@@ -52,7 +52,7 @@ object TabListEventHandler {
     private var tabList = emptyList<List<String>>()
     private var lastCheck = 0L
 
-    private val tabWidgets = mutableMapOf<TabWidget, List<String>>()
+    private val widgets = mutableMapOf<TabWidget, List<String>>()
 
     @Subscription
     fun onTick(event: TickEvent) {
@@ -75,7 +75,7 @@ object TabListEventHandler {
         if (!LocationAPI.isOnSkyblock) return
 
         for (column in event.new) {
-            if (column.isEmpty() || infoRegex.matches(column.first())) continue
+            if (column.isEmpty() || !infoRegex.matches(column.first())) continue
 
             val sections = column
                 .drop(1)
@@ -88,9 +88,9 @@ object TabListEventHandler {
                 val widget = widgetRegexes.entries.firstOrNull { it.value.matches(title) }?.key
                     ?: return@forEach Logger.debug("Unknown tab widget: $title")
 
-                val old = tabWidgets[widget] ?: emptyList()
+                val old = widgets[widget] ?: emptyList()
                 if (old != section) {
-                    tabWidgets[widget] = section
+                    widgets[widget] = section
                     TabWidgetChangeEvent(widget, old, section).post(SkyBlockAPI.eventBus)
                 }
             }
