@@ -1,0 +1,17 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "tech.thatgravyboat.skyblockapi.mixins",
+    "compatibilityLevel": "JAVA_21",
+    "client": [
+        "accessors.AbstractContainerScreenAccessor",
+        "events.ChatListenerMixin",
+        "events.ClientCommonPacketListenerImplMixin",
+        "fixes.ClientPacketListenerMixin",
+        "fixes.SkinManagerMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "mixins": [ "fixes.ScoreboardMixin", "fixes.YggdrasilMinecraftSessionServiceMixin", "fixes.YggdrasilServicesKeyInfoMixin" ]
+}

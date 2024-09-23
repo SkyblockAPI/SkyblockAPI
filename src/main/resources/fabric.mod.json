@@ -1,0 +1,31 @@
+{
+    "schemaVersion": 1,
+    "id": "skyblock-api",
+    "version": "${version}",
+    "name": "skyblock api",
+    "description": "",
+    "authors": [ ],
+    "contact": { },
+    "license": "MIT",
+    "icon": "assets/skyblock-api/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "client": [ "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit\$skyblock_api_client" ],
+        "main": [
+            "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load\$skyblock_api_client",
+            "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init\$skyblock_api_client"
+        ]
+    },
+    "mixins": [
+        {
+            "config": "skyblock-api.client.mixins.json",
+            "environment": "client"
+        }
+    ],
+    "depends": {
+        "fabricloader": ">=${loader_version}",
+        "fabric-language-kotlin": ">=${kotlin_loader_version}",
+        "fabric": "*",
+        "minecraft": "${minecraft_version}"
+    }
+}
