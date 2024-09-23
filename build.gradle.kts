@@ -88,3 +88,32 @@ tasks.withType<JavaCompile>().configureEach {
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion.toString()))
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "skyblock-api-${project.property("minecraft_version")}"
+            from(components["java"])
+
+            pom {
+                name.set("Techarium")
+                url.set("https://github.com/SkyblockAPI/SkyblockAPI")
+
+                scm {
+                    connection.set("git:https://github.com/SkyblockAPI/SkyblockAPI.git")
+                    developerConnection.set("git:https://github.com/SkyblockAPI/SkyblockAPI.git")
+                    url.set("https://github.com/SkyblockAPI/SkyblockAPI")
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            setUrl("https://maven.teamresourceful.com/repository/terrarium/")
+            credentials {
+                username = System.getenv("MAVEN_USER")
+                password = System.getenv("MAVEN_PASS")
+            }
+        }
+    }
+}
