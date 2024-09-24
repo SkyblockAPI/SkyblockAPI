@@ -13,7 +13,7 @@ object HypixelEventHandler {
 
     init {
         HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket::class.java)
-        HypixelModAPICallback.EVENT.register(HypixelModAPICallback { event ->
+        HypixelModAPICallback.EVENT.register { event ->
             if (event is ClientboundLocationPacket) {
                 ServerChangeEvent(
                     event.serverName,
@@ -23,6 +23,6 @@ object HypixelEventHandler {
                     event.map.getOrNull(),
                 ).post(SkyBlockAPI.eventBus)
             }
-        })
+        }
     }
 }

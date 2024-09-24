@@ -7,11 +7,16 @@
         "accessors.AbstractContainerScreenAccessor",
         "events.ChatListenerMixin",
         "events.ClientCommonPacketListenerImplMixin",
+        "events.GuiMixin",
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin"
     ],
     "injectors": {
         "defaultRequire": 1
     },
-    "mixins": [ "fixes.ScoreboardMixin", "fixes.YggdrasilMinecraftSessionServiceMixin", "fixes.YggdrasilServicesKeyInfoMixin" ]
+    "mixins": [
+        "fixes.ScoreboardMixin",
+        "fixes.YggdrasilMinecraftSessionServiceMixin",
+        "fixes.YggdrasilServicesKeyInfoMixin"
+    ]
 }
