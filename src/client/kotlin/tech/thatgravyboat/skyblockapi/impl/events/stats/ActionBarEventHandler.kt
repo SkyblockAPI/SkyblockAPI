@@ -1,53 +1,57 @@
 package tech.thatgravyboat.skyblockapi.impl.events.stats
 
+import org.intellij.lang.annotations.Language
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.ActionBarWidget
-import tech.thatgravyboat.skyblockapi.api.events.info.ActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.*
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
+
+data class ActionBarWidgetType(
+    val widget: ActionBarWidget,
+    val regex: Regex,
+    val factory: (String, Destructured) -> ActionBarWidgetChangeEvent
+) {
+
+    constructor(
+        widget: ActionBarWidget,
+        @Language("RegExp") regex: String,
+        factory: (String, Destructured) -> ActionBarWidgetChangeEvent = { old, new -> ActionBarWidgetChangeEvent(widget, old, new.string) }
+    ) : this(
+        widget,
+        Regexes.create("actionbar.${widget.name.lowercase()}", regex),
+        factory
+    )
+}
 
 @Module
 object ActionBarEventHandler {
 
-    private val regexes = mapOf(
+    private val types = listOf(
         // §c1,303/1,303❤
-        ActionBarWidget.HEALTH to Regexes.create(
-            "actionbar.health",
-            "§.(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)❤"
-        ),
+        ActionBarWidgetType(ActionBarWidget.HEALTH, "§.(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)❤") { old, it ->
+            HealthActionBarWidgetChangeEvent(it["health"].toIntValue(), it["maxhealth"].toIntValue(), old, it.string)
+        },
         // §a245§a❈ Defense
-        ActionBarWidget.DEFENSE to Regexes.create(
-            "actionbar.defense",
-            "§.(?<defense>[\\d,]+)❈ Defense"
-        ),
+        ActionBarWidgetType(ActionBarWidget.DEFENSE, "§.(?<defense>[\\d,]+)❈ Defense") { old, it ->
+            DefenseActionBarWidgetChangeEvent(it["defense"].toIntValue(), old, it.string)
+        },
         // §b319/319✎ Mana
-        ActionBarWidget.MANA to Regexes.create(
-            "actionbar.mana",
-            "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ Mana"
-        ),
+        ActionBarWidgetType(ActionBarWidget.MANA, "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ Mana") { old, it ->
+            ManaActionBarWidgetChangeEvent(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, it.string)
+        },
         // §b+3 SkyBlock XP §7(Accessory Bag§7)§b (68/100)
-        ActionBarWidget.SKYBLOCK_XP to Regexes.create(
-            "actionbar.skyblock_xp",
-            "§.\\+(?<amount>[\\d,]+) SkyBlock XP"
-        ),
+        ActionBarWidgetType(ActionBarWidget.SKYBLOCK_XP, "§.\\+(?<amount>[\\d,]+) SkyBlock XP"),
         // §b-100 Mana (§6Dragon Rage§b)
-        ActionBarWidget.ABILITY to Regexes.create(
-            "actionbar.ability",
-            "§.-?(?<amount>[\\d,]+) Mana \\(§.(?<ability>[^)]+)§.\\)"
-        ),
+        ActionBarWidgetType(ActionBarWidget.ABILITY, "§.-?(?<amount>[\\d,]+) Mana \\(§.(?<ability>[^)]+)§.\\)"),
         // §3+1.7 Mining (38.19%)
-        ActionBarWidget.SKILL_XP to Regexes.create(
-            "actionbar.skill_xp",
-            "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)"
-        ),
+        ActionBarWidgetType(ActionBarWidget.SKILL_XP, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)"),
         // §7⏣ §bLava Springs
-        ActionBarWidget.LOCATION to Regexes.create(
-            "actionbar.location",
-            "§7⏣ §.(?<location>.+)"
-        )
+        ActionBarWidgetType(ActionBarWidget.LOCATION, "§7⏣ §.(?<location>.+)")
     )
 
     private val widgets = mutableMapOf<ActionBarWidget, String>()
@@ -56,15 +60,15 @@ object ActionBarEventHandler {
     fun onActionbarReceived(event: ActionBarReceivedEvent) {
         val parts = event.coloredText.split("     ")
         val foundWidgets = mutableSetOf<ActionBarWidget>()
-        for ((widget, regex) in regexes) {
+        for (type in types) {
             for (part in parts) {
-                regex.find(part) {
-                    val old = widgets[widget] ?: ""
-                    val new = it[0]
-                    foundWidgets.add(widget)
+                type.regex.find(part) {
+                    val old = widgets[type.widget] ?: ""
+                    val new = it.string
+                    foundWidgets.add(type.widget)
                     if (old != new) {
-                        widgets[widget] = new
-                        ActionBarWidgetChangeEvent(widget, old, new).post(SkyBlockAPI.eventBus)
+                        widgets[type.widget] = new
+                        type.factory(old, it).post(SkyBlockAPI.eventBus)
                     }
                 }
             }

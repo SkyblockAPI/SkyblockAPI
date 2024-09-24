@@ -39,10 +39,12 @@ object RegexUtils {
 
 class Destructured internal constructor(private val match: MatchResult, private vararg val keys: String) {
 
+    val string: String get() = match.groupValues[0]
+
     private fun group(key: String): String = match.groups[key]!!.value
 
-    operator fun get(key: String): String = group(key)
-    operator fun get(index: Int): String = match.groupValues[index]
+    operator fun get(key: String): String? = match.groups[key]?.value
+    operator fun get(index: Int): String? = match.groupValues.getOrNull(index)
 
     operator fun component1(): String = group(keys[0])
     operator fun component2(): String = group(keys[1])

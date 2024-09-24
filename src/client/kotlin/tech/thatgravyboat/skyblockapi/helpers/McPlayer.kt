@@ -11,4 +11,10 @@ object McPlayer {
 
     val menu: AbstractContainerMenu?
         get() = self?.containerMenu
+
+    val health: Int
+        get() = self?.health?.toInt() ?: 0
+
+    val maxHealth: Int
+        get() = self?.maxHealth?.toInt() ?: 0
 }
