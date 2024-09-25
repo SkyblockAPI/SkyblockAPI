@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
+import java.text.NumberFormat
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -43,3 +44,6 @@ internal fun String?.parseDuration(): Duration? = runCatching {
     }
     return@runCatching total.seconds
 }.getOrNull()
+
+fun Int.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
+fun Long.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)

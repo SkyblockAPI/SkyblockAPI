@@ -28,4 +28,5 @@ enum class TabWidget {
     DUNGEONS,
     ESSENCE,
     GOOD_TO_KNOW,
+    SHEN,
 }

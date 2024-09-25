@@ -48,6 +48,7 @@ object TabListEventHandler {
         TabWidget.EVENT to Regexes.create("tablist.widget.event", "Event: (?<event>.*)"),
         TabWidget.PARTY to Regexes.create("tablist.widget.party", "Party: (?<party>.*)"),
         TabWidget.MINIONS to Regexes.create("tablist.widget.party", "Minions: (?<party>.*)"),
+        TabWidget.SHEN to Regexes.create("tablist.widget.shen", "Shen: \\((?<duration>[\\ddmsh,]+)\\)"),
     )
 
     private var tabList = emptyList<List<String>>()
