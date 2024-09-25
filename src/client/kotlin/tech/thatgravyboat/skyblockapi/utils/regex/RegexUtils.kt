@@ -9,14 +9,11 @@ object RegexUtils {
     }
 
     fun List<Regex>.match(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
-        for (regex in this) {
-            val match = regex.matchEntire(input)
-            if (match != null) {
-                action(Destructured(match, *groups))
-                return true
-            }
-        }
-        return false
+        return any { it.match(input = input, groups = groups, action = action) }
+    }
+
+    fun Regex.anyMatch(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
+        return input.any { match(it, groups = groups, action = action) }
     }
 
     fun Regex.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
@@ -26,14 +23,11 @@ object RegexUtils {
     }
 
     fun List<Regex>.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
-        for (regex in this) {
-            val match = regex.find(input)
-            if (match != null) {
-                action(Destructured(match, *groups))
-                return true
-            }
-        }
-        return false
+        return any { it.find(input = input, groups = groups, action = action) }
+    }
+
+    fun Regex.anyFound(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
+        return input.any { find(it, groups = groups, action = action) }
     }
 }
 

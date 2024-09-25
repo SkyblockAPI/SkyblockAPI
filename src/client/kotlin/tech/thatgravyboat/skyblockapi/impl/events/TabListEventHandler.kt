@@ -56,6 +56,7 @@ object TabListEventHandler {
 
     @Subscription
     fun onTick(event: TickEvent) {
+        if (!LocationAPI.isOnSkyblock) return
         if (System.currentTimeMillis() - lastCheck < CHECK_INTERVAL) return
         lastCheck = System.currentTimeMillis()
 

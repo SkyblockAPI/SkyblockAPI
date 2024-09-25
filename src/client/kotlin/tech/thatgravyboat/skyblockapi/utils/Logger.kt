@@ -4,10 +4,8 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 
 object Logger {
 
-    private val isDebug = System.getProperty("skyblockapi.debug")?.toBoolean() ?: false
-
     fun debug(message: String, vararg args: Any) {
-        if (!isDebug) return
+        if (!SkyBlockAPI.isDebug) return
         warn("[DEBUG] $message", *args)
     }
 

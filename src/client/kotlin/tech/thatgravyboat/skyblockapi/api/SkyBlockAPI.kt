@@ -11,6 +11,8 @@ object SkyBlockAPI {
 
     internal val logger = LogUtils.getLogger()
 
+    internal val isDebug get() = System.getProperty("skyblockapi.debug")?.lowercase() == "true"
+
     @JvmStatic
     internal fun init() {
         Modules.load()

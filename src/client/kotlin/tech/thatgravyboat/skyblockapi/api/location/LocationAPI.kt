@@ -3,13 +3,22 @@ package tech.thatgravyboat.skyblockapi.api.location
 import net.hypixel.data.type.GameType
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object LocationAPI {
+
+    private val locationRegex = Regexes.create(
+        "scoreboard.location",
+        " *⏣ (?<location>.+)"
+    )
 
     var isOnSkyblock: Boolean = false
         private set
@@ -17,21 +26,35 @@ object LocationAPI {
     var island: SkyblockIsland? = null
         private set
 
+    var area: SkyblockArea = SkyBlockAreas.NONE
+        private set
+
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
         isOnSkyblock = event.type == GameType.SKYBLOCK
+        val old = island
         island = if (isOnSkyblock && event.mode != null) {
             SkyblockIsland.getById(event.mode)
         } else {
             null
         }
-        IslandChangeEvent(island).post(SkyBlockAPI.eventBus)
+        IslandChangeEvent(old, island).post(SkyBlockAPI.eventBus)
     }
 
     @Subscription
     fun onServerDisconnect(event: ServerDisconnectEvent) {
         isOnSkyblock = false
         island = null
+    }
+
+    @Subscription
+    fun onScoreboardChange(event: ScoreboardChangeEvent) {
+        if (!isOnSkyblock) return
+        locationRegex.anyMatch(event.added, "location") { (location) ->
+            val old = area
+            area = SkyblockArea(location)
+            AreaChangeEvent(old, area).post(SkyBlockAPI.eventBus)
+        }
     }
 
 }
