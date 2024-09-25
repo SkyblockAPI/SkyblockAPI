@@ -20,11 +20,15 @@ object CurrencyAPI {
     )
     private val purseRegex = Regexes.create("scoreboard.currency.purse", "Purse: (?<purse>[\\d,kmb]+)")
     private val bitsRegex = Regexes.create("scoreboard.currency.bits", "Bits: (?<bits>[\\d,kmb]+)")
+    private val motesRegex = Regexes.create("scoreboard.currency.motes", "Motes: (?<motes>[\\d,kmb]+)")
 
     var purse: Long = 0
         private set
 
     var bank: Long = 0
+        private set
+
+    var motes: Long = 0
         private set
 
     var bits: Long = 0
@@ -60,6 +64,9 @@ object CurrencyAPI {
         }
         bitsRegex.anyMatch(event.added, "bits") { (bits) ->
             this.bits = bits.parseFormattedLong()
+        }
+        motesRegex.anyMatch(event.added, "motes") { (motes) ->
+            this.motes = motes.parseFormattedLong()
         }
     }
 }

@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.*
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
@@ -51,7 +52,11 @@ object ActionBarEventHandler {
         // §3+1.7 Mining (38.19%)
         ActionBarWidgetType(ActionBarWidget.SKILL_XP, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)"),
         // §7⏣ §bLava Springs
-        ActionBarWidgetType(ActionBarWidget.LOCATION, "§7⏣ §.(?<location>.+)")
+        ActionBarWidgetType(ActionBarWidget.LOCATION, "§7⏣ §.(?<location>.+)"),
+        // §750m40sф Left
+        ActionBarWidgetType(ActionBarWidget.RIFT_TIME, "§7(?<time>.+)ф Left") { old, it ->
+            RiftTimeActionBarWidgetChangeEvent(it["time"].parseDuration(), old, it.string)
+        }
     )
 
     private val widgets = mutableMapOf<ActionBarWidget, String>()
