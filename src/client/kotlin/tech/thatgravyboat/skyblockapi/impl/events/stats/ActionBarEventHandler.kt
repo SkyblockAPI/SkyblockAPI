@@ -52,9 +52,9 @@ object ActionBarEventHandler {
         // §3+1.7 Mining (38.19%)
         ActionBarWidgetType(ActionBarWidget.SKILL_XP, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)"),
         // §7⏣ §bLava Springs
-        ActionBarWidgetType(ActionBarWidget.LOCATION, "§7⏣ §.(?<location>.+)"),
+        ActionBarWidgetType(ActionBarWidget.LOCATION, "§.⏣ §.(?<location>.+)"),
         // §750m40sф Left
-        ActionBarWidgetType(ActionBarWidget.RIFT_TIME, "§7(?<time>.+)ф Left") { old, it ->
+        ActionBarWidgetType(ActionBarWidget.RIFT_TIME, "§.(?<time>.+)ф Left") { old, it ->
             RiftTimeActionBarWidgetChangeEvent(it["time"].parseDuration(), old, it.string)
         }
     )
