@@ -29,4 +29,5 @@ enum class TabWidget {
     ESSENCE,
     GOOD_TO_KNOW,
     SHEN,
+    ADVERTISEMENT,
 }

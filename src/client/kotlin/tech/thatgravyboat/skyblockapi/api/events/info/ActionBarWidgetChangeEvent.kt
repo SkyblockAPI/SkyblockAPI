@@ -1,7 +1,10 @@
 package tech.thatgravyboat.skyblockapi.api.events.info
 
+import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyblockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
 import kotlin.time.Duration
+
+open class RenderActionBarWidgetEvent(val widget: ActionBarWidget) : CancellableSkyblockEvent()
 
 open class ActionBarWidgetChangeEvent(
     val widget: ActionBarWidget,

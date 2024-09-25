@@ -64,10 +64,14 @@ object ActionBarEventHandler {
     @Subscription
     fun onActionbarReceived(event: ActionBarReceivedEvent) {
         val parts = event.coloredText.split("     ")
+        val output = parts.toMutableList()
         val foundWidgets = mutableSetOf<ActionBarWidget>()
         for (type in types) {
             for (part in parts) {
                 type.regex.find(part) {
+                    if (RenderActionBarWidgetEvent(type.widget).post(SkyBlockAPI.eventBus)) {
+                        output.remove(part)
+                    }
                     val old = widgets[type.widget] ?: ""
                     val new = it.string
                     foundWidgets.add(type.widget)
@@ -82,6 +86,12 @@ object ActionBarEventHandler {
             val old = widgets[widget] ?: ""
             ActionBarWidgetChangeEvent(widget, old, "").post(SkyBlockAPI.eventBus)
             widgets.remove(widget)
+        }
+
+        if (output.isEmpty()) {
+            event.cancel()
+        } else if (output != parts) {
+            event.coloredText = output.joinToString("     ")
         }
     }
 }

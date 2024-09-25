@@ -96,7 +96,7 @@ publishing {
             from(components["java"])
 
             pom {
-                name.set("Techarium")
+                name.set("SkyblockAPI")
                 url.set("https://github.com/SkyblockAPI/SkyblockAPI")
 
                 scm {

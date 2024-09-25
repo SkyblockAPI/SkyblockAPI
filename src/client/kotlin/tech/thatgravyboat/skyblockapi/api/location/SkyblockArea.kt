@@ -71,4 +71,6 @@ object SkyBlockAreas {
     val BARRIER_STREET = register("barrier_street", "Barrier Street")
     val BARRY_CENTER = register("barry_center", "Barry Center")
     val BARRY_HQ = register("barry_hq", "Barry HQ")
+    val RIFT_GALLERY = register("rift_gallery", "Rift Gallery")
+    val RIFT_GALLERY_ENTRANCE = register("rift_gallery_entrance", "Rift Gallery Entrance")
 }

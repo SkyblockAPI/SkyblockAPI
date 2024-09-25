@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.chat.ChatListener;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,8 +25,11 @@ public class ChatListenerMixin {
     )
     private void onSetOverlayMessage(Gui instance, Component component, boolean bl, Operation<Void> original) {
         ActionBarReceivedEvent event = new ActionBarReceivedEvent(component);
-        if (event.post(SkyBlockAPI.getEventBus())) return;
-        original.call(instance, event.getComponent(), bl);
+        if (event.post(SkyBlockAPI.getEventBus())) {
+            original.call(instance, CommonComponents.EMPTY, bl);
+        } else {
+            original.call(instance, event.getComponent(), bl);
+        }
     }
 
     @WrapOperation(

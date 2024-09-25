@@ -40,7 +40,8 @@ object TabListEventHandler {
         TabWidget.STATS to Regexes.create("tablist.widget.stats", "Stats:"),
         TabWidget.DUNGEONS to Regexes.create("tablist.widget.dungeons", "Dungeons:"),
         TabWidget.ESSENCE to Regexes.create("tablist.widget.essence", "Essence:"),
-        TabWidget.GOOD_TO_KNOW to Regexes.create("tablist.widget.good_to_know", "Good to Know:"),
+        TabWidget.GOOD_TO_KNOW to Regexes.create("tablist.widget.good_to_know", "Good to know:"),
+        TabWidget.ADVERTISEMENT to Regexes.create("tablist.widget.advertisement", "Advertisement:"),
 
         TabWidget.AREA to Regexes.create("tablist.widget.area", "Area: (?<area>.*)"),
         TabWidget.PROFILE to Regexes.create("tablist.widget.profile", "Profile: (?<profile>.*)"),
