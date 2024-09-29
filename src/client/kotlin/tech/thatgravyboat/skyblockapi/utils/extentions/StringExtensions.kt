@@ -42,6 +42,8 @@ internal fun String?.parseFormattedLong(): Long = runCatching {
     }
 }.getOrElse { 0 }
 
+internal fun String?.parseFormattedInt(): Int = parseFormattedLong().toInt()
+
 internal fun String?.parseDuration(): Duration? = runCatching {
     var total = 0L
     var current = 0L

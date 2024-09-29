@@ -44,7 +44,11 @@ object DateTimeAPI {
             this.day = day.toInt()
         }
         timeRegex.anyMatch(event.added, "hour", "minute", "period") { (hour, minute, period) ->
-            this.hour = (hour.toIntOrNull() ?: 0) + if (period == "pm" && hour.toInt() != 12) 12 else 0
+            this.hour = hour.toIntOrNull() ?: 0
+            this.hour = when (this.hour) {
+                12 -> if (period == "am") 0 else 12
+                else -> this.hour + if (period == "pm") 12 else 0
+            }
             this.minute = minute.toIntOrNull() ?: 0
         }
     }
