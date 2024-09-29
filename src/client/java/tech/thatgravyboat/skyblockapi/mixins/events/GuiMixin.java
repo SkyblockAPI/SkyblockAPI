@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.HudElement;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
@@ -41,11 +42,6 @@ public class GuiMixin {
     @WrapWithCondition(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderJumpMeter(Lnet/minecraft/world/entity/PlayerRideableJumping;Lnet/minecraft/client/gui/GuiGraphics;I)V"))
     private boolean onRenderJumpBar(Gui instance, PlayerRideableJumping playerRideableJumping, GuiGraphics graphics, int i, @Local(argsOnly = true) DeltaTracker delta) {
         return !new RenderHudElementEvent(HudElement.JUMP, graphics).post(SkyBlockAPI.getEventBus());
-    }
-
-    @WrapWithCondition(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderExperienceBar(Lnet/minecraft/client/gui/GuiGraphics;I)V"))
-    private boolean onRenderExperienceBar(Gui instance, GuiGraphics graphics, int i) {
-        return !new RenderHudElementEvent(HudElement.EXPERIENCE, graphics).post(SkyBlockAPI.getEventBus());
     }
 
     @WrapWithCondition(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderVehicleHealth(Lnet/minecraft/client/gui/GuiGraphics;)V"))
@@ -87,6 +83,13 @@ public class GuiMixin {
     private void onEffectsRender(GuiGraphics graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (new RenderHudElementEvent(HudElement.EFFECTS, graphics).post(SkyBlockAPI.getEventBus())) {
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "isExperienceBarVisible", at = @At("HEAD"), cancellable = true)
+    private void onExperienceBarVisible(CallbackInfoReturnable<Boolean> cir) {
+        if (new RenderHudElementEvent(HudElement.EXPERIENCE, null).post(SkyBlockAPI.getEventBus())) {
+            cir.setReturnValue(false);
         }
     }
 

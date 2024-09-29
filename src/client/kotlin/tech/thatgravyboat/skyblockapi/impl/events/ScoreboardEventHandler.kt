@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.impl.events
 
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -26,7 +26,7 @@ object ScoreboardEventHandler {
         val new = McClient.scoreboard?.toList() ?: return
         val old = scoreboard
         if (new == old) return
-        ScoreboardChangeEvent(old, new).post(SkyBlockAPI.eventBus)
+        ScoreboardUpdateEvent(old, new).post(SkyBlockAPI.eventBus)
         scoreboard = new.toMutableList()
     }
 }

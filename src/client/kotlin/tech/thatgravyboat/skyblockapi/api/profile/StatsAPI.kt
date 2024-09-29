@@ -1,10 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.info.ActionBarWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.DefenseActionBarWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.HealthActionBarWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.ManaActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.*
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
@@ -41,6 +38,10 @@ object StatsAPI {
             is ManaActionBarWidgetChangeEvent -> {
                 mana = event.current
                 maxMana = event.max
+            }
+            is ArmadilloActionBarWidgetChangeEvent -> {
+                val healthPercent = McPlayer.health.toFloat() / McPlayer.maxHealth.toFloat()
+                health = (maxHealth * healthPercent).toInt()
             }
         }
 

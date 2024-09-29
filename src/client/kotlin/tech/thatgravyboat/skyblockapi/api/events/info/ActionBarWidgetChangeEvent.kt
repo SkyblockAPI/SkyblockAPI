@@ -24,6 +24,9 @@ class ManaActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String
 class RiftTimeActionBarWidgetChangeEvent(val time: Duration?, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.RIFT_TIME, old, new)
 
+class ArmadilloActionBarWidgetChangeEvent(val current: Float, val max: Float, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.ARMADILLO, old, new)
+
 enum class ActionBarWidget {
     HEALTH,
     DEFENSE,
@@ -32,5 +35,6 @@ enum class ActionBarWidget {
     LOCATION,
     SKILL_XP,
     SKYBLOCK_XP,
-    RIFT_TIME
+    RIFT_TIME,
+    ARMADILLO,
 }

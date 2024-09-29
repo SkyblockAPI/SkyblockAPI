@@ -10,9 +10,27 @@ private val formattedMultiplier = mapOf(
     "b" to 1_000_000_000L
 )
 
+private val romanNumerals = mapOf(
+    'I' to 1,
+    'V' to 5,
+    'X' to 10,
+    'L' to 50,
+    'C' to 100,
+    'D' to 500,
+    'M' to 1000
+)
+
 internal fun String?.toIntValue(): Int = runCatching {
     this?.replace(",", "")?.toInt() ?: 0
 }.getOrElse { 0 }
+
+internal fun String?.toLongValue(): Long = runCatching {
+    this?.replace(",", "")?.toLong() ?: 0
+}.getOrElse { 0 }
+
+internal fun String?.toFloatValue(): Float = runCatching {
+    this?.replace(",", "")?.toFloat() ?: 0f
+}.getOrElse { 0f }
 
 internal fun String?.parseFormattedLong(): Long = runCatching {
     val commaless = this?.replace(",", "")
@@ -45,5 +63,26 @@ internal fun String?.parseDuration(): Duration? = runCatching {
     return@runCatching total.seconds
 }.getOrNull()
 
+internal fun String?.parseRomanNumeral(): Int = runCatching {
+    var total = 0
+    this?.forEachIndexed { index, c ->
+        val value = romanNumerals[c] ?: return@forEachIndexed
+        val nextValue = romanNumerals[this.getOrNull(index + 1)] ?: 0
+        total += if (value < nextValue) -value else value
+    }
+    return@runCatching total
+}.getOrElse { 0 }
+
 fun Int.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
 fun Long.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
+fun Int.toRomanNumeral(): String {
+    var number = this
+    val roman = StringBuilder()
+    romanNumerals.entries.reversed().forEach { (letter, value) ->
+        while (number >= value) {
+            roman.append(letter)
+            number -= value
+        }
+    }
+    return roman.toString()
+}

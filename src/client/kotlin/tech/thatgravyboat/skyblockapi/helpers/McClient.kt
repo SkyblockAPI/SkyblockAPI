@@ -56,5 +56,9 @@ object McClient {
                 .map { it.stripped }
         }
 
+    fun tell(action: () -> Unit) {
+        self.tell(action)
+    }
+
 }
 

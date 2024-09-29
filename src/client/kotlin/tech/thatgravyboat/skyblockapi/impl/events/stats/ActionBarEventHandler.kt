@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.*
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
@@ -38,7 +39,7 @@ object ActionBarEventHandler {
             HealthActionBarWidgetChangeEvent(it["health"].toIntValue(), it["maxhealth"].toIntValue(), old, it.string)
         },
         // §a245§a❈ Defense
-        ActionBarWidgetType(ActionBarWidget.DEFENSE, "§.(?<defense>[\\d,]+)❈ Defense") { old, it ->
+        ActionBarWidgetType(ActionBarWidget.DEFENSE, "§.(?<defense>[\\d,]+)§.❈ Defense") { old, it ->
             DefenseActionBarWidgetChangeEvent(it["defense"].toIntValue(), old, it.string)
         },
         // §b319/319✎ Mana
@@ -56,6 +57,10 @@ object ActionBarEventHandler {
         // §750m40sф Left
         ActionBarWidgetType(ActionBarWidget.RIFT_TIME, "§.(?<time>.+)ф Left") { old, it ->
             RiftTimeActionBarWidgetChangeEvent(it["time"].parseDuration(), old, it.string)
+        },
+        // §6Armadillo Energy: §e§l§m               §r §6248.5§e/§6250
+        ActionBarWidgetType(ActionBarWidget.ARMADILLO, "§.Armadillo Energy: (§.| )+ §.(?<current>[\\d.]+)§./§.(?<max>[\\d.]+)") { old, it ->
+            ArmadilloActionBarWidgetChangeEvent(it["current"].toFloatValue(), it["max"].toFloatValue(), old, it.string)
         }
     )
 

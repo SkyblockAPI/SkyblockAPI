@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -58,7 +58,7 @@ object CurrencyAPI {
     }
 
     @Subscription
-    fun onScoreboardChange(event: ScoreboardChangeEvent) {
+    fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         purseRegex.anyMatch(event.added, "purse") { (purse) ->
             this.purse = purse.parseFormattedLong()
         }

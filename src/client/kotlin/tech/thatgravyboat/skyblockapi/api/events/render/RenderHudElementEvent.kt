@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyblockEvent
 
 class RenderHudElementEvent(
     val element: HudElement,
-    val graphics: GuiGraphics,
+    val graphics: GuiGraphics?,
 ) : CancellableSkyblockEvent()
 
 enum class HudElement {

@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.location
 import net.hypixel.data.type.GameType
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
@@ -48,7 +48,7 @@ object LocationAPI {
     }
 
     @Subscription
-    fun onScoreboardChange(event: ScoreboardChangeEvent) {
+    fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         if (!isOnSkyblock) return
         locationRegex.anyMatch(event.added, "location") { (location) ->
             val old = area
