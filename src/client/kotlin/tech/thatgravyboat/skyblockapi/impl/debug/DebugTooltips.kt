@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.impl
+package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.gui.screens.Screen

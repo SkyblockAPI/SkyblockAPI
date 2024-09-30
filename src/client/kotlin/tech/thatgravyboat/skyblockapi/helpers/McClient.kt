@@ -3,6 +3,9 @@ package tech.thatgravyboat.skyblockapi.helpers
 import com.mojang.blaze3d.platform.Window
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.components.toasts.ToastComponent
+import net.minecraft.client.gui.screens.ChatScreen
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
@@ -56,8 +59,19 @@ object McClient {
                 .map { it.stripped }
         }
 
+    val toasts: ToastComponent
+        get() = self.toasts
+
     fun tell(action: () -> Unit) {
         self.tell(action)
+    }
+
+    fun setScreen(screen: Screen?) {
+        if (self.screen is ChatScreen) {
+            tell { self.setScreen(screen) }
+        } else {
+            self.setScreen(screen)
+        }
     }
 
 }
