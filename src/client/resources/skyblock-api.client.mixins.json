@@ -15,6 +15,7 @@
         "defaultRequire": 1
     },
     "mixins": [
+        "events.ConnectionMixin",
         "events.ItemStackMixin",
         "features.ItemStackDataTypeMixin",
         "fixes.ScoreboardMixin",

@@ -5,8 +5,11 @@ import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
+import com.mojang.brigadier.context.CommandContext
+import com.mojang.brigadier.suggestion.SuggestionProvider
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.minecraft.commands.SharedSuggestionProvider
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
 
 typealias LiteralCommandBuilder = CommandBuilder<LiteralArgumentBuilder<FabricClientCommandSource>>
@@ -27,12 +30,12 @@ class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClie
 }
 
 class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal constructor(
-    private val builder: ArgumentBuilder<FabricClientCommandSource, B>
+    private val builder: ArgumentBuilder<FabricClientCommandSource, B>,
 ) {
 
-    fun callback(callback: () -> Unit) {
+    fun callback(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
         this.builder.executes {
-            callback()
+            callback(it)
             1
         }
     }
@@ -44,8 +47,29 @@ class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal
         return this
     }
 
-    fun <T> then(name: String, argument: ArgumentType<T>, action: ArgumentCommandBuilder<T>.() -> Unit): CommandBuilder<B> {
-        val builder = CommandBuilder(ClientCommandManager.argument(name, argument))
+    fun <T> then(
+        name: String,
+        argument: ArgumentType<T>,
+        suggestions: List<String>,
+        action: ArgumentCommandBuilder<T>.() -> Unit,
+    ): CommandBuilder<B> = then(
+        name,
+        argument,
+        { _, builder -> SharedSuggestionProvider.suggest(suggestions, builder) },
+        action,
+    )
+
+    fun <T> then(
+        name: String,
+        argument: ArgumentType<T>,
+        suggestions: SuggestionProvider<FabricClientCommandSource>? = null,
+        action: ArgumentCommandBuilder<T>.() -> Unit,
+    ): CommandBuilder<B> {
+        val builder = CommandBuilder(
+            ClientCommandManager.argument(name, argument).apply {
+                if (suggestions != null) suggests(suggestions)
+            },
+        )
         builder.action()
         this.builder.then(builder.builder)
         return this

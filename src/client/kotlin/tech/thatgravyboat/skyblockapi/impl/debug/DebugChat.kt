@@ -16,11 +16,14 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
@@ -112,7 +115,11 @@ private class Widget(timestamp: Instant, val content: Component) : StringWidget(
     }
 
     override fun onClick(d: Double, e: Double) {
-        McClient.clipboard = this.content.string
+        if (Screen.hasAltDown()) {
+            McClient.clipboard = this.content.toJson(ComponentSerialization.CODEC).toPrettyString()
+        } else {
+            McClient.clipboard = this.content.string
+        }
         SystemToast.add(
             McClient.toasts,
             toastId,
