@@ -63,14 +63,12 @@ object TabListEventHandler {
         if (System.currentTimeMillis() - lastCheck < CHECK_INTERVAL) return
         lastCheck = System.currentTimeMillis()
 
-        val newTabList = McClient.tablist
-            .take(TAB_LIST_LENGTH)
-            .map { it.displayName.stripped }
-            .chunked(20)
+        val newTabList = McClient.tablist.take(TAB_LIST_LENGTH).map { it.displayName }.chunked(20)
+        val newStringTabList = newTabList.map { it.map { it.stripped } }
 
-        if (tabList != newTabList) {
+        if (tabList != newStringTabList) {
             TabListChangeEvent(tabList, newTabList).post(SkyBlockAPI.eventBus)
-            tabList = newTabList
+            tabList = newStringTabList
         }
     }
 
@@ -79,23 +77,24 @@ object TabListEventHandler {
         if (!LocationAPI.isOnSkyblock) return
 
         for (column in event.new) {
-            if (column.isEmpty() || !infoRegex.matches(column.first())) continue
+            if (column.isEmpty() || !infoRegex.matches(column.first().stripped)) continue
 
             val sections = column
                 .drop(1)
-                .chunked { !it.startsWith(" ") }
-                .peek { it.removeIf(CharSequence::isBlank) }
+                .chunked { !it.stripped.startsWith(" ") }
+                .peek { it.removeIf { c -> c.stripped.isBlank() } }
                 .filter { it.isNotEmpty() }
 
             sections.forEach { section ->
-                val title = section.firstOrNull() ?: return@forEach
+                val title = section.firstOrNull()?.stripped ?: return@forEach
                 val widget = widgetRegexes.entries.firstOrNull { it.value.matches(title) }?.key
                     ?: return@forEach Logger.debug("Unknown tab widget: $title")
 
                 val old = widgets[widget] ?: emptyList()
-                if (old != section) {
-                    widgets[widget] = section
-                    TabWidgetChangeEvent(widget, old, section).post(SkyBlockAPI.eventBus)
+                val new = section.map { it.stripped }
+                if (old != new) {
+                    widgets[widget] = new
+                    TabWidgetChangeEvent(widget, old, new, section).post(SkyBlockAPI.eventBus)
                 }
             }
         }

@@ -2,31 +2,31 @@ package tech.thatgravyboat.skyblockapi.utils.regex
 
 object RegexUtils {
 
-    fun Regex.match(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
+    fun Regex.match(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         val match = matchEntire(input)
         match?.let { action(Destructured(it, *groups)) }
         return match != null
     }
 
-    fun List<Regex>.match(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
+    fun List<Regex>.match(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         return any { it.match(input = input, groups = groups, action = action) }
     }
 
-    fun Regex.anyMatch(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
+    fun Regex.anyMatch(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         return input.any { match(it, groups = groups, action = action) }
     }
 
-    fun Regex.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
+    fun Regex.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         val match = find(input)
         match?.let { action(Destructured(it, *groups)) }
         return match != null
     }
 
-    fun List<Regex>.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
+    fun List<Regex>.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         return any { it.find(input = input, groups = groups, action = action) }
     }
 
-    fun Regex.anyFound(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit): Boolean {
+    fun Regex.anyFound(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         return input.any { find(it, groups = groups, action = action) }
     }
 }

@@ -33,7 +33,7 @@ internal fun String?.toFloatValue(): Float = runCatching {
 }.getOrElse { 0f }
 
 internal fun String?.parseFormattedLong(): Long = runCatching {
-    val commaless = this?.replace(",", "")
+    val commaless = this?.lowercase()?.replace(",", "")
     val multiplier = formattedMultiplier.entries.firstOrNull { commaless?.endsWith(it.key) == true }?.value
     return@runCatching if (multiplier != null) {
         commaless?.dropLast(1)?.toLong()?.times(multiplier) ?: 0
@@ -43,6 +43,18 @@ internal fun String?.parseFormattedLong(): Long = runCatching {
 }.getOrElse { 0 }
 
 internal fun String?.parseFormattedInt(): Int = parseFormattedLong().toInt()
+
+internal fun String?.parseFormattedDouble(): Double = runCatching {
+    val commaless = this?.lowercase()?.replace(",", "")
+    val multiplier = formattedMultiplier.entries.firstOrNull { commaless?.endsWith(it.key) == true }?.value
+    return@runCatching if (multiplier != null) {
+        commaless?.dropLast(1)?.toDouble()?.times(multiplier) ?: 0.0
+    } else {
+        commaless?.toDouble() ?: 0.0
+    }
+}.getOrElse { 0.0 }
+
+internal fun String?.parseFormattedFloat(): Float = parseFormattedDouble().toFloat()
 
 internal fun String?.parseDuration(): Duration? = runCatching {
     var total = 0L
