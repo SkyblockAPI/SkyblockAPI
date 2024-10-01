@@ -73,4 +73,10 @@ object SkyBlockAreas {
     val BARRY_HQ = register("barry_hq", "Barry HQ")
     val RIFT_GALLERY = register("rift_gallery", "Rift Gallery")
     val RIFT_GALLERY_ENTRANCE = register("rift_gallery_entrance", "Rift Gallery Entrance")
+
+    // Dwarves
+    val BASECAMP = register("basecamp", "Dwarven Base Camp")
+    val FOSSIL_RESEARCH = register("fossil_research", "Fossil Research Center")
+    val GLACITE_TUNNELS = register("glacite_tunnels", "Glacite Tunnels")
+    val GREAT_LAKE = register("great_lake", "Great Glacite Lake")
 }

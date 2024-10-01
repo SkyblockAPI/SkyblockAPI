@@ -21,11 +21,20 @@ object LoreDataTypes {
     private val rightClickAbilityRegex = Regexes.create("datatype.right_click_ability", "Ability: (?<ability>[\\w ]+) {2}RIGHT CLICK")
     private val manaCostRegex = Regexes.create("datatype.mana_cost", "Mana Cost: (?<mana>[\\d,kmb]+)")
     private val cooldownRegex = Regexes.create("datatype.cooldown", "Cooldown: (?<cooldown>\\d+)s")
+    private val snowballsRegex = Regexes.create("datatype.snowballs", "Snowballs: (?<snowballs>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
 
     val FUEL: DataType<Pair<Int, Int>> = DataType("fuel") {
         var output: Pair<Int, Int>? = null
         fuelRegex.anyMatch(it.getRawLore(), "fuel", "max") { (fuel, max) ->
             output = fuel.parseFormattedInt() to max.parseFormattedInt()
+        }
+        output
+    }
+
+    val SNOWBALLS: DataType<Pair<Int, Int>> = DataType("snowballs") {
+        var output: Pair<Int, Int>? = null
+        snowballsRegex.anyMatch(it.getRawLore(), "snowballs", "max") { (snowballs, max) ->
+            output = snowballs.parseFormattedInt() to max.parseFormattedInt()
         }
         output
     }
@@ -62,6 +71,7 @@ object LoreDataTypes {
     @Subscription
     fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
         event.register(FUEL)
+        event.register(SNOWBALLS)
         event.register(RIGHT_CLICK_MANA_ABILITY)
         event.register(COOLDOWN_ABILITY)
         event.register(RARITY)

@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.area.mining
 
+import tech.thatgravyboat.skyblockapi.api.area.mining.events.GoblinRaidEvent
 import tech.thatgravyboat.skyblockapi.api.area.mining.events.MiningEvent
 import tech.thatgravyboat.skyblockapi.api.area.mining.events.RaffleMiningEvent
 import tech.thatgravyboat.skyblockapi.api.area.mining.events.UnknownMiningEvent
@@ -23,6 +24,7 @@ object MiningEventsAPI {
             eventsRegex.anyMatch(event.added, "event") { (event) ->
                 this.event = when (event.lowercase()) {
                     "raffle" -> RaffleMiningEvent()
+                    "goblin raid" -> GoblinRaidEvent()
                     else -> UnknownMiningEvent(event)
                 }
             }
