@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
+import tech.thatgravyboat.skyblockapi.api.data.SkyblockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
@@ -53,10 +54,16 @@ object LoreDataTypes {
         if (outputAbility != null && outputDuration != null) outputAbility!! to outputDuration!! else null
     }
 
+    val RARITY: DataType<SkyblockRarity> = DataType("rarity") {
+        val lastLine = it.getRawLore().lastOrNull() ?: return@DataType null
+        SkyblockRarity.entries.firstOrNull { rarity -> lastLine.trim().startsWith(rarity.name, ignoreCase = true) }
+    }
+
     @Subscription
     fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
         event.register(FUEL)
         event.register(RIGHT_CLICK_MANA_ABILITY)
         event.register(COOLDOWN_ABILITY)
+        event.register(RARITY)
     }
 }

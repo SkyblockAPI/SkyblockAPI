@@ -9,7 +9,11 @@ enum class SkyblockRarity {
     EPIC,
     LEGENDARY,
     MYTHIC,
-    DIVINE;
+    DIVINE,
+    ULTIMATE,
+    SPECIAL,
+    VERY_SPECIAL,
+    ADMIN;
 
     companion object {
 

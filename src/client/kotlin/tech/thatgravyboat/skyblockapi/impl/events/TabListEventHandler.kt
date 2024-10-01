@@ -32,7 +32,7 @@ object TabListEventHandler {
         TabWidget.DAILY_QUESTS to Regexes.create("tablist.widget.daily_quests", "Daily Quests:"),
         TabWidget.FORGES to Regexes.create("tablist.widget.forges", "Forges:"),
         TabWidget.COMMISSIONS to Regexes.create("tablist.widget.commissions", "Commissions:"),
-        TabWidget.SKILLS to Regexes.create("tablist.widget.skills", "Skills:"),
+        TabWidget.SKILLS to Regexes.create("tablist.widget.skills", "Skills:(?: (?<avg>[\\d.]+))?"),
         TabWidget.POWDERS to Regexes.create("tablist.widget.powders", "Powders:"),
         TabWidget.CRYSTALS to Regexes.create("tablist.widget.crystals", "Crystals:"),
         TabWidget.BESTIARY to Regexes.create("tablist.widget.bestiary", "Bestiary:"),
