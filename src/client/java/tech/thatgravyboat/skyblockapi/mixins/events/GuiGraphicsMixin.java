@@ -16,7 +16,7 @@ public class GuiGraphicsMixin {
 
     @WrapOperation(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isBarVisible()Z"))
     private boolean itemBarVisible(ItemStack instance, Operation<Boolean> original, @Share("bar") LocalRef<RenderItemBarEvent> bar) {
-        var event = new RenderItemBarEvent(-1, 0f);
+        var event = new RenderItemBarEvent(instance, -1, 0f);
         event.post(SkyBlockAPI.getEventBus());
         bar.set(event);
         return event.getPercent() > 0f || original.call(instance);

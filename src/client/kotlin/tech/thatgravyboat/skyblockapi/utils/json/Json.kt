@@ -21,7 +21,7 @@ object Json {
 
     val JsonElement.isString get() = isJsonPrimitive && asJsonPrimitive.isString
 
-    inline fun <reified T : Any> T.toJson(codec: Codec<T>): JsonElement? {
+    fun <T : Any> T.toJson(codec: Codec<T>): JsonElement? {
         val ops = if (McLevel.hasLevel) McLevel.registry.createSerializationContext(JsonOps.INSTANCE) else JsonOps.INSTANCE
         return codec.encodeStart(ops, this).result().getOrNull()
     }

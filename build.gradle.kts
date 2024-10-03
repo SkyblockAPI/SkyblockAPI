@@ -109,7 +109,7 @@ publishing {
     }
     repositories {
         maven {
-            setUrl("https://maven.teamresourceful.com/repository/terrarium/")
+            setUrl("https://maven.teamresourceful.com/repository/thatgravyboat/")
             credentials {
                 username = System.getenv("MAVEN_USER")
                 password = System.getenv("MAVEN_PASS")

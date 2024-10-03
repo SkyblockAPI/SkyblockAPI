@@ -54,6 +54,7 @@ object PetsAPI {
     @Subscription
     fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         if (event.widget != TabWidget.PET) return
+        this.reset()
         if (event.new.size < 2) return
         event.newComponents[1].siblings.takeIf { it.size == 3 }?.let { (_, level, pet) ->
             petLevelRegex.match(level.string, "level") { (level) ->
@@ -71,5 +72,14 @@ object PetsAPI {
             this.isMaxLevel = true
         }
         this.isMaxLevel = petMaxLevelRegex.anyMatch(event.new)
+    }
+
+    private fun reset() {
+        pet = null
+        rarity = null
+        level = 0
+        isMaxLevel = false
+        xp = 0.0
+        xpToNextLevel = 0.0
     }
 }
