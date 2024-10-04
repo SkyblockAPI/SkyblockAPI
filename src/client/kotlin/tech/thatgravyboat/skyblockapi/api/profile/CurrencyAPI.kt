@@ -21,11 +21,11 @@ object CurrencyAPI {
     private val bankSingleRegex = widgetGroup.create("profile.bank.single", " Bank: (?<bank>[\\d,kmb]+)")
     private val bankCoopRegex = widgetGroup.create(
         "profile.bank.coop",
-        " Bank: (?<coop>\\.\\.\\.|[\\d,kmb]+) / (?<personal>[\\d,kmb]+)"
+        " Bank: (?<coop>\\.\\.\\.|[\\d,kmb]+) / (?<personal>[\\d,kmb]+)",
     )
 
     private val currencyGroup = Regexes.group("scoreboard.currency")
-    private val purseRegex = currencyGroup.create("purse", "Purse: (?<purse>[\\d,kmb.]+)")
+    private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,kmb.]+)")
     private val bitsRegex = currencyGroup.create("bits", "Bits: (?<bits>[\\d,kmb]+)")
     private val motesRegex = currencyGroup.create("motes", "Motes: (?<motes>[\\d,kmb]+)")
     private val copperRegex = currencyGroup.create("copper", "Copper: (?<copper>[\\d,kmb]+)")
