@@ -149,6 +149,8 @@ object RecordCodecGenerator {
             .addModifiers(KModifier.PRIVATE)
             .initializer(
                 CodeBlock.builder().apply {
+                    add("Codec.lazyInitialized {\n")
+                    indent()
                     add("%T.create {\n", RECORD_CODEC_BUILDER_TYPE)
                     indent()
                     add("it.group(\n")
@@ -179,6 +181,8 @@ object RecordCodecGenerator {
                     add("obj\n")
                     unindent()
 
+                    add("}\n")
+                    unindent()
                     add("}\n")
                     unindent()
                     add("}\n")

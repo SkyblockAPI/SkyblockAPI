@@ -49,9 +49,16 @@ class StoredData<T : Any>(
     }
 
     private fun saveToSystem() {
-        if (!Files.isRegularFile(file)) Files.createFile(file)
-        val json = data.toJson(codec) ?: return Logger.warn("Failed to encode {} to json", data)
-        Files.write(file, json.toPrettyString().toByteArray(Charsets.UTF_8))
+        try {
+            if (!Files.isRegularFile(file)) {
+                Files.createDirectories(file.parent)
+                Files.createFile(file)
+            }
+            val json = data.toJson(codec) ?: return Logger.warn("Failed to encode {} to json", data)
+            Files.write(file, json.toPrettyString().toByteArray(Charsets.UTF_8))
+        } catch (e: Exception) {
+            Logger.error("Failed to save {} to file", data, e)
+        }
     }
 
     fun get(): T = data
