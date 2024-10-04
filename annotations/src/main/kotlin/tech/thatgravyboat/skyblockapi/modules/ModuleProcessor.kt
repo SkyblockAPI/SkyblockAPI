@@ -69,7 +69,10 @@ class ModuleProcessor(
                 }.build(),
             )
 
-        file.build().writeTo(generator, false)
+        file.build().writeTo(
+            generator,
+            Dependencies(true, *validModules.mapNotNull(KSClassDeclaration::containingFile).toTypedArray())
+        )
 
         return emptyList()
     }
