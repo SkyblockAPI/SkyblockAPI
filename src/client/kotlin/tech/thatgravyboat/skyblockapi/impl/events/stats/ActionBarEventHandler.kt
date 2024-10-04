@@ -66,6 +66,11 @@ object ActionBarEventHandler {
         ActionBarWidgetType(ActionBarWidget.ARMADILLO, "§.Armadillo Energy: (§.| )+ §.(?<current>[\\d.]+)§./§.(?<max>[\\d.]+)") { old, it ->
             ArmadilloActionBarWidgetChangeEvent(it["current"].toFloatValue(), it["max"].toFloatValue(), old, it.string)
         },
+        // §6§l10ᝐ
+        // §65ᝐ
+        ActionBarWidgetType(ActionBarWidget.ARMOR_STACK, "§6(?:§l)?(?<amount>\\d+)(?<type>[ᝐ⁑|҉Ѫ⚶])") { old, it ->
+            ArmorStackActionBarWidgetChangeEvent(it["amount"].toIntValue(), it["type"] ?: "", old, it.string)
+        }
     )
 
     private val widgets = mutableMapOf<ActionBarWidget, String>()
