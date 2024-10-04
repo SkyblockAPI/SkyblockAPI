@@ -15,13 +15,15 @@ object Regexes {
     private val regexes = mutableMapOf<String, Regex>()
     private val regexLists = mutableMapOf<String, List<Regex>>()
 
-    fun create(key: String, @Language("RegExp") regex: String) = regexes.computeIfAbsent(key) {
+    fun create(key: String, @Language("RegExp") regex: String) = regexes.getOrPut(key) {
         Regex(regex)
     }
 
-    fun createList(key: String, @Language("RegExp") vararg regex: String) = regexLists.computeIfAbsent(key) {
+    fun createList(key: String, @Language("RegExp") vararg regex: String) = regexLists.getOrPut(key) {
         regex.map(::Regex).toList()
     }
+
+    fun group(prefix: String) = RegexGroup(prefix)
 
     @JvmStatic
     internal fun load() {
