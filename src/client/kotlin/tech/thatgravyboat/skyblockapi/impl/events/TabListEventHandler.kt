@@ -66,6 +66,8 @@ object TabListEventHandler {
 
     private val widgets = mutableMapOf<TabWidget, List<String>>()
 
+    private val lastUnknownTabWidgetAlert = mutableMapOf<String, Long>()
+
     @Subscription
     fun onTick(event: TickEvent) {
         if (!LocationAPI.isOnSkyblock) return
@@ -96,8 +98,13 @@ object TabListEventHandler {
 
             sections.forEach { section ->
                 val title = section.firstOrNull()?.stripped ?: return@forEach
-                val widget = widgetRegexes.entries.firstOrNull { it.value.matches(title) }?.key
-                    ?: return@forEach Logger.debug("Unknown tab widget: $title")
+                val widget = widgetRegexes.entries.firstOrNull { it.value.matches(title) }?.key ?: run {
+                    if ((lastUnknownTabWidgetAlert[title] ?: 0) < System.currentTimeMillis() - 60000) {
+                        lastUnknownTabWidgetAlert[title] = System.currentTimeMillis()
+                        Logger.debug("Unknown tab widget: $title")
+                    }
+                    return@forEach
+                }
 
                 val old = widgets[widget] ?: emptyList()
                 val new = section.map { it.stripped }
