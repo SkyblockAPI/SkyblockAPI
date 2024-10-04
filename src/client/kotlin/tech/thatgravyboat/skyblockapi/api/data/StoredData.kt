@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.data
 import com.google.gson.JsonElement
 import com.mojang.serialization.Codec
 import com.mojang.serialization.JsonOps
+import org.apache.commons.io.FileUtils
 import tech.thatgravyboat.skyblockapi.extensions.toKtResult
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
@@ -49,12 +50,8 @@ class StoredData<T : Any>(
 
     private fun saveToSystem() {
         try {
-            if (!Files.isRegularFile(file)) {
-                Files.createDirectories(file.parent)
-                Files.createFile(file)
-            }
             val json = data.toJson(codec) ?: return Logger.warn("Failed to encode {} to json", data)
-            Files.write(file, json.toPrettyString().toByteArray(Charsets.UTF_8))
+            FileUtils.write(file.toFile(), json.toPrettyString(), Charsets.UTF_8)
         } catch (e: Exception) {
             Logger.error("Failed to save {} to file", data, e)
         }
