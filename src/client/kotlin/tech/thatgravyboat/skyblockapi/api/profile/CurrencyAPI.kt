@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
@@ -18,11 +19,11 @@ object CurrencyAPI {
         "tablist.widget.profile.bank.coop",
         " Bank: (?<coop>\\.\\.\\.|[\\d,kmb]+) / (?<personal>[\\d,kmb]+)"
     )
-    private val purseRegex = Regexes.create("scoreboard.currency.purse", "Purse: (?<purse>[\\d,kmb]+)")
+    private val purseRegex = Regexes.create("scoreboard.currency.purse", "Purse: (?<purse>[\\d,kmb.]+)")
     private val bitsRegex = Regexes.create("scoreboard.currency.bits", "Bits: (?<bits>[\\d,kmb]+)")
     private val motesRegex = Regexes.create("scoreboard.currency.motes", "Motes: (?<motes>[\\d,kmb]+)")
 
-    var purse: Long = 0
+    var purse: Double = 0.0
         private set
 
     var bank: Long = 0
@@ -60,7 +61,7 @@ object CurrencyAPI {
     @Subscription
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         purseRegex.anyMatch(event.added, "purse") { (purse) ->
-            this.purse = purse.parseFormattedLong()
+            this.purse = purse.parseFormattedDouble()
         }
         bitsRegex.anyMatch(event.added, "bits") { (bits) ->
             this.bits = bits.parseFormattedLong()

@@ -32,4 +32,5 @@ enum class TabWidget {
     GOOD_TO_KNOW,
     SHEN,
     ADVERTISEMENT,
+    TRAPPER,
 }

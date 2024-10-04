@@ -1,10 +1,15 @@
 package tech.thatgravyboat.skyblockapi.impl.events
 
+import net.minecraft.network.chat.CommonComponents
+import net.minecraft.network.chat.Component
+import net.minecraft.network.protocol.game.ClientboundTabListPacket
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -42,6 +47,7 @@ object TabListEventHandler {
         TabWidget.ESSENCE to Regexes.create("tablist.widget.essence", "Essence:"),
         TabWidget.GOOD_TO_KNOW to Regexes.create("tablist.widget.good_to_know", "Good to know:"),
         TabWidget.ADVERTISEMENT to Regexes.create("tablist.widget.advertisement", "Advertisement:"),
+        TabWidget.TRAPPER to Regexes.create("tablist.widget.trapper", "Trapper:"),
 
         TabWidget.AREA to Regexes.create("tablist.widget.area", "Area: (?<area>.*)"),
         TabWidget.PROFILE to Regexes.create("tablist.widget.profile", "Profile: (?<profile>.*)"),
@@ -54,6 +60,9 @@ object TabListEventHandler {
 
     private var tabList = emptyList<List<String>>()
     private var lastCheck = 0L
+
+    private var header: Component = CommonComponents.EMPTY
+    private var footer: Component = CommonComponents.EMPTY
 
     private val widgets = mutableMapOf<TabWidget, List<String>>()
 
@@ -97,6 +106,20 @@ object TabListEventHandler {
                     TabWidgetChangeEvent(widget, old, new, section).post(SkyBlockAPI.eventBus)
                 }
             }
+        }
+    }
+
+    @Subscription
+    fun onPacketReceived(event: PacketReceivedEvent) {
+        if (event.packet is ClientboundTabListPacket) {
+            TabListHeaderFooterChangeEvent(
+                header,
+                footer,
+                event.packet.header,
+                event.packet.footer
+            ).post(SkyBlockAPI.eventBus)
+            this.header = event.packet.header
+            this.footer = event.packet.footer
         }
     }
 }

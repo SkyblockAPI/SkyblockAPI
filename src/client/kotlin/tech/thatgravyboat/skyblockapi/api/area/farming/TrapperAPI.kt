@@ -3,6 +3,8 @@ package tech.thatgravyboat.skyblockapi.api.area.farming
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
+import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
 import tech.thatgravyboat.skyblockapi.api.location.SkyblockArea
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -15,6 +17,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 object TrapperAPI {
 
     private val peltsRegex = Regexes.create("scoreboard.farming.trapper.pelts", "Pelts: (?<pelts>[\\d,kmb]+)")
+    private val peltsTabListRegex = Regexes.create("tablist.widget.trapper.pelts", " Pelts: (?<pelts>[\\d,kmb]+)")
     private val animalRegex = Regexes.create(
         "chat.farming.trapper.animals",
         "\\[NPC] Trevor: You can find your (?<type>\\w+) animal near the (?<location>.*).",
@@ -32,6 +35,14 @@ object TrapperAPI {
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         peltsRegex.anyMatch(event.added, "pelts") { (pelts) ->
+            this.pelts = pelts.parseFormattedInt()
+        }
+    }
+
+    @Subscription
+    fun onTabListWidgetUpdate(event: TabWidgetChangeEvent) {
+        if (event.widget != TabWidget.TRAPPER) return
+        peltsTabListRegex.anyMatch(event.new, "pelts") { (pelts) ->
             this.pelts = pelts.parseFormattedInt()
         }
     }
