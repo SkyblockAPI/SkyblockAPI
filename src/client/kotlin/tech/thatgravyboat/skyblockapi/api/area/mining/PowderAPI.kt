@@ -7,15 +7,17 @@ import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object PowderAPI {
 
-    private val mithrilPowderRegex = Regexes.create("tablist.widget.powders.mithril", " Mithril: (?<mithril>[\\d,]+)")
-    private val gemstonePowderRegex = Regexes.create("tablist.widget.powders.gemstone", " Gemstone: (?<gemstone>[\\d,]+)")
-    private val glacitePowderRegex = Regexes.create("tablist.widget.powders.glacite", " Glacite: (?<glacite>[\\d,]+)")
+    private val powdersGroup = RegexGroup.TABLIST_WIDGET.group("powders")
+
+    private val mithrilPowderRegex = powdersGroup.create("mithril", " Mithril: (?<mithril>[\\d,]+)")
+    private val gemstonePowderRegex = powdersGroup.create("gemstone", " Gemstone: (?<gemstone>[\\d,]+)")
+    private val glacitePowderRegex = powdersGroup.create("glacite", " Glacite: (?<glacite>[\\d,]+)")
 
     var mithril: Long = 0
         private set

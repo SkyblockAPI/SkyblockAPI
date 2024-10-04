@@ -3,19 +3,21 @@ package tech.thatgravyboat.skyblockapi.api.datetime
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object DateTimeAPI {
 
-    private val dateRegex = Regexes.create(
-        "scoreboard.date",
+    private val regexGroup = RegexGroup.SCOREBOARD
+
+    private val dateRegex = regexGroup.create(
+        "date",
         " *(?<season>[A-Za-z ]+) (?<day>\\d+)(st|nd|rd|th)"
     )
 
-    private val timeRegex = Regexes.create(
-        "scoreboard.time",
+    private val timeRegex = regexGroup.create(
+        "time",
         " *(?<hour>\\d{1,2}):(?<minute>\\d{1,2})(?<period>am|pm) (?<symbol>.)"
     )
 

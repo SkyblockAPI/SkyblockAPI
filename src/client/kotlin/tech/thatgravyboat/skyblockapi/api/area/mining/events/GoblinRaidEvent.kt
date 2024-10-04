@@ -5,8 +5,8 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 data class GoblinRaidEvent(
     var kills: Int = 0,
@@ -18,13 +18,15 @@ data class GoblinRaidEvent(
     @Module
     companion object {
 
-        private val killsRegex = Regexes.create(
-            "scoreboard.mining.events.goblinraid.kills",
+        private val regexGroup = RegexGroup.SCOREBOARD.group("mining.events.goblinraid")
+
+        private val killsRegex = regexGroup.create(
+            "kills",
             "Your kills: (?<kills>[\\d,]+) ☠"
         )
 
-        private val remainingRegex = Regexes.create(
-            "scoreboard.mining.events.goblinraid.remaining",
+        private val remainingRegex = regexGroup.create(
+            "remaining",
             "Remaining: (?<remaining>[\\d,]+) goblins"
         )
 

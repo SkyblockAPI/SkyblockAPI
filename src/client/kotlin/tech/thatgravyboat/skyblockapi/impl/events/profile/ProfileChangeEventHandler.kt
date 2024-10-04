@@ -5,23 +5,25 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
-import java.util.UUID
+import java.util.*
 
 @Module
 object ProfileChangeEventHandler {
 
+    private val regexGroup = RegexGroup.CHAT.group("profile.change")
+
     // §8Profile ID: 0b7f27ad-fea5-4da0-9886-32913feb60b7
-    private val profileIdChangeRegex = Regexes.create(
-        "profile.change.id",
+    private val profileIdChangeRegex = regexGroup.create(
+        "id",
         "Profile ID: (?<id>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})"
     )
 
     // §aYour profile was changed to: §eWatermelon
     // §aYour profile was changed to: §ePomegranate§b (Co-op)
-    private val profileChangeRegex = Regexes.createList(
-        "profile.change.name",
+    private val profileChangeRegex = regexGroup.createList(
+        "name",
         "Your profile was changed to: (?<name>.+) \\(Co-op\\)",
         "Your profile was changed to: (?<name>.+)"
     )

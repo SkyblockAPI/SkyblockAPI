@@ -17,11 +17,13 @@ import kotlin.time.Duration.Companion.seconds
 @Module
 object LoreDataTypes {
 
-    private val fuelRegex = Regexes.create("datatype.fuel", "Fuel: (?<fuel>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
-    private val rightClickAbilityRegex = Regexes.create("datatype.right_click_ability", "Ability: (?<ability>[\\w ]+) {2}RIGHT CLICK")
-    private val manaCostRegex = Regexes.create("datatype.mana_cost", "Mana Cost: (?<mana>[\\d,kmb]+)")
-    private val cooldownRegex = Regexes.create("datatype.cooldown", "Cooldown: (?<cooldown>\\d+)s")
-    private val snowballsRegex = Regexes.create("datatype.snowballs", "Snowballs: (?<snowballs>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
+    private val dataTypeGroup = Regexes.group("datatype")
+
+    private val fuelRegex = dataTypeGroup.create("fuel", "Fuel: (?<fuel>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
+    private val rightClickAbilityRegex = dataTypeGroup.create("right_click_ability", "Ability: (?<ability>[\\w ]+) {2}RIGHT CLICK")
+    private val manaCostRegex = dataTypeGroup.create("mana_cost", "Mana Cost: (?<mana>[\\d,kmb]+)")
+    private val cooldownRegex = dataTypeGroup.create("cooldown", "Cooldown: (?<cooldown>\\d+)s")
+    private val snowballsRegex = dataTypeGroup.create("snowballs", "Snowballs: (?<snowballs>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
 
     val FUEL: DataType<Pair<Int, Int>> = DataType("fuel") {
         var output: Pair<Int, Int>? = null

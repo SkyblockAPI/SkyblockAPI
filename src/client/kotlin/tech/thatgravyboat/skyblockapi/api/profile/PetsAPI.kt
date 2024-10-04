@@ -6,30 +6,32 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object PetsAPI {
 
-    private val petLevelRegex = Regexes.create(
-        "tablist.widget.pet.level",
+    private val petGroup = RegexGroup.TABLIST_WIDGET.group("pet")
+
+    private val petLevelRegex = petGroup.create(
+        "level",
         "\\[Lvl (?<level>\\d+)] "
     )
 
-    private val petXpRegex = Regexes.create(
-        "tablist.widget.pet.xp",
+    private val petXpRegex = petGroup.create(
+        "xp",
         " (?<xp>[\\d,.]+)/(?<nextXp>[\\d,.mbkMBK]+) XP \\((?<percent>[\\d.]+)%\\)"
     )
 
-    private val petOverflowXpRegex = Regexes.create(
-        "tablist.widget.pet.overflowxp",
+    private val petOverflowXpRegex = petGroup.create(
+        "overflowxp",
         " \\+(?<xp>[\\d,.]+) XP"
     )
 
-    private val petMaxLevelRegex = Regexes.create(
-        "tablist.widget.pet.max_level",
+    private val petMaxLevelRegex = petGroup.create(
+        "max_level",
         " MAX LEVEL"
     )
 

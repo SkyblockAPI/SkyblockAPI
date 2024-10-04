@@ -6,14 +6,16 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileLevelChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object ProfileLevelEventHandler {
 
-    private val levelRegex = Regexes.create(
-        "profile.level",
+    private val regexGroup = RegexGroup.TABLIST_WIDGET.group("profile")
+
+    private val levelRegex = regexGroup.create(
+        "level",
         "SB Level: \\[(?<level>\\d+)] (?<xp>\\d+)/(?<nextXp>\\d+) XP"
     )
 

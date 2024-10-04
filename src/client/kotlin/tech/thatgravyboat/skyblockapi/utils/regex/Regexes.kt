@@ -12,18 +12,31 @@ private const val URL = ""
 
 object Regexes {
 
+    private val usedKeys = mutableSetOf<String>()
     private val regexes = mutableMapOf<String, Regex>()
     private val regexLists = mutableMapOf<String, List<Regex>>()
 
-    fun create(key: String, @Language("RegExp") regex: String) = regexes.getOrPut(key) {
-        Regex(regex)
+    fun create(key: String, @Language("RegExp") regex: String): Regex {
+        validateKey(key)
+        return regexes.getOrPut(key) {
+            Regex(regex)
+        }
     }
 
-    fun createList(key: String, @Language("RegExp") vararg regex: String) = regexLists.getOrPut(key) {
-        regex.map(::Regex).toList()
+    fun createList(key: String, @Language("RegExp") vararg regex: String): List<Regex> {
+        validateKey(key)
+        return regexLists.getOrPut(key) {
+            regex.map(::Regex).toList()
+        }
     }
 
     fun group(prefix: String) = RegexGroup(prefix)
+
+    private fun validateKey(key: String) {
+        if (!McClient.isDev) return
+        if (key in usedKeys) error("Regex Key $key is already in use")
+        usedKeys += key
+    }
 
     @JvmStatic
     internal fun load() {

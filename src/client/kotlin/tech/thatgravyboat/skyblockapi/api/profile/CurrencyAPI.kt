@@ -5,18 +5,17 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
-import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object CurrencyAPI {
 
-    private val widgetGroup = Regexes.group("tablist.widget")
+    private val widgetGroup = RegexGroup.WIDGET
     private val gemsRegex = widgetGroup.create("area.gems", " Gems: (?<gems>[\\d,kmb]+)")
     private val bankSingleRegex = widgetGroup.create("profile.bank.single", " Bank: (?<bank>[\\d,kmb]+)")
     private val bankCoopRegex = widgetGroup.create(
@@ -24,7 +23,7 @@ object CurrencyAPI {
         " Bank: (?<coop>\\.\\.\\.|[\\d,kmb]+) / (?<personal>[\\d,kmb]+)",
     )
 
-    private val currencyGroup = Regexes.group("scoreboard.currency")
+    private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
     private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,kmb.]+)")
     private val bitsRegex = currencyGroup.create("bits", "Bits: (?<bits>[\\d,kmb]+)")
     private val motesRegex = currencyGroup.create("motes", "Motes: (?<motes>[\\d,kmb]+)")

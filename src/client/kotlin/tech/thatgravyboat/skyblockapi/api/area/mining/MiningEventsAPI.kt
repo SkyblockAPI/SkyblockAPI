@@ -6,12 +6,12 @@ import tech.thatgravyboat.skyblockapi.api.area.mining.events.RaffleMiningEvent
 import tech.thatgravyboat.skyblockapi.api.area.mining.events.UnknownMiningEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 object MiningEventsAPI {
 
-    private val eventsRegex = Regexes.create("scoreboard.mining.events", "Event: (?<event>.+)")
+    private val eventsRegex = RegexGroup.SCOREBOARD.create("mining.events", "Event: (?<event>.+)")
 
     var event: MiningEvent? = null
         private set
