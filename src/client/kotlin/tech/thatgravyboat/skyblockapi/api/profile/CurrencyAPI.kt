@@ -23,7 +23,7 @@ object CurrencyAPI {
         "tablist.widget.profile.bank.coop",
         " Bank: (?<coop>\\.\\.\\.|[\\d,kmb]+) / (?<personal>[\\d,kmb]+)",
     )
-    private val purseRegex = Regexes.create("scoreboard.currency.purse", "Purse: (?<purse>[\\d,kmb.]+)")
+    private val purseRegex = Regexes.create("scoreboard.currency.purse", "(?:Purse|Piggy): (?<purse>[\\d,kmb.]+)")
     private val bitsRegex = Regexes.create("scoreboard.currency.bits", "Bits: (?<bits>[\\d,kmb]+)")
     private val motesRegex = Regexes.create("scoreboard.currency.motes", "Motes: (?<motes>[\\d,kmb]+)")
     private val cookieAteRegex = Regexes.create("chat.currency.cookie.ate", "You consumed a Booster Cookie!.*")
