@@ -15,7 +15,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 @Module
 object CurrencyAPI {
 
-    private val widgetGroup = RegexGroup.WIDGET
+    private val widgetGroup = RegexGroup.TABLIST_WIDGET
     private val gemsRegex = widgetGroup.create("area.gems", " Gems: (?<gems>[\\d,kmb]+)")
     private val bankSingleRegex = widgetGroup.create("profile.bank.single", " Bank: (?<bank>[\\d,kmb]+)")
     private val bankCoopRegex = widgetGroup.create(
