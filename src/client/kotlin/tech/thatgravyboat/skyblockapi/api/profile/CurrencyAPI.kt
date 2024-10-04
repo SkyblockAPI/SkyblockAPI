@@ -4,6 +4,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
@@ -56,6 +57,13 @@ object CurrencyAPI {
             }
             else -> {}
         }
+    }
+
+    @Subscription
+    fun onInventoryFullyLoaded(event: InventoryFullyLoadedEvent) {
+        println("InventoryFullyLoadedEvent")
+        println(event.title)
+        println(event.itemStacks)
     }
 
     @Subscription

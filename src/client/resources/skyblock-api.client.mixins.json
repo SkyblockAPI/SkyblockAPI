@@ -18,6 +18,7 @@
     "mixins": [
         "events.ConnectionMixin",
         "events.ItemStackMixin",
+        "events.AbstractContainerScreenMixin",
         "features.ItemStackDataTypeMixin",
         "fixes.ScoreboardMixin",
         "fixes.YggdrasilMinecraftSessionServiceMixin",
