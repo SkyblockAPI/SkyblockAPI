@@ -37,4 +37,5 @@ enum class ActionBarWidget {
     SKYBLOCK_XP,
     RIFT_TIME,
     ARMADILLO,
+    CHARGES,
 }

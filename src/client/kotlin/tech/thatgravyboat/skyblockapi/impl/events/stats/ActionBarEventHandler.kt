@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.impl.events.stats
 
+import net.minecraft.util.StringUtil
 import org.intellij.lang.annotations.Language
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -16,17 +17,17 @@ import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 data class ActionBarWidgetType(
     val widget: ActionBarWidget,
     val regex: Regex,
-    val factory: (String, Destructured) -> ActionBarWidgetChangeEvent
+    val factory: (String, Destructured) -> ActionBarWidgetChangeEvent,
 ) {
 
     constructor(
         widget: ActionBarWidget,
         @Language("RegExp") regex: String,
-        factory: (String, Destructured) -> ActionBarWidgetChangeEvent = { old, new -> ActionBarWidgetChangeEvent(widget, old, new.string) }
+        factory: (String, Destructured) -> ActionBarWidgetChangeEvent = { old, new -> ActionBarWidgetChangeEvent(widget, old, new.string) },
     ) : this(
         widget,
         Regexes.create("actionbar.${widget.name.lowercase()}", regex),
-        factory
+        factory,
     )
 }
 
@@ -46,6 +47,9 @@ object ActionBarEventHandler {
         ActionBarWidgetType(ActionBarWidget.MANA, "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ Mana") { old, it ->
             ManaActionBarWidgetChangeEvent(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, it.string)
         },
+        // §a§lⓩⓩⓩ§2§lⓄⓄ
+        // §a§lⓩⓩⓩⓩⓩ§2§l
+        ActionBarWidgetType(ActionBarWidget.CHARGES, "§a§l(?<maxcharges>(?<charges>ⓩ*)§2§l)"),
         // §b+3 SkyBlock XP §7(Accessory Bag§7)§b (68/100)
         ActionBarWidgetType(ActionBarWidget.SKYBLOCK_XP, "§.\\+(?<amount>[\\d,]+) SkyBlock XP"),
         // §b-100 Mana (§6Dragon Rage§b)
@@ -61,7 +65,7 @@ object ActionBarEventHandler {
         // §6Armadillo Energy: §e§l§m               §r §6248.5§e/§6250
         ActionBarWidgetType(ActionBarWidget.ARMADILLO, "§.Armadillo Energy: (§.| )+ §.(?<current>[\\d.]+)§./§.(?<max>[\\d.]+)") { old, it ->
             ArmadilloActionBarWidgetChangeEvent(it["current"].toFloatValue(), it["max"].toFloatValue(), old, it.string)
-        }
+        },
     )
 
     private val widgets = mutableMapOf<ActionBarWidget, String>()
@@ -71,11 +75,12 @@ object ActionBarEventHandler {
         val parts = event.coloredText.split("     ")
         val output = parts.toMutableList()
         val foundWidgets = mutableSetOf<ActionBarWidget>()
-        for (type in types) {
-            for (part in parts) {
+        for (p in parts) {
+            var part = p
+            for (type in types) {
                 type.regex.find(part) {
                     if (RenderActionBarWidgetEvent(type.widget).post(SkyBlockAPI.eventBus)) {
-                        output.remove(part)
+                        part = part.replace(it.string, "")
                     }
                     val old = widgets[type.widget] ?: ""
                     val new = it.string
@@ -85,6 +90,11 @@ object ActionBarEventHandler {
                         type.factory(old, it).post(SkyBlockAPI.eventBus)
                     }
                 }
+            }
+            if (StringUtil.stripColor(part).isBlank()) {
+                output.remove(part)
+            } else {
+                output[output.indexOf(part)] = part
             }
         }
         for (widget in widgets.keys - foundWidgets) {

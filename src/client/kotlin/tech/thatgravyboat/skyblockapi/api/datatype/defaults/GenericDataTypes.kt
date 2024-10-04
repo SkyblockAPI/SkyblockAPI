@@ -15,10 +15,10 @@ object GenericDataTypes {
     val ID: DataType<String> = DataType("id") { it.getTag("id")?.asString }
     val MODIFIER: DataType<String> = DataType("modifier") { it.getTag("modifier")?.asString }
     val TIMESTAMP: DataType<Instant> = DataType("timestamp") {
-        Instant.fromEpochMilliseconds(it.getTag("timestamp")?.asLong ?: 0)
+        it.getTag("timestamp")?.asLong?.let(Instant::fromEpochMilliseconds)
     }
-    val SECONDS_HELD: DataType<Int> = DataType("seconds_held") { it.getTag("seconds_held")?.asInt ?: 0 }
-    val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") { it.getTag("pickonimbus_durability")?.asInt ?: 0 }
+    val SECONDS_HELD: DataType<Int> = DataType("seconds_held") { it.getTag("seconds_held")?.asInt }
+    val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") { it.getTag("pickonimbus_durability")?.asInt }
 
     @Subscription
     fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
@@ -30,4 +30,16 @@ object GenericDataTypes {
 
     private val Tag.asInt get() = (this as? NumericTag)?.asInt
     private val Tag.asLong get() = (this as? NumericTag)?.asLong
+
+    // 10/04/24 m192AR
+    //
+    //  Rift Dimension
+    //  ф Stillgore Château
+    //
+    // Motes: 196,935
+    // Effigies: ⧯⧯⧯⧯⧯⧯
+    //
+    // www.hypixel.net
+
+    //
 }

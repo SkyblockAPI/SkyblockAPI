@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.impl.debug
 
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
@@ -17,6 +18,13 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 @Module
 object DebugCommands {
+
+    private var actionbar: String = ""
+
+    @Subscription(priority = Int.MIN_VALUE)
+    fun onActionBar(event: ActionBarReceivedEvent) {
+        actionbar = event.coloredText
+    }
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
@@ -46,6 +54,15 @@ object DebugCommands {
                             this.color = TextColor.YELLOW
                         }.send()
                         McClient.clipboard = McPlayer.heldItem.toJson(ItemStack.CODEC).toPrettyString()
+                    }
+                }
+
+                then("actionbar") {
+                    callback {
+                        Text.of("[SkyBlockAPI] Copied actionbar to clipboard.") {
+                            this.color = TextColor.YELLOW
+                        }.send()
+                        McClient.clipboard = actionbar
                     }
                 }
             }
