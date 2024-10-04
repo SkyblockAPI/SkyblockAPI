@@ -7,7 +7,7 @@ import java.util.*
 
 @GenerateCodec
 data class CommunityCenterData(
-    val ranks: MutableMap<UUID, FameRank> = mutableMapOf(),
+    val ranks: MutableMap<UUID, String> = mutableMapOf(),
     val bitsAvailable: MutableMap<String, Long> = mutableMapOf(),
 ) {
     companion object {

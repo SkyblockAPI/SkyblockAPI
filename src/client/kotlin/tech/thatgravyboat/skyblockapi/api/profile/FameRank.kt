@@ -10,6 +10,8 @@ object FameRanks {
 
     val registeredFameRanks = mutableMapOf<String, FameRank>()
 
+    fun getByName(name: String) = registeredFameRanks.values.firstOrNull { it.name.equals(name, true) }
+
     private fun register(key: String, name: String, multiplier: Double) =
         registeredFameRanks.computeIfAbsent(key) { FameRank(name, multiplier) }
 

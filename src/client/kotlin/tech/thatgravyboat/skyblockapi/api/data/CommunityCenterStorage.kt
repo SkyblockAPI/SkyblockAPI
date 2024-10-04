@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.data
 
 import tech.thatgravyboat.skyblockapi.api.profile.CommunityCenterData
 import tech.thatgravyboat.skyblockapi.api.profile.FameRank
+import tech.thatgravyboat.skyblockapi.api.profile.FameRanks
 import java.util.*
 
 object CommunityCenterStorage {
@@ -11,11 +12,11 @@ object CommunityCenterStorage {
         StoredData.defaultPath.resolve("community_center_data.json"),
     )
 
-    fun getRank(uuid: UUID): FameRank? = COMMUNITY_CENTER.get().ranks[uuid]
+    fun getRank(uuid: UUID): FameRank? = COMMUNITY_CENTER.get().ranks[uuid]?.let { FameRanks.getByName(it) }
 
     fun setRank(uuid: UUID, rank: FameRank?) {
         rank ?: return
-        COMMUNITY_CENTER.get().ranks[uuid] = rank
+        COMMUNITY_CENTER.get().ranks[uuid] = rank.name
         COMMUNITY_CENTER.save()
     }
 
