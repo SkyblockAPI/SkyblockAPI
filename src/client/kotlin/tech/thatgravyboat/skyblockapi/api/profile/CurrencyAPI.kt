@@ -1,19 +1,21 @@
 package tech.thatgravyboat.skyblockapi.api.profile
 
+import tech.thatgravyboat.skyblockapi.api.data.CommunityCenterStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
-import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
+@Suppress("MemberVisibilityCanBePrivate")
 @Module
 object CurrencyAPI {
 
@@ -28,6 +30,7 @@ object CurrencyAPI {
     private val motesRegex = Regexes.create("scoreboard.currency.motes", "Motes: (?<motes>[\\d,kmb]+)")
     private val cookieAteRegex = Regexes.create("chat.currency.cookie.ate", "You consumed a Booster Cookie!.*")
     private val bitsAvailableRegex = Regexes.create("inventory.currency.bits.available", "Bits Available: (?<bits>[\\d,kmb]+).*")
+    private val fameRankRegex = Regexes.create("inventory.currency.fame.rank", "Your rank: (?<rank>.*)")
 
     private const val BASE_COOKIE_BITS = 4800
 
@@ -44,10 +47,26 @@ object CurrencyAPI {
         private set
 
     var bitsAvailable: Long = 0
-        private set
+        private set(bits) {
+            val profileName = ProfileAPI.profileName ?: return
+            CommunityCenterStorage.setBitsAvailable(profileName, bits)
+            field = bits
+        }
+        get() {
+            val profileName = ProfileAPI.profileName ?: return 0
+            return CommunityCenterStorage.getBitsAvailable(profileName)
+        }
 
     var fameRank: FameRank? = null
-        private set
+        private set(rank) {
+            val uuid = McClient.self.player?.uuid ?: return
+            CommunityCenterStorage.setRank(uuid, rank)
+            field = rank
+        }
+        get() {
+            val uuid = McClient.self.player?.uuid ?: return null
+            return CommunityCenterStorage.getRank(uuid)
+        }
 
     var gems: Long = 0
         private set
@@ -83,21 +102,35 @@ object CurrencyAPI {
 
     @Subscription
     fun onInventoryFullyLoaded(event: InventoryFullyLoadedEvent) {
-        println("a " + event.title.string + " a")
         when (event.title.string) {
             "SkyBlock Menu" -> handleSkyblockMenu(event)
+            "Booster Cookie" -> handleBoosterCookieMenu(event)
             else -> {}
         }
     }
 
     private fun handleSkyblockMenu(event: InventoryFullyLoadedEvent) {
-        println(event.itemStacks.map { it.displayName.string })
-        val cookieItemStack = event.itemStacks.firstOrNull { it.displayName.string == "Booster Cookie" }
-        if (cookieItemStack != null) {
-            println(cookieItemStack.getRawLore())
-            bitsAvailableRegex.anyMatch(cookieItemStack.getRawLore(), "bits") { (bits) ->
+        val cookieLore = event.itemStacks.firstOrNull { it.hoverName.string == "Booster Cookie" }?.getRawLore()
+        if (cookieLore != null) {
+            bitsAvailableRegex.anyMatch(cookieLore, "bits") { (bits) ->
                 bitsAvailable = bits.parseFormattedLong()
-                println("Bits available: $bitsAvailable")
+            }
+        }
+    }
+
+    private fun handleBoosterCookieMenu(event: InventoryFullyLoadedEvent) {
+        val fameRankLore = event.itemStacks.firstOrNull { it.hoverName.string == "Fame Rank" }?.getRawLore()
+        val bitsLore = event.itemStacks.firstOrNull { it.hoverName.string == "Bits" }?.getRawLore()
+
+        if (fameRankLore != null) {
+            fameRankRegex.anyMatch(fameRankLore, "rank") { (rank) ->
+                fameRank = FameRanks.registeredFameRanks.values.firstOrNull { it.name == rank }
+            }
+        }
+
+        if (bitsLore != null) {
+            bitsAvailableRegex.anyMatch(bitsLore, "bits") { (bits) ->
+                bitsAvailable = bits.parseFormattedLong()
             }
         }
     }

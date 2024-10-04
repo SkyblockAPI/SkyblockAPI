@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.data
 import com.google.gson.JsonElement
 import com.mojang.serialization.Codec
 import com.mojang.serialization.JsonOps
+import net.fabricmc.loader.api.FabricLoader
 import tech.thatgravyboat.skyblockapi.extensions.toKtResult
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
@@ -58,5 +59,9 @@ class StoredData<T : Any>(
     fun save() {
         saveTime = System.currentTimeMillis() + SAVE_DELAY
         scheduleSave()
+    }
+
+    companion object {
+        val defaultPath = FabricLoader.getInstance().configDir.resolve("skyblockapi")
     }
 }

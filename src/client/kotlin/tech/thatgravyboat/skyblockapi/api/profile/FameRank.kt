@@ -1,11 +1,14 @@
 package tech.thatgravyboat.skyblockapi.api.profile
 
+import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
+
+@GenerateCodec
 data class FameRank(val name: String, val multiplier: Double)
 
 @Suppress("unused")
 object FameRanks {
 
-    private val registeredFameRanks = mutableMapOf<String, FameRank>()
+    val registeredFameRanks = mutableMapOf<String, FameRank>()
 
     private fun register(key: String, name: String, multiplier: Double) =
         registeredFameRanks.computeIfAbsent(key) { FameRank(name, multiplier) }
