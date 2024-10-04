@@ -16,14 +16,16 @@ object CommunityCenterStorage {
 
     fun setRank(uuid: UUID, rank: FameRank?) {
         rank ?: return
+        if (rank == getRank(uuid)) return
         COMMUNITY_CENTER.get().ranks[uuid] = rank.name
         COMMUNITY_CENTER.save()
     }
 
-    fun getBitsAvailable(key: String): Long = COMMUNITY_CENTER.get().bitsAvailable[key] ?: 0
+    fun getBitsAvailable(profile: String): Long = COMMUNITY_CENTER.get().bitsAvailable[profile] ?: 0
 
-    fun setBitsAvailable(key: String, bits: Long) {
-        COMMUNITY_CENTER.get().bitsAvailable[key] = bits
+    fun setBitsAvailable(profile: String, bits: Long) {
+        if (bits == getBitsAvailable(profile)) return
+        COMMUNITY_CENTER.get().bitsAvailable[profile] = bits
         COMMUNITY_CENTER.save()
     }
 }
