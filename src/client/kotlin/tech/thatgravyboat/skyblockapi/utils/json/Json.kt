@@ -16,8 +16,11 @@ object Json {
 
     val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
-    inline fun <reified T : Any> InputStream.readJson(): JsonObject =
+    inline fun <reified T : Any> InputStream.readJson(): T =
         gson.fromJson(bufferedReader(), typeOf<T>().javaType)
+
+    inline fun <reified T : Any> String.readJson(): T =
+        gson.fromJson(this, typeOf<T>().javaType)
 
     val JsonElement.isString get() = isJsonPrimitive && asJsonPrimitive.isString
 

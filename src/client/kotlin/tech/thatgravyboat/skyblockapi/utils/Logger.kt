@@ -16,4 +16,8 @@ object Logger {
     fun warn(message: String, vararg args: Any) {
         SkyBlockAPI.logger.warn(message, *args)
     }
+
+    fun error(message: String, vararg args: Any) {
+        SkyBlockAPI.logger.error(message, *args)
+    }
 }

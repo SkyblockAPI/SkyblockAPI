@@ -29,7 +29,7 @@ object SpookyFestivalAPI {
     var onGoing: Boolean = false
         private set
 
-    var duration: Duration = Duration.INFINITE
+    var duration: Duration = Duration.ZERO
         private set
 
     var greenCandy: Int = 0

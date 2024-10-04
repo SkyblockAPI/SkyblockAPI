@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import java.text.NumberFormat
+import kotlin.math.pow
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -73,6 +74,17 @@ internal fun String?.parseDuration(): Duration? = runCatching {
                 current = 0
             }
         }
+    }
+    return@runCatching total.seconds
+}.getOrNull()
+
+internal fun String?.parseColonDuration(): Duration? = runCatching {
+    val splits = this?.split(":") ?: return@runCatching null
+    var currentMultiplier = (60.0.pow(splits.size - 1)).toLong()
+    var total = 0L
+    splits.forEach {
+        total += it.toLong() * currentMultiplier.coerceAtLeast(1)
+        currentMultiplier /= 60
     }
     return@runCatching total.seconds
 }.getOrNull()
