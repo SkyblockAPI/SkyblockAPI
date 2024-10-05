@@ -34,9 +34,6 @@ object CurrencyAPI {
     var purse: Double = 0.0
         private set
 
-    var bits: Long = 0
-        private set
-
     var personalBank: Long = 0
         private set
 
@@ -48,13 +45,16 @@ object CurrencyAPI {
     var motes: Long = 0
         private set
 
+    var bits: Long = 0
+        private set
+
+    var gems: Long = 0
+        private set
+
     var copper: Long = 0
         private set
 
     var northStars: Long = 0
-        private set
-
-    var gems: Long = 0
         private set
 
     @Subscription
