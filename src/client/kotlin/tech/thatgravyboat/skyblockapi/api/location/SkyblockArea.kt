@@ -4,6 +4,7 @@ data class SkyblockArea(val name: String) {
     fun inArea() = LocationAPI.area == this
 }
 
+@Suppress("unused")
 object SkyBlockAreas {
 
     private val registeredAreas = mutableMapOf<String, SkyblockArea>()

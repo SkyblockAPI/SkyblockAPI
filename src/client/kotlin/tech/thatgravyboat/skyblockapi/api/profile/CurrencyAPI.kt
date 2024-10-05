@@ -13,6 +13,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
 @Module
+@Suppress("MemberVisibilityCanBePrivate")
 object CurrencyAPI {
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET
@@ -64,6 +65,7 @@ object CurrencyAPI {
                     this.gems = gems.parseFormattedLong()
                 }
             }
+
             TabWidget.PROFILE -> {
                 bankSingleRegex.anyMatch(event.new, "bank") { (bank) ->
                     this.coopBank = bank.parseFormattedLong()
@@ -74,6 +76,7 @@ object CurrencyAPI {
                     this.personalBank = personal.parseFormattedLong()
                 }
             }
+
             else -> {}
         }
     }
