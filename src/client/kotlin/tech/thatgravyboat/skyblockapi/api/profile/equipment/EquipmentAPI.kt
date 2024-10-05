@@ -25,7 +25,7 @@ object EquipmentAPI {
 
     private val chatEquipRegex = RegexGroup.CHAT.group("equipment").create(
         "equip",
-        "You equipped a (?<item>.+)"
+        "You equipped a (?<item>.+)!"
     )
 
 
