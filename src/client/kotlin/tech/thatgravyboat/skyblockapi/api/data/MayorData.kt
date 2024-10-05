@@ -17,7 +17,7 @@ enum class Candidate(val candidateName: String, vararg val perks: Perk) {
 
     val activePerks get() = perks.filter { it.active }
 
-    fun isSpecial() = this in listOf(SCORPIUS, JERRY, DERPY)
+    fun isSpecial() = this in setOf(SCORPIUS, JERRY, DERPY)
 
     override fun toString() = candidateName
 
