@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.profile.community
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
 import tech.thatgravyboat.skyblockapi.api.profile.FameRank
 import tech.thatgravyboat.skyblockapi.api.profile.FameRanks
@@ -84,14 +83,5 @@ object CommunityCenterAPI {
                 bitsAvailable = bits.parseFormattedLong()
             }
         }
-    }
-
-    private fun reset() {
-        bitsAvailable
-    }
-
-    @Subscription
-    fun onProfileChange(event: ProfileChangeEvent) {
-        reset()
     }
 }
