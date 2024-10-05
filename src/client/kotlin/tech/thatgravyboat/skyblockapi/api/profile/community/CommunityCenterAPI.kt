@@ -110,7 +110,7 @@ object CommunityCenterAPI {
 
         if (fameRankLore != null) {
             fameRankRegex.anyMatch(fameRankLore, "rank") { (rank) ->
-                fameRank = FameRanks.registeredFameRanks.values.firstOrNull { it.name == rank }
+                fameRank = FameRanks.getByName(rank)
             }
         }
 

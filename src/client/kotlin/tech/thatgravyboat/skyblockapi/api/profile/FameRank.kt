@@ -8,7 +8,7 @@ data class FameRank(val name: String, val multiplier: Double)
 @Suppress("unused")
 object FameRanks {
 
-    val registeredFameRanks = mutableMapOf<String, FameRank>()
+    private val registeredFameRanks = mutableMapOf<String, FameRank>()
 
     fun getByName(name: String) = registeredFameRanks.values.firstOrNull { it.name.equals(name, true) }
 
