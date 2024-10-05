@@ -13,6 +13,8 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
+private const val BASE_COOKIE_BITS = 4800
+
 @Module
 @Suppress("MemberVisibilityCanBePrivate")
 object CommunityCenterAPI {
@@ -20,8 +22,6 @@ object CommunityCenterAPI {
     private val cookieAteRegex = RegexGroup.CHAT.create("communitycenter.cookie.ate", "You consumed a Booster Cookie!.*")
     private val bitsAvailableRegex = RegexGroup.INVENTORY.create("communitycenter.bits.available", "Bits Available: (?<bits>[\\d,kmb]+).*")
     private val fameRankRegex = RegexGroup.INVENTORY.create("communitycenter.fame.rank", "Your rank: (?<rank>.*)")
-
-    private const val BASE_COOKIE_BITS = 4800
 
     var bitsAvailable: Long
         private set(bits) {
