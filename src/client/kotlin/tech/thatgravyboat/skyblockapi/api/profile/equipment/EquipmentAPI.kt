@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.equipment
 
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.EquipmentStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
@@ -36,7 +37,7 @@ object EquipmentAPI {
     fun onInventoryFullyLoad(event: InventoryFullyLoadedEvent) {
         if (!inventoryNameRegex.matches(event.title.stripped)) return
         EquipmentSlot.entries.forEach {
-            EquipmentStorage.setEquipment(it, event.itemStacks[it.slot])
+            handleInventoryItem(it, event.itemStacks[it.slot])
         }
     }
 
@@ -44,7 +45,13 @@ object EquipmentAPI {
     fun onInventoryChange(event: InventoryChangeEvent) {
         if (!inventoryNameRegex.matches(event.title.stripped)) return
         val slot = EquipmentSlot.entries.find { it.slot == event.slot } ?: return
-        EquipmentStorage.setEquipment(slot, event.item)
+        handleInventoryItem(slot, event.item)
+    }
+
+    private fun handleInventoryItem(slot: EquipmentSlot, itemStack: ItemStack) {
+        val item = if (itemStack.item == Items.LIGHT_GRAY_STAINED_GLASS_PANE) ItemStack.EMPTY
+        else itemStack
+        EquipmentStorage.setEquipment(slot, item)
     }
 
     @Subscription

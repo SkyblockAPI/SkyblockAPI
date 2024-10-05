@@ -73,7 +73,7 @@ object LoreDataTypes {
 
     val CATEGORY: DataType<SkyblockCategory> = DataType("category") {
         val lastLine = it.getRawLore().lastOrNull() ?: return@DataType null
-        val rarity = RARITY.factory(it)?.name ?: ""
+        val rarity = RARITY.factory(it)?.name ?: return@DataType null
         SkyblockCategory.create(lastLine.removePrefix(rarity).trim())
     }
 
