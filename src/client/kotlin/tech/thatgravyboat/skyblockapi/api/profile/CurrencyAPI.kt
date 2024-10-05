@@ -93,8 +93,8 @@ object CurrencyAPI {
                     this.northStars = northstars.parseFormattedLong()
                 }
             } else if (SkyblockIsland.GARDEN.inIsland()) {
-                copperRegex.anyMatch(event.added, "coppere") { (purse) ->
-                    this.copper = purse.parseFormattedLong()
+                copperRegex.anyMatch(event.added, "copper") { (copper) ->
+                    this.copper = copper.parseFormattedLong()
                 }
             }
             purseRegex.anyMatch(event.added, "purse") { (purse) ->
