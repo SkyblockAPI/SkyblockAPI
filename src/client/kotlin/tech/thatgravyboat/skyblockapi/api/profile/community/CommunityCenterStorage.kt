@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.FameRank
 import tech.thatgravyboat.skyblockapi.api.profile.FameRanks
 import java.util.*
 
-object CommunityCenterStorage {
+internal object CommunityCenterStorage {
     private val COMMUNITY_CENTER = StoredData(
         CommunityCenterData(),
         CommunityCenterData.CODEC,
