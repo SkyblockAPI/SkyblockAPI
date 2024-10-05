@@ -9,6 +9,7 @@
         "events.ClientCommonPacketListenerImplMixin",
         "events.GuiGraphicsMixin",
         "events.GuiMixin",
+        "events.ScreenMixin",
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin"
     ],
