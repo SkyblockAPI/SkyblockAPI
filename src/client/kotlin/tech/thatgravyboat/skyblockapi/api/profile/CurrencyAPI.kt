@@ -17,7 +17,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 object CurrencyAPI {
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET
-    private val gemsRegex = widgetGroup.create("area.gems", " Gems: (?<gems>[\\d,kmb]+)")
     private val bankSingleRegex = widgetGroup.create("profile.bank.single", " Bank: (?<bank>[\\d,kmb]+)")
     private val bankCoopRegex = widgetGroup.create(
         "profile.bank.coop",
@@ -26,10 +25,7 @@ object CurrencyAPI {
 
     private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
     private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,kmb.]+)")
-    private val bitsRegex = currencyGroup.create("bits", "Bits: (?<bits>[\\d,kmb]+)")
     private val motesRegex = currencyGroup.create("motes", "Motes: (?<motes>[\\d,kmb]+)")
-    private val copperRegex = currencyGroup.create("copper", "Copper: (?<copper>[\\d,kmb]+)")
-    private val northStarsRegex = currencyGroup.create("northstars", "North Stars: (?<northstars>[\\d,kmb]+)")
 
     var purse: Double = 0.0
         private set
@@ -71,11 +67,14 @@ object CurrencyAPI {
 
     @Subscription
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
-        purseRegex.anyMatch(event.added, "purse") { (purse) ->
-            this.purse = purse.parseFormattedDouble()
-        }
-        motesRegex.anyMatch(event.added, "motes") { (motes) ->
-            this.motes = motes.parseFormattedLong()
+        if (SkyblockIsland.THE_RIFT.inIsland()) {
+            motesRegex.anyMatch(event.added, "motes") { (motes) ->
+                this.motes = motes.parseFormattedLong()
+            }
+        } else {
+            purseRegex.anyMatch(event.added, "purse") { (purse) ->
+                this.purse = purse.parseFormattedDouble()
+            }
         }
     }
 
@@ -84,8 +83,6 @@ object CurrencyAPI {
         personalBank = 0
         coopBank = 0
         motes = 0
-        bits = 0
-        gems = 0
         copper = 0
         northStars = 0
     }

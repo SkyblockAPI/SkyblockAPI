@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
 import tech.thatgravyboat.skyblockapi.api.profile.FameRank
 import tech.thatgravyboat.skyblockapi.api.profile.FameRanks
@@ -13,18 +14,18 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
+@Suppress("MemberVisibilityCanBePrivate")
 @Module
 object CommunityCenterAPI {
 
-
-    private val gemsRegex = Regexes.create("tablist.widget.area.gems", " Gems: (?<gems>[\\d,kmb]+)")
-    private val bitsRegex = Regexes.create("scoreboard.currency.bits", "Bits: (?<bits>[\\d,kmb]+)")
-    private val cookieAteRegex = Regexes.create("chat.currency.cookie.ate", "You consumed a Booster Cookie!.*")
-    private val bitsAvailableRegex = Regexes.create("inventory.currency.bits.available", "Bits Available: (?<bits>[\\d,kmb]+).*")
-    private val fameRankRegex = Regexes.create("inventory.currency.fame.rank", "Your rank: (?<rank>.*)")
+    private val gemsRegex = RegexGroup.TABLIST_WIDGET.create("area.gems", " Gems: (?<gems>[\\d,kmb]+)")
+    private val bitsRegex = RegexGroup.SCOREBOARD.create("communitycenter.bits", "Bits: (?<bits>[\\d,kmb]+)")
+    private val cookieAteRegex = RegexGroup.CHAT.create("communitycenter.cookie.ate", "You consumed a Booster Cookie!.*")
+    private val bitsAvailableRegex = RegexGroup.INVENTORY.create("communitycenter.bits.available", "Bits Available: (?<bits>[\\d,kmb]+).*")
+    private val fameRankRegex = RegexGroup.INVENTORY.create("communitycenter.fame.rank", "Your rank: (?<rank>.*)")
 
     private const val BASE_COOKIE_BITS = 4800
 
@@ -118,5 +119,16 @@ object CommunityCenterAPI {
                 bitsAvailable = bits.parseFormattedLong()
             }
         }
+    }
+
+    private fun reset() {
+        bits = 0
+        bitsAvailable
+        gems = 0
+    }
+
+    @Subscription
+    fun onProfileChange(event: ProfileChangeEvent) {
+        reset()
     }
 }

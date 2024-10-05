@@ -2,8 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.data
 
 import com.google.gson.JsonElement
 import com.mojang.serialization.Codec
-import com.mojang.serialization.JsonOps
-import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.FabricLoader
 import org.apache.commons.io.FileUtils
 import tech.thatgravyboat.skyblockapi.utils.Logger
