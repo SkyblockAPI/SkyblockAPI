@@ -8,31 +8,33 @@ import tech.thatgravyboat.skyblockapi.api.profile.CurrencyAPI
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import kotlin.time.Duration
 
 @Module
 object RiftAPI {
 
-    private val visitedRiftRegex = Regexes.create(
-        "tablist.widget.good_to_know.visited_rift",
+    private val regexGroup = RegexGroup.TABLIST_WIDGET.group("good_to_know")
+
+    private val visitedRiftRegex = regexGroup.create(
+        "visited_rift",
         " Visited Rift: (?<visited>\\d+) times"
     )
-    private val lifetimeMotesRegex = Regexes.create(
-        "tablist.widget.good_to_know.lifetime_motes",
+    private val lifetimeMotesRegex = regexGroup.create(
+        "lifetime_motes",
         " Lifetime Motes: (?<motes>[\\d,kmb]+)"
     )
-    private val timecharmsRegex = Regexes.create(
-        "tablist.widget.good_to_know.timecharms",
+    private val timecharmsRegex = regexGroup.create(
+        "timecharms",
         " Timecharms: (?<current>\\d+)/(?<max>\\d+)"
     )
-    private val enigmaSoulsRegex = Regexes.create(
-        "tablist.widget.good_to_know.enigma_souls",
+    private val enigmaSoulsRegex = regexGroup.create(
+        "enigma_souls",
         " Enigma Souls: (?<current>\\d+)/(?<max>\\d+)"
     )
-    private val monetezumaRegex = Regexes.create(
-        "tablist.widget.good_to_know.monetezuma",
+    private val monetezumaRegex = regexGroup.create(
+        "monetezuma",
         " Monetezuma: (?<current>\\d+)/(?<max>\\d+)"
     )
 

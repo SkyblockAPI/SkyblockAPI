@@ -5,9 +5,9 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -16,13 +16,13 @@ import kotlin.time.Duration.Companion.seconds
 @Module
 object SpookyFestivalAPI {
 
-    private val durationRegex = Regexes.create(
-        "scoreboard.spooky_festival.duration",
+    private val durationRegex = RegexGroup.SCOREBOARD.group("spooky_festival").create(
+        "duration",
         "Spooky Festival: (?<min>\\d{1,2}):(?<sec>\\d{2})",
     )
 
-    private val candyRegex = Regexes.create(
-        "tablist.spooky_festival.candy",
+    private val candyRegex = RegexGroup.TABLIST.group("spooky_festival").create(
+        "candy",
         "Your Candy: (?<green>[\\d,]+) Green, (?<purple>[\\d,]+) Purple \\((?<points>[\\d,]+) pts.\\)",
     )
 

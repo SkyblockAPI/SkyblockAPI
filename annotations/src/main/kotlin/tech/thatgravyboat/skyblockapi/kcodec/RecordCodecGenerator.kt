@@ -74,7 +74,7 @@ object RecordCodecGenerator {
 
         when (ksType.starProjection().toClassName()) {
             List::class.asClassName(), MUTABLE_LIST -> {
-                builder.add("getCodec<%T>().listOf()", ksType.arguments.getType(0))
+                builder.add("%T.list(getCodec<%T>())", CODEC_UTILS_TYPE, ksType.arguments.getType(0))
             }
 
             Set::class.asClassName(), MUTABLE_SET -> {
@@ -83,8 +83,8 @@ object RecordCodecGenerator {
 
             Map::class.asClassName(), MUTABLE_MAP -> {
                 builder.add(
-                    "%T.unboundedMap(getCodec<%T>(), getCodec<%T>())",
-                    CODEC_TYPE,
+                    "%T.map(getCodec<%T>(), getCodec<%T>())",
+                    CODEC_UTILS_TYPE,
                     ksType.arguments.getType(0),
                     ksType.arguments.getType(1),
                 )
@@ -149,6 +149,8 @@ object RecordCodecGenerator {
             .addModifiers(KModifier.PRIVATE)
             .initializer(
                 CodeBlock.builder().apply {
+                    add("Codec.lazyInitialized {\n")
+                    indent()
                     add("%T.create {\n", RECORD_CODEC_BUILDER_TYPE)
                     indent()
                     add("it.group(\n")
@@ -179,6 +181,8 @@ object RecordCodecGenerator {
                     add("obj\n")
                     unindent()
 
+                    add("}\n")
+                    unindent()
                     add("}\n")
                     unindent()
                     add("}\n")

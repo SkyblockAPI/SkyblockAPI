@@ -3,15 +3,17 @@ package tech.thatgravyboat.skyblockapi.api.area.island
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseColonDuration
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import kotlin.time.Duration
 
 @Module
 object PrivateIslandAPI {
 
-    private val flightDurationRegex = Regexes.create(
-        "scoreboard.private_island.flight_duration",
+    private val regexGroup = RegexGroup.SCOREBOARD.group("private_island")
+
+    private val flightDurationRegex = regexGroup.create(
+        "flight_duration",
         "Flight Duration: (?<duration>[\\d:]+)"
     )
 

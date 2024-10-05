@@ -21,6 +21,8 @@ enum class SkyblockIsland(val id: String) {
     JERRYS_WORKSHOP("winter"),
     ;
 
+    fun inIsland() = LocationAPI.island == this
+
     companion object {
 
         fun getById(input: String) = entries.firstOrNull { it.id == input }
