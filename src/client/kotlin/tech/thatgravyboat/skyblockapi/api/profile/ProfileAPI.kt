@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -55,6 +56,9 @@ object ProfileAPI {
                     this.profileName = name
                     this.profileType = ProfileType.NORMAL
                 }
+            }
+            if (SkyblockIsland.THE_RIFT.inIsland()) {
+                this.profileName = this.profileName?.reversed()
             }
         }
 
