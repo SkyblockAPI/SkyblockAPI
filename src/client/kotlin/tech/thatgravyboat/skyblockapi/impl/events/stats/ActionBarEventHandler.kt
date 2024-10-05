@@ -92,9 +92,9 @@ object ActionBarEventHandler {
                 }
             }
             if (StringUtil.stripColor(part).isBlank()) {
-                output.remove(part)
+                output.remove(p)
             } else {
-                output[output.indexOf(part)] = part
+                output[output.indexOf(p)] = part
             }
         }
         for (widget in widgets.keys - foundWidgets) {
