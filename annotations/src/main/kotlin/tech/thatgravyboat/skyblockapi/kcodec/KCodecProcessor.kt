@@ -60,7 +60,7 @@ class KCodecProcessor(
                             for ((type, codec) in DefaultCodecs.codecs) {
                                 this.addCode("    clazz == %T::class.java -> ${codec}\n", type)
                             }
-                            this.addCode("    clazz.isEnum -> %T(castAs(clazz))\n", ENUM_CODEC_TYPE)
+                            this.addCode("    clazz.isEnum -> %T.of(castAs(clazz))\n", ENUM_CODEC_TYPE)
                             for (codec in validGeneratedCodecs) {
                                 this.addCode(
                                     "    clazz == %T::class.java -> %L\n",
