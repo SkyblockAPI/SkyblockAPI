@@ -63,6 +63,7 @@ class StoredData<T : Any>(
         try {
             val json = data.toJson(codec) ?: return Logger.warn("Failed to encode {} to json", data)
             FileUtils.write(file.toFile(), json.toPrettyString(), Charsets.UTF_8)
+            Logger.debug("saved {}", file)
         } catch (e: Exception) {
             Logger.error("Failed to save {} to file", data, e)
         }

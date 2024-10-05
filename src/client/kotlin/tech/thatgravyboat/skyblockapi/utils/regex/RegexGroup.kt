@@ -16,5 +16,6 @@ class RegexGroup(private val prefix: String) {
         val TABLIST_WIDGET = TABLIST.group("widget")
         val CHAT = RegexGroup("chat")
         val ACTIONBAR_WIDGET = RegexGroup("actionbar.widget")
+        val INVENTORY = RegexGroup("inventory")
     }
 }
