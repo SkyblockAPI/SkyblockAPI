@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
+import net.minecraft.util.StringUtil
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import kotlin.math.pow
@@ -116,3 +117,5 @@ fun Int.toRomanNumeral(): String {
     }
     return roman.toString()
 }
+
+fun String.stripColor() = StringUtil.stripColor(this)

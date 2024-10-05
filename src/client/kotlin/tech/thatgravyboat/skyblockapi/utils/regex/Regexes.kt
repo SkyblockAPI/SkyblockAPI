@@ -46,19 +46,13 @@ object Regexes {
                 url = URL,
                 errorFactory = ::RuntimeException,
             )
-            loadJson(result.getOrNull() ?: return@runCatchBlocking)
-        }
-    }
-
-    private fun loadJson(json: JsonObject, path: String = "") {
-        json.entrySet().forEach { (key, value) ->
-            val id = if (path.isEmpty()) key else "$path.$key"
-            if (value is JsonObject) {
-                loadJson(value, id)
-            } else if (value is JsonArray) {
-                regexLists[id] = value.filter { it.isString }.map { it.asString }.map(::Regex).toList()
-            } else if (value.isString) {
-                regexes[id] = Regex(value.asString)
+            val json = result.getOrNull() ?: return@runCatchBlocking
+            json.entrySet().forEach { (key, value) ->
+                if (value is JsonArray) {
+                    regexLists[key] = value.filter { it.isString }.map { it.asString }.map(::Regex).toList()
+                } else if (value.isString) {
+                    regexes[key] = Regex(value.asString)
+                }
             }
         }
     }
