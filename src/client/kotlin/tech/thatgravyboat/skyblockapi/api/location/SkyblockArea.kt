@@ -1,12 +1,14 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
-data class SkyblockArea(val name: String)
+data class SkyblockArea(val name: String) {
+    fun inArea() = LocationAPI.area == this
+}
 
 object SkyBlockAreas {
 
     private val registeredAreas = mutableMapOf<String, SkyblockArea>()
 
-    private fun register(key: String, name: String) = registeredAreas.computeIfAbsent(key) { SkyblockArea(name) }
+    private fun register(key: String, name: String) = registeredAreas.getOrPut(key) { SkyblockArea(name) }
 
     val NONE = register("none", "None")
     val PRIVATE_ISLAND = register("private_island", "Your Island")

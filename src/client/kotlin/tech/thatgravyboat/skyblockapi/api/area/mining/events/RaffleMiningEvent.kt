@@ -5,8 +5,8 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 data class RaffleMiningEvent(
     var tickets: Int = 0,
@@ -18,12 +18,14 @@ data class RaffleMiningEvent(
     @Module
     companion object {
 
-        private val ticketsRegex = Regexes.create(
-            "scoreboard.mining.events.raffle.tickets",
+        private val patternGroup = RegexGroup.SCOREBOARD.group("mining.events.raffle")
+
+        private val ticketsRegex = patternGroup.create(
+            "tickets",
             "Tickets: (?<tickets>\\d+) \\((?<percent>[\\d.]+)%\\)"
         )
-        private val poolRegex = Regexes.create(
-            "scoreboard.mining.events.raffle.pool",
+        private val poolRegex = patternGroup.create(
+            "pool",
             "Pool: (?<pool>\\d+)"
         )
 

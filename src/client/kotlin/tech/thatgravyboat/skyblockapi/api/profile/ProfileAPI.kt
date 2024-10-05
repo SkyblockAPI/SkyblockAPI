@@ -5,21 +5,23 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object ProfileAPI {
 
+    private val profileGroup = RegexGroup.TABLIST_WIDGET.group("profile")
+
     //  SB Level: [15] 30/100 XP
-    private val sbLevelRegex = Regexes.create(
-        "tablist.profile.level",
+    private val sbLevelRegex = profileGroup.create(
+        "level",
         " SB Level: \\[(?<level>\\d+)] [\\d,]+/[\\d,]+ XP"
     )
 
     // Profile: Watermelon ♲
-    private val profileRegex = Regexes.create(
-        "tablist.profile.name",
+    private val profileRegex = profileGroup.create(
+        "name",
         "Profile: (?<name>.+)"
     )
 

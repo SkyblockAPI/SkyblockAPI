@@ -11,8 +11,8 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 data class ActionBarWidgetType(
     val widget: ActionBarWidget,
@@ -26,7 +26,7 @@ data class ActionBarWidgetType(
         factory: (String, Destructured) -> ActionBarWidgetChangeEvent = { old, new -> ActionBarWidgetChangeEvent(widget, old, new.string) },
     ) : this(
         widget,
-        Regexes.create("actionbar.${widget.name.lowercase()}", regex),
+        RegexGroup.ACTIONBAR_WIDGET.create(widget.name.lowercase(), regex),
         factory,
     )
 }
