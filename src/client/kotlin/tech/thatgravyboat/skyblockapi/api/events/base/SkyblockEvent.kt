@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+
 abstract class SkyblockEvent protected constructor() {
 
     var isCancelled = false
@@ -7,6 +9,8 @@ abstract class SkyblockEvent protected constructor() {
 
     fun post(bus: EventBus): Boolean =
         bus.post(this)
+
+    internal fun post(): Boolean = post(SkyBlockAPI.eventBus)
 
     interface Cancellable {
 
