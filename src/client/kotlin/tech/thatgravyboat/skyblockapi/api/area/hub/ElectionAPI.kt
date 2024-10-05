@@ -50,8 +50,9 @@ object ElectionAPI {
         )
         response = result.getOrNull() ?: return
 
+        handleResponse()
+
         if (lastMayor != currentMayor) {
-            handleResponse()
             currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
             lastMayor = currentMayor
 
