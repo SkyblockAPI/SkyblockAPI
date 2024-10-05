@@ -3,7 +3,6 @@ package tech.thatgravyboat.skyblockapi.utils.json
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
 import com.mojang.serialization.JsonOps
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
@@ -27,6 +26,11 @@ object Json {
     fun <T : Any> T.toJson(codec: Codec<T>): JsonElement? {
         val ops = if (McLevel.hasLevel) McLevel.registry.createSerializationContext(JsonOps.INSTANCE) else JsonOps.INSTANCE
         return codec.encodeStart(ops, this).result().getOrNull()
+    }
+
+    fun <T : Any> JsonElement?.toData(codec: Codec<T>): T? {
+        val ops = if (McLevel.hasLevel) McLevel.registry.createSerializationContext(JsonOps.INSTANCE) else JsonOps.INSTANCE
+        return codec.parse(ops, this).result().getOrNull()
     }
 
     fun JsonElement?.toPrettyString(): String = gson.toJson(this)
