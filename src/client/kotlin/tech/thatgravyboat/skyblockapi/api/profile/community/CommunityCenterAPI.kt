@@ -2,9 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.profile.community
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
-import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
 import tech.thatgravyboat.skyblockapi.api.profile.FameRank
@@ -17,20 +14,15 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
-@Suppress("MemberVisibilityCanBePrivate")
 @Module
+@Suppress("MemberVisibilityCanBePrivate")
 object CommunityCenterAPI {
 
-    private val gemsRegex = RegexGroup.TABLIST_WIDGET.create("area.gems", " Gems: (?<gems>[\\d,kmb]+)")
-    private val bitsRegex = RegexGroup.SCOREBOARD.create("communitycenter.bits", "Bits: (?<bits>[\\d,kmb]+)")
     private val cookieAteRegex = RegexGroup.CHAT.create("communitycenter.cookie.ate", "You consumed a Booster Cookie!.*")
     private val bitsAvailableRegex = RegexGroup.INVENTORY.create("communitycenter.bits.available", "Bits Available: (?<bits>[\\d,kmb]+).*")
     private val fameRankRegex = RegexGroup.INVENTORY.create("communitycenter.fame.rank", "Your rank: (?<rank>.*)")
 
     private const val BASE_COOKIE_BITS = 4800
-
-    var bits: Long = 0
-        private set
 
     var bitsAvailable: Long = 0
         private set(bits) {
@@ -53,31 +45,6 @@ object CommunityCenterAPI {
             val uuid = McClient.self.player?.uuid ?: return null
             return CommunityCenterStorage.getRank(uuid)
         }
-
-
-    var gems: Long = 0
-        private set
-
-
-    @Subscription
-    fun onScoreboardChange(event: ScoreboardUpdateEvent) {
-        bitsRegex.anyMatch(event.added, "bits") { (bits) ->
-            this.bits = bits.parseFormattedLong()
-        }
-    }
-
-    @Subscription
-    fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
-        when (event.widget) {
-            TabWidget.AREA -> {
-                gemsRegex.anyMatch(event.new, "gems") { (gems) ->
-                    this.gems = gems.parseFormattedLong()
-                }
-            }
-
-            else -> {}
-        }
-    }
 
     @Subscription
     fun onChat(event: ChatReceivedEvent) {
@@ -122,9 +89,7 @@ object CommunityCenterAPI {
     }
 
     private fun reset() {
-        bits = 0
         bitsAvailable
-        gems = 0
     }
 
     @Subscription
