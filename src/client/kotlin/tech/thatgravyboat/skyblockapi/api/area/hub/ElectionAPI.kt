@@ -1,7 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.area.hub
 
+import tech.thatgravyboat.skyblockapi.api.data.Candidate
 import tech.thatgravyboat.skyblockapi.api.data.ElectionJson
-import tech.thatgravyboat.skyblockapi.api.data.MayorData
+import tech.thatgravyboat.skyblockapi.api.data.Perk
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.MayorUpdateEvent
@@ -25,10 +26,10 @@ object ElectionAPI {
     private var scheduler: ScheduledFuture<*>? = null
     private var response: ElectionJson? = null
 
-    private var currentMayor: MayorData.Candidate? = null
-    private var currentMinister: MayorData.Candidate? = null
+    private var currentMayor: Candidate? = null
+    private var currentMinister: Candidate? = null
 
-    private var lastMayor: MayorData.Candidate? = null
+    private var lastMayor: Candidate? = null
 
     init {
         updateScheduler(10.minutes)
@@ -63,14 +64,14 @@ object ElectionAPI {
     private fun handleResponse() {
         val mayor = response?.mayor ?: return
 
-        currentMayor = MayorData.Candidate.getCandidate(mayor.name)
-        currentMinister = mayor.minister?.let { MayorData.Candidate.getCandidate(it.name) }
+        currentMayor = Candidate.getCandidate(mayor.name)
+        currentMinister = mayor.minister?.let { Candidate.getCandidate(it.name) }
 
-        MayorData.Perk.reset()
+        Perk.reset()
         mayor.perks.forEach { perk ->
-            MayorData.Perk.getPerk(perk.name)?.active = true
+            Perk.getPerk(perk.name)?.active = true
         }
-        mayor.minister?.perk?.let { MayorData.Perk.getPerk(it.name)?.active = true }
+        mayor.minister?.perk?.let { Perk.getPerk(it.name)?.active = true }
     }
 
     @Subscription
