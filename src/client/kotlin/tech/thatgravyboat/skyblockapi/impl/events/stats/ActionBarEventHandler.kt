@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.impl.events.stats
 import net.minecraft.util.StringUtil
 import org.intellij.lang.annotations.Language
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+import tech.thatgravyboat.skyblockapi.api.data.item.ArmorStack
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.*
@@ -18,16 +19,19 @@ data class ActionBarWidgetType(
     val widget: ActionBarWidget,
     val regex: Regex,
     val factory: (String, Destructured) -> ActionBarWidgetChangeEvent,
+    val removalFactory: (Destructured) -> ActionBarWidgetChangeEvent,
 ) {
 
     constructor(
         widget: ActionBarWidget,
         @Language("RegExp") regex: String,
+        removalFactory: (Destructured) -> ActionBarWidgetChangeEvent = { ActionBarWidgetChangeEvent(widget, it.string, "") },
         factory: (String, Destructured) -> ActionBarWidgetChangeEvent = { old, new -> ActionBarWidgetChangeEvent(widget, old, new.string) },
     ) : this(
         widget,
         Regexes.create("actionbar.${widget.name.lowercase()}", regex),
         factory,
+        removalFactory
     )
 }
 
@@ -68,9 +72,13 @@ object ActionBarEventHandler {
         },
         // §6§l10ᝐ
         // §65ᝐ
-        ActionBarWidgetType(ActionBarWidget.ARMOR_STACK, "§6(?:§l)?(?<amount>\\d+)(?<type>[ᝐ⁑|҉Ѫ⚶])") { old, it ->
-            ArmorStackActionBarWidgetChangeEvent(it["amount"].toIntValue(), it["type"] ?: "", old, it.string)
-        }
+        ActionBarWidgetType(ActionBarWidget.ARMOR_STACK, "§6(?:§l)?(?<amount>\\d+)(?<type>[ᝐ⁑|҉Ѫ⚶])", {
+            ArmorStackActionBarWidgetChangeEvent(0, ArmorStack.fromString(it["type"]), it.string, "")
+        }) { old, it ->
+            ArmorStackActionBarWidgetChangeEvent(it["amount"].toIntValue(), ArmorStack.fromString(it["type"]), old, it.string)
+        },
+        // §a |||
+        ActionBarWidgetType(ActionBarWidget.CELLS_ALIGNMENT, "§a \\|{3}")
     )
 
     private val widgets = mutableMapOf<ActionBarWidget, String>()
@@ -104,7 +112,11 @@ object ActionBarEventHandler {
         }
         for (widget in widgets.keys - foundWidgets) {
             val old = widgets[widget] ?: ""
-            ActionBarWidgetChangeEvent(widget, old, "").post(SkyBlockAPI.eventBus)
+            val type = types.find { it.widget == widget }
+            val found = type?.regex?.find(old) {
+                type.removalFactory(it).post()
+            } ?: false
+            if (!found) ActionBarWidgetChangeEvent(widget, old, "").post()
             widgets.remove(widget)
         }
 
