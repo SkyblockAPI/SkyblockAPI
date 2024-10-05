@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 import kotlinx.datetime.Instant
+import tech.thatgravyboat.skyblockapi.api.data.SkyblockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyblockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
@@ -10,6 +11,7 @@ object DataTypes {
 
     val ID: DataType<String> = GenericDataTypes.ID
     val RARITY: DataType<SkyblockRarity> = LoreDataTypes.RARITY
+    val CATEGORY: DataType<SkyblockCategory> = LoreDataTypes.CATEGORY
 
     val MODIFIER: DataType<String> = GenericDataTypes.MODIFIER
     val FUEL: DataType<Pair<Int, Int>> = LoreDataTypes.FUEL
