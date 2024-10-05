@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.info
 
+import tech.thatgravyboat.skyblockapi.api.data.item.ArmorStack
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyblockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
 import kotlin.time.Duration
@@ -27,6 +28,9 @@ class RiftTimeActionBarWidgetChangeEvent(val time: Duration?, old: String, new: 
 class ArmadilloActionBarWidgetChangeEvent(val current: Float, val max: Float, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.ARMADILLO, old, new)
 
+class ArmorStackActionBarWidgetChangeEvent(val current: Int, val type: ArmorStack?, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.ARMOR_STACK, old, new)
+
 enum class ActionBarWidget {
     HEALTH,
     DEFENSE,
@@ -38,4 +42,6 @@ enum class ActionBarWidget {
     RIFT_TIME,
     ARMADILLO,
     CHARGES,
+    ARMOR_STACK,
+    CELLS_ALIGNMENT,
 }

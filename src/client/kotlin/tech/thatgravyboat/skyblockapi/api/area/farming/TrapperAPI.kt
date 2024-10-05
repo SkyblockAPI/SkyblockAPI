@@ -9,17 +9,17 @@ import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
 import tech.thatgravyboat.skyblockapi.api.location.SkyblockArea
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object TrapperAPI {
 
-    private val peltsRegex = Regexes.create("scoreboard.farming.trapper.pelts", "Pelts: (?<pelts>[\\d,kmb]+)")
-    private val peltsTabListRegex = Regexes.create("tablist.widget.trapper.pelts", " Pelts: (?<pelts>[\\d,kmb]+)")
-    private val animalRegex = Regexes.create(
-        "chat.farming.trapper.animals",
+    private val peltsRegex = RegexGroup.SCOREBOARD.create("trapper.pelts", "Pelts: (?<pelts>[\\d,kmb]+)")
+    private val peltsTabListRegex = RegexGroup.TABLIST_WIDGET.create("trapper.pelts", " Pelts: (?<pelts>[\\d,kmb]+)")
+    private val animalRegex = RegexGroup.CHAT.create(
+        "trapper.animals",
         "\\[NPC] Trevor: You can find your (?<type>\\w+) animal near the (?<location>.*).",
     )
 

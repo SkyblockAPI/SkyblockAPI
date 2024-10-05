@@ -4,31 +4,51 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
+import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Suppress("MemberVisibilityCanBePrivate")
 @Module
 object CurrencyAPI {
 
-    private val bankSingleRegex = Regexes.create("tablist.widget.profile.bank.single", " Bank: (?<bank>[\\d,kmb]+)")
-    private val bankCoopRegex = Regexes.create(
-        "tablist.widget.profile.bank.coop",
+    private val widgetGroup = RegexGroup.TABLIST_WIDGET
+    private val gemsRegex = widgetGroup.create("area.gems", " Gems: (?<gems>[\\d,kmb]+)")
+    private val bankSingleRegex = widgetGroup.create("profile.bank.single", " Bank: (?<bank>[\\d,kmb]+)")
+    private val bankCoopRegex = widgetGroup.create(
+        "profile.bank.coop",
         " Bank: (?<coop>\\.\\.\\.|[\\d,kmb]+) / (?<personal>[\\d,kmb]+)",
     )
-    private val purseRegex = Regexes.create("scoreboard.currency.purse", "(?:Purse|Piggy): (?<purse>[\\d,kmb.]+)")
-    private val motesRegex = Regexes.create("scoreboard.currency.motes", "Motes: (?<motes>[\\d,kmb]+)")
+
+    private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
+    private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,kmb.]+)")
+    private val bitsRegex = currencyGroup.create("bits", "Bits: (?<bits>[\\d,kmb]+)")
+    private val motesRegex = currencyGroup.create("motes", "Motes: (?<motes>[\\d,kmb]+)")
+    private val copperRegex = currencyGroup.create("copper", "Copper: (?<copper>[\\d,kmb]+)")
+    private val northStarsRegex = currencyGroup.create("northstars", "North Stars: (?<northstars>[\\d,kmb]+)")
 
     var purse: Double = 0.0
         private set
 
-    var bank: Long = 0
+    var personalBank: Long = 0
         private set
 
+    var coopBank: Long = 0
+        private set
+
+    val bank get() = personalBank + coopBank
+
     var motes: Long = 0
+        private set
+
+    var copper: Long = 0
+        private set
+
+    var northStars: Long = 0
         private set
 
     @Subscription
@@ -36,10 +56,12 @@ object CurrencyAPI {
         when (event.widget) {
             TabWidget.PROFILE -> {
                 bankSingleRegex.anyMatch(event.new, "bank") { (bank) ->
-                    this.bank = bank.parseFormattedLong()
+                    this.coopBank = bank.parseFormattedLong()
+                    this.personalBank = 0
                 }
                 bankCoopRegex.anyMatch(event.new, "coop", "personal") { (coop, personal) ->
-                    this.bank = personal.parseFormattedLong() + coop.parseFormattedLong()
+                    this.coopBank = coop.parseFormattedLong()
+                    this.personalBank = personal.parseFormattedLong()
                 }
             }
 
@@ -55,5 +77,21 @@ object CurrencyAPI {
         motesRegex.anyMatch(event.added, "motes") { (motes) ->
             this.motes = motes.parseFormattedLong()
         }
+    }
+
+    private fun reset() {
+        purse = 0.0
+        personalBank = 0
+        coopBank = 0
+        motes = 0
+        bits = 0
+        gems = 0
+        copper = 0
+        northStars = 0
+    }
+
+    @Subscription
+    fun onProfileChange(event: ProfileChangeEvent) {
+        reset()
     }
 }

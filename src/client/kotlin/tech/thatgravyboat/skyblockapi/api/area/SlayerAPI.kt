@@ -5,21 +5,22 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object SlayerAPI {
 
-    private val slayerQuestRegex = Regexes.create("scoreboard.slayer.quest", "Slayer Quest")
-    private val slayerTypeRegex = Regexes.create("scoreboard.slayer.type", "(?<type>[\\w ]+) (?<level>[MDCLXVI]+)")
-    private val slayerAmountRegex = Regexes.create(
-        "scoreboard.slayer.amount",
+    private val slayerGroup = RegexGroup.SCOREBOARD.group("slayer")
+    private val slayerQuestRegex = slayerGroup.create("quest", "Slayer Quest")
+    private val slayerTypeRegex = slayerGroup.create("type", "(?<type>[\\w ]+) (?<level>[MDCLXVI]+)")
+    private val slayerAmountRegex = slayerGroup.create(
+        "amount",
         " \\(?(?<amount>[\\d,]+)/(?<total>[\\d,]+)\\)? (Combat XP|Kills)"
     )
-    private val slayerBossTextRegex = Regexes.create(
-        "scoreboard.slayer.boss",
+    private val slayerBossTextRegex = slayerGroup.create(
+        "boss",
         "(?<text>Slay the boss!|Boss slain!)"
     )
 

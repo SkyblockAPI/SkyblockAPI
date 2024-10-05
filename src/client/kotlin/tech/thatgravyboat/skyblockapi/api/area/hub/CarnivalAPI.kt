@@ -4,14 +4,16 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object CarnivalAPI {
 
-    private val carnivalTokensRegex = Regexes.create(
-        "scoreboard.carnival.tokens",
+    private val group = RegexGroup.SCOREBOARD.group("carnival")
+
+    private val carnivalTokensRegex = group.create(
+        "tokens",
         "Carnival Tokens: (?<tokens>[\\d,kmb]+)"
     )
 

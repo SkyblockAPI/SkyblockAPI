@@ -18,7 +18,7 @@ import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extentions.chunked
 import tech.thatgravyboat.skyblockapi.utils.extentions.peek
 import tech.thatgravyboat.skyblockapi.utils.mc.displayName
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 private const val TAB_LIST_LENGTH = 80
@@ -27,35 +27,37 @@ private const val CHECK_INTERVAL = 1000
 @Module
 object TabListEventHandler {
 
-    private val infoRegex = Regexes.create(
-        "tablist.info",
+    private val infoRegex = RegexGroup.TABLIST.create(
+        "info",
         ".*(?:Info|Account Info)"
     )
 
-    private val widgetRegexes = mapOf(
-        TabWidget.PET to Regexes.create("tablist.widget.pet", "Pet:"),
-        TabWidget.DAILY_QUESTS to Regexes.create("tablist.widget.daily_quests", "Daily Quests:"),
-        TabWidget.FORGES to Regexes.create("tablist.widget.forges", "Forges:"),
-        TabWidget.COMMISSIONS to Regexes.create("tablist.widget.commissions", "Commissions:"),
-        TabWidget.SKILLS to Regexes.create("tablist.widget.skills", "Skills:(?: (?<avg>[\\d.]+))?"),
-        TabWidget.POWDERS to Regexes.create("tablist.widget.powders", "Powders:"),
-        TabWidget.CRYSTALS to Regexes.create("tablist.widget.crystals", "Crystals:"),
-        TabWidget.BESTIARY to Regexes.create("tablist.widget.bestiary", "Bestiary:"),
-        TabWidget.COLLECTION to Regexes.create("tablist.widget.collection", "Collection:"),
-        TabWidget.STATS to Regexes.create("tablist.widget.stats", "Stats:"),
-        TabWidget.DUNGEONS to Regexes.create("tablist.widget.dungeons", "Dungeons:"),
-        TabWidget.ESSENCE to Regexes.create("tablist.widget.essence", "Essence:"),
-        TabWidget.GOOD_TO_KNOW to Regexes.create("tablist.widget.good_to_know", "Good to know:"),
-        TabWidget.ADVERTISEMENT to Regexes.create("tablist.widget.advertisement", "Advertisement:"),
-        TabWidget.TRAPPER to Regexes.create("tablist.widget.trapper", "Trapper:"),
+    private val widgetGroup = RegexGroup.TABLIST_WIDGET
 
-        TabWidget.AREA to Regexes.create("tablist.widget.area", "Area: (?<area>.*)"),
-        TabWidget.PROFILE to Regexes.create("tablist.widget.profile", "Profile: (?<profile>.*)"),
-        TabWidget.ELECTION to Regexes.create("tablist.widget.election", "Election: (?<election>.*)"),
-        TabWidget.EVENT to Regexes.create("tablist.widget.event", "Event: (?<event>.*)"),
-        TabWidget.PARTY to Regexes.create("tablist.widget.party", "Party: (?<party>.*)"),
-        TabWidget.MINIONS to Regexes.create("tablist.widget.party", "Minions: (?<party>.*)"),
-        TabWidget.SHEN to Regexes.create("tablist.widget.shen", "Shen: \\((?<duration>[\\ddmsh,]+)\\)"),
+    private val widgetRegexes = mapOf(
+        TabWidget.PET to widgetGroup.create("pet", "Pet:"),
+        TabWidget.DAILY_QUESTS to widgetGroup.create("daily_quests", "Daily Quests:"),
+        TabWidget.FORGES to widgetGroup.create("forges", "Forges:"),
+        TabWidget.COMMISSIONS to widgetGroup.create("commissions", "Commissions:"),
+        TabWidget.SKILLS to widgetGroup.create("skills", "Skills:(?: (?<avg>[\\d.]+))?"),
+        TabWidget.POWDERS to widgetGroup.create("powders", "Powders:"),
+        TabWidget.CRYSTALS to widgetGroup.create("crystals", "Crystals:"),
+        TabWidget.BESTIARY to widgetGroup.create("bestiary", "Bestiary:"),
+        TabWidget.COLLECTION to widgetGroup.create("collection", "Collection:"),
+        TabWidget.STATS to widgetGroup.create("stats", "Stats:"),
+        TabWidget.DUNGEONS to widgetGroup.create("dungeons", "Dungeons:"),
+        TabWidget.ESSENCE to widgetGroup.create("essence", "Essence:"),
+        TabWidget.GOOD_TO_KNOW to widgetGroup.create("good_to_know", "Good to know:"),
+        TabWidget.ADVERTISEMENT to widgetGroup.create("advertisement", "Advertisement:"),
+        TabWidget.TRAPPER to widgetGroup.create("trapper", "Trapper:"),
+
+        TabWidget.AREA to widgetGroup.create("area", "Area: (?<area>.*)"),
+        TabWidget.PROFILE to widgetGroup.create("profile", "Profile: (?<profile>.*)"),
+        TabWidget.ELECTION to widgetGroup.create("election", "Election: (?<election>.*)"),
+        TabWidget.EVENT to widgetGroup.create("event", "Event: (?<event>.*)"),
+        TabWidget.PARTY to widgetGroup.create("party", "Party: (?<party>.*)"),
+        TabWidget.MINIONS to widgetGroup.create("minions", "Minions: (?<party>.*)"),
+        TabWidget.SHEN to widgetGroup.create("shen", "Shen: \\((?<duration>[\\ddmsh,]+)\\)"),
     )
 
     private var tabList = emptyList<List<String>>()
@@ -65,6 +67,8 @@ object TabListEventHandler {
     private var footer: Component = CommonComponents.EMPTY
 
     private val widgets = mutableMapOf<TabWidget, List<String>>()
+
+    private val lastUnknownTabWidgetAlert = mutableMapOf<String, Long>()
 
     @Subscription
     fun onTick(event: TickEvent) {
@@ -96,8 +100,13 @@ object TabListEventHandler {
 
             sections.forEach { section ->
                 val title = section.firstOrNull()?.stripped ?: return@forEach
-                val widget = widgetRegexes.entries.firstOrNull { it.value.matches(title) }?.key
-                    ?: return@forEach Logger.debug("Unknown tab widget: $title")
+                val widget = widgetRegexes.entries.firstOrNull { it.value.matches(title) }?.key ?: run {
+                    if ((lastUnknownTabWidgetAlert[title] ?: 0) < System.currentTimeMillis() - 60000) {
+                        lastUnknownTabWidgetAlert[title] = System.currentTimeMillis()
+                        Logger.debug("Unknown tab widget: $title")
+                    }
+                    return@forEach
+                }
 
                 val old = widgets[widget] ?: emptyList()
                 val new = section.map { it.stripped }

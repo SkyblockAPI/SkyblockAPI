@@ -4,11 +4,12 @@ import com.google.gson.JsonElement
 import com.mojang.serialization.Codec
 import com.mojang.serialization.JsonOps
 import net.fabricmc.loader.api.FabricLoader
+import net.fabricmc.loader.api.FabricLoader
 import org.apache.commons.io.FileUtils
-import tech.thatgravyboat.skyblockapi.extensions.toKtResult
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toData
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import java.nio.file.Files
@@ -24,21 +25,32 @@ class StoredData<T : Any>(
 ) {
 
     private var saveTime = -1L
+    private var loadedData: JsonElement? = null
 
     init {
         if (Files.isRegularFile(this.file)) {
             try {
                 val json = Files.readString(this.file)
-                val decoded = json.readJson<JsonElement>()
-                this.data = this.codec.parse(JsonOps.INSTANCE, decoded).toKtResult().getOrThrow()
+                this.loadedData = json.readJson<JsonElement>()
             } catch (e: Exception) {
-                Logger.error("Failed to load {} from file", data, e)
+                Logger.error("Failed to load {} from file", this.loadedData ?: "", e)
+            }
+        }
+    }
+
+    private fun load() {
+        if (this.loadedData != null) {
+            try {
+                this.data = this.loadedData.toData(this.codec)!!
+                this.loadedData = null
+            } catch (e: Exception) {
+                Logger.error("Failed to load {} data", this.loadedData ?: "", e)
             }
         }
     }
 
     private fun scheduleSave() {
-        val diff = (saveTime - System.currentTimeMillis()).coerceAtLeast(0) + 250
+        val diff = (this.saveTime - System.currentTimeMillis()).coerceAtLeast(0) + 250
         Scheduling.schedule(diff.milliseconds) {
             if (System.currentTimeMillis() >= saveTime && saveTime != -1L) {
                 saveToSystem()
@@ -58,7 +70,10 @@ class StoredData<T : Any>(
         }
     }
 
-    fun get(): T = data
+    fun get(): T {
+        load()
+        return this.data
+    }
 
     fun save() {
         saveTime = System.currentTimeMillis() + SAVE_DELAY

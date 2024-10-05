@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import net.minecraft.util.StringUtil
+import java.text.DecimalFormat
 import java.text.NumberFormat
 import kotlin.math.pow
 import kotlin.time.Duration
@@ -102,6 +103,9 @@ internal fun String?.parseRomanNumeral(): Int = runCatching {
 
 fun Int.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
 fun Long.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
+fun Float.toFormattedString(): String = DecimalFormat.getNumberInstance().format(this)
+fun Double.toFormattedString(): String = DecimalFormat.getNumberInstance().format(this)
+
 fun Int.toRomanNumeral(): String {
     var number = this
     val roman = StringBuilder()

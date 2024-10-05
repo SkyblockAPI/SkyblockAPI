@@ -64,45 +64,50 @@ object RecordCodecGenerator {
         return false
     }
 
+    private fun CodeLineBuilder.addCodec(type: KSType) {
+        when (type.starProjection().toClassName()) {
+            List::class.asClassName(), MUTABLE_LIST -> {
+                add("%T.list(", CODEC_UTILS_TYPE)
+                addCodec(type.arguments[0].type!!.resolve())
+                add(")")
+            }
+
+            Set::class.asClassName(), MUTABLE_SET -> {
+                add("%T.set(", CODEC_UTILS_TYPE)
+                addCodec(type.arguments[0].type!!.resolve())
+                add(")")
+            }
+
+            Map::class.asClassName(), MUTABLE_MAP -> {
+                add("%T.map(", CODEC_UTILS_TYPE)
+                addCodec(type.arguments[0].type!!.resolve())
+                add(", ")
+                addCodec(type.arguments[1].type!!.resolve())
+                add(")")
+            }
+
+            EITHER_TYPE -> {
+                add("%T.either(", CODEC_TYPE)
+                addCodec(type.arguments[0].type!!.resolve())
+                add(", ")
+                addCodec(type.arguments[1].type!!.resolve())
+                add(")")
+            }
+
+            else -> {
+                add("getCodec<%T>()", type.toTypeName().copy(nullable = false))
+            }
+        }
+    }
+
     private fun CodeBlock.Builder.createEntry(parameter: KSValueParameter, declaration: KSClassDeclaration): Pair<String, Type> {
         val name = parameter.name!!.asString()
         val nullable = parameter.type.resolve().isMarkedNullable
         val ksType = parameter.type.resolve()
-        val type = ksType.toTypeName().copy(nullable = false)
 
         val builder = CodeLineBuilder()
 
-        when (ksType.starProjection().toClassName()) {
-            List::class.asClassName(), MUTABLE_LIST -> {
-                builder.add("%T.list(getCodec<%T>())", CODEC_UTILS_TYPE, ksType.arguments.getType(0))
-            }
-
-            Set::class.asClassName(), MUTABLE_SET -> {
-                builder.add("%T.set(getCodec<%T>())", CODEC_UTILS_TYPE, ksType.arguments.getType(0))
-            }
-
-            Map::class.asClassName(), MUTABLE_MAP -> {
-                builder.add(
-                    "%T.map(getCodec<%T>(), getCodec<%T>())",
-                    CODEC_UTILS_TYPE,
-                    ksType.arguments.getType(0),
-                    ksType.arguments.getType(1),
-                )
-            }
-
-            EITHER_TYPE -> {
-                builder.add(
-                    "%T.either(getCodec<%T>(), getCodec<%T>())",
-                    CODEC_TYPE,
-                    ksType.arguments.getType(0),
-                    ksType.arguments.getType(1),
-                )
-            }
-
-            else -> {
-                builder.add("getCodec<%T>()", type)
-            }
-        }
+        builder.addCodec(ksType)
 
         return when {
             parameter.hasDefault -> {

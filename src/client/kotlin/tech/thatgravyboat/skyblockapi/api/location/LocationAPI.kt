@@ -9,14 +9,14 @@ import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
 @Module
 object LocationAPI {
 
-    private val locationRegex = Regexes.create(
-        "scoreboard.location",
+    private val locationRegex = RegexGroup.SCOREBOARD.create(
+        "location",
         " *[⏣ф] (?<location>.+)"
     )
 

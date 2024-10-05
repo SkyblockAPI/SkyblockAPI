@@ -30,17 +30,6 @@ class KCodecProcessor(
                     this.addProperties(generatedCodecs)
 
                     this.addFunction(
-                        FunSpec.builder("castAs").apply {
-                            this.addModifiers(KModifier.PRIVATE)
-                            this.addTypeVariable(TypeVariableName("I"))
-                            this.addTypeVariable(TypeVariableName("O"))
-                            this.addParameter("input", TypeVariableName("I"))
-                            this.returns(TypeVariableName("O"))
-                            this.addCode("return input as O")
-                        }.build(),
-                    )
-
-                    this.addFunction(
                         FunSpec.builder("getCodec").apply {
                             this.addModifiers(KModifier.INLINE)
                             this.addTypeVariable(TypeVariableName("T").copy(reified = true))
@@ -60,7 +49,7 @@ class KCodecProcessor(
                             for ((type, codec) in DefaultCodecs.codecs) {
                                 this.addCode("    clazz == %T::class.java -> ${codec}\n", type)
                             }
-                            this.addCode("    clazz.isEnum -> %T(castAs(clazz))\n", ENUM_CODEC_TYPE)
+                            this.addCode("    clazz.isEnum -> %T.forKCodec(clazz.enumConstants)\n", ENUM_CODEC_TYPE)
                             for (codec in validGeneratedCodecs) {
                                 this.addCode(
                                     "    clazz == %T::class.java -> %L\n",
