@@ -56,7 +56,7 @@ object TabListEventHandler {
         TabWidget.ELECTION to widgetGroup.create("election", "Election: (?<election>.*)"),
         TabWidget.EVENT to widgetGroup.create("event", "Event: (?<event>.*)"),
         TabWidget.PARTY to widgetGroup.create("party", "Party: (?<party>.*)"),
-        TabWidget.MINIONS to widgetGroup.create("party", "Minions: (?<party>.*)"),
+        TabWidget.MINIONS to widgetGroup.create("minions", "Minions: (?<party>.*)"),
         TabWidget.SHEN to widgetGroup.create("shen", "Shen: \\((?<duration>[\\ddmsh,]+)\\)"),
     )
 
