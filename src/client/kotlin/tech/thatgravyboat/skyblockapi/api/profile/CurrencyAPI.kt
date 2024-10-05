@@ -88,14 +88,13 @@ object CurrencyAPI {
                 this.motes = motes.parseFormattedLong()
             }
         } else {
-            if (SkyblockIsland.GARDEN.inIsland()) {
-                copperRegex.anyMatch(event.added, "purse") { (purse) ->
-                    this.purse = purse.parseFormattedDouble()
-                }
-            }
             if (SkyblockIsland.JERRYS_WORKSHOP.inIsland()) {
                 northStarsRegex.anyMatch(event.added, "northstars") { (northstars) ->
                     this.northStars = northstars.parseFormattedLong()
+                }
+            } else if (SkyblockIsland.GARDEN.inIsland()) {
+                copperRegex.anyMatch(event.added, "purse") { (purse) ->
+                    this.purse = purse.parseFormattedDouble()
                 }
             }
             purseRegex.anyMatch(event.added, "purse") { (purse) ->
@@ -109,10 +108,11 @@ object CurrencyAPI {
 
     private fun reset() {
         purse = 0.0
-        bits = 0
         personalBank = 0
         coopBank = 0
         motes = 0
+        bits = 0
+        gems = 0
         copper = 0
         northStars = 0
     }
