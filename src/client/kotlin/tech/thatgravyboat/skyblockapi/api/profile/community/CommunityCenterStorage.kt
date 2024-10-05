@@ -1,6 +1,6 @@
-package tech.thatgravyboat.skyblockapi.api.data
+package tech.thatgravyboat.skyblockapi.api.profile.community
 
-import tech.thatgravyboat.skyblockapi.api.profile.CommunityCenterData
+import tech.thatgravyboat.skyblockapi.api.data.StoredData
 import tech.thatgravyboat.skyblockapi.api.profile.FameRank
 import tech.thatgravyboat.skyblockapi.api.profile.FameRanks
 import java.util.*
