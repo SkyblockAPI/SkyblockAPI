@@ -16,14 +16,12 @@ import kotlin.time.Duration.Companion.seconds
 @Module
 object SpookyFestivalAPI {
 
-    private val spookyGroup = RegexGroup.SCOREBOARD.group("spooky_festival")
-
-    private val durationRegex = spookyGroup.create(
+    private val durationRegex = RegexGroup.SCOREBOARD.group("spooky_festival").create(
         "duration",
         "Spooky Festival: (?<min>\\d{1,2}):(?<sec>\\d{2})",
     )
 
-    private val candyRegex = spookyGroup.create(
+    private val candyRegex = RegexGroup.TABLIST.group("spooky_festival").create(
         "candy",
         "Your Candy: (?<green>[\\d,]+) Green, (?<purple>[\\d,]+) Purple \\((?<points>[\\d,]+) pts.\\)",
     )
