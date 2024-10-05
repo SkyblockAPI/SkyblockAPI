@@ -24,22 +24,20 @@ object CommunityCenterAPI {
 
     private const val BASE_COOKIE_BITS = 4800
 
-    var bitsAvailable: Long = 0
+    var bitsAvailable: Long
         private set(bits) {
             val profileName = ProfileAPI.profileName ?: return
             CommunityCenterStorage.setBitsAvailable(profileName, bits)
-            field = bits
         }
         get() {
             val profileName = ProfileAPI.profileName ?: return 0
             return CommunityCenterStorage.getBitsAvailable(profileName)
         }
 
-    var fameRank: FameRank? = null
+    var fameRank: FameRank?
         private set(rank) {
             val uuid = McClient.self.player?.uuid ?: return
             CommunityCenterStorage.setRank(uuid, rank)
-            field = rank
         }
         get() {
             val uuid = McClient.self.player?.uuid ?: return null
