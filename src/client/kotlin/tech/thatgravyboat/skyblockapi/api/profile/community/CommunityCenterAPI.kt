@@ -4,8 +4,6 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.CommunityCenterStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
-import tech.thatgravyboat.skyblockapi.api.profile.FameRank
-import tech.thatgravyboat.skyblockapi.api.profile.FameRanks
 import tech.thatgravyboat.skyblockapi.api.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.modules.Module

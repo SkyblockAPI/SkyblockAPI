@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.api.profile
+package tech.thatgravyboat.skyblockapi.api.profile.community
 
 import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
