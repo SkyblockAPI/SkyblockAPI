@@ -28,6 +28,7 @@ object LocationAPI {
 
     var area: SkyblockArea = SkyBlockAreas.NONE
         private set
+
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
         isOnSkyblock = event.type == GameType.SKYBLOCK
