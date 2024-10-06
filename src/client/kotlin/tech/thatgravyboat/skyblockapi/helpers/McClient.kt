@@ -62,7 +62,7 @@ object McClient {
                 .map { it.stripped }
         }
 
-    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName?.string?.stripColor()
+    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName?.stripped
 
     val toasts: ToastComponent
         get() = self.toasts
