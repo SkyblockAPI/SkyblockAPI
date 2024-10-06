@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.utils.text
 import net.minecraft.network.chat.*
 import net.minecraft.util.StringUtil
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 
 object CommonText {
@@ -43,6 +44,9 @@ object Text {
     fun MutableComponent.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
 
     fun MutableComponent.send() = McClient.self.gui.chat.addMessage(this)
+    fun MutableComponent.send(id: String) = McClient.self.gui.chat.setMessageId(id) {
+        McClient.self.gui.chat.addMessage(this)
+    }
 }
 
 object TextProperties {

@@ -79,5 +79,9 @@ object McClient {
         }
     }
 
+    fun sendCommand(command: String) {
+        self.connection?.sendCommand(command)
+    }
+
 }
 

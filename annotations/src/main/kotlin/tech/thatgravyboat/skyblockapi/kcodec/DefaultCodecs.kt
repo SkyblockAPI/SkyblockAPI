@@ -43,7 +43,7 @@ object DefaultCodecs {
             isString = true
         }
 
-        this.add("net.minecraft.world.item", "ItemStack")
+        this.add("net.minecraft.world.item", "ItemStack", "net.minecraft.world.item.ItemStack.OPTIONAL_CODEC")
     }
 
     fun isStringType(type: KSTypeReference): Boolean {

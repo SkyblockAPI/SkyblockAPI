@@ -4,8 +4,6 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenBackgroundEvent
-import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyReleasedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenMouseClickEvent
@@ -44,13 +42,6 @@ object ScreenEventHandler {
             }
             ScreenKeyboardEvents.afterKeyRelease(screen).register { _, keyCode, scanCode, modifiers ->
                 ScreenKeyReleasedEvent.Post(screen, keyCode, scanCode, modifiers).post(SkyBlockAPI.eventBus)
-            }
-
-            ScreenEvents.beforeRender(screen).register { _, graphics, _, _, _ ->
-                RenderScreenBackgroundEvent(screen, graphics).post(SkyBlockAPI.eventBus)
-            }
-            ScreenEvents.afterRender(screen).register { _, graphics, _, _, _ ->
-                RenderScreenForegroundEvent(screen, graphics).post(SkyBlockAPI.eventBus)
             }
         }
     }
