@@ -28,9 +28,6 @@ object HollowsAPI {
         heatPattern.anyMatch(event.added, "raw", "heat") { (raw, heat) ->
             this.rawHeat = raw
             this.heat = heat.toIntOrNull()
-
-            println("HollowsAPI: $rawHeat")
-            println("HollowsAPI: $heat")
         }
     }
 }
