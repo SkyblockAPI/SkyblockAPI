@@ -9,7 +9,7 @@ internal object ProfileStorage {
     private val PROFILE = StoredData(
         ProfileData(),
         ProfileData.CODEC,
-        StoredData.defaultPath.resolve("profile.json"),
+        StoredData.defaultPath.resolve("profiles.json"),
     )
 
     fun getProfileType(): ProfileType = PROFILE.get().profileType[ProfileAPI.profileName] ?: ProfileType.UNKNOWN
