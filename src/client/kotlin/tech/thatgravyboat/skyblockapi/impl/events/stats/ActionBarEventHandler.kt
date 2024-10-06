@@ -53,7 +53,7 @@ object ActionBarEventHandler {
             ManaActionBarWidgetChangeEvent(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, it.string)
         },
         // §c§lNOT ENOUGH MANA
-        ActionBarWidgetType(ActionBarWidget.MANA, "§c§lNOT ENOUGH MANA"),
+        ActionBarWidgetType(ActionBarWidget.NO_MANA, "§c§lNOT ENOUGH MANA"),
         // §a§lⓩⓩⓩ§2§lⓄⓄ
         // §a§lⓩⓩⓩⓩⓩ§2§l
         ActionBarWidgetType(ActionBarWidget.CHARGES, "§a§l(?<maxcharges>(?<charges>ⓩ*)§2§l)"),

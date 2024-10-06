@@ -35,6 +35,7 @@ enum class ActionBarWidget {
     HEALTH,
     DEFENSE,
     MANA,
+    NO_MANA,
     ABILITY,
     LOCATION,
     SKILL_XP,

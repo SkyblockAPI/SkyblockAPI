@@ -16,7 +16,7 @@ object ProfileLevelEventHandler {
 
     private val levelRegex = regexGroup.create(
         "level",
-        "SB Level: \\[(?<level>\\d+)] (?<xp>\\d+)/(?<nextXp>\\d+) XP"
+        " SB Level: \\[(?<level>\\d+)] (?<xp>\\d+)/(?<nextXp>\\d+) XP"
     )
 
     private var lastLevel: Int = 0
