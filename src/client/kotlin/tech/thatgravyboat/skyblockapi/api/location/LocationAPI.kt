@@ -10,14 +10,14 @@ import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
 @Module
 object LocationAPI {
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
         "location",
-        " *[⏣ф] (?<location>.+)"
+        " *[⏣ф] (?<location>.+)",
     )
 
     var isOnSkyblock: Boolean = false
@@ -28,10 +28,6 @@ object LocationAPI {
 
     var area: SkyblockArea = SkyBlockAreas.NONE
         private set
-
-    var rawArea = ""
-        private set
-
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
         isOnSkyblock = event.type == GameType.SKYBLOCK
@@ -53,15 +49,10 @@ object LocationAPI {
     @Subscription
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         if (!isOnSkyblock) return
-
-        event.added.first { locationRegex.matches(it) }.let {
-            rawArea = it
-            locationRegex.match(it, "location") { (location) ->
-                val old = area
-                area = SkyblockArea(location)
-                AreaChangeEvent(old, area).post(SkyBlockAPI.eventBus)
-            }
+        locationRegex.anyMatch(event.added, "location") { (location) ->
+            val old = area
+            area = SkyblockArea(location)
+            AreaChangeEvent(old, area).post(SkyBlockAPI.eventBus)
         }
     }
-
 }
