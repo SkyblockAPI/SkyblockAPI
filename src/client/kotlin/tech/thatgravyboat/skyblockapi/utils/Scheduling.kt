@@ -15,14 +15,14 @@ object Scheduling {
         Thread(target, "Scheduling-Thread-${counter.getAndIncrement()}")
     }
 
-    fun schedule(time: Duration, runnable: () -> Unit): ScheduledFuture<*> = scheduler.schedule(
-        runnable,
+    fun schedule(time: Duration, runnable: suspend () -> Unit): ScheduledFuture<*> = scheduler.schedule(
+        { runCatchBlocking { runnable() } },
         time.toLong(DurationUnit.MILLISECONDS),
         TimeUnit.MILLISECONDS,
     )
 
-    fun schedule(initalDelay: Duration, delay: Duration, runnable: () -> Unit): ScheduledFuture<*> = scheduler.scheduleAtFixedRate(
-        runnable,
+    fun schedule(initalDelay: Duration, delay: Duration, runnable: suspend () -> Unit): ScheduledFuture<*> = scheduler.scheduleAtFixedRate(
+        { runCatchBlocking { runnable() } },
         initalDelay.toLong(DurationUnit.MILLISECONDS),
         delay.toLong(DurationUnit.MILLISECONDS),
         TimeUnit.MILLISECONDS,
