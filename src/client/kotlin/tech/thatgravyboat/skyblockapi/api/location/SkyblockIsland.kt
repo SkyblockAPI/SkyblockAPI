@@ -23,6 +23,8 @@ enum class SkyblockIsland(val id: String) {
 
     fun inIsland() = LocationAPI.island == this
 
+    val formattedName = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+
     companion object {
 
         fun getById(input: String) = entries.firstOrNull { it.id == input }
