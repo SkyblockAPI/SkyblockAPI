@@ -86,7 +86,6 @@ object ProfileAPI {
     fun onChat(event: ChatReceivedEvent) {
         coopProfileJoinRegex.match(event.text, "profile") { (profile) ->
             coopProfiles.add(profile)
-            println("Added $profile to coop profiles")
         }
     }
 }
