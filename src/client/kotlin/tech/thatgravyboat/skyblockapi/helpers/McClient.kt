@@ -12,7 +12,6 @@ import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 import net.minecraft.world.scores.PlayerTeam
-import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
@@ -62,7 +61,7 @@ object McClient {
                 .map { it.stripped }
         }
 
-    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName?.string?.stripColor()
+    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName?.stripped
 
     val toasts: ToastComponent
         get() = self.toasts

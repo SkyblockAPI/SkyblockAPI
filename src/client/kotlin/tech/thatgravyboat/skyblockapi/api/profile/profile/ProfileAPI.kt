@@ -26,23 +26,11 @@ object ProfileAPI {
     var profileName: String? = null
         private set
 
-    var profileType: ProfileType
-        private set(value) {
-            ProfileStorage.setProfileType(value)
-        }
-        get() = ProfileStorage.getProfileType()
+    val profileType: ProfileType get() = ProfileStorage.getProfileType()
 
-    var sbLevel: Int
-        private set(value) {
-            ProfileStorage.setSkyblockLevel(value)
-        }
-        get() = ProfileStorage.getSkyblockLevel()
+    val sbLevel: Int get() = ProfileStorage.getSkyblockLevel()
 
-    var coop: Boolean
-        private set(value) {
-            ProfileStorage.setCoop(value)
-        }
-        get() = ProfileStorage.isCoop()
+    val coop: Boolean get() = ProfileStorage.isCoop()
 
     @Subscription
     fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
@@ -51,22 +39,22 @@ object ProfileAPI {
             when {
                 name.endsWith("♲") -> {
                     this.profileName = name.trim(' ', '♲')
-                    this.profileType = ProfileType.IRONMAN
+                    ProfileStorage.setProfileType(ProfileType.IRONMAN)
                 }
 
                 name.endsWith("Ⓑ") -> {
                     this.profileName = name.trim(' ', 'Ⓑ')
-                    this.profileType = ProfileType.BINGO
+                    ProfileStorage.setProfileType(ProfileType.BINGO)
                 }
 
                 name.endsWith("☀") -> {
                     this.profileName = name.trim(' ', '☀')
-                    this.profileType = ProfileType.STRANDED
+                    ProfileStorage.setProfileType(ProfileType.STRANDED)
                 }
 
                 else -> {
                     this.profileName = name
-                    this.profileType = ProfileType.NORMAL
+                    ProfileStorage.setProfileType(ProfileType.NORMAL)
                 }
             }
             if (SkyblockIsland.THE_RIFT.inIsland()) {
@@ -77,14 +65,13 @@ object ProfileAPI {
 
     @Subscription
     fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
-        this.sbLevel = event.level
+        ProfileStorage.setSkyblockLevel(event.level)
     }
 
     @Subscription
     fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
-        println(event.new)
         if (event.new.contains("CO-OP")) {
-            this.coop = true
+            ProfileStorage.setCoop(true)
         }
     }
 }
