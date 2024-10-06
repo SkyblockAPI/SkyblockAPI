@@ -24,10 +24,10 @@ object ElectionAPI {
     private val electionOverRegex = chatGroup.create("electionOver", "The election is over!")
 
     private var scheduler: ScheduledFuture<*>? = null
-    private var response: ElectionJson? = null
+    var rawData: ElectionJson? = null
 
-    private var currentMayor: Candidate? = null
-    private var currentMinister: Candidate? = null
+    var currentMayor: Candidate? = null
+    var currentMinister: Candidate? = null
 
     private var lastMayor: Candidate? = null
 
@@ -48,9 +48,9 @@ object ElectionAPI {
             url = url,
             errorFactory = ::RuntimeException,
         )
-        response = result.getOrNull() ?: return
+        val response = result.getOrNull() ?: return
 
-        handleResponse()
+        handleResponse(response)
 
         if (lastMayor != currentMayor) {
             currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
@@ -62,7 +62,8 @@ object ElectionAPI {
         }
     }
 
-    private fun handleResponse() {
+    private fun handleResponse(response: ElectionJson?) {
+        rawData = response
         val mayor = response?.mayor ?: return
 
         currentMayor = Candidate.getCandidate(mayor.name)
