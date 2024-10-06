@@ -3,9 +3,9 @@ package tech.thatgravyboat.skyblockapi.api.data.stored
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.StoredData
 import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
-import tech.thatgravyboat.skyblockapi.api.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.api.profile.equipment.EquipmentData
 import tech.thatgravyboat.skyblockapi.api.profile.equipment.EquipmentSlot
+import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 
 internal object EquipmentStorage {
 
