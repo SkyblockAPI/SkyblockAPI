@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import tech.thatgravyboat.skyblockapi.api.data.StoredData
-import tech.thatgravyboat.skyblockapi.api.profile.ProfileAPI
+import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.api.profile.storage.PlayerStorageData
 import tech.thatgravyboat.skyblockapi.api.profile.storage.PlayerStorageInstance
 import tech.thatgravyboat.skyblockapi.api.profile.storage.StorageData

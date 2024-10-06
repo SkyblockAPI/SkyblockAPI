@@ -1,7 +1,8 @@
-package tech.thatgravyboat.skyblockapi.api.profile
+package tech.thatgravyboat.skyblockapi.api.profile.profile
 
+import tech.thatgravyboat.skyblockapi.api.data.stored.ProfileStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileLevelChangeEvent
@@ -9,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 @Module
 object ProfileAPI {
@@ -22,29 +22,27 @@ object ProfileAPI {
         "Profile: (?<name>.+)",
     )
 
-    private val chatGroup = RegexGroup.CHAT.group("profile")
-
-    private val coopProfileJoinRegex = chatGroup.create(
-        "coopProfileJoin",
-        "You are playing on profile: (?<profile>.*) \\(Co-op\\)",
-    )
-
-    // TODO: Store on disk
-    private var coopProfiles = mutableSetOf<String>()
-
 
     var profileName: String? = null
         private set
 
-    var profileType: ProfileType = ProfileType.UNKNOWN
-        private set
+    var profileType: ProfileType
+        private set(value) {
+            ProfileStorage.setProfileType(value)
+        }
+        get() = ProfileStorage.getProfileType()
 
-    var sbLevel: Int = 0
-        private set
+    var sbLevel: Int
+        private set(value) {
+            ProfileStorage.setSkyblockLevel(value)
+        }
+        get() = ProfileStorage.getSkyblockLevel()
 
-    var coop: Boolean = false
-        private set
-        get() = coopProfiles.contains(profileName)
+    var coop: Boolean
+        private set(value) {
+            ProfileStorage.setCoop(value)
+        }
+        get() = ProfileStorage.isCoop()
 
     @Subscription
     fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
@@ -83,9 +81,10 @@ object ProfileAPI {
     }
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent) {
-        coopProfileJoinRegex.match(event.text, "profile") { (profile) ->
-            coopProfiles.add(profile)
+    fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
+        println(event.new)
+        if (event.new.contains("CO-OP")) {
+            this.coop = true
         }
     }
 }
