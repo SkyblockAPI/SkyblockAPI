@@ -22,6 +22,10 @@ object RegexUtils {
         return match != null
     }
 
+    fun <T> Regex.findOrNull(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> T): T? {
+        return find(input)?.let { action(Destructured(it, *groups)) }
+    }
+
     fun List<Regex>.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         return any { it.find(input = input, groups = groups, action = action) }
     }

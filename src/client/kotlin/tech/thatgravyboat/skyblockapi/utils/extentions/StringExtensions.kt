@@ -80,6 +80,8 @@ internal fun String?.parseDuration(): Duration? = runCatching {
     return@runCatching total.seconds
 }.getOrNull()
 
+internal fun String?.parseRomanOrArabic(): Int = parseRomanNumeral().takeIf { it != 0 } ?: toIntValue()
+
 internal fun String?.parseColonDuration(): Duration? = runCatching {
     val splits = this?.split(":") ?: return@runCatching null
     var currentMultiplier = (60.0.pow(splits.size - 1)).toLong()

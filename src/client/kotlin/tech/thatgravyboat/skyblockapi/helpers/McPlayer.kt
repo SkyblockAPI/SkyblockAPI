@@ -10,6 +10,9 @@ object McPlayer {
     val self: Player?
         get() = Minecraft.getInstance().player
 
+    val name: String
+        get() = self?.name?.string ?: ""
+
     val menu: AbstractContainerMenu?
         get() = self?.containerMenu
 
@@ -33,4 +36,7 @@ object McPlayer {
 
     val heldItem: ItemStack
         get() = self?.mainHandItem ?: ItemStack.EMPTY
+
+    val hotbar: List<ItemStack>
+        get() = self?.inventory?.items?.subList(0, 9) ?: List(9) { ItemStack.EMPTY }
 }
