@@ -63,7 +63,7 @@ object ProfileAPI {
 
                 name.endsWith("☀") -> {
                     this.profileName = name.trim(' ', '☀')
-                    this.profileType = ProfileType.STRANDDED
+                    this.profileType = ProfileType.STRANDED
                 }
 
                 else -> {
@@ -94,6 +94,6 @@ enum class ProfileType {
     NORMAL,
     BINGO,
     IRONMAN,
-    STRANDDED,
+    STRANDED,
     UNKNOWN
 }
