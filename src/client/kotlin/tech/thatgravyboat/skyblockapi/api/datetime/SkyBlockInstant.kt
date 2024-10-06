@@ -56,7 +56,7 @@ data class SkyBlockInstant(private val instant: Instant) {
     operator fun plus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.plus(duration))
     operator fun minus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.minus(duration))
 
-    fun getSeasons(): SkyBlockSeason = SkyBlockSeason.entries[this.month - 1]
+    fun getSeason(): SkyBlockSeason = SkyBlockSeason.entries[this.month - 1]
 
     fun copy(
         year: Int = this.year,
