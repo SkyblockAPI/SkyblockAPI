@@ -25,11 +25,11 @@ object CurrencyAPI {
     )
 
     private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
-    private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,kmb.]+)")
-    private val bitsRegex = currencyGroup.create("bits", "Bits: (?<bits>[\\d,kmb]+)")
-    private val motesRegex = currencyGroup.create("motes", "Motes: (?<motes>[\\d,kmb]+)")
-    private val copperRegex = currencyGroup.create("copper", "Copper: (?<copper>[\\d,kmb]+)")
-    private val northStarsRegex = currencyGroup.create("northstars", "North Stars: (?<northstars>[\\d,kmb]+)")
+    private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,kmb.]+).*")
+    private val bitsRegex = currencyGroup.create("bits", "Bits: (?<bits>[\\d,kmb]+).*")
+    private val motesRegex = currencyGroup.create("motes", "Motes: (?<motes>[\\d,kmb]+).*")
+    private val copperRegex = currencyGroup.create("copper", "Copper: (?<copper>[\\d,kmb]+).*")
+    private val northStarsRegex = currencyGroup.create("northstars", "North Stars: (?<northstars>[\\d,kmb]+).*")
 
     var purse: Double = 0.0
         private set
