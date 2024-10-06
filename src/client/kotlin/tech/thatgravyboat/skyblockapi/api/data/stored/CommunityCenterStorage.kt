@@ -1,8 +1,9 @@
-package tech.thatgravyboat.skyblockapi.api.profile.community
+package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import tech.thatgravyboat.skyblockapi.api.data.StoredData
 import tech.thatgravyboat.skyblockapi.api.profile.FameRank
 import tech.thatgravyboat.skyblockapi.api.profile.FameRanks
+import tech.thatgravyboat.skyblockapi.api.profile.community.CommunityCenterData
 import java.util.*
 
 internal object CommunityCenterStorage {
