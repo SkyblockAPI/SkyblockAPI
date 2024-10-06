@@ -8,8 +8,8 @@ import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.RightClickEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryItemChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
@@ -20,12 +20,12 @@ object EquipmentAPI {
 
     private val inventoryNameRegex = RegexGroup.INVENTORY.group("equipment").create(
         "title",
-        "Your Equipment and Stats"
+        "Your Equipment and Stats",
     )
 
     private val chatEquipRegex = RegexGroup.CHAT.group("equipment").create(
         "equip",
-        "You equipped a (?<item>.+)!"
+        "You equipped a (?<item>.+)!",
     )
 
 
@@ -42,7 +42,7 @@ object EquipmentAPI {
     }
 
     @Subscription
-    fun onInventoryChange(event: InventoryChangeEvent) {
+    fun onInventoryChange(event: InventoryItemChangeEvent) {
         if (!inventoryNameRegex.matches(event.title.stripped)) return
         val slot = EquipmentSlot.entries.find { it.slot == event.slot } ?: return
         handleInventoryItem(slot, event.item)

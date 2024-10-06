@@ -8,8 +8,8 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryItemChangeEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -31,10 +31,12 @@ object PacketEventHandler {
                     InventoryFullyLoadedEvent(event.packet.items, container.title).post(SkyBlockAPI.eventBus)
                 }
             }
+
             is ClientboundContainerSetSlotPacket -> {
                 McClient.tell {
                     val container = McScreen.asMenu?.takeIf { it.menu?.containerId == event.packet.containerId } ?: return@tell
-                    InventoryChangeEvent(event.packet.item, event.packet.slot, container.title).post(SkyBlockAPI.eventBus)
+                    val allItems = container.menu?.slots?.map { it.item } ?: emptyList()
+                    InventoryItemChangeEvent(event.packet.item, event.packet.slot, container.title, allItems).post(SkyBlockAPI.eventBus)
                 }
             }
         }

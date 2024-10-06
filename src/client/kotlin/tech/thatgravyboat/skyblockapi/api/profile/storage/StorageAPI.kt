@@ -2,8 +2,8 @@ package tech.thatgravyboat.skyblockapi.api.profile.storage
 
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerStorageStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryItemChangeEvent
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
@@ -47,7 +47,7 @@ object StorageAPI {
     }
 
     @Subscription
-    fun onInventoryChange(event: InventoryChangeEvent) {
+    fun onInventoryChange(event: InventoryItemChangeEvent) {
         val size = McScreen.asMenu?.menu?.slots?.size?.let { it - 36 } ?: return
         if (event.slot < 9 || event.slot >= size) return
 
