@@ -26,5 +26,9 @@ enum class SkyblockIsland(val id: String) {
     companion object {
 
         fun getById(input: String) = entries.firstOrNull { it.id == input }
+
+        fun inAnyIsland(vararg islands: SkyblockIsland) = islands.any { it.inIsland() }
+
+        fun inAnyIsland(islands: Collection<SkyblockIsland>) = islands.any { it.inIsland() }
     }
 }
