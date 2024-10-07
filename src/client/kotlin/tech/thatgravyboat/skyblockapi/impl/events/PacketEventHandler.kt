@@ -9,10 +9,15 @@ import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerInventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.modules.Module
+
+private const val PLAYER_HOTBAR_CONTAINER_ID = 0
+private const val PLAYER_INVENTORY_CONTAINER_ID = -2
+private const val FIRST_HOTBAR_SLOT = 36
 
 @Module
 object PacketEventHandler {
@@ -34,12 +39,15 @@ object PacketEventHandler {
             is ClientboundContainerSetSlotPacket -> {
                 McClient.tell {
                     val containerId = event.packet.containerId
-                    if (containerId == ClientboundContainerSetSlotPacket.PLAYER_INVENTORY) {
-                        // TODO: doesnt seem to work, fix
-                        PlayerInventoryChangeEvent(event.packet.slot, event.packet.item).post()
-                    } else {
-                        val container = McScreen.asMenu?.takeIf { it.menu?.containerId == containerId } ?: return@tell
-                        ContainerChangeEvent(event.packet.item, event.packet.slot, container.title).post()
+                    when (containerId) {
+                        PLAYER_HOTBAR_CONTAINER_ID -> {
+                            PlayerHotbarChangeEvent(event.packet.slot - FIRST_HOTBAR_SLOT, event.packet.item).post()
+                        }
+                        PLAYER_INVENTORY_CONTAINER_ID -> PlayerInventoryChangeEvent(event.packet.slot, event.packet.item).post()
+                        else -> {
+                            val container = McScreen.asMenu?.takeIf { it.menu?.containerId == containerId } ?: return@tell
+                            ContainerChangeEvent(event.packet.item, event.packet.slot, container.title).post()
+                        }
                     }
                 }
             }

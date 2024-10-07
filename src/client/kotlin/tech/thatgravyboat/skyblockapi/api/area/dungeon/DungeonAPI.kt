@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerInventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -17,8 +17,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
-import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
@@ -74,6 +72,10 @@ object DungeonAPI {
         "boss.start",
         "^\\[BOSS] (?<boss>.+?):",
     )
+    private val endRegex = chatGroup.create(
+        "end",
+        "\\s+(?:Master Mode|The) Catacombs - (?:Entrance|Floor [XVI]+)"
+    )
 
     var ownPlayer: DungeonPlayer? = null
         private set
@@ -91,7 +93,7 @@ object DungeonAPI {
     var started: Boolean = false
         private set
 
-    var completed: Boolean = false // TODO: implement
+    var completed: Boolean = false
         private set
 
     var inBoss: Boolean = false
@@ -152,10 +154,14 @@ object DungeonAPI {
             return
         }
         if (!inBoss && dungeonFloor != DungeonFloor.E) {
-            bossStartRegex.find(message, "boss") { (boss) ->
-                if (boss != "The Watcher") return@find
+            bossStartRegex.findOrNull(message, "boss") { (boss) ->
+                if (boss != "The Watcher") return@findOrNull
                 inBoss = dungeonFloor?.chatBossName == boss
-            }
+            } ?: return
+        }
+        if (started && endRegex.matches(message)) {
+            completed = true
+            return
         }
     }
 
@@ -205,17 +211,15 @@ object DungeonAPI {
         for (line in secondColumn) {
             milestoneRegex.findOrNull(line.stripped, "milestone") { (milestone) ->
                 this.milestone = milestoneCharToInt(milestone.first())
-            } ?: return
+            } ?: break
         }
     }
 
     @Subscription
-    fun onPlayerInventoryUpdate(event: PlayerInventoryChangeEvent) {
-        // TODO: doesnt work
-        //if (!inDungeon()) return
-        //if (event.slot != 27) return
+    fun onPlayerHotbarUpdate(event: PlayerHotbarChangeEvent) {
+        if (!inDungeon()) return
+        if (event.slot != 36) return
         val id = event.item.getData(DataTypes.ID)
-        Text.of("Id: $id").send()
         ownPlayer?.dead = id == "HAUNT_ABILITY"
     }
 

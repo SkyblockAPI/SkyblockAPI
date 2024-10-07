@@ -46,7 +46,7 @@ object DebugPackets {
                             this.color = TextColor.YELLOW
                         }.send()
                         summary.entries.sortedBy { it.value }.forEach { (packet, count) ->
-                            Text.of("${packet.id} - $count") {
+                            Text.of("$packet - $count") {
                                 this.color = TextColor.YELLOW
                             }.send()
                         }

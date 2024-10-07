@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.area.dungeon
 
-enum class DungeonFloor(val displayBossName: String, val chatBossName: String = displayBossName) {
+enum class DungeonFloor(val bossName: String, val chatBossName: String = bossName) {
     E("The Watcher"),
 
     F1("Bonzo"),
