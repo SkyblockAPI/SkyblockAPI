@@ -11,8 +11,6 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerInventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryItemChangeEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -46,15 +44,14 @@ object PacketEventHandler {
                         PLAYER_HOTBAR_CONTAINER_ID -> {
                             PlayerHotbarChangeEvent(event.packet.slot - FIRST_HOTBAR_SLOT, event.packet.item).post()
                         }
+
                         PLAYER_INVENTORY_CONTAINER_ID -> PlayerInventoryChangeEvent(event.packet.slot, event.packet.item).post()
                         else -> {
                             val container = McScreen.asMenu?.takeIf { it.menu?.containerId == containerId } ?: return@tell
-                            ContainerChangeEvent(event.packet.item, event.packet.slot, container.title).post()
+                            val allItems = container.menu?.slots?.map { it.item } ?: emptyList()
+                            ContainerChangeEvent(event.packet.item, event.packet.slot, container.title, allItems).post()
                         }
                     }
-                    val container = McScreen.asMenu?.takeIf { it.menu?.containerId == event.packet.containerId } ?: return@tell
-                    val allItems = container.menu?.slots?.map { it.item } ?: emptyList()
-                    InventoryItemChangeEvent(event.packet.item, event.packet.slot, container.title, allItems).post(SkyBlockAPI.eventBus)
                 }
             }
         }
