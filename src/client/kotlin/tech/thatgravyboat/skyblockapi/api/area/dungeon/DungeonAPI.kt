@@ -49,7 +49,7 @@ object DungeonAPI {
     )
     private val classRegex = tablistGroup.create(
         "player.class",
-        "\\[.+] (?<name>\\S+) .+\\((?<class>\\S+) (?<level>.+)\\)",
+        "(?:\\[.+] ?)*(?<name>\\S+) .+\\((?<class>\\S+) (?<level>.+)\\)",
     )
     private val deadTeammateRegex = tablistGroup.create(
         "player.dead",
