@@ -8,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 private const val CHECK_INTERVAL = 1000
 
@@ -30,11 +31,11 @@ object ScoreboardEventHandler {
     }
 
     private fun handleScoreboard() {
-        val new = McClient.scoreboard?.toList() ?: return
-        val old = scoreboard
-        if (new == old) return
-        ScoreboardUpdateEvent(old, new).post(SkyBlockAPI.eventBus)
-        scoreboard = new.toMutableList()
+        val new = McClient.scoreboard
+        val newAsText = new.map { it.stripped }
+        if (newAsText == scoreboard) return
+        ScoreboardUpdateEvent(scoreboard, newAsText, new.toList()).post(SkyBlockAPI.eventBus)
+        scoreboard = newAsText.toMutableList()
     }
 
     private fun handleTitle() {

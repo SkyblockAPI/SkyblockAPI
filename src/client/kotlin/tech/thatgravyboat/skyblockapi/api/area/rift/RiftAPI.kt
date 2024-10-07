@@ -2,14 +2,19 @@ package tech.thatgravyboat.skyblockapi.api.area.rift
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.RiftTimeActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.api.profile.CurrencyAPI
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentRegex
+import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import kotlin.time.Duration
 
 @Module
@@ -37,6 +42,10 @@ object RiftAPI {
         "monetezuma",
         " Monetezuma: (?<current>\\d+)/(?<max>\\d+)"
     )
+    private val effigiesRegex = ComponentRegex(regexGroup.create(
+        "effigies",
+        "Effigies: (?<e1>⧯)(?<e2>⧯)(?<e3>⧯)(?<e4>⧯)(?<e5>⧯)(?<e6>⧯)"
+    ))
 
     var time: Duration? = null
         private set
@@ -59,9 +68,33 @@ object RiftAPI {
     var monetezuma: Pair<Int, Int> = Pair(0, 0)
         private set
 
+    var effieges: List<Effigy> = listOf(
+        Effigy(150, 73, 95),
+        Effigy(193, 87, 119),
+        Effigy(235, 104, 147),
+        Effigy(293, 90, 134),
+        Effigy(262, 93, 94),
+        Effigy(240, 123, 118),
+    )
+        private set
+
     @Subscription
     fun onActionBarWidgetChange(event: RiftTimeActionBarWidgetChangeEvent) {
         time = event.time
+    }
+
+    @Subscription
+    fun onScoreboardChange(event: ScoreboardUpdateEvent) {
+        if (!SkyblockIsland.THE_RIFT.inIsland()) return
+
+        effigiesRegex.anyMatch(event.components, "e1", "e2", "e3", "e4", "e5", "e6") { (one, two, three, four, five, six) ->
+            effieges[0].enabled = one.style.color?.value == TextColor.RED
+            effieges[1].enabled = two.style.color?.value == TextColor.RED
+            effieges[2].enabled = three.style.color?.value == TextColor.RED
+            effieges[3].enabled = four.style.color?.value == TextColor.RED
+            effieges[4].enabled = five.style.color?.value == TextColor.RED
+            effieges[5].enabled = six.style.color?.value == TextColor.RED
+        }
     }
 
     @Subscription

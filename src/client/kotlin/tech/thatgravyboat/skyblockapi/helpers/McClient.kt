@@ -9,10 +9,9 @@ import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.network.chat.Component
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
-import net.minecraft.world.scores.PlayerTeam
-import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 object McClient {
@@ -51,14 +50,19 @@ object McClient {
     val players: List<PlayerInfo>
         get() = tablist.filter { it.profile.id.version() == 4 }
 
-    val scoreboard: Collection<String>?
+    val scoreboard: Collection<Component>
         get() {
-            val scoreboard = self.level?.scoreboard ?: return null
-            val objective = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return null
+            val scoreboard = self.level?.scoreboard ?: return emptyList()
+            val objective = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return emptyList()
             return scoreboard.listPlayerScores(objective)
                 .sortedBy { -it.value }
-                .map { PlayerTeam.formatNameForTeam(scoreboard.getPlayersTeam(it.owner), CommonText.EMPTY) }
-                .map { it.stripped }
+                .map {
+                    val team = scoreboard.getPlayersTeam(it.owner)
+                    Component.empty().also { main ->
+                        team?.playerPrefix?.apply { siblings.forEach { sibling -> main.append(sibling) } }
+                        team?.playerSuffix?.apply { siblings.forEach { sibling -> main.append(sibling) } }
+                    }
+                }
         }
 
     val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName?.stripped
