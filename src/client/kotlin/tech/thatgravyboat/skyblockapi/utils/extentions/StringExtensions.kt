@@ -7,6 +7,9 @@ import kotlin.math.pow
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
+private val colorCodesStart = Regex("^(?<start>(§.| )*)(?!§.| )")
+private val colorCodesEnd = Regex("^(?<end>(.§| )*)(?!.§| )")
+
 private val formattedMultiplier = mapOf(
     "k" to 1_000L,
     "m" to 1_000_000L,
@@ -121,3 +124,10 @@ fun Int.toRomanNumeral(): String {
 }
 
 fun String.stripColor() = StringUtil.stripColor(this)
+
+fun String.trimIgnoreColor(): String {
+    val start = colorCodesStart.find(this)?.groups?.get("start")?.value ?: ""
+    val end = colorCodesEnd.find(this.reversed())?.groups?.get("end")?.value?.reversed() ?: ""
+    val trimmed = this.removePrefix(start).removeSuffix(end)
+    return start.replace(" ", "") + trimmed + end.replace(" ", "")
+}

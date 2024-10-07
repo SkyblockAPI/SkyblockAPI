@@ -1,6 +1,8 @@
-package tech.thatgravyboat.skyblockapi.api.profile
+package tech.thatgravyboat.skyblockapi.api.profile.profile
 
+import tech.thatgravyboat.skyblockapi.api.data.stored.ProfileStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileLevelChangeEvent
@@ -17,17 +19,18 @@ object ProfileAPI {
     // Profile: Watermelon ♲
     private val profileRegex = profileGroup.create(
         "name",
-        "Profile: (?<name>.+)"
+        "Profile: (?<name>.+)",
     )
+
 
     var profileName: String? = null
         private set
 
-    var profileType: ProfileType = ProfileType.UNKNOWN
-        private set
+    val profileType: ProfileType get() = ProfileStorage.getProfileType()
 
-    var sbLevel: Int = 0
-        private set
+    val sbLevel: Int get() = ProfileStorage.getSkyblockLevel()
+
+    val coop: Boolean get() = ProfileStorage.isCoop()
 
     @Subscription
     fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
@@ -36,19 +39,22 @@ object ProfileAPI {
             when {
                 name.endsWith("♲") -> {
                     this.profileName = name.trim(' ', '♲')
-                    this.profileType = ProfileType.IRONMAN
+                    ProfileStorage.setProfileType(ProfileType.IRONMAN)
                 }
+
                 name.endsWith("Ⓑ") -> {
                     this.profileName = name.trim(' ', 'Ⓑ')
-                    this.profileType = ProfileType.BINGO
+                    ProfileStorage.setProfileType(ProfileType.BINGO)
                 }
+
                 name.endsWith("☀") -> {
                     this.profileName = name.trim(' ', '☀')
-                    this.profileType = ProfileType.STRANDDED
+                    ProfileStorage.setProfileType(ProfileType.STRANDED)
                 }
+
                 else -> {
                     this.profileName = name
-                    this.profileType = ProfileType.NORMAL
+                    ProfileStorage.setProfileType(ProfileType.NORMAL)
                 }
             }
             if (SkyblockIsland.THE_RIFT.inIsland()) {
@@ -59,7 +65,14 @@ object ProfileAPI {
 
     @Subscription
     fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
-        this.sbLevel = event.level
+        ProfileStorage.setSkyblockLevel(event.level)
+    }
+
+    @Subscription
+    fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
+        if (event.new.contains("CO-OP")) {
+            ProfileStorage.setCoop(true)
+        }
     }
 }
 
@@ -67,6 +80,6 @@ enum class ProfileType {
     NORMAL,
     BINGO,
     IRONMAN,
-    STRANDDED,
+    STRANDED,
     UNKNOWN
 }

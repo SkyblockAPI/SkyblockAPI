@@ -37,6 +37,9 @@ object McPlayer {
     val heldItem: ItemStack
         get() = self?.mainHandItem ?: ItemStack.EMPTY
 
+    val inventory: List<ItemStack>
+        get() = self?.inventory?.items ?: emptyList()
+
     val hotbar: List<ItemStack>
-        get() = self?.inventory?.items?.subList(0, 9) ?: List(9) { ItemStack.EMPTY }
+        get() = inventory.subList(0, 9) ?: buildList(9) { ItemStack.EMPTY }
 }

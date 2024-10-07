@@ -2,19 +2,27 @@ package tech.thatgravyboat.skyblockapi.mixins.events;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.chat.ChatListener;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent;
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent;
+import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatComponentExtension;
 
 @Mixin(ChatListener.class)
 public class ChatListenerMixin {
+
+    @Shadow
+    @Final
+    private Minecraft minecraft;
 
     @WrapOperation(
         method = "handleSystemMessage",
@@ -40,8 +48,10 @@ public class ChatListenerMixin {
         )
     )
     private void onAddMessage(ChatComponent instance, Component component, Operation<Void> original) {
-        ChatReceivedEvent event = new ChatReceivedEvent(component);
+        ChatReceivedEvent event = new ChatReceivedEvent(component, null);
         if (event.post(SkyBlockAPI.getEventBus())) return;
+        ((ChatComponentExtension) this.minecraft.gui.getChat()).skyblockapi$setIdForMessage(event.getId());
         original.call(instance, event.getComponent());
+        ((ChatComponentExtension) this.minecraft.gui.getChat()).skyblockapi$setIdForMessage(null);
     }
 }

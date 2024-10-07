@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.trimIgnoreColor
 import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
@@ -51,6 +52,8 @@ object ActionBarEventHandler {
         ActionBarWidgetType(ActionBarWidget.MANA, "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ Mana") { old, it ->
             ManaActionBarWidgetChangeEvent(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, it.string)
         },
+        // §c§lNOT ENOUGH MANA
+        ActionBarWidgetType(ActionBarWidget.NO_MANA, "§c§lNOT ENOUGH MANA"),
         // §a§lⓩⓩⓩ§2§lⓄⓄ
         // §a§lⓩⓩⓩⓩⓩ§2§l
         ActionBarWidgetType(ActionBarWidget.CHARGES, "§a§l(?<maxcharges>(?<charges>ⓩ*)§2§l)"),
@@ -123,7 +126,7 @@ object ActionBarEventHandler {
         if (output.isEmpty()) {
             event.cancel()
         } else if (output != parts) {
-            event.coloredText = output.joinToString("     ")
+            event.coloredText = output.joinToString("     ") { it.trimIgnoreColor() }
         }
     }
 }

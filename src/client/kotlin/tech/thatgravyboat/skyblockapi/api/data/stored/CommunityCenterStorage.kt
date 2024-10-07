@@ -1,15 +1,16 @@
-package tech.thatgravyboat.skyblockapi.api.profile.community
+package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import tech.thatgravyboat.skyblockapi.api.data.StoredData
-import tech.thatgravyboat.skyblockapi.api.profile.FameRank
-import tech.thatgravyboat.skyblockapi.api.profile.FameRanks
+import tech.thatgravyboat.skyblockapi.api.profile.community.CommunityCenterData
+import tech.thatgravyboat.skyblockapi.api.profile.community.FameRank
+import tech.thatgravyboat.skyblockapi.api.profile.community.FameRanks
 import java.util.*
 
 internal object CommunityCenterStorage {
     private val COMMUNITY_CENTER = StoredData(
         CommunityCenterData(),
         CommunityCenterData.CODEC,
-        StoredData.defaultPath.resolve("community_center_data.json"),
+        StoredData.defaultPath.resolve("community_center.json"),
     )
 
     fun getRank(uuid: UUID): FameRank? = COMMUNITY_CENTER.get().ranks[uuid]?.let { FameRanks.getByName(it) }

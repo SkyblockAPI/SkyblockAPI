@@ -61,6 +61,8 @@ object McClient {
                 .map { it.stripped }
         }
 
+    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName?.stripped
+
     val toasts: ToastComponent
         get() = self.toasts
 
@@ -77,6 +79,10 @@ object McClient {
         } else {
             self.setScreen(screen)
         }
+    }
+
+    fun sendCommand(command: String) {
+        self.connection?.sendCommand(command)
     }
 
 }
