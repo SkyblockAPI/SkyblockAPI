@@ -14,20 +14,23 @@ object HollowsAPI {
     var heat: Int? = null
         private set
 
-    var rawHeat = ""
-        private set
+    var heatImmunity: Boolean = false
+        get() = heat == null
 
     // Heat: IMMUNE
     // Heat: 24♨
-    private val heatPattern = glaciteGroup.create("heat", "Heat: (?<raw>.*(?<heat>\\d+|IMMUNE)♨?)")
+    private val heatPattern = glaciteGroup.create("heat", "Heat: (?<heat>\\d+|IMMUNE)♨?")
 
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (!SkyblockIsland.CRYSTAL_HOLLOWS.inIsland()) return
 
-        heatPattern.anyMatch(event.added, "raw", "heat") { (raw, heat) ->
-            this.rawHeat = raw
+        heatPattern.anyMatch(event.added, "heat") { (heat) ->
             this.heat = heat.toIntOrNull()
+        } else {
+            // Heat doesnt show up on the scoreboard if its 0,
+            // so we need to check if it was removed and set it to 0
+            heat = 0
         }
     }
 }
