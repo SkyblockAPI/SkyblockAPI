@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.area.mining
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -32,5 +33,10 @@ object HollowsAPI {
             // so we need to check if it was removed and set it to 0
             heat = 0
         }
+    }
+
+    @Subscription
+    fun onIslandSwitch(event: IslandChangeEvent) {
+        heat = 0
     }
 }
