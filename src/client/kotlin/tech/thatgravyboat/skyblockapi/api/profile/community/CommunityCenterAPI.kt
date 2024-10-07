@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.community
 import tech.thatgravyboat.skyblockapi.api.data.stored.CommunityCenterStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -50,7 +50,7 @@ object CommunityCenterAPI {
     }
 
     @Subscription
-    fun onInventoryFullyLoaded(event: InventoryFullyLoadedEvent) {
+    fun onInventoryFullyLoaded(event: ContainerInitializedEvent) {
         when (event.title.string) {
             "SkyBlock Menu" -> handleSkyblockMenu(event)
             "Booster Cookie" -> handleBoosterCookieMenu(event)
@@ -58,7 +58,7 @@ object CommunityCenterAPI {
         }
     }
 
-    private fun handleSkyblockMenu(event: InventoryFullyLoadedEvent) {
+    private fun handleSkyblockMenu(event: ContainerInitializedEvent) {
         val cookieLore = event.itemStacks.firstOrNull { it.hoverName.string == "Booster Cookie" }?.getRawLore()
         if (cookieLore != null) {
             bitsAvailableRegex.anyMatch(cookieLore, "bits") { (bits) ->
@@ -67,7 +67,7 @@ object CommunityCenterAPI {
         }
     }
 
-    private fun handleBoosterCookieMenu(event: InventoryFullyLoadedEvent) {
+    private fun handleBoosterCookieMenu(event: ContainerInitializedEvent) {
         val fameRankLore = event.itemStacks.firstOrNull { it.hoverName.string == "Fame Rank" }?.getRawLore()
         val bitsLore = event.itemStacks.firstOrNull { it.hoverName.string == "Bits" }?.getRawLore()
 
