@@ -1,13 +1,10 @@
 package tech.thatgravyboat.skyblockapi.utils.regex.component
 
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.Style
 import org.intellij.lang.annotations.Language
-import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
-import java.util.*
 
-class ComponentRegex private constructor(private val regex: Regex) {
+class ComponentRegex(private val regex: Regex) {
 
     constructor(@Language("RegExp") regex: String) : this(Regex(regex))
 
@@ -16,70 +13,47 @@ class ComponentRegex private constructor(private val regex: Regex) {
     fun match(input: Component): ComponentMatchResult? = regex.matchEntire(input.stripped)?.let { ComponentMatchResult(input, it) }
 }
 
-class ComponentMatchResult(component: Component, private val result: MatchResult) {
+class Destructured internal constructor(private val match: ComponentMatchResult, private vararg val keys: String) {
 
-    private val match: Component = component.substring(result.range.first, result.range.last + 1)
+    val component: Component get() = match[0]!!
 
-    fun value(): Component = match
+    private fun group(key: String): Component = match[key]!!
 
-    operator fun get(group: Int): Component? {
-        val groups = result.groups
-        if (group < 0 || group >= groups.size) return null
-        return groups[group]?.range?.let {
-            match.substring(it.first, it.last + 1)
-        }
-    }
+    operator fun get(key: String): Component? = match[key]
+    operator fun get(index: Int): Component? = match[index]
 
-    operator fun get(group: String): Component? = result.groups[group]?.range?.let {
-        match.substring(it.first, it.last + 1)
-    }
-
+    operator fun component1(): Component = group(keys[0])
+    operator fun component2(): Component = group(keys[1])
+    operator fun component3(): Component = group(keys[2])
+    operator fun component4(): Component = group(keys[3])
+    operator fun component5(): Component = group(keys[4])
+    operator fun component6(): Component = group(keys[5])
+    operator fun component7(): Component = group(keys[6])
+    operator fun component8(): Component = group(keys[7])
+    operator fun component9(): Component = group(keys[8])
+    operator fun component10(): Component = group(keys[9])
 }
 
-private fun String.substringIgnoreColorCodes(start: Int, end: Int): String {
-    val builder = StringBuilder()
-    var index = 0
-    var current = 0
-    var color = false
-    while (current < end) {
-        val char = this[index]
-        if (char == '§') {
-            color = true
-            builder.append(char)
-        } else if (color) {
-            color = false
-            builder.append(char)
-        } else {
-            if (current >= start) {
-                builder.append(char)
-            }
-            current++
-        }
-        index++
-    }
-    return builder.toString()
-}
+fun ComponentRegex.match(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean =
+    match(input)?.let { action(Destructured(it, *groups)) } != null
 
-private fun Component.substring(start: Int, end: Int): Component {
-    val components = mutableListOf<Component>()
-    var current = 0
+fun <T> ComponentRegex.matchOrNull(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> T): T? =
+    match(input)?.let { action(Destructured(it, *groups)) }
 
-    this.visit({ style, part ->
-        val length = part.stripColor().length
-        if (current + length <= start) {
-            current += length
-        } else {
-            val startIndex = start - current
-            val endIndex = (end - current).coerceAtMost(length)
-            components.add(Component.literal(part.substringIgnoreColorCodes(startIndex, endIndex)).setStyle(style))
-            current += length
-        }
-        if (current >= end) Optional.of(Unit) else Optional.empty()
-    }, Style.EMPTY)
+fun List<ComponentRegex>.match(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean =
+    any { it.match(input = input, groups = groups, action = action) }
 
-    if (components.isEmpty()) return Component.empty()
-    return Component.empty().apply {
-        components.forEach(this::append)
-    }
-}
+fun ComponentRegex.anyMatch(input: List<Component>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean = 
+    input.any { match(it, groups = groups, action = action) }
 
+fun ComponentRegex.find(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean =
+    find(input)?.let { action(Destructured(it, *groups)) } != null
+
+fun <T> ComponentRegex.findOrNull(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> T): T? = 
+    find(input)?.let { action(Destructured(it, *groups)) }
+
+fun List<ComponentRegex>.find(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean = 
+    any { it.find(input = input, groups = groups, action = action) }
+
+fun ComponentRegex.anyFound(input: List<Component>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean =
+    input.any { find(it, groups = groups, action = action) }
