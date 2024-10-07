@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.area.mining
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryItemChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -34,7 +34,7 @@ object CommissionsAPI {
     val commissions = mutableListOf<Commission>()
 
     @Subscription
-    fun onInventoryUpdate(event: InventoryItemChangeEvent) {
+    fun onInventoryUpdate(event: ContainerChangeEvent) {
         val commissionAreaStack = event.inventory.firstOrNull { it.hoverName.stripped == "Filter" } ?: return
         val commissionArea = commissionAreaRegex.run {
             var matchedArea: String? = null
