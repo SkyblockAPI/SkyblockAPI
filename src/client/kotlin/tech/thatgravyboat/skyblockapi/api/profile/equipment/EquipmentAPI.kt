@@ -8,8 +8,8 @@ import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.RightClickEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryFullyLoadedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryItemChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
@@ -34,7 +34,7 @@ object EquipmentAPI {
     val equipment get(): Map<EquipmentSlot, ItemStack> = EquipmentStorage.equipment
 
     @Subscription
-    fun onInventoryFullyLoad(event: InventoryFullyLoadedEvent) {
+    fun onInventoryFullyLoad(event: ContainerInitializedEvent) {
         if (!inventoryNameRegex.matches(event.title.stripped)) return
         EquipmentSlot.entries.forEach {
             handleInventoryItem(it, event.itemStacks[it.slot])
@@ -42,7 +42,7 @@ object EquipmentAPI {
     }
 
     @Subscription
-    fun onInventoryChange(event: InventoryItemChangeEvent) {
+    fun onInventoryChange(event: ContainerChangeEvent) {
         if (!inventoryNameRegex.matches(event.title.stripped)) return
         val slot = EquipmentSlot.entries.find { it.slot == event.slot } ?: return
         handleInventoryItem(slot, event.item)
