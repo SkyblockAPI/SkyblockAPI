@@ -67,6 +67,7 @@ private fun Component.substring(start: Int, end: Int): Component {
     }, Style.EMPTY)
 
     if (components.isEmpty()) return Component.empty()
+    if (components.size == 1) return components[0]
     return Component.empty().apply {
         components.forEach(this::append)
     }

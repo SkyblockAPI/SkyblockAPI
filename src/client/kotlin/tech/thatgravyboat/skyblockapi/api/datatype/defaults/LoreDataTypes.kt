@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 import tech.thatgravyboat.skyblockapi.api.data.SkyblockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyblockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -68,13 +69,17 @@ object LoreDataTypes {
 
     val RARITY: DataType<SkyblockRarity> = DataType("rarity") {
         val lastLine = it.getRawLore().lastOrNull() ?: return@DataType null
-        SkyblockRarity.entries.firstOrNull { rarity -> lastLine.trim().startsWith(rarity.name, ignoreCase = true) }
+        val isUpgraded = DataTypes.RARITY_UPGRADES.factory(it) != null
+        val line = if (isUpgraded) lastLine.drop(2).dropLast(2) else lastLine.trim()
+        SkyblockRarity.entries.firstOrNull { rarity -> line.startsWith(rarity.name, ignoreCase = true) }
     }
 
     val CATEGORY: DataType<SkyblockCategory> = DataType("category") {
         val lastLine = it.getRawLore().lastOrNull() ?: return@DataType null
+        val isUpgraded = DataTypes.RARITY_UPGRADES.factory(it) != null
+        val line = if (isUpgraded) lastLine.drop(2).dropLast(2) else lastLine.trim()
         val rarity = RARITY.factory(it)?.name ?: return@DataType null
-        SkyblockCategory.create(lastLine.removePrefix(rarity).trim())
+        SkyblockCategory.create(line.removePrefix(rarity).trim())
     }
 
     @Subscription

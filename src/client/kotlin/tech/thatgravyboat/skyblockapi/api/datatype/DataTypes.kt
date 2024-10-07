@@ -14,6 +14,7 @@ object DataTypes {
     val CATEGORY: DataType<SkyblockCategory> = LoreDataTypes.CATEGORY
 
     val MODIFIER: DataType<String> = GenericDataTypes.MODIFIER
+    val RARITY_UPGRADES: DataType<Int> = GenericDataTypes.RARITY_UPGRADES
     val FUEL: DataType<Pair<Int, Int>> = LoreDataTypes.FUEL
     val SNOWBALLS: DataType<Pair<Int, Int>> = LoreDataTypes.SNOWBALLS
     val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = LoreDataTypes.RIGHT_CLICK_MANA_ABILITY

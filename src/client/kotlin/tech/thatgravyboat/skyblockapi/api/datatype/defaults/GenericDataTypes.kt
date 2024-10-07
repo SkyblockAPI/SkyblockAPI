@@ -19,6 +19,7 @@ object GenericDataTypes {
     }
     val SECONDS_HELD: DataType<Int> = DataType("seconds_held") { it.getTag("seconds_held")?.asInt }
     val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") { it.getTag("pickonimbus_durability")?.asInt }
+    val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.getTag("rarity_upgrades")?.asInt }
 
     @Subscription
     fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
