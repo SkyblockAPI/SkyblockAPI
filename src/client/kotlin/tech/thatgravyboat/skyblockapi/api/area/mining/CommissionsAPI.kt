@@ -62,7 +62,9 @@ object CommissionsAPI {
                 }
                 Commission(it.getRawLore().getOrNull(4) ?: "Unknown", commissionArea, progress)
             }
-            .let { this.commissions = it }
+            .let {
+                this.commissions = this.commissions.filter { commission -> commission.area != commissionArea } + it
+            }
     }
 
     @Subscription
