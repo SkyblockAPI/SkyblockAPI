@@ -10,6 +10,7 @@ enum class SkyblockIsland(val id: String) {
     DEEP_CAVERNS("mining_2"),
     DWARVEN_MINES("mining_3"),
     CRYSTAL_HOLLOWS("crystal_hollows"),
+    MINESHAFT("mineshaft"),
     SPIDERS_DEN("combat_1"),
     THE_END("combat_3"),
     CRIMSON_ISLE("crimson_isle"),

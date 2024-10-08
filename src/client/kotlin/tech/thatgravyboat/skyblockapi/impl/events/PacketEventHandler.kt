@@ -36,6 +36,7 @@ object PacketEventHandler {
                     ContainerInitializedEvent(event.packet.items, container.title).post()
                 }
             }
+
             is ClientboundContainerSetSlotPacket -> {
                 McClient.tell {
                     val containerId = event.packet.containerId
@@ -43,10 +44,19 @@ object PacketEventHandler {
                         PLAYER_HOTBAR_CONTAINER_ID -> {
                             PlayerHotbarChangeEvent(event.packet.slot - FIRST_HOTBAR_SLOT, event.packet.item).post()
                         }
+
                         PLAYER_INVENTORY_CONTAINER_ID -> PlayerInventoryChangeEvent(event.packet.slot, event.packet.item).post()
                         else -> {
                             val container = McScreen.asMenu?.takeIf { it.menu?.containerId == containerId } ?: return@tell
-                            ContainerChangeEvent(event.packet.item, event.packet.slot, container.title).post()
+                            val currentItems = container.menu?.slots?.map { it.item } ?: emptyList()
+
+                            val updatedItems = currentItems.toMutableList().apply {
+                                if (event.packet.slot in indices) {
+                                    this[event.packet.slot] = event.packet.item
+                                }
+                            }
+
+                            ContainerChangeEvent(event.packet.item, event.packet.slot, container.title, updatedItems).post()
                         }
                     }
                 }

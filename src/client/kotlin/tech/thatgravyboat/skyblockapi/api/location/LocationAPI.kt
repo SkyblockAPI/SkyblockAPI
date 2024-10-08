@@ -17,7 +17,7 @@ object LocationAPI {
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
         "location",
-        " *[⏣ф] (?<location>.+)"
+        " *[⏣ф] (?<location>.+)",
     )
 
     var isOnSkyblock: Boolean = false
@@ -56,5 +56,4 @@ object LocationAPI {
             AreaChangeEvent(old, area).post(SkyBlockAPI.eventBus)
         }
     }
-
 }
