@@ -26,12 +26,20 @@ object HollowsAPI {
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (!SkyblockIsland.CRYSTAL_HOLLOWS.inIsland()) return
 
-        heatPattern.anyMatch(event.added, "heat") { (heat) ->
+        heatPattern.anyMatch(event.new, "heat") { (heat) ->
             this.heat = heat.toIntOrNull()
-        } else {
-            // Heat doesnt show up on the scoreboard if its 0,
+            return@anyMatch
+        }
+
+        heatPattern.anyMatch(event.old, "heat") { (heat) ->
+            val oldHeat = heat.toIntOrNull()
+
+            // Heat doesn't show up on the scoreboard if its 0,
             // so we need to check if it was removed and set it to 0
-            heat = 0
+            if (oldHeat == 1 && this.heat != 2) {
+                this.heat = 0
+                println("Heat was removed")
+            }
         }
     }
 
