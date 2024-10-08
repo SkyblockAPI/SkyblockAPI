@@ -34,14 +34,14 @@ object CommissionsAPI {
 
     private val commissionAreaRegex = inventoryGroup.create("commissionArea", "▶ (?<area>.*)")
     private val commissionItemRegex = inventoryGroup.create("commission", "Commission #\\d+(?: NEW)?")
+    private val commissionProgressRegex = inventoryGroup.create("commissionProgress", " *(?<progress>[\\d,.]+)%")
 
     private val tablistGroup = RegexGroup.TABLIST_WIDGET.group("commissions")
 
     private val commissionTablistRegex = tablistGroup.create("commission", " (?<commission>.*): (?<percent>[\\d,.]+)%")
 
-    private val currentCommissions = mutableListOf<Commission>()
-
-    val commissions: List<Commission> get() = currentCommissions.toList()
+    var commissions: List<Commission> = emptyList()
+        private set
 
     @Subscription
     fun onInventoryUpdate(event: ContainerChangeEvent) {
@@ -54,13 +54,15 @@ object CommissionsAPI {
             CommissionArea.byName(matchedArea)
         } ?: return
 
-        currentCommissions.removeAll { it.area == commissionArea }
-
         event.inventory.filter { commissionItemRegex.match(it.hoverName.stripped) }
             .map {
-                Commission(it.getRawLore().getOrNull(4) ?: "Unknown", commissionArea, 0f)
+                var progress = 0f
+                commissionProgressRegex.anyMatch(it.getRawLore(), "progress") { (percent) ->
+                    progress = percent.toFloatValue() / 100
+                }
+                Commission(it.getRawLore().getOrNull(4) ?: "Unknown", commissionArea, progress)
             }
-            .let { currentCommissions.addAll(it) }
+            .let { this.commissions = it }
     }
 
     @Subscription
@@ -71,19 +73,21 @@ object CommissionsAPI {
             commissionTablistRegex.match(line, "commission", "percent") { (commissionName, percent) ->
                 val progress = percent.toFloatValue() / 100
 
-                currentCommissions.find { it.name == commissionName }?.also {
+                this.commissions.find { it.name == commissionName }?.also {
                     it.progress = progress
                     return@match
                 }
 
                 val area = CommissionArea.entries.find { it.areaCheck() } ?: return@match
 
-                currentCommissions.add(Commission(commissionName, area, progress))
+                this.commissions += Commission(commissionName, area, progress)
             }
         }
     }
 
     @Subscription
-    fun onProfileSwitch(event: ProfileChangeEvent) = currentCommissions.clear()
+    fun onProfileSwitch(event: ProfileChangeEvent) {
+        this.commissions = emptyList()
+    }
 }
 

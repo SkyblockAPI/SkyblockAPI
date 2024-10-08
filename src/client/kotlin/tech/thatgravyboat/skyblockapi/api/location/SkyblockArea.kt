@@ -2,6 +2,11 @@ package tech.thatgravyboat.skyblockapi.api.location
 
 data class SkyblockArea(val name: String) {
     fun inArea() = LocationAPI.area == this
+
+    companion object {
+
+        fun inAnyArea(vararg areas: SkyblockArea) = areas.any { it.inArea() }
+    }
 }
 
 @Suppress("unused")

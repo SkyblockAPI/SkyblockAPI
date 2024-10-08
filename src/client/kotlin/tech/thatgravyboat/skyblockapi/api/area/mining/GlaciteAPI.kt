@@ -2,13 +2,13 @@ package tech.thatgravyboat.skyblockapi.api.area.mining
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
+import tech.thatgravyboat.skyblockapi.api.location.SkyblockArea
 import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 @Module
 object GlaciteAPI {
@@ -17,13 +17,19 @@ object GlaciteAPI {
 
     private val coldRegex = glaciteGroup.create("cold", "Cold: -(?<cold>\\d+)❄")
 
-    private val locationRegex = glaciteGroup.create("location", "Glacite Tunnels|Great Glacite Lake")
-
     var cold: Int = 0
         private set
 
-    fun inGlaciteTunnels() =
-        SkyblockIsland.MINESHAFT.inIsland() || (SkyblockIsland.DWARVEN_MINES.inIsland() && locationRegex.match(LocationAPI.area.name))
+    fun inGlaciteTunnels() = when {
+        SkyblockIsland.MINESHAFT.inIsland() -> true
+        SkyblockIsland.DWARVEN_MINES.inIsland() -> SkyblockArea.inAnyArea(
+            SkyBlockAreas.GLACITE_TUNNELS,
+            SkyBlockAreas.GREAT_LAKE,
+            SkyBlockAreas.BASECAMP,
+            SkyBlockAreas.FOSSIL_RESEARCH
+        )
+        else -> false
+    }
 
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
