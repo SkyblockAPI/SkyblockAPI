@@ -89,31 +89,29 @@ object TabListEventHandler {
     fun onTabListChange(event: TabListChangeEvent) {
         if (!LocationAPI.isOnSkyblock) return
 
-        for (column in event.new) {
-            if (column.isEmpty() || !infoRegex.matches(column.first().stripped)) continue
+        val sections = event.new
+            .filter { it.isNotEmpty() && infoRegex.matches(it.first().stripped) }
+            .map { it.drop(1) }
+            .flatten()
+            .chunked { !it.stripped.startsWith(" ") }
+            .peek { it.removeIf { c -> c.stripped.isBlank() } }
+            .filter { it.isNotEmpty() }
 
-            val sections = column
-                .drop(1)
-                .chunked { !it.stripped.startsWith(" ") }
-                .peek { it.removeIf { c -> c.stripped.isBlank() } }
-                .filter { it.isNotEmpty() }
-
-            sections.forEach { section ->
-                val title = section.firstOrNull()?.stripped ?: return@forEach
-                val widget = widgetRegexes.entries.firstOrNull { it.value.matches(title) }?.key ?: run {
-                    if ((lastUnknownTabWidgetAlert[title] ?: 0) < System.currentTimeMillis() - 60000) {
-                        lastUnknownTabWidgetAlert[title] = System.currentTimeMillis()
-                        Logger.debug("Unknown tab widget: $title")
-                    }
-                    return@forEach
+        sections.forEach { section ->
+            val title = section.firstOrNull()?.stripped ?: return@forEach
+            val widget = widgetRegexes.entries.firstOrNull { it.value.matches(title) }?.key ?: run {
+                if ((lastUnknownTabWidgetAlert[title] ?: 0) < System.currentTimeMillis() - 60000) {
+                    lastUnknownTabWidgetAlert[title] = System.currentTimeMillis()
+                    Logger.debug("Unknown tab widget: $title")
                 }
+                return@forEach
+            }
 
-                val old = widgets[widget] ?: emptyList()
-                val new = section.map { it.stripped }
-                if (old != new) {
-                    widgets[widget] = new
-                    TabWidgetChangeEvent(widget, old, new, section).post(SkyBlockAPI.eventBus)
-                }
+            val old = widgets[widget] ?: emptyList()
+            val new = section.map { it.stripped }
+            if (old != new) {
+                widgets[widget] = new
+                TabWidgetChangeEvent(widget, old, new, section).post(SkyBlockAPI.eventBus)
             }
         }
     }
