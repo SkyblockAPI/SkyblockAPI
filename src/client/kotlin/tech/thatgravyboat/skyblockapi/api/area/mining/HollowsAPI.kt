@@ -10,17 +10,17 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
 @Module
 object HollowsAPI {
-    private val glaciteGroup = RegexGroup.SCOREBOARD.group("mining.hollows")
+    private val hollowsGroup = RegexGroup.SCOREBOARD.group("mining.hollows")
+
+    // Heat: IMMUNE
+    // Heat: 24♨
+    private val heatPattern = hollowsGroup.create("heat", "Heat: (?<heat>\\d+|IMMUNE)♨?")
 
     var heat: Int? = null
         private set
 
     var heatImmunity: Boolean = false
         get() = heat == null
-
-    // Heat: IMMUNE
-    // Heat: 24♨
-    private val heatPattern = glaciteGroup.create("heat", "Heat: (?<heat>\\d+|IMMUNE)♨?")
 
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {

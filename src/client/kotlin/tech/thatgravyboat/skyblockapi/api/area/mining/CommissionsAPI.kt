@@ -5,8 +5,10 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
+import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
@@ -14,10 +16,10 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 data class Commission(val name: String, val area: CommissionArea, var progress: Float)
 
-enum class CommissionArea(val area: String) {
-    DWARVEN_MINES("Dwarven Mines"),
-    CRYSTAL_HOLLOWS("Crystal Hollows"),
-    GLACITE_TUNNELS("Glacite Tunnels"),
+enum class CommissionArea(val area: String, val areaCheck: () -> Boolean) {
+    DWARVEN_MINES("Dwarven Mines", { SkyblockIsland.DWARVEN_MINES.inIsland() && !GlaciteAPI.inGlaciteTunnels() }),
+    CRYSTAL_HOLLOWS("Crystal Hollows", { SkyblockIsland.CRYSTAL_HOLLOWS.inIsland() }),
+    GLACITE_TUNNELS("Glacite Tunnels", { GlaciteAPI.inGlaciteTunnels() }),
     ;
 
     companion object {
@@ -37,7 +39,9 @@ object CommissionsAPI {
 
     private val commissionTablistRegex = tablistGroup.create("commission", " (?<commission>.*): (?<percent>[\\d,.]+)%")
 
-    val commissions = mutableListOf<Commission>()
+    private val currentCommissions = mutableListOf<Commission>()
+
+    val commissions: List<Commission> get() = currentCommissions.toList()
 
     @Subscription
     fun onInventoryUpdate(event: ContainerChangeEvent) {
@@ -50,13 +54,13 @@ object CommissionsAPI {
             CommissionArea.byName(matchedArea)
         } ?: return
 
-        commissions.removeAll { it.area == commissionArea }
+        currentCommissions.removeAll { it.area == commissionArea }
 
         event.inventory.filter { commissionItemRegex.match(it.hoverName.stripped) }
             .map {
                 Commission(it.getRawLore().getOrNull(4) ?: "Unknown", commissionArea, 0f)
             }
-            .let { commissions.addAll(it) }
+            .let { currentCommissions.addAll(it) }
     }
 
     @Subscription
@@ -65,16 +69,21 @@ object CommissionsAPI {
 
         for (line in event.new) {
             commissionTablistRegex.match(line, "commission", "percent") { (commissionName, percent) ->
-                val progress = percent.toFloatOrNull()?.div(100) ?: 0f
+                val progress = percent.toFloatValue() / 100
 
-                commissions.find { it.name == commissionName }?.also {
+                currentCommissions.find { it.name == commissionName }?.also {
                     it.progress = progress
+                    return@match
                 }
+
+                val area = CommissionArea.entries.find { it.areaCheck() } ?: return@match
+
+                currentCommissions.add(Commission(commissionName, area, progress))
             }
         }
     }
 
     @Subscription
-    fun onProfileSwitch(event: ProfileChangeEvent) = commissions.clear()
+    fun onProfileSwitch(event: ProfileChangeEvent) = currentCommissions.clear()
 }
 
