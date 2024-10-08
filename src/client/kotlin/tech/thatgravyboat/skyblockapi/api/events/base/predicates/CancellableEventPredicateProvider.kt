@@ -10,7 +10,8 @@ class CancellableEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         val subscription = method.getAnnotation<Subscription>() ?: return null
-        return { event, _ -> !event.isCancelled || subscription.receiveCancelled }
+        if (subscription.receiveCancelled) return null
+        return { event, _ -> !event.isCancelled }
     }
 
 }
