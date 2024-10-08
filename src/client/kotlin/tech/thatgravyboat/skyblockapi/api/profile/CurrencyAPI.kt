@@ -23,6 +23,7 @@ object CurrencyAPI {
         "profile.bank.coop",
         "(?i) Bank: (?<coop>\\.\\.\\.|[\\d,kmb]+) / (?<personal>[\\d,kmb]+)",
     )
+    private val soulflowRegex = widgetGroup.create("profile.soulflow", "(?i) Soulflow: (?<soulflow>[\\d,kmb]+)")
 
     private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
     private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,kmb.]+).*")
@@ -57,6 +58,9 @@ object CurrencyAPI {
     var northStars: Long = 0
         private set
 
+    var soulflow: Long = 0
+        private set
+
     @Subscription
     fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
         when (event.widget) {
@@ -74,6 +78,9 @@ object CurrencyAPI {
                 bankCoopRegex.anyMatch(event.new, "coop", "personal") { (coop, personal) ->
                     this.coopBank = coop.parseFormattedLong()
                     this.personalBank = personal.parseFormattedLong()
+                }
+                soulflowRegex.anyMatch(event.new, "soulflow") { (soulflow) ->
+                    this.soulflow = soulflow.parseFormattedLong()
                 }
             }
 
