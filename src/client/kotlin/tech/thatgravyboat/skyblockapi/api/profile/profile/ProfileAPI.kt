@@ -2,9 +2,12 @@ package tech.thatgravyboat.skyblockapi.api.profile.profile
 
 import tech.thatgravyboat.skyblockapi.api.data.stored.ProfileStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileLevelChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -26,6 +29,9 @@ object ProfileAPI {
     var profileName: String? = null
         private set
 
+    var isLoaded: Boolean = false
+        private set
+
     val profileType: ProfileType get() = ProfileStorage.getProfileType()
 
     val sbLevel: Int get() = ProfileStorage.getSkyblockLevel()
@@ -33,9 +39,15 @@ object ProfileAPI {
     val coop: Boolean get() = ProfileStorage.isCoop()
 
     @Subscription
+    fun onServerChange(event: ServerChangeEvent) {
+        this.isLoaded = false
+    }
+
+    @OnlyWidget(TabWidget.PROFILE)
+    @Subscription(priority = Int.MIN_VALUE)
     fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
-        if (event.widget != TabWidget.PROFILE) return
         profileRegex.anyMatch(event.new, "name") { (name) ->
+            val oldName = this.profileName
             when {
                 name.endsWith("♲") -> {
                     this.profileName = name.trim(' ', '♲')
@@ -60,6 +72,11 @@ object ProfileAPI {
             if (SkyblockIsland.THE_RIFT.inIsland()) {
                 this.profileName = this.profileName?.reversed()
             }
+
+            if (oldName != this.profileName) {
+                ProfileChangeEvent(this.profileName!!).post()
+            }
+            this.isLoaded = true
         }
     }
 

@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
+import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -24,6 +25,7 @@ object ScoreboardEventHandler {
     fun onTick(event: TickEvent) {
         if (!LocationAPI.isOnSkyblock) return
         if (System.currentTimeMillis() - lastCheck < CHECK_INTERVAL) return
+        if (!ProfileAPI.isLoaded) return
         lastCheck = System.currentTimeMillis()
 
         handleScoreboard()
