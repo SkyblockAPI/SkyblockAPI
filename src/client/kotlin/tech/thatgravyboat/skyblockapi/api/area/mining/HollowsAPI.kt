@@ -19,8 +19,7 @@ object HollowsAPI {
     var heat: Int? = null
         private set
 
-    var heatImmunity: Boolean = false
-        get() = heat == null
+    val immuneToHeat: Boolean get() = heat == null
 
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
