@@ -12,11 +12,11 @@ internal class EventHandler<T : SkyblockEvent> private constructor(
         listeners.any { it.options.receiveCancelled }
     )
 
-    fun post(event: T, onError: ((Throwable) -> Unit)? = null): Boolean {
+    fun post(event: T, context: Any?, onError: ((Throwable) -> Unit)? = null): Boolean {
         if (this.listeners.isEmpty()) return false
 
         for (listener in listeners) {
-            if (!shouldInvoke(event, listener)) continue
+            if (!listener.predicate.test(event, context)) continue
             try {
                 listener.invoker.accept(event)
             } catch (throwable: Throwable) {
@@ -28,6 +28,4 @@ internal class EventHandler<T : SkyblockEvent> private constructor(
         return event.isCancelled
     }
 
-    private fun shouldInvoke(event: SkyblockEvent, listener: EventListeners.Listener) =
-        !(event.isCancelled && !listener.options.receiveCancelled)
 }

@@ -15,8 +15,8 @@ class EventBus {
         }
     }
 
-    fun post(event: SkyblockEvent): Boolean =
-        getHandler(event.javaClass).post(event)
+    fun post(event: SkyblockEvent, context: Any? = null): Boolean =
+        getHandler(event.javaClass).post(event, context)
 
     fun freeze() {
         frozen = true

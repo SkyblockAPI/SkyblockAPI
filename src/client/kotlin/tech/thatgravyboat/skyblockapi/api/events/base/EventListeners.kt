@@ -20,7 +20,7 @@ internal class EventListeners {
                 transform = Class<*>::getTypeName
             )
         }"
-        listeners.add(Listener(name, createEventConsumer(name, instance, method), options))
+        listeners.add(Listener(name, createEventConsumer(name, instance, method), options, EventPredicates(method)))
     }
 
     /**
@@ -46,5 +46,5 @@ internal class EventListeners {
 
     fun getListeners(): List<Listener> = listeners
 
-    class Listener(val name: String, val invoker: Consumer<Any>, val options: Subscription)
+    class Listener(val name: String, val invoker: Consumer<Any>, val options: Subscription, val predicate: EventPredicates)
 }

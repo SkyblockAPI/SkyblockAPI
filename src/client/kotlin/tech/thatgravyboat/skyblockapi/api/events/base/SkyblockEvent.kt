@@ -10,7 +10,11 @@ abstract class SkyblockEvent protected constructor() {
     fun post(bus: EventBus): Boolean =
         bus.post(this)
 
-    internal fun post(): Boolean = SkyBlockAPI.eventBus.post(this)
+    fun postWithContext(bus: EventBus, context: Any? = null): Boolean =
+        bus.post(this, context)
+
+    internal fun post(): Boolean = post(SkyBlockAPI.eventBus)
+    internal fun postWithContext(context: Any? = null): Boolean = postWithContext(SkyBlockAPI.eventBus, context)
 
     interface Cancellable {
 
