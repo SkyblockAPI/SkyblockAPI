@@ -112,7 +112,6 @@ object CurrencyAPI {
         coopBank = 0
         motes = 0
         bits = 0
-        gems = 0
         copper = 0
         northStars = 0
     }
