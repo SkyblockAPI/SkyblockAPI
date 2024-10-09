@@ -36,6 +36,7 @@ object CommissionsAPI {
     private val commissionAreaRegex = inventoryGroup.create("commissionArea", "▶ (?<area>.*)")
     private val commissionItemRegex = inventoryGroup.create("commission", "Commission #\\d+(?: NEW)?")
     private val commissionProgressRegex = inventoryGroup.create("commissionProgress", " *(?<progress>[\\d,.]+)%")
+    private val commissionCompletedRegex = inventoryGroup.create("commissionCompleted", "COMPLETED")
 
     private val tablistGroup = RegexGroup.TABLIST_WIDGET.group("commissions")
 
@@ -60,6 +61,9 @@ object CommissionsAPI {
                 var progress = 0f
                 commissionProgressRegex.anyMatch(it.getRawLore(), "progress") { (percent) ->
                     progress = percent.toFloatValue() / 100
+                }
+                commissionCompletedRegex.anyMatch(it.getRawLore()) {
+                    progress = 1f
                 }
                 Commission(it.getRawLore().getOrNull(4) ?: "Unknown", commissionArea, progress)
             }
