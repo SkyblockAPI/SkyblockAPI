@@ -29,7 +29,7 @@ object HollowsAPI {
             this.heat = heat.toIntOrNull()
         }
 
-        if (!heatFound && heatPattern.anyMatch(event.removed)) {
+        if (!heatFound && this.heat != 0 && heatPattern.anyMatch(event.removed)) {
             this.heat = 0
         }
     }
