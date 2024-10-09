@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeE
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -69,6 +70,11 @@ object TabListEventHandler {
     private val widgets = mutableMapOf<TabWidget, List<String>>()
 
     private val lastUnknownTabWidgetAlert = mutableMapOf<String, Long>()
+
+    @Subscription
+    fun onServerChange(event: ServerChangeEvent) {
+        this.widgets.clear()
+    }
 
     @Subscription
     fun onTick(event: TickEvent) {

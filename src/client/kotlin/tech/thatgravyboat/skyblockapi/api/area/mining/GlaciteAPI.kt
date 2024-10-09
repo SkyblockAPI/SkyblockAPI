@@ -37,10 +37,8 @@ object GlaciteAPI {
             this.cold = cold.toIntValue()
         }
 
-        if (!coldFound) {
-            coldRegex.anyMatch(event.removed) {
-                this.cold = 0
-            }
+        if (!coldFound && coldRegex.anyMatch(event.removed)) {
+            this.cold = 0
         }
     }
 }
