@@ -80,7 +80,7 @@ object CommissionsAPI {
             commissionTablistRegex.match(line, "commission", "progress") { (commissionName, progress) ->
                 val percent = if (progress == "DONE") 1f else progress.removeSuffix("%").toFloatValue() / 100
 
-                this.commissions.find { it.name == commissionName }?.also {
+                this.commissions.find { it.name == commissionName && it.area == area }?.also {
                     it.progress = percent
                     return@match
                 }

@@ -33,8 +33,14 @@ object GlaciteAPI {
 
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
-        coldRegex.anyMatch(event.added, "cold") { (cold) ->
+        val coldFound = coldRegex.anyMatch(event.added, "cold") { (cold) ->
             this.cold = cold.toIntValue()
+        }
+
+        if (!coldFound) {
+            coldRegex.anyMatch(event.removed) {
+                this.cold = 0
+            }
         }
     }
 }
