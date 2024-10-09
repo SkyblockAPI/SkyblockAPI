@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.area.mining
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
@@ -38,7 +39,7 @@ object CommissionsAPI {
 
     private val tablistGroup = RegexGroup.TABLIST_WIDGET.group("commissions")
 
-    private val commissionTablistRegex = tablistGroup.create("commission", " (?<commission>.*): (?<percent>[\\d,.]+)%")
+    private val commissionTablistRegex = tablistGroup.create("commission", " (?<commission>.*): (?<progress>[\\d,.]+%|DONE)")
 
     var commissions: List<Commission> = emptyList()
         private set
@@ -68,21 +69,21 @@ object CommissionsAPI {
     }
 
     @Subscription
+    @OnlyWidget(TabWidget.COMMISSIONS)
     fun onTabWidgetUpdate(event: TabWidgetChangeEvent) {
-        if (TabWidget.COMMISSIONS != event.widget) return
-
+        val area = CommissionArea.entries.find { it.areaCheck() }
         for (line in event.new) {
-            commissionTablistRegex.match(line, "commission", "percent") { (commissionName, percent) ->
-                val progress = percent.toFloatValue() / 100
+            commissionTablistRegex.match(line, "commission", "progress") { (commissionName, progress) ->
+                val percent = if (progress == "DONE") 1f else progress.removeSuffix("%").toFloatValue() / 100
 
                 this.commissions.find { it.name == commissionName }?.also {
-                    it.progress = progress
+                    it.progress = percent
                     return@match
                 }
 
-                val area = CommissionArea.entries.find { it.areaCheck() } ?: return@match
+                area ?: return@match
 
-                this.commissions += Commission(commissionName, area, progress)
+                this.commissions += Commission(commissionName, area, percent)
             }
         }
     }
