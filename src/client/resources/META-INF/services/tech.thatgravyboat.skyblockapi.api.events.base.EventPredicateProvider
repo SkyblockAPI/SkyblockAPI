@@ -1,3 +1,4 @@
 tech.thatgravyboat.skyblockapi.api.events.base.predicates.CancellableEventPredicateProvider
 tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyInEventPredicateProvider
 tech.thatgravyboat.skyblockapi.api.events.base.predicates.TabWidgetEventPredicateProvider
+tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlockEventPredicateProvider
