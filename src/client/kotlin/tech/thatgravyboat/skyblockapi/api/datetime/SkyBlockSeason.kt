@@ -18,6 +18,10 @@ enum class SkyBlockSeason {
     LATE_WINTER,
     ;
 
+    private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+
+    override fun toString() = string
+
     companion object {
 
         fun parse(value: String): SkyBlockSeason? = runCatching {
