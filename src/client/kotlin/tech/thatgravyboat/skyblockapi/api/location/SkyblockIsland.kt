@@ -32,8 +32,8 @@ enum class SkyblockIsland(val id: String) {
 
         fun getById(input: String) = entries.firstOrNull { it.id == input }
 
-        fun inAnyIsland(vararg islands: SkyblockIsland) = islands.any { it.inIsland() }
+        fun inAnyIsland(vararg islands: SkyblockIsland) = LocationAPI.island in islands
 
-        fun inAnyIsland(islands: Collection<SkyblockIsland>) = islands.any { it.inIsland() }
+        fun inAnyIsland(islands: Collection<SkyblockIsland>) = LocationAPI.island in islands
     }
 }
