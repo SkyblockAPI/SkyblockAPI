@@ -11,6 +11,8 @@ class ComponentRegex(private val regex: Regex) {
     fun find(input: Component): ComponentMatchResult? = regex.find(input.stripped)?.let { ComponentMatchResult(input, it) }
 
     fun match(input: Component): ComponentMatchResult? = regex.matchEntire(input.stripped)?.let { ComponentMatchResult(input, it) }
+
+    fun toRegex() = regex
 }
 
 class Destructured internal constructor(private val match: ComponentMatchResult, private vararg val keys: String) {
