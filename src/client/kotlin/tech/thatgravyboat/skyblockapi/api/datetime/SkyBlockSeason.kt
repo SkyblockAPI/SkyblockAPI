@@ -18,7 +18,7 @@ enum class SkyBlockSeason {
     LATE_WINTER,
     ;
 
-    val formattedName = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+    val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
 
     companion object {
 
