@@ -49,7 +49,12 @@ public class ChatListenerMixin {
     )
     private void onAddMessage(ChatComponent instance, Component component, Operation<Void> original) {
         ChatReceivedEvent event = new ChatReceivedEvent(component, null);
-        if (event.post(SkyBlockAPI.getEventBus())) return;
+        if (event.post(SkyBlockAPI.getEventBus())) {
+            SkyBlockAPI.INSTANCE
+                .getLogger$skyblock_api_client()
+                .info("[Cancelled] [CHAT] {}", event.getComponent().getString());
+            return;
+        }
         ((ChatComponentExtension) this.minecraft.gui.getChat()).skyblockapi$setIdForMessage(event.getId());
         original.call(instance, event.getComponent());
         ((ChatComponentExtension) this.minecraft.gui.getChat()).skyblockapi$setIdForMessage(null);
