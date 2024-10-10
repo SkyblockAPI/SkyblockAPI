@@ -24,6 +24,10 @@ enum class CommissionArea(val area: String, val areaCheck: () -> Boolean) {
     ;
 
     companion object {
+
+        val currentArea: CommissionArea?
+            get() = entries.firstOrNull { it.areaCheck() }
+
         fun byName(area: String?): CommissionArea? = entries.firstOrNull { it.area == area }
     }
 }
@@ -75,7 +79,7 @@ object CommissionsAPI {
     @Subscription
     @OnlyWidget(TabWidget.COMMISSIONS)
     fun onTabWidgetUpdate(event: TabWidgetChangeEvent) {
-        val area = CommissionArea.entries.find { it.areaCheck() }
+        val area = CommissionArea.currentArea
         for (line in event.new) {
             commissionTablistRegex.match(line, "commission", "progress") { (commissionName, progress) ->
                 val percent = if (progress == "DONE") 1f else progress.removeSuffix("%").toFloatValue() / 100
