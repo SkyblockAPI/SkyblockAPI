@@ -51,8 +51,7 @@ enum class ActionBarWidget {
     SECRETS,
     ;
 
-    override fun toString(): String = this.name.replace("_", " ")
-        .lowercase()
-        .split(" ")
-        .joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
+    private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+
+    override fun toString() = string
 }
