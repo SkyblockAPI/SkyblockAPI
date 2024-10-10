@@ -24,7 +24,9 @@ enum class SkyblockIsland(val id: String) {
 
     fun inIsland() = LocationAPI.island == this
 
-    val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+    private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+
+    override fun toString() = string
 
     companion object {
 
