@@ -31,6 +31,9 @@ class ArmadilloActionBarWidgetChangeEvent(val current: Float, val max: Float, ol
 class ArmorStackActionBarWidgetChangeEvent(val current: Int, val type: ArmorStack?, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.ARMOR_STACK, old, new)
 
+class SecretsActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.SECRETS, old, new)
+
 enum class ActionBarWidget {
     HEALTH,
     DEFENSE,
@@ -45,4 +48,11 @@ enum class ActionBarWidget {
     CHARGES,
     ARMOR_STACK,
     CELLS_ALIGNMENT,
+    SECRETS,
+    ;
+
+    override fun toString(): String = this.name.replace("_", " ")
+        .lowercase()
+        .split(" ")
+        .joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
 }

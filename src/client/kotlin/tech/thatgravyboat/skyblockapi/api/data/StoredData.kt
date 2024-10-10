@@ -33,7 +33,8 @@ class StoredData<T : Any>(
                 val json = Files.readString(this.file)
                 this.loadedData = json.readJson<JsonElement>()
             } catch (e: Exception) {
-                Logger.error("Failed to load {} from file", this.loadedData ?: "", e)
+                Logger.error("Failed to load {} from file", this.loadedData ?: "")
+                e.printStackTrace()
             }
         }
     }
@@ -44,7 +45,8 @@ class StoredData<T : Any>(
                 this.data = this.loadedData.toData(this.codec)!!
                 this.loadedData = null
             } catch (e: Exception) {
-                Logger.error("Failed to load {} data", this.loadedData ?: "", e)
+                Logger.error("Failed to load {} data", this.loadedData ?: "")
+                e.printStackTrace()
             }
         }
     }
@@ -69,7 +71,8 @@ class StoredData<T : Any>(
             FileUtils.write(file.toFile(), json.toPrettyString(), Charsets.UTF_8)
             Logger.debug("saved {}", file)
         } catch (e: Exception) {
-            Logger.error("Failed to save {} to file", data, e)
+            Logger.error("Failed to save {} to file", data)
+            e.printStackTrace()
         }
     }
 

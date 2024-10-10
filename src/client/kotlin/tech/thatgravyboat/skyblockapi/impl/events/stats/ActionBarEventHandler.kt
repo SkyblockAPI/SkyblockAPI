@@ -81,7 +81,13 @@ object ActionBarEventHandler {
             ArmorStackActionBarWidgetChangeEvent(it["amount"].toIntValue(), ArmorStack.fromString(it["type"]), old, it.string)
         },
         // §a |||
-        ActionBarWidgetType(ActionBarWidget.CELLS_ALIGNMENT, "§a \\|{3}")
+        ActionBarWidgetType(ActionBarWidget.CELLS_ALIGNMENT, "§a \\|{3}"),
+        // §71/6 Secrets
+        ActionBarWidgetType(ActionBarWidget.SECRETS, "§.(?<current>[\\d,]+)/(?<max>[\\d,]+) Secrets", {
+            SecretsActionBarWidgetChangeEvent(0, 0, it.string, "")
+        }) { old, it ->
+            SecretsActionBarWidgetChangeEvent(it["current"].toIntValue(), it["max"].toIntValue(), old, it.string)
+        },
     )
 
     private val widgets = mutableMapOf<ActionBarWidget, String>()

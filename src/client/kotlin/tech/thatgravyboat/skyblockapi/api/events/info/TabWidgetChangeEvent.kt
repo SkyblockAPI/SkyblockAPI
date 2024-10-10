@@ -38,4 +38,10 @@ enum class TabWidget {
     SHEN,
     ADVERTISEMENT,
     TRAPPER,
+    ;
+
+    override fun toString(): String = this.name.replace("_", " ")
+        .lowercase()
+        .split(" ")
+        .joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
 }

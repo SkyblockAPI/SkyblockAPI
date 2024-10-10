@@ -17,7 +17,7 @@ object LocationAPI {
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
         "location",
-        " *[⏣ф] (?<location>.+)",
+        " *[⏣ф] *(?<location>(?:\\s?[^ൠ\\s]+)*)(?: ൠ x\\d)?",
     )
 
     var isOnSkyblock: Boolean = false

@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.area.dungeon
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
@@ -12,6 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanOrArabic
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -19,9 +21,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 @Module
 object DungeonAPI {
@@ -36,7 +35,7 @@ object DungeonAPI {
     )
     private val timeRegex = scoreboardGroup.create(
         "time",
-        "Time Elapsed: (?:(?<hours>\\\\d)h )?(?:(?<minutes>\\\\d+)m )?(?<seconds>\\\\d+)s",
+        "Time Elapsed: (?<time>[\\dhms ]+)",
     )
     private val roomIdRegex = scoreboardGroup.create(
         "room.id",
@@ -114,36 +113,30 @@ object DungeonAPI {
     var roomId: String? = null
         private set
 
-    fun inDungeon() = SkyblockIsland.THE_CATACOMBS.inIsland()
-
     @Subscription
+    @OnlyIn(SkyblockIsland.THE_CATACOMBS)
     fun onAreaChange(event: AreaChangeEvent) {
-        if (!inDungeon()) return
         dungeonFloorRegex.find(event.new.name, "floor") { (floor) ->
             dungeonFloor = DungeonFloor.getByName(floor)
         }
     }
 
     @Subscription
+    @OnlyIn(SkyblockIsland.THE_CATACOMBS)
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
-        if (!inDungeon()) return
-
         for (line in event.added) {
+            timeRegex.find(line, "time") { (time) ->
+                this.time = time.parseDuration() ?: return@find
+            }
             roomIdRegex.findOrNull(line, "id") { (roomId) ->
                 this.roomId = roomId
             } ?: continue
-            timeRegex.find(line) {
-                val hours = it["hours"].toIntValue().hours
-                val minutes = it["minutes"].toIntValue().minutes
-                val seconds = it["seconds"].toIntValue().seconds
-                time = hours + minutes + seconds
-            }
         }
     }
 
     @Subscription
+    @OnlyIn(SkyblockIsland.THE_CATACOMBS)
     fun onChat(event: ChatReceivedEvent) {
-        if (!inDungeon()) return
         val message = event.text
         if (!started && startRegex.matches(message)) {
             started = true
@@ -166,8 +159,8 @@ object DungeonAPI {
     }
 
     @Subscription
+    @OnlyIn(SkyblockIsland.THE_CATACOMBS)
     fun onTablistUpdate(event: TabListChangeEvent) {
-        if (!inDungeon()) return
 
         // first column
         val firstColumn = event.new.firstOrNull() ?: return
@@ -216,8 +209,8 @@ object DungeonAPI {
     }
 
     @Subscription
+    @OnlyIn(SkyblockIsland.THE_CATACOMBS)
     fun onPlayerHotbarUpdate(event: PlayerHotbarChangeEvent) {
-        if (!inDungeon()) return
         if (event.slot != 36) return
         val id = event.item.getData(DataTypes.ID)
         ownPlayer?.dead = id == "HAUNT_ABILITY"
