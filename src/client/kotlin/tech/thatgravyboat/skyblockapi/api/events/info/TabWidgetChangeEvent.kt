@@ -39,6 +39,7 @@ enum class TabWidget {
     SHEN,
     ADVERTISEMENT,
     TRAPPER,
+    EVENT_TRACKERS,
     FROZEN_CORPSES,
     ;
 

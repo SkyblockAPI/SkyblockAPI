@@ -51,6 +51,7 @@ object TabListEventHandler {
         TabWidget.GOOD_TO_KNOW to widgetGroup.create("good_to_know", "Good to know:"),
         TabWidget.ADVERTISEMENT to widgetGroup.create("advertisement", "Advertisement:"),
         TabWidget.TRAPPER to widgetGroup.create("trapper", "Trapper:"),
+        TabWidget.EVENT to widgetGroup.create("event_Trackers", "Event Trackers:"),
         TabWidget.FROZEN_CORPSES to widgetGroup.create("frozen_corpses", "Frozen Corpses:"),
 
         TabWidget.AREA to widgetGroup.create("area", "Area: (?<area>.*)"),

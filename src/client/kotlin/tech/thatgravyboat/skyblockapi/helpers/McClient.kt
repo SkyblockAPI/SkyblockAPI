@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastComponent
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.client.gui.screens.Screen
@@ -73,6 +74,9 @@ object McClient {
     val serverCommands: CommandDispatcher<SharedSuggestionProvider>?
         get() = self.connection?.commands
 
+    val chat: ChatComponent
+        get() = self.gui.chat
+
     fun tell(action: () -> Unit) {
         self.tell(action)
     }
@@ -86,7 +90,7 @@ object McClient {
     }
 
     fun sendCommand(command: String) {
-        self.connection?.sendCommand(command)
+        self.connection?.sendCommand(command.removePrefix("/"))
     }
 
 }

@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.utils.text
 import net.minecraft.network.chat.*
 import net.minecraft.util.StringUtil
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 
@@ -44,19 +45,16 @@ object Text {
     fun MutableComponent.suffix(suffix: String): MutableComponent = join(this, suffix)
     fun MutableComponent.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
 
-    fun MutableComponent.send() = McClient.self.gui.chat.addMessage(this)
-    fun MutableComponent.send(id: String) = McClient.self.gui.chat.setMessageId(id) {
-        McClient.self.gui.chat.addMessage(this)
+    fun MutableComponent.send() = McClient.chat.addMessage(this)
+    fun MutableComponent.send(id: String) = McClient.chat.setMessageId(id) {
+        this.send()
     }
 }
 
 object TextProperties {
 
-    val Component.width: Int
-        get() = McClient.self.font?.width(this) ?: 0
-
-    val Component.stripped: String
-        get() = StringUtil.stripColor(this.string)
+    val Component.width: Int get() = McFont.width(this)
+    val Component.stripped: String get() = StringUtil.stripColor(this.string)
 }
 
 object TextStyle {
