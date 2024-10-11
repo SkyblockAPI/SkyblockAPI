@@ -98,5 +98,10 @@ enum class ProfileType {
     BINGO,
     IRONMAN,
     STRANDED,
-    UNKNOWN
+    UNKNOWN,
+    ;
+
+    val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+
+    override fun toString(): String = string
 }
