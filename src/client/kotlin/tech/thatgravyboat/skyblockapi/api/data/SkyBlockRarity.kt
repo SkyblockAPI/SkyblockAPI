@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.data
 
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 
-enum class SkyblockRarity {
+enum class SkyBlockRarity {
     COMMON,
     UNCOMMON,
     RARE,
@@ -17,7 +17,7 @@ enum class SkyblockRarity {
 
     companion object {
 
-        fun fromColorOrNull(colorCode: Int): SkyblockRarity? {
+        fun fromColorOrNull(colorCode: Int): SkyBlockRarity? {
             return when (colorCode) {
                 TextColor.WHITE -> COMMON
                 TextColor.GREEN -> UNCOMMON

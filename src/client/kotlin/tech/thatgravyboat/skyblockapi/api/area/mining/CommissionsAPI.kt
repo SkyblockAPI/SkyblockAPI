@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
@@ -18,8 +18,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 data class Commission(val name: String, val area: CommissionArea, var progress: Float)
 
 enum class CommissionArea(val area: String, val areaCheck: () -> Boolean) {
-    DWARVEN_MINES("Dwarven Mines", { SkyblockIsland.DWARVEN_MINES.inIsland() && !GlaciteAPI.inGlaciteTunnels() }),
-    CRYSTAL_HOLLOWS("Crystal Hollows", { SkyblockIsland.CRYSTAL_HOLLOWS.inIsland() }),
+    DWARVEN_MINES("Dwarven Mines", { SkyBlockIsland.DWARVEN_MINES.inIsland() && !GlaciteAPI.inGlaciteTunnels() }),
+    CRYSTAL_HOLLOWS("Crystal Hollows", { SkyBlockIsland.CRYSTAL_HOLLOWS.inIsland() }),
     GLACITE_TUNNELS("Glacite Tunnels", { GlaciteAPI.inGlaciteTunnels() }),
     ;
 

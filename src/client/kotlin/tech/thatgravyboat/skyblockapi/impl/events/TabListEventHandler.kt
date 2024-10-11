@@ -78,7 +78,7 @@ object TabListEventHandler {
 
     @Subscription
     fun onTick(event: TickEvent) {
-        if (!LocationAPI.isOnSkyblock) return
+        if (!LocationAPI.isOnSkyBlock) return
         if (System.currentTimeMillis() - lastCheck < CHECK_INTERVAL) return
         lastCheck = System.currentTimeMillis()
 
@@ -93,7 +93,7 @@ object TabListEventHandler {
 
     @Subscription
     fun onTabListChange(event: TabListChangeEvent) {
-        if (!LocationAPI.isOnSkyblock) return
+        if (!LocationAPI.isOnSkyBlock) return
 
         val sections = event.new
             .filter { it.isNotEmpty() && infoRegex.matches(it.first().stripped) }

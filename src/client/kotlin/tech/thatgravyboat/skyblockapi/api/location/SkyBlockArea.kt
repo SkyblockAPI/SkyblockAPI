@@ -1,20 +1,20 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
-data class SkyblockArea(val name: String) {
+data class SkyBlockArea(val name: String) {
     fun inArea() = LocationAPI.area == this
 
     companion object {
 
-        fun inAnyArea(vararg areas: SkyblockArea) = areas.any { it.inArea() }
+        fun inAnyArea(vararg areas: SkyBlockArea) = areas.any { it.inArea() }
     }
 }
 
 @Suppress("unused")
 object SkyBlockAreas {
 
-    private val registeredAreas = mutableMapOf<String, SkyblockArea>()
+    private val registeredAreas = mutableMapOf<String, SkyBlockArea>()
 
-    private fun register(key: String, name: String) = registeredAreas.getOrPut(key) { SkyblockArea(name) }
+    private fun register(key: String, name: String) = registeredAreas.getOrPut(key) { SkyBlockArea(name) }
 
     val NONE = register("none", "None")
     val PRIVATE_ISLAND = register("private_island", "Your Island")

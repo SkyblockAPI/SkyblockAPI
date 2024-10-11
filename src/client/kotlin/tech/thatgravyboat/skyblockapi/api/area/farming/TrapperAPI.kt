@@ -5,8 +5,8 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockArea
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -29,7 +29,7 @@ object TrapperAPI {
     var trackedType: TrapperAnimalType = TrapperAnimalType.UNKNOWN
         private set
 
-    var trackedLocation: SkyblockArea = SkyBlockAreas.NONE
+    var trackedLocation: SkyBlockArea = SkyBlockAreas.NONE
         private set
 
     @Subscription
@@ -51,7 +51,7 @@ object TrapperAPI {
     fun onChatMessage(event: ChatReceivedEvent) {
         animalRegex.match(event.text, "type", "location") { (type, location) ->
             trackedType = TrapperAnimalType.fromString(type)
-            trackedLocation = SkyblockArea(location)
+            trackedLocation = SkyBlockArea(location)
         }
     }
 }
