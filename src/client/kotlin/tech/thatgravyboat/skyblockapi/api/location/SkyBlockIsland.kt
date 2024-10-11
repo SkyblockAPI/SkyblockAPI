@@ -24,14 +24,16 @@ enum class SkyBlockIsland(val id: String) {
 
     fun inIsland() = LocationAPI.island == this
 
-    val formattedName = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+    private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+
+    override fun toString() = string
 
     companion object {
 
         fun getById(input: String) = entries.firstOrNull { it.id == input }
 
-        fun inAnyIsland(vararg islands: SkyBlockIsland) = islands.any { it.inIsland() }
+        fun inAnyIsland(vararg islands: SkyBlockIsland) = LocationAPI.island in islands
 
-        fun inAnyIsland(islands: Collection<SkyBlockIsland>) = islands.any { it.inIsland() }
+        fun inAnyIsland(islands: Collection<SkyBlockIsland>) = LocationAPI.island in islands
     }
 }
