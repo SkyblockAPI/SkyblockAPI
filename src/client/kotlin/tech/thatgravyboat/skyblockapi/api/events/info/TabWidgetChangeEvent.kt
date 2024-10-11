@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
-import kotlin.text.lowercase
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 data class TabWidgetChangeEvent(
     val widget: TabWidget,
@@ -39,9 +39,10 @@ enum class TabWidget {
     SHEN,
     ADVERTISEMENT,
     TRAPPER,
+    FROZEN_CORPSES,
     ;
 
-    private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+    private val string = toFormattedName()
 
     override fun toString() = string
 }
