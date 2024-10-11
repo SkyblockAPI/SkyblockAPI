@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.events.base
 
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 
-abstract class SkyblockEvent protected constructor() {
+abstract class SkyBlockEvent protected constructor() {
 
     var isCancelled = false
         private set
@@ -15,12 +15,12 @@ abstract class SkyblockEvent protected constructor() {
     interface Cancellable {
 
         fun cancel() {
-            val event = this as SkyblockEvent
+            val event = this as SkyBlockEvent
             event.isCancelled = true
         }
     }
 }
 
-abstract class CancellableSkyblockEvent :
-    SkyblockEvent(),
-    SkyblockEvent.Cancellable
+abstract class CancellableSkyBlockEvent :
+    SkyBlockEvent(),
+    SkyBlockEvent.Cancellable

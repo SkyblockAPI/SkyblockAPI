@@ -20,21 +20,21 @@ object LocationAPI {
         " *[⏣ф] *(?<location>(?:\\s?[^ൠ\\s]+)*)(?: ൠ x\\d)?",
     )
 
-    var isOnSkyblock: Boolean = false
+    var isOnSkyBlock: Boolean = false
         private set
 
-    var island: SkyblockIsland? = null
+    var island: SkyBlockIsland? = null
         private set
 
-    var area: SkyblockArea = SkyBlockAreas.NONE
+    var area: SkyBlockArea = SkyBlockAreas.NONE
         private set
 
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
-        isOnSkyblock = event.type == GameType.SKYBLOCK
+        isOnSkyBlock = event.type == GameType.SKYBLOCK
         val old = island
-        island = if (isOnSkyblock && event.mode != null) {
-            SkyblockIsland.getById(event.mode)
+        island = if (isOnSkyBlock && event.mode != null) {
+            SkyBlockIsland.getById(event.mode)
         } else {
             null
         }
@@ -43,16 +43,16 @@ object LocationAPI {
 
     @Subscription
     fun onServerDisconnect(event: ServerDisconnectEvent) {
-        isOnSkyblock = false
+        isOnSkyBlock = false
         island = null
     }
 
     @Subscription
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
-        if (!isOnSkyblock) return
+        if (!isOnSkyBlock) return
         locationRegex.anyMatch(event.added, "location") { (location) ->
             val old = area
-            area = SkyblockArea(location)
+            area = SkyBlockArea(location)
             AreaChangeEvent(old, area).post(SkyBlockAPI.eventBus)
         }
     }

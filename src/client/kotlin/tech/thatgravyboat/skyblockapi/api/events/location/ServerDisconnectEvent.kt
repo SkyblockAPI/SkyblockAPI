@@ -1,5 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.events.location
 
-import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-object ServerDisconnectEvent : SkyblockEvent()
+object ServerDisconnectEvent : SkyBlockEvent()

@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.RiftTimeActionBarWidgetCha
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.profile.CurrencyAPI
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
@@ -85,7 +85,7 @@ object RiftAPI {
 
     @Subscription
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
-        if (!SkyblockIsland.THE_RIFT.inIsland()) return
+        if (!SkyBlockIsland.THE_RIFT.inIsland()) return
 
         effigiesRegex.anyMatch(event.components, "e1", "e2", "e3", "e4", "e5", "e6") { (one, two, three, four, five, six) ->
             effieges[0].enabled = one.style.color?.value == TextColor.RED

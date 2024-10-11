@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.location
 
-import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockArea
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
 
-data class AreaChangeEvent(val old: SkyblockArea, val new: SkyblockArea) : SkyblockEvent()
+data class AreaChangeEvent(val old: SkyBlockArea, val new: SkyBlockArea) : SkyBlockEvent()

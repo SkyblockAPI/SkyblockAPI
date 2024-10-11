@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
-internal class EventHandler<T : SkyblockEvent> private constructor(
+internal class EventHandler<T : SkyBlockEvent> private constructor(
     val name: String,
     private val listeners: List<EventListeners.Listener>,
     private val canReceiveCancelled: Boolean,

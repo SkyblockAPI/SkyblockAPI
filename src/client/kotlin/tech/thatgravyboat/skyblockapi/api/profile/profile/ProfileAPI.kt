@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileLevelChangeEvent
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
@@ -34,7 +34,7 @@ object ProfileAPI {
 
     val profileType: ProfileType get() = ProfileStorage.getProfileType()
 
-    val sbLevel: Int get() = ProfileStorage.getSkyblockLevel()
+    val sbLevel: Int get() = ProfileStorage.getSkyBlockLevel()
 
     val coop: Boolean get() = ProfileStorage.isCoop()
 
@@ -69,7 +69,7 @@ object ProfileAPI {
                     ProfileStorage.setProfileType(ProfileType.NORMAL)
                 }
             }
-            if (SkyblockIsland.THE_RIFT.inIsland()) {
+            if (SkyBlockIsland.THE_RIFT.inIsland()) {
                 this.profileName = this.profileName?.reversed()
             }
 
@@ -82,7 +82,7 @@ object ProfileAPI {
 
     @Subscription
     fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
-        ProfileStorage.setSkyblockLevel(event.level)
+        ProfileStorage.setSkyBlockLevel(event.level)
     }
 
     @Subscription

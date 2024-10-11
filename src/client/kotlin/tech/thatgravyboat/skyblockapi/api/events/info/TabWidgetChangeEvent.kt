@@ -2,14 +2,14 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
-import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 data class TabWidgetChangeEvent(
     val widget: TabWidget,
     val old: List<String>,
     val new: List<String>,
     val newComponents: List<Component>,
-) : SkyblockEvent() {
+) : SkyBlockEvent() {
 
     override fun post(bus: EventBus): Boolean =
         bus.post(this, this.widget)

@@ -1,26 +1,26 @@
 package tech.thatgravyboat.skyblockapi.api.profile.equipment
 
-import tech.thatgravyboat.skyblockapi.api.data.SkyblockCategory
+import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 
 enum class EquipmentSlot(
     internal val slot: Int,
-    internal vararg val categories: SkyblockCategory
+    internal vararg val categories: SkyBlockCategory,
 ) {
     NECKLACE(
         10,
-        SkyblockCategory.NECKLACE, SkyblockCategory.DUNGEON_NECKLACE
+        SkyBlockCategory.NECKLACE, SkyBlockCategory.DUNGEON_NECKLACE,
     ),
     CLOAK(
         19,
-        SkyblockCategory.CLOAK, SkyblockCategory.DUNGEON_CLOAK
+        SkyBlockCategory.CLOAK, SkyBlockCategory.DUNGEON_CLOAK,
     ),
     BELT(
         28,
-        SkyblockCategory.BELT, SkyblockCategory.DUNGEON_BELT
+        SkyBlockCategory.BELT, SkyBlockCategory.DUNGEON_BELT,
     ),
     GLOVES(
         37,
-        SkyblockCategory.GLOVES, SkyblockCategory.DUNGEON_GLOVES,
-        SkyblockCategory.BRACELET, SkyblockCategory.DUNGEON_BRACELET
+        SkyBlockCategory.GLOVES, SkyBlockCategory.DUNGEON_GLOVES,
+        SkyBlockCategory.BRACELET, SkyBlockCategory.DUNGEON_BRACELET,
     ),
 }

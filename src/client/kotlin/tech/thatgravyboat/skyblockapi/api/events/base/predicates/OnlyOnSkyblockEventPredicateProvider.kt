@@ -14,6 +14,6 @@ class OnlyOnSkyBlockEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         method.getAnnotation<OnlyOnSkyBlock>() ?: return null
-        return { _, _ -> LocationAPI.isOnSkyblock }
+        return { _, _ -> LocationAPI.isOnSkyBlock }
     }
 }

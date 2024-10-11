@@ -21,10 +21,10 @@ internal object ProfileStorage {
         PROFILE.save()
     }
 
-    fun getSkyblockLevel(): Int = PROFILE.get().sbLevel[ProfileAPI.profileName] ?: 0
+    fun getSkyBlockLevel(): Int = PROFILE.get().sbLevel[ProfileAPI.profileName] ?: 0
 
-    fun setSkyblockLevel(level: Int) {
-        if (level == getSkyblockLevel()) return
+    fun setSkyBlockLevel(level: Int) {
+        if (level == getSkyBlockLevel()) return
         val profileName = ProfileAPI.profileName ?: return
         PROFILE.get().sbLevel[profileName] = level
         PROFILE.save()

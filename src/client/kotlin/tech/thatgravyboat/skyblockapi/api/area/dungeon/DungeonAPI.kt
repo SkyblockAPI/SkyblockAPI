@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
@@ -114,7 +114,7 @@ object DungeonAPI {
         private set
 
     @Subscription
-    @OnlyIn(SkyblockIsland.THE_CATACOMBS)
+    @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
     fun onAreaChange(event: AreaChangeEvent) {
         dungeonFloorRegex.find(event.new.name, "floor") { (floor) ->
             dungeonFloor = DungeonFloor.getByName(floor)
@@ -122,7 +122,7 @@ object DungeonAPI {
     }
 
     @Subscription
-    @OnlyIn(SkyblockIsland.THE_CATACOMBS)
+    @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         for (line in event.added) {
             timeRegex.find(line, "time") { (time) ->
@@ -135,7 +135,7 @@ object DungeonAPI {
     }
 
     @Subscription
-    @OnlyIn(SkyblockIsland.THE_CATACOMBS)
+    @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
     fun onChat(event: ChatReceivedEvent) {
         val message = event.text
         if (!started && startRegex.matches(message)) {
@@ -159,7 +159,7 @@ object DungeonAPI {
     }
 
     @Subscription
-    @OnlyIn(SkyblockIsland.THE_CATACOMBS)
+    @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
     fun onTablistUpdate(event: TabListChangeEvent) {
 
         // first column
@@ -209,7 +209,7 @@ object DungeonAPI {
     }
 
     @Subscription
-    @OnlyIn(SkyblockIsland.THE_CATACOMBS)
+    @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
     fun onPlayerHotbarUpdate(event: PlayerHotbarChangeEvent) {
         if (event.slot != 36) return
         val id = event.item.getData(DataTypes.ID)

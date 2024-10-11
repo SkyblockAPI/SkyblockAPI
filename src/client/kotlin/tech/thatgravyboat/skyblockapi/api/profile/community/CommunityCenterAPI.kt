@@ -52,13 +52,13 @@ object CommunityCenterAPI {
     @Subscription
     fun onInventoryFullyLoaded(event: ContainerInitializedEvent) {
         when (event.title.string) {
-            "SkyBlock Menu" -> handleSkyblockMenu(event)
+            "SkyBlock Menu" -> handleSkyBlockMenu(event)
             "Booster Cookie" -> handleBoosterCookieMenu(event)
             else -> {}
         }
     }
 
-    private fun handleSkyblockMenu(event: ContainerInitializedEvent) {
+    private fun handleSkyBlockMenu(event: ContainerInitializedEvent) {
         val cookieLore = event.itemStacks.firstOrNull { it.hoverName.string == "Booster Cookie" }?.getRawLore()
         if (cookieLore != null) {
             bitsAvailableRegex.anyMatch(cookieLore, "bits") { (bits) ->

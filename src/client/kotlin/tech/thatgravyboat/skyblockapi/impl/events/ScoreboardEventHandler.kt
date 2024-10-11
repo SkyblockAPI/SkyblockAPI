@@ -23,7 +23,7 @@ object ScoreboardEventHandler {
 
     @Subscription
     fun onTick(event: TickEvent) {
-        if (!LocationAPI.isOnSkyblock) return
+        if (!LocationAPI.isOnSkyBlock) return
         if (System.currentTimeMillis() - lastCheck < CHECK_INTERVAL) return
         if (!ProfileAPI.isLoaded) return
         lastCheck = System.currentTimeMillis()

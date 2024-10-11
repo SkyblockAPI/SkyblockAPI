@@ -2,9 +2,9 @@ package tech.thatgravyboat.skyblockapi.api.area.mining
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockArea
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -21,12 +21,12 @@ object GlaciteAPI {
         private set
 
     fun inGlaciteTunnels() = when {
-        SkyblockIsland.MINESHAFT.inIsland() -> true
-        SkyblockIsland.DWARVEN_MINES.inIsland() -> SkyblockArea.inAnyArea(
+        SkyBlockIsland.MINESHAFT.inIsland() -> true
+        SkyBlockIsland.DWARVEN_MINES.inIsland() -> SkyBlockArea.inAnyArea(
             SkyBlockAreas.GLACITE_TUNNELS,
             SkyBlockAreas.GREAT_LAKE,
             SkyBlockAreas.BASECAMP,
-            SkyBlockAreas.FOSSIL_RESEARCH
+            SkyBlockAreas.FOSSIL_RESEARCH,
         )
         else -> false
     }
