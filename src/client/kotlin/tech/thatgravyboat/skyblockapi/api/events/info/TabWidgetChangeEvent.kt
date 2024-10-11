@@ -3,7 +3,6 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
-import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
 import kotlin.text.lowercase
 
 data class TabWidgetChangeEvent(
