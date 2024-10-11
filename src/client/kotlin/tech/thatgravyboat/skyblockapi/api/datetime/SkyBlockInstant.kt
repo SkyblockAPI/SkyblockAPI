@@ -14,7 +14,7 @@ private const val HOUR_IN_MILLIS = 50000L
 private const val MINUTE_IN_MILLIS = 833L
 private const val SECOND_IN_MILLIS = 13L
 
-data class SkyBlockInstant(private val instant: Instant) {
+data class SkyBlockInstant(val instant: Instant) {
 
     constructor(
         year: @Range(from = 0, to = Int.MAX_VALUE.toLong()) Int = 1,
@@ -55,6 +55,8 @@ data class SkyBlockInstant(private val instant: Instant) {
 
     operator fun plus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.plus(duration))
     operator fun minus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.minus(duration))
+
+    operator fun minus(other: SkyBlockInstant): Duration = instant.minus(other.instant)
 
     fun getSeason(): SkyBlockSeason = SkyBlockSeason.entries[this.month - 1]
 
