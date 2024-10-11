@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.extensions
+package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.inventory.Slot

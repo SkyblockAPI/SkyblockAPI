@@ -3,8 +3,8 @@ package tech.thatgravyboat.skyblockapi.impl.debug
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
-import tech.thatgravyboat.skyblockapi.extensions.getHoveredSlot
-import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
+import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -38,7 +38,7 @@ object DebugInventory {
         val slot = menuScreen.getHoveredSlot() ?: return
 
         event.graphics.drawCenteredString(
-            McClient.self.font,
+            McFont.self,
             "${slot.index}",
             8,
             8,

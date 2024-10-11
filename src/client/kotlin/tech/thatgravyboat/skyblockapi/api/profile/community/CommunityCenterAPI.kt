@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
-import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
@@ -33,14 +33,8 @@ object CommunityCenterAPI {
         }
 
     var fameRank: FameRank?
-        private set(rank) {
-            val uuid = McClient.self.player?.uuid ?: return
-            CommunityCenterStorage.setRank(uuid, rank)
-        }
-        get() {
-            val uuid = McClient.self.player?.uuid ?: return null
-            return CommunityCenterStorage.getRank(uuid)
-        }
+        private set(rank) = CommunityCenterStorage.setRank(McPlayer.uuid, rank)
+        get() = CommunityCenterStorage.getRank(McPlayer.uuid)
 
     @Subscription
     fun onChat(event: ChatReceivedEvent) {

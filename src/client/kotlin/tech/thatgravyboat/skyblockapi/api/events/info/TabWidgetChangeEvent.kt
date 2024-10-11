@@ -39,6 +39,7 @@ enum class TabWidget {
     SHEN,
     ADVERTISEMENT,
     TRAPPER,
+    EVENT_TRACKERS,
     ;
 
     private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
