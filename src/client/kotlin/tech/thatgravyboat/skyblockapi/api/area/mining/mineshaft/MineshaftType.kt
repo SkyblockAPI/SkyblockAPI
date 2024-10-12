@@ -21,9 +21,10 @@ enum class MineshaftType(val id: String) {
     OPAL("OPAL"),
     ;
 
-    val displayName = toFormattedName()
+    private val string = toFormattedName()
+    override fun toString() = string
 
     companion object {
-        fun fromId(id: String): MineshaftType? = entries.find { it.id == id }
+        fun fromId(id: String): MineshaftType? = entries.find { it.id.equals(id, true) }
     }
 }

@@ -9,9 +9,10 @@ enum class CorpseType(val key: String? = null) {
     VANGUARD("SKELETON_KEY"),
     ;
 
-    val displayName = toFormattedName()
+    private val string = toFormattedName()
+    override fun toString(): String = string
 
     companion object {
-        fun byName(name: String): CorpseType? = entries.find { it.displayName == name }
+        fun byName(name: String): CorpseType? = entries.find { it.name.equals(name, true) }
     }
 }
