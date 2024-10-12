@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileLevelChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
@@ -100,7 +101,7 @@ enum class ProfileType {
     UNKNOWN,
     ;
 
-    val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+    private val string = toFormattedName()
 
     override fun toString(): String = string
 }

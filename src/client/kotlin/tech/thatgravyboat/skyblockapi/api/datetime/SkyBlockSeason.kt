@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.datetime
 
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+
 enum class SkyBlockSeason {
     EARLY_SPRING,
     SPRING,
@@ -18,7 +20,7 @@ enum class SkyBlockSeason {
     LATE_WINTER,
     ;
 
-    private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+    private val string = toFormattedName()
 
     override fun toString() = string
 

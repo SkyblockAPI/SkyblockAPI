@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.area.mining.mineshaft
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
@@ -45,9 +44,8 @@ object MineshaftAPI {
     var corpses: List<Corpse> = listOf()
         private set
 
-    @OnlyIn(SkyBlockIsland.MINESHAFT)
-    @OnlyWidget(TabWidget.AREA, TabWidget.FROZEN_CORPSES)
     @Subscription
+    @OnlyIn(SkyBlockIsland.MINESHAFT)
     fun onWidgetUpdate(event: TabWidgetChangeEvent) {
         when (event.widget) {
             TabWidget.AREA -> {
@@ -68,8 +66,8 @@ object MineshaftAPI {
         }
     }
 
-    @OnlyIn(SkyBlockIsland.MINESHAFT)
     @Subscription
+    @OnlyIn(SkyBlockIsland.MINESHAFT)
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         mineshaftTypeRegex.anyFound(event.added, "type", "number") { (type, number) ->
             this.mineshaftType = MineshaftType.fromId(type)
