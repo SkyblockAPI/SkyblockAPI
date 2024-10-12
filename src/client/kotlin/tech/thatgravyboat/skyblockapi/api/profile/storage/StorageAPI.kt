@@ -14,11 +14,11 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 @Module
 object StorageAPI {
 
-    private val storageGroup = RegexGroup.INVENTORY.group("storage")
+    private val inventoryGroup = RegexGroup.INVENTORY.group("storage")
 
-    private val enderchestRegex = storageGroup.create("enderchest", "Ender Chest \\((?<page>\\d+)/\\d+\\)")
-    private val backpackRegex = storageGroup.create("backpack", ".* Backpack \\(Slot #(?<page>\\d+)\\)")
-    private val riftStorageRegex = storageGroup.create("rift", "Rift Storage \\((?<page>\\d+)/\\d+\\)")
+    private val enderchestRegex = inventoryGroup.create("enderchest", "Ender Chest \\((?<page>\\d+)/\\d+\\)")
+    private val backpackRegex = inventoryGroup.create("backpack", ".* Backpack \\(Slot #(?<page>\\d+)\\)")
+    private val riftStorageRegex = inventoryGroup.create("rift", "Rift Storage \\((?<page>\\d+)/\\d+\\)")
 
     val enderchests get(): List<PlayerStorageInstance> = PlayerStorageStorage.enderchests
     val backpacks get(): List<PlayerStorageInstance> = PlayerStorageStorage.backpacks

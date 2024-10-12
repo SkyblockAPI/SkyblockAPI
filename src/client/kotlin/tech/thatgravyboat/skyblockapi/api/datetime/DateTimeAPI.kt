@@ -13,12 +13,12 @@ object DateTimeAPI {
 
     private val dateRegex = regexGroup.create(
         "date",
-        " *(?<season>[A-Za-z ]+) (?<day>\\d+)(st|nd|rd|th)"
+        "^\\s*(?<season>[A-Za-z\\s]+) (?<day>\\d+)(?:st|nd|rd|th)"
     )
 
     private val timeRegex = regexGroup.create(
         "time",
-        " *(?<hour>\\d{1,2}):(?<minute>\\d{1,2})(?<period>am|pm) (?<symbol>.)"
+        "^\\s*(?<hour>\\d{1,2}):(?<minute>\\d{1,2})(?<period>am|pm) (?<symbol>.)"
     )
 
     var season: SkyBlockSeason? = null
@@ -46,12 +46,12 @@ object DateTimeAPI {
             this.day = day.toInt()
         }
         timeRegex.anyMatch(event.added, "hour", "minute", "period") { (hour, minute, period) ->
-            this.hour = hour.toIntOrNull() ?: 0
+            this.hour = hour.toInt()
             this.hour = when (this.hour) {
                 12 -> if (period == "am") 0 else 12
                 else -> this.hour + if (period == "pm") 12 else 0
             }
-            this.minute = minute.toIntOrNull() ?: 0
+            this.minute = minute.toInt()
         }
     }
 }

@@ -17,14 +17,13 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 @Module
 object ProfileAPI {
 
-    private val profileGroup = RegexGroup.TABLIST_WIDGET.group("profile")
+    private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("profile")
 
     // Profile: Watermelon ♲
-    private val profileRegex = profileGroup.create(
+    private val profileRegex = widgetGroup.create(
         "name",
         "Profile: (?<name>.+)",
     )
-
 
     var profileName: String? = null
         private set

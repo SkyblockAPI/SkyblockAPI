@@ -18,7 +18,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanOrArabic
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import kotlin.time.Duration
 
@@ -125,10 +125,10 @@ object DungeonAPI {
     @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         for (line in event.added) {
-            timeRegex.find(line, "time") { (time) ->
-                this.time = time.parseDuration() ?: return@find
-            }
-            roomIdRegex.findOrNull(line, "id") { (roomId) ->
+            timeRegex.findThenNull(line, "time") { (time) ->
+                this.time = time.parseDuration() ?: return@findThenNull
+            } ?: continue
+            roomIdRegex.findThenNull(line, "id") { (roomId) ->
                 this.roomId = roomId
             } ?: continue
         }
@@ -147,8 +147,8 @@ object DungeonAPI {
             return
         }
         if (!inBoss && dungeonFloor != DungeonFloor.E) {
-            bossStartRegex.findOrNull(message, "boss") { (boss) ->
-                if (boss != "The Watcher") return@findOrNull
+            bossStartRegex.findThenNull(message, "boss") { (boss) ->
+                if (boss != "The Watcher") return@findThenNull
                 inBoss = dungeonFloor?.chatBossName == boss
             } ?: return
         }
@@ -161,7 +161,6 @@ object DungeonAPI {
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
     fun onTablistUpdate(event: TabListChangeEvent) {
-
         // first column
         val firstColumn = event.new.firstOrNull() ?: return
         val first = firstColumn.firstOrNull() ?: return
@@ -173,7 +172,7 @@ object DungeonAPI {
 
         for (line in firstColumn) {
             val stripped = line.stripped
-            classRegex.findOrNull(stripped, "name", "class", "level") { (name, dungeonClass, level) ->
+            classRegex.findThenNull(stripped, "name", "class", "level") { (name, dungeonClass, level) ->
                 val dungeonPlayer = teammates.find { it.name == name }
                 if (dungeonPlayer != null) {
                     if (name != ownName) dungeonPlayer.dead = false
@@ -181,9 +180,9 @@ object DungeonAPI {
                         dungeonPlayer.dungeonClass = DungeonClass.getByName(dungeonClass)
                         dungeonPlayer.classLevel = level.parseRomanOrArabic()
                     }
-                    return@findOrNull
+                    return@findThenNull
                 }
-                val playerClass = DungeonClass.getByName(dungeonClass) ?: return@findOrNull
+                val playerClass = DungeonClass.getByName(dungeonClass) ?: return@findThenNull
                 val player = DungeonPlayer(name, playerClass, level.parseRomanOrArabic())
                 if (name == ownName) {
                     ownPlayer = player
@@ -202,7 +201,7 @@ object DungeonAPI {
 
         val secondColumn = event.new.getOrNull(1) ?: return
         for (line in secondColumn) {
-            milestoneRegex.findOrNull(line.stripped, "milestone") { (milestone) ->
+            milestoneRegex.findThenNull(line.stripped, "milestone") { (milestone) ->
                 this.milestone = milestoneCharToInt(milestone.first())
             } ?: break
         }
