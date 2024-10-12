@@ -30,7 +30,7 @@ object TabListEventHandler {
 
     private val infoRegex = RegexGroup.TABLIST.create(
         "info",
-        ".*(?:Info|Account Info)"
+        "(?:Info|Account Info)$"
     )
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET
@@ -98,7 +98,7 @@ object TabListEventHandler {
         if (!LocationAPI.isOnSkyBlock) return
 
         val sections = event.new
-            .filter { it.isNotEmpty() && infoRegex.matches(it.first().stripped) }
+            .filter { it.isNotEmpty() && infoRegex.containsMatchIn(it.first().stripped) }
             .map { it.drop(1) }
             .flatten()
             .chunked { !it.stripped.startsWith(" ") }
