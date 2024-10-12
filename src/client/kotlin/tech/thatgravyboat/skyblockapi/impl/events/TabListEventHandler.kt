@@ -52,6 +52,7 @@ object TabListEventHandler {
         TabWidget.ADVERTISEMENT to widgetGroup.create("advertisement", "Advertisement:"),
         TabWidget.TRAPPER to widgetGroup.create("trapper", "Trapper:"),
         TabWidget.EVENT to widgetGroup.create("event_Trackers", "Event Trackers:"),
+        TabWidget.FROZEN_CORPSES to widgetGroup.create("frozen_corpses", "Frozen Corpses:"),
 
         TabWidget.AREA to widgetGroup.create("area", "Area: (?<area>.*)"),
         TabWidget.PROFILE to widgetGroup.create("profile", "Profile: (?<profile>.*)"),
@@ -87,7 +88,7 @@ object TabListEventHandler {
         val newStringTabList = newTabList.map { it.map { it.stripped } }
 
         if (tabList != newStringTabList) {
-            TabListChangeEvent(tabList, newTabList).post(SkyBlockAPI.eventBus)
+            TabListChangeEvent(tabList, newTabList).post()
             tabList = newStringTabList
         }
     }
@@ -118,7 +119,7 @@ object TabListEventHandler {
             val new = section.map { it.stripped }
             if (old != new) {
                 widgets[widget] = new
-                TabWidgetChangeEvent(widget, old, new, section).post(SkyBlockAPI.eventBus)
+                TabWidgetChangeEvent(widget, old, new, section).post()
             }
         }
     }
