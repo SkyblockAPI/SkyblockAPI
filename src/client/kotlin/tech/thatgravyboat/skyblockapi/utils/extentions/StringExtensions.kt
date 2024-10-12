@@ -106,6 +106,9 @@ internal fun String?.parseRomanNumeral(): Int = runCatching {
     return@runCatching total
 }.getOrElse { 0 }
 
+internal fun <T : Enum<T>> Enum<T>.toFormattedName(): String =
+    name.split("_").joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+
 fun Int.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
 fun Long.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
 fun Float.toFormattedString(): String = DecimalFormat.getNumberInstance().format(this)

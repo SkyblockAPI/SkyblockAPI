@@ -33,6 +33,15 @@ object RegexUtils {
     fun Regex.anyFound(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         return input.any { find(it, groups = groups, action = action) }
     }
+
+    fun Regex.findAll(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
+        var globalFound = false
+        input.forEach {
+            val found = find(it, groups = groups, action = action)
+            if (found) globalFound = true
+        }
+        return globalFound
+    }
 }
 
 class Destructured internal constructor(private val match: MatchResult, private vararg val keys: String) {
