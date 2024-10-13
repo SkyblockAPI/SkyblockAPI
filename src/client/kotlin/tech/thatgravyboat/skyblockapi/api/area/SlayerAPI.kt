@@ -40,9 +40,7 @@ object SlayerAPI {
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (event.removed.any { slayerQuestRegex.matches(it) }) {
             reset()
-            return
-        }
-        if (this.type == null && this.level == 0) {
+        } else if (this.type == null && this.level == 0) {
             val index = event.added.indexOfFirst { slayerQuestRegex.matches(it) }
             if (index != -1 && event.new.size > index) {
                 slayerTypeRegex.match(event.added[index + 1], "type", "level") { (type, level) ->
