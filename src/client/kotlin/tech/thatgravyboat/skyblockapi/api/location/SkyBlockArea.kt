@@ -87,4 +87,9 @@ object SkyBlockAreas {
     val FOSSIL_RESEARCH = register("fossil_research", "Fossil Research Center")
     val GLACITE_TUNNELS = register("glacite_tunnels", "Glacite Tunnels")
     val GREAT_LAKE = register("great_lake", "Great Glacite Lake")
+
+    // Crimson
+    val DOJO = register("dojo", "Dojo")
+    val DOJO_ARENA = register("dojo_arena", "Dojo Arena")
+    val MAGMA_CHAMBER = register("magma_chamber", "Magma Chamber")
 }
