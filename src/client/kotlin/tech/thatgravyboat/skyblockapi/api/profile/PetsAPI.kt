@@ -9,8 +9,8 @@ import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.regex.component.anyFound
+import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @Module
@@ -18,10 +18,10 @@ object PetsAPI {
 
     private val petGroup = RegexGroup.TABLIST_WIDGET.group("pet")
 
-    private val petRegex = ComponentRegex(petGroup.create(
+    private val petRegex = petGroup.create(
         "pet",
         "^ \\[Lvl (?<level>\\d+)] (?<pet>[\\w ]+)"
-    ))
+    ).toComponentRegex()
 
     private val petXpRegex = petGroup.create(
         "xp",

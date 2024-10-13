@@ -24,3 +24,6 @@ internal inline fun <T> List<T>.peek(crossinline block: (T) -> Unit): List<T> {
     return this
 }
 
+internal inline val <T> List<T>.asMutable get() = this as MutableList<T>
+internal inline val <T> Set<T>.asMutable get() = this as MutableSet<T>
+

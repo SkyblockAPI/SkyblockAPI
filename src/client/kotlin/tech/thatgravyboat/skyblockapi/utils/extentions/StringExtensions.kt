@@ -28,15 +28,15 @@ private val romanNumerals = mapOf(
 
 internal fun String?.toIntValue(): Int = runCatching {
     this?.replace(",", "")?.toInt() ?: 0
-}.getOrElse { 0 }
+}.getOrDefault(0)
 
 internal fun String?.toLongValue(): Long = runCatching {
     this?.replace(",", "")?.toLong() ?: 0
-}.getOrElse { 0 }
+}.getOrDefault(0)
 
 internal fun String?.toFloatValue(): Float = runCatching {
     this?.replace(",", "")?.toFloat() ?: 0f
-}.getOrElse { 0f }
+}.getOrDefault(0f)
 
 internal fun String?.parseFormattedLong(): Long = runCatching {
     val commaless = this?.lowercase()?.replace(",", "")
@@ -46,7 +46,7 @@ internal fun String?.parseFormattedLong(): Long = runCatching {
     } else {
         commaless?.toLong() ?: 0
     }
-}.getOrElse { 0 }
+}.getOrDefault(0)
 
 internal fun String?.parseFormattedInt(): Int = parseFormattedLong().toInt()
 
@@ -58,7 +58,7 @@ internal fun String?.parseFormattedDouble(): Double = runCatching {
     } else {
         commaless?.toDouble() ?: 0.0
     }
-}.getOrElse { 0.0 }
+}.getOrDefault(0.0)
 
 internal fun String?.parseFormattedFloat(): Float = parseFormattedDouble().toFloat()
 
@@ -104,10 +104,15 @@ internal fun String?.parseRomanNumeral(): Int = runCatching {
         total += if (value < nextValue) -value else value
     }
     return@runCatching total
-}.getOrElse { 0 }
+}.getOrDefault(0)
 
 internal fun <T : Enum<T>> Enum<T>.toFormattedName(): String =
     name.split("_").joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+
+internal fun String.cleanPlayerName(): String {
+    val split = trim().split(" ")
+    return split[split.size.coerceAtMost(1)].stripColor().trim()
+}
 
 fun Int.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
 fun Long.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
