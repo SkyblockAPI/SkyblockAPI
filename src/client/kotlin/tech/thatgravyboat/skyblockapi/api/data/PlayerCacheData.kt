@@ -9,10 +9,11 @@ data class PlayerCacheData(
     val players: MutableMap<UUID, CachedPlayer> = mutableMapOf()
 ) {
     companion object {
-        val CODED = KCodec.getCodec<PlayerCacheData>()
+        val CODEC = KCodec.getCodec<PlayerCacheData>()
     }
 }
 
+@GenerateCodec
 data class CachedPlayer(
     var name: String,
     var time: Long = System.currentTimeMillis()

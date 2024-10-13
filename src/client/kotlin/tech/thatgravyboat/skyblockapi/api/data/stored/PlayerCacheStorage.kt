@@ -19,7 +19,7 @@ internal object PlayerCacheStorage {
 
     private val PLAYER_CACHE = StoredData(
         PlayerCacheData(),
-        PlayerCacheData.CODED,
+        PlayerCacheData.CODEC,
         "player_cache.json"
     )
 
@@ -58,10 +58,7 @@ internal object PlayerCacheStorage {
 
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
-        if (shouldSave) {
-            shouldSave = false
-            PLAYER_CACHE.save()
-        }
+        if (shouldSave) save()
     }
 
     @Subscription

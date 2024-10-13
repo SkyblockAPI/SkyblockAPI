@@ -236,7 +236,7 @@ object PartyAPI {
                         add("inParty: $inParty")
                         add("leader: $leader")
                         add("members: (${members.joinToString()})")
-                        add("size: $size")
+                        add("size: ${this@PartyAPI.size}")
                         add("allInvite: $allInvite")
                     }.joinToString("\n")
 
