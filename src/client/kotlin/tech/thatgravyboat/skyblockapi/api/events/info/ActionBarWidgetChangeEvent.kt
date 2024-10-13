@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 import tech.thatgravyboat.skyblockapi.api.data.item.ArmorStack
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import kotlin.time.Duration
 
 open class RenderActionBarWidgetEvent(val widget: ActionBarWidget) : CancellableSkyBlockEvent()
@@ -51,7 +52,7 @@ enum class ActionBarWidget {
     SECRETS,
     ;
 
-    private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+    private val string = toFormattedName()
 
     override fun toString() = string
 }

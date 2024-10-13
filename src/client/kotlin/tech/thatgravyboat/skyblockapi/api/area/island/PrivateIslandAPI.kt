@@ -1,6 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.area.island
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseColonDuration
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -21,7 +24,8 @@ object PrivateIslandAPI {
         private set
 
     @Subscription
-    fun onScoreboardUpdate(event: tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent) {
+    @OnlyIn(SkyBlockIsland.PRIVATE_ISLAND, SkyBlockIsland.GARDEN)
+    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         flightDurationRegex.anyMatch(event.added, "duration") { (duration) ->
             flightDuration = duration.parseColonDuration() ?: Duration.ZERO
         }

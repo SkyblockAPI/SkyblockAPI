@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.impl.events.profile
 
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
@@ -33,7 +32,7 @@ object ProfileLevelEventHandler {
             if (newLevel != lastLevel || newXp != lastXp) {
                 lastLevel = newLevel
                 lastXp = newXp
-                ProfileLevelChangeEvent(newLevel, newXp, newXpToNextLevel).post(SkyBlockAPI.eventBus)
+                ProfileLevelChangeEvent(newLevel, newXp, newXpToNextLevel).post()
             }
         }
     }

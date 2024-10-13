@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.area.mining
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
@@ -13,9 +14,12 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 @Module
 object GlaciteAPI {
 
-    private val glaciteGroup = RegexGroup.SCOREBOARD.group("mining.glacite")
+    private val scoreboardGroup = RegexGroup.SCOREBOARD.group("mining.glacite")
 
-    private val coldRegex = glaciteGroup.create("cold", "Cold: -(?<cold>\\d+)❄")
+    private val coldRegex = scoreboardGroup.create(
+        "cold",
+        "Cold: -(?<cold>\\d+)❄"
+    )
 
     var cold: Int = 0
         private set
@@ -41,4 +45,11 @@ object GlaciteAPI {
             this.cold = 0
         }
     }
+
+    private fun reset() {
+        cold = 0
+    }
+
+    @Subscription
+    fun onServerChange(event: ServerChangeEvent) = reset()
 }

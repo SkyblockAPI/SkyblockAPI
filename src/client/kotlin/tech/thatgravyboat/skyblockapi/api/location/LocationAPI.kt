@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
 import net.hypixel.data.type.GameType
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
@@ -38,13 +37,7 @@ object LocationAPI {
         } else {
             null
         }
-        IslandChangeEvent(old, island).post(SkyBlockAPI.eventBus)
-    }
-
-    @Subscription
-    fun onServerDisconnect(event: ServerDisconnectEvent) {
-        isOnSkyBlock = false
-        island = null
+        IslandChangeEvent(old, island).post()
     }
 
     @Subscription
@@ -53,7 +46,15 @@ object LocationAPI {
         locationRegex.anyMatch(event.added, "location") { (location) ->
             val old = area
             area = SkyBlockArea(location)
-            AreaChangeEvent(old, area).post(SkyBlockAPI.eventBus)
+            AreaChangeEvent(old, area).post()
         }
     }
+
+    private fun reset() {
+        isOnSkyBlock = false
+        island = null
+    }
+
+    @Subscription
+    fun onServerDisconnect(event: ServerDisconnectEvent) = reset()
 }

@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile
 
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -55,39 +56,9 @@ object PetsAPI {
     var xpToNextLevel: Double = 0.0
         private set
 
-    // {
-    //   "text": "",
-    //   "extra": [
-    //     {
-    //       "text": "§9Party §8\u003e §b[MVP§2+§b] Empa_§f: ",
-    //       "hoverEvent": {
-    //         "contents": {
-    //           "text": "§eClick here to view §bEmpa_§e\u0027s profile",
-    //           "strikethrough": false
-    //         },
-    //         "action": "show_text"
-    //       },
-    //       "clickEvent": {
-    //         "action": "run_command",
-    //         "value": "/viewprofile ecdf4cc9-0487-4d6f-bf09-8497deaf8b33"
-    //       },
-    //       "strikethrough": false
-    //     },
-    //     {
-    //       "text": "a",
-    //       "obfuscated": false,
-    //       "italic": false,
-    //       "underlined": false,
-    //       "strikethrough": false,
-    //       "bold": false
-    //     }
-    //   ],
-    //   "strikethrough": false
-    // }
-
     @Subscription
+    @OnlyWidget(TabWidget.PET)
     fun onTabWidgetChange(event: TabWidgetChangeEvent) {
-        if (event.widget != TabWidget.PET) return
         this.reset()
         if (event.new.size < 2) return
         petRegex.anyFound(event.newComponents, "level", "pet") { (level, pet) ->

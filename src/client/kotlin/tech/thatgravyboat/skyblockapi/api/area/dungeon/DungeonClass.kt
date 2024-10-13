@@ -9,6 +9,6 @@ enum class DungeonClass(val displayName: String) {
     ;
 
     companion object {
-        fun getByName(name: String) = entries.firstOrNull { it.displayName == name }
+        fun getByName(name: String) = entries.find { it.displayName == name }
     }
 }

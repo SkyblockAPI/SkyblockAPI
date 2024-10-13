@@ -4,6 +4,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
@@ -26,9 +27,9 @@ enum class CommissionArea(val area: String, val areaCheck: () -> Boolean) {
     companion object {
 
         val currentArea: CommissionArea?
-            get() = entries.firstOrNull { it.areaCheck() }
+            get() = entries.find { it.areaCheck() }
 
-        fun byName(area: String?): CommissionArea? = entries.firstOrNull { it.area == area }
+        fun byName(area: String?): CommissionArea? = entries.find { it.area == area }
     }
 }
 
@@ -51,7 +52,7 @@ object CommissionsAPI {
 
     @Subscription
     fun onInventoryUpdate(event: ContainerChangeEvent) {
-        val commissionAreaStack = event.inventory.firstOrNull { it.hoverName.stripped == "Filter" } ?: return
+        val commissionAreaStack = event.inventory.find { it.hoverName.stripped == "Filter" } ?: return
         val commissionArea = commissionAreaRegex.run {
             var matchedArea: String? = null
             anyMatch(commissionAreaStack.getRawLore(), "area") { (area) ->
@@ -96,9 +97,14 @@ object CommissionsAPI {
         }
     }
 
-    @Subscription
-    fun onProfileSwitch(event: ProfileChangeEvent) {
+    private fun reset() {
         this.commissions = emptyList()
     }
+
+    @Subscription
+    fun onDisconnect(event: ServerDisconnectEvent) = reset()
+
+    @Subscription
+    fun onProfileChange(event: ProfileChangeEvent) = reset()
 }
 

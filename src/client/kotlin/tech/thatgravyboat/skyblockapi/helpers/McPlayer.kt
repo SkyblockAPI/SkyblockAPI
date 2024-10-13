@@ -27,7 +27,7 @@ object McPlayer {
     val xpLevelProgress: Float get() = self?.experienceProgress ?: 0f
 
     val heldItem: ItemStack get() = self?.mainHandItem ?: ItemStack.EMPTY
-    val helemet: ItemStack get() = self?.getItemBySlot(EquipmentSlot.HEAD) ?: ItemStack.EMPTY
+    val helmet: ItemStack get() = self?.getItemBySlot(EquipmentSlot.HEAD) ?: ItemStack.EMPTY
     val chestplate: ItemStack get() = self?.getItemBySlot(EquipmentSlot.CHEST) ?: ItemStack.EMPTY
     val leggings: ItemStack get() = self?.getItemBySlot(EquipmentSlot.LEGS) ?: ItemStack.EMPTY
     val boots: ItemStack get() = self?.getItemBySlot(EquipmentSlot.FEET) ?: ItemStack.EMPTY

@@ -8,10 +8,12 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
-data class GoblinRaidEvent(
-    var kills: Int = 0,
+class GoblinRaidEvent : MiningEvent {
+
+    var kills: Int = 0
+        private set
     var remaining: Int = 0
-) : MiningEvent {
+        private set
 
     override val name: String = "Goblin Raid"
 

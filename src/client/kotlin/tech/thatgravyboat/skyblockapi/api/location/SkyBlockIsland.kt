@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+
 enum class SkyBlockIsland(val id: String) {
     PRIVATE_ISLAND("dynamic"),
     HUB("hub"),
@@ -24,7 +26,7 @@ enum class SkyBlockIsland(val id: String) {
 
     fun inIsland() = LocationAPI.island == this
 
-    private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+    private val string = toFormattedName()
 
     override fun toString() = string
 
