@@ -13,12 +13,16 @@ class PartyMember(val uuid: UUID?, role: PartyRole = PartyRole.MEMBER) {
         this.name = name
     }
 
-    var role = role
+    var role: PartyRole = role
         internal set
 
     var name: String? = if (uuid != null) PlayerCacheStorage.getPlayerName(uuid) else null
         internal set
 
     internal fun missingData(): Boolean = name != null
+
+    override fun toString(): String = "PartyMember(uuid=${uuid.cleanString()}, name=${name.cleanString()}, role=$role)"
+
+    private fun Any?.cleanString(): String = this?.toString() ?: "Unknown"
 
 }

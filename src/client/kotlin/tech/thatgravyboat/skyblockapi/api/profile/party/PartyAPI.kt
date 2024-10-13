@@ -6,6 +6,8 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerCacheStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.PartyInfoEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.events.HypixelEventHandler
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -17,7 +19,11 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.isFound
 import tech.thatgravyboat.skyblockapi.utils.regex.component.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.util.*
 
 private const val MINIMUM_PARTY_INFO_DELAY = 1000 * 60 // 1 minute
@@ -214,6 +220,28 @@ object PartyAPI {
                 val member = PartyMember(uuid, player.role)
                 if (player.role == PartyRole.LEADER) leader = member
                 this.add(member)
+            }
+        }
+    }
+
+    @Subscription
+    fun onCommandsRegistration(event: RegisterCommandsEvent) {
+        event.register("sbapi") {
+            then("party") {
+                callback {
+                    Text.of("[SkyBlockAPI] Copied Party Info to clipboard.") {
+                        this.color = TextColor.YELLOW
+                    }.send()
+                    val string = buildList {
+                        add("inParty: $inParty")
+                        add("leader: $leader")
+                        add("members: (${members.joinToString()})")
+                        add("size: $size")
+                        add("allInvite: $allInvite")
+                    }.joinToString("\n")
+
+                    McClient.clipboard = string
+                }
             }
         }
     }

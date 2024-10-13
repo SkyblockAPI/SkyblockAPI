@@ -19,8 +19,8 @@ object CommonText {
 object Text {
 
     fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
-    fun translatable(text: String, init: MutableComponent.() -> Unit = {}) = Component.translatable(text).also(init)
-    fun String.asComponent(init: MutableComponent.() -> Unit = {}) = Component.literal(this).also(init)
+    fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
+    fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
 
     fun multiline(vararg lines: Any?) = join(*lines, separator = CommonText.NEWLINE)
     fun join(vararg components: Any?, separator: MutableComponent? = null): MutableComponent {
