@@ -16,7 +16,7 @@ class PartyMember(val uuid: UUID?, role: PartyRole = PartyRole.MEMBER) {
     var role = role
         internal set
 
-    var name: String? = if (uuid != null) PlayerCacheStorage.getName(uuid) else null
+    var name: String? = if (uuid != null) PlayerCacheStorage.getPlayerName(uuid) else null
         internal set
 
     internal fun missingData(): Boolean = name != null
