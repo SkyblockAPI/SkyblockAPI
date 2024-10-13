@@ -9,7 +9,6 @@ import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import java.util.*
 
-private const val MINIMUM_UPDATE_TIME = 60 * 60 * 1000 // 1 hour
 private const val MAX_REMOVE_TIME = 10 * 24 * 60 * 60 * 1000 // 10 days
 
 @Module

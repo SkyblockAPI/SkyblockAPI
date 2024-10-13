@@ -16,13 +16,13 @@ internal object EquipmentStorage {
     )
 
     private val normalEquipment: MutableMap<EquipmentSlot, ItemStack>
-        get() = EQUIPMENT.get().slots.getOrPut(ProfileAPI.profileName ?: "", emptyEquipment)
+        get() = EQUIPMENT.get().slots.getOrPut(ProfileAPI.profileName ?: "", ::emptyEquipment)
 
     private val riftEquipment: MutableMap<EquipmentSlot, ItemStack>
-        get() = EQUIPMENT.get().riftSlots.getOrPut(ProfileAPI.profileName ?: "", emptyEquipment)
+        get() = EQUIPMENT.get().riftSlots.getOrPut(ProfileAPI.profileName ?: "", ::emptyEquipment)
 
-    private val emptyEquipment: () -> MutableMap<EquipmentSlot, ItemStack>
-        get() = { EquipmentSlot.entries.associateWith { ItemStack.EMPTY }.toMutableMap() }
+    private fun emptyEquipment(): MutableMap<EquipmentSlot, ItemStack> =
+        EquipmentSlot.entries.associateWith { ItemStack.EMPTY }.toMutableMap()
 
     val equipment: MutableMap<EquipmentSlot, ItemStack>
         get() = if (SkyBlockIsland.THE_RIFT.inIsland()) riftEquipment else normalEquipment
