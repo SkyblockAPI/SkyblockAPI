@@ -21,15 +21,14 @@ object DefaultCodecs {
         this.add("java.lang", "Float", "com.mojang.serialization.Codec.FLOAT")
         this.add("java.lang", "Double", "com.mojang.serialization.Codec.DOUBLE")
         this.add("java.util", "UUID", "net.minecraft.core.UUIDUtil.STRING_CODEC") { isString = true }
+        this.add("kotlinx.datetime", "Instant", "tech.thatgravyboat.skyblockapi.utils.codecs.ModCodecs.INSTANT")
         this.add("net.minecraft.resources", "ResourceLocation") { isString = true }
 
         this.add("net.minecraft.advancements.critereon", "BlockPredicate")
         this.add("net.minecraft.core", "BlockPos")
         this.add("net.minecraft.core", "GlobalPos")
         this.add("net.minecraft.core", "Vec3i")
-        this.add("net.minecraft.core", "Vec3i")
         this.add("net.minecraft.nbt", "CompoundTag", "net.minecraft.nbt.TagParser.LENIENT_CODEC") { isString = true }
-        this.add("net.minecraft.core", "Vec3i")
         this.add("org.joml", "Vector3f", "net.minecraft.util.ExtraCodecs.VECTOR3F")
         this.add("org.joml", "Vector4f", "net.minecraft.util.ExtraCodecs.VECTOR4F")
         this.add("com.mojang.authlib", "GameProfile", "net.minecraft.util.ExtraCodecs.GAME_PROFILE")
