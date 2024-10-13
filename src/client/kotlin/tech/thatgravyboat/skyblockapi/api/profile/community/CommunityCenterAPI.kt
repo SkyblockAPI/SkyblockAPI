@@ -11,7 +11,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.isFound
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 
 private const val BASE_COOKIE_BITS = 4800
 
@@ -39,7 +39,7 @@ object CommunityCenterAPI {
 
     @Subscription
     fun onChat(event: ChatReceivedEvent) {
-        if (cookieAteRegex.isFound(event.text)) {
+        if (cookieAteRegex.contains(event.text)) {
             bitsAvailable += (BASE_COOKIE_BITS * (fameRank?.multiplier ?: 1.0)).toInt()
         }
     }
