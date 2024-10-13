@@ -11,7 +11,6 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.events.HypixelEventHandler
 import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.extentions.asMutable
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanPlayerName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
@@ -40,7 +39,7 @@ object PartyAPI {
 
     private val ownJoinedRegex = ownGroup.create(
         "join",
-        "^You have joined (?:\\[.+] )?(?<leader>\\S*)'s? party!$"
+        "^You have joined (?:\\[.+] )?(?<leader>[a-zA-Z0-9_]+)'s? party!$"
     )
     private val ownLeaveRegex = ownGroup.createList(
         "leave",
@@ -53,7 +52,7 @@ object PartyAPI {
 
     private val otherJoinedRegex = otherGroup.create(
         "join",
-        "^(?:\\[.+] )?(?<member>\\S*) joined the party\\.$"
+        "^(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) joined the party\\.$"
     )
     private val otherInPartyRegex = otherGroup.create(
         "inparty",
@@ -61,18 +60,18 @@ object PartyAPI {
     )
     private val otherLeftRegexList = otherGroup.createList(
         "left",
-        "^(?:\\[.+] )?(?<member>\\S*) has (?:left|been removed from) the party\\.",
-        "^Kicked (?:\\[.+] )?(?<member>\\S*) because they were offline\\.",
-        "^(?:\\[.+] )?(?<member>\\S*) was removed from your party because they disconnected\\."
+        "^(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) has (?:left|been removed from) the party\\.",
+        "^Kicked (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) because they were offline\\.",
+        "^(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) was removed from your party because they disconnected\\."
     )
 
     private val transferLeaveRegex = transferGroup.create(
         "leave",
-        "^The party was transferred to (?:\\[.+] )?(?<leader>\\S*) because (?:\\[.+] )?(?<member>\\S*) left"
+        "^The party was transferred to (?:\\[.+] )?(?<leader>[a-zA-Z0-9_]+) because (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) left"
     )
     private val transferRegex = transferGroup.create(
         "normal",
-        "^The party was transferred to (?:\\[.+] )?(?<leader>\\S*) because (?:\\[.+] )?(?<mod>\\S*)"
+        "^The party was transferred to (?:\\[.+] )?(?<leader>[a-zA-Z0-9_]+) by (?:\\[.+] )?(?<mod>[a-zA-Z0-9_]+)"
     )
 
     private val listMembersRegex = chatGroup.create(
@@ -82,16 +81,16 @@ object PartyAPI {
 
     private val partyFinderRegex = chatGroup.create(
         "partyfinder",
-        "^Party Finder > (?:\\[.+] )?(?<member>\\S*) joined the"
+        "^Party Finder > (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) joined the"
     )
     private val allInviteRegex = chatGroup.create(
         "allinvite",
-        "(?:\\[.+] )?(?<member>\\S*) (?<state>enabled|disabled) All Invite"
+        "(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) (?<state>enabled|disabled) All Invite"
     )
 
     private val partyMessageRegex = chatGroup.create(
         "message",
-        "^Party > (?:\\[.+] )?(?<member>\\S*): "
+        "^Party > (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+): "
     ).toComponentRegex()
 
     private val uuidCommandRegex = chatGroup.create(
@@ -151,7 +150,7 @@ object PartyAPI {
             setRole(leaderName, PartyRole.LEADER)
             remove(memberName)
         } ?: return
-        transferRegex.findThenNull(message, "newleader", "mod") { (leaderName, modName) ->
+        transferRegex.findThenNull(message, "leader", "mod") { (leaderName, modName) ->
             if (checkParty()) return@findThenNull
             setRole(leaderName, PartyRole.LEADER)
             setRole(modName, PartyRole.MOD)
@@ -169,10 +168,12 @@ object PartyAPI {
                     PartyRole.LEADER
                 }
                 "Moderators" -> PartyRole.MOD
+
                 else -> PartyRole.MEMBER
             }
-            for (name in membersList.split(" ● ")) {
-                val member = PartyMember(name.replace(" ●", "").cleanPlayerName(), partyRole)
+            for (name in membersList.split("●")) {
+                if (name.isBlank()) continue
+                val member = PartyMember(name.cleanPlayerName(), partyRole)
                 add(member)
                 if (partyRole == PartyRole.LEADER) this.leader = member
             }
@@ -189,6 +190,7 @@ object PartyAPI {
             } ?: add(PartyMember(member, PartyRole.MOD))
         } ?: return
         partyMessageRegex.findThenNull(event.component, "member") { (member) ->
+            if (checkParty()) return@findThenNull
             val clickEvent = member.style.clickEvent ?: return@findThenNull
             if (clickEvent.action != ClickEvent.Action.RUN_COMMAND) return@findThenNull
             val (uuidString) = uuidCommandRegex.findGroups(clickEvent.value, "uuid") ?: return@findThenNull
@@ -255,18 +257,18 @@ object PartyAPI {
     private fun requestPartyInfo(): Boolean {
         if (requestedPartyInfo) return false
         val current = System.currentTimeMillis()
-        if (lastPartyInfoRequest - current < MINIMUM_PARTY_INFO_DELAY) return false
+        if (current - lastPartyInfoRequest < MINIMUM_PARTY_INFO_DELAY) return false
         requestedPartyInfo = HypixelEventHandler.requestPartyInfo()
         if (requestedPartyInfo) lastPartyInfoRequest = current
         return requestedPartyInfo
     }
 
     private fun add(member: PartyMember) {
-        this.members.asMutable.add(member)
+        this.members += member
     }
 
     private fun remove(name: String) {
-        this.members.asMutable.removeIf { it.name == name }
+        this.members = members.filter { it.name == name }
     }
 
     private fun ownPlayer(role: PartyRole = PartyRole.MEMBER) = PartyMember(McPlayer.name, role)

@@ -1,6 +1,8 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import net.minecraft.util.StringUtil
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import kotlin.math.pow
@@ -109,9 +111,15 @@ internal fun String?.parseRomanNumeral(): Int = runCatching {
 internal fun <T : Enum<T>> Enum<T>.toFormattedName(): String =
     name.split("_").joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
 
+private val regexGroup = Regexes.group("string")
+
+private val cleanPlayerNameRegex = regexGroup.create(
+    "clean.playername",
+    "(?:(?<rank>\\[.+]) ?)?(?<name>[a-zA-Z0-9_]+)"
+)
+
 internal fun String.cleanPlayerName(): String {
-    val split = trim().split(" ")
-    return split[split.size.coerceAtMost(1)].stripColor().trim()
+    return cleanPlayerNameRegex.findGroup(this, "name") ?: this
 }
 
 fun Int.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)

@@ -22,6 +22,10 @@ object RegexUtils {
         return match != null
     }
 
+    fun Regex.findGroup(input: CharSequence, group: String): String? {
+        return find(input)?.let { Destructured(it, group).component1() }
+    }
+
     fun Regex.findGroups(input: CharSequence, vararg groups: String = arrayOf()): Destructured? {
         return find(input)?.let { Destructured(it, *groups) }
     }
