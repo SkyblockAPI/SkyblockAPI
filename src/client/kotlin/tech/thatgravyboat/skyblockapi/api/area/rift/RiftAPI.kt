@@ -14,8 +14,8 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
-import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import kotlin.time.Duration
 
@@ -44,10 +44,10 @@ object RiftAPI {
         "monetezuma",
         "^\\s*Monetezuma: (?<current>\\d+)/(?<max>\\d+)"
     )
-    private val effigiesRegex = ComponentRegex(regexGroup.create(
+    private val effigiesRegex = regexGroup.create(
         "effigies",
         "^Effigies: (?<e1>⧯)(?<e2>⧯)(?<e3>⧯)(?<e4>⧯)(?<e5>⧯)(?<e6>⧯)"
-    ))
+    ).toComponentRegex()
 
     var time: Duration? = null
         private set

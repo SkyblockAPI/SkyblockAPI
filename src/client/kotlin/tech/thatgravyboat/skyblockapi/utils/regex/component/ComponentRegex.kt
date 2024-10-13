@@ -60,8 +60,16 @@ fun ComponentRegex.find(input: Component, vararg groups: String = arrayOf(), act
 fun <T> ComponentRegex.findOrNull(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> T): T? = 
     find(input)?.let { action(Destructured(it, *groups)) }
 
+fun ComponentRegex.findThenNull(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Unit? {
+    val find = find(input) ?: return Unit
+    action(Destructured(find, *groups))
+    return null
+}
+
 fun List<ComponentRegex>.find(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean = 
     any { it.find(input = input, groups = groups, action = action) }
 
 fun ComponentRegex.anyFound(input: List<Component>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean =
     input.any { find(it, groups = groups, action = action) }
+
+fun Regex.toComponentRegex() = ComponentRegex(this)

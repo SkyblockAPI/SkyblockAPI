@@ -23,4 +23,3 @@ internal inline fun <T> List<T>.peek(crossinline block: (T) -> Unit): List<T> {
     }
     return this
 }
-

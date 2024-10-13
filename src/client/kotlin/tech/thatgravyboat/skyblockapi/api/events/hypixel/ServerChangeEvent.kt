@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.api.events.location
+package tech.thatgravyboat.skyblockapi.api.events.hypixel
 
 import net.hypixel.data.type.ServerType
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent

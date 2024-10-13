@@ -22,6 +22,7 @@ class StoredData<T : Any>(
     private val codec: Codec<T>,
     private val file: Path,
 ) {
+    constructor(data: T, codec: Codec<T>, file: String) : this(data, codec, defaultPath.resolve(file))
 
     private var lastScheduler: ScheduledFuture<*>? = null
     private var saveTime: Long = -1L
