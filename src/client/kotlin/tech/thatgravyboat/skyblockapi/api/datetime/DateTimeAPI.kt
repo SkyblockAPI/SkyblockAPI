@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.datetime
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
@@ -43,15 +44,15 @@ object DateTimeAPI {
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         dateRegex.anyMatch(event.added, "season", "day") { (season, day) ->
             this.season = SkyBlockSeason.parse(season)
-            this.day = day.toInt()
+            this.day = day.toIntValue()
         }
         timeRegex.anyMatch(event.added, "hour", "minute", "period") { (hour, minute, period) ->
-            this.hour = hour.toInt()
+            this.hour = hour.toIntValue()
             this.hour = when (this.hour) {
                 12 -> if (period == "am") 0 else 12
                 else -> this.hour + if (period == "pm") 12 else 0
             }
-            this.minute = minute.toInt()
+            this.minute = minute.toIntValue()
         }
     }
 }

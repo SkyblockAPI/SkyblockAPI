@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils.regex.component
 
 import net.minecraft.network.chat.Component
 import org.intellij.lang.annotations.Language
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 class ComponentRegex(private val regex: Regex) {
@@ -15,7 +16,7 @@ class ComponentRegex(private val regex: Regex) {
     fun matches(input: Component) = matches(input.stripped)
     fun contains(input: Component) = contains(input.stripped)
     fun matches(input: String) = regex.matches(input)
-    fun contains(input: String) = regex.containsMatchIn(input)
+    fun contains(input: String) = regex.contains(input)
 
     fun regex() = this.regex
 }

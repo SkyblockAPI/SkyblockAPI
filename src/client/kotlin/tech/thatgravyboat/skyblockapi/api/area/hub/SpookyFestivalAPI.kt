@@ -3,6 +3,8 @@ package tech.thatgravyboat.skyblockapi.api.area.hub
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -60,6 +62,12 @@ object SpookyFestivalAPI {
             onGoing = true
         } ?: reset()
     }
+
+    @Subscription
+    fun onProfileChange(event: ProfileChangeEvent) = reset()
+
+    @Subscription
+    fun onDisconnect(event: ServerDisconnectEvent) = reset()
 
     private fun reset() {
         onGoing = false

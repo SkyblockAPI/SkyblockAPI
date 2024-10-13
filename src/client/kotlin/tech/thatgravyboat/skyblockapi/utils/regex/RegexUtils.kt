@@ -26,7 +26,7 @@ object RegexUtils {
         return find(input)?.let { Destructured(it, *groups) }
     }
 
-    fun Regex.isFound(input: CharSequence): Boolean = find(input) != null
+    fun Regex.contains(input: CharSequence): Boolean = containsMatchIn(input)
 
     fun <T> Regex.findOrNull(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> T): T? {
         return find(input)?.let { action(Destructured(it, *groups)) }

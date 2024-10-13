@@ -20,6 +20,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.chunked
 import tech.thatgravyboat.skyblockapi.utils.extentions.peek
 import tech.thatgravyboat.skyblockapi.utils.mc.displayName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 private const val TAB_LIST_LENGTH = 80
@@ -98,7 +99,7 @@ object TabListEventHandler {
         if (!LocationAPI.isOnSkyBlock) return
 
         val sections = event.new
-            .filter { it.isNotEmpty() && infoRegex.containsMatchIn(it.first().stripped) }
+            .filter { it.isNotEmpty() && infoRegex.contains(it.first().stripped) }
             .map { it.drop(1) }
             .flatten()
             .chunked { !it.stripped.startsWith(" ") }
