@@ -2,8 +2,10 @@ package tech.thatgravyboat.skyblockapi.impl.events
 
 import net.hypixel.modapi.HypixelModAPI
 import net.hypixel.modapi.fabric.event.HypixelModAPICallback
+import net.hypixel.modapi.packet.HypixelPacket
 import net.hypixel.modapi.packet.impl.clientbound.ClientboundPartyInfoPacket
 import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket
+import net.hypixel.modapi.packet.impl.serverbound.ServerboundPartyInfoPacket
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.PartyInfoEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -31,4 +33,10 @@ object HypixelEventHandler {
             }
         }
     }
+
+    private fun sendPacket(packet: HypixelPacket): Boolean {
+        return HypixelModAPI.getInstance().sendPacket(packet)
+    }
+
+    internal fun requestPartyInfo(): Boolean = sendPacket(ServerboundPartyInfoPacket())
 }

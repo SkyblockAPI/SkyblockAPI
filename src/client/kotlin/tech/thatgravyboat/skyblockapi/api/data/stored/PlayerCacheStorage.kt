@@ -36,9 +36,10 @@ internal object PlayerCacheStorage {
         save()
     }
 
-    fun getName(uuid: UUID) = uuid.player?.name
+    fun getPlayerName(uuid: UUID) = uuid.player?.name
 
-    fun updatePlayer(uuid: UUID, name: String): Boolean {
+    /** Returns true if the player was added to the cache or the name was updated */
+    internal fun updatePlayer(uuid: UUID, name: String): Boolean {
         val player = uuid.player
         if (player == null) {
             players[uuid] = CachedPlayer(name)

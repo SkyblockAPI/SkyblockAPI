@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.PartyInfoEvent
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.impl.events.HypixelEventHandler
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.asMutable
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanPlayerName
@@ -18,6 +19,8 @@ import tech.thatgravyboat.skyblockapi.utils.regex.component.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.*
+
+private const val MINIMUM_PARTY_INFO_DELAY = 1000 * 60 // 1 minute
 
 internal typealias PartyRole = ClientboundPartyInfoPacket.PartyRole
 
@@ -36,7 +39,10 @@ object PartyAPI {
     private val ownLeaveRegex = ownGroup.createList(
         "leave",
         " has disbanded the party!$",
-        "^You have been kicked from the party by "
+        "^You have been kicked from the party by ",
+        "^You left the party\\.",
+        "^The party was disbanded because all invites expired and the party was empty\\.",
+        "^You are not (?:currently )?in a party\\.",
     )
 
     private val otherJoinedRegex = otherGroup.create(
@@ -70,7 +76,7 @@ object PartyAPI {
 
     private val partyFinderRegex = chatGroup.create(
         "partyfinder",
-        "^Party Finder > "
+        "^Party Finder > (?:\\[.+] )?(?<member>\\S*) joined the"
     )
     private val allInviteRegex = chatGroup.create(
         "allinvite",
@@ -101,7 +107,8 @@ object PartyAPI {
     var allInvite: Boolean = false
         private set
 
-    private var requestedPartyInfo = false
+    private var requestedPartyInfo: Boolean = false
+    private var lastPartyInfoRequest: Long = 0L
 
     @Subscription
     fun onChat(event: ChatReceivedEvent) {
@@ -159,13 +166,15 @@ object PartyAPI {
                 else -> PartyRole.MEMBER
             }
             for (name in membersList.split(" ● ")) {
-                add(PartyMember(name.replace(" ●", "").cleanPlayerName(), partyRole))
+                val member = PartyMember(name.replace(" ●", "").cleanPlayerName(), partyRole)
+                add(member)
+                if (partyRole == PartyRole.LEADER) this.leader = member
             }
         } ?: return
-        if (partyFinderRegex.isFound(message)) {
-            checkParty()
-            return
-        }
+        partyFinderRegex.findThenNull(message, "member") { (member) ->
+            if (checkParty()) return@findThenNull
+            add(PartyMember(member))
+        } ?: return
         allInviteRegex.findThenNull(message, "member", "state") { (member, state) ->
             if (checkParty()) return@findThenNull
             this.allInvite = state == "enabled"
@@ -212,14 +221,16 @@ object PartyAPI {
     private fun checkParty(): Boolean {
         if (inParty) return false
         inParty = true
-        requestPartyInfo()
-        return true
+        return requestPartyInfo()
     }
 
-    private fun requestPartyInfo() {
-        if (requestedPartyInfo) return
-        requestedPartyInfo = true
-        // TODO
+    private fun requestPartyInfo(): Boolean {
+        if (requestedPartyInfo) return false
+        val current = System.currentTimeMillis()
+        if (lastPartyInfoRequest - current < MINIMUM_PARTY_INFO_DELAY) return false
+        requestedPartyInfo = HypixelEventHandler.requestPartyInfo()
+        if (requestedPartyInfo) lastPartyInfoRequest = current
+        return requestedPartyInfo
     }
 
     private fun add(member: PartyMember) {
