@@ -10,7 +10,7 @@ class PartyMember(val uuid: UUID?, role: PartyRole = PartyRole.MEMBER) {
     }
 
     constructor(uuid: UUID, name: String, role: PartyRole = PartyRole.MEMBER) : this (uuid, role) {
-        this.name
+        this.name = name
     }
 
     var role = role
