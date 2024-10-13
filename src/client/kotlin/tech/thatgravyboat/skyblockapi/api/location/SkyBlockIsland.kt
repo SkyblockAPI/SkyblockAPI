@@ -21,6 +21,7 @@ enum class SkyBlockIsland(val id: String) {
     THE_RIFT("rift"),
     DARK_AUCTION("dark_auction"),
     THE_CATACOMBS("dungeon"),
+    KUUDRA("kuudra"),
     JERRYS_WORKSHOP("winter"),
     ;
 
