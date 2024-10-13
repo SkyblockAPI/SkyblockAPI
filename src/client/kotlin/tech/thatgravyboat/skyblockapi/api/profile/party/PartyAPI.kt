@@ -14,9 +14,9 @@ import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.asMutable
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanPlayerName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroups
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.isFound
 import tech.thatgravyboat.skyblockapi.utils.regex.component.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -157,7 +157,7 @@ object PartyAPI {
             setRole(modName, PartyRole.MOD)
         } ?: return
         for (regex in ownLeaveRegex) {
-            if (regex.isFound(message)) {
+            if (regex.contains(message)) {
                 reset()
                 return
             }
