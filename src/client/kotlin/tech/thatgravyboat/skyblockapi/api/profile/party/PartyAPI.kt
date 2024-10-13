@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.events.HypixelEventHandler
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanPlayerName
+import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroups
@@ -32,6 +33,7 @@ internal typealias PartyRole = ClientboundPartyInfoPacket.PartyRole
 @Module
 object PartyAPI {
 
+    //region Regex
     private val chatGroup = RegexGroup.CHAT.group("party")
     private val ownGroup = chatGroup.group("own")
     private val otherGroup = chatGroup.group("other")
@@ -92,11 +94,7 @@ object PartyAPI {
         "message",
         "^Party > (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+): "
     ).toComponentRegex()
-
-    private val uuidCommandRegex = chatGroup.create(
-        "command.uuid",
-        "/viewprofile (?<uuid>.+)"
-    )
+    //endregion
 
     var inParty: Boolean = false
         private set
@@ -193,7 +191,7 @@ object PartyAPI {
             if (checkParty()) return@findThenNull
             val clickEvent = member.style.clickEvent ?: return@findThenNull
             if (clickEvent.action != ClickEvent.Action.RUN_COMMAND) return@findThenNull
-            val (uuidString) = uuidCommandRegex.findGroups(clickEvent.value, "uuid") ?: return@findThenNull
+            val (uuidString) = CommonRegexes.viewProfileRegex.findGroups(clickEvent.value, "uuid") ?: return@findThenNull
             val uuid = UUID.fromString(uuidString)
             val name = member.stripped
             val hasUpdated = PlayerCacheStorage.updatePlayer(uuid, name)
