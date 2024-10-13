@@ -41,7 +41,7 @@ object ScoreboardEventHandler {
     }
 
     private fun handleTitle() {
-        val newTitle = McClient.scoreboardTitle
+        val newTitle = McClient.scoreboardTitle?.stripped
         if (newTitle != null && newTitle != currentTitle) {
             ScoreboardTitleUpdateEvent(currentTitle, newTitle).post(SkyBlockAPI.eventBus)
             currentTitle = newTitle
