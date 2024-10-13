@@ -13,7 +13,6 @@ import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 object McClient {
 
@@ -66,7 +65,7 @@ object McClient {
                 }
         }
 
-    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName?.stripped
+    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
 
     val toasts: ToastComponent
         get() = self.toasts
