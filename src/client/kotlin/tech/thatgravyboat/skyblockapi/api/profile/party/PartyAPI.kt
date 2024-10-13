@@ -108,7 +108,7 @@ object PartyAPI {
     var members: List<PartyMember> = emptyList()
         private set
 
-    val size: Int = members.size
+    val size: Int get() = members.size
 
     var allInvite: Boolean = false
         private set
