@@ -210,7 +210,7 @@ object DungeonAPI {
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
     fun onPlayerHotbarUpdate(event: PlayerHotbarChangeEvent) {
-        if (event.slot != 36) return
+        if (event.slot != 0) return
         val id = event.item.getData(DataTypes.ID)
         ownPlayer?.dead = id == "HAUNT_ABILITY"
     }
