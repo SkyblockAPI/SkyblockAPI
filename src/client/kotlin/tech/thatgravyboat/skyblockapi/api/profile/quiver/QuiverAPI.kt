@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
+import tech.thatgravyboat.skyblockapi.api.remote.SkyBlockItems
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
@@ -57,8 +58,9 @@ object QuiverAPI {
         if (item.item != Items.ARROW) return
         if (item.getData(DataTypes.QUIVER_ARROW) != true) return
         activeArrowRegex.anyFound(item.getRawLore(), "type", "amount") { (type, amount) ->
-            val id = getIdFromName(type) ?: return@anyFound
+            val id = SkyBlockItems.getIdByDisplayName(type)
             currentArrow = id
+            if (id == null) return@anyFound
             currentAmount = amount.toIntValue()
         }
     }
@@ -84,10 +86,7 @@ object QuiverAPI {
                 addOrPut(id, item.count)
             }
         }
-        QuiverStorage.updateAll(newArrows)
+        QuiverStorage.setArrows(newArrows)
     }
-
-    // TODO: Waiting for item database
-    private fun getIdFromName(name: String): String? = null
 
 }

@@ -34,7 +34,7 @@ internal object QuiverStorage {
         QUIVER.save()
     }
 
-    fun updateAll(map: Map<String, Int>) {
+    fun setArrows(map: Map<String, Int>) {
         if (arrows == map) return
         arrows.clear()
         arrows.putAll(map)
