@@ -18,8 +18,6 @@ internal object QuiverStorage {
             return QUIVER.get().arrows[profileName] ?: mutableMapOf()
         }
 
-    fun getArrow(id: String): Int? = arrows[id]
-
     fun updateArrow(id: String, amount: Int) {
         val prevAmount = arrows[id]
         if (prevAmount == amount) return
