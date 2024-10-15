@@ -15,7 +15,8 @@ internal object QuiverStorage {
 
     private inline val profile: ProfileQuiverData?
         get() {
-            return QUIVER.get().profiles.getOrPut(ProfileAPI.profileName ?: return null, ::ProfileQuiverData)
+            val profile = ProfileAPI.profileName ?: return null
+            return QUIVER.get().profiles.getOrPut(profile, ::ProfileQuiverData)
         }
 
     val arrows: MutableMap<String, Int>
