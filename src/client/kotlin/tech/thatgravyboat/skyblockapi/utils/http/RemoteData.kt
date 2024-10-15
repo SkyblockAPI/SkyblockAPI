@@ -11,8 +11,8 @@ import java.nio.file.Path
 import java.util.*
 
 class RemoteData<T : Any>(
-    private val codec: Codec<T>,
-    private val url: String,
+    codec: Codec<T>,
+    url: String,
     file: Path,
 ) {
 

@@ -33,6 +33,8 @@ object EquipmentAPI {
 
     val equipment get(): Map<EquipmentSlot, ItemStack> = EquipmentStorage.equipment
 
+    fun getEquipment(slot: EquipmentSlot): ItemStack = equipment[slot] ?: ItemStack.EMPTY
+
     @Subscription
     fun onInventoryFullyLoad(event: ContainerInitializedEvent) {
         if (!inventoryNameRegex.matches(event.title)) return

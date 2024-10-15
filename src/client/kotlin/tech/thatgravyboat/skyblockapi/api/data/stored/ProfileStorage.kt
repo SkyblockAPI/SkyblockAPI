@@ -1,41 +1,43 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
-import tech.thatgravyboat.skyblockapi.api.data.StoredData
+import tech.thatgravyboat.skyblockapi.api.data.StoredPlayerData
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileType
 
 internal object ProfileStorage {
-    private val PROFILE = StoredData(
-        ProfileData(),
+    private val PROFILE = StoredPlayerData(
+        ::ProfileData,
         ProfileData.CODEC,
-        StoredData.defaultPath.resolve("profiles.json"),
+        "profiles.json",
     )
 
-    fun getProfileType(): ProfileType = PROFILE.get().profileType[ProfileAPI.profileName] ?: ProfileType.UNKNOWN
+    private inline val data get(): ProfileData = PROFILE.get()
+
+    fun getProfileType(): ProfileType = data.profileType[ProfileAPI.profileName] ?: ProfileType.UNKNOWN
 
     fun setProfileType(profileType: ProfileType) {
         if (profileType == getProfileType()) return
         val profileName = ProfileAPI.profileName ?: return
-        PROFILE.get().profileType[profileName] = profileType
+        data.profileType[profileName] = profileType
         PROFILE.save()
     }
 
-    fun getSkyBlockLevel(): Int = PROFILE.get().sbLevel[ProfileAPI.profileName] ?: 0
+    fun getSkyBlockLevel(): Int = data.sbLevel[ProfileAPI.profileName] ?: 0
 
     fun setSkyBlockLevel(level: Int) {
         if (level == getSkyBlockLevel()) return
         val profileName = ProfileAPI.profileName ?: return
-        PROFILE.get().sbLevel[profileName] = level
+        data.sbLevel[profileName] = level
         PROFILE.save()
     }
 
-    fun isCoop(): Boolean = PROFILE.get().coop[ProfileAPI.profileName] == true
+    fun isCoop(): Boolean = data.coop[ProfileAPI.profileName] == true
 
     fun setCoop(coop: Boolean) {
         if (coop == isCoop()) return
         val profileName = ProfileAPI.profileName ?: return
-        PROFILE.get().coop[profileName] = coop
+        data.coop[profileName] = coop
         PROFILE.save()
     }
 
