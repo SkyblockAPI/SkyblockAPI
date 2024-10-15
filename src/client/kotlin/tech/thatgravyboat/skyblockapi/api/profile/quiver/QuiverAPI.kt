@@ -32,8 +32,11 @@ object QuiverAPI {
         "^Quiver$"
     )
 
-    var currentArrow: String? = null
-        private set
+    var currentArrow: String?
+        get() = QuiverStorage.currentArrow
+        private set(value) {
+            QuiverStorage.updateCurrent(value ?: return)
+        }
 
     var currentAmount: Int?
         get() = arrows[currentArrow]
@@ -73,15 +76,16 @@ object QuiverAPI {
     private fun handleQuiverInventory(title: String, items: List<ItemStack>) {
         if (!quiverInventoryRegex.contains(title)) return
 
-        for (item in items) {
-            val category = item.getData(DataTypes.CATEGORY)
-            if (category != SkyBlockCategory.ARROW) continue
-            val id = item.getData(DataTypes.ID) ?: continue
-            mutableArrows.addOrPut(id, item.count)
+        val newArrows = buildMap {
+            for (item in items) {
+                val category = item.getData(DataTypes.CATEGORY)
+                if (category != SkyBlockCategory.ARROW) continue
+                val id = item.getData(DataTypes.ID) ?: continue
+                addOrPut(id, item.count)
+            }
         }
+        QuiverStorage.updateAll(newArrows)
     }
-
-
 
     private fun getIdFromName(name: String): String? = TODO("Waiting for database")
 
