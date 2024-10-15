@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.quiver
 
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.stored.QuiverStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
@@ -55,7 +54,6 @@ object QuiverAPI {
     fun onHotbarChange(event: PlayerHotbarChangeEvent) {
         if (event.slot != 8) return
         val item = event.item
-        if (item.item != Items.ARROW) return
         if (item.getData(DataTypes.QUIVER_ARROW) != true) return
         activeArrowRegex.anyFound(item.getRawLore(), "type", "amount") { (type, amount) ->
             val id = SkyBlockItems.getIdByDisplayName(type)
