@@ -35,7 +35,7 @@ object CommunityCenterAPI {
         }
 
     // TODO: Add museum progress
-    private val bitsPerCookie: Int get() = (BASE_COOKIE_BITS * (fameRank?.multiplier ?: 1.0)).toInt()
+    val bitsPerCookie: Int get() = (BASE_COOKIE_BITS * (fameRank?.multiplier ?: 1.0)).toInt()
 
     @Subscription
     fun onChat(event: ChatReceivedEvent) {
