@@ -5,15 +5,10 @@ import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class QuiverData(
-    val profiles: MutableMap<String, ProfileQuiverData> = mutableMapOf(),
+    var current: String? = null,
+    val arrows: MutableMap<String, Int> = mutableMapOf()
 ) {
     companion object {
         val CODEC = KCodec.getCodec<QuiverData>()
     }
 }
-
-@GenerateCodec
-data class ProfileQuiverData(
-    var current: String? = null,
-    val arrows: MutableMap<String, Int> = mutableMapOf()
-)

@@ -1,31 +1,23 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
-import tech.thatgravyboat.skyblockapi.api.data.StoredData
-import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
-import tech.thatgravyboat.skyblockapi.api.profile.quiver.ProfileQuiverData
+import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.quiver.QuiverData
 
 internal object QuiverStorage {
 
-    private val QUIVER = StoredData(
-        QuiverData(),
+    private val QUIVER = StoredProfileData(
+        ::QuiverData,
         QuiverData.CODEC,
         "quiver.json"
     )
 
-    private inline val profile: ProfileQuiverData?
-        get() {
-            val profile = ProfileAPI.profileName ?: return null
-            return QUIVER.get().profiles.getOrPut(profile, ::ProfileQuiverData)
-        }
-
     val arrows: MutableMap<String, Int>
-        get() = profile?.arrows ?: mutableMapOf()
+        get() = QUIVER.get()?.arrows ?: mutableMapOf()
 
     var currentArrow: String?
-        get() = profile?.current
+        get() = QUIVER.get()?.current
         private set(value) {
-            profile?.current = value
+            QUIVER.get()?.current = value
         }
 
 
