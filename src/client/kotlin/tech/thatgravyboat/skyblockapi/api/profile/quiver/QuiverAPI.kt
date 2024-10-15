@@ -87,6 +87,7 @@ object QuiverAPI {
         QuiverStorage.updateAll(newArrows)
     }
 
-    private fun getIdFromName(name: String): String? = TODO("Waiting for database")
+    // TODO: Waiting for item database
+    private fun getIdFromName(name: String): String? = null
 
 }
