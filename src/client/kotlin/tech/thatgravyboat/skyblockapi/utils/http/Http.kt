@@ -51,6 +51,19 @@ object Http {
         )
     }
 
+    suspend fun <T : Any> head(
+        url: String,
+        timeout: Int = 10000,
+        queries: Map<String, Any> = mapOf(),
+        headers: Map<String, String> = mapOf(),
+        handler: suspend HttpResponse.() -> T,
+    ): T {
+        val response = connect(url, timeout, queries, headers) {
+            HEAD()
+        }
+        return handler(HttpResponse(response.statusCode(), response.headers().map(), response.body()))
+    }
+
     /**
      * This will perform a GET request on a provided url and return a response that is processed by a provided handler.
      *
