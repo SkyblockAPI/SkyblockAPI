@@ -35,7 +35,7 @@ object EquipmentAPI {
 
     @Subscription
     fun onInventoryFullyLoad(event: ContainerInitializedEvent) {
-        if (!inventoryNameRegex.matches(event.titleComponent.stripped)) return
+        if (!inventoryNameRegex.matches(event.title)) return
         EquipmentSlot.entries.forEach {
             handleInventoryItem(it, event.itemStacks[it.slot])
         }
@@ -43,7 +43,7 @@ object EquipmentAPI {
 
     @Subscription
     fun onInventoryChange(event: ContainerChangeEvent) {
-        if (!inventoryNameRegex.matches(event.titleComponent.stripped)) return
+        if (!inventoryNameRegex.matches(event.title)) return
         val slot = EquipmentSlot.entries.find { it.slot == event.slot } ?: return
         handleInventoryItem(slot, event.item)
     }
