@@ -18,5 +18,6 @@ data class SkyBlockCategory(val name: String, val isDungeon: Boolean = false) {
         val DUNGEON_GLOVES = create("dungeon gloves")
         val BRACELET = create("bracelet")
         val DUNGEON_BRACELET = create("dungeon bracelet")
+        val ARROW = create("arrow")
     }
 }

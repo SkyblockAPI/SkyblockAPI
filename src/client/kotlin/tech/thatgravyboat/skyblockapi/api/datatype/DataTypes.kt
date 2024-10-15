@@ -21,4 +21,6 @@ object DataTypes {
     val COOLDOWN_ABILITY: DataType<Pair<String, Duration>> = LoreDataTypes.COOLDOWN_ABILITY
     val TIMESTAMP: DataType<Instant> = GenericDataTypes.TIMESTAMP
     val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD
+    val PICKONIMBUS_DURABILITY: DataType<Int> = GenericDataTypes.PICKONIMBUS_DURABILITY
+    val QUIVER_ARROW: DataType<Boolean> = GenericDataTypes.QUIVER_ARROW
 }

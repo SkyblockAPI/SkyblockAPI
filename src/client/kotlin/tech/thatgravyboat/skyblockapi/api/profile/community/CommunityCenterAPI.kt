@@ -46,7 +46,7 @@ object CommunityCenterAPI {
 
     @Subscription
     fun onInventoryFullyLoaded(event: ContainerInitializedEvent) {
-        when (event.title.string) {
+        when (event.titleComponent.string) {
             "SkyBlock Menu" -> handleSkyBlockMenu(event)
             "Booster Cookie" -> handleBoosterCookieMenu(event)
             else -> return

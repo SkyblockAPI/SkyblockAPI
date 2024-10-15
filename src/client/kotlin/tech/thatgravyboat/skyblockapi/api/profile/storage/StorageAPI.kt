@@ -27,19 +27,19 @@ object StorageAPI {
     @Subscription
     fun onInventoryLoad(event: ContainerInitializedEvent) {
         val size = McScreen.asMenu?.menu?.slots?.size?.let { it - 36 } ?: return
-        enderchestRegex.match(event.title.stripped, "page") { (page) ->
+        enderchestRegex.match(event.titleComponent.stripped, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
             val items = event.itemStacks.take(size).drop(9)
             PlayerStorageStorage.setEnderchest(PlayerStorageInstance(pageId - 1, items.toMutableList()))
         }
 
-        backpackRegex.match(event.title.stripped, "page") { (page) ->
+        backpackRegex.match(event.titleComponent.stripped, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
             val items = event.itemStacks.take(size).drop(9)
             PlayerStorageStorage.setBackpack(PlayerStorageInstance(pageId - 1, items.toMutableList()))
         }
 
-        riftStorageRegex.match(event.title.stripped, "page") { (page) ->
+        riftStorageRegex.match(event.titleComponent.stripped, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
             val items = event.itemStacks.take(size).drop(9)
             PlayerStorageStorage.setRiftStorage(PlayerStorageInstance(pageId - 1, items.toMutableList()))
@@ -51,21 +51,21 @@ object StorageAPI {
         val size = McScreen.asMenu?.menu?.slots?.size?.let { it - 36 } ?: return
         if (event.slot < 9 || event.slot >= size) return
 
-        enderchestRegex.match(event.title.stripped, "page") { (page) ->
+        enderchestRegex.match(event.titleComponent.stripped, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
             val instance = PlayerStorageStorage.enderchests.find { it.index == pageId - 1 } ?: return@match
             instance.items[event.slot - 9] = event.item
             PlayerStorageStorage.setEnderchest(instance)
         }
 
-        backpackRegex.match(event.title.stripped, "page") { (page) ->
+        backpackRegex.match(event.titleComponent.stripped, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
             val instance = PlayerStorageStorage.backpacks.find { it.index == pageId - 1 } ?: return@match
             instance.items[event.slot - 9] = event.item
             PlayerStorageStorage.setBackpack(instance)
         }
 
-        riftStorageRegex.match(event.title.stripped, "page") { (page) ->
+        riftStorageRegex.match(event.titleComponent.stripped, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
             val instance = PlayerStorageStorage.riftStorage.find { it.index == pageId - 1 } ?: return@match
             instance.items[event.slot - 9] = event.item
