@@ -48,22 +48,19 @@ object ProfileAPI {
     fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
         profileRegex.anyMatch(event.new, "name") { (name) ->
             val oldName = this.profileName
-            when {
-                name.endsWith("♲") -> {
+            when (name.last()) {
+                '♲' -> {
                     this.profileName = name.trim(' ', '♲')
                     ProfileStorage.setProfileType(ProfileType.IRONMAN)
                 }
-
-                name.endsWith("Ⓑ") -> {
+                'Ⓑ' -> {
                     this.profileName = name.trim(' ', 'Ⓑ')
                     ProfileStorage.setProfileType(ProfileType.BINGO)
                 }
-
-                name.endsWith("☀") -> {
+                '☀' -> {
                     this.profileName = name.trim(' ', '☀')
                     ProfileStorage.setProfileType(ProfileType.STRANDED)
                 }
-
                 else -> {
                     this.profileName = name
                     ProfileStorage.setProfileType(ProfileType.NORMAL)

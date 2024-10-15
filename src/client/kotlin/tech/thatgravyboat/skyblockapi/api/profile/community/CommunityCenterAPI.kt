@@ -4,9 +4,8 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.CommunityCenterStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
-import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
-import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -24,23 +23,24 @@ object CommunityCenterAPI {
     private val fameRankRegex = RegexGroup.INVENTORY.create("communitycenter.fame.rank", "Your rank: (?<rank>.*)")
 
     var bitsAvailable: Long
-        get() {
-            val profileName = ProfileAPI.profileName ?: return 0
-            return CommunityCenterStorage.getBitsAvailable(profileName)
-        }
-        private set(bits) {
-            val profileName = ProfileAPI.profileName ?: return
-            CommunityCenterStorage.setBitsAvailable(profileName, bits)
+        get() = CommunityCenterStorage.bitsAvailable
+        private set(value) {
+            CommunityCenterStorage.bitsAvailable = value
         }
 
     var fameRank: FameRank?
-        get() = CommunityCenterStorage.getRank(McPlayer.uuid)
-        private set(rank) = CommunityCenterStorage.setRank(McPlayer.uuid, rank)
+        get() = CommunityCenterStorage.rank
+        private set(value) {
+            CommunityCenterStorage.rank = value
+        }
+
+    // TODO: Add museum progress
+    private val bitsPerCookie: Int get() = (BASE_COOKIE_BITS * (fameRank?.multiplier ?: 1.0)).toInt()
 
     @Subscription
     fun onChat(event: ChatReceivedEvent) {
         if (cookieAteRegex.contains(event.text)) {
-            bitsAvailable += (BASE_COOKIE_BITS * (fameRank?.multiplier ?: 1.0)).toInt()
+            bitsAvailable += bitsPerCookie
         }
     }
 
@@ -54,15 +54,15 @@ object CommunityCenterAPI {
     }
 
     private fun handleSkyBlockMenu(event: ContainerInitializedEvent) {
-        val cookieLore = event.itemStacks.find { it.hoverName.string == "Booster Cookie" }?.getRawLore() ?: return
+        val cookieLore = event.itemStacks.find { it.cleanName == "Booster Cookie" }?.getRawLore() ?: return
         bitsAvailableRegex.anyMatch(cookieLore, "bits") { (bits) ->
             bitsAvailable = bits.parseFormattedLong()
         }
     }
 
     private fun handleBoosterCookieMenu(event: ContainerInitializedEvent) {
-        val fameRankLore = event.itemStacks.find { it.hoverName.string == "Fame Rank" }?.getRawLore()
-        val bitsLore = event.itemStacks.find { it.hoverName.string == "Bits" }?.getRawLore()
+        val fameRankLore = event.itemStacks.find { it.cleanName == "Fame Rank" }?.getRawLore()
+        val bitsLore = event.itemStacks.find { it.cleanName == "Bits" }?.getRawLore()
 
         if (fameRankLore != null) {
             fameRankRegex.anyMatch(fameRankLore, "rank") { (rank) ->
