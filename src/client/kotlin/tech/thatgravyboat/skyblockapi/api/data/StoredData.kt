@@ -7,7 +7,7 @@ import org.apache.commons.io.FileUtils
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
-import tech.thatgravyboat.skyblockapi.utils.json.Json.toData
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import java.nio.file.Files
@@ -43,7 +43,7 @@ class StoredData<T : Any>(
     private fun load() {
         if (this.loadedData != null) {
             try {
-                this.data = this.loadedData.toData(this.codec)!!
+                this.data = this.loadedData.toDataOrThrow(this.codec)
                 this.loadedData = null
             } catch (e: Exception) {
                 Logger.error("Failed to load {} data", this.loadedData ?: "")
