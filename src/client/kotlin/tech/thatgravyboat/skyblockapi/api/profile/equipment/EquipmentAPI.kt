@@ -11,9 +11,9 @@ import tech.thatgravyboat.skyblockapi.api.events.level.RightClickEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @Module
 object EquipmentAPI {
@@ -33,9 +33,11 @@ object EquipmentAPI {
 
     val equipment get(): Map<EquipmentSlot, ItemStack> = EquipmentStorage.equipment
 
+    fun getEquipment(slot: EquipmentSlot): ItemStack = equipment[slot] ?: ItemStack.EMPTY
+
     @Subscription
     fun onInventoryFullyLoad(event: ContainerInitializedEvent) {
-        if (!inventoryNameRegex.matches(event.title.stripped)) return
+        if (!inventoryNameRegex.matches(event.title)) return
         EquipmentSlot.entries.forEach {
             handleInventoryItem(it, event.itemStacks[it.slot])
         }
@@ -43,7 +45,7 @@ object EquipmentAPI {
 
     @Subscription
     fun onInventoryChange(event: ContainerChangeEvent) {
-        if (!inventoryNameRegex.matches(event.title.stripped)) return
+        if (!inventoryNameRegex.matches(event.title)) return
         val slot = EquipmentSlot.entries.find { it.slot == event.slot } ?: return
         handleInventoryItem(slot, event.item)
     }
@@ -65,7 +67,7 @@ object EquipmentAPI {
     fun onChat(event: ChatReceivedEvent) {
         val (item, slot) = lastClickedEquipment ?: return
         chatEquipRegex.find(event.text, "item") { (itemName) ->
-            if (item.hoverName.stripped != itemName) return@find
+            if (item.cleanName != itemName) return@find
             EquipmentStorage.setEquipment(slot, item)
             lastClickedEquipment = null
         }

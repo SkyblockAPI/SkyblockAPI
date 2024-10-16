@@ -88,6 +88,6 @@ class StoredData<T : Any>(
     }
 
     companion object {
-        val defaultPath = FabricLoader.getInstance().configDir.resolve("skyblockapi")
+        val defaultPath: Path = FabricLoader.getInstance().configDir.resolve("skyblockapi")
     }
 }

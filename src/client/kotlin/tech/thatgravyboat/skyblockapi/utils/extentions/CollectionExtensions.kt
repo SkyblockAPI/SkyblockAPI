@@ -23,3 +23,11 @@ internal inline fun <T> List<T>.peek(crossinline block: (T) -> Unit): List<T> {
     }
     return this
 }
+
+internal fun <K> MutableMap<K, Int>.addOrPut(key: K, number: Int): Int = merge(key, number, Int::plus)!!
+
+internal fun <K> MutableMap<K, Double>.addOrPut(key: K, number: Double): Double = merge(key, number, Double::plus)!!
+
+internal fun <K> MutableMap<K, Float>.addOrPut(key: K, number: Float): Float = merge(key, number, Float::plus)!!
+
+internal fun <K> MutableMap<K, Long>.addOrPut(key: K, number: Long): Long = merge(key, number, Long::plus)!!

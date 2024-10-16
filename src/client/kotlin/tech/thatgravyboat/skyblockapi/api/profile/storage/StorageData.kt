@@ -6,10 +6,9 @@ import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class StorageData(
-    val normal: MutableMap<String, PlayerStorageData> = mutableMapOf(),
-    val rift: MutableMap<String, MutableList<PlayerStorageInstance>> = mutableMapOf()
+    val normal: PlayerStorageData = PlayerStorageData(),
+    val rift: MutableList<PlayerStorageInstance> = mutableListOf()
 ) {
-
     companion object {
         val CODEC = KCodec.getCodec<StorageData>()
     }

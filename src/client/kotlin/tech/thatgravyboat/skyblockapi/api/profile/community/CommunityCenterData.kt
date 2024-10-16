@@ -3,11 +3,10 @@ package tech.thatgravyboat.skyblockapi.api.profile.community
 import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.generated.KCodec
 import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
-import java.util.*
 
 @GenerateCodec
 data class CommunityCenterData(
-    val ranks: MutableMap<UUID, String> = mutableMapOf(),
+    var rank: FameRank = FameRanks.NEW_PLAYER,
     val bitsAvailable: MutableMap<String, Long> = mutableMapOf(),
 ) {
     companion object {
