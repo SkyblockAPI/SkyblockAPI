@@ -39,11 +39,7 @@ object SlayerAPI {
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (event.removed.any { slayerQuestRegex.matches(it) }) {
-            this.type = null
-            this.text = null
-            this.level = 0
-            this.current = 0
-            this.max = 0
+            reset()
         } else if (this.type == null && this.level == 0) {
             val index = event.added.indexOfFirst { slayerQuestRegex.matches(it) }
             if (index != -1 && event.new.size > index) {
@@ -61,6 +57,14 @@ object SlayerAPI {
                 this.text = text
             }
         }
+    }
+
+    private fun reset() {
+        this.type = null
+        this.text = null
+        this.level = 0
+        this.current = 0
+        this.max = 0
     }
 }
 

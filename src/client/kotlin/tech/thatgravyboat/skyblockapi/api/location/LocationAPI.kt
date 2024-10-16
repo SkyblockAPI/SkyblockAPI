@@ -1,12 +1,11 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
 import net.hypixel.data.type.GameType
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -20,40 +19,42 @@ object LocationAPI {
         " *[⏣ф] *(?<location>(?:\\s?[^ൠ\\s]+)*)(?: ൠ x\\d)?",
     )
 
-    var isOnSkyblock: Boolean = false
+    var isOnSkyBlock: Boolean = false
         private set
 
-    var island: SkyblockIsland? = null
+    var island: SkyBlockIsland? = null
         private set
 
-    var area: SkyblockArea = SkyBlockAreas.NONE
+    var area: SkyBlockArea = SkyBlockAreas.NONE
         private set
 
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
-        isOnSkyblock = event.type == GameType.SKYBLOCK
+        isOnSkyBlock = event.type == GameType.SKYBLOCK
         val old = island
-        island = if (isOnSkyblock && event.mode != null) {
-            SkyblockIsland.getById(event.mode)
+        island = if (isOnSkyBlock && event.mode != null) {
+            SkyBlockIsland.getById(event.mode)
         } else {
             null
         }
-        IslandChangeEvent(old, island).post(SkyBlockAPI.eventBus)
-    }
-
-    @Subscription
-    fun onServerDisconnect(event: ServerDisconnectEvent) {
-        isOnSkyblock = false
-        island = null
+        IslandChangeEvent(old, island).post()
     }
 
     @Subscription
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
-        if (!isOnSkyblock) return
+        if (!isOnSkyBlock) return
         locationRegex.anyMatch(event.added, "location") { (location) ->
             val old = area
-            area = SkyblockArea(location)
-            AreaChangeEvent(old, area).post(SkyBlockAPI.eventBus)
+            area = SkyBlockArea(location)
+            AreaChangeEvent(old, area).post()
         }
     }
+
+    private fun reset() {
+        isOnSkyBlock = false
+        island = null
+    }
+
+    @Subscription
+    fun onServerDisconnect(event: ServerDisconnectEvent) = reset()
 }

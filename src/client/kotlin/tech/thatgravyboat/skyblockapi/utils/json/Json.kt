@@ -33,5 +33,10 @@ object Json {
         return codec.parse(ops, this).result().getOrNull()
     }
 
+    fun <T : Any> JsonElement?.toDataOrThrow(codec: Codec<T>): T {
+        val ops = if (McLevel.hasLevel) McLevel.registry.createSerializationContext(JsonOps.INSTANCE) else JsonOps.INSTANCE
+        return codec.parse(ops, this).getOrThrow()
+    }
+
     fun JsonElement?.toPrettyString(): String = gson.toJson(this)
 }

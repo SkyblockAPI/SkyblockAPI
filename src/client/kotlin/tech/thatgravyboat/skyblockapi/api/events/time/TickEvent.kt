@@ -1,5 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.events.time
 
-import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-object TickEvent : SkyblockEvent()
+object TickEvent : SkyBlockEvent()

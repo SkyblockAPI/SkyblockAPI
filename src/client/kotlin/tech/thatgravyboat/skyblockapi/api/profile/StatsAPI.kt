@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.*
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.modules.Module
 
@@ -45,7 +45,7 @@ object StatsAPI {
             }
         }
 
-        if (LocationAPI.island == SkyblockIsland.THE_RIFT) {
+        if (LocationAPI.island == SkyBlockIsland.THE_RIFT) {
             health = McPlayer.health
             maxHealth = McPlayer.maxHealth
         }

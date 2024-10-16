@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.area.mining
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
@@ -13,11 +14,11 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 @Module
 object PowderAPI {
 
-    private val powdersGroup = RegexGroup.TABLIST_WIDGET.group("powders")
+    private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("powders")
 
-    private val mithrilPowderRegex = powdersGroup.create("mithril", " Mithril: (?<mithril>[\\d,]+)")
-    private val gemstonePowderRegex = powdersGroup.create("gemstone", " Gemstone: (?<gemstone>[\\d,]+)")
-    private val glacitePowderRegex = powdersGroup.create("glacite", " Glacite: (?<glacite>[\\d,]+)")
+    private val mithrilPowderRegex = widgetGroup.create("mithril", " Mithril: (?<mithril>[\\d,]+)")
+    private val gemstonePowderRegex = widgetGroup.create("gemstone", " Gemstone: (?<gemstone>[\\d,]+)")
+    private val glacitePowderRegex = widgetGroup.create("glacite", " Glacite: (?<glacite>[\\d,]+)")
 
     var mithril: Long = 0
         private set
@@ -29,9 +30,8 @@ object PowderAPI {
         private set
 
     @Subscription
+    @OnlyWidget(TabWidget.POWDERS)
     fun onTabWidgetChange(event: TabWidgetChangeEvent) {
-        if (event.widget != TabWidget.POWDERS) return
-
         mithrilPowderRegex.anyMatch(event.new, "mithril") { (mithril) ->
             this.mithril = mithril.toLongValue()
         }
@@ -49,7 +49,7 @@ object PowderAPI {
     fun onDisconnect(event: ServerDisconnectEvent) = reset()
 
     @Subscription
-    fun onSwapProfile(event: ProfileChangeEvent) = reset()
+    fun onProfileChange(event: ProfileChangeEvent) = reset()
 
     private fun reset() {
         this.mithril = 0

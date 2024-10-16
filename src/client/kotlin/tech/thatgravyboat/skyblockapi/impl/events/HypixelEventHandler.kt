@@ -2,9 +2,12 @@ package tech.thatgravyboat.skyblockapi.impl.events
 
 import net.hypixel.modapi.HypixelModAPI
 import net.hypixel.modapi.fabric.event.HypixelModAPICallback
+import net.hypixel.modapi.packet.HypixelPacket
+import net.hypixel.modapi.packet.impl.clientbound.ClientboundPartyInfoPacket
 import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
+import net.hypixel.modapi.packet.impl.serverbound.ServerboundPartyInfoPacket
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.PartyInfoEvent
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import kotlin.jvm.optionals.getOrNull
 
@@ -14,15 +17,26 @@ object HypixelEventHandler {
     init {
         HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket::class.java)
         HypixelModAPICallback.EVENT.register { event ->
-            if (event is ClientboundLocationPacket) {
-                ServerChangeEvent(
-                    event.serverName,
-                    event.serverType.getOrNull(),
-                    event.lobbyName.getOrNull(),
-                    event.mode.getOrNull(),
-                    event.map.getOrNull(),
-                ).post(SkyBlockAPI.eventBus)
+            when (event) {
+                is ClientboundLocationPacket -> {
+                    ServerChangeEvent(
+                        event.serverName,
+                        event.serverType.getOrNull(),
+                        event.lobbyName.getOrNull(),
+                        event.mode.getOrNull(),
+                        event.map.getOrNull(),
+                    ).post()
+                }
+                is ClientboundPartyInfoPacket -> {
+                    PartyInfoEvent(event.isInParty, event.memberMap).post()
+                }
             }
         }
     }
+
+    private fun sendPacket(packet: HypixelPacket): Boolean {
+        return HypixelModAPI.getInstance().sendPacket(packet)
+    }
+
+    internal fun requestPartyInfo(): Boolean = sendPacket(ServerboundPartyInfoPacket())
 }

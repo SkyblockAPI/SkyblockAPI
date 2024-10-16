@@ -4,9 +4,10 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
@@ -18,17 +19,17 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 data class Commission(val name: String, val area: CommissionArea, var progress: Float)
 
 enum class CommissionArea(val area: String, val areaCheck: () -> Boolean) {
-    DWARVEN_MINES("Dwarven Mines", { SkyblockIsland.DWARVEN_MINES.inIsland() && !GlaciteAPI.inGlaciteTunnels() }),
-    CRYSTAL_HOLLOWS("Crystal Hollows", { SkyblockIsland.CRYSTAL_HOLLOWS.inIsland() }),
+    DWARVEN_MINES("Dwarven Mines", { SkyBlockIsland.DWARVEN_MINES.inIsland() && !GlaciteAPI.inGlaciteTunnels() }),
+    CRYSTAL_HOLLOWS("Crystal Hollows", { SkyBlockIsland.CRYSTAL_HOLLOWS.inIsland() }),
     GLACITE_TUNNELS("Glacite Tunnels", { GlaciteAPI.inGlaciteTunnels() }),
     ;
 
     companion object {
 
         val currentArea: CommissionArea?
-            get() = entries.firstOrNull { it.areaCheck() }
+            get() = entries.find { it.areaCheck() }
 
-        fun byName(area: String?): CommissionArea? = entries.firstOrNull { it.area == area }
+        fun byName(area: String?): CommissionArea? = entries.find { it.area == area }
     }
 }
 
@@ -51,7 +52,7 @@ object CommissionsAPI {
 
     @Subscription
     fun onInventoryUpdate(event: ContainerChangeEvent) {
-        val commissionAreaStack = event.inventory.firstOrNull { it.hoverName.stripped == "Filter" } ?: return
+        val commissionAreaStack = event.inventory.find { it.hoverName.stripped == "Filter" } ?: return
         val commissionArea = commissionAreaRegex.run {
             var matchedArea: String? = null
             anyMatch(commissionAreaStack.getRawLore(), "area") { (area) ->
@@ -80,25 +81,25 @@ object CommissionsAPI {
     @OnlyWidget(TabWidget.COMMISSIONS)
     fun onTabWidgetUpdate(event: TabWidgetChangeEvent) {
         val area = CommissionArea.currentArea
+        this.commissions = this.commissions.filter { it.area != area }
+
         for (line in event.new) {
             commissionTablistRegex.match(line, "commission", "progress") { (commissionName, progress) ->
                 val percent = if (progress == "DONE") 1f else progress.removeSuffix("%").toFloatValue() / 100
-
-                this.commissions.find { it.name == commissionName && it.area == area }?.also {
-                    it.progress = percent
-                    return@match
-                }
-
                 area ?: return@match
-
                 this.commissions += Commission(commissionName, area, percent)
             }
         }
     }
 
-    @Subscription
-    fun onProfileSwitch(event: ProfileChangeEvent) {
+    private fun reset() {
         this.commissions = emptyList()
     }
+
+    @Subscription
+    fun onDisconnect(event: ServerDisconnectEvent) = reset()
+
+    @Subscription
+    fun onProfileChange(event: ProfileChangeEvent) = reset()
 }
 

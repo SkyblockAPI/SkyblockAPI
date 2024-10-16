@@ -15,7 +15,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-private const val url = "https://api.hypixel.net/v2/resources/skyblock/election"
+private const val URL = "https://api.hypixel.net/v2/resources/skyblock/election"
 
 @Module
 object ElectionAPI {
@@ -25,9 +25,12 @@ object ElectionAPI {
 
     private var scheduler: ScheduledFuture<*>? = null
     var rawData: ElectionJson? = null
+        private set
 
     var currentMayor: Candidate? = null
+        private set
     var currentMinister: Candidate? = null
+        private set
 
     private var lastMayor: Candidate? = null
 
@@ -45,7 +48,7 @@ object ElectionAPI {
     @JvmStatic
     private suspend fun check(newSchedulerTime: Duration? = null) {
         val result = Http.getResult<ElectionJson>(
-            url = url,
+            url = URL,
             errorFactory = ::RuntimeException,
         )
         val response = result.getOrNull() ?: return

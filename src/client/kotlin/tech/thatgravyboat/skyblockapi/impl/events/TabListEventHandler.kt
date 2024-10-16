@@ -5,12 +5,12 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ClientboundTabListPacket
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.location.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -20,6 +20,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.chunked
 import tech.thatgravyboat.skyblockapi.utils.extentions.peek
 import tech.thatgravyboat.skyblockapi.utils.mc.displayName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 private const val TAB_LIST_LENGTH = 80
@@ -30,7 +31,7 @@ object TabListEventHandler {
 
     private val infoRegex = RegexGroup.TABLIST.create(
         "info",
-        ".*(?:Info|Account Info)"
+        "(?:Info|Account Info)$"
     )
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET
@@ -51,6 +52,8 @@ object TabListEventHandler {
         TabWidget.GOOD_TO_KNOW to widgetGroup.create("good_to_know", "Good to know:"),
         TabWidget.ADVERTISEMENT to widgetGroup.create("advertisement", "Advertisement:"),
         TabWidget.TRAPPER to widgetGroup.create("trapper", "Trapper:"),
+        TabWidget.EVENT to widgetGroup.create("event_Trackers", "Event Trackers:"),
+        TabWidget.FROZEN_CORPSES to widgetGroup.create("frozen_corpses", "Frozen Corpses:"),
 
         TabWidget.AREA to widgetGroup.create("area", "Area: (?<area>.*)"),
         TabWidget.PROFILE to widgetGroup.create("profile", "Profile: (?<profile>.*)"),
@@ -78,7 +81,7 @@ object TabListEventHandler {
 
     @Subscription
     fun onTick(event: TickEvent) {
-        if (!LocationAPI.isOnSkyblock) return
+        if (!LocationAPI.isOnSkyBlock) return
         if (System.currentTimeMillis() - lastCheck < CHECK_INTERVAL) return
         lastCheck = System.currentTimeMillis()
 
@@ -86,17 +89,17 @@ object TabListEventHandler {
         val newStringTabList = newTabList.map { it.map { it.stripped } }
 
         if (tabList != newStringTabList) {
-            TabListChangeEvent(tabList, newTabList).post(SkyBlockAPI.eventBus)
+            TabListChangeEvent(tabList, newTabList).post()
             tabList = newStringTabList
         }
     }
 
     @Subscription
     fun onTabListChange(event: TabListChangeEvent) {
-        if (!LocationAPI.isOnSkyblock) return
+        if (!LocationAPI.isOnSkyBlock) return
 
         val sections = event.new
-            .filter { it.isNotEmpty() && infoRegex.matches(it.first().stripped) }
+            .filter { it.isNotEmpty() && infoRegex.contains(it.first().stripped) }
             .map { it.drop(1) }
             .flatten()
             .chunked { !it.stripped.startsWith(" ") }
@@ -117,7 +120,7 @@ object TabListEventHandler {
             val new = section.map { it.stripped }
             if (old != new) {
                 widgets[widget] = new
-                TabWidgetChangeEvent(widget, old, new, section).post(SkyBlockAPI.eventBus)
+                TabWidgetChangeEvent(widget, old, new, section).post()
             }
         }
     }

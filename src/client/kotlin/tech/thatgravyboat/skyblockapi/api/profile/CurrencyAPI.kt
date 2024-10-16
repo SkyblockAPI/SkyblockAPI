@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
-import tech.thatgravyboat.skyblockapi.api.location.SkyblockIsland
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
@@ -16,7 +16,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 @Suppress("MemberVisibilityCanBePrivate")
 object CurrencyAPI {
 
-    private val widgetGroup = RegexGroup.TABLIST_WIDGET
+    private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("currency")
     private val gemsRegex = widgetGroup.create("area.gems", "(?i) Gems: (?<gems>[\\d,kmb]+)")
     private val bankSingleRegex = widgetGroup.create("profile.bank.single", "(?i) Bank: (?<bank>[\\d,kmb]+)")
     private val bankCoopRegex = widgetGroup.create(
@@ -84,22 +84,22 @@ object CurrencyAPI {
                 }
             }
 
-            else -> {}
+            else -> return
         }
     }
 
     @Subscription
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
-        if (SkyblockIsland.THE_RIFT.inIsland()) {
+        if (SkyBlockIsland.THE_RIFT.inIsland()) {
             motesRegex.anyMatch(event.added, "motes") { (motes) ->
                 this.motes = motes.parseFormattedLong()
             }
         } else {
-            if (SkyblockIsland.JERRYS_WORKSHOP.inIsland()) {
+            if (SkyBlockIsland.JERRYS_WORKSHOP.inIsland()) {
                 northStarsRegex.anyMatch(event.added, "northstars") { (northstars) ->
                     this.northStars = northstars.parseFormattedLong()
                 }
-            } else if (SkyblockIsland.GARDEN.inIsland()) {
+            } else if (SkyBlockIsland.GARDEN.inIsland()) {
                 copperRegex.anyMatch(event.added, "copper") { (copper) ->
                     this.copper = copper.parseFormattedLong()
                 }

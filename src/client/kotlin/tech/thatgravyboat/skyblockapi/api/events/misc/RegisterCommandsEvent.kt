@@ -10,13 +10,13 @@ import com.mojang.brigadier.suggestion.SuggestionProvider
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.SharedSuggestionProvider
-import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 typealias LiteralCommandBuilder = CommandBuilder<LiteralArgumentBuilder<FabricClientCommandSource>>
 typealias ArgumentCommandBuilder<T> = CommandBuilder<RequiredArgumentBuilder<FabricClientCommandSource, T>>
 
 
-class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClientCommandSource>) : SkyblockEvent() {
+class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClientCommandSource>) : SkyBlockEvent() {
 
     fun register(command: LiteralArgumentBuilder<FabricClientCommandSource>) {
         dispatcher.register(command)
@@ -40,17 +40,19 @@ class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal
         }
     }
 
-    fun then(name: String, action: LiteralCommandBuilder.() -> Unit): CommandBuilder<B> {
-        val builder = CommandBuilder(ClientCommandManager.literal(name))
-        builder.action()
-        this.builder.then(builder.builder)
+    fun then(vararg names: String, action: LiteralCommandBuilder.() -> Unit): CommandBuilder<B> {
+        for (name in names) {
+            val builder = CommandBuilder(ClientCommandManager.literal(name))
+            builder.action()
+            this.builder.then(builder.builder)
+        }
         return this
     }
 
     fun <T> then(
         name: String,
         argument: ArgumentType<T>,
-        suggestions: List<String>,
+        suggestions: Collection<String>,
         action: ArgumentCommandBuilder<T>.() -> Unit,
     ): CommandBuilder<B> = then(
         name,

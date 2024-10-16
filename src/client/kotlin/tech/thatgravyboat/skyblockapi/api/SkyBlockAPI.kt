@@ -21,7 +21,6 @@ object SkyBlockAPI {
 
     @JvmStatic
     internal fun postInit() {
-        eventBus.freeze()
         DataTypesRegistry.load()
     }
 }

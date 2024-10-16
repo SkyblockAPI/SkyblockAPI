@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
-internal class EventHandler<T : SkyblockEvent> private constructor(
+internal class EventHandler<T : SkyBlockEvent> private constructor(
     val name: String,
     private val listeners: List<EventListeners.Listener>,
     private val canReceiveCancelled: Boolean,
@@ -8,8 +8,8 @@ internal class EventHandler<T : SkyblockEvent> private constructor(
 
     constructor(event: Class<T>, listeners: List<EventListeners.Listener>) : this(
         (event.name.split(".").lastOrNull() ?: event.name).replace("$", "."),
-        listeners.sortedBy { it.options.priority }.toList(),
-        listeners.any { it.options.receiveCancelled }
+        listeners.sortedBy { it.priority }.toList(),
+        listeners.any { it.receiveCancelled }
     )
 
     fun post(event: T, context: Any?, onError: ((Throwable) -> Unit)? = null): Boolean {

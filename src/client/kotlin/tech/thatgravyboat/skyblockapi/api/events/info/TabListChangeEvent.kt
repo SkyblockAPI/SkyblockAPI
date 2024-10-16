@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.events.info
 
 import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 /**
  * Fired when the tab list changes in SkyBlock.
@@ -9,5 +9,5 @@ import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
  */
 data class TabListChangeEvent(
     val old: List<List<String>>,
-    val new: List<List<Component>>
-) : SkyblockEvent()
+    val new: List<List<Component>>,
+) : SkyBlockEvent()

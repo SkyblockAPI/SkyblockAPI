@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastComponent
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.client.gui.screens.Screen
@@ -12,7 +13,6 @@ import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 object McClient {
 
@@ -65,13 +65,16 @@ object McClient {
                 }
         }
 
-    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName?.stripped
+    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
 
     val toasts: ToastComponent
         get() = self.toasts
 
     val serverCommands: CommandDispatcher<SharedSuggestionProvider>?
         get() = self.connection?.commands
+
+    val chat: ChatComponent
+        get() = self.gui.chat
 
     fun tell(action: () -> Unit) {
         self.tell(action)
@@ -86,7 +89,7 @@ object McClient {
     }
 
     fun sendCommand(command: String) {
-        self.connection?.sendCommand(command)
+        self.connection?.sendCommand(command.removePrefix("/"))
     }
 
 }

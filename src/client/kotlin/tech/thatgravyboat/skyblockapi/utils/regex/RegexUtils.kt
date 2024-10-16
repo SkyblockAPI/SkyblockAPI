@@ -22,8 +22,24 @@ object RegexUtils {
         return match != null
     }
 
+    fun Regex.findGroup(input: CharSequence, group: String): String? {
+        return find(input)?.let { Destructured(it, group).component1() }
+    }
+
+    fun Regex.findGroups(input: CharSequence, vararg groups: String = arrayOf()): Destructured? {
+        return find(input)?.let { Destructured(it, *groups) }
+    }
+
+    fun Regex.contains(input: CharSequence): Boolean = containsMatchIn(input)
+
     fun <T> Regex.findOrNull(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> T): T? {
         return find(input)?.let { action(Destructured(it, *groups)) }
+    }
+
+    fun Regex.findThenNull(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Unit? {
+        val match = find(input) ?: return Unit
+        action(Destructured(match, *groups))
+        return null
     }
 
     fun List<Regex>.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
@@ -32,6 +48,15 @@ object RegexUtils {
 
     fun Regex.anyFound(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         return input.any { find(it, groups = groups, action = action) }
+    }
+
+    fun Regex.findAll(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
+        var globalFound = false
+        input.forEach {
+            val found = find(it, groups = groups, action = action)
+            if (found) globalFound = true
+        }
+        return globalFound
     }
 }
 

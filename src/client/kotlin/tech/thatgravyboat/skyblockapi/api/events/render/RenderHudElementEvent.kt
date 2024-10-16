@@ -1,12 +1,12 @@
 package tech.thatgravyboat.skyblockapi.api.events.render
 
 import net.minecraft.client.gui.GuiGraphics
-import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyblockEvent
+import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 
 class RenderHudElementEvent(
     val element: HudElement,
     val graphics: GuiGraphics?,
-) : CancellableSkyblockEvent()
+) : CancellableSkyBlockEvent()
 
 enum class HudElement {
     HOTBAR,

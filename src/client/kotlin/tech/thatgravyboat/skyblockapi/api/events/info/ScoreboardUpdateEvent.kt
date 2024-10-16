@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.events.info
 
 import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 /**
@@ -10,8 +10,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 data class ScoreboardUpdateEvent(
     val old: List<String>,
     val new: List<String>,
-    val components: List<Component>
-) : SkyblockEvent() {
+    val components: List<Component>,
+) : SkyBlockEvent() {
 
     val added: List<String> = new - old.toSet()
     val removed: List<String> = old - new.toSet()

@@ -1,6 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
-enum class SkyblockIsland(val id: String) {
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+
+enum class SkyBlockIsland(val id: String) {
     PRIVATE_ISLAND("dynamic"),
     HUB("hub"),
     DUNGEON_HUB("dungeon_hub"),
@@ -19,12 +21,13 @@ enum class SkyblockIsland(val id: String) {
     THE_RIFT("rift"),
     DARK_AUCTION("dark_auction"),
     THE_CATACOMBS("dungeon"),
+    KUUDRA("kuudra"),
     JERRYS_WORKSHOP("winter"),
     ;
 
     fun inIsland() = LocationAPI.island == this
 
-    private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+    private val string = toFormattedName()
 
     override fun toString() = string
 
@@ -32,8 +35,8 @@ enum class SkyblockIsland(val id: String) {
 
         fun getById(input: String) = entries.firstOrNull { it.id == input }
 
-        fun inAnyIsland(vararg islands: SkyblockIsland) = LocationAPI.island in islands
+        fun inAnyIsland(vararg islands: SkyBlockIsland) = LocationAPI.island in islands
 
-        fun inAnyIsland(islands: Collection<SkyblockIsland>) = LocationAPI.island in islands
+        fun inAnyIsland(islands: Collection<SkyBlockIsland>) = LocationAPI.island in islands
     }
 }

@@ -1,11 +1,11 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
-data class SkyblockCategory(val name: String, val isDungeon: Boolean = false) {
+data class SkyBlockCategory(val name: String, val isDungeon: Boolean = false) {
     companion object {
-        fun create(string: String): SkyblockCategory = if (string.startsWith("dungeon", true)) {
-            SkyblockCategory(string.lowercase().removePrefix("dungeon").trim(), true)
+        fun create(string: String): SkyBlockCategory = if (string.startsWith("dungeon", true)) {
+            SkyBlockCategory(string.lowercase().removePrefix("dungeon").trim(), true)
         } else {
-            SkyblockCategory(string.lowercase().trim())
+            SkyBlockCategory(string.lowercase().trim())
         }
 
         val NECKLACE = create("necklace")

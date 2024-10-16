@@ -23,7 +23,7 @@ object ScoreboardEventHandler {
 
     @Subscription
     fun onTick(event: TickEvent) {
-        if (!LocationAPI.isOnSkyblock) return
+        if (!LocationAPI.isOnSkyBlock) return
         if (System.currentTimeMillis() - lastCheck < CHECK_INTERVAL) return
         if (!ProfileAPI.isLoaded) return
         lastCheck = System.currentTimeMillis()
@@ -41,7 +41,7 @@ object ScoreboardEventHandler {
     }
 
     private fun handleTitle() {
-        val newTitle = McClient.scoreboardTitle
+        val newTitle = McClient.scoreboardTitle?.stripped
         if (newTitle != null && newTitle != currentTitle) {
             ScoreboardTitleUpdateEvent(currentTitle, newTitle).post(SkyBlockAPI.eventBus)
             currentTitle = newTitle

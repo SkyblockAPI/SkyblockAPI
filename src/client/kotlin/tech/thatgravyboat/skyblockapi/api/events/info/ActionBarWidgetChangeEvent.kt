@@ -1,17 +1,18 @@
 package tech.thatgravyboat.skyblockapi.api.events.info
 
 import tech.thatgravyboat.skyblockapi.api.data.item.ArmorStack
-import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyblockEvent
-import tech.thatgravyboat.skyblockapi.api.events.base.SkyblockEvent
+import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import kotlin.time.Duration
 
-open class RenderActionBarWidgetEvent(val widget: ActionBarWidget) : CancellableSkyblockEvent()
+open class RenderActionBarWidgetEvent(val widget: ActionBarWidget) : CancellableSkyBlockEvent()
 
 open class ActionBarWidgetChangeEvent(
     val widget: ActionBarWidget,
     val old: String,
     val new: String,
-) : SkyblockEvent()
+) : SkyBlockEvent()
 
 class HealthActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.HEALTH, old, new)
@@ -51,7 +52,7 @@ enum class ActionBarWidget {
     SECRETS,
     ;
 
-    private val string = name.split('_').joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+    private val string = toFormattedName()
 
     override fun toString() = string
 }
