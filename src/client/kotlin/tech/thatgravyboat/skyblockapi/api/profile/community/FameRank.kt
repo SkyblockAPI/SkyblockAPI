@@ -32,5 +32,12 @@ object FameRanks {
     val PREMIER = register("premier", "Premier", 2.22)
     val CHANCELLOR = register("chancellor", "Chancellor", 2.24)
     val SUPREME = register("supreme", "Supreme", 2.26)
+    val OVERSEER = register("overseer", "Overseer", 2.28)
+    val REGENT = register("regent", "Regent", 2.3)
+    val VICEROY = register("viceroy", "Viceroy", 2.32)
+    val SOVEREIGN = register("sovereign", "Sovereign", 2.34)
+    val ARCHON = register("archon", "Archon", 2.36)
+    val IMPERATOR = register("imperator", "Imperator", 2.38)
+    val PARAGON = register("paragon", "Paragon", 2.4)
 
 }
