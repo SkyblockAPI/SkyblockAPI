@@ -6,10 +6,9 @@ import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class CommunityCenterData(
-    var rank: String?,
+    var rank: FameRank = FameRanks.NEW_PLAYER,
     val bitsAvailable: MutableMap<String, Long> = mutableMapOf(),
 ) {
-    constructor() : this(null)
     companion object {
         val CODEC: Codec<CommunityCenterData> = KCodec.getCodec<CommunityCenterData>()
     }

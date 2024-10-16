@@ -3,7 +3,6 @@ package tech.thatgravyboat.skyblockapi.api.data.stored
 import tech.thatgravyboat.skyblockapi.api.data.StoredPlayerData
 import tech.thatgravyboat.skyblockapi.api.profile.community.CommunityCenterData
 import tech.thatgravyboat.skyblockapi.api.profile.community.FameRank
-import tech.thatgravyboat.skyblockapi.api.profile.community.FameRanks
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 
 internal object CommunityCenterStorage {
@@ -16,10 +15,10 @@ internal object CommunityCenterStorage {
     private inline val data get() = COMMUNITY_CENTER.get()
 
     var rank: FameRank?
-        get() = data.rank?.let { FameRanks.getByName(it) }
+        get() = data.rank
         set(value) {
             if (value == null || rank == value) return
-            data.rank = value.name
+            data.rank = value
             COMMUNITY_CENTER.save()
         }
 

@@ -1,19 +1,25 @@
 package tech.thatgravyboat.skyblockapi.api.profile.community
 
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
+import com.mojang.serialization.Codec
+import tech.thatgravyboat.skyblockapi.generated.KCodec
 
-@GenerateCodec
-data class FameRank(val name: String, val multiplier: Double)
+data class FameRank(val id: String, val name: String, val multiplier: Double) {
+    companion object {
+        val CODEC: Codec<FameRank> = KCodec.getCodec<String>().xmap(FameRanks::getById, FameRank::id)
+    }
+}
 
 @Suppress("unused")
 object FameRanks {
 
     private val registeredFameRanks = mutableMapOf<String, FameRank>()
 
-    fun getByName(name: String) = registeredFameRanks.values.find { it.name.equals(name, true) }
+    fun getByName(name: String): FameRank? = registeredFameRanks.values.find { it.name.equals(name, true) }
+
+    fun getById(id: String): FameRank = registeredFameRanks[id] ?: NEW_PLAYER
 
     private fun register(key: String, name: String, multiplier: Double) =
-        registeredFameRanks.computeIfAbsent(key) { FameRank(name, multiplier) }
+        registeredFameRanks.getOrPut(key) { FameRank(key, name, multiplier) }
 
     val NEW_PLAYER = register("new_player", "New Player", 1.0)
     val SETTLER = register("settler", "Settler", 1.1)
