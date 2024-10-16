@@ -17,20 +17,20 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 object CurrencyAPI {
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("currency")
-    private val gemsRegex = widgetGroup.create("area.gems", "(?i) Gems: (?<gems>[\\d,kmb]+)")
-    private val bankSingleRegex = widgetGroup.create("profile.bank.single", "(?i) Bank: (?<bank>[\\d,kmb]+)")
+    private val gemsRegex = widgetGroup.create("area.gems", "(?i) Gems: (?<gems>[\\d,.kmb]+)")
+    private val bankSingleRegex = widgetGroup.create("profile.bank.single", "(?i) Bank: (?<bank>[\\d,.kmb]+)")
     private val bankCoopRegex = widgetGroup.create(
         "profile.bank.coop",
-        "(?i) Bank: (?<coop>\\.\\.\\.|[\\d,kmb]+) / (?<personal>[\\d,kmb]+)",
+        "(?i) Bank: (?<coop>\\.\\.\\.|[\\d,.kmb]+) / (?<personal>[\\d,.kmb]+)",
     )
-    private val soulflowRegex = widgetGroup.create("profile.soulflow", "(?i) Soulflow: (?<soulflow>[\\d,kmb]+)")
+    private val soulflowRegex = widgetGroup.create("profile.soulflow", "(?i) Soulflow: (?<soulflow>[\\d,.kmb]+)")
 
     private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
-    private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,kmb.]+).*")
-    private val bitsRegex = currencyGroup.create("bits", "Bits: (?<bits>[\\d,kmb]+).*")
-    private val motesRegex = currencyGroup.create("motes", "Motes: (?<motes>[\\d,kmb]+).*")
-    private val copperRegex = currencyGroup.create("copper", "Copper: (?<copper>[\\d,kmb]+).*")
-    private val northStarsRegex = currencyGroup.create("northstars", "North Stars: (?<northstars>[\\d,kmb]+).*")
+    private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,.kmb]+).*")
+    private val bitsRegex = currencyGroup.create("bits", "Bits: (?<bits>[\\d,.kmb]+).*")
+    private val motesRegex = currencyGroup.create("motes", "Motes: (?<motes>[\\d,.kmb]+).*")
+    private val copperRegex = currencyGroup.create("copper", "Copper: (?<copper>[\\d,.kmb]+).*")
+    private val northStarsRegex = currencyGroup.create("northstars", "North Stars: (?<northstars>[\\d,.kmb]+).*")
 
     var purse: Double = 0.0
         private set
@@ -72,12 +72,12 @@ object CurrencyAPI {
 
             TabWidget.PROFILE -> {
                 bankSingleRegex.anyMatch(event.new, "bank") { (bank) ->
-                    this.coopBank = bank.parseFormattedLong()
+                    this.coopBank = bank.parseFormattedDouble().toLong()
                     this.personalBank = 0
                 }
                 bankCoopRegex.anyMatch(event.new, "coop", "personal") { (coop, personal) ->
-                    this.coopBank = coop.parseFormattedLong()
-                    this.personalBank = personal.parseFormattedLong()
+                    this.coopBank = coop.parseFormattedDouble().toLong()
+                    this.personalBank = personal.parseFormattedDouble().toLong()
                 }
                 soulflowRegex.anyMatch(event.new, "soulflow") { (soulflow) ->
                     this.soulflow = soulflow.parseFormattedLong()
@@ -108,7 +108,8 @@ object CurrencyAPI {
                 this.purse = purse.parseFormattedDouble()
             }
             bitsRegex.anyMatch(event.added, "bits") { (bits) ->
-                this.bits = bits.parseFormattedLong()
+                // Has a .0 if below 1k
+                this.bits = bits.parseFormattedDouble().toLong()
             }
         }
     }
