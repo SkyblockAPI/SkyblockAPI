@@ -82,6 +82,12 @@ object SkyBlockAreas {
     val RIFT_GALLERY = register("rift_gallery", "Rift Gallery")
     val RIFT_GALLERY_ENTRANCE = register("rift_gallery_entrance", "Rift Gallery Entrance")
 
+    // Rift-Slayer
+    val PHOTON_PATHWAY = register("photon_pathway", "Photon Pathway")
+    val STILLGORE_CHATEAU = register("stillgore_chateau", "Stillgore Château")
+    val OUBLIETTE = register("oubliette", "Oubliette")
+    val FAIRYLOSOPHER_TOWER = register("fairylosopher_tower", "Fairylosopher Tower")
+
     // Dwarves
     val BASECAMP = register("basecamp", "Dwarven Base Camp")
     val FOSSIL_RESEARCH = register("fossil_research", "Fossil Research Center")
