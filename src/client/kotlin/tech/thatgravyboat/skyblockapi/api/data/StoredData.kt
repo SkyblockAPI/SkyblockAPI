@@ -44,11 +44,11 @@ class StoredData<T : Any>(
         if (this.loadedData != null) {
             try {
                 this.data = this.loadedData.toDataOrThrow(this.codec)
-                this.loadedData = null
             } catch (e: Exception) {
                 Logger.error("Failed to load {} data", this.loadedData ?: "")
                 e.printStackTrace()
             }
+            this.loadedData = null
         }
     }
 
