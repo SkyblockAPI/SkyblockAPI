@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import kotlinx.datetime.Instant
 import tech.thatgravyboat.skyblockapi.api.data.FriendData
-import tech.thatgravyboat.skyblockapi.api.data.StoredData
+import tech.thatgravyboat.skyblockapi.api.data.StoredPlayerData
 import tech.thatgravyboat.skyblockapi.api.profile.friends.Friend
 import java.util.*
 import kotlin.time.Duration.Companion.days
@@ -11,8 +11,8 @@ private val MINIMUM_DIFF = 1.days
 
 internal object FriendStorage {
 
-    private val FRIENDS = StoredData(
-        FriendData(),
+    private val FRIENDS = StoredPlayerData(
+        ::FriendData,
         FriendData.CODEC,
         "friends.json"
     )
@@ -20,7 +20,12 @@ internal object FriendStorage {
     val friends: MutableList<Friend>
         get() = FRIENDS.get().friends
 
-    fun updateFriend(name: String? = null, uuid: UUID? = null, bestFriend: Boolean? = null, friendsSince: Instant? = null): Boolean {
+    fun updateFriend(
+        name: String? = null,
+        uuid: UUID? = null,
+        bestFriend: Boolean? = null,
+        friendsSince: Instant? = null
+    ): Boolean {
         if (name == null && uuid == null) return false
         val friend = friends.find {
             (uuid != null && it.uuid == uuid) || (name != null && it.name == name)
