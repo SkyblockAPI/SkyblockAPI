@@ -10,6 +10,21 @@ internal class EventListeners {
 
     private val listeners: MutableList<Listener> = mutableListOf()
 
+    fun removeListener(listener: Any) {
+        listeners.removeIf { it.listener == listener }
+    }
+
+    fun <T> addListener(callback: (T) -> Unit, priority: Int, receiveCancelled: Boolean) {
+        @Suppress("UNCHECKED_CAST")
+        listeners.add(Listener(
+            callback,
+            { callback(it as T) },
+            priority,
+            receiveCancelled,
+            EventPredicates(listOf { event, _ -> receiveCancelled || !event.isCancelled })
+        ))
+    }
+
     fun addListener(method: Method, instance: Any, options: Subscription) {
         val name = "${method.declaringClass.name}.${method.name}${
             method.parameterTypes.joinTo(
@@ -17,10 +32,16 @@ internal class EventListeners {
                 prefix = "(",
                 postfix = ")",
                 separator = ", ",
-                transform = Class<*>::getTypeName
+                transform = Class<*>::getTypeName,
             )
         }"
-        listeners.add(Listener(name, createEventConsumer(name, instance, method), options, EventPredicates(method)))
+        listeners.add(Listener(
+            method,
+            createEventConsumer(name, instance, method),
+            options.priority,
+            options.receiveCancelled,
+            EventPredicates(method)
+        ))
     }
 
     /**
@@ -37,7 +58,7 @@ internal class EventListeners {
                 MethodType.methodType(Consumer::class.java, instance::class.java),
                 MethodType.methodType(Nothing::class.javaPrimitiveType, Object::class.java),
                 handle,
-                MethodType.methodType(Nothing::class.javaPrimitiveType, method.parameterTypes[0])
+                MethodType.methodType(Nothing::class.javaPrimitiveType, method.parameterTypes[0]),
             ).target.bindTo(instance).invokeExact() as Consumer<Any>
         } catch (e: Throwable) {
             throw IllegalArgumentException("Method $name is not a valid consumer", e)
@@ -46,5 +67,11 @@ internal class EventListeners {
 
     fun getListeners(): List<Listener> = listeners
 
-    class Listener(val name: String, val invoker: Consumer<Any>, val options: Subscription, val predicate: EventPredicates)
+    class Listener(
+        val listener: Any,
+        val invoker: Consumer<Any>,
+        val priority: Int,
+        val receiveCancelled: Boolean,
+        val predicate: EventPredicates,
+    )
 }

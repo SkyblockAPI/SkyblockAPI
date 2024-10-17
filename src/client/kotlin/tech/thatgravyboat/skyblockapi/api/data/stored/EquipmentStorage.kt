@@ -1,25 +1,24 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.api.data.StoredData
+import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.profile.equipment.EquipmentData
 import tech.thatgravyboat.skyblockapi.api.profile.equipment.EquipmentSlot
-import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 
 internal object EquipmentStorage {
 
-    private val EQUIPMENT = StoredData(
-        EquipmentData(),
+    private val EQUIPMENT = StoredProfileData(
+        ::EquipmentData,
         EquipmentData.CODED,
-        StoredData.defaultPath.resolve("equipment.json")
+        "equipment.json"
     )
 
     private val normalEquipment: MutableMap<EquipmentSlot, ItemStack>
-        get() = EQUIPMENT.get().slots.getOrPut(ProfileAPI.profileName ?: "", ::emptyEquipment)
+        get() = EQUIPMENT.get()?.slots ?: emptyEquipment()
 
     private val riftEquipment: MutableMap<EquipmentSlot, ItemStack>
-        get() = EQUIPMENT.get().riftSlots.getOrPut(ProfileAPI.profileName ?: "", ::emptyEquipment)
+        get() = EQUIPMENT.get()?.riftSlots ?: emptyEquipment()
 
     private fun emptyEquipment(): MutableMap<EquipmentSlot, ItemStack> =
         EquipmentSlot.entries.associateWith { ItemStack.EMPTY }.toMutableMap()
@@ -31,9 +30,5 @@ internal object EquipmentStorage {
         if (item == equipment[slot]) return
         equipment[slot] = item
         EQUIPMENT.save()
-    }
-
-    fun getEquipment(slot: EquipmentSlot): ItemStack {
-        return equipment[slot] ?: ItemStack.EMPTY
     }
 }

@@ -9,12 +9,12 @@ import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 data class Commission(val name: String, val area: CommissionArea, var progress: Float)
 
@@ -52,7 +52,7 @@ object CommissionsAPI {
 
     @Subscription
     fun onInventoryUpdate(event: ContainerChangeEvent) {
-        val commissionAreaStack = event.inventory.find { it.hoverName.stripped == "Filter" } ?: return
+        val commissionAreaStack = event.inventory.find { it.cleanName == "Filter" } ?: return
         val commissionArea = commissionAreaRegex.run {
             var matchedArea: String? = null
             anyMatch(commissionAreaStack.getRawLore(), "area") { (area) ->
@@ -61,7 +61,7 @@ object CommissionsAPI {
             CommissionArea.byName(matchedArea)
         } ?: return
 
-        event.inventory.filter { commissionItemRegex.match(it.hoverName.stripped) }
+        event.inventory.filter { commissionItemRegex.match(it.cleanName) }
             .map {
                 var progress = 0f
                 commissionProgressRegex.anyMatch(it.getRawLore(), "progress") { (percent) ->

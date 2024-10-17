@@ -13,3 +13,5 @@ fun ItemStack.getRawLore(): List<String> {
     val lore = this.get(DataComponents.LORE) ?: return emptyList()
     return lore.lines.map { it.stripped }
 }
+
+val ItemStack.cleanName: String get() = hoverName.stripped

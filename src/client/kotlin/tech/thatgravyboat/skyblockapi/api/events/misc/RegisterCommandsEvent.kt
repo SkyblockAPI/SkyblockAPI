@@ -40,17 +40,19 @@ class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal
         }
     }
 
-    fun then(name: String, action: LiteralCommandBuilder.() -> Unit): CommandBuilder<B> {
-        val builder = CommandBuilder(ClientCommandManager.literal(name))
-        builder.action()
-        this.builder.then(builder.builder)
+    fun then(vararg names: String, action: LiteralCommandBuilder.() -> Unit): CommandBuilder<B> {
+        for (name in names) {
+            val builder = CommandBuilder(ClientCommandManager.literal(name))
+            builder.action()
+            this.builder.then(builder.builder)
+        }
         return this
     }
 
     fun <T> then(
         name: String,
         argument: ArgumentType<T>,
-        suggestions: List<String>,
+        suggestions: Collection<String>,
         action: ArgumentCommandBuilder<T>.() -> Unit,
     ): CommandBuilder<B> = then(
         name,

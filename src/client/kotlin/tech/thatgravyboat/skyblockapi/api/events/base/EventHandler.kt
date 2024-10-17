@@ -8,8 +8,8 @@ internal class EventHandler<T : SkyBlockEvent> private constructor(
 
     constructor(event: Class<T>, listeners: List<EventListeners.Listener>) : this(
         (event.name.split(".").lastOrNull() ?: event.name).replace("$", "."),
-        listeners.sortedBy { it.options.priority }.toList(),
-        listeners.any { it.options.receiveCancelled }
+        listeners.sortedBy { it.priority }.toList(),
+        listeners.any { it.receiveCancelled }
     )
 
     fun post(event: T, context: Any?, onError: ((Throwable) -> Unit)? = null): Boolean {

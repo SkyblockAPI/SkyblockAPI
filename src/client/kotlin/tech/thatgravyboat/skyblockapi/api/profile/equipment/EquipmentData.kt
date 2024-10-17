@@ -6,8 +6,8 @@ import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class EquipmentData(
-    val slots: MutableMap<String, MutableMap<EquipmentSlot, ItemStack>> = mutableMapOf(),
-    val riftSlots: MutableMap<String, MutableMap<EquipmentSlot, ItemStack>> = mutableMapOf()
+    val slots: MutableMap<EquipmentSlot, ItemStack> = mutableMapOf(),
+    val riftSlots: MutableMap<EquipmentSlot, ItemStack> = mutableMapOf()
 ) {
     companion object {
         val CODED = KCodec.getCodec<EquipmentData>()
