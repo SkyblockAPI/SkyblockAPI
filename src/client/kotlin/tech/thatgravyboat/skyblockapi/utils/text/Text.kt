@@ -6,6 +6,8 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import java.util.*
 
 object CommonText {
 
@@ -21,6 +23,11 @@ object Text {
     fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
     fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
     fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
+    internal fun debug(text: String, prefix: Boolean = true, init: MutableComponent.() -> Unit = {}) =
+        of("${if (prefix) "[SkyBlockAPI] " else ""}$text") {
+            this.color = TextColor.YELLOW
+            init.invoke(this)
+        }
 
     fun multiline(vararg lines: Any?) = join(*lines, separator = CommonText.NEWLINE)
     fun join(vararg components: Any?, separator: MutableComponent? = null): MutableComponent {
@@ -55,6 +62,35 @@ object TextProperties {
 
     val Component.width: Int get() = McFont.width(this)
     val Component.stripped: String get() = StringUtil.stripColor(this.string)
+}
+
+object TextUtils {
+
+    fun Component.splitLines(): List<Component> = split("\n")
+
+    fun Component.split(separator: String): List<Component> {
+        val components = mutableListOf<Component>()
+        var current = Component.empty()
+
+        this.visit(
+            { style, part ->
+                val lines = part.split(separator)
+                current.append(Component.literal(lines[0]).setStyle(style))
+                if (lines.size > 1) {
+                    components.add(current)
+                    for (i in 2 until lines.lastIndex) {
+                        components.add(Component.literal(lines[i]).setStyle(style))
+                    }
+                    current = Component.literal(lines.last()).setStyle(style)
+                }
+                Optional.empty<Unit>()
+            },
+            Style.EMPTY,
+        )
+
+        return components + current
+    }
+
 }
 
 object TextStyle {

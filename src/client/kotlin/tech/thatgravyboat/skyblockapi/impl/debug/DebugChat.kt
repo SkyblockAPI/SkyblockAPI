@@ -28,6 +28,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 
 @Module
 object DebugChat {
@@ -116,10 +117,17 @@ private class Widget(timestamp: Instant, val content: Component) : StringWidget(
     }
 
     override fun onClick(d: Double, e: Double) {
+        val copyType: String
         if (Screen.hasAltDown()) {
             McClient.clipboard = this.content.toJson(ComponentSerialization.CODEC).toPrettyString()
+            copyType = "Component"
+        } else if (Screen.hasShiftDown()) {
+            val lines = this.content.splitLines()
+            McClient.clipboard = lines.joinToString { it.toJson(ComponentSerialization.CODEC).toPrettyString() }
+            copyType = "Component Lines"
         } else {
             McClient.clipboard = this.content.string
+            copyType = "String"
         }
         SystemToast.add(
             McClient.toasts,
@@ -127,7 +135,7 @@ private class Widget(timestamp: Instant, val content: Component) : StringWidget(
             Text.of("[SkyBlock API]") {
                 this.color = TextColor.YELLOW
             },
-            Text.of("Message copied to clipboard!") {
+            Text.of("Message copied to clipboard! ($copyType)") {
                 this.color = TextColor.YELLOW
             },
         )

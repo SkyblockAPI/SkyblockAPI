@@ -139,7 +139,7 @@ fun Int.toRomanNumeral(): String {
     return roman.toString()
 }
 
-fun String.stripColor() = StringUtil.stripColor(this)
+fun String.stripColor(): String = StringUtil.stripColor(this)
 
 fun String.trimIgnoreColor(): String {
     val start = colorCodesStart.find(this)?.groups?.get("start")?.value ?: ""

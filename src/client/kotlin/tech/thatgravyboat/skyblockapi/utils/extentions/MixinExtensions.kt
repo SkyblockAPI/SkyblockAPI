@@ -10,4 +10,4 @@ import tech.thatgravyboat.skyblockapi.mixins.accessors.AbstractContainerScreenAc
 
 
 fun AbstractContainerScreen<*>.getHoveredSlot(): Slot? =
-    (this as AbstractContainerScreenAccessor).hoverdSlot
+    (this as AbstractContainerScreenAccessor).hoveredSlot
