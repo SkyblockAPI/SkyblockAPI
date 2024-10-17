@@ -52,8 +52,10 @@ internal object FriendStorage {
         return true
     }
 
-    fun removeFriend(name: String) {
-        val removed = friends.removeIf { it.name == name }
+    fun removeFriend(name: String) = removeFriends { it.name == name }
+
+    fun removeFriends(predicate: (Friend) -> Boolean) {
+        val removed = friends.removeIf(predicate)
         if (removed) save()
     }
 

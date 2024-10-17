@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
+import java.util.*
 
 object CommonText {
 
@@ -55,6 +56,30 @@ object TextProperties {
 
     val Component.width: Int get() = McFont.width(this)
     val Component.stripped: String get() = StringUtil.stripColor(this.string)
+}
+
+object TextUtils {
+
+    fun Component.splitLines(): List<Component> {
+        val components = mutableListOf<Component>()
+        var current = Component.empty()
+
+        this.visit({ style, part ->
+            val lines = part.split("\n")
+            current.append(Component.literal(lines[0]).setStyle(style))
+            if (lines.size > 1) {
+                components.add(current)
+                for (i in 2 until lines.lastIndex) {
+                    components.add(Component.literal(lines[i]).setStyle(style))
+                }
+                current = Component.literal(lines.last()).setStyle(style)
+            }
+            Optional.empty<Unit>()
+        }, Style.EMPTY)
+
+        return components + current
+    }
+
 }
 
 object TextStyle {
