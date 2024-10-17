@@ -60,12 +60,14 @@ object TextProperties {
 
 object TextUtils {
 
-    fun Component.splitLines(): List<Component> {
+    fun Component.splitLines(): List<Component> = split("\n")
+
+    fun Component.split(separator: String): List<Component> {
         val components = mutableListOf<Component>()
         var current = Component.empty()
 
         this.visit({ style, part ->
-            val lines = part.split("\n")
+            val lines = part.split(separator)
             current.append(Component.literal(lines[0]).setStyle(style))
             if (lines.size > 1) {
                 components.add(current)
