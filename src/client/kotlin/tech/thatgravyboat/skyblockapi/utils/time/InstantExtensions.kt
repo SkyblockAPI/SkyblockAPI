@@ -9,3 +9,7 @@ internal fun currentInstant(): Instant = Clock.System.now()
 internal fun Duration.fromNow(): Instant = currentInstant() + this
 
 internal fun Duration.ago(): Instant = currentInstant() - this
+
+internal fun Instant.since(): Duration = currentInstant() - this
+
+internal fun Instant.until(): Duration = this - currentInstant()

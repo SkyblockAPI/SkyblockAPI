@@ -6,7 +6,7 @@ import java.util.*
 
 @GenerateCodec
 data class Friend(
-    val name: String?,
+    val name: String,
     val uuid: UUID?,
     val bestFriend: Boolean,
     val friendsSince: Instant,

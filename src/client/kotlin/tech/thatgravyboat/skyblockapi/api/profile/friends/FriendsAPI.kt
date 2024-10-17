@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.friends
 
+import com.mojang.brigadier.arguments.StringArgumentType
 import kotlinx.datetime.Clock
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
@@ -7,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.FriendStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
@@ -22,6 +24,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 import tech.thatgravyboat.skyblockapi.utils.time.ago
+import tech.thatgravyboat.skyblockapi.utils.time.since
 import kotlin.time.Duration
 
 @Suppress("unused")
@@ -88,7 +91,8 @@ object FriendsAPI {
         components.any(::handleSingleLine)
     }
 
-    private fun resetListSearch() {
+    // TODO: also call this on guild join/leave message if the person is in your friends list
+    internal fun resetListSearch() {
         currentPage = 0
         maxPage = 0
         isInFriendsList = false
@@ -127,7 +131,6 @@ object FriendsAPI {
 
             if (isInFriendsList && currentPage == maxPage) {
                 FriendStorage.removeFriends { it.name !in foundFriends }
-                Text.of("updated friends list!").send()
                 resetListSearch()
             }
         }
@@ -152,6 +155,63 @@ object FriendsAPI {
             FriendStorage.updateFriend(name = name, bestFriend = false)
         } ?: return true
         return false
+    }
+
+    @Subscription
+    fun onCommandsRegistration(event: RegisterCommandsEvent) {
+        event.register("sbapi") {
+            then("friends") {
+                then("add", StringArgumentType.string()) {
+                    callback {
+                        val name = StringArgumentType.getString(this, "name") ?: return@callback
+                        FriendStorage.addFriend(name)
+                        Text.debug("Added $name to friends list.").send()
+                    }
+                }
+                then("remove", StringArgumentType.string()) {
+                    callback {
+                        val name = StringArgumentType.getString(this, "name") ?: return@callback
+                        FriendStorage.removeFriend(name)
+                        Text.debug("Removed $name from friends list.").send()
+                    }
+                }
+                then("list") {
+                    callback {
+                        val friends = friends
+                        if (friends.isEmpty()) {
+                            Text.debug("You have no friends. :(").send()
+                            return@callback
+                        }
+                        Text.debug("Friends:").send()
+                        friends.forEach { friend ->
+                            val name = friend.name
+                            val bestFriend = if (friend.bestFriend) "§l§aBest Friend" else "§7Friend"
+                            val duration = friend.friendsSince.since()
+                            Text.debug(" - $name [$bestFriend] for $duration", false).send()
+                        }
+                    }
+                }
+                then("check", StringArgumentType.string()) {
+                    callback {
+                        val name = StringArgumentType.getString(this, "name") ?: return@callback
+                        val friend = FriendStorage.getFriend(name)
+                        if (friend == null) {
+                            Text.debug("$name is not your friend.").send()
+                            return@callback
+                        }
+                        val bestFriend = if (friend.bestFriend) "§l§aBest Friend" else "§7Friend"
+                        val duration = friend.friendsSince.since()
+                        Text.debug("$name is your $bestFriend for $duration").send()
+                    }
+                }
+                then("clear") {
+                    callback {
+                        FriendStorage.clear()
+                        Text.debug("Cleared friends list.").send()
+                    }
+                }
+            }
+        }
     }
 
     @Subscription

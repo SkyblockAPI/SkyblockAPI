@@ -21,14 +21,13 @@ internal object FriendStorage {
         get() = FRIENDS.get().friends
 
     fun updateFriend(
-        name: String? = null,
+        name: String,
         uuid: UUID? = null,
         bestFriend: Boolean? = null,
         friendsSince: Instant? = null
     ): Boolean {
-        if (name == null && uuid == null) return false
         val friend = friends.find {
-            (uuid != null && it.uuid == uuid) || (name != null && it.name == name)
+            (uuid != null && it.uuid == uuid) || it.name == name
         }
         if (friend == null) {
             val instant = friendsSince ?: Instant.DISTANT_PAST
@@ -44,15 +43,19 @@ internal object FriendStorage {
         }
         friends.remove(friend)
         val newInstant = friendsSince ?: friend.friendsSince
-        val newName = name ?: friend.name
         val newUuid = uuid ?: friend.uuid
         val newBestFriend = bestFriend ?: friend.bestFriend
-        friends.add(Friend(newName, newUuid, newBestFriend, newInstant))
+        friends.add(Friend(name, newUuid, newBestFriend, newInstant))
         save()
         return true
     }
 
-    fun removeFriend(name: String) = removeFriends { it.name == name }
+    fun addFriend(name: String) {
+        removeFriend(name)
+        friends.add(Friend(name, null, false, Instant.DISTANT_PAST))
+    }
+
+    fun removeFriend(name: String) = removeFriends { it.name.equals(name, true) }
 
     fun removeFriends(predicate: (Friend) -> Boolean) {
         val removed = friends.removeIf(predicate)
@@ -60,11 +63,16 @@ internal object FriendStorage {
     }
 
     fun getFriend(name: String): Friend? {
-        return friends.find { it.name == name }
+        return friends.find { it.name.equals(name, true) }
     }
 
     fun getFriend(uuid: UUID): Friend? {
         return friends.find { it.uuid == uuid }
+    }
+
+    fun clear() {
+        friends.clear()
+        save()
     }
 
     private fun save() {
