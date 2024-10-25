@@ -1,31 +1,29 @@
 package tech.thatgravyboat.skyblockapi.api.profile.friends
 
 import com.mojang.brigadier.arguments.StringArgumentType
-import kotlinx.datetime.Clock
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.HoverEvent
 import tech.thatgravyboat.skyblockapi.api.data.stored.FriendStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.FriendEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.find
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
-import tech.thatgravyboat.skyblockapi.utils.time.ago
-import tech.thatgravyboat.skyblockapi.utils.time.since
-import kotlin.time.Duration
+import java.util.*
 
 @Suppress("unused")
 @Module
@@ -61,9 +59,10 @@ object FriendsAPI {
         "entry",
         "^(?<name>\\S+) is "
     ).toComponentRegex()
-    private val friendsDurationRegex = listGroup.create(
-        "duration",
-        "Friends for (?<time>.+)\n"
+
+    private val friendJoinLeaveRegex = regexGroup.create(
+        "joinleave",
+        "^Friend > (?<name>\\S+) (?<action>joined|left)"
     )
     //endregion
 
@@ -72,7 +71,11 @@ object FriendsAPI {
 
     fun isFriend(name: String): Boolean = FriendStorage.getFriend(name) != null
 
+    fun isFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid) != null
+
     fun isBestFriend(name: String): Boolean = FriendStorage.getFriend(name)?.bestFriend ?: false
+
+    fun isBestFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid)?.bestFriend ?: false
 
     // Dealing with friends list
     private var currentPage: Int = 0
@@ -116,17 +119,13 @@ object FriendsAPI {
 
             for (i in 3 until components.lastIndex) {
                 val lineComponent = components[i]
-                friendEntryListRegex.find(lineComponent, "name") linesFind@{ (component) ->
+                friendEntryListRegex.find(lineComponent, "name") { (component) ->
                     val name = component.stripped
                     val isBestFriend = component.string.contains("§l")
-                    val hoverComponent = component.style.hoverEvent?.getValue(HoverEvent.Action.SHOW_TEXT) ?: return@linesFind
-                    val timeString = friendsDurationRegex.findGroup(hoverComponent.stripped, "time") ?: return@linesFind
-                    val duration: Duration = timeString.parseDuration() ?: Duration.ZERO // TODO: actually parse the duration properly
                     val uuid = CommonRegexes.getUuidFromViewProfile(component)
-                    FriendStorage.updateFriend(name, uuid, isBestFriend, duration.ago())
+                    FriendStorage.updateFriend(name, uuid, isBestFriend)
                     foundFriends += name
                 }
-
             }
 
             if (isInFriendsList && currentPage == maxPage) {
@@ -142,8 +141,15 @@ object FriendsAPI {
 
     private fun handleMessage(component: Component): Boolean {
         val message = component.stripped
+        friendJoinLeaveRegex.findThenNull(message, "name", "action") { (name, action) ->
+            val friend = FriendStorage.addIfAbsent(name)
+            val joined = action == "joined"
+
+            if (joined) FriendEvent.Join(friend).post()
+            else FriendEvent.Leave(friend).post()
+        } ?: return true
         addedFriendRegex.findThenNull(message, "name") { (name) ->
-            FriendStorage.updateFriend(name = name, bestFriend = false, friendsSince = Clock.System.now())
+            FriendStorage.updateFriend(name = name, bestFriend = false)
         } ?: return true
         removedFriendRegex.findThenNull(message, "name") { (name) ->
             FriendStorage.removeFriend(name)
@@ -161,18 +167,23 @@ object FriendsAPI {
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
         event.register("sbapi") {
             then("friends") {
-                then("add", StringArgumentType.string()) {
-                    callback {
-                        val name = StringArgumentType.getString(this, "name") ?: return@callback
-                        FriendStorage.addFriend(name)
-                        Text.debug("Added $name to friends list.").send()
+                then("add") {
+                    then("name", StringArgumentType.string()) {
+                        callback {
+                            val name = StringArgumentType.getString(this, "name") ?: return@callback
+                            FriendStorage.removeFriend(name)
+                            FriendStorage.addFriend(name)
+                            Text.debug("Added $name to friends list.").send()
+                        }
                     }
                 }
-                then("remove", StringArgumentType.string()) {
-                    callback {
-                        val name = StringArgumentType.getString(this, "name") ?: return@callback
-                        FriendStorage.removeFriend(name)
-                        Text.debug("Removed $name from friends list.").send()
+                then("remove") {
+                    then("name", StringArgumentType.string()) {
+                        callback {
+                            val name = StringArgumentType.getString(this, "name") ?: return@callback
+                            FriendStorage.removeFriend(name)
+                            Text.debug("Removed $name from friends list.").send()
+                        }
                     }
                 }
                 then("list") {
@@ -182,26 +193,36 @@ object FriendsAPI {
                             Text.debug("You have no friends. :(").send()
                             return@callback
                         }
-                        Text.debug("Friends:").send()
+                        Text.debug("Friends (${friends.size}):").send()
                         friends.forEach { friend ->
-                            val name = friend.name
-                            val bestFriend = if (friend.bestFriend) "§l§aBest Friend" else "§7Friend"
-                            val duration = friend.friendsSince.since()
-                            Text.debug(" - $name [$bestFriend] for $duration", false).send()
+                            Text.debug(" - ${friend.name}").apply {
+                                if (friend.bestFriend) {
+                                    val friendText = Text.of(" (Best Friend)") {
+                                        this.color = TextColor.GREEN
+                                        this.bold = true
+                                    }
+                                    append(friendText)
+                                }
+                            }.send()
                         }
                     }
                 }
-                then("check", StringArgumentType.string()) {
-                    callback {
-                        val name = StringArgumentType.getString(this, "name") ?: return@callback
-                        val friend = FriendStorage.getFriend(name)
-                        if (friend == null) {
-                            Text.debug("$name is not your friend.").send()
-                            return@callback
+                then("check") {
+                    then("name", StringArgumentType.string()) {
+                        callback {
+                            val name = StringArgumentType.getString(this, "name") ?: return@callback
+                            val friend = FriendStorage.getFriend(name)
+                            if (friend == null) {
+                                Text.debug("$name is not your friend.").send()
+                                return@callback
+                            }
+                            val bestFriend = if (friend.bestFriend) "Best Friend" else "Friend"
+                            val friendText = Text.of(bestFriend) {
+                                this.color = TextColor.GREEN
+                                this.bold = friend.bestFriend
+                            }
+                            Text.debug("${friend.name} is your ").append(friendText).send()
                         }
-                        val bestFriend = if (friend.bestFriend) "§l§aBest Friend" else "§7Friend"
-                        val duration = friend.friendsSince.since()
-                        Text.debug("$name is your $bestFriend for $duration").send()
                     }
                 }
                 then("clear") {

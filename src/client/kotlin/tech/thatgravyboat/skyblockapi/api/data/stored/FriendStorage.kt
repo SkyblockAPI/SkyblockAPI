@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
-import kotlinx.datetime.Instant
 import tech.thatgravyboat.skyblockapi.api.data.FriendData
 import tech.thatgravyboat.skyblockapi.api.data.StoredPlayerData
 import tech.thatgravyboat.skyblockapi.api.profile.friends.Friend
@@ -24,35 +23,35 @@ internal object FriendStorage {
         name: String,
         uuid: UUID? = null,
         bestFriend: Boolean? = null,
-        friendsSince: Instant? = null
     ): Boolean {
         val friend = friends.find {
             (uuid != null && it.uuid == uuid) || it.name == name
         }
         if (friend == null) {
-            val instant = friendsSince ?: Instant.DISTANT_PAST
-            val newFriend = Friend(name, uuid, bestFriend ?: false, instant)
+            val newFriend = Friend(name, uuid, bestFriend ?: false)
             friends.add(newFriend)
             save()
             return true
         }
-        if (friend.name == name && friend.uuid == uuid || friend.bestFriend == bestFriend) {
-            if (friendsSince == null) return false
-            val difference = (friend.friendsSince - friendsSince).absoluteValue
-            if (difference < MINIMUM_DIFF) return false
-        }
+        if (friend.name == name && friend.uuid == uuid && friend.bestFriend == bestFriend) return false
         friends.remove(friend)
-        val newInstant = friendsSince ?: friend.friendsSince
         val newUuid = uuid ?: friend.uuid
         val newBestFriend = bestFriend ?: friend.bestFriend
-        friends.add(Friend(name, newUuid, newBestFriend, newInstant))
+        friends.add(Friend(name, newUuid, newBestFriend))
         save()
         return true
     }
 
-    fun addFriend(name: String) {
-        removeFriend(name)
-        friends.add(Friend(name, null, false, Instant.DISTANT_PAST))
+    fun addFriend(name: String): Friend {
+        val friend = Friend(name, null, false)
+        friends.add(friend)
+        save()
+        return friend
+    }
+
+    fun addIfAbsent(name: String): Friend {
+        val friend = friends.find { it.name.equals(name, true) }
+        return friend ?: addFriend(name)
     }
 
     fun removeFriend(name: String) = removeFriends { it.name.equals(name, true) }
