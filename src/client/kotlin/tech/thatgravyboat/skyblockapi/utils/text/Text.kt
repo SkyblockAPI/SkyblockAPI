@@ -23,8 +23,8 @@ object Text {
     fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
     fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
     fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
-    internal fun debug(text: String, prefix: Boolean = true, init: MutableComponent.() -> Unit = {}) =
-        of("${if (prefix) "[SkyBlockAPI] " else ""}$text") {
+    internal fun debug(text: String, init: MutableComponent.() -> Unit = {}) =
+        of("[SkyBlockAPI] $text") {
             this.color = TextColor.YELLOW
             init.invoke(this)
         }
