@@ -1,6 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.profile.friends
 
 import com.mojang.brigadier.arguments.StringArgumentType
+import com.mojang.brigadier.suggestion.SuggestionProvider
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.data.stored.FriendStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -35,34 +38,34 @@ object FriendsAPI {
 
     private val addedFriendRegex = regexGroup.create(
         "add",
-        "^You are now friends with (?:\\[.+] )?(?<name>[a-zA-Z0-9_]+)"
+        "^You are now friends with (?:\\[.+] )?(?<name>[a-zA-Z0-9_]+)",
     )
     private val removedFriendRegex = regexGroup.create(
         "remove",
-        "^You removed (?:\\[.+] )?(?<name>[a-zA-Z0-9_]+) from your friends list!"
+        "^You removed (?:\\[.+] )?(?<name>[a-zA-Z0-9_]+) from your friends list!",
     )
 
     private val addedBestFriendRegex = regexGroup.create(
         "bestfriend.add",
-        "^(?:\\[.+] )?(?<name>[a-zA-Z0-9_]+) is now a best friend!"
+        "^(?:\\[.+] )?(?<name>[a-zA-Z0-9_]+) is now a best friend!",
     )
     private val removeBestFriendRegex = regexGroup.create(
         "bestfriend.remove",
-        "^(?:\\[.+] )?(?<name>[a-zA-Z0-9_]+) is no longer a best friend!"
+        "^(?:\\[.+] )?(?<name>[a-zA-Z0-9_]+) is no longer a best friend!",
     )
 
     private val pageFriendsListRegex = listGroup.create(
         "page",
-        "^\\s*(?:<<)? Friends \\(Page (?<current>\\d+) of (?<max>\\d+)\\)"
+        "^\\s*(?:<<)? Friends \\(Page (?<current>\\d+) of (?<max>\\d+)\\)",
     )
     private val friendEntryListRegex = listGroup.create(
         "entry",
-        "^(?<name>\\S+) is "
+        "^(?<name>\\S+) is ",
     ).toComponentRegex()
 
     private val friendJoinLeaveRegex = regexGroup.create(
         "joinleave",
-        "^Friend > (?<name>\\S+) (?<action>joined|left)"
+        "^Friend > (?<name>\\S+) (?<action>joined|left)",
     )
     //endregion
 
@@ -83,7 +86,7 @@ object FriendsAPI {
     private var isInFriendsList = false
     private val foundFriends: MutableSet<String> = mutableSetOf()
 
-    @Subscription
+    @Subscription(priority = Int.MIN_VALUE)
     fun onChat(event: ChatReceivedEvent) {
         val components = event.component.splitLines()
         if (components.size == 1) {
@@ -165,6 +168,10 @@ object FriendsAPI {
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
+        val provider = SuggestionProvider<FabricClientCommandSource> { _, builder ->
+            val friends = friends.map { it.name }
+            SharedSuggestionProvider.suggest(friends, builder)
+        }
         event.register("sbapi") {
             then("friends") {
                 then("add") {
@@ -178,7 +185,7 @@ object FriendsAPI {
                     }
                 }
                 then("remove") {
-                    then("name", StringArgumentType.string()) {
+                    then("name", StringArgumentType.string(), provider) {
                         callback {
                             val name = StringArgumentType.getString(this, "name") ?: return@callback
                             FriendStorage.removeFriend(name)
@@ -195,7 +202,7 @@ object FriendsAPI {
                         }
                         Text.debug("Friends (${friends.size}):").send()
                         friends.forEach { friend ->
-                            Text.debug(" - ${friend.name}").apply {
+                            Text.debug(" - ${friend.name}") {
                                 if (friend.bestFriend) {
                                     val friendText = Text.of(" (Best Friend)") {
                                         this.color = TextColor.GREEN
@@ -221,7 +228,9 @@ object FriendsAPI {
                                 this.color = TextColor.GREEN
                                 this.bold = friend.bestFriend
                             }
-                            Text.debug("${friend.name} is your ").append(friendText).send()
+                            Text.debug("${friend.name} is your ") {
+                                append(friendText)
+                            }.send()
                         }
                     }
                 }
