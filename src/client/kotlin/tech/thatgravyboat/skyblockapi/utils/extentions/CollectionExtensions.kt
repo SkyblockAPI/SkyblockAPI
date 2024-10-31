@@ -31,3 +31,12 @@ internal fun <K> MutableMap<K, Double>.addOrPut(key: K, number: Double): Double 
 internal fun <K> MutableMap<K, Float>.addOrPut(key: K, number: Float): Float = merge(key, number, Float::plus)!!
 
 internal fun <K> MutableMap<K, Long>.addOrPut(key: K, number: Long): Long = merge(key, number, Long::plus)!!
+
+internal inline fun <T, R : Any> List<T>.lastNotNullOfOrNull(transform: (T) -> R?): R? {
+    val iterator = this.listIterator(size)
+    while (iterator.hasPrevious()) {
+        val result = transform(iterator.previous())
+        if (result != null) return result
+    }
+    return null
+}

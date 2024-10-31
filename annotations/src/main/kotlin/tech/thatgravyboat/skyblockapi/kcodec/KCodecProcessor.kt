@@ -25,6 +25,7 @@ class KCodecProcessor(
         val generatedCodecs = validGeneratedCodecs.map { RecordCodecGenerator.generateCodec(it) }
 
         val file = FileSpec.builder("tech.thatgravyboat.skyblockapi.generated", "KCodec")
+            .indent("    ")
             .addType(
                 TypeSpec.objectBuilder("KCodec").apply {
                     this.addProperties(generatedCodecs)

@@ -1,12 +1,18 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
@@ -29,6 +35,14 @@ object DebugInventory {
                 }
             }
         }
+    }
+
+    @Subscription
+    fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
+        if (event.key != InputConstants.KEY_C) return
+        val slot = McScreen.asMenu?.getHoveredSlot() ?: return
+        McClient.clipboard = slot.item.toJson(ItemStack.CODEC).toPrettyString()
+        Text.debug("Copied item data to clipboard.").send()
     }
 
     @Subscription

@@ -45,6 +45,7 @@ class ModuleProcessor(
         logger.warn("Generating Modules.kt")
 
         val file = FileSpec.builder("tech.thatgravyboat.skyblockapi.generated", "Modules")
+            .indent("    ")
             .addType(
                 TypeSpec.objectBuilder("Modules").apply {
                     this.addModifiers(KModifier.INTERNAL)
