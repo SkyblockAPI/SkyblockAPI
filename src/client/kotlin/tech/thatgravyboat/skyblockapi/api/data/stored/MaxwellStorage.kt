@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.data.MaxwellData
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPower
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPowers
+import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
 
 private const val MAX_ACCESSORIES_PER_PAGE = 9 * 5
 
@@ -35,6 +36,9 @@ internal object MaxwellStorage {
 
     val unlockedPowers: MutableSet<MaxwellPower>
         get() = data?.unlockedPowers ?: mutableSetOf()
+
+    val tunings: MutableList<MaxwellTuning>
+        get() = data?.tunings ?: mutableListOf()
 
     fun updatePower(newPower: MaxwellPower) {
         if (power == newPower) return

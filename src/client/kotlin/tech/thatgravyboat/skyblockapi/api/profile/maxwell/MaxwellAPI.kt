@@ -44,6 +44,9 @@ object MaxwellAPI {
     val unlockedPowers: Set<MaxwellPower>
         get() = MaxwellStorage.unlockedPowers
 
+    val tunings: List<MaxwellTuning>
+        get() = MaxwellStorage.tunings
+
     private val chatGroup = RegexGroup.CHAT.group("maxwell")
 
     private val selectPowerRegex = chatGroup.create(
