@@ -16,6 +16,7 @@ enum class SkyBlockStat(
     DEFENSE('❈', TextColor.GREEN),
     STRENGTH('❁', TextColor.RED),
     INTELLIGENCE('✎', TextColor.AQUA),
+    SPEED('✦', TextColor.WHITE),
     CRIT_DAMAGE('☠', TextColor.BLUE),
     CRIT_CHANCE('☣', TextColor.BLUE),
     ATTACK_SPEED('⚔', TextColor.YELLOW),
@@ -28,5 +29,11 @@ enum class SkyBlockStat(
 
     val displayText: Component = Text.of("$icon $displayName") {
         this@of.color = this@SkyBlockStat.color
+    }
+
+    companion object {
+        fun fromName(name: String): SkyBlockStat? {
+            return entries.find { it.displayName.equals(name, ignoreCase = true) }
+        }
     }
 }

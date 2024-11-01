@@ -14,7 +14,7 @@ data class MaxwellData(
     var magicalPower: Int = 0,
     val accessories: MutableList<ItemStack> = mutableListOf(),
     val unlockedPowers: MutableSet<MaxwellPower> = mutableSetOf(MaxwellPowers.NO_POWER),
-    val tunings: MutableList<MaxwellTuning> = mutableListOf(),
+    var tunings: MutableList<MaxwellTuning> = mutableListOf(),
 ) {
     companion object {
         val CODEC: Codec<MaxwellData> = KCodec.getCodec<MaxwellData>()

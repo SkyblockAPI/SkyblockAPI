@@ -3,19 +3,25 @@ package tech.thatgravyboat.skyblockapi.api.profile.maxwell
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
+import tech.thatgravyboat.skyblockapi.api.data.SkyBlockStat
 import tech.thatgravyboat.skyblockapi.api.data.stored.MaxwellStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 private const val THAUMATURGY_GUI_ROWS = 5
 private const val THAUMATURGY_GUI_LEFT_SPACING = 1
@@ -69,6 +75,14 @@ object MaxwellAPI {
     private val thaumaturgyMpRegex = thaumaturgyGuiGroup.create(
         "mp",
         "^Total: (?<mp>[\\d,.]+) Magical Power",
+    )
+    private val thaumaturgyStartTuningRegex = thaumaturgyGuiGroup.create(
+        "tuning.start",
+        "^Your tuning:"
+    )
+    private val thaumaturgyTuningRegex = thaumaturgyGuiGroup.create(
+        "tuning",
+        "(?<amount>[\\d,.]+)(?<icon>.) (?<name>.+)"
     )
     //endregion
 
@@ -129,8 +143,17 @@ object MaxwellAPI {
             }
         }
 
-        //val tuningsLore = items[THAUMATURGY_STATS_TUNING_SLOT].getRawLore()
-        // TODO: Implement tunings
+        val tuningsLore = items[THAUMATURGY_STATS_TUNING_SLOT].getRawLore()
+        val tunings = buildList {
+            thaumaturgyTuningRegex.findAll(tuningsLore, "amount", "name") { (amount, name) ->
+                val statName = SkyBlockStat.fromName(name) ?: return@findAll
+                val value = amount.parseFormattedDouble()
+                add(MaxwellTuning(statName, value))
+            }
+        }
+
+        MaxwellStorage.updateTunings(tunings, false)
+
         return true
     }
 
@@ -185,6 +208,20 @@ object MaxwellAPI {
     private fun handleTuningsGui(event: ContainerInitializedEvent): Boolean {
         return false
         // TODO: Implement tunings
+    }
+
+    @Subscription
+    fun onCommandRegister(event: RegisterCommandsEvent) {
+        event.register("sbapi") {
+            then("maxwell") {
+                then("reset") {
+                    callback {
+                        MaxwellStorage.reset()
+                        Text.debug("Reset Maxwell Data!").send()
+                    }
+                }
+            }
+        }
     }
 
     private fun isAccessoryOrEmpty(item: ItemStack): Boolean {

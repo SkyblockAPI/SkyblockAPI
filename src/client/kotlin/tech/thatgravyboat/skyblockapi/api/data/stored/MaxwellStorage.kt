@@ -6,8 +6,10 @@ import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPower
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPowers
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
+import kotlin.math.absoluteValue
 
 private const val MAX_ACCESSORIES_PER_PAGE = 9 * 5
+private const val MINIMUM_DIFFERENCE_TUNING_CHANGE = 1.5
 
 internal object MaxwellStorage {
 
@@ -37,8 +39,11 @@ internal object MaxwellStorage {
     val unlockedPowers: MutableSet<MaxwellPower>
         get() = data?.unlockedPowers ?: mutableSetOf()
 
-    val tunings: MutableList<MaxwellTuning>
-        get() = data?.tunings ?: mutableListOf()
+    var tunings: List<MaxwellTuning>
+        get() = data?.tunings ?: emptyList()
+        private set(value) {
+            data?.tunings = value.toMutableList()
+        }
 
     fun updatePower(newPower: MaxwellPower) {
         if (power == newPower) return
@@ -54,14 +59,55 @@ internal object MaxwellStorage {
     }
 
     fun updateAccessories(page: Int, newAccessories: List<ItemStack>) {
-        val index = (page - 1) * MAX_ACCESSORIES_PER_PAGE
-        val shouldSave = accessories.addAll(index, newAccessories)
+        val firstIndex = (page - 1) * MAX_ACCESSORIES_PER_PAGE
+        var shouldSave = false
+        for (i in newAccessories.indices) {
+            val newIndex = firstIndex + i
+            if (accessories.size <= newIndex) {
+                if (accessories[newIndex] == newAccessories[i]) continue
+                shouldSave = true
+                accessories[newIndex] = newAccessories[i]
+            } else {
+                accessories.add(newAccessories[i])
+            }
+        }
         if (shouldSave) save()
     }
 
     fun addUnlockedPower(power: MaxwellPower) {
         val shouldSave = unlockedPowers.add(power)
         if (shouldSave) save()
+    }
+
+    fun updateTunings(newTunings: List<MaxwellTuning>, exact: Boolean) {
+        if (tunings == newTunings) return
+        if (exact) return setTunings(newTunings)
+        if (tunings.size != newTunings.size) return setTunings(newTunings)
+        val oldStatMap = tunings.associateBy(MaxwellTuning::stat)
+        val newStatMap = newTunings.associateBy(MaxwellTuning::stat)
+        for (stat in MaxwellTuning.ALLOWED_STATS) {
+            val oldValue = oldStatMap[stat]?.value
+            val newValue = newStatMap[stat]?.value
+            if (oldValue == newValue) continue
+            if (oldValue == null || newValue == null) return setTunings(newTunings)
+            if ((newValue - oldValue).absoluteValue > MINIMUM_DIFFERENCE_TUNING_CHANGE) {
+                return setTunings(newTunings)
+            }
+        }
+    }
+
+    private fun setTunings(newTunings: List<MaxwellTuning>) {
+        tunings = newTunings
+        save()
+    }
+
+    fun reset() {
+        power = MaxwellPowers.NO_POWER
+        magicalPower = 0
+        accessories.clear()
+        unlockedPowers.clear()
+        tunings = emptyList()
+        save()
     }
 
     private fun save() = DATA.save()
