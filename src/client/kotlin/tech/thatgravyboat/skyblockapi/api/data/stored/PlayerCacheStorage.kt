@@ -6,6 +6,8 @@ import tech.thatgravyboat.skyblockapi.api.data.StoredData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.modules.Module
 import java.util.*
 
@@ -35,7 +37,11 @@ internal object PlayerCacheStorage {
         save()
     }
 
-    fun getPlayerName(uuid: UUID) = uuid.player?.name
+    fun getPlayerName(uuid: UUID) = when {
+        uuid == McPlayer.uuid -> McPlayer.name
+        uuid.player == null -> McClient.players.find { it.profile.id == uuid }?.profile?.also { updatePlayer(it.id, it.name) }?.name
+        else -> uuid.player?.name
+    }
 
     /** Returns true if the player was added to the cache or the name was updated */
     internal fun updatePlayer(uuid: UUID, name: String): Boolean {
