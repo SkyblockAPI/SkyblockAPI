@@ -40,7 +40,6 @@ internal object PlayerStorageStorage {
             PLAYER_STORAGE.save()
         } else if (data != old) {
             val index = indexOf(old)
-            clear()
             this[index] = data
             PLAYER_STORAGE.save()
         }
