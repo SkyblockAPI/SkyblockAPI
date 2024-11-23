@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.mixins.events;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.gui.Font;
@@ -56,23 +57,14 @@ public class GuiGraphicsMixin {
         lastStack.set(stack);
     }
 
-    @Inject(
-        method = "renderTooltipInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
-        at = @At(
-            value = "HEAD",
-            target = "Lnet/minecraft/client/gui/GuiGraphics;renderTooltipInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V"
-        )
-    )
+    @Inject(method = "renderTooltipInternal", at = @At("HEAD"))
     private void onRenderTooltipInternal(
-        Font font,
-        List<ClientTooltipComponent> list,
-        int i,
-        int j,
-        ClientTooltipPositioner clientTooltipPositioner,
-        CallbackInfo ci
+        Font $1, List<ClientTooltipComponent> $2, int $3, int $4, ClientTooltipPositioner $5, CallbackInfo $6,
+        @Local(argsOnly = true) LocalRef<List<ClientTooltipComponent>> list
     ) {
-        List<ClientTooltipComponent> listCopy = new ArrayList<>(list);
+        List<ClientTooltipComponent> listCopy = new ArrayList<>(list.get());
         GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
         event.post(SkyBlockAPI.getEventBus());
+        list.set(listCopy);
     }
 }
