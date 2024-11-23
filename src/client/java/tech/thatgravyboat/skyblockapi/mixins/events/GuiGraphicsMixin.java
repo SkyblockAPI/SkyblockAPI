@@ -62,9 +62,12 @@ public class GuiGraphicsMixin {
         Font $1, List<ClientTooltipComponent> $2, int $3, int $4, ClientTooltipPositioner $5, CallbackInfo $6,
         @Local(argsOnly = true) LocalRef<List<ClientTooltipComponent>> list
     ) {
-        List<ClientTooltipComponent> listCopy = new ArrayList<>(list.get());
-        GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
-        event.post(SkyBlockAPI.getEventBus());
-        list.set(listCopy);
+        if (lastStack.get() != null) {
+            List<ClientTooltipComponent> listCopy = new ArrayList<>(list.get());
+            GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
+            event.post(SkyBlockAPI.getEventBus());
+            list.set(listCopy);
+            lastStack.remove();
+        }
     }
 }
