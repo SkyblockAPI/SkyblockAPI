@@ -26,13 +26,16 @@ object CurrencyAPI {
     private val soulflowRegex = widgetGroup.create("profile.soulflow", "(?i) Soulflow: (?<soulflow>[\\d,.kmb]+)")
 
     private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
-    private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,.kmb]+).*")
+    private val purseRegex = currencyGroup.create("purse", "(?<type>Purse|Piggy): (?<purse>[\\d,.kmb]+).*")
     private val bitsRegex = currencyGroup.create("bits", "Bits: (?<bits>[\\d,.kmb]+).*")
     private val motesRegex = currencyGroup.create("motes", "Motes: (?<motes>[\\d,.kmb]+).*")
     private val copperRegex = currencyGroup.create("copper", "Copper: (?<copper>[\\d,.kmb]+).*")
     private val northStarsRegex = currencyGroup.create("northstars", "North Stars: (?<northstars>[\\d,.kmb]+).*")
 
     var purse: Double = 0.0
+        private set
+
+    var piggyBankActive = false
         private set
 
     var personalBank: Long = 0
@@ -104,7 +107,8 @@ object CurrencyAPI {
                     this.copper = copper.parseFormattedLong()
                 }
             }
-            purseRegex.anyMatch(event.added, "purse") { (purse) ->
+            purseRegex.anyMatch(event.added, "purse") { (type, purse) ->
+                this.piggyBankActive = type.equals("Piggy", ignoreCase = true)
                 this.purse = purse.parseFormattedDouble()
             }
             bitsRegex.anyMatch(event.added, "bits") { (bits) ->
@@ -116,6 +120,7 @@ object CurrencyAPI {
 
     private fun reset() {
         purse = 0.0
+        piggyBankActive = false
         personalBank = 0
         coopBank = 0
         motes = 0
