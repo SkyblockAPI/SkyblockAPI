@@ -12,6 +12,12 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
+enum class PurseType {
+    UNKNOWN,
+    NORMAL,
+    PIGGY,
+}
+
 @Module
 @Suppress("MemberVisibilityCanBePrivate")
 object CurrencyAPI {
@@ -35,7 +41,7 @@ object CurrencyAPI {
     var purse: Double = 0.0
         private set
 
-    var piggyBankActive = false
+    var purseType: PurseType = PurseType.UNKNOWN
         private set
 
     var personalBank: Long = 0
@@ -108,8 +114,12 @@ object CurrencyAPI {
                 }
             }
             purseRegex.anyMatch(event.added, "purse") { (type, purse) ->
-                this.piggyBankActive = type.equals("Piggy", ignoreCase = true)
                 this.purse = purse.parseFormattedDouble()
+                this.purseType = when (type.lowercase()) {
+                    "purse" -> PurseType.NORMAL
+                    "piggy" -> PurseType.PIGGY
+                    else -> PurseType.UNKNOWN
+                }
             }
             bitsRegex.anyMatch(event.added, "bits") { (bits) ->
                 // Has a .0 if below 1k
@@ -120,7 +130,7 @@ object CurrencyAPI {
 
     private fun reset() {
         purse = 0.0
-        piggyBankActive = false
+        purseType = PurseType.UNKNOWN
         personalBank = 0
         coopBank = 0
         motes = 0
