@@ -13,7 +13,12 @@ object DataTypesRegistry {
         RegisterDataTypesEvent(types::add).post(SkyBlockAPI.eventBus)
     }
 
-    internal fun getData(item: ItemStack): Map<DataType<*>, *> = types
-        .associateWith { it.factory(item) }
-        .filterValues { it != null }
+    internal fun getData(item: ItemStack): Map<DataType<*>, *> = runCatching {
+        types
+            .associateWith { it.factory(item) }
+            .filterValues { it != null }
+    }.getOrElse {
+        SkyBlockAPI.logger.error("Faileed to get data for {}", this, it)
+        mapOf()
+    }
 }

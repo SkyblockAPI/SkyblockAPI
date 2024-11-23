@@ -33,7 +33,7 @@ object PacketEventHandler {
             is ClientboundContainerSetContentPacket -> {
                 McClient.tell {
                     val container = McScreen.asMenu?.takeIf { it.menu?.containerId == event.packet.containerId } ?: return@tell
-                    ContainerInitializedEvent(event.packet.items, container.title).post()
+                    ContainerInitializedEvent(event.packet.items, container).post()
                 }
             }
 
@@ -56,7 +56,7 @@ object PacketEventHandler {
                                 }
                             }
 
-                            ContainerChangeEvent(event.packet.item, event.packet.slot, container.title, updatedItems).post()
+                            ContainerChangeEvent(event.packet.item, event.packet.slot, container, updatedItems).post()
                         }
                     }
                 }

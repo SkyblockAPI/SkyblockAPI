@@ -4,9 +4,6 @@ import tech.thatgravyboat.skyblockapi.api.data.FriendData
 import tech.thatgravyboat.skyblockapi.api.data.StoredPlayerData
 import tech.thatgravyboat.skyblockapi.api.profile.friends.Friend
 import java.util.*
-import kotlin.time.Duration.Companion.days
-
-private val MINIMUM_DIFF = 1.days
 
 internal object FriendStorage {
 
@@ -23,27 +20,29 @@ internal object FriendStorage {
         name: String,
         uuid: UUID? = null,
         bestFriend: Boolean? = null,
+        nickname: String? = null,
     ): Boolean {
         val friend = friends.find {
             (uuid != null && it.uuid == uuid) || it.name == name
         }
         if (friend == null) {
-            val newFriend = Friend(name, uuid, bestFriend ?: false)
+            val newFriend = Friend(name, uuid, bestFriend ?: false, nickname)
             friends.add(newFriend)
             save()
             return true
         }
-        if (friend.name == name && friend.uuid == uuid && friend.bestFriend == bestFriend) return false
+        if (friend.name == name && friend.uuid == uuid && friend.bestFriend == bestFriend && friend.nickname == nickname) return false
         friends.remove(friend)
         val newUuid = uuid ?: friend.uuid
         val newBestFriend = bestFriend ?: friend.bestFriend
-        friends.add(Friend(name, newUuid, newBestFriend))
+        val newNickname = nickname ?: friend.nickname
+        friends.add(Friend(name, newUuid, newBestFriend, newNickname))
         save()
         return true
     }
 
     fun addFriend(name: String): Friend {
-        val friend = Friend(name, null, false)
+        val friend = Friend(name, null, false, null)
         friends.add(friend)
         save()
         return friend

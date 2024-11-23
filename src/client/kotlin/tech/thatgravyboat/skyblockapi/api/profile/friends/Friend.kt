@@ -8,4 +8,5 @@ data class Friend(
     val name: String,
     val uuid: UUID?,
     val bestFriend: Boolean,
+    val nickname: String?,
 )
