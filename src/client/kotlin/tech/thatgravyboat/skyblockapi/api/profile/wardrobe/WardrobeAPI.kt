@@ -1,5 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.profile.wardrobe
 
+import net.fabricmc.fabric.api.tag.client.v1.ClientTags
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.WardrobeStorage
@@ -100,24 +104,12 @@ object WardrobeAPI {
     }
 
     private fun ItemStack.takeOrEmpty() = takeIf {
-        it.item !in setOf(
-            Items.GLASS_PANE,
-            Items.BLACK_STAINED_GLASS_PANE,
-            Items.RED_STAINED_GLASS_PANE,
-            Items.GREEN_STAINED_GLASS_PANE,
-            Items.BROWN_STAINED_GLASS_PANE,
-            Items.BLUE_STAINED_GLASS_PANE,
-            Items.PURPLE_STAINED_GLASS_PANE,
-            Items.CYAN_STAINED_GLASS_PANE,
-            Items.LIGHT_GRAY_STAINED_GLASS_PANE,
-            Items.GRAY_STAINED_GLASS_PANE,
-            Items.PINK_STAINED_GLASS_PANE,
-            Items.LIME_STAINED_GLASS_PANE,
-            Items.YELLOW_STAINED_GLASS_PANE,
-            Items.LIGHT_BLUE_STAINED_GLASS_PANE,
-            Items.MAGENTA_STAINED_GLASS_PANE,
-            Items.ORANGE_STAINED_GLASS_PANE,
-            Items.WHITE_STAINED_GLASS_PANE,
+        !ClientTags.isInWithLocalFallback(
+            TagKey.create(
+                Registries.ITEM,
+                ResourceLocation.fromNamespaceAndPath("skyblockapi", "glass_panes"),
+            ),
+            it.item,
         )
     } ?: ItemStack.EMPTY
 
