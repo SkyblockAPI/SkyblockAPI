@@ -1,16 +1,10 @@
 package tech.thatgravyboat.skyblockapi.impl.events
 
-import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket
-import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket
-import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket
+import net.minecraft.network.protocol.game.*
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerInventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.*
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -35,6 +29,10 @@ object PacketEventHandler {
                     val container = McScreen.asMenu?.takeIf { it.menu?.containerId == event.packet.containerId } ?: return@tell
                     ContainerInitializedEvent(event.packet.items, container).post()
                 }
+            }
+
+            is ClientboundContainerClosePacket -> {
+                ContainerCloseEvent.post()
             }
 
             is ClientboundContainerSetSlotPacket -> {
