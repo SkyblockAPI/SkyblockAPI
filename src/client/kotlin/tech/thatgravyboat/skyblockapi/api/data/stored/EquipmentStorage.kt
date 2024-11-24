@@ -10,8 +10,8 @@ internal object EquipmentStorage {
 
     private val EQUIPMENT = StoredProfileData(
         ::EquipmentData,
-        EquipmentData.CODED,
-        "equipment.json"
+        EquipmentData.CODEC,
+        "equipment.json",
     )
 
     private val normalEquipment: MutableMap<EquipmentSlot, ItemStack>

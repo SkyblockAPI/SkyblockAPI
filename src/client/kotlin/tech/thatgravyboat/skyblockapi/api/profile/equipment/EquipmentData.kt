@@ -10,6 +10,6 @@ data class EquipmentData(
     val riftSlots: MutableMap<EquipmentSlot, ItemStack> = mutableMapOf()
 ) {
     companion object {
-        val CODED = KCodec.getCodec<EquipmentData>()
+        val CODEC = KCodec.getCodec<EquipmentData>()
     }
 }
