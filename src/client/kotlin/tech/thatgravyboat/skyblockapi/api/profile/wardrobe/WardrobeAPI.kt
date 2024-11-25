@@ -1,9 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.wardrobe
 
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags
-import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
-import net.minecraft.tags.TagKey
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.WardrobeStorage
@@ -14,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTagKey
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
@@ -105,10 +103,7 @@ object WardrobeAPI {
 
     private fun ItemStack.takeOrEmpty() = takeIf {
         !ClientTags.isInWithLocalFallback(
-            TagKey.create(
-                Registries.ITEM,
-                ResourceLocation.fromNamespaceAndPath("skyblockapi", "glass_panes"),
-            ),
+            ItemTagKey.GLASS_PANES.key,
             it.item,
         )
     } ?: ItemStack.EMPTY
