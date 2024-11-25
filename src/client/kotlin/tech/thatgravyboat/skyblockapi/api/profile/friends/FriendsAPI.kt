@@ -5,6 +5,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.HoverEvent
 import tech.thatgravyboat.skyblockapi.api.data.stored.FriendStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -16,6 +17,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.find
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
@@ -60,8 +62,12 @@ object FriendsAPI {
     )
     private val friendEntryListRegex = listGroup.create(
         "entry",
-        "^(?<name>\\S+) is ",
+        "^(?<name>\\S+?)(?<nick>\\*)? is ",
     ).toComponentRegex()
+    private val friendEntryHoverNameRegex = listGroup.create(
+        "entry.hover",
+        "Click here to view (?<name>[a-zA-Z0-9_]+)'s profile"
+    )
 
     private val friendJoinLeaveRegex = regexGroup.create(
         "joinleave",
@@ -79,6 +85,8 @@ object FriendsAPI {
     fun isBestFriend(name: String): Boolean = FriendStorage.getFriend(name)?.bestFriend ?: false
 
     fun isBestFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid)?.bestFriend ?: false
+
+    fun getFriend(name: String): Friend? = FriendStorage.getFriend(name)
 
     // Dealing with friends list
     private var currentPage: Int = 0
@@ -120,13 +128,23 @@ object FriendsAPI {
                 isInFriendsList = true
             }
 
-            for (i in 3 until components.lastIndex) {
+            for (i in 2 until components.lastIndex) {
                 val lineComponent = components[i]
-                friendEntryListRegex.find(lineComponent, "name") { (component) ->
-                    val name = component.stripped
+                friendEntryListRegex.find(lineComponent) friendsList@{
+                    val component = it["name"] ?: return@friendsList
+                    var nick: String? = null
+                    val name: String
+                    val isNick = it["nick"] != null
+                    if (isNick) {
+                        nick = component.stripped
+                        val value = component.style.hoverEvent?.getValue(HoverEvent.Action.SHOW_TEXT) ?: return@friendsList
+                        name = friendEntryHoverNameRegex.findGroup(value.stripped, "name") ?: return@friendsList
+                    } else {
+                        name = component.stripped
+                    }
                     val isBestFriend = component.string.contains("§l")
                     val uuid = CommonRegexes.getUuidFromViewProfile(component)
-                    FriendStorage.updateFriend(name, uuid, isBestFriend)
+                    FriendStorage.updateFriend(name, uuid, isBestFriend, nick)
                     foundFriends += name
                 }
             }
@@ -210,6 +228,12 @@ object FriendsAPI {
                                     }
                                     append(friendText)
                                 }
+                                if (friend.nickname != null) {
+                                    val friendText = Text.of(" (Nick: ${friend.nickname})") {
+                                        this.color = TextColor.YELLOW
+                                    }
+                                    append(friendText)
+                                }
                             }.send()
                         }
                     }
@@ -230,6 +254,12 @@ object FriendsAPI {
                             }
                             Text.debug("${friend.name} is your ") {
                                 append(friendText)
+                                if (friend.nickname != null) {
+                                    val nicknameText = Text.of(" (Nick: ${friend.nickname})") {
+                                        this.color = TextColor.YELLOW
+                                    }
+                                    append(nicknameText)
+                                }
                             }.send()
                         }
                     }
