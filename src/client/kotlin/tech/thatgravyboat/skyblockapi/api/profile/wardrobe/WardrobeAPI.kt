@@ -37,13 +37,9 @@ object WardrobeAPI {
     var inWardrobe = false
         private set
 
-    var slots = listOf<WardrobeSlot>()
-        get() = WardrobeStorage.slots
-        private set
+    val slots get() = WardrobeStorage.slots.toList()
 
-    var currentSlot: Int? = null
-        get() = WardrobeStorage.currentSlot
-        private set
+    val currentSlot: Int? get() = WardrobeStorage.currentSlot
 
 
     private fun processInventory(title: String, items: List<ItemStack>) {
@@ -118,8 +114,6 @@ object WardrobeAPI {
                             this.color = TextColor.YELLOW
                         }.send()
                         WardrobeStorage.clear()
-                        slots = WardrobeStorage.slots
-                        currentSlot = WardrobeStorage.currentSlot
                     }
                 }
             }
