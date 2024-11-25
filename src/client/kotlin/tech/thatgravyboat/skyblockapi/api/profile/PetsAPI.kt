@@ -70,11 +70,9 @@ object PetsAPI {
             this.xp = xp.parseFormattedDouble()
             this.xpToNextLevel = nextXp.parseFormattedDouble()
         }
-        petOverflowXpRegex.anyMatch(event.new, "xp") { (xp) ->
+        this.isMaxLevel = petOverflowXpRegex.anyMatch(event.new, "xp") { (xp) ->
             this.xp += xp.parseFormattedDouble()
-            this.isMaxLevel = true
-        }
-        this.isMaxLevel = petMaxLevelRegex.anyMatch(event.new)
+        } || petMaxLevelRegex.anyMatch(event.new)
     }
 
     private fun reset() {
