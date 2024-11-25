@@ -89,7 +89,7 @@ object WardrobeAPI {
         inWardrobe = false
     }
 
-    private fun ItemStack.takeOrEmpty() = takeIf { !ItemTagKey.GLASS_PANES.contains(it) } ?: ItemStack.EMPTY
+    private fun ItemStack.takeOrEmpty() = takeIf { it !in ItemTagKey.GLASS_PANES } ?: ItemStack.EMPTY
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
