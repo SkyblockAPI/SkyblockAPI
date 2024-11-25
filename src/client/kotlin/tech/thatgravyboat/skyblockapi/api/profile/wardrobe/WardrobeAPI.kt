@@ -1,12 +1,10 @@
 package tech.thatgravyboat.skyblockapi.api.profile.wardrobe
 
-import net.fabricmc.fabric.api.tag.client.v1.ClientTags
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.WardrobeStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
@@ -39,10 +37,12 @@ object WardrobeAPI {
     var inWardrobe = false
         private set
 
-    var slots = mutableListOf<WardrobeSlot>()
+    var slots = listOf<WardrobeSlot>()
+        get() = WardrobeStorage.slots
         private set
 
     var currentSlot: Int? = null
+        get() = WardrobeStorage.currentSlot
         private set
 
 
@@ -60,7 +60,6 @@ object WardrobeAPI {
             if (selectStack.item == Items.RED_DYE) {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
-                currentSlot = id
                 WardrobeStorage.updateCurrentSlot(id)
             }
 
@@ -72,7 +71,6 @@ object WardrobeAPI {
             val slot = WardrobeSlot(id, mutableListOf(helmetStack, chestplateStack, leggingsStack, bootsStack), locked)
 
             WardrobeStorage.updateSlot(slot)
-            slots = WardrobeStorage.slots
         }
     }
 
@@ -95,18 +93,7 @@ object WardrobeAPI {
         inWardrobe = false
     }
 
-    @Subscription
-    fun onProfileSwitch(event: ProfileChangeEvent) {
-        slots = WardrobeStorage.slots
-        currentSlot = WardrobeStorage.currentSlot
-    }
-
-    private fun ItemStack.takeOrEmpty() = takeIf {
-        !ClientTags.isInWithLocalFallback(
-            ItemTagKey.GLASS_PANES.key,
-            it.item,
-        )
-    } ?: ItemStack.EMPTY
+    private fun ItemStack.takeOrEmpty() = takeIf { !ItemTagKey.GLASS_PANES.contains(it) } ?: ItemStack.EMPTY
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
