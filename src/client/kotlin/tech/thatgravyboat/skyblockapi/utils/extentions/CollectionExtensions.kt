@@ -62,3 +62,5 @@ internal inline fun <T, R : Any> List<T>.lastNotNullOfOrNull(transform: (T) -> R
     }
     return null
 }
+
+internal fun <T> MutableCollection<T>.addNotNull(element: T?) = element?.let { add(it) } ?: false

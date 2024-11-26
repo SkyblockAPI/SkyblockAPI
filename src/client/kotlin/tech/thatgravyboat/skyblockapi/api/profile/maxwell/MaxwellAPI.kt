@@ -8,17 +8,19 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.MaxwellStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
-import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
-import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
-import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
@@ -30,6 +32,7 @@ private const val THAUMATURGY_GUI_TOP_SPACING = 1
 
 private const val THAUMATURGY_MP_SLOT = 48
 private const val THAUMATURGY_STATS_TUNING_SLOT = 51
+private val tuningGuiSlots = listOf(19, 20, 21, 22, 28, 29, 30, 31)
 
 private const val BAGS_ACCESSORY_BAG_SLOT = 24
 
@@ -100,11 +103,30 @@ object MaxwellAPI {
         "mp",
         "^Magical Power: (?<mp>[\\d,.]+)",
     )
-    private val bagsPowwerRegex = bagsGroup.create(
+    private val bagsPowerRegex = bagsGroup.create(
         "power",
         "Selected Power: (?<power>.+)",
     )
+    private val tuningStartRegex = bagsGroup.create(
+        "tuning.start",
+        "^Tuning:"
+    )
 
+    private val tuningsGroup = inventoryGroup.group("tunings")
+    private val tuningsTitleRegex = tuningsGroup.create(
+        "title",
+        "^Stats Tuning$",
+    )
+    private val tuningsStatRegex = tuningsGroup.create(
+        "stat",
+        "^(?<icon>.) (?<name>.+)"
+    )
+    private val tuningsAmountRegex = tuningsGroup.create(
+        "amount",
+        "^You have: \\S+\\s\\+\\s(?<amount>[\\d,.]+)"
+    )
+
+    @OnlyOnSkyBlock
     @Subscription
     fun onChat(event: ChatReceivedEvent) {
         val message = event.text
@@ -114,16 +136,23 @@ object MaxwellAPI {
         } ?: return
     }
 
+    @OnlyOnSkyBlock
     @Subscription
-    fun onInventoryFullyOpened(event: ContainerInitializedEvent) {
+    fun onInventoryUpdate(event: ContainerChangeEvent) {
         if (handleThaumaturgyGui(event)) return
         if (handleAccessoryBagGui(event)) return
+        if (handleTuningsGui(event)) return
+    }
+
+    @OnlyOnSkyBlock
+    @Subscription
+    fun onInventoryFullyOpened(event: ContainerInitializedEvent) {
         if (handleBagsGui(event)) return
     }
 
-    private fun handleThaumaturgyGui(event: ContainerInitializedEvent): Boolean {
-        if (!thaumaturgyTitleRegex.matches(event.title)) return false
-        val items = event.itemStacks
+    private fun handleThaumaturgyGui(event: ContainerChangeEvent): Boolean {
+        if (!thaumaturgyTitleRegex.contains(event.title)) return false
+        val items = event.inventory
 
         for (row in 0 until THAUMATURGY_GUI_ROWS) {
             for (column in 0 until THAUMATURGY_GUI_COLUMNS) {
@@ -143,26 +172,32 @@ object MaxwellAPI {
             }
         }
 
-        val tuningsLore = items[THAUMATURGY_STATS_TUNING_SLOT].getRawLore()
-        val tunings = buildList {
-            thaumaturgyTuningRegex.findAll(tuningsLore, "amount", "name") { (amount, name) ->
-                val statName = SkyBlockStat.fromName(name) ?: return@findAll
-                val value = amount.parseFormattedDouble()
-                add(MaxwellTuning(statName, value))
+        items.getOrNull(THAUMATURGY_STATS_TUNING_SLOT)?.getRawLore()?.let { lore ->
+            val tunings = buildList {
+                lore.forEach { line ->
+                    addNotNull(handleTuningsLine(line))
+                }
             }
+            MaxwellStorage.updateTunings(tunings, false)
         }
-
-        MaxwellStorage.updateTunings(tunings, false)
 
         return true
     }
 
-    private fun handleAccessoryBagGui(event: ContainerInitializedEvent): Boolean {
+    private fun handleTuningsLine(line: String): MaxwellTuning? {
+        return thaumaturgyTuningRegex.findOrNull(line, "amount", "name") { (amount, name) ->
+            val statName = SkyBlockStat.fromName(name) ?: return@findOrNull null
+            val value = amount.parseFormattedDouble()
+            return@findOrNull MaxwellTuning(statName, value)
+        }
+    }
+
+    private fun handleAccessoryBagGui(event: ContainerChangeEvent): Boolean {
         val match = accessoryBagTitleRegex.find(event.title) ?: return false
         val currentPage = match.groups["current"]?.value?.parseFormattedInt(1) ?: 1
         // TODO: remove player inventory inside ContainerInitializedEvent
         val items = buildList {
-            for (stack in event.itemStacks) {
+            for (stack in event.inventory) {
                 if (stack.item == Items.BLACK_STAINED_GLASS_PANE) break
                 if (isAccessoryOrEmpty(stack)) add(stack)
             }
@@ -177,9 +212,20 @@ object MaxwellAPI {
         val item = event.itemStacks.getOrNull(BAGS_ACCESSORY_BAG_SLOT) ?: return false
         var foundMp = false
         var foundPower = false
-        //var foundTunings = false
+        var foundTunings = false
+        var insideTunings = false
+        val tunings = mutableListOf<MaxwellTuning>()
+
         for (line in item.getRawLore()) {
-            if (foundMp && foundPower/* && foundTunings*/) break
+            if (foundMp && foundPower && foundTunings) break
+            if (insideTunings) {
+                tunings.addNotNull(handleTuningsLine(line))
+            }
+            if (insideTunings && line.isEmpty()) {
+                insideTunings = false
+                foundTunings = true
+                continue
+            }
             if (!foundMp) {
                 bagsMpRegex.findThenNull(line, "mp") { (mp) ->
                     val newMp = mp.parseFormattedInt()
@@ -188,26 +234,42 @@ object MaxwellAPI {
                 } ?: continue
             }
             if (!foundPower) {
-                bagsPowwerRegex.findThenNull(line, "power") { (power) ->
+                bagsPowerRegex.findThenNull(line, "power") { (power) ->
                     val newPower = MaxwellPowers.getByName(power) ?: return@findThenNull
                     MaxwellStorage.updatePower(newPower)
                     foundPower = true
                 } ?: continue
             }
-            /*if (!foundTunings) {
-                // TODO: Implement tunings
-            }*/
+            if (!foundTunings && !insideTunings && tuningStartRegex.contains(line)) {
+                insideTunings = true
+                continue
+            }
         }
 
         if (!foundMp) MaxwellStorage.updateMagicalPower(0)
         if (!foundPower) MaxwellStorage.updatePower(MaxwellPowers.NO_POWER)
-        //if (!foundTunings) MaxwellStorage.updateTunings(emptyList())
+        MaxwellStorage.updateTunings(tunings, false)
         return true
     }
 
-    private fun handleTuningsGui(event: ContainerInitializedEvent): Boolean {
-        return false
-        // TODO: Implement tunings
+    private fun handleTuningsGui(event: ContainerChangeEvent): Boolean {
+        if (!tuningsTitleRegex.contains(event.title)) return false
+        val items = event.inventory
+        val tunings = buildList {
+            for (slot in tuningGuiSlots) {
+                val item = items.getOrNull(slot) ?: continue
+                val statName = tuningsStatRegex.findGroup(item.cleanName, "name") ?: continue
+                val stat = SkyBlockStat.fromName(statName) ?: continue
+                val lore = item.getRawLore()
+                tuningsAmountRegex.anyFound(lore, "amount") { (amount) ->
+                    val value = amount.parseFormattedDouble()
+                    add(MaxwellTuning(stat, value))
+                }
+            }
+        }
+
+        MaxwellStorage.updateTunings(tunings, true)
+        return true
     }
 
     @Subscription
@@ -220,16 +282,19 @@ object MaxwellAPI {
                         Text.debug("Reset Maxwell Data!").send()
                     }
                 }
+                then("tunings") {
+                    callback {
+                        McClient.clipboard = tunings.toString()
+                        Text.debug("Copied tunings to clipboard!").send()
+                    }
+                }
             }
         }
     }
 
     private fun isAccessoryOrEmpty(item: ItemStack): Boolean {
-        if (item == ItemStack.EMPTY) return true
-        return when (item.getData(DataTypes.CATEGORY)) {
-            SkyBlockCategory.ACCESSORY, SkyBlockCategory.DUNGEON_ACCESSORY,
-            SkyBlockCategory.HATCESSORY -> true
-            else -> false
-        }
+        if (item.isEmpty) return true
+        val category = item.getData(DataTypes.CATEGORY) ?: return false
+        return category.equalsAny(SkyBlockCategory.ACCESSORY, SkyBlockCategory.HATCESSORY, ignoreDungeon = true)
     }
 }

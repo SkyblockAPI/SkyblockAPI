@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPower
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPowers
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
+import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 import kotlin.math.absoluteValue
 
 private const val MAX_ACCESSORIES_PER_PAGE = 9 * 5
@@ -63,12 +64,13 @@ internal object MaxwellStorage {
         var shouldSave = false
         for (i in newAccessories.indices) {
             val newIndex = firstIndex + i
-            if (accessories.size <= newIndex) {
-                if (accessories[newIndex] == newAccessories[i]) continue
+            if (newIndex < accessories.size) {
+                if (accessories[newIndex].isSameItem((newAccessories[i]))) continue
                 shouldSave = true
                 accessories[newIndex] = newAccessories[i]
             } else {
                 accessories.add(newAccessories[i])
+                shouldSave = true
             }
         }
         if (shouldSave) save()
@@ -81,22 +83,22 @@ internal object MaxwellStorage {
 
     fun updateTunings(newTunings: List<MaxwellTuning>, exact: Boolean) {
         if (tunings == newTunings) return
-        if (exact) return setTunings(newTunings)
-        if (tunings.size != newTunings.size) return setTunings(newTunings)
+        if (exact) return setNewTunings(newTunings)
+        if (tunings.size != newTunings.size) return setNewTunings(newTunings)
         val oldStatMap = tunings.associateBy(MaxwellTuning::stat)
         val newStatMap = newTunings.associateBy(MaxwellTuning::stat)
         for (stat in MaxwellTuning.ALLOWED_STATS) {
             val oldValue = oldStatMap[stat]?.value
             val newValue = newStatMap[stat]?.value
             if (oldValue == newValue) continue
-            if (oldValue == null || newValue == null) return setTunings(newTunings)
+            if (oldValue == null || newValue == null) return setNewTunings(newTunings)
             if ((newValue - oldValue).absoluteValue > MINIMUM_DIFFERENCE_TUNING_CHANGE) {
-                return setTunings(newTunings)
+                return setNewTunings(newTunings)
             }
         }
     }
 
-    private fun setTunings(newTunings: List<MaxwellTuning>) {
+    private fun setNewTunings(newTunings: List<MaxwellTuning>) {
         tunings = newTunings
         save()
     }
