@@ -50,6 +50,7 @@ object PartyAPI {
         "^You left the party\\.",
         "^The party was disbanded because all invites expired and the party was empty\\.",
         "^You are not (?:currently )?in a party\\.",
+        "^The party was disbanded because the party leader disconnected\\."
     )
 
     private val otherJoinedRegex = otherGroup.create(
@@ -266,12 +267,12 @@ object PartyAPI {
     }
 
     private fun remove(name: String) {
-        this.members = members.filter { it.name == name }
+        this.members = members.filter { it.name.equals(name, ignoreCase = true) }
     }
 
     private fun ownPlayer(role: PartyRole = PartyRole.MEMBER) = PartyMember(McPlayer.name, role)
 
-    private fun findPlayer(name: String): PartyMember? = this.members.find { it.name == name }
+    private fun findPlayer(name: String): PartyMember? = this.members.find { it.name.equals(name, ignoreCase = true) }
 
     private fun findPlayer(uuid: UUID): PartyMember? = this.members.find { it.uuid == uuid }
 

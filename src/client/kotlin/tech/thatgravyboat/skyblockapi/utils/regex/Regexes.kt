@@ -42,10 +42,7 @@ object Regexes {
     internal fun load() {
         if (McClient.isDev) return
         runCatchBlocking {
-            val result = Http.getResult<JsonObject>(
-                url = URL,
-                errorFactory = ::RuntimeException,
-            )
+            val result = Http.getResult<JsonObject>(URL)
             val json = result.getOrNull() ?: return@runCatchBlocking
             json.entrySet().forEach { (key, value) ->
                 if (value is JsonArray) {

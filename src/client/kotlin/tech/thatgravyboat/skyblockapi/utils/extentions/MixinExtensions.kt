@@ -11,3 +11,9 @@ import tech.thatgravyboat.skyblockapi.mixins.accessors.AbstractContainerScreenAc
 
 fun AbstractContainerScreen<*>.getHoveredSlot(): Slot? =
     (this as AbstractContainerScreenAccessor).hoveredSlot
+
+val AbstractContainerScreen<*>.left: Int
+    get() = (this as AbstractContainerScreenAccessor).leftPos
+
+val AbstractContainerScreen<*>.top: Int
+    get() = (this as AbstractContainerScreenAccessor).topPos

@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.component.anyFound
+import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
@@ -18,9 +18,10 @@ object PetsAPI {
 
     private val petGroup = RegexGroup.TABLIST_WIDGET.group("pet")
 
+
     private val petRegex = petGroup.create(
         "pet",
-        "^ \\[Lvl (?<level>\\d+)] (?<pet>[\\w ]+)"
+        " \\[Lvl (?<level>\\d+)] (?<pet>[\\w ]+)(?: ✦)?"
     ).toComponentRegex()
 
     private val petXpRegex = petGroup.create(
@@ -61,7 +62,7 @@ object PetsAPI {
     fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         this.reset()
         if (event.new.size < 2) return
-        petRegex.anyFound(event.newComponents, "level", "pet") { (level, pet) ->
+        petRegex.anyMatch(event.newComponents, "level", "pet") { (level, pet) ->
             this.level = level.stripped.toIntOrNull() ?: 0
             this.pet = pet.stripped
             this.rarity = SkyBlockRarity.fromColorOrNull(pet.style.color?.value ?: 0)
@@ -70,11 +71,9 @@ object PetsAPI {
             this.xp = xp.parseFormattedDouble()
             this.xpToNextLevel = nextXp.parseFormattedDouble()
         }
-        petOverflowXpRegex.anyMatch(event.new, "xp") { (xp) ->
+        this.isMaxLevel = petOverflowXpRegex.anyMatch(event.new, "xp") { (xp) ->
             this.xp += xp.parseFormattedDouble()
-            this.isMaxLevel = true
-        }
-        this.isMaxLevel = petMaxLevelRegex.anyMatch(event.new)
+        } || petMaxLevelRegex.anyMatch(event.new)
     }
 
     private fun reset() {

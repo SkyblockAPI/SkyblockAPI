@@ -12,6 +12,12 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
+enum class PurseType {
+    UNKNOWN,
+    NORMAL,
+    PIGGY,
+}
+
 @Module
 @Suppress("MemberVisibilityCanBePrivate")
 object CurrencyAPI {
@@ -26,13 +32,16 @@ object CurrencyAPI {
     private val soulflowRegex = widgetGroup.create("profile.soulflow", "(?i) Soulflow: (?<soulflow>[\\d,.kmb]+)")
 
     private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
-    private val purseRegex = currencyGroup.create("purse", "(?:Purse|Piggy): (?<purse>[\\d,.kmb]+).*")
+    private val purseRegex = currencyGroup.create("purse", "(?<type>Purse|Piggy): (?<purse>[\\d,.kmb]+).*")
     private val bitsRegex = currencyGroup.create("bits", "Bits: (?<bits>[\\d,.kmb]+).*")
     private val motesRegex = currencyGroup.create("motes", "Motes: (?<motes>[\\d,.kmb]+).*")
     private val copperRegex = currencyGroup.create("copper", "Copper: (?<copper>[\\d,.kmb]+).*")
     private val northStarsRegex = currencyGroup.create("northstars", "North Stars: (?<northstars>[\\d,.kmb]+).*")
 
     var purse: Double = 0.0
+        private set
+
+    var purseType: PurseType = PurseType.UNKNOWN
         private set
 
     var personalBank: Long = 0
@@ -104,8 +113,13 @@ object CurrencyAPI {
                     this.copper = copper.parseFormattedLong()
                 }
             }
-            purseRegex.anyMatch(event.added, "purse") { (purse) ->
+            purseRegex.anyMatch(event.added, "type", "purse") { (type, purse) ->
                 this.purse = purse.parseFormattedDouble()
+                this.purseType = when (type.lowercase()) {
+                    "purse" -> PurseType.NORMAL
+                    "piggy" -> PurseType.PIGGY
+                    else -> PurseType.UNKNOWN
+                }
             }
             bitsRegex.anyMatch(event.added, "bits") { (bits) ->
                 // Has a .0 if below 1k
@@ -116,6 +130,7 @@ object CurrencyAPI {
 
     private fun reset() {
         purse = 0.0
+        purseType = PurseType.UNKNOWN
         personalBank = 0
         coopBank = 0
         motes = 0

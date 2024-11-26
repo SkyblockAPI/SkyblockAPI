@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
@@ -7,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.asReversedIterator
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
@@ -67,19 +69,26 @@ object LoreDataTypes {
         if (outputAbility != null && outputDuration != null) outputAbility!! to outputDuration!! else null
     }
 
+    private fun getRarityLine(stack: ItemStack): Pair<String, SkyBlockRarity>? {
+        val isUpgraded = DataTypes.RARITY_UPGRADES.factory(stack) != null
+        for (line in stack.getRawLore().asReversedIterator()) {
+            val rarityLine = if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim()
+            val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.name, ignoreCase = true) }
+            if (rarity != null) {
+                return rarityLine to rarity
+            }
+        }
+        return null
+    }
+
     val RARITY: DataType<SkyBlockRarity> = DataType("rarity") {
-        val lastLine = it.getRawLore().lastOrNull() ?: return@DataType null
-        val isUpgraded = DataTypes.RARITY_UPGRADES.factory(it) != null
-        val line = if (isUpgraded) lastLine.drop(2).dropLast(2) else lastLine.trim()
-        SkyBlockRarity.entries.firstOrNull { rarity -> line.startsWith(rarity.name, ignoreCase = true) }
+        getRarityLine(it)?.second
     }
 
     val CATEGORY: DataType<SkyBlockCategory> = DataType("category") {
-        val lastLine = it.getRawLore().lastOrNull() ?: return@DataType null
-        val isUpgraded = DataTypes.RARITY_UPGRADES.factory(it) != null
-        val line = if (isUpgraded) lastLine.drop(2).dropLast(2) else lastLine.trim()
-        val rarity = RARITY.factory(it)?.name ?: return@DataType null
-        SkyBlockCategory.create(line.removePrefix(rarity).trim())
+        getRarityLine(it)?.let { line ->
+            line.first.removePrefix(line.second.name).trim()
+        }?.let(SkyBlockCategory::create)
     }
 
     @Subscription

@@ -33,7 +33,11 @@ class EventBus {
         listeners.values.forEach { it.removeListener(callback) }
     }
 
-    fun post(event: SkyBlockEvent, context: Any? = null): Boolean = getHandler(event.javaClass).post(event, context)
+    fun post(
+        event: SkyBlockEvent,
+        context: Any? = null,
+        onError: ((Throwable) -> Unit)? = null
+    ): Boolean = getHandler(event.javaClass).post(event, context, onError)
 
     @Suppress("UNCHECKED_CAST")
     private fun <T : SkyBlockEvent> getHandler(event: Class<T>): EventHandler<T> = handlers.getOrPut(event) {

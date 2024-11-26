@@ -111,8 +111,8 @@ publishing {
         maven {
             setUrl("https://maven.teamresourceful.com/repository/thatgravyboat/")
             credentials {
-                username = System.getenv("MAVEN_USER")
-                password = System.getenv("MAVEN_PASS")
+                username = System.getenv("MAVEN_USER") ?: providers.gradleProperty("maven_username").orNull
+                password = System.getenv("MAVEN_PASS") ?: providers.gradleProperty("maven_password").orNull
             }
         }
     }

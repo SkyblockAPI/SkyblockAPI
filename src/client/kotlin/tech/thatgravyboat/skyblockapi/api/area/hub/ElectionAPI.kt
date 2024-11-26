@@ -47,10 +47,7 @@ object ElectionAPI {
 
     @JvmStatic
     private suspend fun check(newSchedulerTime: Duration? = null) {
-        val result = Http.getResult<ElectionJson>(
-            url = URL,
-            errorFactory = ::RuntimeException,
-        )
+        val result = Http.getResult<ElectionJson>(URL)
         val response = result.getOrNull() ?: return
 
         handleResponse(response)

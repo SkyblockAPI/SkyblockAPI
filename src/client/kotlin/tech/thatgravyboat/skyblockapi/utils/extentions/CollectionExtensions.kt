@@ -24,6 +24,28 @@ internal inline fun <T> List<T>.peek(crossinline block: (T) -> Unit): List<T> {
     return this
 }
 
+internal fun <T> List<T>.asReversedIterator(): Iterator<T> {
+    val list = this
+    return object : Iterator<T> {
+
+        val originalSize = list.size
+        var index = originalSize - 1
+
+        override fun hasNext(): Boolean = index >= 0
+
+        override fun next(): T {
+            if (originalSize != list.size) {
+                throw ConcurrentModificationException()
+            } else if (!hasNext()) {
+                throw NoSuchElementException()
+            } else {
+                return list[index--]
+            }
+        }
+
+    }
+}
+
 internal fun <K> MutableMap<K, Int>.addOrPut(key: K, number: Int): Int = merge(key, number, Int::plus)!!
 
 internal fun <K> MutableMap<K, Double>.addOrPut(key: K, number: Double): Double = merge(key, number, Double::plus)!!

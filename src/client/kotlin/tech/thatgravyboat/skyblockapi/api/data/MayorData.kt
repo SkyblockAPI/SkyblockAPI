@@ -1,5 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
+import tech.thatgravyboat.skyblockapi.api.data.Candidate.entries
+import tech.thatgravyboat.skyblockapi.api.data.Perk.entries
+
+
 enum class Candidate(val candidateName: String, vararg val perks: Perk) {
     AATROX("Aatrox", Perk.SLASHED_PRICING, Perk.SLAYER_XP_BUFF, Perk.PATHFINDER),
     COLE("Cole", Perk.PROSPECTION, Perk.MINING_XP_BUFF, Perk.MINING_FIESTA, Perk.MOLTEN_FORGE),
@@ -17,7 +21,7 @@ enum class Candidate(val candidateName: String, vararg val perks: Perk) {
 
     val activePerks get() = perks.filter { it.active }
 
-    fun isSpecial() = this in setOf(SCORPIUS, JERRY, DERPY)
+    val isSpecial by lazy { this in setOf(SCORPIUS, JERRY, DERPY) }
 
     override fun toString() = candidateName
 

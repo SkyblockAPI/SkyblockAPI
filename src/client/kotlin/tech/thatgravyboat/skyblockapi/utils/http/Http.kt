@@ -101,7 +101,7 @@ object Http {
     suspend inline fun <reified T : Any> getResult(
         url: String,
         gson: Gson = Json.gson,
-        crossinline errorFactory: (String) -> Exception,
+        crossinline errorFactory: ((String) -> Exception) = ::RuntimeException,
         queries: Map<String, Any> = mapOf(),
         timeout: Int = 10000,
         headers: Map<String, String> = mapOf(),
