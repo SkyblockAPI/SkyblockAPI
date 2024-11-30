@@ -129,10 +129,10 @@ object TabListEventHandler {
     fun onPacketReceived(event: PacketReceivedEvent) {
         if (event.packet is ClientboundTabListPacket) {
             TabListHeaderFooterChangeEvent(
-                header,
                 footer,
+                header,
+                event.packet.footer,
                 event.packet.header,
-                event.packet.footer
             ).post(SkyBlockAPI.eventBus)
             this.header = event.packet.header
             this.footer = event.packet.footer
