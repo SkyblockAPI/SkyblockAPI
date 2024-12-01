@@ -18,7 +18,7 @@ private const val BASE_COOKIE_BITS = 4800
 @Suppress("MemberVisibilityCanBePrivate")
 object CommunityCenterAPI {
 
-    private val cookieAteRegex = RegexGroup.CHAT.create("communitycenter.cookie.ate", "^You consumed a Booster Cookie!")
+    internal val cookieAteRegex = RegexGroup.CHAT.create("communitycenter.cookie.ate", "^You consumed a Booster Cookie!")
     private val bitsAvailableRegex = RegexGroup.INVENTORY.create("communitycenter.bits.available", "Bits Available: (?<bits>[\\d,kmb]+).*")
     private val fameRankRegex = RegexGroup.INVENTORY.create("communitycenter.fame.rank", "Your rank: (?<rank>.*)")
 

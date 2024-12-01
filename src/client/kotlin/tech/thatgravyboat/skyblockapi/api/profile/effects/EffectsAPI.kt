@@ -1,0 +1,115 @@
+package tech.thatgravyboat.skyblockapi.api.profile.effects
+
+import kotlinx.datetime.Clock.System
+import tech.thatgravyboat.skyblockapi.api.data.stored.EffectsStorage
+import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
+import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
+import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.profile.community.CommunityCenterAPI.cookieAteRegex
+import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+
+@Module
+object EffectsAPI {
+
+    val boosterCookieExpireTime get() = EffectsStorage.boosterCookieExpireTime
+
+
+    @Subscription
+    fun onChat(event: ChatReceivedEvent) {
+        if (cookieAteRegex.contains(event.text)) {
+            updateBoosterCookieExpireTime(4.days)
+        }
+    }
+
+    @Subscription
+    fun onInventoryFullyLoaded(event: ContainerInitializedEvent) {
+        if (event.title == "SkyBlock Menu") {
+            val cookieLore = event.itemStacks.find { it.cleanName == "Booster Cookie" }?.getRawLore() ?: return
+            cookieInventoryRegex.anyMatch(cookieLore, "duration") { (duration) ->
+                val parsedDuration = duration.parseDuration() ?: return@anyMatch
+                updateBoosterCookieExpireTime(parsedDuration)
+            }
+        }
+    }
+
+    @Subscription
+    fun onTabFooterUpdate(event: TabListHeaderFooterChangeEvent) {
+        val asshole = event.newFooterChunked.find { "Cookie Buff" in it } ?: return
+        asshole[2].let {
+            val parsedDuration = it.parseWordDuration() ?: return
+            updateBoosterCookieExpireTime(parsedDuration)
+        }
+    }
+
+    @Subscription
+    @OnlyWidget(TabWidget.ACTIVE_EFFECTS)
+    fun onTabWidgetUpdate(event: TabWidgetChangeEvent) {
+        cookieTabWidgetRegex.anyMatch(event.new, "duration") { (duration) ->
+            val parsedDuration = duration.parseDuration() ?: return@anyMatch
+            updateBoosterCookieExpireTime(parsedDuration)
+        }
+    }
+
+    private fun updateBoosterCookieExpireTime(parsedDuration: Duration) {
+        val expireTime = (System.now() + parsedDuration).toEpochMilliseconds()
+
+        // Check if the new expiry time is greater (more accurate) than the current one
+        if (expireTime > boosterCookieExpireTime) {
+            EffectsStorage.boosterCookieExpireTime = expireTime
+        }
+    }
+
+
+    @Subscription
+    fun onCommandsRegistration(event: RegisterCommandsEvent) {
+        event.register("sbapi") {
+            then("effects") {
+                then("copy") {
+                    callback {
+                        val cookieExpireTime = "Cookie Expire Time: ${boosterCookieExpireTime.toReadableTimeStamp()}"
+
+                        Text.of("[SkyBlockAPI] Copied Effects Data to clipboard.") {
+                            this.color = TextColor.YELLOW
+                        }.send()
+
+                        McClient.clipboard = cookieExpireTime
+                    }
+                }
+                then("reset") {
+                    callback {
+                        EffectsStorage.boosterCookieExpireTime = 0
+                        Text.of("[SkyBlockAPI] Reset Effects Data.") {
+                            this.color = TextColor.YELLOW
+                        }.send()
+                    }
+                }
+            }
+        }
+    }
+
+
+    private val cookieTabWidgetRegex = RegexGroup.TABLIST_WIDGET.create(
+        "effects.cookie",
+        "\\s*Cookie Buff: (?<duration>.*)",
+    )
+    private val cookieInventoryRegex = RegexGroup.INVENTORY.create(
+        "effects.cookie",
+        "Duration: (?<duration>.*)",
+    )
+}

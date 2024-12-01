@@ -62,6 +62,7 @@ object TabListEventHandler {
         TabWidget.PARTY to widgetGroup.create("party", "Party: (?<party>.*)"),
         TabWidget.MINIONS to widgetGroup.create("minions", "Minions: (?<party>.*)"),
         TabWidget.SHEN to widgetGroup.create("shen", "Shen: \\((?<duration>[\\ddmsh,]+)\\)"),
+        TabWidget.ACTIVE_EFFECTS to widgetGroup.create("active_effects", "Active Effects:(?: \\((?<amount>\\d+)\\))?"),
     )
 
     private var tabList = emptyList<List<String>>()
