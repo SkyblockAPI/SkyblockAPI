@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
+import kotlinx.datetime.Instant
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.effects.EffectsData
 
@@ -10,8 +11,8 @@ internal object EffectsStorage {
         "effects.json",
     )
 
-    var boosterCookieExpireTime: Long
-        get() = EFFECTS.get()?.boosterCookieExpireTime ?: 0
+    var boosterCookieExpireTime: Instant
+        get() = EFFECTS.get()?.boosterCookieExpireTime ?: Instant.DISTANT_PAST
         set(value) {
             if (EFFECTS.get()?.boosterCookieExpireTime == value) return
             EFFECTS.get()?.boosterCookieExpireTime = value

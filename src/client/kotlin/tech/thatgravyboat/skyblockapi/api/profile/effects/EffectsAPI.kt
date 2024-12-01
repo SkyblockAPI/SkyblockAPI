@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.effects
 
 import kotlinx.datetime.Clock.System
+import kotlinx.datetime.Instant
 import tech.thatgravyboat.skyblockapi.api.data.stored.EffectsStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
@@ -13,7 +14,10 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEven
 import tech.thatgravyboat.skyblockapi.api.profile.community.CommunityCenterAPI.cookieAteRegex
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseWordDuration
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
@@ -34,7 +38,7 @@ object EffectsAPI {
     @Subscription
     fun onChat(event: ChatReceivedEvent) {
         if (cookieAteRegex.contains(event.text)) {
-            updateBoosterCookieExpireTime(boosterCookieExpireTime.milliseconds + 4.days)
+            updateBoosterCookieExpireTime(boosterCookieExpireTime.toEpochMilliseconds().milliseconds + 4.days)
         }
     }
 
@@ -68,7 +72,7 @@ object EffectsAPI {
     }
 
     private fun updateBoosterCookieExpireTime(parsedDuration: Duration) {
-        val expireTime = (System.now() + parsedDuration).toEpochMilliseconds()
+        val expireTime = System.now() + parsedDuration
 
         // Check if the new expiry time is greater (more accurate) than the current one
         if (expireTime > boosterCookieExpireTime) {
@@ -83,7 +87,7 @@ object EffectsAPI {
             then("effects") {
                 then("copy") {
                     callback {
-                        val cookieExpireTime = "Cookie Expire Time: ${boosterCookieExpireTime.toReadableTimeStamp()}"
+                        val cookieExpireTime = "Cookie Expire Time: ${boosterCookieExpireTime}"
 
                         Text.of("[SkyBlockAPI] Copied Effects Data to clipboard.") {
                             this.color = TextColor.YELLOW
@@ -94,7 +98,7 @@ object EffectsAPI {
                 }
                 then("reset") {
                     callback {
-                        EffectsStorage.boosterCookieExpireTime = 0
+                        EffectsStorage.boosterCookieExpireTime = Instant.DISTANT_PAST
                         Text.of("[SkyBlockAPI] Reset Effects Data.") {
                             this.color = TextColor.YELLOW
                         }.send()

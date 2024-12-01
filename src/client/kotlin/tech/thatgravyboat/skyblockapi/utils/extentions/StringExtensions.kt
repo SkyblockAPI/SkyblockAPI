@@ -5,8 +5,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.math.pow
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -178,8 +176,6 @@ fun Int.toRomanNumeral(subtractive: Boolean = false): String {
         return roman.toString()
     }
 }
-
-fun Long.toReadableTimeStamp(): String = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US).format(Date(this))
 
 fun String.stripColor(): String = StringUtil.stripColor(this)
 
