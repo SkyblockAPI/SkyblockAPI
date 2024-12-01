@@ -23,6 +23,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.milliseconds
 
 @Module
 object EffectsAPI {
@@ -33,7 +34,7 @@ object EffectsAPI {
     @Subscription
     fun onChat(event: ChatReceivedEvent) {
         if (cookieAteRegex.contains(event.text)) {
-            updateBoosterCookieExpireTime(4.days)
+            updateBoosterCookieExpireTime(boosterCookieExpireTime.milliseconds + 4.days)
         }
     }
 
