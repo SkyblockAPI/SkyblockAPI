@@ -16,7 +16,8 @@ data class TabListHeaderFooterChangeEvent(
     val oldFooterChunked by lazy { oldFooter.chunk() }
     val oldHeaderChunked by lazy { oldHeader.chunk() }
 
-    private fun Component.chunk() = string.split("\n")
-        .chunked { it.stripColor().isBlank() }
-        .map { it.filter { line -> line.isNotBlank() } }
+    private fun Component.chunk() = string.stripColor().split("\n")
+        .chunked(CharSequence::isBlank)
+        .map { it.filter(CharSequence::isNotBlank) }
+        .filter(List<String>::isNotEmpty)
 }
