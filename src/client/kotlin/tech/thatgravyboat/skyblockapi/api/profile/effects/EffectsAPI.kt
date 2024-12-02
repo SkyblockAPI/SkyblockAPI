@@ -40,9 +40,18 @@ object EffectsAPI {
         "effects.cookie",
         "Duration: (?<duration>.*)",
     )
+    private val godPotionWidgetRegex = RegexGroup.TABLIST_WIDGET.create(
+        "effects.god_potion",
+        "\\s*God Potion: (?<duration>.*)",
+    )
+    private val godPotionFooterRegex = RegexGroup.TABLIST.create(
+        "effects.god_potion.footer",
+        "You have a God Potion active! (?<duration>.*)",
+    )
 
 
     val boosterCookieExpireTime get() = EffectsStorage.boosterCookieExpireTime
+    val godPotionDuration get() = EffectsStorage.godPotionDuration
 
 
     @Subscription
@@ -65,10 +74,15 @@ object EffectsAPI {
 
     @Subscription
     fun onTabFooterUpdate(event: TabListHeaderFooterChangeEvent) {
-        val cookieBuffChunk = event.newFooterChunked.find { "Cookie Buff" in it } ?: return
-        cookieBuffChunk.last().let {
+        val cookieBuffChunk = event.newFooterChunked.find { "Cookie Buff" in it }
+        cookieBuffChunk?.last()?.let {
             val parsedDuration = it.parseWordDuration() ?: return
             updateBoosterCookieExpireTime(parsedDuration)
+        }
+
+        godPotionFooterRegex.anyMatch(event.newFooterChunked.flatten(), "duration") { (duration) ->
+            val parsedDuration = duration.parseWordDuration() ?: return@anyMatch
+            EffectsStorage.godPotionDuration = parsedDuration
         }
     }
 
@@ -78,6 +92,11 @@ object EffectsAPI {
         cookieTabWidgetRegex.anyMatch(event.new, "duration") { (duration) ->
             val parsedDuration = duration.parseDuration() ?: return@anyMatch
             updateBoosterCookieExpireTime(parsedDuration)
+            readlnOrNull()
+        }
+        godPotionWidgetRegex.anyMatch(event.new, "duration") { (duration) ->
+            val parsedDuration = duration.parseDuration() ?: return@anyMatch
+            EffectsStorage.godPotionDuration = parsedDuration
         }
     }
 
@@ -97,18 +116,22 @@ object EffectsAPI {
             then("effects") {
                 then("copy") {
                     callback {
-                        val cookieExpireTime = "Cookie Expire Time: $boosterCookieExpireTime"
+                        val effects = listOf(
+                            "Booster Cookie Expire Time: $boosterCookieExpireTime",
+                            "God Potion Duration: $godPotionDuration",
+                        )
 
                         Text.of("[SkyBlockAPI] Copied Effects Data to clipboard.") {
                             this.color = TextColor.YELLOW
                         }.send()
 
-                        McClient.clipboard = cookieExpireTime
+                        McClient.clipboard = effects.joinToString("\n")
                     }
                 }
                 then("reset") {
                     callback {
                         EffectsStorage.boosterCookieExpireTime = Instant.DISTANT_PAST
+                        EffectsStorage.godPotionDuration = Duration.ZERO
                         Text.of("[SkyBlockAPI] Reset Effects Data.") {
                             this.color = TextColor.YELLOW
                         }.send()
