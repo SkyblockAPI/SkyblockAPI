@@ -142,7 +142,7 @@ private val cleanPlayerNameRegex = regexGroup.create(
     "(?:(?<rank>\\[.+]) ?)?(?<name>[a-zA-Z0-9_]+)",
 )
 
-private val formattingCodesRegex = Regex("(?i)§[0-9A-FK-ORS]")
+private val formattingCodesRegex = Regex("§.")
 
 internal fun String.cleanPlayerName(): String {
     return cleanPlayerNameRegex.findGroup(this, "name") ?: this
