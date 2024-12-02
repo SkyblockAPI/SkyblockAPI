@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
-import net.minecraft.util.StringUtil
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import java.text.DecimalFormat
@@ -177,12 +176,8 @@ fun Int.toRomanNumeral(subtractive: Boolean = false): String {
     }
 }
 
-fun String.stripColor(): String = StringUtil.stripColor(this)
+fun String.stripColor(): String = formattingCodesRegex.replace(this, "")
 
-/**
- * @return Removes formatting, colors and §s, why? Because fuck hypixel ???
- */
-fun String.stripColorAndS(): String = formattingCodesRegex.replace(this, "")
 
 fun String.trimIgnoreColor(): String {
     val start = colorCodesStart.find(this)?.groups?.get("start")?.value ?: ""

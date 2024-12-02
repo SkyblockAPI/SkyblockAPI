@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.profile.effects
 
-import kotlinx.datetime.Clock.System
 import kotlinx.datetime.Instant
 import tech.thatgravyboat.skyblockapi.api.data.stored.EffectsStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -25,12 +24,23 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.time.fromNow
 import tech.thatgravyboat.skyblockapi.utils.time.until
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 
 @Module
 object EffectsAPI {
+
+    private val cookieTabWidgetRegex = RegexGroup.TABLIST_WIDGET.create(
+        "effects.cookie",
+        "\\s*Cookie Buff: (?<duration>.*)",
+    )
+    private val cookieInventoryRegex = RegexGroup.INVENTORY.create(
+        "effects.cookie",
+        "Duration: (?<duration>.*)",
+    )
+
 
     val boosterCookieExpireTime get() = EffectsStorage.boosterCookieExpireTime
 
@@ -55,8 +65,8 @@ object EffectsAPI {
 
     @Subscription
     fun onTabFooterUpdate(event: TabListHeaderFooterChangeEvent) {
-        val asshole = event.newFooterChunked.find { "Cookie Buff" in it } ?: return
-        asshole[2].let {
+        val cookieBuffChunk = event.newFooterChunked.find { "Cookie Buff" in it } ?: return
+        cookieBuffChunk.last().let {
             val parsedDuration = it.parseWordDuration() ?: return
             updateBoosterCookieExpireTime(parsedDuration)
         }
@@ -72,7 +82,7 @@ object EffectsAPI {
     }
 
     private fun updateBoosterCookieExpireTime(parsedDuration: Duration) {
-        val expireTime = System.now() + parsedDuration
+        val expireTime = parsedDuration.fromNow()
 
         // Check if the new expiry time is greater (more accurate) than the current one
         if (expireTime > boosterCookieExpireTime) {
@@ -87,7 +97,7 @@ object EffectsAPI {
             then("effects") {
                 then("copy") {
                     callback {
-                        val cookieExpireTime = "Cookie Expire Time: ${boosterCookieExpireTime}"
+                        val cookieExpireTime = "Cookie Expire Time: $boosterCookieExpireTime"
 
                         Text.of("[SkyBlockAPI] Copied Effects Data to clipboard.") {
                             this.color = TextColor.YELLOW
@@ -107,14 +117,4 @@ object EffectsAPI {
             }
         }
     }
-
-
-    private val cookieTabWidgetRegex = RegexGroup.TABLIST_WIDGET.create(
-        "effects.cookie",
-        "\\s*Cookie Buff: (?<duration>.*)",
-    )
-    private val cookieInventoryRegex = RegexGroup.INVENTORY.create(
-        "effects.cookie",
-        "Duration: (?<duration>.*)",
-    )
 }
