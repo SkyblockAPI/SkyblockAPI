@@ -179,7 +179,7 @@ object MaxwellAPI {
         items.getOrNull(THAUMATURGY_STATS_TUNING_SLOT)?.getRawLore()?.let { lore ->
             val tunings = buildList {
                 lore.forEach { line ->
-                    addNotNull(handleTuningsLine(line))
+                    addIfNotNull(handleTuningsLine(line))
                 }
             }
             MaxwellStorage.updateTunings(tunings, false)
@@ -223,7 +223,7 @@ object MaxwellAPI {
         for (line in item.getRawLore()) {
             if (foundMp && foundPower && foundTunings) break
             if (insideTunings) {
-                tunings.addNotNull(handleTuningsLine(line))
+                tunings.addIfNotNull(handleTuningsLine(line))
             }
             if (insideTunings && line.isEmpty()) {
                 insideTunings = false

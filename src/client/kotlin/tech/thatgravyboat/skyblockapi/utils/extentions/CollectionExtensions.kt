@@ -54,4 +54,4 @@ internal fun <K> MutableMap<K, Float>.addOrPut(key: K, number: Float): Float = m
 
 internal fun <K> MutableMap<K, Long>.addOrPut(key: K, number: Long): Long = merge(key, number, Long::plus)!!
 
-internal fun <T> MutableCollection<T>.addNotNull(element: T?): Boolean = element?.let { add(it) } ?: false
+internal fun <T : Any> MutableCollection<T>.addIfNotNull(element: T?): Boolean = element?.let { add(it) } ?: false

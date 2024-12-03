@@ -39,7 +39,7 @@ object DebugInventory {
 
     @Subscription
     fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
-        if (event.key != InputConstants.KEY_C) return
+        if (!enabled || event.key != InputConstants.KEY_C) return
         val slot = McScreen.asMenu?.getHoveredSlot() ?: return
         McClient.clipboard = slot.item.toJson(ItemStack.CODEC).toPrettyString()
         Text.debug("Copied item data to clipboard.").send()
