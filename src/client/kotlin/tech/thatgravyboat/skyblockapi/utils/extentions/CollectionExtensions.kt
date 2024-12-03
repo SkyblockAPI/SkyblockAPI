@@ -54,13 +54,4 @@ internal fun <K> MutableMap<K, Float>.addOrPut(key: K, number: Float): Float = m
 
 internal fun <K> MutableMap<K, Long>.addOrPut(key: K, number: Long): Long = merge(key, number, Long::plus)!!
 
-internal inline fun <T, R : Any> List<T>.lastNotNullOfOrNull(transform: (T) -> R?): R? {
-    val iterator = this.listIterator(size)
-    while (iterator.hasPrevious()) {
-        val result = transform(iterator.previous())
-        if (result != null) return result
-    }
-    return null
-}
-
-internal fun <T> MutableCollection<T>.addNotNull(element: T?) = element?.let { add(it) } ?: false
+internal fun <T> MutableCollection<T>.addNotNull(element: T?): Boolean = element?.let { add(it) } ?: false

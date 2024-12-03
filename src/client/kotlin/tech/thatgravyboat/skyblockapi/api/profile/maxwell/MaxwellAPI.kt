@@ -36,7 +36,6 @@ private val tuningGuiSlots = listOf(19, 20, 21, 22, 28, 29, 30, 31)
 
 private const val BAGS_ACCESSORY_BAG_SLOT = 24
 
-
 @Suppress("unused")
 @Module
 object MaxwellAPI {
@@ -56,6 +55,7 @@ object MaxwellAPI {
     val tunings: List<MaxwellTuning>
         get() = MaxwellStorage.tunings
 
+    //region Regex
     private val chatGroup = RegexGroup.CHAT.group("maxwell")
 
     private val selectPowerRegex = chatGroup.create(
@@ -112,6 +112,7 @@ object MaxwellAPI {
         "^Tuning:"
     )
 
+    //region Tunings
     private val tuningsGroup = inventoryGroup.group("tunings")
     private val tuningsTitleRegex = tuningsGroup.create(
         "title",
@@ -125,6 +126,8 @@ object MaxwellAPI {
         "amount",
         "^You have: \\S+\\s\\+\\s(?<amount>[\\d,.]+)"
     )
+    //endregion
+    //endregion
 
     @OnlyOnSkyBlock
     @Subscription
@@ -136,6 +139,7 @@ object MaxwellAPI {
         } ?: return
     }
 
+    // These need to be on ContainerChangeEvent because you can interact with the GUI and update data
     @OnlyOnSkyBlock
     @Subscription
     fun onInventoryUpdate(event: ContainerChangeEvent) {
@@ -167,7 +171,7 @@ object MaxwellAPI {
         }
 
         items.getOrNull(THAUMATURGY_MP_SLOT)?.getRawLore()?.lastOrNull()?.let {
-            thaumaturgyMpRegex.findThenNull(it, "mp") { (mp) ->
+            thaumaturgyMpRegex.findOrNull(it, "mp") { (mp) ->
                 MaxwellStorage.updateMagicalPower(mp.parseFormattedInt())
             }
         }
@@ -208,7 +212,7 @@ object MaxwellAPI {
     }
 
     private fun handleBagsGui(event: ContainerInitializedEvent): Boolean {
-        if (!bagsTitleRegex.matches(event.title)) return false
+        if (!bagsTitleRegex.contains(event.title)) return false
         val item = event.itemStacks.getOrNull(BAGS_ACCESSORY_BAG_SLOT) ?: return false
         var foundMp = false
         var foundPower = false
