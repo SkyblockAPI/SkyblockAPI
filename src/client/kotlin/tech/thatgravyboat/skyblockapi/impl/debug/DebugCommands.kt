@@ -1,9 +1,11 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
+import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
@@ -21,6 +23,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 object DebugCommands {
 
     private var actionbar: String = ""
+    private var tabListFooter: Component = Component.empty()
+    private var tabListHeader: Component = Component.empty()
 
     private fun copyMessage(title: String) {
         Text.of("[SkyBlockAPI] Copied $title to clipboard.") {
@@ -31,6 +35,12 @@ object DebugCommands {
     @Subscription(priority = Int.MIN_VALUE)
     fun onActionBar(event: ActionBarReceivedEvent) {
         actionbar = event.coloredText
+    }
+
+    @Subscription(priority = Int.MIN_VALUE)
+    fun onHeaderFooter(event: TabListHeaderFooterChangeEvent) {
+        tabListFooter = event.newFooter
+        tabListHeader = event.newHeader
     }
 
     @Subscription
@@ -54,6 +64,34 @@ object DebugCommands {
                 }
 
                 then("tablist") {
+                    then("footer") {
+                        then("raw") {
+                            callback {
+                                copyMessage("raw tablist footer")
+                                McClient.clipboard = tabListFooter.toJson(ComponentSerialization.CODEC).toPrettyString()
+                            }
+                        }
+
+                        callback {
+                            copyMessage("tablist footer")
+                            McClient.clipboard = tabListFooter.stripped
+                        }
+                    }
+
+                    then("header") {
+                        then("raw") {
+                            callback {
+                                copyMessage("raw tablist header")
+                                McClient.clipboard = tabListHeader.toJson(ComponentSerialization.CODEC).toPrettyString()
+                            }
+                        }
+
+                        callback {
+                            copyMessage("tablist header")
+                            McClient.clipboard = tabListHeader.stripped
+                        }
+                    }
+
                     then("raw") {
                         callback {
                             copyMessage("raw tablist")

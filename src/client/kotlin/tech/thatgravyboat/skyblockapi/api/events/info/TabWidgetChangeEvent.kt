@@ -41,6 +41,7 @@ enum class TabWidget {
     TRAPPER,
     EVENT_TRACKERS,
     FROZEN_CORPSES,
+    ACTIVE_EFFECTS,
     ;
 
     private val string = toFormattedName()

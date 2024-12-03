@@ -1,29 +1,30 @@
 {
-    "required": true,
-    "minVersion": "0.8",
-    "package": "tech.thatgravyboat.skyblockapi.mixins",
-    "compatibilityLevel": "JAVA_21",
-    "client": [
-        "accessors.AbstractContainerScreenAccessor",
-        "events.ChatComponentMixin",
-        "events.ChatListenerMixin",
-        "events.ClientCommonPacketListenerImplMixin",
-        "events.GuiGraphicsMixin",
-        "events.GuiMessageMixin",
-        "events.GuiMixin",
-        "events.ScreenMixin",
-        "fixes.ClientPacketListenerMixin",
-        "fixes.SkinManagerMixin"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    },
-    "mixins": [
-        "events.ConnectionMixin",
-        "events.ItemStackMixin",
-        "features.ItemStackDataTypeMixin",
-        "fixes.ScoreboardMixin",
-        "fixes.YggdrasilMinecraftSessionServiceMixin",
-        "fixes.YggdrasilServicesKeyInfoMixin"
-    ]
+  "required": true,
+  "minVersion": "0.8",
+  "package": "tech.thatgravyboat.skyblockapi.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "accessors.AbstractContainerScreenAccessor",
+    "events.ChatComponentMixin",
+    "events.ChatListenerMixin",
+    "events.ClientCommonPacketListenerImplMixin",
+    "events.GuiGraphicsMixin",
+    "events.GuiMessageMixin",
+    "events.GuiMixin",
+    "events.ScreenMixin",
+    "fixes.ClientPacketListenerMixin",
+    "fixes.SkinManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "events.ConnectionMixin",
+    "events.ItemStackMixin",
+    "features.ItemStackDataTypeMixin",
+    "fixes.FishingHookMixin",
+    "fixes.ScoreboardMixin",
+    "fixes.YggdrasilMinecraftSessionServiceMixin",
+    "fixes.YggdrasilServicesKeyInfoMixin"
+  ]
 }
