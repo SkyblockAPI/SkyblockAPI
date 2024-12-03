@@ -14,30 +14,28 @@ object RecordCodecGenerator {
 
     private const val MAX_PARAMETERS = 16
 
-    private fun isValid(parameter: KSValueParameter, logger: KSPLogger): Boolean {
+    private fun isValid(parameter: KSValueParameter, logger: KSPLogger, builtinCodecs: BuiltinCodecs): Boolean {
         val ksType = parameter.type.resolve()
         val name = parameter.name!!.asString()
         if (parameter.isVararg) {
             logger.error("parameter $name is a vararg")
         } else if (parameter.hasDefault && ksType.isMarkedNullable) {
             logger.error("parameter $name is nullable and has a default value")
-        } else if (
-            (ksType.starProjection().toClassName() == Map::class.asClassName() ||
-                ksType.starProjection().toClassName() == MutableMap::class.asClassName()) &&
-            !DefaultCodecs.isStringType(
-                ksType.arguments.getRef(
-                    0,
-                ),
-            )
-        ) {
-            logger.error("parameter $name is a map with a key type that is not a string")
         } else {
+            val isMap = ksType.starProjection().toClassName() == Map::class.asClassName() || ksType.starProjection().toClassName() == MutableMap::class.asClassName()
+            if (isMap) {
+                val keyType = ksType.arguments.getRef(0)
+                if (Modifier.ENUM !in keyType.modifiers && !builtinCodecs.isStringType(keyType.resolve().toTypeName().copy(false))) {
+                    logger.error("parameter $name is a map with a key type that is not a string")
+                    return false
+                }
+            }
             return true
         }
         return false
     }
 
-    fun isValid(declaration: KSAnnotated?, logger: KSPLogger): Boolean {
+    fun isValid(declaration: KSAnnotated?, logger: KSPLogger, builtinCodecs: BuiltinCodecs): Boolean {
         if (declaration !is KSClassDeclaration) {
             logger.error("Declaration is not a class")
         } else if (declaration.modifiers.contains(Modifier.INLINE)) {
@@ -54,7 +52,7 @@ object RecordCodecGenerator {
             logger.error(
                 "@GenerateCodec can only be applied to classes with a primary constructor that has at most $MAX_PARAMETERS parameters",
             )
-        } else if (!declaration.primaryConstructor!!.parameters.all { isValid(it, logger) }) {
+        } else if (!declaration.primaryConstructor!!.parameters.all { isValid(it, logger, builtinCodecs) }) {
             logger.error(
                 "@GenerateCodec can only be applied to classes with a primary constructor that has valid parameters, view the error above for more information",
             )

@@ -20,8 +20,11 @@ class KCodecProcessor(
         if (ran) return emptyList()
         ran = true
 
+        val builtinCodecs = BuiltinCodecs()
+        resolver.getSymbolsWithAnnotation(IncludedCodec::class.qualifiedName!!).forEach { builtinCodecs.add(it, logger) }
+
         val annotated = resolver.getSymbolsWithAnnotation(GenerateCodec::class.qualifiedName!!).toList()
-        val validGeneratedCodecs = annotated.filter { RecordCodecGenerator.isValid(it, logger) }
+        val validGeneratedCodecs = annotated.filter { RecordCodecGenerator.isValid(it, logger, builtinCodecs) }
         val generatedCodecs = validGeneratedCodecs.map { RecordCodecGenerator.generateCodec(it) }
 
         val file = FileSpec.builder("tech.thatgravyboat.skyblockapi.generated", "KCodec")
@@ -46,8 +49,8 @@ class KCodecProcessor(
                             this.addParameter("clazz", ClassName("java.lang", "Class").parameterizedBy(STAR))
                             this.returns(ClassName("com.mojang.serialization", "Codec").parameterizedBy(STAR))
                             this.addCode("return when {\n")
-                            for ((type, codec) in DefaultCodecs.codecs) {
-                                this.addCode("    clazz == %T::class.java -> ${codec}\n", type)
+                            builtinCodecs.forEach { type, info ->
+                                this.addCode("    clazz == %T::class.java -> ${info.codec}\n", type)
                             }
                             this.addCode("    clazz.isEnum -> %T.forKCodec(clazz.enumConstants)\n", ENUM_CODEC_TYPE)
                             for (codec in validGeneratedCodecs) {
