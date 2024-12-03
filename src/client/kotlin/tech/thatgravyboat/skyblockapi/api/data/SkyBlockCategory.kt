@@ -11,6 +11,8 @@ class SkyBlockCategory private constructor(
     fun equalsAny(vararg others: SkyBlockCategory, ignoreDungeon: Boolean = false): Boolean =
         others.any { equals(it, ignoreDungeon) }
 
+    override fun toString(): String = if (isDungeon) "dungeon $name" else name
+
     @Suppress("unused")
     companion object {
         private val registeredCategories = mutableMapOf<String, SkyBlockCategory>()
