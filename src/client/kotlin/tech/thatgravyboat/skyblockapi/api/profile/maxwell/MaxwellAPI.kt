@@ -284,7 +284,7 @@ object MaxwellAPI {
                 }
                 then("tunings") {
                     callback {
-                        McClient.clipboard = tunings.toString()
+                        McClient.clipboard = tunings.joinToString { (stat, value) -> "$stat: $value" }
                         Text.debug("Copied tunings to clipboard!").send()
                     }
                 }
