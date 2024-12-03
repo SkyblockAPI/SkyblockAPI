@@ -76,7 +76,7 @@ object EffectsAPI {
     fun onTabFooterUpdate(event: TabListHeaderFooterChangeEvent) {
         val cookieBuffChunk = event.newFooterChunked.find { "Cookie Buff" in it }
         cookieBuffChunk?.last()?.let {
-            val parsedDuration = it.parseWordDuration() ?: return
+            val parsedDuration = it.parseWordDuration() ?: return@let
             updateBoosterCookieExpireTime(parsedDuration)
         }
 
