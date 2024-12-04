@@ -41,6 +41,7 @@ object PacketEventHandler {
                     when (containerId) {
                         PLAYER_HOTBAR_CONTAINER_ID -> {
                             PlayerHotbarChangeEvent(event.packet.slot - FIRST_HOTBAR_SLOT, event.packet.item).post()
+                            PlayerInventoryChangeEvent(event.packet.slot, event.packet.item).post()
                         }
 
                         PLAYER_INVENTORY_CONTAINER_ID -> PlayerInventoryChangeEvent(event.packet.slot, event.packet.item).post()
