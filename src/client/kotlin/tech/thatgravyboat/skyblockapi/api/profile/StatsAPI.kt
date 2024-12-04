@@ -25,6 +25,9 @@ object StatsAPI {
     var maxMana: Int = 100
         private set
 
+    var overflowMana: Int = 0
+        private set
+
     @Subscription
     fun onActionBarWidget(event: ActionBarWidgetChangeEvent) {
         when (event) {
@@ -38,6 +41,9 @@ object StatsAPI {
             is ManaActionBarWidgetChangeEvent -> {
                 mana = event.current
                 maxMana = event.max
+            }
+            is OverflowManaActionBarWidgetChangeEvent -> {
+                overflowMana = event.current
             }
             is ArmadilloActionBarWidgetChangeEvent -> {
                 val healthPercent = McPlayer.health.toFloat() / McPlayer.maxHealth.toFloat()

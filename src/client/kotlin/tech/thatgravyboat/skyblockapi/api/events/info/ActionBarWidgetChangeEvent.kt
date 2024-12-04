@@ -23,6 +23,9 @@ class DefenseActionBarWidgetChangeEvent(val current: Int, old: String, new: Stri
 class ManaActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.MANA, old, new)
 
+class OverflowManaActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.OVERFLOW_MANA, old, new)
+
 class RiftTimeActionBarWidgetChangeEvent(val time: Duration?, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.RIFT_TIME, old, new)
 
@@ -40,6 +43,7 @@ enum class ActionBarWidget {
     DEFENSE,
     MANA,
     NO_MANA,
+    OVERFLOW_MANA,
     ABILITY,
     LOCATION,
     SKILL_XP,

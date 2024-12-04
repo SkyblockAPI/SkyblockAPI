@@ -49,8 +49,15 @@ object ActionBarEventHandler {
             DefenseActionBarWidgetChangeEvent(it["defense"].toIntValue(), old, it.string)
         },
         // §b319/319✎ Mana
-        ActionBarWidgetType(ActionBarWidget.MANA, "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ Mana") { old, it ->
+        // §b319/319✎
+        ActionBarWidgetType(ActionBarWidget.MANA, "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ (?:Mana)?") { old, it ->
             ManaActionBarWidgetChangeEvent(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, it.string)
+        },
+        // §3400ʬ
+        ActionBarWidgetType(ActionBarWidget.OVERFLOW_MANA, "§.(?<overflow>[\\d,]+)ʬ", {
+            OverflowManaActionBarWidgetChangeEvent(0, it.string, "")
+        }) { old, it ->
+            OverflowManaActionBarWidgetChangeEvent(it["overflow"].toIntValue(), old, it.string)
         },
         // §c§lNOT ENOUGH MANA
         ActionBarWidgetType(ActionBarWidget.NO_MANA, "§c§lNOT ENOUGH MANA"),
