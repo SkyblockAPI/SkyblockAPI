@@ -14,7 +14,7 @@ import java.util.*
 private const val MAX_REMOVE_TIME = 10 * 24 * 60 * 60 * 1000 // 10 days
 
 @Module
-internal object PlayerCacheStorage {
+object PlayerCacheStorage {
 
     private var shouldSave = false
 
