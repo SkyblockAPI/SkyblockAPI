@@ -8,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 data class ProfileData(
     val profileType: MutableMap<String, ProfileType> = mutableMapOf(),
     val sbLevel: MutableMap<String, Int> = mutableMapOf(),
+    val sbLevelProgress: MutableMap<String, Int> = mutableMapOf(),
     val coop: MutableMap<String, Boolean> = mutableMapOf(),
 ) {
     companion object {

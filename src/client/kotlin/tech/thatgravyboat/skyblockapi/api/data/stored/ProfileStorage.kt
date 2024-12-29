@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileType
 
 internal object ProfileStorage {
+    // Todo: use StoredProfileData instead, basically the same just better here
     private val PROFILE = StoredPlayerData(
         ::ProfileData,
         ProfileData.CODEC,
@@ -29,6 +30,15 @@ internal object ProfileStorage {
         if (level == getSkyBlockLevel()) return
         val profileName = ProfileAPI.profileName ?: return
         data.sbLevel[profileName] = level
+        PROFILE.save()
+    }
+
+    fun getSkyBlockLevelProgress(): Int = data.sbLevelProgress[ProfileAPI.profileName] ?: 0
+
+    fun setSkyBlockLevelProgress(level: Int) {
+        if (level == getSkyBlockLevelProgress()) return
+        val profileName = ProfileAPI.profileName ?: return
+        data.sbLevelProgress[profileName] = level
         PROFILE.save()
     }
 

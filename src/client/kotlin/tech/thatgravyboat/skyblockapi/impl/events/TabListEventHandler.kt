@@ -32,7 +32,7 @@ object TabListEventHandler {
 
     private val infoRegex = RegexGroup.TABLIST.create(
         "info",
-        "(?:Info|Account Info)$"
+        "(?:Info|Account Info)$",
     )
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET
