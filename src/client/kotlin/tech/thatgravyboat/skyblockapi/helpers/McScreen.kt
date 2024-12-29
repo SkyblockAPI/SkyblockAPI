@@ -11,4 +11,8 @@ object McScreen {
 
     val asMenu: AbstractContainerScreen<*>?
         get() = self as? AbstractContainerScreen<*>
+
+    inline fun <reified T> isOf(): Boolean {
+        return self is T
+    }
 }

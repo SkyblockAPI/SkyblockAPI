@@ -55,7 +55,7 @@ object EffectsAPI {
 
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         if (cookieAteRegex.contains(event.text)) {
             updateBoosterCookieExpireTime(boosterCookieExpireTime.until() + 4.days)
         }

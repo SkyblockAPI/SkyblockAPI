@@ -56,7 +56,7 @@ object TrapperAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_BARN)
-    fun onChatMessage(event: ChatReceivedEvent) {
+    fun onChatMessage(event: ChatReceivedEvent.Pre) {
         animalRegex.match(event.text, "type", "location") { (type, location) ->
             trackedType = TrapperAnimalType.fromString(type)
             trackedLocation = SkyBlockArea(location)

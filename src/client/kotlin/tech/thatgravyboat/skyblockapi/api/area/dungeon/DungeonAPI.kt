@@ -136,7 +136,7 @@ object DungeonAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         val message = event.text
         if (!started && startRegex.matches(message)) {
             started = true

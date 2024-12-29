@@ -36,7 +36,7 @@ object DebugChat {
     private val messages = mutableListOf<Pair<Instant, Component>>()
 
     @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
-    fun onMessage(event: ChatReceivedEvent) {
+    fun onMessage(event: ChatReceivedEvent.Pre) {
         messages.add(Clock.System.now() to event.component)
     }
 

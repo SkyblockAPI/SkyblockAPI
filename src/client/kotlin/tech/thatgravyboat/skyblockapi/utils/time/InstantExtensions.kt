@@ -4,12 +4,12 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
-internal fun currentInstant(): Instant = Clock.System.now()
+fun currentInstant(): Instant = Clock.System.now()
 
-internal fun Duration.fromNow(): Instant = currentInstant() + this
+fun Duration.fromNow(): Instant = currentInstant() + this
 
-internal fun Duration.ago(): Instant = currentInstant() - this
+fun Duration.ago(): Instant = currentInstant() - this
 
-internal fun Instant.since(): Duration = currentInstant() - this
+fun Instant.since(): Duration = currentInstant() - this
 
-internal fun Instant.until(): Duration = this - currentInstant()
+fun Instant.until(): Duration = this - currentInstant()

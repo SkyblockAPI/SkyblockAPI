@@ -32,8 +32,8 @@ object DebugCommands {
         }.send()
     }
 
-    @Subscription(priority = Int.MIN_VALUE)
-    fun onActionBar(event: ActionBarReceivedEvent) {
+    @Subscription(receiveCancelled = true)
+    fun onActionBar(event: ActionBarReceivedEvent.Pre) {
         actionbar = event.coloredText
     }
 

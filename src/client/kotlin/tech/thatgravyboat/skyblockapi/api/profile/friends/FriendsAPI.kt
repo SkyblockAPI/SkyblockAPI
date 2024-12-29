@@ -95,7 +95,7 @@ object FriendsAPI {
     private val foundFriends: MutableSet<String> = mutableSetOf()
 
     @Subscription(priority = Int.MIN_VALUE)
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         val components = event.component.splitLines()
         if (components.size == 1) {
             handleSingleLine(components.first())

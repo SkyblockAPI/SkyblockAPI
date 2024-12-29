@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
 import net.minecraft.client.Minecraft
+import net.minecraft.client.resources.PlayerSkin
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
@@ -13,6 +14,7 @@ object McPlayer {
 
     val name: String get() = McClient.self.gameProfile.name
     val uuid: UUID get() = McClient.self.gameProfile.id
+    val skin: PlayerSkin? get() = McClient.self.player?.skin
 
     val menu: AbstractContainerMenu?
         get() = self?.containerMenu

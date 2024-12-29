@@ -64,7 +64,7 @@ object EquipmentAPI {
     }
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         val (item, slot) = lastClickedEquipment ?: return
         chatEquipRegex.find(event.text, "item") { (itemName) ->
             if (item.cleanName != itemName) return@find

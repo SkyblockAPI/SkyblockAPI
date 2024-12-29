@@ -38,7 +38,7 @@ object CommunityCenterAPI {
     val bitsPerCookie: Int get() = (BASE_COOKIE_BITS * (fameRank?.multiplier ?: 1.0)).toInt()
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         if (cookieAteRegex.contains(event.text)) {
             bitsAvailable += bitsPerCookie
         }

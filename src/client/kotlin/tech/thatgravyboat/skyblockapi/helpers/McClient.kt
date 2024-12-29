@@ -4,6 +4,8 @@ import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft
+import net.minecraft.client.Options
+import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.gui.screens.ChatScreen
@@ -11,6 +13,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
+import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 
@@ -66,15 +69,12 @@ object McClient {
         }
 
     val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
+    val serverCommands: CommandDispatcher<SharedSuggestionProvider>? get() = self.connection?.commands
 
-    val toasts: ToastManager
-        get() = self.toastManager
-
-    val serverCommands: CommandDispatcher<SharedSuggestionProvider>?
-        get() = self.connection?.commands
-
-    val chat: ChatComponent
-        get() = self.gui.chat
+    val toasts: ToastManager get() = self.toastManager
+    val gui: Gui get() = self.gui
+    val chat: ChatComponent get() = gui.chat
+    val options: Options get() = self.options
 
     fun tell(action: () -> Unit) {
         self.schedule(action)
@@ -89,7 +89,7 @@ object McClient {
     }
 
     fun sendCommand(command: String) {
-        self.connection?.sendCommand(command.removePrefix("/"))
+        self.connection?.send(ServerboundChatCommandPacket(command.removePrefix("/")))
     }
 
 }

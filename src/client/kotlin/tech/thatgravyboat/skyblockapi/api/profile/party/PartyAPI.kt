@@ -115,7 +115,7 @@ object PartyAPI {
     private var lastPartyInfoRequest: Long = 0L
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         val message = event.text
         ownJoinedRegex.findThenNull(message, "leader") { (leaderName) ->
             inParty = true

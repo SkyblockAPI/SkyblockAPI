@@ -1,16 +1,16 @@
 package tech.thatgravyboat.skyblockapi.api.events.chat
 
 import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
-import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-class ActionBarReceivedEvent(var component: Component) : CancellableSkyBlockEvent() {
+abstract class ActionBarReceivedEvent : SkyBlockEvent() {
 
-    val text: String
-        get() = component.stripped
+    abstract val component: Component
 
-    var coloredText: String
-        get() = component.string
-        set(value) = run { component = Text.of(value) }
+    val text: String get() = component.stripped
+    val coloredText: String get() = component.string
+
+    class Pre(override val component: Component): ActionBarReceivedEvent(), Cancellable
+    class Post(override var component: Component): ActionBarReceivedEvent()
 }

@@ -38,12 +38,16 @@ class ArmorStackActionBarWidgetChangeEvent(val current: Int, val type: ArmorStac
 class SecretsActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.SECRETS, old, new)
 
+class DrillActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.DRILL_FUEL, old, new)
+
 enum class ActionBarWidget {
     HEALTH,
     DEFENSE,
     MANA,
     NO_MANA,
     OVERFLOW_MANA,
+    DRILL_FUEL,
     ABILITY,
     LOCATION,
     SKILL_XP,

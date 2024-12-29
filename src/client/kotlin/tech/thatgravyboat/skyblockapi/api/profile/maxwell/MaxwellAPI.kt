@@ -131,7 +131,7 @@ object MaxwellAPI {
 
     @OnlyOnSkyBlock
     @Subscription
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         val message = event.text
         selectPowerRegex.findThenNull(message, "power") { (power) ->
             val newPower = MaxwellPowers.getByName(power) ?: return@findThenNull

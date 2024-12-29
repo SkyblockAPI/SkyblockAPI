@@ -77,7 +77,7 @@ object ElectionAPI {
     }
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         if (electionOverRegex.matches(event.text)) {
             // When the Election is over, schedule a check every minute until a new mayor is found, then schedule every 20 minutes
             updateScheduler(1.minutes, 20.minutes)
