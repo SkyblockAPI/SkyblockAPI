@@ -53,6 +53,8 @@ object ProfileAPI {
 
     val sbLevel: Int get() = ProfileStorage.getSkyBlockLevel()
 
+    val sbLevelProgress: Int get() = ProfileStorage.getSkyBlockLevelProgress()
+
     val coop: Boolean get() = ProfileStorage.isCoop()
 
     @Subscription
