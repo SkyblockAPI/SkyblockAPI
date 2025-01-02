@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.fabric.api.event.player.UseEntityCallback
 import net.fabricmc.fabric.api.event.player.UseItemCallback
@@ -64,6 +65,13 @@ object MiscEventHandler {
         UseEntityCallback.EVENT.register { player, _, hand, entity, _ ->
             val stack = player.getItemInHand(hand)
             if (RightClickEntityEvent(entity, stack).post(SkyBlockAPI.eventBus)) {
+                InteractionResult.FAIL
+            }
+            InteractionResult.PASS
+        }
+        AttackEntityCallback.EVENT.register { player, _, hand, entity, _ ->
+            val stack = player.getItemInHand(hand)
+            if (LeftClickEntityEvent(entity, stack).post(SkyBlockAPI.eventBus)) {
                 InteractionResult.FAIL
             }
             InteractionResult.PASS
