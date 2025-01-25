@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.mixins.events;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,9 +15,11 @@ import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEv
 @Mixin(Screen.class)
 public class ScreenMixin {
 
-    @Inject(method = "renderWithTooltip", at = @At("HEAD"))
-    private void renderBefore(GuiGraphics graphics, int i, int j, float f, CallbackInfo ci) {
-        new RenderScreenBackgroundEvent((Screen) (Object) this, graphics).post(SkyBlockAPI.getEventBus());
+    @WrapOperation(method = "renderWithTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V"))
+    private void renderBefore(Screen instance, GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, Operation<Void> original) {
+        if (!new RenderScreenBackgroundEvent((Screen) (Object) this, graphics).post(SkyBlockAPI.getEventBus())) {
+            original.call(instance, graphics, mouseX, mouseY, partialTicks);
+        }
     }
 
     @Inject(
@@ -26,7 +30,7 @@ public class ScreenMixin {
             shift = At.Shift.AFTER
         )
     )
-    private void renderAFter(GuiGraphics graphics, int i, int j, float f, CallbackInfo ci) {
+    private void renderAfter(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         new RenderScreenForegroundEvent((Screen) (Object) this, graphics).post(SkyBlockAPI.getEventBus());
     }
 }

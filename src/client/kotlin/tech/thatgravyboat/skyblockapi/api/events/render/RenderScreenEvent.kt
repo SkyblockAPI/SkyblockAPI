@@ -8,4 +8,4 @@ open class RenderScreenEvent(val screen: Screen) : SkyBlockEvent()
 
 class RenderScreenForegroundEvent(screen: Screen, val graphics: GuiGraphics) : RenderScreenEvent(screen)
 
-class RenderScreenBackgroundEvent(screen: Screen, val graphics: GuiGraphics) : RenderScreenEvent(screen)
+class RenderScreenBackgroundEvent(screen: Screen, val graphics: GuiGraphics) : RenderScreenEvent(screen), SkyBlockEvent.Cancellable
