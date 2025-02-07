@@ -10,6 +10,6 @@ open class ScreenMouseClickEvent(
     val button: Int,
 ) : SkyBlockEvent() {
 
-    class Pre(screen: Screen, x: Double, y: Double, button: Int) : ScreenMouseClickEvent(screen, x, y, button)
+    class Pre(screen: Screen, x: Double, y: Double, button: Int) : ScreenMouseClickEvent(screen, x, y, button), Cancellable
     class Post(screen: Screen, x: Double, y: Double, button: Int) : ScreenMouseClickEvent(screen, x, y, button)
 }

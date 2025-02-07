@@ -10,6 +10,6 @@ open class ScreenKeyReleasedEvent(
     val modifiers: Int,
 ) : SkyBlockEvent() {
 
-    class Pre(screen: Screen, key: Int, scanCode: Int, modifiers: Int) : ScreenKeyReleasedEvent(screen, key, scanCode, modifiers)
+    class Pre(screen: Screen, key: Int, scanCode: Int, modifiers: Int) : ScreenKeyReleasedEvent(screen, key, scanCode, modifiers), Cancellable
     class Post(screen: Screen, key: Int, scanCode: Int, modifiers: Int) : ScreenKeyReleasedEvent(screen, key, scanCode, modifiers)
 }
