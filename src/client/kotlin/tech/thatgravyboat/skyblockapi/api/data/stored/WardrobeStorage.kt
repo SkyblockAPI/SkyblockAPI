@@ -24,9 +24,9 @@ internal object WardrobeStorage {
         }
 
 
-    fun updateCurrentSlot(slot: Int) {
+    fun updateCurrentSlot(slot: Int?) {
         if (slot == currentSlot) return
-        currentSlot = slot
+        currentSlot = slot ?: -1
         WARDROBE.save()
     }
 
