@@ -48,6 +48,7 @@ object WardrobeAPI {
     val slots get() = WardrobeStorage.slots.toList()
     val currentSlot: Int? get() = WardrobeStorage.currentSlot
 
+
     private fun processInventory(title: String, items: List<ItemStack>) {
         inventoryNameRegex.match(title, "currentPage") { (cp) ->
             cp.toIntOrNull()?.let { currentPage = it }
