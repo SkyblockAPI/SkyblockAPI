@@ -5,6 +5,7 @@ import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.WardrobeStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
@@ -18,6 +19,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+
+private const val SELECT_START_INDEX = 36
 
 @Module
 object WardrobeAPI {
@@ -33,23 +36,27 @@ object WardrobeAPI {
         "Slot \\d+: Equipped",
     )
 
+    private val emptyArmor = mutableListOf(ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY)
 
     var inWardrobe = false
         private set
 
-    val slots get() = WardrobeStorage.slots.toList()
+    /** 0 if not in wardrobe */
+    var currentPage = 0
+        private set
 
+    val slots get() = WardrobeStorage.slots.toList()
     val currentSlot: Int? get() = WardrobeStorage.currentSlot
 
-
     private fun processInventory(title: String, items: List<ItemStack>) {
-        var currentPage = 0
         inventoryNameRegex.match(title, "currentPage") { (cp) ->
             cp.toIntOrNull()?.let { currentPage = it }
         }
 
+        var foundCurrentSlot = false
+
         for (index in 0..8) {
-            val selectStack = items[index + 36]
+            val selectStack = items[index + SELECT_START_INDEX]
             val id = 9 * currentPage + index - 8
             var locked = false
 
@@ -57,6 +64,7 @@ object WardrobeAPI {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
                 WardrobeStorage.updateCurrentSlot(id)
+                foundCurrentSlot = true
             }
 
             val helmetStack = items[index].takeOrEmpty()
@@ -68,7 +76,13 @@ object WardrobeAPI {
 
             WardrobeStorage.updateSlot(slot)
         }
+
+        if (!foundCurrentSlot && isCurrentSlotInCurrentPage()) {
+            WardrobeStorage.updateCurrentSlot(null)
+        }
     }
+
+    fun isCurrentSlotInCurrentPage() = WardrobeStorage.currentSlot?.let { it in 9 * currentPage - 8..9 * currentPage } == true
 
     @Subscription
     fun onInventoryUpdate(event: ContainerChangeEvent) {
@@ -87,6 +101,19 @@ object WardrobeAPI {
     @Subscription
     fun onInventoryClose(event: ContainerCloseEvent) {
         inWardrobe = false
+        currentPage = 0
+    }
+
+    @Subscription
+    fun onProfileSwitch(event: ProfileChangeEvent) {
+        repeat(18) { index ->
+            val incr = index + 1
+            val foundSlot = slots.any { it.id == incr }
+            if (!foundSlot) {
+                val emptySlot = WardrobeSlot(incr, emptyArmor, true)
+                WardrobeStorage.updateSlot(emptySlot)
+            }
+        }
     }
 
     private fun ItemStack.takeOrEmpty() = takeIf { it !in ItemTagKey.GLASS_PANES } ?: ItemStack.EMPTY
