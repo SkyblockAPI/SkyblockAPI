@@ -12,9 +12,9 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentRegex
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.match
+import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
@@ -24,8 +24,11 @@ object SacksAPI {
     // [Sacks] +14 items. (Last 5s.)
     // [Sacks] -38 items. (Last 5s.)
     // [Sacks] +38 items, -1 item. (Last 8s.)
-    val sackMessageRegex = ComponentRegex("\\[Sacks\\] (?:(?<gained>\\+[\\d.,]+) items?,?)?\\s*(?:(?<lost>-[\\d.,]+) items?)?\\.\\s*\\(.*")
-    val addedItemsRegex = RegexGroup.CHAT.create("sackapi.changed", " {2}(?<amount>[+-][\\d.,]+) (?<item>.+) \\(.*")
+    val sackMessageRegex = RegexGroup.CHAT.create(
+        "sackapi.message",
+        "\\[Sacks] (?:(?<gained>\\+[\\d.,]+) items?,?)?\\s*(?:(?<lost>-[\\d.,]+) items?)?\\.\\s*\\(.*",
+    ).toComponentRegex()
+    val addedItemsRegex = RegexGroup.CHAT.create("sackapi.changed", " {2}(?<amount>[+-][\\d.,]+) (?<item>.+) \\(")
     val sackTitleRegex = RegexGroup.INVENTORY.create("sackapi.title", ".* Sack")
     val sackAmountRegex = RegexGroup.INVENTORY.create("sackapi.amount", "Stored: (?<amount>[\\d,.]+)/.*")
 
@@ -41,14 +44,9 @@ object SacksAPI {
             val hoverComponents = gainedHoverComponents + lostHoverComponents
 
             val changedItems = hoverComponents.mapNotNull {
-                var amount: Int? = null
-                var item: String? = null
-                addedItemsRegex.match(it.stripped, "amount", "item") { (_amount, _item) ->
-                    amount = _amount.replace("+", "").toIntValue()
-                    item = _item
+                addedItemsRegex.findOrNull(it.stripped, "amount", "item") { (amount, item) ->
+                    return@findOrNull item to amount.replace("+", "").toIntValue()
                 }
-                if (item != null && amount != null) item to amount
-                else null
             }
 
             changedItems.forEach { (item, amount) -> SacksStorage.updateItemValue(item, amount) }
