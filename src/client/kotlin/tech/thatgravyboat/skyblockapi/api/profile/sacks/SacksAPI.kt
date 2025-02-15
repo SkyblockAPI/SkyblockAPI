@@ -21,7 +21,10 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 
 @Module
 object SacksAPI {
-    val sackMessageRegex = ComponentRegex("\\[Sacks\\] (?<amount>[+-][\\d.,]+) items?\\.+ \\(.*")
+    // [Sacks] +14 items. (Last 5s.)
+    // [Sacks] -38 items. (Last 5s.)
+    // [Sacks] +38 items, -1 item. (Last 8s.)
+    val sackMessageRegex = ComponentRegex("\\[Sacks\\] (?:(?<gained>\\+[\\d.,]+) items?,?)?\\s*(?:(?<lost>-[\\d.,]+) items?)?\\.\\s*\\(.*")
     val addedItemsRegex = RegexGroup.CHAT.create("sackapi.changed", " {2}(?<amount>[+-][\\d.,]+) (?<item>.+) \\(.*")
     val sackTitleRegex = RegexGroup.INVENTORY.create("sackapi.title", ".* Sack")
     val sackAmountRegex = RegexGroup.INVENTORY.create("sackapi.amount", "Stored: (?<amount>[\\d,.]+)/.*")
@@ -32,8 +35,10 @@ object SacksAPI {
     @Subscription
     @OnlyOnSkyBlock
     fun onChat(event: ChatReceivedEvent) {
-        sackMessageRegex.match(event.component, "amount") { (amountComponent) ->
-            val hoverComponents = amountComponent.copy().hover?.splitLines() ?: emptyList()
+        sackMessageRegex.match(event.component) {
+            val gainedHoverComponents = it["gained"]?.copy()?.hover?.splitLines() ?: emptyList()
+            val lostHoverComponents = it["lost"]?.copy()?.hover?.splitLines() ?: emptyList()
+            val hoverComponents = gainedHoverComponents + lostHoverComponents
 
             val changedItems = hoverComponents.mapNotNull {
                 var amount: Int? = null
