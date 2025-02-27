@@ -19,6 +19,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 
 @Module
 object ProfileAPI {
@@ -41,6 +42,22 @@ object ProfileAPI {
         "You are playing on profile: (?<name>.+)",
     )
 
+    private val levelColors = mapOf(
+        0..39 to TextColor.GRAY,
+        40..79 to TextColor.WHITE,
+        80..119 to TextColor.YELLOW,
+        120..159 to TextColor.GREEN,
+        160..199 to TextColor.DARK_GREEN,
+        200..239 to TextColor.AQUA,
+        240..279 to TextColor.DARK_AQUA,
+        280..319 to TextColor.BLUE,
+        320..359 to TextColor.LIGHT_PURPLE,
+        360..399 to TextColor.DARK_PURPLE,
+        400..439 to TextColor.GOLD,
+        440..479 to TextColor.RED,
+        480..Int.MAX_VALUE to TextColor.DARK_RED,
+    )
+
     private var lastWorldSwap = 0L
 
     var profileName: String? = null
@@ -56,6 +73,11 @@ object ProfileAPI {
     val sbLevelProgress: Int get() = ProfileStorage.getSkyBlockLevelProgress()
 
     val coop: Boolean get() = ProfileStorage.isCoop()
+
+    fun getLevelColor(): Int = getLevelColor(sbLevel)
+
+    fun getLevelColor(level: Int): Int = levelColors.entries.firstOrNull { level in it.key }?.value ?: TextColor.BLACK
+
 
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
