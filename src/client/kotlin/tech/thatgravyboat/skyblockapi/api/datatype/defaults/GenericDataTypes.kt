@@ -23,7 +23,7 @@ object GenericDataTypes {
     val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.getTag("rarity_upgrades")?.asInt }
     val QUIVER_ARROW: DataType<Boolean> = DataType("quiver_arrow") { it.getTag("quiver_arrow")?.asString?.equals("true") }
     val ENCHANTMENTS: DataType<Map<String, Int>> = DataType("enchantments") {
-        it.getTag("enchantment")?.asObject?.let { tag ->
+        it.getTag("enchantments")?.asObject?.let { tag ->
             buildMap { tag.allKeys.forEach { key -> this[key] = tag.getInt(key) } }
         }
     }
