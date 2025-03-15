@@ -101,7 +101,8 @@ object CurrencyAPI {
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         if (SkyBlockIsland.THE_RIFT.inIsland()) {
             motesRegex.anyMatch(event.added, "motes") { (motes) ->
-                this.motes = motes.parseFormattedLong()
+                // Has a decimal place if obtained via mcgrubber burgers
+                this.motes = motes.parseFormattedDouble().toLong()
             }
         } else {
             if (SkyBlockIsland.JERRYS_WORKSHOP.inIsland()) {
