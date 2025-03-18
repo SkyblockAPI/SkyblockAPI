@@ -20,7 +20,7 @@ enum class SkyBlockStat(
     INTELLIGENCE('✎', TextColor.AQUA),
     CRIT_DAMAGE('☠', TextColor.BLUE),
     CRIT_CHANCE('☣', TextColor.BLUE),
-    BONUS_ATTACK_SPEED('⚔', TextColor.YELLOW),
+    ATTACK_SPEED('⚔', TextColor.YELLOW, name = "Bonus Attack Speed"),
     ABILITY_DAMAGE('๑', TextColor.RED),
     TRUE_DEFENSE('❂', TextColor.WHITE),
     FEROCITY('⫽', TextColor.RED),
