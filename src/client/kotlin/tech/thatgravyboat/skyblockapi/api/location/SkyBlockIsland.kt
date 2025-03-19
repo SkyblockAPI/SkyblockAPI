@@ -17,6 +17,7 @@ enum class SkyBlockIsland(val id: String) {
     THE_END("combat_3"),
     CRIMSON_ISLE("crimson_isle"),
     GARDEN("garden"),
+    BACKWATER_BAYOU("fishing_1"),
 
     THE_RIFT("rift"),
     DARK_AUCTION("dark_auction"),
