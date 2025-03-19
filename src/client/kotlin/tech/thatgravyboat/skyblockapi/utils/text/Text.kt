@@ -29,8 +29,8 @@ object Text {
             init.invoke(this)
         }
 
-    fun multiline(vararg lines: Any?) = join(*lines, separator = CommonText.NEWLINE)
-    fun join(vararg components: Any?, separator: MutableComponent? = null): MutableComponent {
+    fun multiline(vararg lines: Any?, init: MutableComponent.() -> Unit = {}) = join(*lines, separator = CommonText.NEWLINE, init = init)
+    fun join(vararg components: Any?, separator: MutableComponent? = null, init: MutableComponent.() -> Unit = {}): MutableComponent {
         val result = Component.literal("")
         components.forEachIndexed { index, it ->
             when (it) {
@@ -45,7 +45,7 @@ object Text {
                 result.append(separator)
             }
         }
-        return result
+        return result.also(init)
     }
 
     fun MutableComponent.prefix(prefix: String): MutableComponent = join(prefix, this)
