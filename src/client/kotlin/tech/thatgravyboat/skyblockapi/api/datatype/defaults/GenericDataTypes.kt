@@ -35,6 +35,7 @@ object GenericDataTypes {
             buildMap { tag.allKeys.forEach { key -> this[key] = tag.getInt(key) } }
         }
     }
+    val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.getTag("mined_crops")?.asLong }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
@@ -54,6 +55,7 @@ object GenericDataTypes {
         event.register(POTION)
         event.register(POTION_LEVEL)
         event.register(ATTRIBUTES)
+        event.register(CROPS_BROKEN)
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)
