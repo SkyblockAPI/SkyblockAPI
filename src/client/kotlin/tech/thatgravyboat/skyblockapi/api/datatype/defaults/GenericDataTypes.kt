@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NumericTag
 import net.minecraft.nbt.Tag
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
+import tech.thatgravyboat.skyblockapi.api.datatype.FishingRodPart
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -30,6 +31,10 @@ object GenericDataTypes {
     val POTION: DataType<String> = DataType("potion") { it.getTag("potion")?.asString }
     val POTION_LEVEL: DataType<Int> = DataType("potion_level") { it.getTag("potion_level")?.asInt }
 
+    val HOOK: DataType<FishingRodPart> = getFishingRodPartDataType("hook")
+    val LINE: DataType<FishingRodPart> = getFishingRodPartDataType("line")
+    val SINKER: DataType<FishingRodPart> = getFishingRodPartDataType("sinker")
+
     @Subscription
     fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
         event.register(ID)
@@ -43,10 +48,17 @@ object GenericDataTypes {
         event.register(ENCHANTMENTS)
         event.register(POTION)
         event.register(POTION_LEVEL)
+        event.register(HOOK)
+        event.register(LINE)
+        event.register(SINKER)
     }
 
     private val Tag.asInt get() = (this as? NumericTag)?.asInt
     private val Tag.asLong get() = (this as? NumericTag)?.asLong
     private val Tag.asObject get() = (this as? CompoundTag)
 
+    private fun getFishingRodPartDataType(name: String) = DataType(name) {
+        val tag = it.getTag(name)?.asObject ?: return@DataType null
+        FishingRodPart(java.util.UUID.fromString(tag.getString("uuid")), tag.getString("part"))
+    }
 }
