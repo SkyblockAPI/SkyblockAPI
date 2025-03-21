@@ -9,13 +9,14 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getTag
-import java.util.*
+import java.util.UUID
+import java.util.UUID as JUUID
 
 @Module
 object GenericDataTypes {
 
     val ID: DataType<String> = DataType("id") { it.getTag("id")?.asString }
-    val UUID: DataType<UUID> = DataType("uuid") { runCatching { it.getTag("uuid")?.asString?.let(java.util.UUID::fromString) }.getOrNull() }
+    val UUID: DataType<UUID> = DataType("uuid") { runCatching { it.getTag("uuid")?.asString?.let(JUUID::fromString) }.getOrNull() }
     val MODIFIER: DataType<String> = DataType("modifier") { it.getTag("modifier")?.asString }
     val TIMESTAMP: DataType<Instant> = DataType("timestamp") { it.getTag("timestamp")?.asLong?.let(Instant::fromEpochMilliseconds) }
     val SECONDS_HELD: DataType<Int> = DataType("seconds_held") { it.getTag("seconds_held")?.asInt }
@@ -35,6 +36,10 @@ object GenericDataTypes {
         }
     }
 
+    val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
+    val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
+    val SINKER: DataType<Pair<UUID, String>> = getFishingRodPartDataType("sinker")
+
     @Subscription
     fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
         event.register(ID)
@@ -49,10 +54,17 @@ object GenericDataTypes {
         event.register(POTION)
         event.register(POTION_LEVEL)
         event.register(ATTRIBUTES)
+        event.register(HOOK)
+        event.register(LINE)
+        event.register(SINKER)
     }
 
     private val Tag.asInt get() = (this as? NumericTag)?.asInt
     private val Tag.asLong get() = (this as? NumericTag)?.asLong
     private val Tag.asObject get() = (this as? CompoundTag)
 
+    private fun getFishingRodPartDataType(name: String) = DataType(name) {
+        val tag = it.getTag(name)?.asObject ?: return@DataType null
+        JUUID.fromString(tag.getString("uuid")) to tag.getString("part")
+    }
 }

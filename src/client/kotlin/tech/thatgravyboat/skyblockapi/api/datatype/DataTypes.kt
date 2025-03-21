@@ -33,4 +33,9 @@ object DataTypes {
     val POTION: DataType<String> = GenericDataTypes.POTION
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
     val ATTRIBUTES: DataType<Map<String, Int>> = GenericDataTypes.ATTRIBUTES
+
+    // Fishing Rod
+    val HOOK: DataType<Pair<UUID, String>> = GenericDataTypes.HOOK
+    val LINE: DataType<Pair<UUID, String>> = GenericDataTypes.LINE
+    val SINKER: DataType<Pair<UUID, String>> = GenericDataTypes.SINKER
 }
