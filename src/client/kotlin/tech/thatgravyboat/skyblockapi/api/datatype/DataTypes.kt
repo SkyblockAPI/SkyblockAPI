@@ -32,6 +32,7 @@ object DataTypes {
     val ENCHANTMENTS: DataType<Map<String, Int>> = GenericDataTypes.ENCHANTMENTS
     val POTION: DataType<String> = GenericDataTypes.POTION
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
+    val ATTRIBUTES: DataType<Map<String, Int>> = GenericDataTypes.ATTRIBUTES
 
     // Fishing Rod
     val HOOK: DataType<FishingRodPart> = GenericDataTypes.HOOK

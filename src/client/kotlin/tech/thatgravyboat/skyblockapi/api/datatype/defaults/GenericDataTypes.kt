@@ -24,12 +24,17 @@ object GenericDataTypes {
     val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.getTag("rarity_upgrades")?.asInt }
     val QUIVER_ARROW: DataType<Boolean> = DataType("quiver_arrow") { it.getTag("quiver_arrow")?.asString?.equals("true") }
     val ENCHANTMENTS: DataType<Map<String, Int>> = DataType("enchantments") {
-        it.getTag("enchantment")?.asObject?.let { tag ->
+        it.getTag("enchantments")?.asObject?.let { tag ->
             buildMap { tag.allKeys.forEach { key -> this[key] = tag.getInt(key) } }
         }
     }
     val POTION: DataType<String> = DataType("potion") { it.getTag("potion")?.asString }
     val POTION_LEVEL: DataType<Int> = DataType("potion_level") { it.getTag("potion_level")?.asInt }
+    val ATTRIBUTES: DataType<Map<String, Int>> = DataType("attributes") {
+        it.getTag("attributes")?.asObject?.let { tag ->
+            buildMap { tag.allKeys.forEach { key -> this[key] = tag.getInt(key) } }
+        }
+    }
 
     val HOOK: DataType<FishingRodPart> = getFishingRodPartDataType("hook")
     val LINE: DataType<FishingRodPart> = getFishingRodPartDataType("line")
@@ -48,6 +53,7 @@ object GenericDataTypes {
         event.register(ENCHANTMENTS)
         event.register(POTION)
         event.register(POTION_LEVEL)
+        event.register(ATTRIBUTES)  
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)

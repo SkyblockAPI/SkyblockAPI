@@ -48,6 +48,7 @@ object SkyBlockAreas {
     val COAL_MINE = register("coal_mine", "Coal Mine")
     val BAZAAR_ALLEY = register("bazaar_alley", "Bazaar Alley")
     val WILDERNESS = register("wilderness", "Wilderness")
+    val FISHING_OUTPOST = register("fishing_outpost", "Fishing Outpost")
     val FISHERMANS_HUT = register("fishermans_hut", "Fisherman's Hut")
     val UNINCORPORATED = register("unincorporated", "Unincorporated")
     val WIZARD_TOWER = register("wizard_tower", "Wizard Tower")
@@ -170,4 +171,7 @@ object SkyBlockAreas {
     val MAGMA_FIELDS = register("magma_fields", "Magma Fields")
     val KHAZAD_DUM = register("khazad_dum", "Khazad-dûm")
     val FAIRY_GROTTO = register("fairy_grotto", "Fairy Grotto")
+
+    // Backwater Bayou
+    val BACKWATER_BAYOU = register("backwater_bayou", "Backwater Bayou") // The full island uses this
 }
