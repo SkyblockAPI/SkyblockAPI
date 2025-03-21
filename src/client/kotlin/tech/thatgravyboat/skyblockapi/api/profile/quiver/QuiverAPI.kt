@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.SkyBlockItems
+import tech.thatgravyboat.skyblockapi.api.remote.UseRepoLib
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
@@ -51,6 +52,7 @@ object QuiverAPI {
         get() = QuiverStorage.arrows
 
     @Subscription
+    @OptIn(UseRepoLib::class)
     fun onHotbarChange(event: PlayerHotbarChangeEvent) {
         if (event.slot != 8) return
         val item = event.item

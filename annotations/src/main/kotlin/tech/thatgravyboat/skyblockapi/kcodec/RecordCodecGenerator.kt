@@ -168,20 +168,7 @@ object RecordCodecGenerator {
                     add(").apply(it) { ${args.joinToString(", ") { "p_${it.first}" }} -> \n")
 
                     indent()
-                    add(
-                        "var obj = %T(${
-                            args.filter { it.second != Type.DEFAULT }.joinToString(", ") {
-                                val name = it.first
-                                if (it.second == Type.NULLABLE) "$name = p_$name.orElse(null)" else "$name = p_$name"
-                            }
-                        })\n",
-                        declaration.toClassName(),
-                    )
-                    for (pair in args.filter { it.second == Type.DEFAULT }) {
-                        val name = pair.first
-                        add("if (p_$name.isPresent) obj = obj.copy($name = p_$name.get())\n")
-                    }
-                    add("obj\n")
+                    RecordCodecInstanceGenerator.generateCodecInstance(this, args, declaration)
                     unindent()
 
                     add("}\n")
