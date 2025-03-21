@@ -53,7 +53,7 @@ object GenericDataTypes {
         event.register(ENCHANTMENTS)
         event.register(POTION)
         event.register(POTION_LEVEL)
-        event.register(ATTRIBUTES)  
+        event.register(ATTRIBUTES)
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)
