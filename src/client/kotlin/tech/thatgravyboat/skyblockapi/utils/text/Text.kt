@@ -78,7 +78,7 @@ object TextUtils {
                 current.append(Component.literal(lines[0]).setStyle(style))
                 if (lines.size > 1) {
                     components.add(current)
-                    for (i in 2 until lines.lastIndex) {
+                    for (i in 1 until lines.lastIndex) {
                         components.add(Component.literal(lines[i]).setStyle(style))
                     }
                     current = Component.literal(lines.last()).setStyle(style)
