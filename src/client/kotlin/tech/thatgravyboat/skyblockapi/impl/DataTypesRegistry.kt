@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 object DataTypesRegistry {
 
@@ -19,7 +20,8 @@ object DataTypesRegistry {
             .associateWith { it.factory(item) }
             .filterValues { it != null }
     }.getOrElse {
-        SkyBlockAPI.logger.error("Failed to get data for ${it}\n${item.toJson(ItemStack.CODEC)}")
+        SkyBlockAPI.logger.error("Failed to get data for ${item.hoverName.stripped}", it)
+        SkyBlockAPI.logger.error("Item: ${item.toJson(ItemStack.CODEC)}")
         mapOf()
     }
 }
