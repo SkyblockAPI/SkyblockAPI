@@ -13,7 +13,7 @@ fun JsonElement?.asLong(default: Long): Long = parse(default) { it.asLong }
 fun JsonElement?.asDouble(default: Double): Double = parse(default) { it.asDouble }
 fun JsonElement?.asShort(default: Short): Short = parse(default) { it.asShort }
 
-val JsonElement?.asUUID: UUID? get() = parse(null) { UUID.fromString(it.asString) }
+fun JsonElement?.asUUID(): UUID? = parse(null) { UUID.fromString(it.asString) }
 fun JsonElement?.asUUID(default: UUID): UUID = parse(default) { UUID.fromString(it.asString) }
 fun JsonElement?.asString(default: String): String = parse(default) { it.asString }
 fun <K, V> JsonElement?.asMap(mapper: (String, JsonElement) -> Pair<K, V>): Map<K, V> =

@@ -3,6 +3,8 @@ package tech.thatgravyboat.skyblockapi.api.area.hub
 import com.google.gson.JsonObject
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
+import tech.thatgravyboat.skyblockapi.utils.extentions.asDouble
+import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
 import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
 import tech.thatgravyboat.skyblockapi.utils.http.Http
 import kotlin.time.Duration.Companion.hours
@@ -30,10 +32,10 @@ object BazaarAPI {
                 val quick = obj.getAsJsonObject("quick_status")
                 id to BazaarProduct(
                     id,
-                    quick.getAsJsonPrimitive("sellPrice").asDouble,
-                    quick.getAsJsonPrimitive("sellVolume").asLong,
-                    quick.getAsJsonPrimitive("buyPrice").asDouble,
-                    quick.getAsJsonPrimitive("buyVolume").asLong,
+                    quick.getAsJsonPrimitive("sellPrice").asDouble(0.0),
+                    quick.getAsJsonPrimitive("sellVolume").asLong(0),
+                    quick.getAsJsonPrimitive("buyPrice").asDouble(0.0),
+                    quick.getAsJsonPrimitive("buyVolume").asLong(0),
                 )
             }.map { it.value }
         }
