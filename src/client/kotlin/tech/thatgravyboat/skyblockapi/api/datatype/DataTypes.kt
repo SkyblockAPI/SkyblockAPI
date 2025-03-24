@@ -39,4 +39,9 @@ object DataTypes {
     val HOOK: DataType<Pair<UUID, String>> = GenericDataTypes.HOOK
     val LINE: DataType<Pair<UUID, String>> = GenericDataTypes.LINE
     val SINKER: DataType<Pair<UUID, String>> = GenericDataTypes.SINKER
+
+    // Drill Components
+    val FUEL_TANK: DataType<String> = GenericDataTypes.FUEL_TANK
+    val ENGINE: DataType<String> = GenericDataTypes.ENGINE
+    val UPGRADE_MODULE: DataType<String> = GenericDataTypes.UPGRADE_MODULE
 }
