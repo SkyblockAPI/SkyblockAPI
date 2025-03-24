@@ -29,7 +29,10 @@ object Text {
             init.invoke(this)
         }
 
+    @JvmOverloads
     fun multiline(vararg lines: Any?, init: MutableComponent.() -> Unit = {}) = join(*lines, separator = CommonText.NEWLINE, init = init)
+
+    @JvmOverloads
     fun join(vararg components: Any?, separator: MutableComponent? = null, init: MutableComponent.() -> Unit = {}): MutableComponent {
         val result = Component.literal("")
         components.forEachIndexed { index, it ->
