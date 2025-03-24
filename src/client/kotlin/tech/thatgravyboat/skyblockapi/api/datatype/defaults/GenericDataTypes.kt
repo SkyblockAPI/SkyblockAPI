@@ -41,6 +41,10 @@ object GenericDataTypes {
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
     val SINKER: DataType<Pair<UUID, String>> = getFishingRodPartDataType("sinker")
 
+    val FUEL_TANK: DataType<String> = DataType("drill_part_fuel_tank") { it.getTag("drill_part_fuel_tank")?.asString }
+    val ENGINE: DataType<String> = DataType("drill_part_engine") { it.getTag("drill_part_engine")?.asString }
+    val UPGRADE_MODULE: DataType<String> = DataType("drill_part_upgrade_module") { it.getTag("drill_part_upgrade_module")?.asString }
+
     @Subscription
     fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
         event.register(ID)
@@ -59,6 +63,9 @@ object GenericDataTypes {
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)
+        event.register(FUEL_TANK)
+        event.register(ENGINE)
+        event.register(UPGRADE_MODULE)
     }
 
     private val Tag.asInt get() = (this as? NumericTag)?.asInt
