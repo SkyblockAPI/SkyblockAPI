@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
 import kotlinx.datetime.Instant
+import net.minecraft.Util
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NumericTag
 import net.minecraft.nbt.Tag
@@ -74,6 +75,7 @@ object GenericDataTypes {
 
     private fun getFishingRodPartDataType(name: String) = DataType(name) {
         val tag = it.getTag(name)?.asObject ?: return@DataType null
-        JUUID.fromString(tag.getString("uuid")) to tag.getString("part")
+        val uuid = runCatching { JUUID.fromString(tag.getString("uuid")) }.getOrNull() ?: Util.NIL_UUID
+        uuid to tag.getString("part")
     }
 }
