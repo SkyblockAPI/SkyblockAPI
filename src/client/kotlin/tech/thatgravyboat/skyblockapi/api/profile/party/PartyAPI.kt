@@ -191,8 +191,8 @@ object PartyAPI {
         partyMessageRegex.findThenNull(event.component, "member") { (member) ->
             if (checkParty()) return@findThenNull
             val clickEvent = member.style.clickEvent ?: return@findThenNull
-            if (clickEvent.action != ClickEvent.Action.RUN_COMMAND) return@findThenNull
-            val (uuidString) = CommonRegexes.viewProfileRegex.findGroups(clickEvent.value, "uuid") ?: return@findThenNull
+            if (clickEvent !is ClickEvent.RunCommand) return@findThenNull
+            val (uuidString) = CommonRegexes.viewProfileRegex.findGroups(clickEvent.command, "uuid") ?: return@findThenNull
             val uuid = UUID.fromString(uuidString)
             val name = member.stripped
             val hasUpdated = PlayerCacheStorage.updatePlayer(uuid, name)

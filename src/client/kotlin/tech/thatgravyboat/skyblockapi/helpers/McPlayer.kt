@@ -34,6 +34,6 @@ object McPlayer {
     val leggings: ItemStack get() = self?.getItemBySlot(EquipmentSlot.LEGS) ?: ItemStack.EMPTY
     val boots: ItemStack get() = self?.getItemBySlot(EquipmentSlot.FEET) ?: ItemStack.EMPTY
 
-    val inventory: List<ItemStack> get() = self?.inventory?.items ?: emptyList()
-    val hotbar: List<ItemStack> get() = self?.inventory?.items?.subList(0, 9) ?: List(9) { ItemStack.EMPTY }
+    val inventory: List<ItemStack> get() = self?.inventory?.nonEquipmentItems ?: emptyList()
+    val hotbar: List<ItemStack> get() = self?.inventory?.nonEquipmentItems?.subList(0, 9) ?: List(9) { ItemStack.EMPTY }
 }

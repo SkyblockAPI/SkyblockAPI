@@ -25,8 +25,9 @@
         "events.ItemStackMixin",
         "features.ItemStackDataTypeMixin",
         "fixes.FishingHookMixin",
+        "fixes.NarratorMixin",
         "fixes.ScoreboardMixin",
         "fixes.YggdrasilMinecraftSessionServiceMixin",
         "fixes.YggdrasilServicesKeyInfoMixin"
-  ]
+    ]
 }

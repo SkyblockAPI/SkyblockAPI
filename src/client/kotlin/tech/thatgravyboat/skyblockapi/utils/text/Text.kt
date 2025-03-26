@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import java.net.URI
 import java.util.*
 
 object CommonText {
@@ -104,27 +105,33 @@ object TextStyle {
     }
 
     var MutableComponent.hover: Component?
-        get() = this.style.hoverEvent?.getValue(HoverEvent.Action.SHOW_TEXT)
+        get() = (this.style.hoverEvent as? HoverEvent.ShowText)?.value
         set(value) {
-            this.style { withHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, value)) }
+            this.style { withHoverEvent(value?.let { HoverEvent.ShowText(it) }) }
         }
 
     var MutableComponent.command: String?
-        get() = this.style.clickEvent?.takeIf { it.action == ClickEvent.Action.RUN_COMMAND }?.value
+        get() = (this.style.clickEvent as? ClickEvent.RunCommand)?.command
         set(value) {
-            this.style { withClickEvent(ClickEvent(ClickEvent.Action.RUN_COMMAND, value)) }
+            this.style { withClickEvent(value?.let { ClickEvent.RunCommand(it) }) }
         }
 
     var MutableComponent.suggest: String?
-        get() = this.style.clickEvent?.takeIf { it.action == ClickEvent.Action.SUGGEST_COMMAND }?.value
+        get() = (this.style.clickEvent as? ClickEvent.SuggestCommand)?.command
         set(value) {
-            this.style { withClickEvent(ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, value)) }
+            this.style { withClickEvent(value?.let { ClickEvent.SuggestCommand(it) }) }
+        }
+
+    var MutableComponent.uri: URI?
+        get() = (this.style.clickEvent as? ClickEvent.OpenUrl)?.uri
+        set(value) {
+            this.style { withClickEvent(value?.let { ClickEvent.OpenUrl(it) }) }
         }
 
     var MutableComponent.url: String?
-        get() = this.style.clickEvent?.takeIf { it.action == ClickEvent.Action.OPEN_URL }?.value
+        get() = this.uri?.toString()
         set(value) {
-            this.style { withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, value)) }
+            this.uri = value?.let(URI::create)
         }
 
     var MutableComponent.color: Int

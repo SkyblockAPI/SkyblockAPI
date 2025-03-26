@@ -18,8 +18,8 @@ internal object CommonRegexes {
 
     fun getUuidFromViewProfile(component: Component): UUID? {
         val clickEvent = component.style.clickEvent ?: return null
-        if (clickEvent.action != ClickEvent.Action.RUN_COMMAND) return null
-        val uuidString = viewProfileRegex.findGroup(clickEvent.value, "uuid") ?: return null
+        if (clickEvent !is ClickEvent.RunCommand) return null
+        val uuidString = viewProfileRegex.findGroup(clickEvent.command, "uuid") ?: return null
         return UUID.fromString(uuidString)
     }
 

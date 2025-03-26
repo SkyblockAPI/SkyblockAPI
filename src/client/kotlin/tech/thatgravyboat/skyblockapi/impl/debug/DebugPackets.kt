@@ -25,10 +25,10 @@ object DebugPackets {
     @Subscription
     fun onCommandRegistration(event: RegisterCommandsEvent) {
         val packetTypes = mutableMapOf<ResourceLocation, PacketType<*>>()
-        GameProtocols.CLIENTBOUND_TEMPLATE.listPackets { packetType, _ ->
+        GameProtocols.CLIENTBOUND_TEMPLATE.details().listPackets { packetType, _ ->
             packetTypes[packetType.id.withPrefix("clientbound_")] = packetType
         }
-        GameProtocols.SERVERBOUND_TEMPLATE.listPackets { packetType, _ ->
+        GameProtocols.SERVERBOUND_TEMPLATE.details().listPackets { packetType, _ ->
             packetTypes[packetType.id.withPrefix("serverbound_")] = packetType
         }
         val packetKeys = packetTypes.keys.map(ResourceLocation::toString).toList()

@@ -1,11 +1,12 @@
 package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
-import net.minecraft.nbt.NumericTag
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes.ID
 import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.extentions.getTag
+import tech.thatgravyboat.skyblockapi.utils.extentions.getIntOrNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.getStringOrNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.tag
 
 /**
  * Data types for things like personal compactor and deletor
@@ -25,7 +26,7 @@ object PersonalAccessoryDataTypes {
         val maxItems = it.getMaxItems("COMPACTOR") ?: return@DataType null
         buildList {
             for (i in 0 until maxItems) {
-                add(it.getTag("personal_compact_$i")?.asString)
+                add(it.tag?.getStringOrNull("personal_compact_$i"))
             }
         }
     }
@@ -34,12 +35,12 @@ object PersonalAccessoryDataTypes {
         val maxItems = it.getMaxItems("DELETOR") ?: return@DataType null
         buildList {
             for (i in 0 until maxItems) {
-                add(it.getTag("personal_deletor_$i")?.asString)
+                add(it.tag?.getStringOrNull("personal_deletor_$i"))
             }
         }
     }
 
     var PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType("personal_accessory_active") {
-        (it.getTag("PERSONAL_DELETOR_ACTIVE") as? NumericTag)?.asInt?.let { active -> active == 1 }
+        it.tag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE").let { active -> active == 1 }
     }
 }

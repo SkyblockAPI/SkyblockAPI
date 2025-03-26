@@ -137,8 +137,8 @@ object FriendsAPI {
                     val isNick = it["nick"] != null
                     if (isNick) {
                         nick = component.stripped
-                        val value = component.style.hoverEvent?.getValue(HoverEvent.Action.SHOW_TEXT) ?: return@friendsList
-                        name = friendEntryHoverNameRegex.findGroup(value.stripped, "name") ?: return@friendsList
+                        val value = component.style.hoverEvent as? HoverEvent.ShowText ?: return@friendsList
+                        name = friendEntryHoverNameRegex.findGroup(value.value.stripped, "name") ?: return@friendsList
                     } else {
                         name = component.stripped
                     }

@@ -2,49 +2,45 @@ package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
 import kotlinx.datetime.Instant
 import net.minecraft.Util
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.NumericTag
-import net.minecraft.nbt.Tag
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.extentions.getTag
-import java.util.UUID
-import java.util.UUID as JUUID
+import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import java.util.*
 
 @Module
 object GenericDataTypes {
 
-    val ID: DataType<String> = DataType("id") { it.getTag("id")?.asString }
-    val UUID: DataType<UUID> = DataType("uuid") { runCatching { it.getTag("uuid")?.asString?.let(JUUID::fromString) }.getOrNull() }
-    val MODIFIER: DataType<String> = DataType("modifier") { it.getTag("modifier")?.asString }
-    val TIMESTAMP: DataType<Instant> = DataType("timestamp") { it.getTag("timestamp")?.asLong?.let(Instant::fromEpochMilliseconds) }
-    val SECONDS_HELD: DataType<Int> = DataType("seconds_held") { it.getTag("seconds_held")?.asInt }
-    val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") { it.getTag("pickonimbus_durability")?.asInt }
-    val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.getTag("rarity_upgrades")?.asInt }
-    val QUIVER_ARROW: DataType<Boolean> = DataType("quiver_arrow") { it.getTag("quiver_arrow")?.asString?.equals("true") }
+    val ID: DataType<String> = DataType("id") { it.tag?.getStringOrNull("id") }
+    val UUID: DataType<UUID> = DataType("uuid") { it.tag?.getUuidOrNull("uuid") }
+    val MODIFIER: DataType<String> = DataType("modifier") { it.tag?.getStringOrNull("modifier") }
+    val TIMESTAMP: DataType<Instant> = DataType("timestamp") { it.tag?.getLongOrNull("timestamp")?.let(Instant::fromEpochMilliseconds) }
+    val SECONDS_HELD: DataType<Int> = DataType("seconds_held") { it.tag?.getIntOrNull("seconds_held") }
+    val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") {  it.tag?.getIntOrNull("pickonimbus_durability") }
+    val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.tag?.getIntOrNull("rarity_upgrades") }
+    val QUIVER_ARROW: DataType<Boolean> = DataType("quiver_arrow") { it.tag?.getStringOrNull("quiver_arrow")?.equals("true") }
     val ENCHANTMENTS: DataType<Map<String, Int>> = DataType("enchantments") {
-        it.getTag("enchantments")?.asObject?.let { tag ->
-            buildMap { tag.allKeys.forEach { key -> this[key] = tag.getInt(key) } }
+        it.tag?.getCompoundOrEmpty("enchantments")?.let { tag ->
+            buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
-    val POTION: DataType<String> = DataType("potion") { it.getTag("potion")?.asString }
-    val POTION_LEVEL: DataType<Int> = DataType("potion_level") { it.getTag("potion_level")?.asInt }
+    val POTION: DataType<String> = DataType("potion") { it.tag?.getStringOrNull("potion") }
+    val POTION_LEVEL: DataType<Int> = DataType("potion_level") { it.tag?.getIntOrNull("potion_level") }
     val ATTRIBUTES: DataType<Map<String, Int>> = DataType("attributes") {
-        it.getTag("attributes")?.asObject?.let { tag ->
-            buildMap { tag.allKeys.forEach { key -> this[key] = tag.getInt(key) } }
+        it.tag?.getCompoundOrEmpty("attributes")?.let { tag ->
+            buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
-    val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.getTag("mined_crops")?.asLong }
+    val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
     val SINKER: DataType<Pair<UUID, String>> = getFishingRodPartDataType("sinker")
 
-    val FUEL_TANK: DataType<String> = DataType("drill_part_fuel_tank") { it.getTag("drill_part_fuel_tank")?.asString }
-    val ENGINE: DataType<String> = DataType("drill_part_engine") { it.getTag("drill_part_engine")?.asString }
-    val UPGRADE_MODULE: DataType<String> = DataType("drill_part_upgrade_module") { it.getTag("drill_part_upgrade_module")?.asString }
+    val FUEL_TANK: DataType<String> = DataType("drill_part_fuel_tank") { it.tag?.getStringOrNull("drill_part_fuel_tank") }
+    val ENGINE: DataType<String> = DataType("drill_part_engine") { it.tag?.getStringOrNull("drill_part_engine") }
+    val UPGRADE_MODULE: DataType<String> = DataType("drill_part_upgrade_module") { it.tag?.getStringOrNull("drill_part_upgrade_module") }
 
     @Subscription
     fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
@@ -69,13 +65,9 @@ object GenericDataTypes {
         event.register(UPGRADE_MODULE)
     }
 
-    private val Tag.asInt get() = (this as? NumericTag)?.asInt
-    private val Tag.asLong get() = (this as? NumericTag)?.asLong
-    private val Tag.asObject get() = (this as? CompoundTag)
-
     private fun getFishingRodPartDataType(name: String) = DataType(name) {
-        val tag = it.getTag(name)?.asObject ?: return@DataType null
-        val uuid = runCatching { JUUID.fromString(tag.getString("uuid")) }.getOrNull() ?: Util.NIL_UUID
-        uuid to tag.getString("part")
+        val tag = it.tag?.getObjectOrNull(name) ?: return@DataType null
+        val uuid = tag.getUuidOrNull("uuid") ?: Util.NIL_UUID
+        uuid to tag.getStringOr("part", "")
     }
 }

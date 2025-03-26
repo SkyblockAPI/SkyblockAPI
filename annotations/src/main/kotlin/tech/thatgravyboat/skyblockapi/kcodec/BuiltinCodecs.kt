@@ -41,7 +41,6 @@ class BuiltinCodecs {
         this.add("com.mojang.authlib", "GameProfile", "net.minecraft.util.ExtraCodecs.GAME_PROFILE")
         this.add("net.minecraft.util", "ResourceLocationPattern")
         this.add("net.minecraft.util", "Unit")
-        this.add("net.minecraft.util.random", "Weight")
         this.add("net.minecraft.util.valueproviders", "FloatProvider")
         this.add("net.minecraft.util.valueproviders", "IntProvider")
 
