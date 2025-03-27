@@ -4,6 +4,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @Suppress("DEPRECATION")
@@ -20,4 +21,10 @@ val ItemStack.cleanName: String get() = hoverName.stripped
 fun ItemStack.isSameItem(other: ItemStack?): Boolean {
     if (other == null) return false
     return this == other || ItemStack.isSameItemSameComponents(this, other)
+}
+
+fun ItemStack.getTexture(): String? {
+    if (!this.`is`(Items.PLAYER_HEAD)) return null
+    val skin = this.get(DataComponents.PROFILE) ?: return null
+    return skin.gameProfile.properties.get("textures").first().value
 }
