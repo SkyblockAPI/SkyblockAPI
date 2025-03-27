@@ -28,19 +28,19 @@ private val romanNumerals = mapOf(
     'M' to 1000,
 )
 
-internal fun String?.toIntValue(): Int = runCatching {
+fun String?.toIntValue(): Int = runCatching {
     this?.replace(",", "")?.toInt() ?: 0
 }.getOrDefault(0)
 
-internal fun String?.toLongValue(): Long = runCatching {
+fun String?.toLongValue(): Long = runCatching {
     this?.replace(",", "")?.toLong() ?: 0
 }.getOrDefault(0)
 
-internal fun String?.toFloatValue(): Float = runCatching {
+fun String?.toFloatValue(): Float = runCatching {
     this?.replace(",", "")?.toFloat() ?: 0f
 }.getOrDefault(0f)
 
-internal fun String?.parseFormattedLong(default: Long = 0L): Long = runCatching {
+fun String?.parseFormattedLong(default: Long = 0L): Long = runCatching {
     val commaless = this?.lowercase()?.replace(",", "")
     val multiplier = formattedMultiplier.entries.firstOrNull { commaless?.endsWith(it.key) == true }?.value
     return@runCatching if (multiplier != null) {
@@ -50,9 +50,9 @@ internal fun String?.parseFormattedLong(default: Long = 0L): Long = runCatching 
     }
 }.getOrDefault(default)
 
-internal fun String?.parseFormattedInt(default: Int = 0): Int = parseFormattedLong(default.toLong()).toInt()
+fun String?.parseFormattedInt(default: Int = 0): Int = parseFormattedLong(default.toLong()).toInt()
 
-internal fun String?.parseFormattedDouble(): Double = runCatching {
+fun String?.parseFormattedDouble(): Double = runCatching {
     val commaless = this?.lowercase()?.replace(",", "")
     val multiplier = formattedMultiplier.entries.firstOrNull { commaless?.endsWith(it.key) == true }?.value
     return@runCatching if (multiplier != null) {
@@ -62,11 +62,11 @@ internal fun String?.parseFormattedDouble(): Double = runCatching {
     }
 }.getOrDefault(0.0)
 
-internal fun String?.parseFormattedFloat(): Float = parseFormattedDouble().toFloat()
+fun String?.parseFormattedFloat(): Float = parseFormattedDouble().toFloat()
 
-internal fun String?.parseRomanOrArabic(): Int = parseRomanNumeral().takeIf { it != 0 } ?: toIntValue()
+fun String?.parseRomanOrArabic(): Int = parseRomanNumeral().takeIf { it != 0 } ?: toIntValue()
 
-internal fun String?.parseDuration(): Duration? = runCatching {
+fun String?.parseDuration(): Duration? = runCatching {
     var total = 0L
     var current = 0L
     this?.forEach {
@@ -88,7 +88,7 @@ internal fun String?.parseDuration(): Duration? = runCatching {
     return@runCatching total.milliseconds
 }.getOrNull()
 
-internal fun String?.parseWordDuration(): Duration? = runCatching {
+fun String?.parseWordDuration(): Duration? = runCatching {
     var total = 0L
     var current = ""
     this?.split(" ", ", ", " and ")?.forEach {
@@ -112,7 +112,7 @@ internal fun String?.parseWordDuration(): Duration? = runCatching {
     return@runCatching total.seconds
 }.getOrNull()
 
-internal fun String?.parseColonDuration(): Duration? = runCatching {
+fun String?.parseColonDuration(): Duration? = runCatching {
     val splits = this?.split(":") ?: return@runCatching null
     var currentMultiplier = (60.0.pow(splits.size - 1)).toLong()
     var total = 0L
@@ -123,7 +123,7 @@ internal fun String?.parseColonDuration(): Duration? = runCatching {
     return@runCatching total.seconds
 }.getOrNull()
 
-internal fun String?.parseRomanNumeral(): Int = runCatching {
+fun String?.parseRomanNumeral(): Int = runCatching {
     var total = 0
     this?.forEachIndexed { index, c ->
         val value = romanNumerals[c] ?: return@forEachIndexed
@@ -133,7 +133,7 @@ internal fun String?.parseRomanNumeral(): Int = runCatching {
     return@runCatching total
 }.getOrDefault(0)
 
-internal fun <T : Enum<T>> Enum<T>.toFormattedName(): String =
+fun <T : Enum<T>> Enum<T>.toFormattedName(): String =
     name.split("_").joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
 
 private val regexGroup = Regexes.group("string")
@@ -145,7 +145,7 @@ private val cleanPlayerNameRegex = regexGroup.create(
 
 private val formattingCodesRegex = Regex("§.")
 
-internal fun String.cleanPlayerName(): String {
+fun String.cleanPlayerName(): String {
     return cleanPlayerNameRegex.findGroup(this, "name") ?: this
 }
 

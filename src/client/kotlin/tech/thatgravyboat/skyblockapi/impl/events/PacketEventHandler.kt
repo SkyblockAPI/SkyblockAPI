@@ -4,6 +4,7 @@ import net.minecraft.network.protocol.game.*
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.PacketSentEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.*
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
@@ -15,6 +16,17 @@ private const val FIRST_HOTBAR_SLOT = 36
 
 @Module
 object PacketEventHandler {
+    private var lastContainerCloseId: Int? = null
+
+    @Subscription
+    fun onPacketSend(event: PacketSentEvent) {
+        when (event.packet) {
+            is ServerboundContainerClosePacket -> {
+                lastContainerCloseId = event.packet.containerId
+                ContainerCloseEvent.post()
+            }
+        }
+    }
 
     @Subscription
     fun onPacketReceived(event: PacketReceivedEvent) {
@@ -32,6 +44,7 @@ object PacketEventHandler {
             }
 
             is ClientboundContainerClosePacket -> {
+                if (event.packet.containerId == lastContainerCloseId) return
                 ContainerCloseEvent.post()
             }
 
