@@ -16,11 +16,15 @@ private const val FIRST_HOTBAR_SLOT = 36
 
 @Module
 object PacketEventHandler {
+    private var lastContainerCloseId: Int? = null
 
     @Subscription
     fun onPacketSend(event: PacketSentEvent) {
         when (event.packet) {
-            is ServerboundContainerClosePacket -> ContainerCloseEvent.post()
+            is ServerboundContainerClosePacket -> {
+                lastContainerCloseId = event.packet.containerId
+                ContainerCloseEvent.post()
+            }
         }
     }
 
@@ -39,7 +43,10 @@ object PacketEventHandler {
                 }
             }
 
-            is ClientboundContainerClosePacket -> ContainerCloseEvent.post()
+            is ClientboundContainerClosePacket -> {
+                if (event.packet.containerId == lastContainerCloseId) return
+                ContainerCloseEvent.post()
+            }
 
             is ClientboundContainerSetSlotPacket -> {
                 McClient.tell {
