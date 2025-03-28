@@ -21,3 +21,8 @@ fun ItemStack.isSameItem(other: ItemStack?): Boolean {
     if (other == null) return false
     return this == other || ItemStack.isSameItemSameComponents(this, other)
 }
+
+fun ItemStack.getTexture(): String? {
+    val skin = this.get(DataComponents.PROFILE) ?: return null
+    return skin.gameProfile.properties.get("textures").first().value
+}
