@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseCreateEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseSpawnEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftEnteredEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftFoundEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
@@ -72,7 +72,7 @@ object MineshaftAPI {
                     }
                 }
                 if (corpses.isEmpty() && foundCorpses.isNotEmpty()) {
-                    CorpseCreateEvent(foundCorpses)
+                    CorpseSpawnEvent(foundCorpses)
                 }
                 corpses = foundCorpses
             }
