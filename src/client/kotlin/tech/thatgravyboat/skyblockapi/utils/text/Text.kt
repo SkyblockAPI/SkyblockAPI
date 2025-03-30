@@ -140,6 +140,12 @@ object TextStyle {
             this.style { withColor(value) }
         }
 
+    var MutableComponent.shadowColor: Int?
+        get() = this.style.shadowColor
+        set(value) {
+            this.style { this.withShadowColor(value ?: 0) }
+        }
+
     var MutableComponent.bold: Boolean
         get() = this.style.isBold
         set(value) {
