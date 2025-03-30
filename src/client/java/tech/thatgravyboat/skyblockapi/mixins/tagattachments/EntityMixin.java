@@ -104,15 +104,15 @@ public abstract class EntityMixin implements ListenForNameChange, EntityAttachme
         }
 
         final Entity first = entities.getFirst();
-        if (first == null) {
+        if (!(first instanceof EntityAttachmentAccessor accessor)) {
             return;
         }
 
         if (attachedTo != first && attachedTo != null) {
-            ((EntityAttachmentAccessor) first).skyblockapi$getAttachments().removeIf(it -> it.get() == self());
+            accessor.skyblockapi$getAttachments().removeIf(it -> it.get() == self());
         }
 
-        ((EntityAttachmentAccessor) first).skyblockapi$getAttachments().add(new WeakReference<>(self()));
+       accessor.skyblockapi$getAttachments().add(new WeakReference<>(self()));
         final Component customName = self().getCustomName();
         attachedTo = first;
         if (customName != null) {
