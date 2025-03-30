@@ -72,7 +72,7 @@ object MineshaftAPI {
                     }
                 }
                 if (corpses.isEmpty() && foundCorpses.isNotEmpty()) {
-                    CorpseSpawnEvent(foundCorpses)
+                    CorpseSpawnEvent(foundCorpses).post()
                 }
                 corpses = foundCorpses
             }
@@ -87,7 +87,7 @@ object MineshaftAPI {
         mineshaftTypeRegex.anyFound(event.added, "type", "number") { (type, number) ->
             this.mineshaftType = MineshaftType.fromId(type)
             this.isCrystal = number == "2"
-            MineshaftEnteredEvent(mineshaftType, isCrystal)
+            MineshaftEnteredEvent(mineshaftType, isCrystal).post()
         }
     }
 
