@@ -33,7 +33,7 @@ public class EntityRendererMixin {
         if (!EntityEvents.INSTANCE.getDebug()) {
             return;
         }
-        final Entity entity = ((EntityRenderAccessor) state).ocean$getSelf();
+        final Entity entity = ((EntityRenderAccessor) state).skyblockapi$getSelf();
         if (entity == Minecraft.getInstance().crosshairPickEntity) {
             final List<Entity> attachedLines = SkyBlockEntity.getAttachedEntities(entity);
             poseStack.pushPose();
@@ -56,7 +56,7 @@ public class EntityRendererMixin {
             @Local(argsOnly = true) T self,
             @Local(argsOnly = true) S state
     ) {
-        ((EntityRenderAccessor) state).ocean$setSelf(self);
+        ((EntityRenderAccessor) state).skyblockapi$setSelf(self);
     }
 
 }

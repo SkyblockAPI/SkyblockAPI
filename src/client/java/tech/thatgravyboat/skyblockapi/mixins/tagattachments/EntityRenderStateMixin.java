@@ -12,12 +12,12 @@ public class EntityRenderStateMixin implements EntityRenderAccessor {
     private Entity self;
 
     @Override
-    public void ocean$setSelf(Entity entity) {
+    public void skyblockapi$setSelf(Entity entity) {
         self = entity;
     }
 
     @Override
-    public Entity ocean$getSelf() {
+    public Entity skyblockapi$getSelf() {
         return self;
     }
 }

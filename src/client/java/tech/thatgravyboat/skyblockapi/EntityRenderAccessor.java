@@ -4,7 +4,7 @@ import net.minecraft.world.entity.Entity;
 
 public interface EntityRenderAccessor {
 
-    void ocean$setSelf(Entity entity);
-    Entity ocean$getSelf();
+    void skyblockapi$setSelf(Entity entity);
+    Entity skyblockapi$getSelf();
 
 }
