@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils
 
 private object UNINITIALIZED_VALUE
 
-data class DiscoverableVariable<T>(var discover: () -> T?): Lazy<T?> {
+data class DiscoverableValue<T>(var discover: () -> T?): Lazy<T?> {
     private var _value: Any = UNINITIALIZED_VALUE
 
     override val value: T?
