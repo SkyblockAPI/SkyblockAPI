@@ -1,21 +1,13 @@
 package tech.thatgravyboat.skyblockapi.utils
 
-private object UNINITIALIZED_VALUE
-
 data class DiscoverableValue<T>(var discover: () -> T?): Lazy<T?> {
-    private var _value: Any = UNINITIALIZED_VALUE
+    private var _value: T? = null
 
     override val value: T?
         get() {
-            if (isInitialized()) {
-                @Suppress("UNCHECKED_CAST")
-                return _value as T
-            }
-
-            _value = discover()?: UNINITIALIZED_VALUE
-            @Suppress("UNCHECKED_CAST")
-            return _value.takeUnless { it == UNINITIALIZED_VALUE } as T?
+            if (_value == null) _value = discover()
+            return _value
         }
 
-    override fun isInitialized() = _value !== UNINITIALIZED_VALUE
+    override fun isInitialized() = _value != null
 }
