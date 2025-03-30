@@ -3,9 +3,6 @@ package tech.thatgravyboat.skyblockapi.api.area.slayer
 import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeOwnedByPlayer
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlySlayerBosses
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlySlayerMiniBosses
 import tech.thatgravyboat.skyblockapi.api.events.entity.ComponentAttachEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineAttachEvent
@@ -17,8 +14,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 @Module
 object SlayerAPI {
@@ -85,7 +80,6 @@ object SlayerAPI {
         val slayerInfo: SlayerInfo = if (!isSlayerLine(event.literalComponent)) {
             slayerBosses[event.attachedTo] ?: return
         } else {
-            println(event)
             event.attachedTo?.let { slayerBosses.computeIfAbsent(it) { SlayerInfo(it) } }
         } ?: return
 
@@ -99,19 +93,6 @@ object SlayerAPI {
             event.cancel()
             SlayerInfoLineChangeEvent(event.component, event.infoLineEntity, it).post(SkyBlockAPI.eventBus)
         }
-    }
-
-    @Subscription
-    @OnlySlayerMiniBosses
-    fun onSlayerMiniBoss(event: SlayerInfoLineChangeEvent) {
-        Text.of("mini - ").append(event.component.copy()).send()
-    }
-
-    @Subscription
-    @MustBeOwnedByPlayer
-    @OnlySlayerBosses
-    fun ownSlayer(event: SlayerInfoLineChangeEvent) {
-        Text.of("own boss :3 - ").append(event.component.copy()).send()
     }
 
     private fun isSlayerLine(line: String) = line.startsWith("☠") || (line.endsWith("❤") || line.endsWith("❤ ✯"))

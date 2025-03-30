@@ -25,10 +25,10 @@ public class EntityRendererMixin {
 
     @Inject(method = "render", at = @At("HEAD"))
     public <S extends EntityRenderState> void render(
-            CallbackInfo ci,
-            @Local(argsOnly = true) S state,
-            @Local(argsOnly = true) PoseStack poseStack,
-            @Local(argsOnly = true) MultiBufferSource bufferSource
+        CallbackInfo ci,
+        @Local(argsOnly = true) S state,
+        @Local(argsOnly = true) PoseStack poseStack,
+        @Local(argsOnly = true) MultiBufferSource bufferSource
     ) {
         if (!EntityEvents.INSTANCE.getDebug()) {
             return;
@@ -41,10 +41,10 @@ public class EntityRendererMixin {
                 final Vec3 subtract = attachedLine.position().subtract(entity.position());
 
                 ShapeRenderer.renderVector(
-                        poseStack,
-                        bufferSource.getBuffer(RenderType.lines()),
-                        Vec3.ZERO.toVector3f(),
-                        subtract.add(0,0.1,0).normalize().scale(2), -1);
+                    poseStack,
+                    bufferSource.getBuffer(RenderType.lines()),
+                    Vec3.ZERO.toVector3f(),
+                    subtract.add(0, 0.1, 0).normalize().scale(2), -1);
             }
             poseStack.popPose();
         }
@@ -52,9 +52,9 @@ public class EntityRendererMixin {
 
     @Inject(method = "extractRenderState", at = @At("HEAD"))
     public <T extends Entity, S extends EntityRenderState> void extractRenderState(
-            CallbackInfo ci,
-            @Local(argsOnly = true) T self,
-            @Local(argsOnly = true) S state
+        CallbackInfo ci,
+        @Local(argsOnly = true) T self,
+        @Local(argsOnly = true) S state
     ) {
         ((EntityRenderAccessor) state).skyblockapi$setSelf(self);
     }
