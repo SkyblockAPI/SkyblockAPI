@@ -12,7 +12,7 @@ public class ClientPacketListenerMixin {
 
     @WrapOperation(
         method = "handlePlayerInfoUpdate",
-        at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V")
+        at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", remap = false)
     )
     private void onPlayerInfoUpdateWarn(Logger instance, String s, Object o1, Object o2, Operation<Void> original) {
         // Do nothing
@@ -20,7 +20,7 @@ public class ClientPacketListenerMixin {
 
     @WrapOperation(
         method = "handleSetEntityPassengersPacket",
-        at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;)V")
+        at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;)V", remap = false)
     )
     private void onSetEntityPassengersPacketWarn(Logger instance, String s, Operation<Void> original) {
         // Do nothing

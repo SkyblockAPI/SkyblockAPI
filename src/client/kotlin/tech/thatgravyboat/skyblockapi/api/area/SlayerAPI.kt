@@ -1,73 +1,27 @@
 package tech.thatgravyboat.skyblockapi.api.area
 
-import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
-import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
-import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval
+import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerAPI as NewSlayerAPI
+import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType as NewSlayerType
 
-@Module
+@Deprecated(
+    message = "Use slayer.SlayerAPI instead",
+    replaceWith = ReplaceWith("SlayerAPI", "tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerAPI"),
+)
+@ScheduledForRemoval
 object SlayerAPI {
-
-    private val slayerGroup = RegexGroup.SCOREBOARD.group("slayer")
-    private val slayerQuestRegex = slayerGroup.create("quest", "Slayer Quest")
-    private val slayerTypeRegex = slayerGroup.create("type", "(?<type>[\\w ]+) (?<level>[MDCLXVI]+)")
-    private val slayerAmountRegex = slayerGroup.create(
-        "amount",
-        " \\(?(?<amount>[\\d,]+)/(?<total>[\\d,]+)\\)? (Combat XP|Kills)"
-    )
-    private val slayerBossTextRegex = slayerGroup.create(
-        "boss",
-        "(?<text>Slay the boss!|Boss slain!)"
-    )
-
-    var type: SlayerType? = null
-        private set
-    var level: Int = 0
-        private set
-
-    var text: String? = null
-        private set
-    var current: Int = 0
-        private set
-    var max: Int = 0
-        private set
-
-    @Subscription
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
-        if (event.removed.any { slayerQuestRegex.matches(it) }) {
-            reset()
-        } else if (this.type == null && this.level == 0) {
-            val index = event.added.indexOfFirst { slayerQuestRegex.matches(it) }
-            if (index != -1 && event.new.size > index) {
-                slayerTypeRegex.match(event.added[index + 1], "type", "level") { (type, level) ->
-                    this.type = SlayerType.fromDisplayName(type)
-                    this.level = level.parseRomanNumeral()
-                }
-            }
-        } else if (event.added.isNotEmpty()) {
-            slayerAmountRegex.anyMatch(event.added, "amount", "total") { (amount, total) ->
-                this.current = amount.toIntValue()
-                this.max = total.toIntValue()
-            }
-            slayerBossTextRegex.anyMatch(event.added, "text") { (text) ->
-                this.text = text
-            }
-        }
-    }
-
-    private fun reset() {
-        this.type = null
-        this.text = null
-        this.level = 0
-        this.current = 0
-        this.max = 0
-    }
+    val type: SlayerType? get() = NewSlayerAPI.type?.let { SlayerType.fromNewType(it) }
+    val level: Int get() = NewSlayerAPI.level
+    val text: String? get() = NewSlayerAPI.text
+    val current: Int get() = NewSlayerAPI.current
+    val max: Int get() = NewSlayerAPI.max
 }
 
+@Deprecated(
+    message = "Use slayer.SlayerType instead",
+    replaceWith = ReplaceWith("SlayerType", "tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType"),
+)
+@ScheduledForRemoval
 enum class SlayerType(val displayName: String) {
     REVENANT_HORROR("Revenant Horror"),
     TARANTULA_BROODFATHER("Tarantula Broodfather"),
@@ -78,9 +32,19 @@ enum class SlayerType(val displayName: String) {
     ;
 
     companion object {
-
         fun fromDisplayName(displayName: String): SlayerType? = entries.firstOrNull {
             it.displayName.equals(displayName, ignoreCase = true)
+        }
+
+        internal fun fromNewType(slayerType: NewSlayerType): SlayerType {
+            return when (slayerType) {
+                NewSlayerType.REVENANT_HORROR -> REVENANT_HORROR
+                NewSlayerType.TARANTULA_BROODFATHER -> TARANTULA_BROODFATHER
+                NewSlayerType.SVEN_PACKMASTER -> SVEN_PACKMASTER
+                NewSlayerType.VOIDGLOOM_SERAPH -> VOIDGLOOM_SERAPH
+                NewSlayerType.RIFTSTALKER_BLOODFIEND -> RIFTSTALKER_BLOODFIEND
+                NewSlayerType.INFERNO_DEMONLORD -> INFERNO_DEMONLORD
+            }
         }
     }
 }

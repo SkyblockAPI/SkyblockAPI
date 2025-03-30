@@ -15,7 +15,12 @@
         "events.MouseHandlerMixin",
         "events.ScreenMixin",
         "fixes.ClientPacketListenerMixin",
-        "fixes.SkinManagerMixin"
+        "fixes.SkinManagerMixin",
+        "tagattachments.ClientLevelMixin",
+        "tagattachments.DebugScreenOverlayMixin",
+        "tagattachments.EntityMixin",
+        "tagattachments.EntityRendererMixin",
+        "tagattachments.EntityRenderStateMixin"
     ],
     "injectors": {
         "defaultRequire": 1

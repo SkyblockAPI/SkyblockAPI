@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(FishingHook.class)
 public class FishingHookMixin {
 
-    @WrapOperation(method = "recreateFromPacket", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"))
+    @WrapOperation(method = "recreateFromPacket", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", remap = false))
     private void onRecreatePacketError(Logger instance, String s, Object o1, Object o2, Operation<Void> original) {
         // Do nothing
     }
