@@ -131,8 +131,8 @@ public abstract class EntityMixin implements ListenForNameChange, EntityAttachme
 
     @Inject(method = "onRemoval", at = @At("RETURN"))
     public void remove(CallbackInfo ci) {
-        if (this.attachedTo != null) {
-            ((EntityAttachmentAccessor) attachedTo).skyblockapi$getAttachments().removeIf(it -> it.get() == self());
+        if (this.attachedTo instanceof EntityAttachmentAccessor accessor) {
+            accessor.skyblockapi$getAttachments().removeIf(it -> it.get() == self());
             this.autoAttach = false;
         }
     }
