@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.utils.text
 
 import net.minecraft.network.chat.*
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.StringUtil
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
@@ -21,6 +22,7 @@ object CommonText {
 
 object Text {
 
+    fun of(init: MutableComponent.() -> Unit = {}) = "".asComponent(init)
     fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
     fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
     fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
@@ -104,6 +106,12 @@ object TextStyle {
         return this
     }
 
+    var MutableComponent.font: ResourceLocation?
+        get() = this.style.font
+        set(value) {
+            this.style { withFont(value) }
+        }
+
     var MutableComponent.hover: Component?
         get() = (this.style.hoverEvent as? HoverEvent.ShowText)?.value
         set(value) {
@@ -169,6 +177,14 @@ object TextStyle {
         set(value) {
             this.style { withStrikethrough(value) }
         }
+}
+
+object TextBuilder {
+
+    fun MutableComponent.append(like: ComponentLike) = this.append(like.toComponent())
+    fun MutableComponent.append(text: String, init: MutableComponent.() -> Unit = {}) = this.append(text.asComponent(init))
+    fun MutableComponent.append(number: Number, init: MutableComponent.() -> Unit = {}) = this.append(number.toString().asComponent(init))
+    fun MutableComponent.append(boolean: Boolean, init: MutableComponent.() -> Unit = {}) = this.append(boolean.toString().asComponent(init))
 }
 
 object TextColor {
