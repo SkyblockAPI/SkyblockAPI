@@ -12,7 +12,7 @@ public class ScoreboardMixin {
 
     @WrapOperation(
         method = "addPlayerTeam",
-        at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V")
+        at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V", remap = false)
     )
     public void addPlayerTeam(Logger instance, String s, Object o, Operation<Void> original) {
         // Do nothing
