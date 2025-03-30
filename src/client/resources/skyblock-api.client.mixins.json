@@ -17,7 +17,6 @@
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin",
         "tagattachments.ClientLevelMixin",
-        "tagattachments.ClientPacketListenerMixin",
         "tagattachments.DebugScreenOverlayMixin",
         "tagattachments.EntityMixin",
         "tagattachments.EntityRendererMixin",
@@ -27,7 +26,6 @@
         "defaultRequire": 1
     },
     "mixins": [
-        "accessors.EntityAccessor",
         "events.ConnectionMixin",
         "events.ItemStackMixin",
         "features.ItemStackDataTypeMixin",

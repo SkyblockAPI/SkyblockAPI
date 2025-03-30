@@ -1,11 +1,14 @@
 package tech.thatgravyboat.skyblockapi.mixins.tagattachments;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -18,13 +21,14 @@ import tech.thatgravyboat.skyblockapi.api.events.entity.ListenForNameChange;
 import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent;
 import tech.thatgravyboat.skyblockapi.helpers.EntityAttachmentAccessor;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Mixin(Entity.class)
-public class EntityMixin implements ListenForNameChange, EntityAttachmentAccessor {
+public abstract class EntityMixin implements ListenForNameChange, EntityAttachmentAccessor {
 
     @Unique
     boolean autoAttach = false;
@@ -35,15 +39,28 @@ public class EntityMixin implements ListenForNameChange, EntityAttachmentAccesso
     @Shadow
     private Level level;
     @Unique
-    private List<Entity> attached;
+    private List<WeakReference<Entity>> attached;
     @Unique
     private Entity attachedTo;
+
+    @Shadow
+    public abstract AABB getBoundingBox();
+
+    @Shadow
+    @Final
+    private static EntityDataAccessor<Optional<Component>> DATA_CUSTOM_NAME;
+
+    @Shadow
+    @Nullable
+    public abstract Component getCustomName();
 
     @Inject(method = "setCustomName", at = @At("RETURN"))
     public void setCustomName(Component name, CallbackInfo ci) {
         if (isNameTag) {
-            if (name == null) return;
-            new NameChangedEvent(((Entity) (Object) this), name).post(SkyBlockAPI.getEventBus());
+            if (name == null) {
+                return;
+            }
+            new NameChangedEvent(name, self()).post(SkyBlockAPI.getEventBus());
         }
     }
 
@@ -77,10 +94,9 @@ public class EntityMixin implements ListenForNameChange, EntityAttachmentAccesso
     @Override
     public void skyblockapi$attachToClosest() {
         autoAttach = true;
-        final List<Entity> entities = this.level.getEntities(self(), AABB.ofSize(self().position(), 3, 3, 3));
+        final List<Entity> entities = this.level.getEntities(self(), getBoundingBox().inflate(0, 1, 0));
         entities.sort(Comparator.comparing(e -> e.distanceToSqr(self())));
-        entities.removeIf(ArmorStand.class::isInstance);
-        entities.removeIf(Objects::isNull);
+        entities.removeIf(it -> it == null || it instanceof ArmorStand);
 
         int index = entities.indexOf(attachedTo);
         if ((index != -1 && index < 2) || entities.isEmpty()) {
@@ -93,10 +109,10 @@ public class EntityMixin implements ListenForNameChange, EntityAttachmentAccesso
         }
 
         if (attachedTo != first && attachedTo != null) {
-            ((EntityAttachmentAccessor) first).skyblockapi$getAttachments().remove(self());
+            ((EntityAttachmentAccessor) first).skyblockapi$getAttachments().removeIf(it -> it.get() == self());
         }
 
-        ((EntityAttachmentAccessor) first).skyblockapi$getAttachments().add(self());
+        ((EntityAttachmentAccessor) first).skyblockapi$getAttachments().add(new WeakReference<>(self()));
         final Component customName = self().getCustomName();
         attachedTo = first;
         if (customName != null) {
@@ -105,7 +121,7 @@ public class EntityMixin implements ListenForNameChange, EntityAttachmentAccesso
     }
 
     @Override
-    public @NotNull List<Entity> skyblockapi$getAttachments() {
+    public @NotNull List<WeakReference<Entity>> skyblockapi$getAttachments() {
         if (attached == null) {
             attached = new ArrayList<>();
         }
@@ -116,7 +132,7 @@ public class EntityMixin implements ListenForNameChange, EntityAttachmentAccesso
     @Inject(method = "onRemoval", at = @At("RETURN"))
     public void remove(CallbackInfo ci) {
         if (this.attachedTo != null) {
-            ((EntityAttachmentAccessor) attachedTo).skyblockapi$getAttachments().remove(self());
+            ((EntityAttachmentAccessor) attachedTo).skyblockapi$getAttachments().removeIf(it -> it.get() == self());
             this.autoAttach = false;
         }
     }
@@ -129,5 +145,17 @@ public class EntityMixin implements ListenForNameChange, EntityAttachmentAccesso
     @Override
     public @NotNull Entity skyblockapi$getAttachedTo() {
         return attachedTo;
+    }
+
+    @Inject(method = "onSyncedDataUpdated(Lnet/minecraft/network/syncher/EntityDataAccessor;)V", at = @At("TAIL"))
+    public void onEntityDataUpdate(EntityDataAccessor<?> entityDataAccessor, CallbackInfo ci) {
+        if (this.skyblockapi$isNameTag()) {
+            if (entityDataAccessor == DATA_CUSTOM_NAME) {
+                final Component customName = getCustomName();
+                if (customName != null) {
+                    new NameChangedEvent(customName, self()).post(SkyBlockAPI.getEventBus());
+                }
+            }
+        }
     }
 }

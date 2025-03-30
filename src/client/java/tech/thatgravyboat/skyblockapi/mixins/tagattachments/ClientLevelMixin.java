@@ -14,8 +14,8 @@ public class ClientLevelMixin {
 
     @Inject(method = "addEntity", at = @At("HEAD"))
     public void addEntity(Entity entity, CallbackInfo ci) {
-        if (entity instanceof ArmorStand) {
-            ((ListenForNameChange) entity).skyblockapi$markAsNameTag();
+        if (entity instanceof ArmorStand && entity instanceof ListenForNameChange nameChange) {
+            nameChange.skyblockapi$markAsNameTag();
         }
     }
 

@@ -1,13 +1,21 @@
 package tech.thatgravyboat.skyblockapi.utils
 
-import kotlin.reflect.KProperty
+private object UNINITIALIZED_VALUE
 
-data class DiscoverableVariable<T>(var value: T?, var discover: () -> T?) {
-    operator fun getValue(slayerInfo: Any, property: KProperty<*>): T? {
-        if (value == null) {
-            value = discover()
+data class DiscoverableVariable<T>(var discover: () -> T?): Lazy<T?> {
+    private var _value: Any = UNINITIALIZED_VALUE
+
+    override val value: T?
+        get() {
+            if (isInitialized()) {
+                @Suppress("UNCHECKED_CAST")
+                return _value as T
+            }
+
+            _value = discover()?: UNINITIALIZED_VALUE
+            @Suppress("UNCHECKED_CAST")
+            return _value.takeUnless { it == UNINITIALIZED_VALUE } as T?
         }
 
-        return value
-    }
+    override fun isInitialized() = _value !== UNINITIALIZED_VALUE
 }

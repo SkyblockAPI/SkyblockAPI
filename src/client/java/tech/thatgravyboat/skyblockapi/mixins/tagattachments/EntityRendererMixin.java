@@ -18,6 +18,7 @@ import tech.thatgravyboat.skyblockapi.EntityRenderAccessor;
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityEvents;
 import tech.thatgravyboat.skyblockapi.helpers.SkyBlockEntity;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 @Mixin(EntityRenderer.class)
@@ -35,10 +36,15 @@ public class EntityRendererMixin {
         }
         final Entity entity = ((EntityRenderAccessor) state).skyblockapi$getSelf();
         if (entity == Minecraft.getInstance().crosshairPickEntity) {
-            final List<Entity> attachedLines = SkyBlockEntity.getAttachedEntities(entity);
+            final List<WeakReference<Entity>> attachedLines = SkyBlockEntity.getAttachedEntities(entity);
             poseStack.pushPose();
-            for (Entity attachedLine : attachedLines) {
-                final Vec3 subtract = attachedLine.position().subtract(entity.position());
+            for (WeakReference<Entity> attachedLine : attachedLines) {
+                final Entity attachedLineEntity = attachedLine.get();
+                if (attachedLineEntity == null) {
+                    continue;
+                }
+
+                final Vec3 subtract = attachedLineEntity.position().subtract(entity.position());
 
                 ShapeRenderer.renderVector(
                         poseStack,

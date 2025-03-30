@@ -46,25 +46,24 @@ object EntityEvents {
 }
 
 open class EntityInfoLineEvent(
-    open val component: Component,
-    open val infoLineEntity: Entity,
+    val component: Component,
+    val infoLineEntity: Entity,
 ) : CancellableSkyBlockEvent() {
-    val attachedTo: Entity?
-        get() = infoLineEntity.getAttachedTo()
+    val attachedTo: Entity? get() = infoLineEntity.getAttachedTo()
     val literalComponent by lazy { component.stripped }
 }
 
-data class EntityInfoLineAttachEvent(
-    override val component: Component,
-    override val infoLineEntity: Entity
+class EntityInfoLineAttachEvent(
+    component: Component,
+    infoLineEntity: Entity,
 ) : EntityInfoLineEvent(component, infoLineEntity)
 
-data class NameChangedEvent(
-    override val infoLineEntity: Entity,
-    override val component: Component,
+class NameChangedEvent(
+    component: Component,
+    infoLineEntity: Entity,
 ) : EntityInfoLineEvent(component, infoLineEntity)
 
-data class ComponentAttachEvent(
-    override val component: Component,
-    override val infoLineEntity: Entity,
+class ComponentAttachEvent(
+    component: Component,
+    infoLineEntity: Entity,
 ) : EntityInfoLineEvent(component, infoLineEntity)
