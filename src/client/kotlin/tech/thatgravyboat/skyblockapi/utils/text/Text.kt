@@ -163,6 +163,12 @@ object TextStyle {
         set(value) {
             this.style { withStrikethrough(value) }
         }
+
+    var MutableComponent.shadowColor: Int?
+        get() = this.style.shadowColor
+        set(value) {
+            this.style { this.withShadowColor(value ?: 0) }
+        }
 }
 
 object TextColor {
