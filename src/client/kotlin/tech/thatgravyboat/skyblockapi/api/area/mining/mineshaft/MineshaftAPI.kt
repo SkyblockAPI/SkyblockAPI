@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseCreateEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftEnteredEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftFoundEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
@@ -15,8 +16,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
-import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 @Module
 object MineshaftAPI {
@@ -65,13 +64,17 @@ object MineshaftAPI {
             }
 
             TabWidget.FROZEN_CORPSES -> {
-                corpses = buildList {
+                val foundCorpses = buildList {
                     corpseRegex.findAll(event.new, "corpse", "state") { (corpse, state) ->
                         val type = CorpseType.byName(corpse) ?: return@findAll
                         val looted = state == "LOOTED"
                         add(Corpse(type, looted))
                     }
                 }
+                if (corpses.isEmpty() && foundCorpses.isNotEmpty()) {
+                    CorpseCreateEvent(foundCorpses)
+                }
+                corpses = foundCorpses
             }
 
             else -> return
@@ -93,7 +96,6 @@ object MineshaftAPI {
     fun onChat(event: ChatReceivedEvent) {
         if (mineshaftFoundRegex.matches(event.text)) {
             MineshaftFoundEvent.post()
-            Text.of("hi shaft").send()
         }
     }
 
