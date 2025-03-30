@@ -2,34 +2,44 @@ package tech.thatgravyboat.skyblockapi.api.area.mining.mineshaft
 
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
+import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftEnteredEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftFoundEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 @Module
 object MineshaftAPI {
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("mineshaft")
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("mineshaft")
+    private val chatGroup = RegexGroup.CHAT.group("mineshaft")
 
     private val scrapRegex = widgetGroup.create(
         "scrap",
-        "^\\s*Scrap: (?<scrap>\\d+/\\d)$"
+        "^\\s*Scrap: (?<scrap>\\d+/\\d)$",
     )
     private val corpseRegex = widgetGroup.create(
         "corpse",
-        "^\\s*(?<corpse>\\w+): (?<state>.+)$"
+        "^\\s*(?<corpse>\\w+): (?<state>.+)$",
     )
     private val mineshaftTypeRegex = scoreboardGroup.create(
         "type",
-        "^\\d+/\\d+/\\d+ \\S+ (?<type>\\w{4})(?<number>\\d)$"
+        "^\\d+/\\d+/\\d+ \\S+ (?<type>\\w{4})(?<number>\\d)$",
+    )
+    private val mineshaftFoundRegex = chatGroup.create(
+        "found",
+        "WOW! You found a Glacite Mineshaft portal!",
     )
 
     var mineshaftType: MineshaftType? = null
@@ -53,6 +63,7 @@ object MineshaftAPI {
                     MineshaftAPI.scrap = scrap.toIntValue()
                 }
             }
+
             TabWidget.FROZEN_CORPSES -> {
                 corpses = buildList {
                     corpseRegex.findAll(event.new, "corpse", "state") { (corpse, state) ->
@@ -62,6 +73,7 @@ object MineshaftAPI {
                     }
                 }
             }
+
             else -> return
         }
     }
@@ -72,6 +84,16 @@ object MineshaftAPI {
         mineshaftTypeRegex.anyFound(event.added, "type", "number") { (type, number) ->
             this.mineshaftType = MineshaftType.fromId(type)
             this.isCrystal = number == "2"
+            MineshaftEnteredEvent(mineshaftType, isCrystal)
+        }
+    }
+
+    @Subscription
+    @OnlyIn(SkyBlockIsland.DWARVEN_MINES)
+    fun onChat(event: ChatReceivedEvent) {
+        if (mineshaftFoundRegex.matches(event.text)) {
+            MineshaftFoundEvent.post()
+            Text.of("hi shaft").send()
         }
     }
 
