@@ -14,11 +14,12 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import java.util.WeakHashMap
 
 @Module
 object SlayerAPI {
 
-    private val slayerBosses: MutableMap<Entity, SlayerInfo> = mutableMapOf()
+    private val slayerBosses: WeakHashMap<Entity, SlayerInfo> = WeakHashMap()
     private val slayerGroup = RegexGroup.SCOREBOARD.group("slayer")
     private val slayerQuestRegex = slayerGroup.create("quest", "Slayer Quest")
     private val slayerTypeRegex = slayerGroup.create("type", "(?<type>[\\w ]+) (?<level>[MDCLXVI]+)")
@@ -100,6 +101,7 @@ object SlayerAPI {
 
 interface SlayerMob {
     val displayName: String
+    val inGameName: String get() = displayName
 }
 
 val SLAYER_MOBS: List<SlayerMob> = listOf(
@@ -147,7 +149,9 @@ enum class SlayerType(override val displayName: String) : SlayerMob {
     TARANTULA_BROODFATHER("Tarantula Broodfather"),
     SVEN_PACKMASTER("Sven Packmaster"),
     VOIDGLOOM_SERAPH("Voidgloom Seraph"),
-    RIFTSTALKER_BLOODFIEND("Riftstalker Bloodfiend"),
+    RIFTSTALKER_BLOODFIEND("Riftstalker Bloodfiend") {
+        override val inGameName get() = "Bloodfiend"
+    },
     INFERNO_DEMONLORD("Inferno Demonlord"),
     ;
 
