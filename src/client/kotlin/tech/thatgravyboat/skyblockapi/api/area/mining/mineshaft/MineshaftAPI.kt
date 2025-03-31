@@ -71,10 +71,10 @@ object MineshaftAPI {
                         add(Corpse(type, looted))
                     }
                 }
+                corpses = foundCorpses
                 if (corpses.isEmpty() && foundCorpses.isNotEmpty()) {
                     CorpseSpawnEvent(foundCorpses).post()
                 }
-                corpses = foundCorpses
             }
 
             else -> return
