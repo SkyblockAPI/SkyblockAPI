@@ -71,8 +71,9 @@ object MineshaftAPI {
                         add(Corpse(type, looted))
                     }
                 }
+                val wasEmpty = corpses.isEmpty()
                 corpses = foundCorpses
-                if (corpses.isEmpty() && foundCorpses.isNotEmpty()) {
+                if (wasEmpty && corpses.isNotEmpty()) {
                     CorpseSpawnEvent(foundCorpses).post()
                 }
             }
