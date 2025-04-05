@@ -20,8 +20,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.match
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
-import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
@@ -95,9 +93,6 @@ object SacksAPI {
     @OptIn(UseRepoLib::class)
     private fun getId(name: String): String {
         val formattedName = name.replace(Regex("[^\\w ]"), "").trim() // Removes the icon from gemstones
-        return SkyBlockItems.getIdByDisplayName(formattedName) ?: run {
-            Text.of("Unknown item: $formattedName").send()
-            formattedName
-        }
+        return SkyBlockItems.getIdByDisplayName(formattedName) ?: formattedName
     }
 }
