@@ -28,5 +28,5 @@ object SkyBlockAPI {
         DataTypesRegistry.load()
     }
 
-    internal fun id(path: String) = ResourceLocation.fromNamespaceAndPath(SELF.metadata.id, path)
+    internal fun id(path: String) = ResourceLocation.fromNamespaceAndPath("skyblockapi", path)
 }

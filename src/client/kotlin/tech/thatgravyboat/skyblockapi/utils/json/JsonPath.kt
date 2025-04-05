@@ -7,13 +7,13 @@ import com.mojang.brigadier.StringReader
 import org.intellij.lang.annotations.Language
 
 
-fun JsonElement.getPath(@Language("JSONPath") path: String, createIfMissing: Boolean = false): JsonElement? {
+fun JsonElement.getPath(@Language("JSONPath") path: String, createParentsIfMissing: Boolean = false): JsonElement? {
     val reader = StringReader(path)
     var current: JsonElement? = this
 
     fun JsonElement?.getOrCreate(name: String): JsonElement? {
         (this as? JsonObject)?.let {
-            if (createIfMissing && !it.has(name)) {
+            if (createParentsIfMissing && !it.has(name)) {
                 val newObject = JsonObject()
                 it.add(name, newObject)
                 return newObject

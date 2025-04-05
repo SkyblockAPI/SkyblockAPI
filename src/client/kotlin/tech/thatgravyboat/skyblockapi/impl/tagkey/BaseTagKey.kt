@@ -6,19 +6,19 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
 
-interface AbstractTagKey<T> {
+interface BaseTagKey<T> {
     val key: TagKey<T>
 
     operator fun contains(element: T): Boolean = ClientTags.isInWithLocalFallback(key, element)
 }
 
-interface BlockTagKey : AbstractTagKey<Block> {
+interface BlockTagKey : BaseTagKey<Block> {
     override val key: TagKey<Block>
 
     override operator fun contains(element: Block): Boolean = ClientTags.isInWithLocalFallback(key, element)
 }
 
-interface ItemTagKey : AbstractTagKey<Item> {
+interface ItemTagKey : BaseTagKey<Item> {
     override val key: TagKey<Item>
 
     operator fun contains(stack: ItemStack): Boolean = stack.item in this
