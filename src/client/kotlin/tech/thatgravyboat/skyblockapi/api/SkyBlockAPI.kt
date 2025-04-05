@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 
 object SkyBlockAPI {
 
-    internal val SELF = FabricLoader.getInstance().getModContainer("skyocean").get()
+    internal val SELF = FabricLoader.getInstance().getModContainer("skyblockapi").get()
 
     @JvmStatic
     val eventBus = EventBus()
