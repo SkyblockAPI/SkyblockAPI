@@ -155,7 +155,7 @@ fun Float.toFormattedString(): String = DecimalFormat.getNumberInstance().format
 fun Double.toFormattedString(): String = DecimalFormat.getNumberInstance().format(this)
 
 private val thousandsPlace = listOf("", "M", "MM", "MMM")
-private val hundreadsPlace = listOf("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
+private val hundredsPlace = listOf("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
 private val tensPlace = listOf("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC")
 private val onesPlace = listOf("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX")
 
@@ -164,7 +164,7 @@ private val onesPlace = listOf("", "I", "II", "III", "IV", "V", "VI", "VII", "VI
  */
 fun Int.toRomanNumeral(subtractive: Boolean = false): String {
     if (subtractive) {
-        return thousandsPlace[this / 1000] + hundreadsPlace[this % 1000 / 100] + tensPlace[this % 100 / 10] + onesPlace[this % 10]
+        return thousandsPlace[this / 1000] + hundredsPlace[this % 1000 / 100] + tensPlace[this % 100 / 10] + onesPlace[this % 10]
     } else {
         var number = this
         val roman = StringBuilder()
@@ -180,6 +180,7 @@ fun Int.toRomanNumeral(subtractive: Boolean = false): String {
 
 fun String.stripColor(): String = formattingCodesRegex.replace(this, "")
 
+fun String.capitalize() = lowercase().split(" ", "_").joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
 
 fun String.trimIgnoreColor(): String {
     val start = colorCodesStart.find(this)?.groups?.get("start")?.value ?: ""

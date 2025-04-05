@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.utils.extentions
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
+import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
@@ -14,6 +15,8 @@ fun ItemStack.getRawLore(): List<String> {
     val lore = this[DataComponents.LORE] ?: return emptyList()
     return lore.lines.map { it.stripped }
 }
+
+fun ItemStack.getLore(): List<Component> = this[DataComponents.LORE]?.lines ?: emptyList()
 
 val ItemStack.cleanName: String get() = hoverName.stripped
 
