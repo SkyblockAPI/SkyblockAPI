@@ -17,13 +17,14 @@ object SkyBlockItems {
     private val repo by RemoteData(
         CodecUtils.map(Codec.STRING, Codec.STRING).fieldOf("items").codec(),
         "https://raw.githubusercontent.com/SkyblockAPI/Data/refs/heads/main/namesToId.json",
-        "namesToId.json"
+        "namesToId.json",
     )
 
-    val nameToId: Map<String, String>
+    val idToName: Map<String, String>
         get() = repo ?: emptyMap()
 
-    fun getIdByDisplayName(name: String): String? = nameToId[name.lowercase()]
+    fun getIdByDisplayName(name: String): String? = idToName.entries.find { it.value.equals(name, true) }?.key
+    fun getDisplayNameById(id: String): String? = idToName.entries.find { it.key.equals(id, true) }?.value
 }
 
 @RequiresOptIn(

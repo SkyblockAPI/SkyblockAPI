@@ -9,7 +9,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.forNullGetter
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.runCatchBlocking
 import java.nio.file.Path
-import java.util.*
 
 class RemoteData<T : Any> internal constructor(
     codec: Codec<T>,

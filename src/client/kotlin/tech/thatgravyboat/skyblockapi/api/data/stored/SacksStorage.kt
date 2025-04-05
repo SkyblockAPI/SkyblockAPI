@@ -7,7 +7,7 @@ internal object SacksStorage {
     private val SACKS = StoredProfileData(
         ::SacksData,
         SacksData.CODEC,
-        "sacks.json",
+        "sacks_new.json",
     )
 
     var items: MutableMap<String, Int>
@@ -25,7 +25,7 @@ internal object SacksStorage {
 
     fun updateItemValue(item: String, diff: Int) {
         val prevAmount = items[item] ?: 0
-        val newAmount = prevAmount + diff
+        val newAmount = (prevAmount + diff).coerceAtLeast(0)
         updateItem(item, newAmount)
     }
 
