@@ -1,0 +1,26 @@
+package tech.thatgravyboat.skyblockapi.impl.tagkey
+
+import net.fabricmc.fabric.api.tag.client.v1.ClientTags
+import net.minecraft.tags.TagKey
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.Block
+
+interface AbstractTagKey<T> {
+    val key: TagKey<T>
+
+    operator fun contains(element: T): Boolean = ClientTags.isInWithLocalFallback(key, element)
+}
+
+interface BlockTagKey : AbstractTagKey<Block> {
+    override val key: TagKey<Block>
+
+    override operator fun contains(element: Block): Boolean = ClientTags.isInWithLocalFallback(key, element)
+}
+
+interface ItemTagKey : AbstractTagKey<Item> {
+    override val key: TagKey<Item>
+
+    operator fun contains(stack: ItemStack): Boolean = stack.item in this
+    override operator fun contains(element: Item): Boolean = ClientTags.isInWithLocalFallback(key, element)
+}

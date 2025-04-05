@@ -1,11 +1,15 @@
 package tech.thatgravyboat.skyblockapi.api
 
 import com.mojang.logging.LogUtils
+import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.resources.ResourceLocation
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.generated.Modules
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 
 object SkyBlockAPI {
+
+    internal val SELF = FabricLoader.getInstance().getModContainer("skyocean").get()
 
     @JvmStatic
     val eventBus = EventBus()
@@ -23,4 +27,6 @@ object SkyBlockAPI {
     internal fun postInit() {
         DataTypesRegistry.load()
     }
+
+    internal fun id(path: String) = ResourceLocation.fromNamespaceAndPath(SELF.metadata.id, path)
 }

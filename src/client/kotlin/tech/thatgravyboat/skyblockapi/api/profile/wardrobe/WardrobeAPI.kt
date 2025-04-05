@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTagKey
+import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
@@ -117,7 +117,7 @@ object WardrobeAPI {
         }
     }
 
-    private fun ItemStack.takeOrEmpty() = takeIf { it !in ItemTagKey.GLASS_PANES } ?: ItemStack.EMPTY
+    private fun ItemStack.takeOrEmpty() = takeIf { it !in ItemTag.GLASS_PANES } ?: ItemStack.EMPTY
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
