@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.base.predicates
 
-import net.minecraft.util.TriState
+import net.fabricmc.fabric.api.util.TriState
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerDemon
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerMiniBoss
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerMob
