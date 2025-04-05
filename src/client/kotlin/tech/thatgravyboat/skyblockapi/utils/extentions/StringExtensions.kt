@@ -180,7 +180,7 @@ fun Int.toRomanNumeral(subtractive: Boolean = false): String {
 
 fun String.stripColor(): String = formattingCodesRegex.replace(this, "")
 
-fun String.capitalize() = replace("_", " ").lowercase().split(" ").joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
+fun String.capitalize() = lowercase().split(" ", "_").joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
 
 fun String.trimIgnoreColor(): String {
     val start = colorCodesStart.find(this)?.groups?.get("start")?.value ?: ""
