@@ -21,7 +21,10 @@ private const val URL = "https://api.hypixel.net/v2/resources/skyblock/election"
 object ElectionAPI {
 
     private val chatGroup = RegexGroup.CHAT.group("election")
-    private val electionOverRegex = chatGroup.create("electionOver", "The election room is now closed\. Clerk Seraphine is doing a final count of the votes\.\.\.")
+    private val electionOverRegex = chatGroup.create(
+        "electionOver", 
+        "The election room is now closed\\. Clerk Seraphine is doing a final count of the votes\\.\\.\\.",
+    )
 
     private var scheduler: ScheduledFuture<*>? = null
     var rawData: ElectionJson? = null
