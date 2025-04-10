@@ -44,6 +44,7 @@ repositories {
     maven(url = "https://repo.hypixel.net/repository/Hypixel/")
     maven(url = "https://api.modrinth.com/maven")
     maven(url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+    maven(url = "https://maven.teamresourceful.com/repository/maven-public/")
 }
 
 dependencies {
@@ -60,6 +61,8 @@ dependencies {
 
     modImplementation("net.hypixel:mod-api:1.0.1")
     modImplementation("maven.modrinth:hypixel-mod-api:1.0.1+build.1+mc1.21")
+
+    modImplementation("tech.thatgravyboat.repo-lib:repo-lib:1.2.0")
 
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.1")
 }

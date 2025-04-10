@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.http.RemoteData
  */
 @Module
 @UseRepoLib
+@Deprecated("Use ItemAPI instead")
 object SkyBlockItems {
 
     private val repo by RemoteData(

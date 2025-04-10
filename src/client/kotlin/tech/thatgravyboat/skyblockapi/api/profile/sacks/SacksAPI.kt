@@ -90,6 +90,7 @@ object SacksAPI {
         }
     }
 
+    // TODO @sophie use the new thing here
     @OptIn(UseRepoLib::class)
     private fun getId(name: String): String {
         val formattedName = name.replace(Regex("[^\\w ]"), "").trim() // Removes the icon from gemstones
