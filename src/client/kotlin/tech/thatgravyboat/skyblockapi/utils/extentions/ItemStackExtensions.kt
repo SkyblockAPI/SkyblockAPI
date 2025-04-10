@@ -1,10 +1,17 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
+import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
+import net.minecraft.core.Holder
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.ResolvableProfile
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import java.util.UUID
 
 @Suppress("DEPRECATION")
 val ItemStack.tag: CompoundTag? get() = this[DataComponents.CUSTOM_DATA]?.unsafe
@@ -25,4 +32,21 @@ fun ItemStack.isSameItem(other: ItemStack?): Boolean {
 fun ItemStack.getTexture(): String? {
     val skin = this.get(DataComponents.PROFILE) ?: return null
     return skin.gameProfile.properties.get("textures").first().value
+}
+
+val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
+
+object ItemUtils {
+
+    fun createSkull(textureBase64: String): ItemStack {
+        val profile = GameProfile(UUID.randomUUID(), "a")
+        profile.properties.put("textures", Property("textures", textureBase64))
+        return createSkull(profile)
+    }
+
+    fun createSkull(profile: GameProfile): ItemStack {
+        val stack = ItemStack(Items.PLAYER_HEAD)
+        stack.set(DataComponents.PROFILE, ResolvableProfile(profile))
+        return stack
+    }
 }
