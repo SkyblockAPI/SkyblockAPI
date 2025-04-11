@@ -59,8 +59,9 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
 
-    modImplementation("net.hypixel:mod-api:1.0.1")
-    modImplementation("maven.modrinth:hypixel-mod-api:1.0.1+build.1+mc1.21")
+    include(modImplementation("net.hypixel:mod-api:1.0.1")!!)
+    include(modImplementation("maven.modrinth:hypixel-mod-api:1.0.1+build.1+mc1.21")!!)
+    include(implementation("tech.thatgravyboat.repo-lib:repo-lib:1.2.0")!!)
 
     modImplementation("tech.thatgravyboat.repo-lib:repo-lib:1.2.0")
 

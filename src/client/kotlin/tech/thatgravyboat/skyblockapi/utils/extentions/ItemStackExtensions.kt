@@ -37,6 +37,12 @@ fun ItemStack.getTexture(): String? {
     return skin.gameProfile.properties.get("textures").first().value
 }
 
+fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
+    val stack = ItemStack(item)
+    stack.builder()
+    return stack
+}
+
 val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
 
 object ItemUtils {
