@@ -10,8 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ChangedSackItem
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.SacksChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
-import tech.thatgravyboat.skyblockapi.api.remote.SkyBlockItems
-import tech.thatgravyboat.skyblockapi.api.remote.UseRepoLib
+import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
@@ -50,7 +49,7 @@ object SacksAPI {
 
             val changedItems = hoverComponents.mapNotNull {
                 addedItemsRegex.findOrNull(it.stripped, "amount", "item") { (amount, item) ->
-                    val id = getId(item)
+                    val id = RepoItemsAPI.getItemIdByName(item) ?: return@findOrNull null
                     return@findOrNull id to amount.replace("+", "").toIntValue()
                 }
             }
@@ -88,12 +87,5 @@ object SacksAPI {
                 SacksStorage.updateItem(actualId, amount.toIntValue())
             }
         }
-    }
-
-    // TODO @sophie use the new thing here
-    @OptIn(UseRepoLib::class)
-    private fun getId(name: String): String {
-        val formattedName = name.replace(Regex("[^\\w ]"), "").trim() // Removes the icon from gemstones
-        return SkyBlockItems.getIdByDisplayName(formattedName) ?: formattedName
     }
 }
