@@ -4,6 +4,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
@@ -28,4 +29,10 @@ fun ItemStack.isSameItem(other: ItemStack?): Boolean {
 fun ItemStack.getTexture(): String? {
     val skin = this.get(DataComponents.PROFILE) ?: return null
     return skin.gameProfile.properties.get("textures").first().value
+}
+
+fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
+    val stack = ItemStack(item)
+    stack.builder()
+    return stack
 }

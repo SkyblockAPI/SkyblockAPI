@@ -1,42 +1,12 @@
 package tech.thatgravyboat.skyblockapi.api.remote
 
-import com.mojang.serialization.Codec
-import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
-import tech.thatgravyboat.skyblockapi.utils.http.RemoteData
+import org.jetbrains.annotations.ApiStatus
 
-/**
- * Contains simplified SkyBlock item data.
- *
- * This does not contain any lore and just the ItemStack with their name and items with optional glint.
- */
-@Module
-@UseRepoLib
+@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22.0")
+@Deprecated("Use the new API to get item IDs.")
 object SkyBlockItems {
 
-    private val repo by RemoteData(
-        CodecUtils.map(Codec.STRING, Codec.STRING).fieldOf("items").codec(),
-        "https://raw.githubusercontent.com/SkyblockAPI/Data/refs/heads/main/namesToId.json",
-        "namesToId.json"
-    )
+    val nameToId: Map<String, String> get() = RepoItemsAPI.nameCache
 
-    val nameToId: Map<String, String>
-        get() = repo ?: emptyMap()
-
-    fun getIdByDisplayName(name: String): String? = nameToId[name.lowercase()]
+    fun getIdByDisplayName(name: String): String? = RepoItemsAPI.getItemIdByName(name)
 }
-
-@RequiresOptIn(
-    message = """
-        This API is not as exhaustive as the RepoLib API and may not 
-        contain all items and does not contain all information. 
-        It is recommended to use the RepoLib API for more accurate data.
-        If you are sure you want to use this API, you can suppress this warning.
-        
-        For information on how to use the RepoLib API, see https://github.com/SkyblockAPI/Repo-Lib
-    """,
-    level = RequiresOptIn.Level.WARNING,
-)
-@Retention(AnnotationRetention.BINARY)
-@Target(AnnotationTarget.CLASS)
-annotation class UseRepoLib
