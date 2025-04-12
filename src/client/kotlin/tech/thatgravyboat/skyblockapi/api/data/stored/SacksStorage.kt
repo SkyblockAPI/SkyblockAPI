@@ -1,14 +1,20 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
+import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.sacks.SacksData
 
 internal object SacksStorage {
     private val SACKS = StoredProfileData(
+        1,
         ::SacksData,
-        SacksData.CODEC,
-        "sacks_new.json",
-    )
+        "sacks.json",
+    ) { version ->
+        when (version) {
+            1 -> SacksData.CODEC
+            else -> Codec.unit { SacksData() }
+        }
+    }
 
     var items: MutableMap<String, Int>
         get() = SACKS.get()?.items ?: mutableMapOf()
