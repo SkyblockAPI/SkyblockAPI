@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
 import net.fabricmc.loader.api.FabricLoader
 import org.apache.commons.io.FileUtils
@@ -10,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
+import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.ScheduledFuture
@@ -17,13 +19,16 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private const val SAVE_DELAY = 1000 * 10
 
-class StoredData<T : Any>(
+internal class StoredData<T : Any>(
+    private val version: Int = 0,
     private var data: T,
-    private val codec: Codec<T>,
-    private val file: Path,
+    file: String,
+    private val codec: (Int) -> Codec<T>,
 ) {
-    constructor(data: T, codec: Codec<T>, file: String) : this(data, codec, defaultPath.resolve(file))
 
+    constructor(data: T, codec: Codec<T>, file: String) : this(0, data, file, { codec })
+
+    private val file: Path = defaultPath.resolve(file)
     private var lastScheduler: ScheduledFuture<*>? = null
     private var saveTime: Long = -1L
     private var loadedData: JsonElement? = null
@@ -43,7 +48,15 @@ class StoredData<T : Any>(
     private fun load() {
         if (this.loadedData != null) {
             try {
-                this.data = this.loadedData.toDataOrThrow(this.codec)
+                val data = this.loadedData as? JsonObject
+                if (data != null && data.has("@skyblockapi:version") && data.has("@skyblockapi:data")) {
+                    val version = data.get("@skyblockapi:version").asInt
+                    val dataElement = data.getAsJsonObject("@skyblockapi:data")
+
+                    this.data = dataElement.toDataOrThrow(this.codec(version))
+                } else {
+                    this.data = this.loadedData.toDataOrThrow(this.codec(0))
+                }
             } catch (e: Exception) {
                 Logger.error("Failed to load {} data", this.loadedData ?: "")
                 e.printStackTrace()
@@ -68,7 +81,12 @@ class StoredData<T : Any>(
 
     private fun saveToSystem() {
         try {
-            val json = data.toJson(codec) ?: return Logger.warn("Failed to encode {} to json", data)
+            val version = this.version
+            val codec = this.codec(version)
+            val json = JsonObject {
+                this["@skyblockapi:version"] = version
+                this["@skyblockapi:data"] = data.toJson(codec) ?: return Logger.warn("Failed to encode {} to json", data)
+            }
             FileUtils.write(file.toFile(), json.toPrettyString(), Charsets.UTF_8)
             Logger.debug("saved {}", file)
         } catch (e: Exception) {

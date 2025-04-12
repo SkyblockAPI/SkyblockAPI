@@ -55,3 +55,7 @@ fun <K> MutableMap<K, Float>.addOrPut(key: K, number: Float): Float = merge(key,
 fun <K> MutableMap<K, Long>.addOrPut(key: K, number: Long): Long = merge(key, number, Long::plus)!!
 
 internal fun <T : Any> MutableCollection<T>.addIfNotNull(element: T?): Boolean = element?.let { add(it) } ?: false
+
+fun <K, V> Map<K, V>.mapValuesNotNull(transform: (Map.Entry<K, V>) -> V?): Map<K, V> {
+    return this.mapNotNull { transform(it)?.let { value -> it.key to value } }.toMap()
+}

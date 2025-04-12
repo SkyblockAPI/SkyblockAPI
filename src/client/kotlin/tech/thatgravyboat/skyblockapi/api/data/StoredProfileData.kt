@@ -5,27 +5,35 @@ import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.generated.KCodec
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
-import java.nio.file.Path
 import java.util.*
 
-class StoredProfileData<T : Any>(
+internal class StoredProfileData<T : Any>(
+    version: Int = 0,
     private val data: () -> T,
-    codec: Codec<T>,
-    file: Path,
+    file: String,
+    codec: (Int) -> Codec<T>,
 ) {
-    constructor(data: () -> T, codec: Codec<T>, file: String) : this(data, codec, StoredData.defaultPath.resolve(file))
+
+    constructor(data: () -> T, codec: Codec<T>, file: String) : this(
+        0,
+        data,
+        file,
+        { codec },
+    )
 
     private val storedData = StoredData(
+        version,
         mutableMapOf(),
+        file,
+    ) {
         CodecUtils.map(
             KCodec.getCodec<UUID>(),
             CodecUtils.map(
                 KCodec.getCodec<String>(),
-                codec
-            )
-        ),
-        file
-    )
+                codec(it),
+            ),
+        )
+    }
 
     fun get(): T? {
         val profile = ProfileAPI.profileName ?: return null
