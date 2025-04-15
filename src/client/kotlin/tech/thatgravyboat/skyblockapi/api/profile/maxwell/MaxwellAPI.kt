@@ -81,11 +81,11 @@ object MaxwellAPI {
     )
     private val thaumaturgyStartTuningRegex = thaumaturgyGuiGroup.create(
         "tuning.start",
-        "^Your tuning:"
+        "^Your tuning:",
     )
     private val thaumaturgyTuningRegex = thaumaturgyGuiGroup.create(
         "tuning",
-        "(?<amount>[\\d,.]+)(?<icon>.) (?<name>.+)"
+        "(?<amount>[\\d,.]+)(?<icon>.) (?<name>.+)",
     )
     //endregion
 
@@ -109,7 +109,7 @@ object MaxwellAPI {
     )
     private val tuningStartRegex = bagsGroup.create(
         "tuning.start",
-        "^Tuning:"
+        "^Tuning:",
     )
 
     //region Tunings
@@ -120,11 +120,11 @@ object MaxwellAPI {
     )
     private val tuningsStatRegex = tuningsGroup.create(
         "stat",
-        "^(?<icon>.) (?<name>.+)"
+        "^(?<icon>.) (?<name>.+)",
     )
     private val tuningsAmountRegex = tuningsGroup.create(
         "amount",
-        "^You have: \\S+\\s\\+\\s(?<amount>[\\d,.]+)"
+        "^You have: \\S+\\s\\+\\s(?<amount>[\\d,.]+)",
     )
     //endregion
     //endregion
@@ -278,19 +278,17 @@ object MaxwellAPI {
 
     @Subscription
     fun onCommandRegister(event: RegisterCommandsEvent) {
-        event.register("sbapi") {
-            then("maxwell") {
-                then("reset") {
-                    callback {
-                        MaxwellStorage.reset()
-                        Text.debug("Reset Maxwell Data!").send()
-                    }
+        event.register("sbapi maxwell") {
+            then("reset") {
+                callback {
+                    MaxwellStorage.reset()
+                    Text.debug("Reset Maxwell Data!").send()
                 }
-                then("tunings") {
-                    callback {
-                        McClient.clipboard = tunings.joinToString { (stat, value) -> "$stat: $value" }
-                        Text.debug("Copied tunings to clipboard!").send()
-                    }
+            }
+            then("tunings") {
+                callback {
+                    McClient.clipboard = tunings.joinToString { (stat, value) -> "$stat: $value" }
+                    Text.debug("Copied tunings to clipboard!").send()
                 }
             }
         }

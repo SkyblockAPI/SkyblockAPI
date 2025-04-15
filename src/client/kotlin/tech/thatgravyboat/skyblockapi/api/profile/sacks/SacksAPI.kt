@@ -1,12 +1,16 @@
 package tech.thatgravyboat.skyblockapi.api.profile.sacks
 
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.SacksStorage
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ChangedSackItem
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.SacksChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
+import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
@@ -45,7 +49,8 @@ object SacksAPI {
 
             val changedItems = hoverComponents.mapNotNull {
                 addedItemsRegex.findOrNull(it.stripped, "amount", "item") { (amount, item) ->
-                    return@findOrNull item to amount.replace("+", "").toIntValue()
+                    val id = RepoItemsAPI.getItemIdByName(item) ?: return@findOrNull null
+                    return@findOrNull id to amount.replace("+", "").toIntValue()
                 }
             }
 
@@ -59,10 +64,28 @@ object SacksAPI {
     fun onInventoryUpdate(event: ContainerChangeEvent) {
         if (!sackTitleRegex.matches(event.title)) return
         val item = event.item
+        val id = event.item.getData(DataTypes.ID) ?: return
+
+        when (event.title) {
+            "Gemstones Sack" -> {
+                handleGemstones(item, id)
+                return
+            }
+
+            "Runes Sack" -> return // No one cares about you
+        }
 
         sackAmountRegex.anyMatch(item.getRawLore(), "amount") { (amount) ->
-            SacksStorage.updateItem(item.hoverName.stripped, amount.toIntValue())
+            SacksStorage.updateItem(id, amount.toIntValue())
         }
     }
 
+    private fun handleGemstones(item: ItemStack, id: String) {
+        listOf("Rough", "Flawed", "Fine").forEach { name ->
+            Regex(" $name: (?<amount>[\\d,.]+) .*").anyMatch(item.getRawLore(), "amount") { (amount) ->
+                val actualId = id.replace("ROUGH", name.uppercase())
+                SacksStorage.updateItem(actualId, amount.toIntValue())
+            }
+        }
+    }
 }

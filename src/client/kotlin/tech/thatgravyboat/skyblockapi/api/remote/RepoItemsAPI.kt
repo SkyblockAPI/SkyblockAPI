@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.remote
 
 import com.mojang.serialization.JsonOps
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.repolib.api.RepoAPI
@@ -33,6 +34,8 @@ object RepoItemsAPI {
     fun getItem(id: String): ItemStack = getItemOrNull(id) ?: ItemStack(Items.BARRIER).apply {
         this.set(DataComponents.ITEM_NAME, Text.of(id))
     }
+
+    fun getItemName(id: String): Component = getItem(id).hoverName
 
     fun getItemIdByName(name: String): String? = nameCache[name.lowercase()]
 }

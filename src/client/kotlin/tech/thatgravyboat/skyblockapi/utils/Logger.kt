@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils
 
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 
-object Logger {
+internal object Logger {
 
     fun debug(message: String, vararg args: Any) {
         if (!SkyBlockAPI.isDebug) return

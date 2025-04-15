@@ -47,12 +47,17 @@ object RepoPetsAPI {
             query.level,
             query.rarity,
             query.skin != null,
-            skin?.getData(DataTypes.RARITY)
+            skin?.getData(DataTypes.RARITY),
         )
         base[DataComponents.LORE] = ItemLore(pet.getFormattedLore(query.level, query.heldItem).map(Text::of))
 
         return@getOrPut base
     }
+
+    fun getPetAsItem(id: String, rarity: SkyBlockRarity, level: Int = 100, skin: String? = null, heldItem: String? = null) =
+        getPetAsItem(
+            PetQuery(id, rarity, level, skin, heldItem),
+        )
 
     fun getPetAsItem(query: PetQuery): ItemStack = getPetAsItemOrNull(query) ?: ItemStack(Items.BARRIER) {
         this[DataComponents.ITEM_NAME] = getFormattedName(query.id, query.level, query.rarity, query.skin != null, null)
@@ -63,11 +68,13 @@ object RepoPetsAPI {
         level: Int,
         rarity: SkyBlockRarity,
         hasSkin: Boolean,
-        skinRarity: SkyBlockRarity?
+        skinRarity: SkyBlockRarity?,
     ) = Text.join(
         Text.of("[Lvl $level] ") { this.color = TextColor.GRAY },
         Text.of(name) { this.color = rarity.color },
-        if (hasSkin) { Text.of(" ✦") { this.color = skinRarity?.color ?: TextColor.LIGHT_PURPLE } } else null,
+        if (hasSkin) {
+            Text.of(" ✦") { this.color = skinRarity?.color ?: TextColor.LIGHT_PURPLE }
+        } else null,
     ) {
         this.italic = false
     }

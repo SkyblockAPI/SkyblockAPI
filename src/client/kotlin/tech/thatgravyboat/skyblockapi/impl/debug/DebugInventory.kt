@@ -27,18 +27,16 @@ object DebugInventory {
 
     @Subscription
     fun onCommandRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi") {
-            then("inventory") {
-                callback {
-                    enabled = !enabled
-                    Text.multiline(
-                        "[SkyBlockAPI] Debug inventory: $enabled",
-                        "Use [C] to copy the raw item data.",
-                        "Use [S] to copy the skin.",
-                    ) {
-                        this.color = TextColor.YELLOW
-                    }.send()
-                }
+        event.register("sbapi inventory") {
+            callback {
+                enabled = !enabled
+                Text.multiline(
+                    "[SkyBlockAPI] Debug inventory: $enabled",
+                    "Use [C] to copy the raw item data.",
+                    "Use [S] to copy the skin.",
+                ) {
+                    this.color = TextColor.YELLOW
+                }.send()
             }
         }
     }

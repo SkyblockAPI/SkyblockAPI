@@ -111,30 +111,28 @@ object EffectsAPI {
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi") {
-            then("effects") {
-                then("copy") {
-                    callback {
-                        val effects = listOf(
-                            "Booster Cookie Expire Time: $boosterCookieExpireTime",
-                            "God Potion Duration: $godPotionDuration",
-                        )
+        event.register("sbapi effects") {
+            then("copy") {
+                callback {
+                    val effects = listOf(
+                        "Booster Cookie Expire Time: $boosterCookieExpireTime",
+                        "God Potion Duration: $godPotionDuration",
+                    )
 
-                        Text.of("[SkyBlockAPI] Copied Effects Data to clipboard.") {
-                            this.color = TextColor.YELLOW
-                        }.send()
+                    Text.of("[SkyBlockAPI] Copied Effects Data to clipboard.") {
+                        this.color = TextColor.YELLOW
+                    }.send()
 
-                        McClient.clipboard = effects.joinToString("\n")
-                    }
+                    McClient.clipboard = effects.joinToString("\n")
                 }
-                then("reset") {
-                    callback {
-                        EffectsStorage.boosterCookieExpireTime = Instant.DISTANT_PAST
-                        EffectsStorage.godPotionDuration = Duration.ZERO
-                        Text.of("[SkyBlockAPI] Reset Effects Data.") {
-                            this.color = TextColor.YELLOW
-                        }.send()
-                    }
+            }
+            then("reset") {
+                callback {
+                    EffectsStorage.boosterCookieExpireTime = Instant.DISTANT_PAST
+                    EffectsStorage.godPotionDuration = Duration.ZERO
+                    Text.of("[SkyBlockAPI] Reset Effects Data.") {
+                        this.color = TextColor.YELLOW
+                    }.send()
                 }
             }
         }

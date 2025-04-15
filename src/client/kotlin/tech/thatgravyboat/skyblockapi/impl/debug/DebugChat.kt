@@ -42,11 +42,9 @@ object DebugChat {
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi") {
-            then("chat") {
-                callback {
-                    McClient.setScreen(DebugChatScreen(messages))
-                }
+        event.register("sbapi chat") {
+            callback {
+                McClient.setScreen(DebugChatScreen(messages))
             }
         }
     }
