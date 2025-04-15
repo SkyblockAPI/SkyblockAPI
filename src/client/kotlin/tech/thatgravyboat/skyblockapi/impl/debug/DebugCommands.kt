@@ -45,80 +45,78 @@ object DebugCommands {
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi") {
-            then("copy") {
-                then("scoreboard") {
+        event.register("sbapi copy") {
+            then("scoreboard") {
+                then("raw") {
+                    callback {
+                        copyMessage("raw scoreboard")
+                        McClient.clipboard = McClient.scoreboard.joinToString("\n") {
+                            it.toJson(ComponentSerialization.CODEC).toPrettyString()
+                        }
+                    }
+                }
+
+                callback {
+                    copyMessage("scoreboard")
+                    McClient.clipboard = McClient.scoreboard.joinToString("\n") { it.stripped }
+                }
+            }
+
+            then("tablist") {
+                then("footer") {
                     then("raw") {
                         callback {
-                            copyMessage("raw scoreboard")
-                            McClient.clipboard = McClient.scoreboard.joinToString("\n") {
-                                it.toJson(ComponentSerialization.CODEC).toPrettyString()
-                            }
+                            copyMessage("raw tablist footer")
+                            McClient.clipboard = tabListFooter.toJson(ComponentSerialization.CODEC).toPrettyString()
                         }
                     }
 
                     callback {
-                        copyMessage("scoreboard")
-                        McClient.clipboard = McClient.scoreboard.joinToString("\n") { it.stripped }
+                        copyMessage("tablist footer")
+                        McClient.clipboard = tabListFooter.stripped
                     }
                 }
 
-                then("tablist") {
-                    then("footer") {
-                        then("raw") {
-                            callback {
-                                copyMessage("raw tablist footer")
-                                McClient.clipboard = tabListFooter.toJson(ComponentSerialization.CODEC).toPrettyString()
-                            }
-                        }
-
-                        callback {
-                            copyMessage("tablist footer")
-                            McClient.clipboard = tabListFooter.stripped
-                        }
-                    }
-
-                    then("header") {
-                        then("raw") {
-                            callback {
-                                copyMessage("raw tablist header")
-                                McClient.clipboard = tabListHeader.toJson(ComponentSerialization.CODEC).toPrettyString()
-                            }
-                        }
-
-                        callback {
-                            copyMessage("tablist header")
-                            McClient.clipboard = tabListHeader.stripped
-                        }
-                    }
-
+                then("header") {
                     then("raw") {
                         callback {
-                            copyMessage("raw tablist")
-                            McClient.clipboard = McClient.tablist.joinToString("\n") {
-                                it.displayName.toJson(ComponentSerialization.CODEC).toPrettyString()
-                            }
+                            copyMessage("raw tablist header")
+                            McClient.clipboard = tabListHeader.toJson(ComponentSerialization.CODEC).toPrettyString()
                         }
                     }
 
                     callback {
-                        copyMessage("tablist")
-                        McClient.clipboard = McClient.tablist.joinToString("\n") { it.displayName.stripped }
+                        copyMessage("tablist header")
+                        McClient.clipboard = tabListHeader.stripped
                     }
                 }
 
-                then("item") {
+                then("raw") {
                     callback {
-                        copyMessage("item")
-                        McClient.clipboard = McPlayer.heldItem.toJson(ItemStack.CODEC).toPrettyString()
+                        copyMessage("raw tablist")
+                        McClient.clipboard = McClient.tablist.joinToString("\n") {
+                            it.displayName.toJson(ComponentSerialization.CODEC).toPrettyString()
+                        }
                     }
                 }
 
-                then("actionbar") {
-                    callback {
-                        copyMessage("actionbar")
-                        McClient.clipboard = actionbar
-                    }
+                callback {
+                    copyMessage("tablist")
+                    McClient.clipboard = McClient.tablist.joinToString("\n") { it.displayName.stripped }
+                }
+            }
+
+            then("item") {
+                callback {
+                    copyMessage("item")
+                    McClient.clipboard = McPlayer.heldItem.toJson(ItemStack.CODEC).toPrettyString()
+                }
+            }
+
+            then("actionbar") {
+                callback {
+                    copyMessage("actionbar")
+                    McClient.clipboard = actionbar
                 }
             }
         }
