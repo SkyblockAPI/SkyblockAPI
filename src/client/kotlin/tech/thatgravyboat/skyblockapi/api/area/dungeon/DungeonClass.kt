@@ -2,10 +2,10 @@ package tech.thatgravyboat.skyblockapi.api.area.dungeon
 
 enum class DungeonClass(val displayName: String) {
     ARCHER("Archer"),
-    BERSERKER("Berserker"),
+    BERSERKER("Berserk"),
     HEALER("Healer"),
     MAGE("Mage"),
-    TANK("Tank"),
+    TANK("Tank")
     ;
 
     companion object {

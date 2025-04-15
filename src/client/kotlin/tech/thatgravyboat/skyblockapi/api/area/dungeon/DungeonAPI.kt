@@ -182,7 +182,7 @@ object DungeonAPI {
                     }
                     return@findThenNull
                 }
-                val playerClass = DungeonClass.getByName(dungeonClass) ?: return@findThenNull
+                val playerClass = DungeonClass.getByName(dungeonClass)
                 val player = DungeonPlayer(name, playerClass, level.parseRomanOrArabic())
                 if (name == ownName) {
                     ownPlayer = player
