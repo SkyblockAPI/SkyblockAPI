@@ -181,6 +181,7 @@ fun Int.toRomanNumeral(subtractive: Boolean = false): String {
 fun String.stripColor(): String = formattingCodesRegex.replace(this, "")
 
 fun String.capitalize() = lowercase().split(" ", "_").joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
+fun String.toTitleCase() = capitalize()
 
 fun String.trimIgnoreColor(): String {
     val start = colorCodesStart.find(this)?.groups?.get("start")?.value ?: ""
