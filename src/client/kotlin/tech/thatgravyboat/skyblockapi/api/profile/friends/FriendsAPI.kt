@@ -66,7 +66,7 @@ object FriendsAPI {
     ).toComponentRegex()
     private val friendEntryHoverNameRegex = listGroup.create(
         "entry.hover",
-        "Click here to view (?<name>[a-zA-Z0-9_]+)'s profile"
+        "Click here to view (?<name>[a-zA-Z0-9_]+)'s profile",
     )
 
     private val friendJoinLeaveRegex = regexGroup.create(
@@ -190,85 +190,77 @@ object FriendsAPI {
             val friends = friends.map { it.name }
             SharedSuggestionProvider.suggest(friends, builder)
         }
-        event.register("sbapi") {
-            then("friends") {
-                then("add") {
-                    then("name", StringArgumentType.string()) {
-                        callback {
-                            val name = StringArgumentType.getString(this, "name") ?: return@callback
-                            FriendStorage.removeFriend(name)
-                            FriendStorage.addFriend(name)
-                            Text.debug("Added $name to friends list.").send()
-                        }
-                    }
+        event.register("sbapi friends") {
+            then("add name", StringArgumentType.string()) {
+                callback {
+                    val name = StringArgumentType.getString(this, "name") ?: return@callback
+                    FriendStorage.removeFriend(name)
+                    FriendStorage.addFriend(name)
+                    Text.debug("Added $name to friends list.").send()
                 }
-                then("remove") {
-                    then("name", StringArgumentType.string(), provider) {
-                        callback {
-                            val name = StringArgumentType.getString(this, "name") ?: return@callback
-                            FriendStorage.removeFriend(name)
-                            Text.debug("Removed $name from friends list.").send()
-                        }
-                    }
+            }
+            then("remove name", StringArgumentType.string(), provider) {
+                callback {
+                    val name = StringArgumentType.getString(this, "name") ?: return@callback
+                    FriendStorage.removeFriend(name)
+                    Text.debug("Removed $name from friends list.").send()
                 }
-                then("list") {
-                    callback {
-                        val friends = friends
-                        if (friends.isEmpty()) {
-                            Text.debug("You have no friends. :(").send()
-                            return@callback
-                        }
-                        Text.debug("Friends (${friends.size}):").send()
-                        friends.forEach { friend ->
-                            Text.debug(" - ${friend.name}") {
-                                if (friend.bestFriend) {
-                                    val friendText = Text.of(" (Best Friend)") {
-                                        this.color = TextColor.GREEN
-                                        this.bold = true
-                                    }
-                                    append(friendText)
+            }
+            then("list") {
+                callback {
+                    val friends = friends
+                    if (friends.isEmpty()) {
+                        Text.debug("You have no friends. :(").send()
+                        return@callback
+                    }
+                    Text.debug("Friends (${friends.size}):").send()
+                    friends.forEach { friend ->
+                        Text.debug(" - ${friend.name}") {
+                            if (friend.bestFriend) {
+                                val friendText = Text.of(" (Best Friend)") {
+                                    this.color = TextColor.GREEN
+                                    this.bold = true
                                 }
-                                if (friend.nickname != null) {
-                                    val friendText = Text.of(" (Nick: ${friend.nickname})") {
-                                        this.color = TextColor.YELLOW
-                                    }
-                                    append(friendText)
-                                }
-                            }.send()
-                        }
-                    }
-                }
-                then("check") {
-                    then("name", StringArgumentType.string()) {
-                        callback {
-                            val name = StringArgumentType.getString(this, "name") ?: return@callback
-                            val friend = FriendStorage.getFriend(name)
-                            if (friend == null) {
-                                Text.debug("$name is not your friend.").send()
-                                return@callback
-                            }
-                            val bestFriend = if (friend.bestFriend) "Best Friend" else "Friend"
-                            val friendText = Text.of(bestFriend) {
-                                this.color = TextColor.GREEN
-                                this.bold = friend.bestFriend
-                            }
-                            Text.debug("${friend.name} is your ") {
                                 append(friendText)
-                                if (friend.nickname != null) {
-                                    val nicknameText = Text.of(" (Nick: ${friend.nickname})") {
-                                        this.color = TextColor.YELLOW
-                                    }
-                                    append(nicknameText)
+                            }
+                            if (friend.nickname != null) {
+                                val friendText = Text.of(" (Nick: ${friend.nickname})") {
+                                    this.color = TextColor.YELLOW
                                 }
-                            }.send()
-                        }
+                                append(friendText)
+                            }
+                        }.send()
                     }
                 }
-                then("clear") {
-                    callback {
-                        FriendStorage.clear()
-                        Text.debug("Cleared friends list.").send()
+            }
+            then("check name", StringArgumentType.string()) {
+                callback {
+                    val name = StringArgumentType.getString(this, "name") ?: return@callback
+                    val friend = FriendStorage.getFriend(name)
+                    if (friend == null) {
+                        Text.debug("$name is not your friend.").send()
+                        return@callback
                     }
+                    val bestFriend = if (friend.bestFriend) "Best Friend" else "Friend"
+                    val friendText = Text.of(bestFriend) {
+                        this.color = TextColor.GREEN
+                        this.bold = friend.bestFriend
+                    }
+                    Text.debug("${friend.name} is your ") {
+                        append(friendText)
+                        if (friend.nickname != null) {
+                            val nicknameText = Text.of(" (Nick: ${friend.nickname})") {
+                                this.color = TextColor.YELLOW
+                            }
+                            append(nicknameText)
+                        }
+                    }.send()
+                }
+            }
+            then("clear") {
+                callback {
+                    FriendStorage.clear()
+                    Text.debug("Cleared friends list.").send()
                 }
             }
         }

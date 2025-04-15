@@ -33,64 +33,58 @@ object DebugPackets {
         }
         val packetKeys = packetTypes.keys.map(ResourceLocation::toString).toList()
 
-        event.register("sbapi") {
-            then("logpackets") {
-                callback {
-                    logPackets = !logPackets
-                    Text.of("[SkyBlockAPI] Packet logging is now ${if (logPackets) "enabled" else "disabled"}") {
+        event.register("sbapi logpackets") {
+            callback {
+                logPackets = !logPackets
+                Text.of("[SkyBlockAPI] Packet logging is now ${if (logPackets) "enabled" else "disabled"}") {
+                    this.color = TextColor.YELLOW
+                }.send()
+
+                if (!logPackets) {
+                    Text.of("[SkyBlockAPI] Packet summary:") {
                         this.color = TextColor.YELLOW
                     }.send()
-
-                    if (!logPackets) {
-                        Text.of("[SkyBlockAPI] Packet summary:") {
+                    summary.entries.sortedBy { it.value }.forEach { (packet, count) ->
+                        Text.of("$packet - $count") {
                             this.color = TextColor.YELLOW
                         }.send()
-                        summary.entries.sortedBy { it.value }.forEach { (packet, count) ->
-                            Text.of("$packet - $count") {
-                                this.color = TextColor.YELLOW
-                            }.send()
-                        }
-                        summary.clear()
                     }
+                    summary.clear()
                 }
+            }
 
-                then("list") {
-                    callback {
-                        Text.of("[SkyBlockAPI] Packets to log:") {
+            then("list") {
+                callback {
+                    Text.of("[SkyBlockAPI] Packets to log:") {
+                        this.color = TextColor.YELLOW
+                    }.send()
+                    toLog.forEach {
+                        Text.of(it.id.toString()) {
                             this.color = TextColor.YELLOW
                         }.send()
-                        toLog.forEach {
-                            Text.of(it.id.toString()) {
-                                this.color = TextColor.YELLOW
-                            }.send()
-                        }
                     }
                 }
+            }
 
-                then("add") {
-                    then("packet", StringArgumentType.greedyString(), packetKeys) {
-                        callback {
-                            val id = ResourceLocation.tryParse(StringArgumentType.getString(this, "packet")) ?: return@callback
-                            val packetType = packetTypes[id] ?: return@callback
-                            toLog.add(packetType)
-                            Text.of("[SkyBlockAPI] Added packet ${packetType.id} to log list") {
-                                this.color = TextColor.YELLOW
-                            }.send()
-                        }
-                    }
+            then("add packet", StringArgumentType.greedyString(), packetKeys) {
+                callback {
+                    val id = ResourceLocation.tryParse(StringArgumentType.getString(this, "packet")) ?: return@callback
+                    val packetType = packetTypes[id] ?: return@callback
+                    toLog.add(packetType)
+                    Text.of("[SkyBlockAPI] Added packet ${packetType.id} to log list") {
+                        this.color = TextColor.YELLOW
+                    }.send()
                 }
+            }
 
-                then("remove") {
-                    then("packet", StringArgumentType.greedyString(), packetKeys) {
-                        callback {
-                            val id = ResourceLocation.tryParse(StringArgumentType.getString(this, "packet")) ?: return@callback
-                            val packetType = packetTypes[id] ?: return@callback
-                            toLog.remove(packetType)
-                            Text.of("[SkyBlockAPI] Removed packet ${packetType.id} to log list") {
-                                this.color = TextColor.YELLOW
-                            }.send()
-                        }
-                    }
+            then("remove packet", StringArgumentType.greedyString(), packetKeys) {
+                callback {
+                    val id = ResourceLocation.tryParse(StringArgumentType.getString(this, "packet")) ?: return@callback
+                    val packetType = packetTypes[id] ?: return@callback
+                    toLog.remove(packetType)
+                    Text.of("[SkyBlockAPI] Removed packet ${packetType.id} to log list") {
+                        this.color = TextColor.YELLOW
+                    }.send()
                 }
             }
         }

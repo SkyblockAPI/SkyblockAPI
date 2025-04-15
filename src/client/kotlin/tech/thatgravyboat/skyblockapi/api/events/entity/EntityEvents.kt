@@ -25,11 +25,9 @@ object EntityEvents {
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi") {
-            then("mob_attachments") {
-                callback {
-                    debug = !debug
-                }
+        event.register("sbapi mob_attachments") {
+            callback {
+                debug = !debug
             }
         }
     }

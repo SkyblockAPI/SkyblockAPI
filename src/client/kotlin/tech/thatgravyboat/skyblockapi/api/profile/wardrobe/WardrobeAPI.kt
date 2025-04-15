@@ -121,28 +121,26 @@ object WardrobeAPI {
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi") {
-            then("wardrobe") {
-                then("copy") {
-                    callback {
-                        val currentSlot = "Current Slot: $currentSlot"
-                        val slots =
-                            slots.map { "Id: ${it.id} - Armor: ${it.armor.map { a -> a.hoverName.stripped }} - Locked: ${it.locked}" }
+        event.register("sbapi wardrobe") {
+            then("copy") {
+                callback {
+                    val currentSlot = "Current Slot: $currentSlot"
+                    val slots =
+                        slots.map { "Id: ${it.id} - Armor: ${it.armor.map { a -> a.hoverName.stripped }} - Locked: ${it.locked}" }
 
-                        Text.of("[SkyBlockAPI] Copied Wardrobe Data to clipboard.") {
-                            this.color = TextColor.YELLOW
-                        }.send()
+                    Text.of("[SkyBlockAPI] Copied Wardrobe Data to clipboard.") {
+                        this.color = TextColor.YELLOW
+                    }.send()
 
-                        McClient.clipboard = "$currentSlot\n${slots.joinToString("\n")}"
-                    }
+                    McClient.clipboard = "$currentSlot\n${slots.joinToString("\n")}"
                 }
-                then("reset") {
-                    callback {
-                        Text.of("[SkyBlockAPI] Reset Wardrobe Data.") {
-                            this.color = TextColor.YELLOW
-                        }.send()
-                        WardrobeStorage.clear()
-                    }
+            }
+            then("reset") {
+                callback {
+                    Text.of("[SkyBlockAPI] Reset Wardrobe Data.") {
+                        this.color = TextColor.YELLOW
+                    }.send()
+                    WardrobeStorage.clear()
                 }
             }
         }

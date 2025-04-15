@@ -41,7 +41,7 @@ object PartyAPI {
 
     private val ownJoinedRegex = ownGroup.create(
         "join",
-        "^You have joined (?:\\[.+] )?(?<leader>[a-zA-Z0-9_]+)'s? party!$"
+        "^You have joined (?:\\[.+] )?(?<leader>[a-zA-Z0-9_]+)'s? party!$",
     )
     private val ownLeaveRegex = ownGroup.createList(
         "leave",
@@ -50,50 +50,50 @@ object PartyAPI {
         "^You left the party\\.",
         "^The party was disbanded because all invites expired and the party was empty\\.",
         "^You are not (?:currently )?in a party\\.",
-        "^The party was disbanded because the party leader disconnected\\."
+        "^The party was disbanded because the party leader disconnected\\.",
     )
 
     private val otherJoinedRegex = otherGroup.create(
         "join",
-        "^(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) joined the party\\.$"
+        "^(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) joined the party\\.$",
     )
     private val otherInPartyRegex = otherGroup.create(
         "inparty",
-        "^You'll be partying with: (?<members>.+)"
+        "^You'll be partying with: (?<members>.+)",
     )
     private val otherLeftRegexList = otherGroup.createList(
         "left",
         "^(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) has (?:left|been removed from) the party\\.",
         "^Kicked (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) because they were offline\\.",
-        "^(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) was removed from your party because they disconnected\\."
+        "^(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) was removed from your party because they disconnected\\.",
     )
 
     private val transferLeaveRegex = transferGroup.create(
         "leave",
-        "^The party was transferred to (?:\\[.+] )?(?<leader>[a-zA-Z0-9_]+) because (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) left"
+        "^The party was transferred to (?:\\[.+] )?(?<leader>[a-zA-Z0-9_]+) because (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) left",
     )
     private val transferRegex = transferGroup.create(
         "normal",
-        "^The party was transferred to (?:\\[.+] )?(?<leader>[a-zA-Z0-9_]+) by (?:\\[.+] )?(?<mod>[a-zA-Z0-9_]+)"
+        "^The party was transferred to (?:\\[.+] )?(?<leader>[a-zA-Z0-9_]+) by (?:\\[.+] )?(?<mod>[a-zA-Z0-9_]+)",
     )
 
     private val listMembersRegex = chatGroup.create(
         "list",
-        "^Party (?<role>Leader|Moderators|Members): (?<members>.+)"
+        "^Party (?<role>Leader|Moderators|Members): (?<members>.+)",
     )
 
     private val partyFinderRegex = chatGroup.create(
         "partyfinder",
-        "^Party Finder > (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) joined the"
+        "^Party Finder > (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) joined the",
     )
     private val allInviteRegex = chatGroup.create(
         "allinvite",
-        "(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) (?<state>enabled|disabled) All Invite"
+        "(?:\\[.+] )?(?<member>[a-zA-Z0-9_]+) (?<state>enabled|disabled) All Invite",
     )
 
     private val partyMessageRegex = chatGroup.create(
         "message",
-        "^Party > (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+): "
+        "^Party > (?:\\[.+] )?(?<member>[a-zA-Z0-9_]+): ",
     ).toComponentRegex()
     //endregion
 
@@ -166,6 +166,7 @@ object PartyAPI {
                     this.members = emptyList()
                     PartyRole.LEADER
                 }
+
                 "Moderators" -> PartyRole.MOD
 
                 else -> PartyRole.MEMBER
@@ -227,22 +228,20 @@ object PartyAPI {
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi") {
-            then("party") {
-                callback {
-                    Text.of("[SkyBlockAPI] Copied Party Info to clipboard.") {
-                        this.color = TextColor.YELLOW
-                    }.send()
-                    val string = buildList {
-                        add("inParty: $inParty")
-                        add("leader: $leader")
-                        add("members: (${members.joinToString()})")
-                        add("size: ${this@PartyAPI.size}")
-                        add("allInvite: $allInvite")
-                    }.joinToString("\n")
+        event.register("sbapi party") {
+            callback {
+                Text.of("[SkyBlockAPI] Copied Party Info to clipboard.") {
+                    this.color = TextColor.YELLOW
+                }.send()
+                val string = buildList {
+                    add("inParty: $inParty")
+                    add("leader: $leader")
+                    add("members: (${members.joinToString()})")
+                    add("size: ${this@PartyAPI.size}")
+                    add("allInvite: $allInvite")
+                }.joinToString("\n")
 
-                    McClient.clipboard = string
-                }
+                McClient.clipboard = string
             }
         }
     }
