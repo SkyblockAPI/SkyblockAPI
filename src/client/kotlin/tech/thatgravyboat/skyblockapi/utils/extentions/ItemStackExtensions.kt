@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ResolvableProfile
+import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.UUID
 
@@ -45,6 +46,8 @@ fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
 
 val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
 
+@Deprecated("")
+@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6")
 object ItemUtils {
 
     fun createSkull(textureBase64: String): ItemStack {
