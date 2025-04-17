@@ -24,7 +24,8 @@ object RepoItemsAPI {
     }
 
     fun getItemOrNull(id: String): ItemStack? = cache.getOrPut(id.uppercase()) {
-        val json = RepoAPI.items().getItem(id.uppercase()) ?: return@getOrPut null
+        val id = id.uppercase().replace(":", "-").takeUnless { it == "MUSHROOM_COLLECTION" } ?: "RED_MUSHROOM"
+        val json = RepoAPI.items().getItem(id) ?: return@getOrPut null
         ItemStack.CODEC.parse(JsonOps.INSTANCE, json)
             .ifError { Logger.error(it.message()) }
             .result()
