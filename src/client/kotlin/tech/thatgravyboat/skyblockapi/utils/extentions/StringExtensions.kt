@@ -133,8 +133,7 @@ fun String?.parseRomanNumeral(): Int = runCatching {
     return@runCatching total
 }.getOrDefault(0)
 
-fun <T : Enum<T>> Enum<T>.toFormattedName(): String =
-    name.split("_").joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
+fun <T : Enum<T>> Enum<T>.toFormattedName(): String = name.toTitleCase()
 
 private val regexGroup = Regexes.group("string")
 
