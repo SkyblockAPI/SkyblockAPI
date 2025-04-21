@@ -14,6 +14,7 @@
         "events.KeyboardHandlerMixin",
         "events.MouseHandlerMixin",
         "events.ScreenMixin",
+        "features.GuiGraphicsMixin",
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin",
         "tagattachments.ClientLevelMixin",
@@ -26,9 +27,11 @@
         "defaultRequire": 1
     },
     "mixins": [
+        "events.AbstractContainerMenuMixin",
         "events.ConnectionMixin",
         "events.ItemStackMixin",
         "features.ItemStackDataTypeMixin",
+        "features.VisualItemMixin",
         "fixes.FishingHookMixin",
         "fixes.NarratorMixin",
         "fixes.ScoreboardMixin",
