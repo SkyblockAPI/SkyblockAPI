@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.mixins.events;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +21,10 @@ public class AbstractContainerMenuMixin {
     @Final
     public int containerId;
 
+    @Shadow
+    @Final
+    public NonNullList<Slot> slots;
+
     @WrapOperation(method = {"initializeContents", "setItem"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;set(Lnet/minecraft/world/item/ItemStack;)V"))
     public void setItemEvent(Slot instance, ItemStack itemStack, Operation<Void> original) {
         original.call(instance, itemStack);
@@ -30,7 +35,7 @@ public class AbstractContainerMenuMixin {
         if (asMenu.getMenu().containerId != containerId) {
             return;
         }
-        new InventoryChangeEvent(itemStack, instance, asMenu.getTitle()).post$skyblock_api_client();
+        new InventoryChangeEvent(itemStack, instance, asMenu.getTitle(), slots, asMenu).post$skyblock_api_client();
     }
 
 }
