@@ -1,0 +1,35 @@
+package tech.thatgravyboat.skyblockapi.api.item
+
+import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
+import java.util.function.IntConsumer
+
+internal interface VisualItemAccessor {
+    fun `skyblockapi$setVisualItem`(item: ItemStack?)
+    fun `skyblockapi$getVisualItem`(): ItemStack?
+    fun `skyblockapi$setSlotText`(slotText: String?)
+    fun `skyblockapi$getSlotText`(): String?
+    fun `skyblockapi$setOnClickAction`(clickAction: IntConsumer?)
+    fun `skyblockapi$getOnClickAction`(): IntConsumer?
+
+    companion object {
+        fun getVisualItemAccessor(item: ItemStack?): VisualItemAccessor {
+            @Suppress("CAST_NEVER_SUCCEEDS")
+            return item as VisualItemAccessor
+        }
+    }
+}
+
+internal fun ItemStack.asVisualItemAccessor(): VisualItemAccessor {
+    return VisualItemAccessor.getVisualItemAccessor(this)
+}
+
+fun ItemStack.replaceVisually(builder: ItemBuilder.() -> Unit) = replaceVisually(ItemBuilder().apply { builder() }.build())
+
+fun ItemStack.replaceVisually(replacement: ItemStack?) {
+    this.asVisualItemAccessor().`skyblockapi$setVisualItem`(replacement)
+}
+
+internal fun ItemStack.getClickAction() = this.asVisualItemAccessor().`skyblockapi$getOnClickAction`()
+internal fun ItemStack.getVisualItem() = this.asVisualItemAccessor().`skyblockapi$getVisualItem`()
+
