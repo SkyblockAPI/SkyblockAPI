@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.area.hub
 import tech.thatgravyboat.skyblockapi.api.data.Candidate
 import tech.thatgravyboat.skyblockapi.api.data.ElectionJson
 import tech.thatgravyboat.skyblockapi.api.data.Perk
+import tech.thatgravyboat.skyblockapi.api.data.PerkJson
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.MayorUpdateEvent
@@ -73,10 +74,16 @@ object ElectionAPI {
         currentMinister = mayor.minister?.let { Candidate.getCandidate(it.name) }
 
         Perk.reset()
-        mayor.perks.forEach { perk ->
-            Perk.getPerk(perk.name)?.active = true
-        }
-        mayor.minister?.perk?.let { Perk.getPerk(it.name)?.active = true }
+        mayor.perks.forEach(::handlePerk)
+        mayor.minister?.perk?.let(::handlePerk)
+
+        println(mayor)
+    }
+
+    private fun handlePerk(perk: PerkJson) {
+        val perkData = Perk.getPerk(perk.name) ?: return
+        perkData.active = true
+        perkData.description = perk.description
     }
 
     @Subscription
