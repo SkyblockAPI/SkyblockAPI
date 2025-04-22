@@ -76,8 +76,6 @@ object ElectionAPI {
         Perk.reset()
         mayor.perks.forEach(::handlePerk)
         mayor.minister?.perk?.let(::handlePerk)
-
-        println(mayor)
     }
 
     private fun handlePerk(perk: PerkJson) {
