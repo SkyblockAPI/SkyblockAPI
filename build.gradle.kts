@@ -61,7 +61,7 @@ dependencies {
 
     include(modImplementation("net.hypixel:mod-api:1.0.1")!!)
     include(modImplementation("maven.modrinth:hypixel-mod-api:1.0.1+build.1+mc1.21")!!)
-    include(implementation("tech.thatgravyboat.repo-lib:repo-lib:1.2.0")!!)
+    include(implementation("tech.thatgravyboat.repo-lib:repo-lib:1.3.0")!!)
 
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.1")
 }
