@@ -41,7 +41,7 @@ object McClient {
     val mouse: Pair<Double, Double>
         get() = Pair(
             self.mouseHandler.xpos() * (window.guiScaledWidth / window.screenWidth.coerceAtLeast(1).toDouble()),
-            self.mouseHandler.ypos() * (window.guiScaledHeight / window.screenHeight.coerceAtLeast(1).toDouble())
+            self.mouseHandler.ypos() * (window.guiScaledHeight / window.screenHeight.coerceAtLeast(1).toDouble()),
         )
 
     val tablist: List<PlayerInfo>

@@ -97,6 +97,45 @@ object TextUtils {
         return components + current
     }
 
+    private fun <T> split(
+        splits: List<T>,
+        maxWidth: Int,
+        calc: (T) -> Int,
+        joiner: (List<T>) -> T,
+    ): List<T> {
+        val output = mutableListOf<T>()
+        var current = mutableListOf<T>()
+        var currentLength = 0
+        for (split in splits) {
+            val splitWidth = calc.invoke(split)
+            if (currentLength + splitWidth > maxWidth) {
+                output.add(joiner.invoke(current))
+                current.clear()
+                currentLength = 0
+            }
+            current.add(split)
+            currentLength += splitWidth
+        }
+
+        if (current.isNotEmpty()) {
+            output.add(joiner.invoke(current))
+        }
+
+        return output
+    }
+
+    fun Component.splitToWidth(separator: String, maxWidth: Int): List<Component> = split(
+        this.split(separator),
+        maxWidth,
+        McFont::width
+    ) { Text.join(*it.toTypedArray(), Text.of(separator)) }
+
+    fun String.splitToWidth(separator: String, maxWidth: Int): List<String> = split(
+        this.split(separator),
+        maxWidth,
+        McFont::width
+    ) { it.joinToString(separator) }
+
 }
 
 object TextStyle {
