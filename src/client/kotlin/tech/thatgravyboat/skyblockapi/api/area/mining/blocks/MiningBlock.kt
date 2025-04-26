@@ -102,7 +102,7 @@ enum class MiningBlock(
     ),
     MYCELIUM(
         Blocks.MYCELIUM,
-        { SPIDERS_DEN.inIsland() },
+        { CRIMSON_ISLE.inIsland() },
         MiningFortuneType.BLOCK,
         Family.EXTRA_NETHER,
     ),
