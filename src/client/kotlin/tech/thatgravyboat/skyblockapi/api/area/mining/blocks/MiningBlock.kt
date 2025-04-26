@@ -6,6 +6,8 @@ import tech.thatgravyboat.skyblockapi.api.area.mining.GlaciteAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockMinedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.MiningBlockMinedEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.*
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -113,7 +115,26 @@ enum class MiningBlock(
         Family.EXTRA_NETHER,
     ),
 
-    // TODO: Hard Stone
+    // Hard Stone
+    HARD_STONE_CRYSTAL_HOLLOWS(
+        // There are probably more but mostly useless
+        listOf(Blocks.STONE, Blocks.CLAY, Blocks.COBBLESTONE, Blocks.GRAY_WOOL, Blocks.LIGHT_GRAY_WOOL, Blocks.CYAN_TERRACOTTA),
+        { CRYSTAL_HOLLOWS.inIsland() },
+        MiningFortuneType.BLOCK,
+        Family.HARD_STONE,
+    ),
+    HARD_STONE_GLACITE_TUNNELS(
+        listOf(Blocks.INFESTED_STONE, Blocks.LIGHT_GRAY_WOOL),
+        { GlaciteAPI.inGlaciteTunnels() },
+        MiningFortuneType.BLOCK,
+        Family.HARD_STONE,
+    ),
+    HARD_STONE_MINESHAFT(
+        listOf(Blocks.STONE, Blocks.LIGHT_GRAY_WOOL),
+        { SkyBlockIsland.inAnyIsland(MINESHAFT) },
+        MiningFortuneType.BLOCK,
+        Family.HARD_STONE,
+    ),
 
     // Mithril Family
     LOW_TIER_MITHRIL(
@@ -279,12 +300,12 @@ enum class MiningBlock(
         Family.GLACITE,
     ),
     LOW_TIER_TUNGSTEN(
-        Blocks.COBBLESTONE,
-        { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
+        listOf(Blocks.INFESTED_COBBLESTONE, Blocks.COBBLESTONE),
+        { GlaciteAPI.inGlaciteTunnels() },
         MiningFortuneType.ORE,
         Family.GLACITE,
     ),
-    MID_TIER_TUNGSTEN(
+    HIGH_TIER_TUNGSTEN(
         Blocks.CLAY,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.ORE,
@@ -307,28 +328,39 @@ enum class MiningBlock(
 
     @Module
     companion object {
+        private val MINING_ISLANDS = listOf(
+            HUB,
+            GOLD_MINES,
+            DEEP_CAVERNS,
+            DWARVEN_MINES,
+            MINESHAFT,
+            CRYSTAL_HOLLOWS,
+            SPIDERS_DEN,
+            THE_END,
+            CRIMSON_ISLE,
+        )
+
+        var currentlyActiveBlocks = listOf<MiningBlock>()
+            private set
+
+        @Subscription
+        fun onIslandChange(event: IslandChangeEvent) {
+            currentlyActiveBlocks = MiningBlock.entries.filter { it.validArea() }
+        }
+
+        @Subscription
+        fun onAreaChange(event: AreaChangeEvent) {
+            currentlyActiveBlocks = MiningBlock.entries.filter { it.validArea() }
+        }
+
         @Subscription
         fun onBlockMine(event: BlockMinedEvent) {
-            if (!SkyBlockIsland.inAnyIsland(
-                    HUB,
-                    GOLD_MINES,
-                    DEEP_CAVERNS,
-                    DWARVEN_MINES,
-                    MINESHAFT,
-                    CRYSTAL_HOLLOWS,
-                    SPIDERS_DEN,
-                    THE_END,
-                    CRIMSON_ISLE,
-                )
-            ) return
+            if (!SkyBlockIsland.inAnyIsland(MINING_ISLANDS)) return
 
-            val blocks = entries.filter { it.validArea() }
-            val block = blocks.find { it.blocks.contains(event.state.block) } ?: return
+            val block = currentlyActiveBlocks.find { it.blocks.contains(event.state.block) } ?: return
 
             MiningBlockMinedEvent(event.pos, block).post()
             Text.of("Player mined ${block.name}").send()
         }
-
-        fun inDwarven() = DWARVEN_MINES.inIsland() && !GlaciteAPI.inGlaciteTunnels()
     }
 }
