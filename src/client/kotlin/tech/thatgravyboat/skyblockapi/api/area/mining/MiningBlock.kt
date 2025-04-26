@@ -2,16 +2,20 @@ package tech.thatgravyboat.skyblockapi.api.area.mining
 
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.phys.BlockHitResult
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockMinedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.MiningBlockMinedEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.*
+import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.helpers.McFont
+import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 enum class MiningBlockFamily {
     VANILLA_BLOCKS,
@@ -342,6 +346,8 @@ enum class MiningBlock(
         var currentlyActiveBlocks = listOf<MiningBlock>()
             private set
 
+        private var debugToggle = false
+
         @Subscription
         fun onIslandChange(event: IslandChangeEvent) {
             currentlyActiveBlocks = entries.filter { it.validArea() }
@@ -359,7 +365,23 @@ enum class MiningBlock(
             val block = currentlyActiveBlocks.find { it.blocks.contains(event.state.block) } ?: return
 
             MiningBlockMinedEvent(event.pos, block).post()
-            Text.of("Player mined ${block.name}").send()
+        }
+
+        @Subscription
+        fun onRender(event: RenderHudEvent) {
+            if (!debugToggle) return
+            val lookingAt = McClient.self.cameraEntity?.pick(20.0, 0f, false) as? BlockHitResult ?: return
+            val block = currentlyActiveBlocks.find { it.blocks.contains(McLevel[lookingAt.blockPos].block) } ?: return
+            event.graphics.drawString(McFont.self, "Looking at: ${block.name}", 8, 8, 0xFFFFFF)
+        }
+
+        @Subscription
+        fun onCommandRegistration(event: RegisterCommandsEvent) {
+            event.register("sbapi mining") {
+                callback {
+                    debugToggle = !debugToggle
+                }
+            }
         }
     }
 }
