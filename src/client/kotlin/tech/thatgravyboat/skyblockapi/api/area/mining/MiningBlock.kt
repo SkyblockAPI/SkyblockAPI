@@ -1,8 +1,7 @@
-package tech.thatgravyboat.skyblockapi.api.area.mining.blocks
+package tech.thatgravyboat.skyblockapi.api.area.mining
 
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
-import tech.thatgravyboat.skyblockapi.api.area.mining.GlaciteAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockMinedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.MiningBlockMinedEvent
@@ -345,12 +344,12 @@ enum class MiningBlock(
 
         @Subscription
         fun onIslandChange(event: IslandChangeEvent) {
-            currentlyActiveBlocks = MiningBlock.entries.filter { it.validArea() }
+            currentlyActiveBlocks = entries.filter { it.validArea() }
         }
 
         @Subscription
         fun onAreaChange(event: AreaChangeEvent) {
-            currentlyActiveBlocks = MiningBlock.entries.filter { it.validArea() }
+            currentlyActiveBlocks = entries.filter { it.validArea() }
         }
 
         @Subscription

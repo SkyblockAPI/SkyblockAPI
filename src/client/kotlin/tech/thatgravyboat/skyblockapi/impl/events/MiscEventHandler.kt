@@ -13,7 +13,7 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.api.area.mining.blocks.MiningBlockFamily
+import tech.thatgravyboat.skyblockapi.api.area.mining.MiningBlockFamily
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent

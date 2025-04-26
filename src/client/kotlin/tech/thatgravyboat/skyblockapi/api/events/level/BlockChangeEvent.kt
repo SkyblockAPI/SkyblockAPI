@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.events.level
 
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.state.BlockState
-import tech.thatgravyboat.skyblockapi.api.area.mining.blocks.MiningBlock
+import tech.thatgravyboat.skyblockapi.api.area.mining.MiningBlock
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 /** Posted when the server changes a block. */
