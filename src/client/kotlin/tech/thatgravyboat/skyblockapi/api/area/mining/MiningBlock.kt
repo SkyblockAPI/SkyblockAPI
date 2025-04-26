@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.area.mining
 
+import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.BlockHitResult
@@ -345,6 +346,8 @@ enum class MiningBlock(
 
         var currentlyActiveBlocks = listOf<MiningBlock>()
             private set
+        var lastBrokenBlock: Pair<BlockPos, MiningBlock>? = null
+            private set
 
         private var debugToggle = false
 
@@ -363,6 +366,7 @@ enum class MiningBlock(
             if (!SkyBlockIsland.inAnyIsland(MINING_ISLANDS)) return
 
             val block = currentlyActiveBlocks.find { it.blocks.contains(event.state.block) } ?: return
+            lastBrokenBlock = event.pos to block
 
             MiningBlockMinedEvent(event.pos, block).post()
         }
