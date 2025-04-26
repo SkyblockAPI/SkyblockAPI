@@ -10,7 +10,10 @@ import net.fabricmc.fabric.api.event.player.*
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+import tech.thatgravyboat.skyblockapi.api.area.mining.blocks.Family
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -110,9 +113,22 @@ object MiscEventHandler {
         }
     }
 
+    private fun validMineChange(old: Block, new: Block): Boolean {
+        if (old == new) return false
+        if (old in listOf(Blocks.AIR, Blocks.BEDROCK)) return false
+        if (new in listOf(Blocks.AIR, Blocks.BEDROCK)) return true
+
+        if (new == Blocks.COBBLESTONE && old == Blocks.STONE) return true
+        if (new == Blocks.POLISHED_DIORITE && old in Family.MITHRIL.getBlocks()) return true
+        if (new == Blocks.STONE && (old in Family.VANILLA_ORES.getBlocks() || old in Family.VANILLA_BLOCKS.getBlocks())) return true
+
+        return false
+    }
+
     @Subscription
     fun onBlockChange(event: BlockChangeEvent) {
-        if (blocksClicked.getIfPresent(event.pos) != null && event.state.isAir) {
+        // TODO: check around mines block for efficient miner broken blocks
+        if (blocksClicked.getIfPresent(event.pos) != null && validMineChange(McLevel[event.pos].block, event.state.block)) {
             blocksClicked.invalidate(event.pos)
             BlockMinedEvent(event.pos, McLevel[event.pos]).post(SkyBlockAPI.eventBus)
         }
