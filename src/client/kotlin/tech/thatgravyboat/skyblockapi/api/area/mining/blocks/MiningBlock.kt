@@ -14,7 +14,7 @@ import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
-enum class Family {
+enum class MiningBlockFamily {
     VANILLA_BLOCKS,
     VANILLA_ORES,
     HARD_STONE,
@@ -39,80 +39,80 @@ enum class MiningBlock(
     val blocks: List<Block>,
     val validArea: () -> Boolean,
     val category: MiningFortuneType,
-    val family: Family,
+    val family: MiningBlockFamily,
 ) {
     // Vanilla blocks
     STONE(
         Blocks.STONE,
         { !SkyBlockIsland.inAnyIsland(CRYSTAL_HOLLOWS, MINESHAFT) },
         MiningFortuneType.BLOCK,
-        Family.VANILLA_BLOCKS,
+        MiningBlockFamily.VANILLA_BLOCKS,
     ),
     COBBLESTONE(
         Blocks.COBBLESTONE,
         { !SkyBlockIsland.inAnyIsland(CRYSTAL_HOLLOWS, MINESHAFT) && !GlaciteAPI.inGlaciteTunnels() },
         MiningFortuneType.BLOCK,
-        Family.VANILLA_BLOCKS,
+        MiningBlockFamily.VANILLA_BLOCKS,
     ),
     NETHERRACK(
         Blocks.NETHERRACK,
         { CRIMSON_ISLE.inIsland() },
         MiningFortuneType.BLOCK,
-        Family.VANILLA_BLOCKS,
+        MiningBlockFamily.VANILLA_BLOCKS,
     ),
     END_STONE(
         Blocks.END_STONE,
         { THE_END.inIsland() },
         MiningFortuneType.BLOCK,
-        Family.VANILLA_BLOCKS,
+        MiningBlockFamily.VANILLA_BLOCKS,
     ),
     OBSIDIAN(
         Blocks.OBSIDIAN,
         { SkyBlockIsland.inAnyIsland(THE_END, CRYSTAL_HOLLOWS, DEEP_CAVERNS) },
         MiningFortuneType.ORE,
-        Family.VANILLA_BLOCKS,
+        MiningBlockFamily.VANILLA_BLOCKS,
     ),
     GRAVEL(
         Blocks.GRAVEL,
         { SPIDERS_DEN.inIsland() },
         MiningFortuneType.BLOCK,
-        Family.VANILLA_BLOCKS,
+        MiningBlockFamily.VANILLA_BLOCKS,
     ),
 
     // Vanilla Ores
-    COAL_ORE(Blocks.COAL_ORE, { true }, MiningFortuneType.ORE, Family.VANILLA_ORES),
-    IRON_ORE(Blocks.IRON_ORE, { true }, MiningFortuneType.ORE, Family.VANILLA_ORES),
-    GOLD_ORE(Blocks.GOLD_ORE, { true }, MiningFortuneType.ORE, Family.VANILLA_ORES),
-    LAPIS_ORE(Blocks.LAPIS_ORE, { true }, MiningFortuneType.ORE, Family.VANILLA_ORES),
-    DIAMOND_ORE(Blocks.DIAMOND_ORE, { true }, MiningFortuneType.ORE, Family.VANILLA_ORES),
-    EMERALD_ORE(Blocks.EMERALD_ORE, { true }, MiningFortuneType.ORE, Family.VANILLA_ORES),
-    NETHER_QUARTZ_ORE(Blocks.NETHER_QUARTZ_ORE, { true }, MiningFortuneType.ORE, Family.VANILLA_ORES),
-    REDSTONE_ORE(Blocks.REDSTONE_ORE, { true }, MiningFortuneType.ORE, Family.VANILLA_ORES),
+    COAL_ORE(Blocks.COAL_ORE, { true }, MiningFortuneType.ORE, MiningBlockFamily.VANILLA_ORES),
+    IRON_ORE(Blocks.IRON_ORE, { true }, MiningFortuneType.ORE, MiningBlockFamily.VANILLA_ORES),
+    GOLD_ORE(Blocks.GOLD_ORE, { true }, MiningFortuneType.ORE, MiningBlockFamily.VANILLA_ORES),
+    LAPIS_ORE(Blocks.LAPIS_ORE, { true }, MiningFortuneType.ORE, MiningBlockFamily.VANILLA_ORES),
+    DIAMOND_ORE(Blocks.DIAMOND_ORE, { true }, MiningFortuneType.ORE, MiningBlockFamily.VANILLA_ORES),
+    EMERALD_ORE(Blocks.EMERALD_ORE, { true }, MiningFortuneType.ORE, MiningBlockFamily.VANILLA_ORES),
+    NETHER_QUARTZ_ORE(Blocks.NETHER_QUARTZ_ORE, { true }, MiningFortuneType.ORE, MiningBlockFamily.VANILLA_ORES),
+    REDSTONE_ORE(Blocks.REDSTONE_ORE, { true }, MiningFortuneType.ORE, MiningBlockFamily.VANILLA_ORES),
 
     // Nether
     GLOWSTONE(
         Blocks.GLOWSTONE,
         { CRIMSON_ISLE.inIsland() },
         MiningFortuneType.BLOCK,
-        Family.EXTRA_NETHER,
+        MiningBlockFamily.EXTRA_NETHER,
     ),
     RED_SAND(
         Blocks.RED_SAND,
         { CRIMSON_ISLE.inIsland() },
         MiningFortuneType.BLOCK,
-        Family.EXTRA_NETHER,
+        MiningBlockFamily.EXTRA_NETHER,
     ),
     MYCELIUM(
         Blocks.MYCELIUM,
         { CRIMSON_ISLE.inIsland() },
         MiningFortuneType.BLOCK,
-        Family.EXTRA_NETHER,
+        MiningBlockFamily.EXTRA_NETHER,
     ),
     SULPHUR(
         Blocks.SPONGE,
         { CRIMSON_ISLE.inIsland() },
         MiningFortuneType.ORE,
-        Family.EXTRA_NETHER,
+        MiningBlockFamily.EXTRA_NETHER,
     ),
 
     // Hard Stone
@@ -121,19 +121,19 @@ enum class MiningBlock(
         listOf(Blocks.STONE, Blocks.CLAY, Blocks.COBBLESTONE, Blocks.GRAY_WOOL, Blocks.LIGHT_GRAY_WOOL, Blocks.CYAN_TERRACOTTA),
         { CRYSTAL_HOLLOWS.inIsland() },
         MiningFortuneType.BLOCK,
-        Family.HARD_STONE,
+        MiningBlockFamily.HARD_STONE,
     ),
     HARD_STONE_GLACITE_TUNNELS(
         listOf(Blocks.INFESTED_STONE, Blocks.LIGHT_GRAY_WOOL),
         { GlaciteAPI.inGlaciteTunnels() },
         MiningFortuneType.BLOCK,
-        Family.HARD_STONE,
+        MiningBlockFamily.HARD_STONE,
     ),
     HARD_STONE_MINESHAFT(
         listOf(Blocks.STONE, Blocks.LIGHT_GRAY_WOOL),
         { SkyBlockIsland.inAnyIsland(MINESHAFT) },
         MiningFortuneType.BLOCK,
-        Family.HARD_STONE,
+        MiningBlockFamily.HARD_STONE,
     ),
 
     // Mithril Family
@@ -141,25 +141,25 @@ enum class MiningBlock(
         listOf(Blocks.GRAY_TERRACOTTA, Blocks.GRAY_WOOL, Blocks.GRAY_TERRACOTTA),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.DWARVEN_METAL,
-        Family.MITHRIL,
+        MiningBlockFamily.MITHRIL,
     ),
     MID_TIER_MITHRIL(
         listOf(Blocks.DARK_PRISMARINE, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT, CRYSTAL_HOLLOWS) },
         MiningFortuneType.DWARVEN_METAL,
-        Family.MITHRIL,
+        MiningBlockFamily.MITHRIL,
     ),
     HIGH_TIER_MITHRIL(
         Blocks.LIGHT_BLUE_WOOL,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT, CRYSTAL_HOLLOWS) },
         MiningFortuneType.DWARVEN_METAL,
-        Family.MITHRIL,
+        MiningBlockFamily.MITHRIL,
     ),
     TITANIUM(
         Blocks.POLISHED_DIORITE,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.DWARVEN_METAL,
-        Family.MITHRIL,
+        MiningBlockFamily.MITHRIL,
     ),
 
     // Gemstones
@@ -167,73 +167,73 @@ enum class MiningBlock(
         listOf(Blocks.RED_STAINED_GLASS, Blocks.RED_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     SAPPHIRE(
         listOf(Blocks.LIGHT_BLUE_STAINED_GLASS, Blocks.LIGHT_BLUE_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     JADE(
         listOf(Blocks.LIME_STAINED_GLASS, Blocks.LIME_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     AMBER(
         listOf(Blocks.ORANGE_STAINED_GLASS, Blocks.ORANGE_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     AMETHYST(
         listOf(Blocks.PURPLE_STAINED_GLASS, Blocks.PURPLE_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     TOPAZ(
         listOf(Blocks.YELLOW_STAINED_GLASS, Blocks.YELLOW_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     JASPER(
         listOf(Blocks.BROWN_STAINED_GLASS, Blocks.BROWN_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(CRYSTAL_HOLLOWS, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     OPAL(
         listOf(Blocks.WHITE_STAINED_GLASS, Blocks.WHITE_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(CRIMSON_ISLE, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     PERIDOT(
         listOf(Blocks.GREEN_STAINED_GLASS, Blocks.GREEN_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     CITRINE(
         listOf(Blocks.BROWN_STAINED_GLASS, Blocks.BROWN_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     ONYX(
         listOf(Blocks.BLACK_STAINED_GLASS, Blocks.BLACK_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
     AQUAMARINE(
         listOf(Blocks.BLUE_STAINED_GLASS, Blocks.BLUE_STAINED_GLASS_PANE),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.GEMSTONE,
-        Family.GEMSTONES,
+        MiningBlockFamily.GEMSTONES,
     ),
 
     // Pure Ores
@@ -241,43 +241,43 @@ enum class MiningBlock(
         Blocks.COAL_BLOCK,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS) },
         MiningFortuneType.ORE,
-        Family.PURE_ORES,
+        MiningBlockFamily.PURE_ORES,
     ),
     PURE_IRON(
         Blocks.IRON_BLOCK,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS) },
         MiningFortuneType.ORE,
-        Family.PURE_ORES,
+        MiningBlockFamily.PURE_ORES,
     ),
     PURE_GOLD(
         Blocks.GOLD_BLOCK,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS) },
         MiningFortuneType.ORE,
-        Family.PURE_ORES,
+        MiningBlockFamily.PURE_ORES,
     ),
     PURE_LAPIS(
         Blocks.LAPIS_BLOCK,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS) },
         MiningFortuneType.ORE,
-        Family.PURE_ORES,
+        MiningBlockFamily.PURE_ORES,
     ),
     PURE_DIAMOND(
         Blocks.DIAMOND_BLOCK,
         { SkyBlockIsland.inAnyIsland(DEEP_CAVERNS, DWARVEN_MINES, CRYSTAL_HOLLOWS) },
         MiningFortuneType.ORE,
-        Family.PURE_ORES,
+        MiningBlockFamily.PURE_ORES,
     ),
     PURE_EMERALD(
         Blocks.EMERALD_BLOCK,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS) },
         MiningFortuneType.ORE,
-        Family.PURE_ORES,
+        MiningBlockFamily.PURE_ORES,
     ),
     PURE_NETHER_QUARTZ(
         Blocks.QUARTZ_BLOCK,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES) },
         MiningFortuneType.ORE,
-        Family.PURE_ORES,
+        MiningBlockFamily.PURE_ORES,
     ),
 
     // Glacite Family
@@ -285,41 +285,41 @@ enum class MiningBlock(
         Blocks.TERRACOTTA,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.ORE,
-        Family.GLACITE,
+        MiningBlockFamily.GLACITE,
     ),
     MID_TIER_UMBER(
         Blocks.BROWN_TERRACOTTA,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.ORE,
-        Family.GLACITE,
+        MiningBlockFamily.GLACITE,
     ),
     HIGH_TIER_UMBER(
         Blocks.SMOOTH_RED_SANDSTONE,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.ORE,
-        Family.GLACITE,
+        MiningBlockFamily.GLACITE,
     ),
     LOW_TIER_TUNGSTEN(
         listOf(Blocks.INFESTED_COBBLESTONE, Blocks.COBBLESTONE),
         { GlaciteAPI.inGlaciteTunnels() },
         MiningFortuneType.ORE,
-        Family.GLACITE,
+        MiningBlockFamily.GLACITE,
     ),
     HIGH_TIER_TUNGSTEN(
         Blocks.CLAY,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.ORE,
-        Family.GLACITE,
+        MiningBlockFamily.GLACITE,
     ),
     GLACITE(
         Blocks.PACKED_ICE,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         MiningFortuneType.ORE,
-        Family.GLACITE,
+        MiningBlockFamily.GLACITE,
     ),
     ;
 
-    constructor(block: Block, validArea: () -> Boolean, category: MiningFortuneType, family: Family) : this(
+    constructor(block: Block, validArea: () -> Boolean, category: MiningFortuneType, family: MiningBlockFamily) : this(
         listOf(block),
         validArea,
         category,

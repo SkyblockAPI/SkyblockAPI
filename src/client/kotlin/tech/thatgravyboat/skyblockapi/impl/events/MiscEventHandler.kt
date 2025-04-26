@@ -13,7 +13,7 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.api.area.mining.blocks.Family
+import tech.thatgravyboat.skyblockapi.api.area.mining.blocks.MiningBlockFamily
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -119,8 +119,8 @@ object MiscEventHandler {
         if (new in listOf(Blocks.AIR, Blocks.BEDROCK)) return true
 
         if (new == Blocks.COBBLESTONE && old == Blocks.STONE) return true
-        if (new == Blocks.POLISHED_DIORITE && old in Family.MITHRIL.getBlocks()) return true
-        if (new == Blocks.STONE && (old in Family.VANILLA_ORES.getBlocks() || old in Family.VANILLA_BLOCKS.getBlocks())) return true
+        if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.getBlocks()) return true
+        if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.getBlocks() || old in MiningBlockFamily.VANILLA_BLOCKS.getBlocks())) return true
         if (new == Blocks.RED_SANDSTONE && old == Blocks.RED_SAND) return true
         if (new == Blocks.GRAY_TERRACOTTA && old == Blocks.MYCELIUM) return true
 
