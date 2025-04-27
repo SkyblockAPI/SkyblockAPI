@@ -34,6 +34,7 @@ object MiscEventHandler {
     private val blocksClicked = CacheBuilder.newBuilder()
         .maximumSize(50)
         .build<BlockPos, Unit>()
+    private var lastBlockClicked: BlockPos = BlockPos.ZERO
 
     init {
         ClientTickEvents.END_CLIENT_TICK.register {
@@ -81,6 +82,7 @@ object MiscEventHandler {
                 InteractionResult.FAIL
             }
             blocksClicked.put(pos, Unit)
+            lastBlockClicked = pos
             InteractionResult.PASS
         }
 
@@ -129,8 +131,11 @@ object MiscEventHandler {
 
     @Subscription
     fun onBlockChange(event: BlockChangeEvent) {
-        // TODO: check around mines block for efficient miner broken blocks
-        if (blocksClicked.getIfPresent(event.pos) != null && validMineChange(McLevel[event.pos].block, event.state.block)) {
+        if ((blocksClicked.getIfPresent(event.pos) != null || event.pos.distSqr(lastBlockClicked) < 25 /* maybe check if 5 block range is good enough */) && validMineChange(
+                McLevel[event.pos].block,
+                event.state.block,
+            )
+        ) {
             blocksClicked.invalidate(event.pos)
             BlockMinedEvent(event.pos, McLevel[event.pos]).post(SkyBlockAPI.eventBus)
         }
