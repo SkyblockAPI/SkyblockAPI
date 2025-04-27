@@ -121,6 +121,7 @@ object MiscEventHandler {
         if (new in listOf(Blocks.AIR, Blocks.BEDROCK)) return true
 
         if (new == Blocks.COBBLESTONE && old == Blocks.STONE) return true
+        if (new == Blocks.STONE && old == Blocks.COBBLESTONE) return false
         if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.getBlocks()) return true
         if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.getBlocks() || old in MiningBlockFamily.VANILLA_BLOCKS.getBlocks())) return true
         if (new == Blocks.RED_SANDSTONE && old == Blocks.RED_SAND) return true
@@ -131,10 +132,9 @@ object MiscEventHandler {
 
     @Subscription
     fun onBlockChange(event: BlockChangeEvent) {
-        if ((blocksClicked.getIfPresent(event.pos) != null || event.pos.distSqr(lastBlockClicked) < 25 /* maybe check if 5 block range is good enough */) && validMineChange(
-                McLevel[event.pos].block,
-                event.state.block,
-            )
+        if (
+            (blocksClicked.getIfPresent(event.pos) != null || event.pos.distSqr(lastBlockClicked) < 25 /* maybe check if 5 block range is good enough */)
+            && validMineChange(McLevel[event.pos].block, event.state.block)
         ) {
             blocksClicked.invalidate(event.pos)
             BlockMinedEvent(event.pos, McLevel[event.pos]).post(SkyBlockAPI.eventBus)
