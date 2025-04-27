@@ -2,15 +2,19 @@ package tech.thatgravyboat.skyblockapi.helpers
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.PlayerSkin
+import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.phys.Vec3
 import java.util.*
 
 object McPlayer {
 
     val self: Player? get() = Minecraft.getInstance().player
+
+    val position: Vec3? get() = self?.position()
 
     val name: String get() = McClient.self.gameProfile.name
     val uuid: UUID get() = McClient.self.gameProfile.id
@@ -36,4 +40,7 @@ object McPlayer {
 
     val inventory: List<ItemStack> get() = self?.inventory?.nonEquipmentItems ?: emptyList()
     val hotbar: List<ItemStack> get() = self?.inventory?.nonEquipmentItems?.subList(0, 9) ?: List(9) { ItemStack.EMPTY }
+
+    fun distanceSqr(pos: Vec3): Double = position?.distanceToSqr(pos) ?: 0.0
+    fun distanceSqr(pos: BlockPos): Double = distanceSqr(Vec3(pos))
 }

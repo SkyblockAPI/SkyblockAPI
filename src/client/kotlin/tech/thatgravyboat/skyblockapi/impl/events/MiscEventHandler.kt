@@ -10,7 +10,10 @@ import net.fabricmc.fabric.api.event.player.*
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+import tech.thatgravyboat.skyblockapi.api.area.mining.MiningBlockFamily
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -31,6 +34,7 @@ object MiscEventHandler {
     private val blocksClicked = CacheBuilder.newBuilder()
         .maximumSize(50)
         .build<BlockPos, Unit>()
+    private var lastBlockClicked: BlockPos = BlockPos.ZERO
 
     init {
         ClientTickEvents.END_CLIENT_TICK.register {
@@ -78,6 +82,7 @@ object MiscEventHandler {
                 InteractionResult.FAIL
             }
             blocksClicked.put(pos, Unit)
+            lastBlockClicked = pos
             InteractionResult.PASS
         }
 
@@ -110,9 +115,27 @@ object MiscEventHandler {
         }
     }
 
+    private fun validMineChange(old: Block, new: Block): Boolean {
+        if (old == new) return false
+        if (old in listOf(Blocks.AIR, Blocks.BEDROCK)) return false
+        if (new in listOf(Blocks.AIR, Blocks.BEDROCK)) return true
+
+        if (new == Blocks.COBBLESTONE && old == Blocks.STONE) return true
+        if (new == Blocks.STONE && old == Blocks.COBBLESTONE) return false
+        if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.getBlocks()) return true
+        if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.getBlocks() || old in MiningBlockFamily.VANILLA_BLOCKS.getBlocks())) return true
+        if (new == Blocks.RED_SANDSTONE && old == Blocks.RED_SAND) return true
+        if (new == Blocks.GRAY_TERRACOTTA && old == Blocks.MYCELIUM) return true
+
+        return false
+    }
+
     @Subscription
     fun onBlockChange(event: BlockChangeEvent) {
-        if (blocksClicked.getIfPresent(event.pos) != null && event.state.isAir) {
+        if (
+            (blocksClicked.getIfPresent(event.pos) != null || event.pos.distSqr(lastBlockClicked) < 25 /* maybe check if 5 block range is good enough */)
+            && validMineChange(McLevel[event.pos].block, event.state.block)
+        ) {
             blocksClicked.invalidate(event.pos)
             BlockMinedEvent(event.pos, McLevel[event.pos]).post(SkyBlockAPI.eventBus)
         }

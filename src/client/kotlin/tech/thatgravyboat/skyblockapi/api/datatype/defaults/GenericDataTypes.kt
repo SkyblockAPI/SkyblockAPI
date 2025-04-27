@@ -33,6 +33,7 @@ object GenericDataTypes {
         }
     }
     val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
+    val COMPACT_BLOCKS: DataType<Long> = DataType("compact_blocks") { it.tag?.getLongOrNull("compact_blocks") }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
@@ -57,6 +58,7 @@ object GenericDataTypes {
         event.register(POTION_LEVEL)
         event.register(ATTRIBUTES)
         event.register(CROPS_BROKEN)
+        event.register(COMPACT_BLOCKS)
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)
