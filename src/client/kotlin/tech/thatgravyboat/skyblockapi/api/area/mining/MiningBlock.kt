@@ -335,7 +335,7 @@ enum class MiningBlock(
 
     @Module
     companion object {
-        private val MINING_ISLANDS = listOf(
+        private val MINING_ISLANDS = setOf(
             HUB,
             GOLD_MINES,
             DEEP_CAVERNS,
