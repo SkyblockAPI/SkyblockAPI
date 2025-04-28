@@ -22,8 +22,8 @@ private const val FIRST_HOTBAR_SLOT = 36
 
 @Module
 object PacketEventHandler {
-    private val lastBlockChances = CacheBuilder.newBuilder()
-        .maximumSize(5)
+    private val lastBlockChanges = CacheBuilder.newBuilder()
+        .maximumSize(10)
         .expireAfterWrite(1.seconds.toJavaDuration())
         .build<BlockPos, Pair<BlockState, BlockState>>()
 
@@ -87,12 +87,12 @@ object PacketEventHandler {
     private fun postBlockChange(pos: BlockPos, new: BlockState) {
         val old = McLevel[pos]
 
-        val lastChance = lastBlockChances.getIfPresent(pos)
+        val lastChance = lastBlockChanges.getIfPresent(pos)
         if (lastChance != null && lastChance.first == old && lastChance.second == new) {
             return
         }
 
         BlockChangeEvent(pos, new).post()
-        lastBlockChances.put(pos, old to new)
+        lastBlockChanges.put(pos, old to new)
     }
 }
