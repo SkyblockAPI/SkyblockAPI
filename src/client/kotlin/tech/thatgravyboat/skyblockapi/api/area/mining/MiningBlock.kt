@@ -125,14 +125,7 @@ enum class MiningBlock(
     // Hard Stone
     HARD_STONE_CRYSTAL_HOLLOWS(
         // There are probably more but mostly useless
-        listOf(
-            Blocks.STONE,
-            Blocks.CLAY,
-            Blocks.COBBLESTONE,
-            Blocks.GRAY_WOOL,
-            Blocks.LIGHT_GRAY_WOOL,
-            Blocks.CYAN_TERRACOTTA
-        ),
+        listOf(Blocks.STONE, Blocks.CLAY, Blocks.COBBLESTONE, Blocks.GRAY_WOOL, Blocks.LIGHT_GRAY_WOOL, Blocks.CYAN_TERRACOTTA),
         { CRYSTAL_HOLLOWS.inIsland() },
         MiningFortuneType.BLOCK,
         MiningBlockFamily.HARD_STONE,
