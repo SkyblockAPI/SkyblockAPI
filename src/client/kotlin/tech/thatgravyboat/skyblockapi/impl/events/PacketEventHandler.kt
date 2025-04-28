@@ -23,7 +23,7 @@ private const val FIRST_HOTBAR_SLOT = 36
 @Module
 object PacketEventHandler {
     private val lastBlockChanges = CacheBuilder.newBuilder()
-        .maximumSize(10)
+        .maximumSize(15)
         .expireAfterWrite(1.seconds.toJavaDuration())
         .build<BlockPos, Pair<BlockState, BlockState>>()
 
