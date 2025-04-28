@@ -1,0 +1,11 @@
+{
+    "values": [
+        "minecraft:coal",
+        "minecraft:redstone",
+        "minecraft:diamond",
+        "minecraft:emerald",
+        "minecraft:emerald_block",
+        "minecraft:coal_block",
+        "minecraft:redstone_block"
+    ]
+}
