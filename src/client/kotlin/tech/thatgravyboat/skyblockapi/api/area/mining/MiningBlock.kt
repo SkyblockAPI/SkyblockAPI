@@ -125,7 +125,14 @@ enum class MiningBlock(
     // Hard Stone
     HARD_STONE_CRYSTAL_HOLLOWS(
         // There are probably more but mostly useless
-        listOf(Blocks.STONE, Blocks.CLAY, Blocks.COBBLESTONE, Blocks.GRAY_WOOL, Blocks.LIGHT_GRAY_WOOL, Blocks.CYAN_TERRACOTTA),
+        listOf(
+            Blocks.STONE,
+            Blocks.CLAY,
+            Blocks.COBBLESTONE,
+            Blocks.GRAY_WOOL,
+            Blocks.LIGHT_GRAY_WOOL,
+            Blocks.CYAN_TERRACOTTA
+        ),
         { CRYSTAL_HOLLOWS.inIsland() },
         MiningFortuneType.BLOCK,
         MiningBlockFamily.HARD_STONE,
@@ -372,9 +379,12 @@ enum class MiningBlock(
             val block = currentlyActiveBlocks.find { it.blocks.contains(event.state.block) } ?: return
             lastBrokenBlock = event.pos to block
 
-            MiningBlockMinedEvent(event.pos, block).post()
+            MiningBlockMinedEvent(event.pos, block, event.byMiningSpread).post()
 
-            if (debugToggle) Text.of("Mined ${block.name}").send()
+            if (debugToggle) Text.join(
+                "Mined ${block.name}",
+                if (event.byMiningSpread) " (with spread)" else null,
+            ).send()
         }
 
         @Subscription
