@@ -1,14 +1,20 @@
 package tech.thatgravyboat.skyblockapi.impl.events
 
+import com.google.common.cache.CacheBuilder
+import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.*
+import net.minecraft.world.level.block.state.BlockState
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketSentEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.*
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.modules.Module
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 private const val PLAYER_HOTBAR_CONTAINER_ID = 0
 private const val PLAYER_INVENTORY_CONTAINER_ID = -2
@@ -16,6 +22,11 @@ private const val FIRST_HOTBAR_SLOT = 36
 
 @Module
 object PacketEventHandler {
+    private val lastBlockChances = CacheBuilder.newBuilder()
+        .maximumSize(5)
+        .expireAfterWrite(1.seconds.toJavaDuration())
+        .build<BlockPos, Pair<BlockState, BlockState>>()
+
     private var lastContainerCloseId: Int? = null
 
     @Subscription
@@ -31,11 +42,8 @@ object PacketEventHandler {
     @Subscription
     fun onPacketReceived(event: PacketReceivedEvent) {
         when (event.packet) {
-            is ClientboundBlockUpdatePacket -> BlockChangeEvent(event.packet.pos, event.packet.blockState).post()
-            is ClientboundSectionBlocksUpdatePacket -> event.packet.runUpdates { pos, state ->
-                BlockChangeEvent(pos.immutable(), state).post()
-            }
-
+            is ClientboundBlockUpdatePacket -> postBlockChange(event.packet.pos, event.packet.blockState)
+            is ClientboundSectionBlocksUpdatePacket -> event.packet.runUpdates(::postBlockChange)
             is ClientboundContainerSetContentPacket -> {
                 McClient.tell {
                     val container = McScreen.asMenu?.takeIf { it.menu?.containerId == event.packet.containerId } ?: return@tell
@@ -74,5 +82,17 @@ object PacketEventHandler {
                 }
             }
         }
+    }
+
+    private fun postBlockChange(pos: BlockPos, new: BlockState) {
+        val old = McLevel[pos]
+
+        val lastChance = lastBlockChances.getIfPresent(pos)
+        if (lastChance != null && lastChance.first == old && lastChance.second == new) {
+            return
+        }
+
+        BlockChangeEvent(pos, new).post()
+        lastBlockChances.put(pos, old to new)
     }
 }
