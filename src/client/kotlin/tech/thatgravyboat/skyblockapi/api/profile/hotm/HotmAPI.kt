@@ -19,6 +19,11 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 @Module
 object HotmAPI {
 
+    private val titleRegex = RegexGroup.INVENTORY.group("hotm").create(
+        "title",
+        "Heart of the Mountain",
+    )
+
     private val levelRegex = RegexGroup.INVENTORY.group("hotm").create(
         "level",
         "Level (?<level>\\d+)(?:/\\d+)?",
@@ -45,7 +50,7 @@ object HotmAPI {
 
     @Subscription
     fun onInventoryChange(event: InventoryChangeEvent) {
-        if (event.title != "Heart of the Mountain") return
+        if (!titleRegex.matches(event.title)) return
         if (event.item !in ItemTag.HOTM_PERK_ITEMS) return
 
         var level = 1
