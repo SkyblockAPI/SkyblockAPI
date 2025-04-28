@@ -92,7 +92,7 @@ object PacketEventHandler {
             return
         }
 
-        BlockChangeEvent(pos, new).post()
         lastBlockChanges.put(pos, old to new)
+        BlockChangeEvent(pos, new).post()
     }
 }
