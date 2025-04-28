@@ -372,9 +372,12 @@ enum class MiningBlock(
             val block = currentlyActiveBlocks.find { it.blocks.contains(event.state.block) } ?: return
             lastBrokenBlock = event.pos to block
 
-            MiningBlockMinedEvent(event.pos, block).post()
+            MiningBlockMinedEvent(event.pos, block, event.byMiningSpread).post()
 
-            if (debugToggle) Text.of("Mined ${block.name}").send()
+            if (debugToggle) Text.join(
+                "Mined ${block.name}",
+                if (event.byMiningSpread) " (with spread)" else null,
+            ).send()
         }
 
         @Subscription

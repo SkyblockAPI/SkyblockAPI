@@ -25,6 +25,8 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatComponentExtension
 import tech.thatgravyboat.skyblockapi.modules.Module
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 @Module
 object MiscEventHandler {
@@ -33,6 +35,7 @@ object MiscEventHandler {
 
     private val blocksClicked = CacheBuilder.newBuilder()
         .maximumSize(50)
+        .expireAfterWrite(5.seconds.toJavaDuration())
         .build<BlockPos, Unit>()
     private var lastBlockClicked: BlockPos = BlockPos.ZERO
 
@@ -137,7 +140,7 @@ object MiscEventHandler {
             && validMineChange(McLevel[event.pos].block, event.state.block)
         ) {
             blocksClicked.invalidate(event.pos)
-            BlockMinedEvent(event.pos, McLevel[event.pos]).post(SkyBlockAPI.eventBus)
+            BlockMinedEvent(event.pos, McLevel[event.pos], event.pos != lastBlockClicked).post(SkyBlockAPI.eventBus)
         }
     }
 }
