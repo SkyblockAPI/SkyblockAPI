@@ -10,7 +10,7 @@ internal object ItemValueCalculator {
     /** Use [tech.thatgravyboat.skyblockapi.api.datatype.getItemValue] to get the item value. */
     fun ItemStack.calculateItemValue(): ItemValueResult {
         val id = getId() ?: return ItemValueResult.EMPTY
-        val lb = LowestBinAPI.items[id]?.lowest ?: run {
+        val lb = LowestBinAPI.getLowestPrice(id) ?: run {
             val price = BazaarAPI.getProduct(id)?.sellPrice?.toLong() ?: return ItemValueResult.EMPTY
             return ItemValueResult(price, price * this.count, emptyMap())
         }

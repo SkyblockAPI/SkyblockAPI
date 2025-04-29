@@ -18,6 +18,9 @@ object LowestBinAPI {
     var items = mapOf<String, AuctionItem>()
         private set
 
+    fun getPrice(id: String?): AuctionItem? = items.entries.find { it.key.equals(id, ignoreCase = true) }?.value
+    fun getLowestPrice(id: String?): Long? = getPrice(id)?.lowest
+
     init {
         Scheduling.schedule(0.seconds, 2.hours) {
             fetch()
