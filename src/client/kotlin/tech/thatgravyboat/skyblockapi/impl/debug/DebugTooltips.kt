@@ -49,37 +49,54 @@ object DebugTooltips {
         event.add(CommonText.EMPTY)
 
         if (!Screen.hasAltDown()) {
-            event.add(Text.of("${types.size} Data Type(s) [Alt]") {
-                this.color = TextColor.DARK_GRAY
-            })
+            event.add(
+                Text.of("${types.size} Data Type(s) [Alt]") {
+                    this.color = TextColor.DARK_GRAY
+                },
+            )
             keys = types.keys.toList()
             index = 0
         } else {
-            event.add(Text.join(
-                Text.of("${index + 1}/${types.size} Data Type(s) [") { this.color = TextColor.DARK_GRAY },
-                Text.of("ALT") {
-                    this.bold = true
-                    this.color = TextColor.GRAY
-                },
-                Text.of("]") { this.color = TextColor.DARK_GRAY }
-            ))
+            event.add(
+                Text.join(
+                    Text.of("${index + 1}/${types.size} Data Type(s) [") { this.color = TextColor.DARK_GRAY },
+                    Text.of("ALT") {
+                        this.bold = true
+                        this.color = TextColor.GRAY
+                    },
+                    Text.of("]") { this.color = TextColor.DARK_GRAY },
+                ),
+            )
 
             if (keys.isEmpty()) keys = types.keys.toList()
 
             if (keys.isNotEmpty()) {
                 val key = keys[index]
                 val value = types[key]
-                event.add(Text.join(
-                    Text.of(" - ${key.id}: ") { this.color = TextColor.DARK_GRAY },
-                    Text.of("$value") { this.color = TextColor.GRAY }
-                ))
+                event.add(
+                    Text.join(
+                        Text.of(" - ${key.id}: ") { this.color = TextColor.DARK_GRAY },
+                        Text.of("$value") { this.color = TextColor.GRAY },
+                    ),
+                )
             }
+
+            event.add(CommonText.EMPTY)
 
             event.add(
                 Text.of("Value: ${event.item.getItemValue().rawPrice.toFormattedString()}-${event.item.getItemValue().price.toFormattedString()}") {
                     this.color = TextColor.DARK_GRAY
                 },
             )
+            event.add(Text.of("Sources:") { this.color = TextColor.DARK_GRAY })
+
+            event.item.getItemValue().sources.entries.map { (source, value) ->
+                Text.join(
+                    Text.of(" - ${source.name}: ") { this.color = TextColor.DARK_GRAY },
+                    Text.of(value.toFormattedString()) { this.color = TextColor.GRAY },
+                )
+            }.forEach { event.add(it) }
+
         }
     }
 }

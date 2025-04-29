@@ -25,6 +25,7 @@ object GenericDataTypes {
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
+    val HOT_POTATO_BOOKS: DataType<Int> = DataType("hot_potato_count") { it.tag?.getIntOrNull("hot_potato_count") }
     val POTION: DataType<String> = DataType("potion") { it.tag?.getStringOrNull("potion") }
     val POTION_LEVEL: DataType<Int> = DataType("potion_level") { it.tag?.getIntOrNull("potion_level") }
     val ATTRIBUTES: DataType<Map<String, Int>> = DataType("attributes") {
@@ -54,6 +55,7 @@ object GenericDataTypes {
         event.register(RARITY_UPGRADES)
         event.register(QUIVER_ARROW)
         event.register(ENCHANTMENTS)
+        event.register(HOT_POTATO_BOOKS)
         event.register(POTION)
         event.register(POTION_LEVEL)
         event.register(ATTRIBUTES)

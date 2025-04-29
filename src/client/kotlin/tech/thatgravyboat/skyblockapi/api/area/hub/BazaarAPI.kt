@@ -18,7 +18,7 @@ object BazaarAPI {
     var products = listOf<BazaarProduct>()
         private set
 
-    fun getProduct(id: String) = products.find { it.productId == id }
+    fun getProduct(id: String) = products.find { it.productId.equals(id, true) }
 
     init {
         Scheduling.schedule(0.seconds, 2.hours) {
