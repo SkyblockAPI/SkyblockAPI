@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.api.item.ItemValueResult
+import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueResult
 
 internal interface DataTypeItemStack {
 

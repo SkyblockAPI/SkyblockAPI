@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType;
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypeItemStack;
-import tech.thatgravyboat.skyblockapi.api.item.ItemValueCalculator;
-import tech.thatgravyboat.skyblockapi.api.item.ItemValueResult;
+import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueCalculator;
+import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueResult;
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry;
 
 import java.util.Map;
