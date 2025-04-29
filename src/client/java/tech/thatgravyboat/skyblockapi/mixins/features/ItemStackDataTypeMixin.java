@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType;
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypeItemStack;
+import tech.thatgravyboat.skyblockapi.api.item.ItemValueCalculator;
+import tech.thatgravyboat.skyblockapi.api.item.ItemValueResult;
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry;
 
 import java.util.Map;
@@ -28,10 +30,14 @@ public class ItemStackDataTypeMixin implements DataTypeItemStack {
     @Unique
     private Map<DataType<?>, ?> skyblockapi$data = Map.of();
 
+    @Unique
+    private ItemValueResult skyblockapi$itemValueResult = ItemValueResult.Companion.getEMPTY();
+
     @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At("RETURN"))
     private void skyblockapi$init(ItemLike item, int count, PatchedDataComponentMap map, CallbackInfo ci) {
         if (COPYING.get() != null) return;
         skyblockapi$data = DataTypesRegistry.INSTANCE.getData$skyblock_api_client((ItemStack) (Object) this);
+        skyblockapi$itemValueResult = ItemValueCalculator.INSTANCE.calculateItemValue((ItemStack) (Object) this);
     }
 
     @WrapOperation(method = "copy", at = @At(value = "NEW", target = "(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)Lnet/minecraft/world/item/ItemStack;"))
@@ -56,5 +62,10 @@ public class ItemStackDataTypeMixin implements DataTypeItemStack {
     @Override
     public void skyblockapi$setTypes(@NotNull Map<@NotNull DataType<?>, ?> types) {
         this.skyblockapi$data = types;
+    }
+
+    @Override
+    public @NotNull ItemValueResult skyblockapi$getItemValueResult() {
+        return this.skyblockapi$itemValueResult;
     }
 }

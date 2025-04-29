@@ -17,7 +17,7 @@ object GenericDataTypes {
     val MODIFIER: DataType<String> = DataType("modifier") { it.tag?.getStringOrNull("modifier") }
     val TIMESTAMP: DataType<Instant> = DataType("timestamp") { it.tag?.getLongOrNull("timestamp")?.let(Instant::fromEpochMilliseconds) }
     val SECONDS_HELD: DataType<Int> = DataType("seconds_held") { it.tag?.getIntOrNull("seconds_held") }
-    val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") {  it.tag?.getIntOrNull("pickonimbus_durability") }
+    val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") { it.tag?.getIntOrNull("pickonimbus_durability") }
     val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.tag?.getIntOrNull("rarity_upgrades") }
     val QUIVER_ARROW: DataType<Boolean> = DataType("quiver_arrow") { it.tag?.getStringOrNull("quiver_arrow")?.equals("true") }
     val ENCHANTMENTS: DataType<Map<String, Int>> = DataType("enchantments") {
