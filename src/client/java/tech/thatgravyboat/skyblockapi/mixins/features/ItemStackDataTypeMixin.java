@@ -9,7 +9,6 @@ import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -24,18 +23,13 @@ import java.util.Map;
 @Mixin(ItemStack.class)
 public class ItemStackDataTypeMixin implements DataTypeItemStack {
 
-    @Unique
-    private static final ThreadLocal<Unit> COPYING = new ThreadLocal<>();
-
-    @Unique
+    private static final ThreadLocal<Unit> skyblockapi$COPYING = new ThreadLocal<>();
     private Map<DataType<?>, ?> skyblockapi$data = Map.of();
-
-    @Unique
-    private ItemValueResult skyblockapi$itemValueResult = ItemValueResult.Companion.getEMPTY();
+    private ItemValueResult skyblockapi$itemValueResult = ItemValueResult.getEMPTY();
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At("RETURN"))
     private void skyblockapi$init(ItemLike item, int count, PatchedDataComponentMap map, CallbackInfo ci) {
-        if (COPYING.get() == null) {
+        if (skyblockapi$COPYING.get() == null) {
             skyblockapi$data = DataTypesRegistry.INSTANCE.getData$skyblock_api_client((ItemStack) (Object) this);
         } else {
             skyblockapi$data = Map.of();
@@ -45,10 +39,10 @@ public class ItemStackDataTypeMixin implements DataTypeItemStack {
 
     @WrapOperation(method = "copy", at = @At(value = "NEW", target = "(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack skyblockapi$copy(ItemLike item, int count, PatchedDataComponentMap patch, Operation<ItemStack> operation) {
-        COPYING.set(Unit.INSTANCE);
+        skyblockapi$COPYING.set(Unit.INSTANCE);
         ItemStack stack = operation.call(item, count, patch);
         ((DataTypeItemStack) (Object) stack).skyblockapi$setTypes(this.skyblockapi$data);
-        COPYING.remove();
+        skyblockapi$COPYING.remove();
         return stack;
     }
 

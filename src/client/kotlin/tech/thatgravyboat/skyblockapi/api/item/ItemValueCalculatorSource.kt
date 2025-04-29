@@ -27,6 +27,7 @@ data class ItemValueResult(
     val sources: Map<ItemValueCalculatorSource, Long>,
 ) {
     companion object {
+        @JvmStatic
         val EMPTY = ItemValueResult(0L, 0L, emptyMap())
     }
 }
