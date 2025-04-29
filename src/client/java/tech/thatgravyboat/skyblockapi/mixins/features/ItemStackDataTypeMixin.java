@@ -35,8 +35,11 @@ public class ItemStackDataTypeMixin implements DataTypeItemStack {
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At("RETURN"))
     private void skyblockapi$init(ItemLike item, int count, PatchedDataComponentMap map, CallbackInfo ci) {
-        if (COPYING.get() != null) return;
-        skyblockapi$data = DataTypesRegistry.INSTANCE.getData$skyblock_api_client((ItemStack) (Object) this);
+        if (COPYING.get() == null) {
+            skyblockapi$data = DataTypesRegistry.INSTANCE.getData$skyblock_api_client((ItemStack) (Object) this);
+        } else {
+            skyblockapi$data = Map.of();
+        }
         skyblockapi$itemValueResult = ItemValueCalculator.INSTANCE.calculateItemValue((ItemStack) (Object) this);
     }
 

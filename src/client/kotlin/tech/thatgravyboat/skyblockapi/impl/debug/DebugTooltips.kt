@@ -75,7 +75,11 @@ object DebugTooltips {
                 ))
             }
 
-            event.add(Text.of("Value: ${event.item.getItemValue().rawPrice.toFormattedString()}-${event.item.getItemValue().price.toFormattedString()}"))
+            event.add(
+                Text.of("Value: ${event.item.getItemValue().rawPrice.toFormattedString()}-${event.item.getItemValue().price.toFormattedString()}") {
+                    this.color = TextColor.DARK_GRAY
+                },
+            )
         }
     }
 }
