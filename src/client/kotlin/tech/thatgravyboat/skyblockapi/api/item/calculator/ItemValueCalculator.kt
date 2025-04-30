@@ -15,7 +15,7 @@ internal object ItemValueCalculator {
             return ItemValueResult(price, price * this.count, emptyMap())
         }
 
-        return ItemValueCalculatorSource.calculate(lb, this)
+        return ItemValueSource.calculate(lb, this)
     }
 
 }

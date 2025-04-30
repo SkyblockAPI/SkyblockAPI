@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.item.calculator
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.*
 
-enum class ItemValueCalculatorSource(val calc: Calculator) : Calculator by calc {
+enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     RECOMBOBULATOR(RecombobulatorCalculator),
     REFORGE(ReforgeCalculator),
     ENCHANTMENT(EnchantmentCalculator),
@@ -26,7 +26,7 @@ interface Calculator {
 data class ItemValueResult(
     val rawPrice: Long,
     val price: Long,
-    val sources: Map<ItemValueCalculatorSource, Long>,
+    val sources: Map<ItemValueSource, Long>,
 ) {
     companion object {
         @JvmStatic
