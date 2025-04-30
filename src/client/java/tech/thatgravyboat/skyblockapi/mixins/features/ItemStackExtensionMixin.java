@@ -15,17 +15,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType;
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypeItemStack;
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueCalculator;
+import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueItemStack;
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueResult;
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry;
 
 import java.util.Map;
 
 @Mixin(ItemStack.class)
-public class ItemStackDataTypeMixin implements DataTypeItemStack {
+public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItemStack {
 
     private static final ThreadLocal<Unit> skyblockapi$COPYING = new ThreadLocal<>();
     private Map<DataType<?>, ?> skyblockapi$data = Map.of();
-    private ItemValueResult skyblockapi$itemValueResult = ItemValueResult.getEMPTY();
+    private ItemValueResult skyblockapi$itemValueResult = null;
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At("RETURN"))
     private void skyblockapi$init(ItemLike item, int count, PatchedDataComponentMap map, CallbackInfo ci) {
@@ -34,7 +35,6 @@ public class ItemStackDataTypeMixin implements DataTypeItemStack {
         } else {
             skyblockapi$data = Map.of();
         }
-        skyblockapi$itemValueResult = ItemValueCalculator.INSTANCE.calculateItemValue((ItemStack) (Object) this);
     }
 
     @WrapOperation(method = "copy", at = @At(value = "NEW", target = "(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)Lnet/minecraft/world/item/ItemStack;"))
@@ -63,6 +63,9 @@ public class ItemStackDataTypeMixin implements DataTypeItemStack {
 
     @Override
     public @NotNull ItemValueResult skyblockapi$getItemValueResult() {
+        if (this.skyblockapi$itemValueResult == null) {
+            this.skyblockapi$itemValueResult = ItemValueCalculator.calculateItemValue((ItemStack) (Object) this);
+        }
         return this.skyblockapi$itemValueResult;
     }
 }

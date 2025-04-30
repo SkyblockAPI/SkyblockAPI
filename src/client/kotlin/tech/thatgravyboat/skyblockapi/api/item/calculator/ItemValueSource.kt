@@ -29,7 +29,7 @@ data class ItemValueResult(
     val sources: Map<ItemValueSource, Long>,
 ) {
     companion object {
-        @JvmStatic
+        @JvmField
         val EMPTY = ItemValueResult(0L, 0L, emptyMap())
     }
 }
