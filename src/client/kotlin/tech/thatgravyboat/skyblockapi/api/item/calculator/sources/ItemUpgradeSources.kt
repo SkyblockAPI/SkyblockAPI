@@ -5,6 +5,8 @@ import tech.thatgravyboat.skyblockapi.api.area.hub.BazaarAPI
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
+import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI
+import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI.getApplyCost
 
 internal object RecombobulatorCalculator : Calculator {
     override fun calculate(stack: ItemStack): Long {
@@ -13,11 +15,14 @@ internal object RecombobulatorCalculator : Calculator {
 }
 
 internal object ReforgeCalculator : Calculator {
-    // TODO: apply cost, doesnt work on all reforges
     override fun calculate(stack: ItemStack): Long {
         val reforgeName = stack.getData(DataTypes.MODIFIER) ?: return 0L
+        val rarity = stack.getData(DataTypes.RARITY) ?: return 0L
+        val stone = RepoReforgeStonesAPI.getReforgeByName(reforgeName) ?: RepoReforgeStonesAPI.getReforge(reforgeName)?.let { reforgeName to it } ?: return 0L
 
-        return BazaarAPI.getProduct(reforgeName)?.sellPrice?.toLong() ?: 0L
+        val applyCost = stone.second.getApplyCost(rarity) ?: 0L
+
+        return BazaarAPI.getProduct(stone.first)?.sellPrice?.toLong()?.plus(applyCost) ?: 0L
     }
 }
 
