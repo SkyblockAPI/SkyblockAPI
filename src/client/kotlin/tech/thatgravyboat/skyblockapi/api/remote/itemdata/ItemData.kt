@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.generated.KCodec
 import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
+import tech.thatgravyboat.skyblockapi.modules.FieldName
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
@@ -25,6 +26,9 @@ object ItemData {
 @GenerateCodec
 data class HypixelApiItem(
     val id: String,
+    @param:FieldName("gemstone_slots") val gemstones: List<GemstoneCost> = emptyList(),
+    @param:FieldName("upgrade_costs") val updateCost: List<List<Cost>> = emptyList(),
+    @param:FieldName("dungeon_item_conversion_cost") val conversionCost: EssenceCost?,
 ) {
     companion object {
         val CODEC: Codec<HypixelApiItem> = KCodec.getCodec<HypixelApiItem>()

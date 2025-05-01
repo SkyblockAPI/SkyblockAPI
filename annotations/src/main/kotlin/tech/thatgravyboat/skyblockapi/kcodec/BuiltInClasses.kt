@@ -7,6 +7,7 @@ private const val SERIALIZATION = "com.mojang.serialization"
 private const val DATAFIXER = "com.mojang.datafixers"
 
 val CODEC_TYPE = ClassName(SERIALIZATION, "Codec")
+val MAP_CODEC_TYPE = ClassName(SERIALIZATION, "MapCodec")
 val RECORD_CODEC_BUILDER_TYPE = ClassName("$SERIALIZATION.codecs", "RecordCodecBuilder")
 val EITHER_TYPE = ClassName("$DATAFIXER.util", "Either")
 val CODEC_UTILS_TYPE = ClassName(API, "CodecUtils")

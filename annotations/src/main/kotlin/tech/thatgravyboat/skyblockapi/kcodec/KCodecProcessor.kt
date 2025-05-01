@@ -51,7 +51,7 @@ class KCodecProcessor(
                             this.returns(ClassName("com.mojang.serialization", "Codec").parameterizedBy(STAR))
                             this.addCode("return when {\n")
                             builtinCodecs.forEach { type, info ->
-                                this.addCode("    clazz == %T::class.java -> ${info.codec}\n", type)
+                                this.addCode("    clazz == %T::class.java -> ${info.codec}${".codec()".takeIf { info.mapCodec } ?: ""}\n", type)
                             }
                             this.addCode("    clazz.isEnum -> %T.forKCodec(clazz.enumConstants)\n", ENUM_CODEC_TYPE)
                             for (codec in validGeneratedCodecs) {
