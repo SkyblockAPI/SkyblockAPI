@@ -21,6 +21,7 @@ internal object DrillComponentsCalculator : Calculator {
     }
 }
 
+// TODO: apply cost
 internal object GemstoneCalculator : Calculator {
     override fun calculate(stack: ItemStack): Long {
         val gemstone = stack.getData(DataTypes.GEMSTONES) ?: return 0L
