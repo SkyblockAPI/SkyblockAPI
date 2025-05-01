@@ -73,12 +73,26 @@ object DebugTooltips {
             if (keys.isNotEmpty()) {
                 val key = keys[index]
                 val value = types[key]
-                event.add(
-                    Text.join(
-                        Text.of(" - ${key.id}: ") { this.color = TextColor.DARK_GRAY },
-                        Text.of("$value") { this.color = TextColor.GRAY },
-                    ),
-                )
+
+                if (value is List<*>) {
+                    event.add(
+                        Text.join(
+                            Text.of(" - ${key.id}: ") { this.color = TextColor.DARK_GRAY },
+                            Text.of("[") { this.color = TextColor.GRAY },
+                        ),
+                    )
+                    for (any in value) {
+                        event.add(Text.join(Text.of("   $any,") { this.color = TextColor.GRAY }))
+                    }
+                    event.add(Text.of("]") { this.color = TextColor.GRAY })
+                } else {
+                    event.add(
+                        Text.join(
+                            Text.of(" - ${key.id}: ") { this.color = TextColor.DARK_GRAY },
+                            Text.of("$value") { this.color = TextColor.GRAY },
+                        ),
+                    )
+                }
             }
 
             event.add(CommonText.EMPTY)

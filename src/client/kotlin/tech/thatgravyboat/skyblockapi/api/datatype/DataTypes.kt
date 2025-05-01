@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.datatype
 import kotlinx.datetime.Instant
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlotData
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.PersonalAccessoryDataTypes
@@ -31,6 +32,7 @@ object DataTypes {
     val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = PersonalAccessoryDataTypes.PERSONAL_ACCESSORY_ACTIVE
     val ENCHANTMENTS: DataType<Map<String, Int>> = GenericDataTypes.ENCHANTMENTS
     val HOT_POTATO_BOOKS: DataType<Int> = GenericDataTypes.HOT_POTATO_BOOKS
+    val GEMSTONES: DataType<List<GemstoneSlotData>> = GenericDataTypes.GEMSTONES
     val POTION: DataType<String> = GenericDataTypes.POTION
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
     val ATTRIBUTES: DataType<Map<String, Int>> = GenericDataTypes.ATTRIBUTES
