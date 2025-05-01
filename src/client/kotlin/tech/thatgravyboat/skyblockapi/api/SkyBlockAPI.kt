@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api
 
 import com.mojang.logging.LogUtils
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.resources.ResourceLocation
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RepoVersion
@@ -9,6 +10,8 @@ import tech.thatgravyboat.skyblockapi.generated.Modules
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 
 object SkyBlockAPI {
+
+    internal val mod = FabricLoader.getInstance().getModContainer("skyblock-api").orElseThrow()
 
     @JvmStatic
     val eventBus = EventBus()
