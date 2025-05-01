@@ -9,6 +9,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     ENCHANTMENT(EnchantmentCalculator),
     HOT_POTATO(HotPotatoCalculator),
     DRILL_COMPONENTS(DrillComponentsCalculator),
+    FISHING_ROD_PARTS(RodPartCalculator),
     ;
 
     companion object {
