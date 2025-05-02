@@ -20,9 +20,10 @@ fun JsonElement?.asString(): String? = parse(null) { it.asString }
 fun JsonElement?.asString(default: String): String = parse(default) { it.asString }
 
 fun <K, V> JsonElement?.asMap(mapper: (String, JsonElement) -> Pair<K, V>): Map<K, V> =
-    parse(emptyMap<K, V>()) { it.asJsonObject.entrySet().associate { mapper(it.key, it.value) } }
+    parse(emptyMap()) { it.asJsonObject.entrySet().associate { mapper(it.key, it.value) } }
 
 fun <T> JsonElement?.asList(mapper: (JsonElement) -> T): List<T> = parse(emptyList()) { it.asJsonArray.map(mapper) }
+fun JsonElement?.asStringList(): List<String> = asList { it.asString }
 
 inline fun <reified T : Enum<T>> JsonElement?.asEnum(mapper: (T) -> String = { it.name }): T? {
     val content = this.asString() ?: return null
