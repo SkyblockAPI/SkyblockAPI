@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.item.calculator.sources
 
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.api.area.hub.BazaarAPI
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
@@ -26,7 +25,7 @@ internal object GemstoneCalculator : Calculator {
         val unlockCosts = stack.getId()?.let { ItemData.getItemData(it)?.gemstones } ?: emptyList()
         return gemstone.sumOf { (gem, slot, qu) ->
             val unlockCost = unlockCosts.find { it.slotType == slot }?.cost?.sumOf { Cost.calculateCost(it) } ?: 0L
-            val price = BazaarAPI.getProduct("${qu.name}_${gem.name}_GEM")?.sellPrice?.toLong() ?: 0L
+            val price = Pricing.getPrice("${qu.name}_${gem.name}_GEM")
             unlockCost + price
         }
     }
