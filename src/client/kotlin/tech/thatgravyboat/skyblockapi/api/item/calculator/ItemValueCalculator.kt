@@ -11,13 +11,17 @@ internal object ItemValueCalculator {
     @JvmStatic
     fun ItemStack.calculateItemValue(): ItemValueResult {
         val id = getId() ?: return ItemValueResult.EMPTY
-        val product = BazaarAPI.getProduct(id)
-        if (product != null) {
-            val bazaar = product.sellPrice.toLong()
-            return ItemValueResult(bazaar, bazaar * this.count, emptyMap())
-        }
-        val lb = LowestBinAPI.getLowestPrice(id) ?: 0L
-        return ItemValueSource.calculate(lb, this)
+        return ItemValueSource.calculate(Pricing.getPrice(id), this)
     }
 
+}
+
+object Pricing {
+    fun getPrice(id: String?): Long {
+        val product = BazaarAPI.getProduct(id)
+        if (product != null) {
+            return product.sellPrice.toLong()
+        }
+        return LowestBinAPI.getLowestPrice(id) ?: 0L
+    }
 }

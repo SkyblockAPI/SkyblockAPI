@@ -16,7 +16,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     companion object {
         fun calculate(lowestBin: Long, stack: ItemStack): ItemValueResult {
             val sources = entries.associateWith { it.calc.calculate(stack) }
-            return ItemValueResult(lowestBin, sources.values.sum() + lowestBin, sources)
+            return ItemValueResult(lowestBin, (sources.values.sum() + lowestBin) * stack.count, sources)
         }
     }
 }
