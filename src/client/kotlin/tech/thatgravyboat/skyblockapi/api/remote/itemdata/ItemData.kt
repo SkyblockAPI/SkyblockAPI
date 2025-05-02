@@ -17,6 +17,8 @@ object ItemData {
     var itemData: List<HypixelApiItem> = emptyList()
         private set
 
+    fun getItemData(id: String) = itemData.firstOrNull { it.id == id }
+
     init {
         itemData = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
             ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())

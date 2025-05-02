@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.remote.itemdata
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import tech.thatgravyboat.skyblockapi.api.area.hub.BazaarAPI
 import tech.thatgravyboat.skyblockapi.api.data.Essence
 import tech.thatgravyboat.skyblockapi.generated.KCodec
 import tech.thatgravyboat.skyblockapi.kcodec.IncludedCodec
@@ -47,5 +48,12 @@ abstract class Cost(val type: CostTypes) {
     companion object {
         @IncludedCodec
         val CODEC: Codec<Cost> = Codec.STRING.dispatch({ it.type.name }, { CostTypes.valueOf(it).codec })
+
+        fun calculateCost(cost: Cost) = when (cost) {
+            is CoinCost -> cost.amount.toLong()
+            is ItemCost -> cost.amount * (BazaarAPI.getProduct(cost.itemId)?.sellPrice?.toLong() ?: 0)
+            is EssenceCost -> cost.amount * (BazaarAPI.getProduct(cost.essenceType.bazaarId)?.sellPrice?.toLong() ?: 0)
+            else -> 0L
+        }
     }
 }
