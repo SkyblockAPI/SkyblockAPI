@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.item.calculator
 
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.*
-import tech.thatgravyboat.skyblockapi.utils.extentions.getId
+import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 
 enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     RECOMBOBULATOR(RecombobulatorCalculator),
@@ -18,7 +18,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
 
     companion object {
         fun calculate(lowestBin: Long, stack: ItemStack): ItemValueResult {
-            val id = stack.getId() ?: return ItemValueResult.EMPTY
+            val id = stack.getSkyBlockId() ?: return ItemValueResult.EMPTY
             val sources = entries.associateWith { it.calc.calculate(id, stack) }
             return ItemValueResult(lowestBin, (sources.values.sum() + lowestBin) * stack.count, sources)
         }
