@@ -22,7 +22,6 @@ object ItemData {
     init {
         itemData = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
             ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
-        println("Balls")
     }
 }
 
