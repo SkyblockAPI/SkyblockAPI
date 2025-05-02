@@ -1,3 +1,4 @@
+import com.google.devtools.ksp.gradle.KspTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -6,6 +7,8 @@ plugins {
     id("fabric-loom") version "1.10-SNAPSHOT"
     id("maven-publish")
     id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+    id("me.owdding.resources")
+    `item-data`
 }
 
 version = project.property("mod_version") as String
@@ -61,7 +64,7 @@ dependencies {
 
     include(modImplementation("net.hypixel:mod-api:1.0.1")!!)
     include(modImplementation("maven.modrinth:hypixel-mod-api:1.0.1+build.1+mc1.21")!!)
-    include(implementation("tech.thatgravyboat.repo-lib:repo-lib:1.3.1")!!)
+    include(implementation("tech.thatgravyboat.repo-lib:repo-lib:1.4.0")!!)
 
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.1")
 }
@@ -91,6 +94,14 @@ tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion.toString()))
 }
 
+tasks.withType<KspTask>() {
+    outputs.upToDateWhen { false }
+}
+
+tasks.withType<Jar> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -118,4 +129,8 @@ publishing {
             }
         }
     }
+}
+
+compactingResources {
+    this.basePath = "repo"
 }

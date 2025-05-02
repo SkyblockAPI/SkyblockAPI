@@ -56,9 +56,9 @@ class BuiltinCodecs {
     private fun add(packageName: String, className: String, keyable: Boolean = false) = add(ClassName(packageName, className), "$packageName.$className.CODEC", keyable)
     private fun add(packageName: String, className: String, codec: String, keyable: Boolean = false) = add(ClassName(packageName, className), codec, keyable)
 
-    private fun add(type: TypeName, value: String, keyable: Boolean = false): Boolean {
+    private fun add(type: TypeName, value: String, keyable: Boolean = false, mapCodec: Boolean = false): Boolean {
         if (type !in codecs) {
-            codecs[type] = Info(value, keyable)
+            codecs[type] = Info(value, keyable, mapCodec)
             return true
         }
         return false
@@ -69,8 +69,9 @@ class BuiltinCodecs {
             declaration as KSPropertyDeclaration
             val type = declaration.type.resolve().arguments[0].toTypeName()
             val isKeyable = declaration.getAnnotationsByType(IncludedCodec::class).first().keyable
+            val isMapCodec = declaration.type.resolve().starProjection().toClassName() == MAP_CODEC_TYPE
 
-            if (!add(type, declaration.qualifiedName!!.asString(), isKeyable)) {
+            if (!add(type, declaration.qualifiedName!!.asString(), isKeyable, isMapCodec)) {
                 logger.error("Duplicate included codec for $type")
             }
         }
@@ -94,8 +95,10 @@ class BuiltinCodecs {
                 logger.error("@IncludedCodec can only be applied to public properties in objects")
             } else if (!declaration.parentDeclaration!!.isPublic() && !declaration.parentDeclaration!!.isInternal()) {
                 logger.error("@IncludedCodec can only be applied to public properties in public objects")
-            } else if (declaration.type.resolve().starProjection().toClassName() != CODEC_TYPE) {
-                logger.error("@IncludedCodec can only be applied to properties that are Codec<T>")
+            } else if (declaration.type.resolve().starProjection().toClassName() != CODEC_TYPE
+                && declaration.type.resolve().starProjection().toClassName() != MAP_CODEC_TYPE
+            ) {
+                logger.error("@IncludedCodec can only be applied to properties that are Codec<T> or MapCodec<T>")
             } else {
                 return true
             }
@@ -106,6 +109,7 @@ class BuiltinCodecs {
 
 data class Info(
     val codec: String,
-    val keyable: Boolean
+    val keyable: Boolean,
+    val mapCodec: Boolean,
 )
 

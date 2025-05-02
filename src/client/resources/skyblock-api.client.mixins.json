@@ -30,7 +30,7 @@
         "events.AbstractContainerMenuMixin",
         "events.ConnectionMixin",
         "events.ItemStackMixin",
-        "features.ItemStackDataTypeMixin",
+        "features.ItemStackExtensionMixin",
         "features.VisualItemMixin",
         "fixes.FishingHookMixin",
         "fixes.NarratorMixin",

@@ -12,8 +12,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ResolvableProfile
 import org.jetbrains.annotations.ApiStatus
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
-import java.util.UUID
+import java.util.*
 
 @Suppress("DEPRECATION")
 val ItemStack.tag: CompoundTag? get() = this[DataComponents.CUSTOM_DATA]?.unsafe
@@ -43,6 +45,8 @@ fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
     stack.builder()
     return stack
 }
+
+fun ItemStack.getSkyBlockId() = getData(DataTypes.ID)
 
 val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
 

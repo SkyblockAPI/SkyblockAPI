@@ -7,12 +7,15 @@ import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
+import tech.thatgravyboat.skyblockapi.modules.FieldName
 import tech.thatgravyboat.skyblockapi.utils.CodeLineBuilder
 import java.util.*
+import kotlin.reflect.KClass
 
 object RecordCodecGenerator {
 
     private const val MAX_PARAMETERS = 16
+    var logger: KSPLogger? = null
 
     private fun isValid(parameter: KSValueParameter, logger: KSPLogger, builtinCodecs: BuiltinCodecs): Boolean {
         val ksType = parameter.type.resolve()
@@ -22,7 +25,8 @@ object RecordCodecGenerator {
         } else if (parameter.hasDefault && ksType.isMarkedNullable) {
             logger.error("parameter $name is nullable and has a default value")
         } else {
-            val isMap = ksType.starProjection().toClassName() == Map::class.asClassName() || ksType.starProjection().toClassName() == MutableMap::class.asClassName()
+            val isMap =
+                ksType.starProjection().toClassName() == Map::class.asClassName() || ksType.starProjection().toClassName() == MutableMap::class.asClassName()
             if (isMap) {
                 val keyType = ksType.arguments.getRef(0)
                 if (Modifier.ENUM !in keyType.modifiers && !builtinCodecs.isStringType(keyType.resolve().toTypeName().copy(false))) {
@@ -36,6 +40,7 @@ object RecordCodecGenerator {
     }
 
     fun isValid(declaration: KSAnnotated?, logger: KSPLogger, builtinCodecs: BuiltinCodecs): Boolean {
+        this.logger = logger
         if (declaration !is KSClassDeclaration) {
             logger.error("Declaration is not a class")
         } else if (declaration.modifiers.contains(Modifier.INLINE)) {
@@ -64,7 +69,12 @@ object RecordCodecGenerator {
 
     private fun CodeLineBuilder.addCodec(type: KSType) {
         when (type.starProjection().toClassName()) {
-            List::class.asClassName(), MUTABLE_LIST -> {
+            List::class.asClassName() -> {
+                addCodec(type.arguments[0].type!!.resolve())
+                add(".listOf()")
+            }
+
+            MUTABLE_LIST -> {
                 add("%T.list(", CODEC_UTILS_TYPE)
                 addCodec(type.arguments[0].type!!.resolve())
                 add(")")
@@ -76,7 +86,15 @@ object RecordCodecGenerator {
                 add(")")
             }
 
-            Map::class.asClassName(), MUTABLE_MAP -> {
+            Map::class.asClassName() -> {
+                add("%T.unboundedMap(", CODEC_TYPE)
+                addCodec(type.arguments[0].type!!.resolve())
+                add(", ")
+                addCodec(type.arguments[1].type!!.resolve())
+                add(")")
+            }
+
+            MUTABLE_MAP -> {
                 add("%T.map(", CODEC_UTILS_TYPE)
                 addCodec(type.arguments[0].type!!.resolve())
                 add(", ")
@@ -98,8 +116,16 @@ object RecordCodecGenerator {
         }
     }
 
+    fun KSAnnotated.getAnnotation(annotation: KClass<out Annotation>): KSAnnotation? = this.annotations.firstOrNull {
+        it.annotationType.resolve().declaration.qualifiedName!!.asString() == annotation.qualifiedName
+    }
+
     private fun CodeBlock.Builder.createEntry(parameter: KSValueParameter, declaration: KSClassDeclaration): Pair<String, Type> {
+        val fieldName = parameter.getAnnotation(FieldName::class)?.let {
+            it.arguments.find { arg -> arg.name?.asString() == "value" }?.value as String
+        } ?: parameter.name!!.asString()
         val name = parameter.name!!.asString()
+
         val nullable = parameter.type.resolve().isMarkedNullable
         val ksType = parameter.type.resolve()
 
@@ -111,7 +137,7 @@ object RecordCodecGenerator {
             parameter.hasDefault -> {
                 builder.add(
                     ".optionalFieldOf(\"%L\").forGetter { getter -> %T.of(getter.%L) },\n",
-                    name,
+                    fieldName,
                     Optional::class.java,
                     name,
                 )
@@ -122,7 +148,7 @@ object RecordCodecGenerator {
             nullable -> {
                 builder.add(
                     ".optionalFieldOf(\"%L\").forGetter { getter -> %T.ofNullable(getter.%L) },\n",
-                    name,
+                    fieldName,
                     Optional::class.java,
                     name,
                 )
@@ -133,7 +159,7 @@ object RecordCodecGenerator {
             else -> {
                 builder.add(
                     ".fieldOf(\"%L\").forGetter(%T::%L),\n",
-                    name,
+                    fieldName,
                     declaration.toClassName(),
                     name,
                 )

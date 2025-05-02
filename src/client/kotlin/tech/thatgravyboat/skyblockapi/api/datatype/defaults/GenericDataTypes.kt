@@ -8,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 @Module
 object GenericDataTypes {
@@ -17,7 +18,7 @@ object GenericDataTypes {
     val MODIFIER: DataType<String> = DataType("modifier") { it.tag?.getStringOrNull("modifier") }
     val TIMESTAMP: DataType<Instant> = DataType("timestamp") { it.tag?.getLongOrNull("timestamp")?.let(Instant::fromEpochMilliseconds) }
     val SECONDS_HELD: DataType<Int> = DataType("seconds_held") { it.tag?.getIntOrNull("seconds_held") }
-    val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") {  it.tag?.getIntOrNull("pickonimbus_durability") }
+    val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") { it.tag?.getIntOrNull("pickonimbus_durability") }
     val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.tag?.getIntOrNull("rarity_upgrades") }
     val QUIVER_ARROW: DataType<Boolean> = DataType("quiver_arrow") { it.tag?.getStringOrNull("quiver_arrow")?.equals("true") }
     val ENCHANTMENTS: DataType<Map<String, Int>> = DataType("enchantments") {
@@ -25,6 +26,8 @@ object GenericDataTypes {
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
+    val HOT_POTATO_BOOKS: DataType<Int> = DataType("hot_potato_count") { it.tag?.getIntOrNull("hot_potato_count") }
+    val GEMSTONES: DataType<List<GemstoneSlotData>> = DataType("gemstones") { it.tag?.let(::parseGemstones) }
     val POTION: DataType<String> = DataType("potion") { it.tag?.getStringOrNull("potion") }
     val POTION_LEVEL: DataType<Int> = DataType("potion_level") { it.tag?.getIntOrNull("potion_level") }
     val ATTRIBUTES: DataType<Map<String, Int>> = DataType("attributes") {
@@ -34,6 +37,8 @@ object GenericDataTypes {
     }
     val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
     val COMPACT_BLOCKS: DataType<Long> = DataType("compact_blocks") { it.tag?.getLongOrNull("compact_blocks") }
+    val STAR_COUNT: DataType<Int> = DataType("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
+    val DUNGEON_ITEM: DataType<Boolean> = DataType("dungeon_item") { it.tag?.getBoolean("dungeon_item")?.getOrNull() }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
@@ -54,11 +59,15 @@ object GenericDataTypes {
         event.register(RARITY_UPGRADES)
         event.register(QUIVER_ARROW)
         event.register(ENCHANTMENTS)
+        event.register(HOT_POTATO_BOOKS)
+        event.register(GEMSTONES)
         event.register(POTION)
         event.register(POTION_LEVEL)
         event.register(ATTRIBUTES)
         event.register(CROPS_BROKEN)
         event.register(COMPACT_BLOCKS)
+        event.register(STAR_COUNT)
+        event.register(DUNGEON_ITEM)
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)

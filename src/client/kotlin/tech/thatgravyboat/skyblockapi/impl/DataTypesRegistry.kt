@@ -18,6 +18,8 @@ object DataTypesRegistry {
     internal fun getData(item: ItemStack): Map<DataType<*>, *> = runCatching {
         types
             .associateWith { it.factory(item) }
+            .filterValues { if (it is Map<*, *>) it.isNotEmpty() else true }
+            .filterValues { if (it is Collection<*>) it.isNotEmpty() else true }
             .filterValues { it != null }
     }.getOrElse {
         SkyBlockAPI.logger.error("Failed to get data for ${item.hoverName.stripped}", it)
