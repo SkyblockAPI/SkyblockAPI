@@ -14,15 +14,10 @@ import java.nio.file.Files
 @Module
 object ItemData {
 
-    var itemData: List<HypixelApiItem> = emptyList()
-        private set
+    val itemData: List<HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
+        ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
 
     fun getItemData(id: String) = itemData.firstOrNull { it.id == id }
-
-    init {
-        itemData = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
-            ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
-    }
 }
 
 @GenerateCodec
