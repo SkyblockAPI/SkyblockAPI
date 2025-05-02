@@ -9,13 +9,13 @@ import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI
 import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI.getApplyCost
 
 internal object RecombobulatorCalculator : Calculator {
-    override fun calculate(stack: ItemStack): Long {
+    override fun calculate(id: String, stack: ItemStack): Long {
         return Pricing.getPrice("RECOMBOBULATOR_3000") * (stack.getData(DataTypes.RARITY_UPGRADES) ?: 0)
     }
 }
 
 internal object ReforgeCalculator : Calculator {
-    override fun calculate(stack: ItemStack): Long {
+    override fun calculate(id: String, stack: ItemStack): Long {
         val reforgeName = stack.getData(DataTypes.MODIFIER) ?: return 0L
         val rarity = stack.getData(DataTypes.RARITY) ?: return 0L
         val stone = RepoReforgeStonesAPI.getReforgeByName(reforgeName) ?: RepoReforgeStonesAPI.getReforge(reforgeName)?.let { reforgeName to it } ?: return 0L
@@ -27,7 +27,7 @@ internal object ReforgeCalculator : Calculator {
 }
 
 internal object EnchantmentCalculator : Calculator {
-    override fun calculate(stack: ItemStack): Long {
+    override fun calculate(id: String, stack: ItemStack): Long {
         return stack.getData(DataTypes.ENCHANTMENTS)?.map { "ENCHANTMENT_${it.key}_${it.value}" }?.sumOf { enchant ->
             Pricing.getPrice(enchant)
         } ?: 0L
@@ -35,7 +35,7 @@ internal object EnchantmentCalculator : Calculator {
 }
 
 internal object HotPotatoCalculator : Calculator {
-    override fun calculate(stack: ItemStack): Long {
+    override fun calculate(id: String, stack: ItemStack): Long {
         val applied = stack.getData(DataTypes.HOT_POTATO_BOOKS) ?: return 0L
         val hotPotatoBooks = applied.coerceAtMost(10)
         val fumingBooks = (applied - 10).coerceAtLeast(0)
