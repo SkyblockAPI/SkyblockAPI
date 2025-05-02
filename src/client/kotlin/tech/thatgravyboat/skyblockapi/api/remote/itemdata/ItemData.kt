@@ -22,6 +22,7 @@ object ItemData {
     init {
         itemData = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
             ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
+        println("Balls")
     }
 }
 
@@ -29,7 +30,7 @@ object ItemData {
 data class HypixelApiItem(
     val id: String,
     @param:FieldName("gemstone_slots") val gemstones: List<GemstoneCost> = emptyList(),
-    @param:FieldName("upgrade_costs") val updateCost: List<List<Cost>> = emptyList(),
+    @param:FieldName("upgrade_costs") val upgradeCost: List<List<Cost>> = emptyList(),
     @param:FieldName("dungeon_item_conversion_cost") val conversionCost: EssenceCost?,
 ) {
     companion object {

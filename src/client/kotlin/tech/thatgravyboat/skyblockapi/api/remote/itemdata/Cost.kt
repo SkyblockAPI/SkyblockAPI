@@ -15,7 +15,7 @@ enum class CostTypes(val codec: MapCodec<out Cost>) {
     ;
 }
 
-data class EssenceCost(val essenceType: Essence, val amount: Int) : Cost(CostTypes.ITEM) {
+data class EssenceCost(val essenceType: Essence, val amount: Int) : Cost(CostTypes.ESSENCE) {
     companion object {
         @IncludedCodec
         val CODEC: MapCodec<EssenceCost> = RecordCodecBuilder.mapCodec {
@@ -40,7 +40,7 @@ data class ItemCost(val itemId: String, val amount: Int) : Cost(CostTypes.ITEM) 
 
 data class CoinCost(val amount: Int) : Cost(CostTypes.COINS) {
     companion object {
-        val CODEC: MapCodec<CoinCost> = Codec.INT.fieldOf("amount").xmap(::CoinCost, CoinCost::amount)
+        val CODEC: MapCodec<CoinCost> = Codec.INT.fieldOf("coins").xmap(::CoinCost, CoinCost::amount)
     }
 }
 

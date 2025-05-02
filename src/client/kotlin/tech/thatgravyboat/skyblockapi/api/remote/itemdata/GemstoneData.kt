@@ -7,5 +7,5 @@ import tech.thatgravyboat.skyblockapi.modules.FieldName
 @GenerateCodec
 data class GemstoneCost(
     @param:FieldName("slot_type") val slotType: GemstoneSlot,
-    val cost: List<Cost> = emptyList(),
+    @FieldName("costs") val cost: List<Cost> = emptyList(),
 )
