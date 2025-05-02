@@ -20,15 +20,14 @@ internal object DrillComponentsCalculator : Calculator {
     }
 }
 
-// TODO: test :3
 internal object GemstoneCalculator : Calculator {
     override fun calculate(stack: ItemStack): Long {
         val gemstone = stack.getData(DataTypes.GEMSTONES) ?: return 0L
         val unlockCosts = stack.getId()?.let { ItemData.getItemData(it)?.gemstones } ?: emptyList()
-        return gemstone.map { (gem, slot, qu) ->
+        return gemstone.sumOf { (gem, slot, qu) ->
             val unlockCost = unlockCosts.find { it.slotType == slot }?.cost?.sumOf { Cost.calculateCost(it) } ?: 0L
             val price = BazaarAPI.getProduct("${qu.name}_${gem.name}_GEM")?.sellPrice?.toLong() ?: 0L
             unlockCost + price
-        }.sum()
+        }
     }
 }
