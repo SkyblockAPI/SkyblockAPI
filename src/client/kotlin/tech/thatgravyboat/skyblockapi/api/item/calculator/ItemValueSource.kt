@@ -9,6 +9,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     REFORGE(ReforgeCalculator),
     ENCHANTMENT(EnchantmentCalculator),
     HOT_POTATO(HotPotatoCalculator),
+    ITEM_STARS(ItemStarsCalculator),
     DRILL_COMPONENTS(DrillComponentsCalculator),
     GEMSTONE(GemstoneCalculator),
     FISHING_ROD_PARTS(RodPartCalculator),

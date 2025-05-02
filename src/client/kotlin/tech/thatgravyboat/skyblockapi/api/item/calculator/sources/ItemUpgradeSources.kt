@@ -7,6 +7,8 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Pricing
 import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI
 import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI.getApplyCost
+import tech.thatgravyboat.skyblockapi.api.remote.itemdata.Cost
+import tech.thatgravyboat.skyblockapi.api.remote.itemdata.ItemData
 
 internal object RecombobulatorCalculator : Calculator {
     override fun calculate(id: String, stack: ItemStack): Long {
@@ -44,5 +46,36 @@ internal object HotPotatoCalculator : Calculator {
         val fumingPrice = Pricing.getPrice("FUMING_POTATO_BOOK")
 
         return (hotPotatoPrice * hotPotatoBooks) + (fumingPrice * fumingBooks)
+    }
+}
+
+internal object ItemStarsCalculator : Calculator {
+    val masterStars = listOf(
+        "FIRST",
+        "SECOND",
+        "THIRD",
+        "FOURTH",
+        "FIFTH",
+    ).map { "${it}_MASTER_STAR" }
+
+    override fun calculate(id: String, stack: ItemStack): Long {
+        val stars = stack.getData(DataTypes.STAR_COUNT) ?: return 0L
+
+        return if (stack.getData(DataTypes.CATEGORY)?.isDungeon == true) {
+            val dungeonStars = stars.coerceAtMost(5)
+            val masterStars = (stars - dungeonStars).coerceAtLeast(0)
+
+            val data = ItemData.getItemData(id)
+            val starCost = data?.upgradeCost ?: emptyList()
+            val starPrice = starCost.take(dungeonStars).flatten().sumOf { Cost.calculateCost(it) }
+            val masterStarPrice = ItemStarsCalculator.masterStars.take(masterStars).sumOf { Pricing.getPrice(it) }
+
+            val conversionCost = data?.conversionCost?.let { Cost.calculateCost(it) } ?: 0L
+
+            starPrice + masterStarPrice + conversionCost
+        } else {
+            // TODO :3
+            0L
+        }
     }
 }

@@ -38,6 +38,7 @@ object DataTypes {
     val ATTRIBUTES: DataType<Map<String, Int>> = GenericDataTypes.ATTRIBUTES
     val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
     val COMPACT_BLOCKS: DataType<Long> = GenericDataTypes.COMPACT_BLOCKS
+    val STAR_COUNT: DataType<Int> = GenericDataTypes.STAR_COUNT
 
     // Fishing Rod
     val HOOK: DataType<Pair<UUID, String>> = GenericDataTypes.HOOK

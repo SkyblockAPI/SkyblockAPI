@@ -8,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 @Module
 object GenericDataTypes {
@@ -36,6 +37,8 @@ object GenericDataTypes {
     }
     val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
     val COMPACT_BLOCKS: DataType<Long> = DataType("compact_blocks") { it.tag?.getLongOrNull("compact_blocks") }
+    val STAR_COUNT: DataType<Int> = DataType("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
+    val DUNGEON_ITEM: DataType<Boolean> = DataType("dungeon_item") { it.tag?.getBoolean("dungeon_item")?.getOrNull() }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
@@ -63,6 +66,8 @@ object GenericDataTypes {
         event.register(ATTRIBUTES)
         event.register(CROPS_BROKEN)
         event.register(COMPACT_BLOCKS)
+        event.register(STAR_COUNT)
+        event.register(DUNGEON_ITEM)
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)
