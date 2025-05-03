@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.storage
 
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerStorageStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
@@ -53,22 +54,33 @@ object StorageAPI {
         enderchestRegex.match(event.title, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
             val instance = PlayerStorageStorage.enderchests.find { it.index == pageId - 1 } ?: return@match
-            instance.items[event.slot - 9] = event.item
+            instance.items.setAt(event.slot - 9, event.item)
             PlayerStorageStorage.setEnderchest(instance)
         }
 
         backpackRegex.match(event.title, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
             val instance = PlayerStorageStorage.backpacks.find { it.index == pageId - 1 } ?: return@match
-            instance.items[event.slot - 9] = event.item
+            instance.items.setAt(event.slot - 9, event.item)
             PlayerStorageStorage.setBackpack(instance)
         }
 
         riftStorageRegex.match(event.title, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
             val instance = PlayerStorageStorage.riftStorage.find { it.index == pageId - 1 } ?: return@match
-            instance.items[event.slot - 9] = event.item
+            instance.items.setAt(event.slot - 9, event.item)
             PlayerStorageStorage.setRiftStorage(instance)
+        }
+    }
+
+    private fun MutableList<ItemStack>.setAt(index: Int, item: ItemStack) {
+        if (index < size) {
+            this[index] = item
+        } else {
+            while (size <= index + 1) {
+                add(ItemStack.EMPTY)
+            }
+            this[index] = item
         }
     }
 }
