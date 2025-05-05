@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlotData
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes.PetData
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.PersonalAccessoryDataTypes
 import java.util.*
@@ -13,6 +14,7 @@ import kotlin.time.Duration
 object DataTypes {
 
     val ID: DataType<String> = GenericDataTypes.ID
+    val API_ID: DataType<String> = GenericDataTypes.API_ID
     val UUID: DataType<UUID> = GenericDataTypes.UUID
     val RARITY: DataType<SkyBlockRarity> = LoreDataTypes.RARITY
     val CATEGORY: DataType<SkyBlockCategory> = LoreDataTypes.CATEGORY
@@ -39,6 +41,9 @@ object DataTypes {
     val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
     val COMPACT_BLOCKS: DataType<Long> = GenericDataTypes.COMPACT_BLOCKS
     val STAR_COUNT: DataType<Int> = GenericDataTypes.STAR_COUNT
+    val DUNGEON_ITEM: DataType<Boolean> = GenericDataTypes.DUNGEON_ITEM
+    val APPLIED_RUNE: DataType<Pair<String, Int>> = GenericDataTypes.APPLIED_RUNE
+    val PET_DATA: DataType<PetData> = GenericDataTypes.PET_DATA
 
     // Fishing Rod
     val HOOK: DataType<Pair<UUID, String>> = GenericDataTypes.HOOK
