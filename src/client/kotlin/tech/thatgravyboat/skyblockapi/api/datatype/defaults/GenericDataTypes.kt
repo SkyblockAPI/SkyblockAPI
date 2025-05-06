@@ -120,6 +120,7 @@ object GenericDataTypes {
             json.get("exp").asLong(0),
             SkyBlockRarity.entries.find { rarity -> rarity.name.equals(json.get("tier").asString(), true) } ?: SkyBlockRarity.COMMON,
             json.get("heldItem")?.asString,
+            json.get("skin")?.asString,
             json.get("candyUsed").asInt(0),
         )
     }
@@ -130,6 +131,7 @@ object GenericDataTypes {
         val exp: Long,
         val rarity: SkyBlockRarity,
         val heldItem: String?,
+        val skin: String?,
         val candyUsed: Int,
     )
 }
