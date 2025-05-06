@@ -47,11 +47,12 @@ fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
 }
 
 fun ItemStack.getSkyBlockId() = getData(DataTypes.ID)
+fun ItemStack.getApiId() = getData(DataTypes.API_ID)
 
 val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
 
 @Deprecated("")
-@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6")
+@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
 object ItemUtils {
 
     fun createSkull(textureBase64: String): ItemStack {
