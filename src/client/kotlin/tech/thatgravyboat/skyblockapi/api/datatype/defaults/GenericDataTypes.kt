@@ -55,7 +55,8 @@ object GenericDataTypes {
     val STAR_COUNT: DataType<Int> = DataType("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
     val DUNGEON_ITEM: DataType<Boolean> = DataType("dungeon_item") { it.tag?.getBoolean("dungeon_item")?.getOrNull() }
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType("applied_rune") { getAppliedRune(it.tag ?: return@DataType null) }
-    val HELMET_SKIN: DataType<String> = DataType("skin") { it.tag?.getStringOrNull("skin") }
+    val APPLIED_DYE: DataType<String> = DataType("applied_dye") { it.tag?.getStringOrNull("dye_item") }
+    val HELMET_SKIN: DataType<String> = DataType("helmet_skin") { it.tag?.getStringOrNull("skin") }
     val PET_DATA: DataType<PetData> = DataType("pet_data") { getPetData(it.tag ?: return@DataType null) }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
@@ -88,6 +89,7 @@ object GenericDataTypes {
         event.register(STAR_COUNT)
         event.register(DUNGEON_ITEM)
         event.register(APPLIED_RUNE)
+        event.register(APPLIED_DYE)
         event.register(HELMET_SKIN)
         event.register(PET_DATA)
         event.register(HOOK)
