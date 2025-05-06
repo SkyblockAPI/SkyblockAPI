@@ -4,19 +4,12 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.DataTypesCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Pricing
 import tech.thatgravyboat.skyblockapi.api.remote.itemdata.Cost
 import tech.thatgravyboat.skyblockapi.api.remote.itemdata.ItemData
 
-internal object DrillComponentsCalculator : Calculator {
-    override fun calculate(id: String, stack: ItemStack): Long {
-        val fuelTankPrice = Pricing.getPrice(stack.getData(DataTypes.FUEL_TANK))
-        val enginePrice = Pricing.getPrice(stack.getData(DataTypes.ENGINE))
-        val upgradeModulePrice = Pricing.getPrice(stack.getData(DataTypes.UPGRADE_MODULE))
-
-        return fuelTankPrice + enginePrice + upgradeModulePrice
-    }
-}
+internal object DrillComponentsCalculator : DataTypesCalculator(DataTypes.FUEL_TANK, DataTypes.ENGINE, DataTypes.UPGRADE_MODULE)
 
 internal object GemstoneCalculator : Calculator {
     override fun calculate(id: String, stack: ItemStack): Long {

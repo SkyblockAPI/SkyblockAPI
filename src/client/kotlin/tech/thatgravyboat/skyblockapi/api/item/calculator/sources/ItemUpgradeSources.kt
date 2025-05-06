@@ -74,7 +74,7 @@ internal object ItemStarsCalculator : Calculator {
 
             starPrice + masterStarPrice + conversionCost
         } else {
-            // TODO :3
+            // TODO @Mona :3
             0L
         }
     }
