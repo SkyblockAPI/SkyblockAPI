@@ -102,7 +102,7 @@ object DebugTooltips {
                     this.color = TextColor.DARK_GRAY
                 },
             )
-            event.add(Text.of("Sources:") { this.color = TextColor.DARK_GRAY })
+            event.add(Text.of("Sources: ([Shift] for all)") { this.color = TextColor.DARK_GRAY })
 
             val sources = event.item.getItemValue().sources.entries.sortedByDescending { it.value }
             val sourcesToShow = sources.filter { it.value > 0L }.takeUnless { Screen.hasShiftDown() } ?: sources
