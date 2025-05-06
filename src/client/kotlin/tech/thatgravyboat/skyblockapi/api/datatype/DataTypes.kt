@@ -43,6 +43,7 @@ object DataTypes {
     val STAR_COUNT: DataType<Int> = GenericDataTypes.STAR_COUNT
     val DUNGEON_ITEM: DataType<Boolean> = GenericDataTypes.DUNGEON_ITEM
     val APPLIED_RUNE: DataType<Pair<String, Int>> = GenericDataTypes.APPLIED_RUNE
+    val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN
     val PET_DATA: DataType<PetData> = GenericDataTypes.PET_DATA
 
     // Fishing Rod
