@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.tag
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -21,13 +22,11 @@ object GenericDataTypes {
     val API_ID: DataType<String> = DataType("api_id") {
         val id = it.tag?.getStringOrNull("id")
         if (id == "RUNE") {
-            val rune = it.tag?.getCompoundOrEmpty("runes")?.let { tag ->
-                buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
-            }?.entries?.first()?.toPair()
+            val rune = getAppliedRune(it.tag ?: return@DataType null)
             "rune:${rune?.first}:${rune?.second}"
         } else if (id == "PET") {
             val pet = getPetData(it.tag ?: return@DataType null)
-            "pet:${pet.id}:${pet.rarity.name}"
+            "pet:${pet?.id}:${pet?.rarity?.name}"
         } else id
     }
     val UUID: DataType<UUID> = DataType("uuid") { it.tag?.getUuidOrNull("uuid") }
@@ -55,11 +54,7 @@ object GenericDataTypes {
     val COMPACT_BLOCKS: DataType<Long> = DataType("compact_blocks") { it.tag?.getLongOrNull("compact_blocks") }
     val STAR_COUNT: DataType<Int> = DataType("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
     val DUNGEON_ITEM: DataType<Boolean> = DataType("dungeon_item") { it.tag?.getBoolean("dungeon_item")?.getOrNull() }
-    val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType("applied_rune") {
-        it.tag?.getCompoundOrEmpty("runes")?.let { tag ->
-            buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
-        }?.entries?.firstOrNull()?.toPair()
-    }
+    val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType("applied_rune") { getAppliedRune(it.tag ?: return@DataType null) }
     val PET_DATA: DataType<PetData> = DataType("pet_data") { getPetData(it.tag ?: return@DataType null) }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
@@ -107,8 +102,14 @@ object GenericDataTypes {
         uuid to tag.getStringOr("part", "")
     }
 
-    private fun getPetData(tag: CompoundTag): PetData {
-        val json = tag.getStringOrNull("petInfo")?.readJson<JsonObject>() ?: return PetData("", false, 0, SkyBlockRarity.COMMON, null, 0)
+    private fun getAppliedRune(tag: CompoundTag): Pair<String, Int>? {
+        return tag.getCompoundOrEmpty("runes")?.let { tag ->
+            buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
+        }?.entries?.firstOrNull()?.toPair()
+    }
+
+    private fun getPetData(tag: CompoundTag): PetData? {
+        val json = tag.getStringOrNull("petInfo")?.readJson<JsonObject>() ?: return null
         return PetData(
             json.get("type").asString(""),
             json.get("active").asBoolean(false),
