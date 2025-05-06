@@ -25,8 +25,7 @@ object GenericDataTypes {
             val rune = getAppliedRune(it.tag ?: return@DataType null)
             "rune:${rune?.first}:${rune?.second}"
         } else if (id == "PET") {
-            val pet = getPetData(it.tag ?: return@DataType null)
-            "pet:${pet?.id}:${pet?.rarity?.name}"
+            getPetData(it.tag ?: return@DataType null)?.apiId ?: return@DataType null
         } else id
     }
     val UUID: DataType<UUID> = DataType("uuid") { it.tag?.getUuidOrNull("uuid") }
@@ -133,5 +132,7 @@ object GenericDataTypes {
         val heldItem: String?,
         val skin: String?,
         val candyUsed: Int,
-    )
+    ) {
+        val apiId = "pet:$id:${rarity.name}"
+    }
 }
