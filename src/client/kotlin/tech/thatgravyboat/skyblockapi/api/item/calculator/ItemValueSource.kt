@@ -14,6 +14,9 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     GEMSTONE(GemstoneCalculator),
     FISHING_ROD_PARTS(RodPartCalculator),
     SILEX(SilexCalculator),
+    APPLIED_RUNE(AppliedRuneCalculator),
+    APPLIED_DYE(AppliedDyeCalculator),
+    HELMET_SKIN(HelmetSkinCalculator),
     ;
 
     companion object {
