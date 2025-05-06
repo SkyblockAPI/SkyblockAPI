@@ -26,6 +26,8 @@ enum class SkyBlockRarity(val color: Int) {
     override fun toString(): String = displayName
 
     companion object {
+        fun fromNameOrNull(name: String) = entries.find { it.name.equals(name, true) }
+        fun fromName(name: String) = fromNameOrNull(name) ?: COMMON
 
         internal fun fromColorOrNull(colorCode: Int): SkyBlockRarity? {
             return when (colorCode) {

@@ -118,7 +118,7 @@ object GenericDataTypes {
             json.get("type").asString(""),
             json.get("active").asBoolean(false),
             json.get("exp").asLong(0),
-            SkyBlockRarity.entries.find { rarity -> rarity.name.equals(json.get("tier").asString(), true) } ?: SkyBlockRarity.COMMON,
+            SkyBlockRarity.fromName(json.get("tier").asString("")),
             json.get("heldItem")?.asString,
             json.get("skin")?.asString,
             json.get("candyUsed").asInt(0),
