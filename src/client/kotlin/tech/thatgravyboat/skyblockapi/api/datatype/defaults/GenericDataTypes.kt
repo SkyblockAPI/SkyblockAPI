@@ -1,12 +1,17 @@
 package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
+import com.google.gson.JsonObject
 import kotlinx.datetime.Instant
 import net.minecraft.Util
+import net.minecraft.nbt.CompoundTag
+import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.tag
+import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -14,6 +19,15 @@ import kotlin.jvm.optionals.getOrNull
 object GenericDataTypes {
 
     val ID: DataType<String> = DataType("id") { it.tag?.getStringOrNull("id") }
+    val API_ID: DataType<String> = DataType("api_id") {
+        val id = it.tag?.getStringOrNull("id")
+        if (id == "RUNE") {
+            val rune = getAppliedRune(it.tag ?: return@DataType null)
+            "rune:${rune?.first}:${rune?.second}"
+        } else if (id == "PET") {
+            getPetData(it.tag ?: return@DataType null)?.apiId ?: return@DataType null
+        } else id
+    }
     val UUID: DataType<UUID> = DataType("uuid") { it.tag?.getUuidOrNull("uuid") }
     val MODIFIER: DataType<String> = DataType("modifier") { it.tag?.getStringOrNull("modifier") }
     val TIMESTAMP: DataType<Instant> = DataType("timestamp") { it.tag?.getLongOrNull("timestamp")?.let(Instant::fromEpochMilliseconds) }
@@ -39,6 +53,10 @@ object GenericDataTypes {
     val COMPACT_BLOCKS: DataType<Long> = DataType("compact_blocks") { it.tag?.getLongOrNull("compact_blocks") }
     val STAR_COUNT: DataType<Int> = DataType("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
     val DUNGEON_ITEM: DataType<Boolean> = DataType("dungeon_item") { it.tag?.getBoolean("dungeon_item")?.getOrNull() }
+    val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType("applied_rune") { getAppliedRune(it.tag ?: return@DataType null) }
+    val APPLIED_DYE: DataType<String> = DataType("applied_dye") { it.tag?.getStringOrNull("dye_item") }
+    val HELMET_SKIN: DataType<String> = DataType("helmet_skin") { it.tag?.getStringOrNull("skin") }
+    val PET_DATA: DataType<PetData> = DataType("pet_data") { getPetData(it.tag ?: return@DataType null) }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
@@ -51,6 +69,7 @@ object GenericDataTypes {
     @Subscription
     fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
         event.register(ID)
+        event.register(API_ID)
         event.register(UUID)
         event.register(MODIFIER)
         event.register(TIMESTAMP)
@@ -68,6 +87,10 @@ object GenericDataTypes {
         event.register(COMPACT_BLOCKS)
         event.register(STAR_COUNT)
         event.register(DUNGEON_ITEM)
+        event.register(APPLIED_RUNE)
+        event.register(APPLIED_DYE)
+        event.register(HELMET_SKIN)
+        event.register(PET_DATA)
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)
@@ -80,5 +103,36 @@ object GenericDataTypes {
         val tag = it.tag?.getObjectOrNull(name) ?: return@DataType null
         val uuid = tag.getUuidOrNull("uuid") ?: Util.NIL_UUID
         uuid to tag.getStringOr("part", "")
+    }
+
+    private fun getAppliedRune(tag: CompoundTag): Pair<String, Int>? {
+        return tag.getCompoundOrEmpty("runes")?.let { tag ->
+            buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
+        }?.entries?.firstOrNull()?.toPair()
+    }
+
+    private fun getPetData(tag: CompoundTag): PetData? {
+        val json = tag.getStringOrNull("petInfo")?.readJson<JsonObject>() ?: return null
+        return PetData(
+            json.get("type").asString(""),
+            json.get("active").asBoolean(false),
+            json.get("exp").asLong(0),
+            SkyBlockRarity.fromName(json.get("tier").asString("")),
+            json.get("heldItem")?.asString,
+            json.get("skin")?.asString,
+            json.get("candyUsed").asInt(0),
+        )
+    }
+
+    data class PetData(
+        val id: String,
+        val active: Boolean,
+        val exp: Long,
+        val rarity: SkyBlockRarity,
+        val heldItem: String?,
+        val skin: String?,
+        val candyUsed: Int,
+    ) {
+        val apiId = "pet:$id:${rarity.name}"
     }
 }
