@@ -34,6 +34,12 @@ class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClie
             ?.apply { LiteralCommandBuilder(this).apply(builder) }
             ?.let(dispatcher::register)
     }
+
+    fun registerWithCallback(command: String, callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
+        register(command) {
+            this.callback(callback)
+        }
+    }
 }
 
 class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal constructor(

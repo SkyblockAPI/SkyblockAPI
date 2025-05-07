@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.BlockHitResult
+import tech.thatgravyboat.skyblockapi.api.area.mining.MiningBlock.entries
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockMinedEvent
@@ -390,10 +391,8 @@ enum class MiningBlock(
 
         @Subscription
         fun onCommandRegistration(event: RegisterCommandsEvent) {
-            event.register("sbapi mining") {
-                callback {
-                    debugToggle = !debugToggle
-                }
+            event.registerWithCallback("sbapi mining") {
+                debugToggle = !debugToggle
             }
         }
     }
