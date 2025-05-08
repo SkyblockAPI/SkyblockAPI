@@ -104,13 +104,15 @@ tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion.toString()))
 }
 
-tasks.withType<KspTask>() {
+tasks.withType<KspTask> {
     outputs.upToDateWhen { false }
 }
 
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+tasks.apiCheck { enabled = false }
 
 publishing {
     publications {

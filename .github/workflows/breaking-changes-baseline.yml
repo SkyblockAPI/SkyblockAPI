@@ -1,0 +1,49 @@
+name: API Baseline Updater
+
+on:
+    push:
+        branches: [ "1.x" ]
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up JDK 21
+              uses: actions/setup-java@v4.0.0
+              with:
+                  java-version: '21'
+                  distribution: 'temurin'
+
+            - name: Setup Gradle
+              uses: gradle/actions/setup-gradle@v3
+
+            - name: Grant execute permission for gradlew
+              run: chmod +x gradlew
+
+            - name: Build with Gradle
+              run: ./gradlew apiDump || true
+
+            -   name: Compare API
+                run: git diff api/SkyblockAPI.api | grep "^+[^+]" >> api.added || true
+
+            -   name: Check for breaking changes
+                env:
+                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: |
+                    if grep -q '[^[:space:]]' < api.added
+                    then
+                        rm api.added
+                        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                        git config --global user.name "github-actions[bot]"
+                        git add .
+                        git commit -m "update api dump"
+                        git push
+                    fi
