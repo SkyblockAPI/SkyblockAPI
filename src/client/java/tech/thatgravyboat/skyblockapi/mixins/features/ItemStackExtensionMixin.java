@@ -64,7 +64,7 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
     @Override
     public @NotNull ItemValueResult skyblockapi$getItemValueResult() {
         if (this.skyblockapi$itemValueResult == null) {
-            this.skyblockapi$itemValueResult = ItemValueCalculator.calculateItemValue((ItemStack) (Object) this);
+            this.skyblockapi$itemValueResult = ItemValueCalculator.calculateItemValue$skyblock_api_client((ItemStack) (Object) this);
         }
         return this.skyblockapi$itemValueResult;
     }

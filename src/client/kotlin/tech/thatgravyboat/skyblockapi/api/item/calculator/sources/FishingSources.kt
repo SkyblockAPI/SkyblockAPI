@@ -4,7 +4,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
-import tech.thatgravyboat.skyblockapi.api.item.calculator.Pricing
+import tech.thatgravyboat.skyblockapi.api.remote.pricing.Pricing
 
 internal object RodPartCalculator : Calculator {
     override fun calculate(id: String, stack: ItemStack): Long {

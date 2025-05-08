@@ -57,6 +57,9 @@ object GenericDataTypes {
     val APPLIED_DYE: DataType<String> = DataType("applied_dye") { it.tag?.getStringOrNull("dye_item") }
     val HELMET_SKIN: DataType<String> = DataType("helmet_skin") { it.tag?.getStringOrNull("skin") }
     val PET_DATA: DataType<PetData> = DataType("pet_data") { getPetData(it.tag ?: return@DataType null) }
+    val DIVAN_POWDER_COATING: DataType<Int> = DataType("divan_powder_coating") { it.tag?.getIntOrNull("divan_powder_coating") }
+    val POLARVOID: DataType<Int> = DataType("polarvoid") { it.tag?.getIntOrNull("polarvoid") }
+    val POWER_ABILITY_SCROLL: DataType<String> = DataType("power_ability_scroll") { it.tag?.getStringOrNull("power_ability_scroll") }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
@@ -91,6 +94,9 @@ object GenericDataTypes {
         event.register(APPLIED_DYE)
         event.register(HELMET_SKIN)
         event.register(PET_DATA)
+        event.register(DIVAN_POWDER_COATING)
+        event.register(POLARVOID)
+        event.register(POWER_ABILITY_SCROLL)
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)

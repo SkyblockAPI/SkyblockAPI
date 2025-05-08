@@ -4,10 +4,12 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.DataTypeCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.DataTypesCalculator
-import tech.thatgravyboat.skyblockapi.api.item.calculator.Pricing
+import tech.thatgravyboat.skyblockapi.api.item.calculator.IntDataTypeCalculator
 import tech.thatgravyboat.skyblockapi.api.remote.itemdata.Cost
 import tech.thatgravyboat.skyblockapi.api.remote.itemdata.ItemData
+import tech.thatgravyboat.skyblockapi.api.remote.pricing.Pricing
 
 internal object DrillComponentsCalculator : DataTypesCalculator(DataTypes.FUEL_TANK, DataTypes.ENGINE, DataTypes.UPGRADE_MODULE)
 
@@ -30,3 +32,9 @@ internal object SilexCalculator : Calculator {
         return (efficiency - 5).coerceAtLeast(0) * Pricing.getPrice("SIL_EX")
     }
 }
+
+internal object DivanPowderCoatingCalculator : IntDataTypeCalculator(DataTypes.DIVAN_POWDER_COATING, "DIVAN_POWDER_COATING")
+
+internal object PolarVoidCalculator : IntDataTypeCalculator(DataTypes.POLARVOID, "POLARVOID_BOOK")
+
+internal object PowerAbilityScrollCalculator : DataTypeCalculator(DataTypes.POWER_ABILITY_SCROLL)

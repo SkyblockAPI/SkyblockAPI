@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.DataTypeCalculator
-import tech.thatgravyboat.skyblockapi.api.item.calculator.Pricing
+import tech.thatgravyboat.skyblockapi.api.remote.pricing.Pricing
 
 internal object AppliedDyeCalculator : DataTypeCalculator(DataTypes.APPLIED_DYE)
 internal object HelmetSkinCalculator : DataTypeCalculator(DataTypes.HELMET_SKIN)
