@@ -34,7 +34,7 @@ object BazaarAPI {
                 val quick = obj.getAsJsonObject("quick_status")
                 id to BazaarProduct(
                     id,
-                    quick.getAsJsonPrimitive("sellPrice").asDouble(0.0),
+                    quick.getAsJsonPrimitive("sellPrice").asFloat,
                     quick.getAsJsonPrimitive("sellVolume").asLong(0),
                     quick.getAsJsonPrimitive("buyPrice").asDouble(0.0),
                     quick.getAsJsonPrimitive("buyVolume").asLong(0),
@@ -45,7 +45,7 @@ object BazaarAPI {
 
     data class BazaarProduct(
         val productId: String,
-        val sellPrice: Double,
+        val sellPrice: Float,
         val sellVolume: Long,
         val buyPrice: Double,
         val buyVolume: Long,
