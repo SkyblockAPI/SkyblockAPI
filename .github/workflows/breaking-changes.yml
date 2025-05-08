@@ -1,0 +1,54 @@
+name: Breaking Changes Checker
+
+on:
+    pull_request:
+        branches: [ "1.x" ]
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v3.5.2
+            -   name: Set up JDK 21
+                uses: actions/setup-java@v4.0.0
+                with:
+                    java-version: '21'
+                    distribution: 'temurin'
+            -   name: Grant execute permission for gradlew
+                run: chmod +x gradlew
+            -   name: Build with Gradle
+                uses: gradle/gradle-build-action@v2.11.0
+                with:
+                    arguments: apiDump --stacktrace
+
+            -   name: Compare API
+                run: |
+                    git diff api/SkyblockAPI.api | grep "^-[^-]" >> api.removed
+                    git diff api/SkyblockAPI.api | grep "^+[^+]" >> api.added
+
+            -   name: Check for breaking changes
+                env:
+                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+                run: |
+                    grep -q '[^[:space:]]' < api.removed && {
+                        echo "Breaking changes detected, please make sure not to break APIs between MC versions." >> comment
+                        echo "Please check the following diff:" >> comment
+                        echo "\`\`\`diff" >> comment
+                        cat api.removed >> comment
+                        echo "\`\`\`" >> comment
+                        gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
+                    } || grep -q '[^[:space:]]' < api.added && {
+                        rm api.diff
+                        git config user.name github-actions
+                        git config user.email github-actions@github.com
+                        git add .
+                        git commit -m "update api dump"
+                        git push
+                    }
