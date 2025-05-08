@@ -7,6 +7,7 @@ plugins {
     id("fabric-loom") version "1.10-SNAPSHOT"
     id("maven-publish")
     id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.17.0"
     id("me.owdding.resources")
     `item-data`
 }
@@ -41,6 +42,15 @@ loom {
             sourceSet("client")
         }
     }
+}
+
+apiValidation {
+    additionalSourceSets += "client"
+    nonPublicMarkers += "org.jetbrains.annotations.ApiStatus\$Internal"
+
+    ignoredProjects += "annotations"
+    ignoredPackages += "tech.thatgravyboat.skyblockapi.mixins"
+    ignoredPackages += "tech.thatgravyboat.skyblockapi.impl"
 }
 
 repositories {
