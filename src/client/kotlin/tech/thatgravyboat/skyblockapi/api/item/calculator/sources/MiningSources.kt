@@ -7,9 +7,9 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.DataTypeCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.DataTypesCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.IntDataTypeCalculator
-import tech.thatgravyboat.skyblockapi.api.item.calculator.Pricing
 import tech.thatgravyboat.skyblockapi.api.remote.itemdata.Cost
 import tech.thatgravyboat.skyblockapi.api.remote.itemdata.ItemData
+import tech.thatgravyboat.skyblockapi.api.remote.pricing.Pricing
 
 internal object DrillComponentsCalculator : DataTypesCalculator(DataTypes.FUEL_TANK, DataTypes.ENGINE, DataTypes.UPGRADE_MODULE)
 

@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import tech.thatgravyboat.skyblockapi.api.data.Essence
-import tech.thatgravyboat.skyblockapi.api.item.calculator.Pricing
+import tech.thatgravyboat.skyblockapi.api.remote.pricing.Pricing
 import tech.thatgravyboat.skyblockapi.generated.KCodec
 import tech.thatgravyboat.skyblockapi.kcodec.IncludedCodec
 

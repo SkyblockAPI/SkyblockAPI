@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.item.calculator
 
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.remote.pricing.Pricing
 import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 
 internal interface ItemValueItemStack {
