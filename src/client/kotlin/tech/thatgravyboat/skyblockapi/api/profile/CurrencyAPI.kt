@@ -38,7 +38,7 @@ object CurrencyAPI {
     private val copperRegex = currencyGroup.create("copper", "Copper: (?<copper>[\\d,.kmb]+).*")
     private val northStarsRegex = currencyGroup.create("northstars", "North Stars: (?<northstars>[\\d,.kmb]+).*")
 
-    var purse: Float = 0.0f
+    var purse: Double = 0.0
         private set
 
     var purseType: PurseType = PurseType.UNKNOWN
@@ -115,7 +115,7 @@ object CurrencyAPI {
                 }
             }
             purseRegex.anyMatch(event.added, "type", "purse") { (type, purse) ->
-                this.purse = purse.parseFormattedDouble().toFloat()
+                this.purse = purse.parseFormattedDouble()
                 this.purseType = when (type.lowercase()) {
                     "purse" -> PurseType.NORMAL
                     "piggy" -> PurseType.PIGGY
@@ -130,7 +130,7 @@ object CurrencyAPI {
     }
 
     private fun reset() {
-        purse = 0.0f
+        purse = 0.0
         purseType = PurseType.UNKNOWN
         personalBank = 0
         coopBank = 0

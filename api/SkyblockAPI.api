@@ -2517,7 +2517,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/CurrencyAPI {
 	public final fun getMotes ()J
 	public final fun getNorthStars ()J
 	public final fun getPersonalBank ()J
-	public final fun getPurse ()F
+	public final fun getPurse ()D
 	public final fun getPurseType ()Ltech/thatgravyboat/skyblockapi/api/profile/PurseType;
 	public final fun getSoulflow ()J
 	public final fun onProfileChange (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
