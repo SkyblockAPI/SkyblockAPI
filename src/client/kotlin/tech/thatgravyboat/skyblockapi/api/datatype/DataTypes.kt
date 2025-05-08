@@ -46,6 +46,9 @@ object DataTypes {
     val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN
     val APPLIED_DYE: DataType<String> = GenericDataTypes.APPLIED_DYE
     val PET_DATA: DataType<PetData> = GenericDataTypes.PET_DATA
+    val DIVAN_POWDER_COATING: DataType<Int> = GenericDataTypes.DIVAN_POWDER_COATING
+    val POLARVOID: DataType<Int> = GenericDataTypes.POLARVOID
+    val POWER_ABILITY_SCROLL: DataType<String> = GenericDataTypes.POWER_ABILITY_SCROLL
 
     // Fishing Rod
     val HOOK: DataType<Pair<UUID, String>> = GenericDataTypes.HOOK

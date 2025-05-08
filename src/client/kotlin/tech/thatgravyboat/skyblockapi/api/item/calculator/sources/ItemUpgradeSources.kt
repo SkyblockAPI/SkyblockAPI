@@ -4,17 +4,14 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.IntDataTypeCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Pricing
 import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI
 import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI.getApplyCost
 import tech.thatgravyboat.skyblockapi.api.remote.itemdata.Cost
 import tech.thatgravyboat.skyblockapi.api.remote.itemdata.ItemData
 
-internal object RecombobulatorCalculator : Calculator {
-    override fun calculate(id: String, stack: ItemStack): Long {
-        return Pricing.getPrice("RECOMBOBULATOR_3000") * (stack.getData(DataTypes.RARITY_UPGRADES) ?: 0)
-    }
-}
+internal object RecombobulatorCalculator : IntDataTypeCalculator(DataTypes.RARITY_UPGRADES, "RECOMBOBULATOR_3000")
 
 internal object ReforgeCalculator : Calculator {
     override fun calculate(id: String, stack: ItemStack): Long {

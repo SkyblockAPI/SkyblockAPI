@@ -16,6 +16,9 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     GEMSTONE(GemstoneCalculator),
     FISHING_ROD_PARTS(RodPartCalculator),
     SILEX(SilexCalculator),
+    DIVAN_POWDER_COATING(DivanPowderCoatingCalculator),
+    POLARVOID(PolarVoidCalculator),
+    POWER_ABILITY_SCROLL(PowerAbilityScrollCalculator),
     APPLIED_RUNE(AppliedRuneCalculator),
     APPLIED_DYE(AppliedDyeCalculator),
     HELMET_SKIN(HelmetSkinCalculator),
@@ -43,6 +46,12 @@ open class DataTypeCalculator(private val dataType: DataType<String>) : Calculat
 open class DataTypesCalculator(private vararg val dataTypes: DataType<String>) : Calculator {
     override fun calculate(id: String, stack: ItemStack): Long {
         return dataTypes.sumOf { Pricing.getPrice(stack.getData(it) ?: return@sumOf 0L) }
+    }
+}
+
+open class IntDataTypeCalculator(private val dataType: DataType<Int>, private val itemId: String) : Calculator {
+    override fun calculate(id: String, stack: ItemStack): Long {
+        return Pricing.getPrice(itemId) * (stack.getData(dataType) ?: 0)
     }
 }
 
