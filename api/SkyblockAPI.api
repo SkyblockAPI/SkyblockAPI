@@ -3401,6 +3401,7 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McClient {
 	public final fun sendCommand (Ljava/lang/String;)V
 	public final fun setClipboard (Ljava/lang/String;)V
 	public final fun setScreen (Lnet/minecraft/client/gui/screens/Screen;)V
+	public final fun setScreenAsync (Lnet/minecraft/client/gui/screens/Screen;)V
 	public final fun tell (Lkotlin/jvm/functions/Function0;)V
 }
 
