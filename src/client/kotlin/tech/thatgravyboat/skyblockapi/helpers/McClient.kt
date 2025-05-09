@@ -80,9 +80,11 @@ object McClient {
         self.schedule(action)
     }
 
+    fun setScreenAsync(screen: Screen?) = tell { self.setScreen(screen) }
+
     fun setScreen(screen: Screen?) {
         if (self.screen is ChatScreen) {
-            tell { self.setScreen(screen) }
+            setScreenAsync(screen)
         } else {
             self.setScreen(screen)
         }
