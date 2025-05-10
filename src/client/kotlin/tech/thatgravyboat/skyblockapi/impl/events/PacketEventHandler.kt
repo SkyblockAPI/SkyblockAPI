@@ -43,7 +43,7 @@ object PacketEventHandler {
     fun onPacketReceived(event: PacketReceivedEvent) {
         when (event.packet) {
             is ClientboundBlockUpdatePacket -> postBlockChange(event.packet.pos, event.packet.blockState)
-            is ClientboundSectionBlocksUpdatePacket -> event.packet.runUpdates(::postBlockChange)
+            is ClientboundSectionBlocksUpdatePacket -> event.packet.runUpdates { mutablePos, state -> postBlockChange(mutablePos.immutable(), state) }
             is ClientboundContainerSetContentPacket -> {
                 McClient.tell {
                     val container = McScreen.asMenu?.takeIf { it.menu?.containerId == event.packet.containerId } ?: return@tell
