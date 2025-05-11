@@ -1,8 +1,10 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.core.component.DataComponents
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.CustomData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
@@ -12,6 +14,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
+import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.getTexture
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
@@ -34,6 +37,8 @@ object DebugInventory {
                     "[SkyBlockAPI] Debug inventory: $enabled",
                     "Use [C] to copy the raw item data.",
                     "Use [S] to copy the skin.",
+                    "Use [I] to copy the id.",
+                    "Use [D] to copy the custom data.",
                 ) {
                     this.color = TextColor.YELLOW
                 }.send()
@@ -48,10 +53,24 @@ object DebugInventory {
         val cancel = when (event.key) {
             InputConstants.KEY_S -> copySkin(slot)
             InputConstants.KEY_C -> copyItem(slot)
+            InputConstants.KEY_I -> copyId(slot)
+            InputConstants.KEY_D -> copyCustomData(slot)
             else -> false
         }
 
         if (cancel) event.cancel()
+    }
+
+    private fun copyCustomData(slot: Slot): Boolean {
+        McClient.clipboard = slot.item.get(DataComponents.CUSTOM_DATA)?.toJson(CustomData.CODEC).toPrettyString()
+        Text.debug("Copied custom data to clipboard.").send()
+        return true
+    }
+
+    private fun copyId(slot: Slot): Boolean {
+        McClient.clipboard = slot.item.getSkyBlockId()
+        Text.debug("Copied item id to clipboard.").send()
+        return true
     }
 
     private fun copySkin(slot: Slot): Boolean {
