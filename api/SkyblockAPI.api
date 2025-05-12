@@ -3161,8 +3161,10 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/RepoItemsAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/RepoItemsAPI;
 	public final fun getItem (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
 	public final fun getItemIdByName (Ljava/lang/String;)Ljava/lang/String;
+	public final fun getItemLazy (Ljava/lang/String;)Lkotlin/Lazy;
 	public final fun getItemName (Ljava/lang/String;)Lnet/minecraft/network/chat/Component;
 	public final fun getItemOrNull (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
+	public final fun getItemOrNullLazy (Ljava/lang/String;)Lkotlin/Lazy;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/RepoMobsAPI {
