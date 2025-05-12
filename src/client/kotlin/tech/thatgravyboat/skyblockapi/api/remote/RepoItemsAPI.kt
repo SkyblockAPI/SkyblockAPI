@@ -36,6 +36,9 @@ object RepoItemsAPI {
         this.set(DataComponents.ITEM_NAME, Text.of(id))
     }
 
+    fun getItemOrNullLazy(id: String) = lazy { getItemOrNull(id) }
+    fun getItemLazy(id: String) = lazy { getItem(id) }
+
     fun getItemName(id: String): Component = getItem(id).hoverName
 
     fun getItemIdByName(name: String): String? = nameCache[name.lowercase()]
