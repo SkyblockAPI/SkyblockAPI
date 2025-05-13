@@ -125,7 +125,7 @@ enum class TrophyFishType(
 
     companion object {
         fun getByInternalName(internalName: String): TrophyFishType? {
-            return entries.firstOrNull { internalName.equals(it.internalName, ignoreCase = true) }
+            return entries.find { internalName.equals(it.internalName, ignoreCase = true) }
         }
 
         fun getByDisplayName(name: String): TrophyFishType? {
