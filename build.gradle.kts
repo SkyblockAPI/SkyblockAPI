@@ -26,6 +26,7 @@ java {
 }
 
 loom {
+    accessWidenerPath = file("src/main/resources/skyblockapi.accesswidener")
     splitEnvironmentSourceSets()
 
     runs {
