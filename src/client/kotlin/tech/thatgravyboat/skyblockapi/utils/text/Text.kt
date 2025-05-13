@@ -58,6 +58,11 @@ object Text {
     fun MutableComponent.suffix(suffix: String): MutableComponent = join(this, suffix)
     fun MutableComponent.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
 
+    fun Component.send() = McClient.chat.addMessage(this)
+    fun Component.send(id: String) = McClient.chat.setMessageId(id) {
+        this.send()
+    }
+
     fun MutableComponent.send() = McClient.chat.addMessage(this)
     fun MutableComponent.send(id: String) = McClient.chat.setMessageId(id) {
         this.send()
@@ -127,13 +132,13 @@ object TextUtils {
     fun Component.splitToWidth(separator: String, maxWidth: Int): List<Component> = split(
         this.split(separator),
         maxWidth,
-        McFont::width
+        McFont::width,
     ) { Text.join(*it.toTypedArray(), Text.of(separator)) }
 
     fun String.splitToWidth(separator: String, maxWidth: Int): List<String> = split(
         this.split(separator),
         maxWidth,
-        McFont::width
+        McFont::width,
     ) { it.joinToString(separator) }
 
 }
