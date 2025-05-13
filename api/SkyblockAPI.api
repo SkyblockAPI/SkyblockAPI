@@ -231,6 +231,124 @@ public final class tech/thatgravyboat/skyblockapi/api/area/island/PrivateIslandA
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish$Companion;
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiName ()Ljava/lang/String;
+	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
+	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getTier ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish$Companion {
+	public final fun fromString (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishData {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishData$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/Map;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishData;Ljava/util/Map;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishData$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishRank : java/lang/Enum {
+	public static final field ADEPT Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishRank;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishRank$Companion;
+	public static final field EXPERT Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishRank;
+	public static final field MASTER Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishRank;
+	public static final field NOVICE Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishRank;
+	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishRank;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishRank;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishRank$Companion {
+	public final fun getById (I)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishRank;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier : java/lang/Enum {
+	public static final field BRONZE Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier$Companion;
+	public static final field DIAMOND Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public static final field GOLD Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public static final field NONE Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public static final field SILVER Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public final fun getDisplayName ()Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getNameSuffix ()Lnet/minecraft/network/chat/Component;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier$Companion {
+	public final fun getByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType : java/lang/Enum {
+	public static final field BLOBFISH Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType$Companion;
+	public static final field FLYFISH Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field GOLDEN_FISH Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field GUSHER Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field KARATE_FISH Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field LAVA_HORSE Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field MANA_RAY Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field MOLDFIN Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field OBFUSCATED_ONE Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field OBFUSCATED_THREE Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field OBFUSCATED_TWO Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field SKELETON_FISH Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field SLUGFISH Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field SOUL_FISH Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field STEAMING_HOT_FLOUNDER Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field SULPHUR_SKITTER Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field VANILLE Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static final field VOLCANIC_STONEFISH Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public final fun getBronze ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getDiamond ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getGold ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getInternalName ()Ljava/lang/String;
+	public final fun getItem (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)Lnet/minecraft/world/item/ItemStack;
+	public final fun getSilver ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getStrippedName ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType$Companion {
+	public final fun getByDisplayName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public final fun getByInternalName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishingAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishingAPI;
+	public final fun getCaught (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;)Ljava/util/Map;
+	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
+	public final fun onInventory (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/area/mining/Commission {
 	public fun <init> (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/area/mining/CommissionArea;F)V
 	public final fun component1 ()Ljava/lang/String;
@@ -1963,6 +2081,19 @@ public final class tech/thatgravyboat/skyblockapi/api/events/location/IslandChan
 
 public final class tech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/location/isle/TrophyFishCaughtEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)Ltech/thatgravyboat/skyblockapi/api/events/location/isle/TrophyFishCaughtEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/location/isle/TrophyFishCaughtEvent;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/location/isle/TrophyFishCaughtEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getTier ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseSpawnEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -3883,6 +4014,8 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/Text {
 	public static synthetic fun of$default (Ltech/thatgravyboat/skyblockapi/utils/text/Text;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;
 	public static synthetic fun of$default (Ltech/thatgravyboat/skyblockapi/utils/text/Text;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun prefix (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;
+	public final fun send (Lnet/minecraft/network/chat/Component;)V
+	public final fun send (Lnet/minecraft/network/chat/Component;Ljava/lang/String;)V
 	public final fun send (Lnet/minecraft/network/chat/MutableComponent;)V
 	public final fun send (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;)V
 	public final fun suffix (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;
