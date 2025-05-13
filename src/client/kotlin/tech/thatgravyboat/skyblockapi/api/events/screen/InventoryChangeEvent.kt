@@ -28,7 +28,7 @@ class InventoryChangeEvent(
     val isOnLeftColumn = slot.index % 9 == 0
     val isOnRightColumn = slot.index % 9 == 8
 
-    val isOnSides = isOnLeftColumn or isOnRightColumn
-    val isInTopRowOrBottomRow = isInTopRow or isInBottomRow
-    val isInMainPart = !isOnSides or !isInTopRowOrBottomRow
+    val isOnSides = isOnLeftColumn || isOnRightColumn
+    val isInTopRowOrBottomRow = isInTopRow || isInBottomRow
+    val isInMainPart = !isOnSides || !isInTopRowOrBottomRow
 }
