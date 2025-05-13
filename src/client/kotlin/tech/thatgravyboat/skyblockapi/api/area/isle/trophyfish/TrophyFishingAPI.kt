@@ -31,7 +31,6 @@ object TrophyFishingAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
-    // ♔ TROPHY FISH! You caught a Blobfish GOLD!
     fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
         if (!content.startsWith("♔ TROPHY FISH!")) return
