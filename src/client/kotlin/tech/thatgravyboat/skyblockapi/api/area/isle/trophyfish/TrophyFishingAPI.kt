@@ -33,7 +33,6 @@ object TrophyFishingAPI {
     @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
     fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
-        if (!content.startsWith("♔ TROPHY FISH!")) return
         trophyFishCaughtRegex.match(content, "type", "tier") { (type, tier) ->
             val fishTier = TrophyFishTier.valueOf(tier)
             val type = TrophyFishType.getByDisplayName(type) ?: return@match
