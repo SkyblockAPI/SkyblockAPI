@@ -113,6 +113,7 @@ object MiscEventHandler {
                 }
             } else {
                 ChatReceivedEvent.Post(message).let { event ->
+                    event.post()
                     (McClient.self.gui.chat as ChatComponentExtension).`skyblockapi$setIdForMessage`(event.id)
                     event.component
                 }
