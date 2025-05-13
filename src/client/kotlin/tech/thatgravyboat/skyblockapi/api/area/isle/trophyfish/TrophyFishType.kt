@@ -108,10 +108,10 @@ enum class TrophyFishType(
     val internalName: String = internalName.takeUnless { it.isEmpty() } ?: name
     val strippedName = displayName.stripped
 
-    val bronze by lazy { RepoItemsAPI.getItem("${this.internalName}_BRONZE") }
-    val silver by lazy { RepoItemsAPI.getItem("${this.internalName}_SILVER") }
-    val gold by lazy { RepoItemsAPI.getItem("${this.internalName}_GOLD") }
-    val diamond by lazy { RepoItemsAPI.getItem("${this.internalName}_DIAMOND") }
+    val bronze by RepoItemsAPI.getItemLazy("${this.internalName}_BRONZE")
+    val silver by RepoItemsAPI.getItemLazy("${this.internalName}_SILVER")
+    val gold by RepoItemsAPI.getItemLazy("${this.internalName}_GOLD")
+    val diamond by RepoItemsAPI.getItemLazy("${this.internalName}_DIAMOND")
 
     fun getItem(tier: TrophyFishTier): ItemStack {
         return when (tier) {
