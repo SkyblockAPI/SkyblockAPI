@@ -8,7 +8,7 @@ data class TrophyFish(val type: TrophyFishType, val tier: TrophyFishTier) {
     val item: ItemStack by lazy { type.getItem(tier) }
     val displayName: Component by lazy {
         if (tier == TrophyFishTier.NONE) {
-            return@lazy Component.empty().append(type.displayName)
+            return@lazy type.displayName.copy()
         }
 
         Text.join(type.displayName, " ", tier.nameSuffix)
