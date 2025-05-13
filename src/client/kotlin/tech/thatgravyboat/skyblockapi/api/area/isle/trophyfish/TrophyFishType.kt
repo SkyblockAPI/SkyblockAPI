@@ -129,7 +129,7 @@ enum class TrophyFishType(
         }
 
         fun getByDisplayName(name: String): TrophyFishType? {
-            return entries.firstOrNull { name.equals(it.strippedName, ignoreCase = true) }
+            return entries.find { name.equals(it.strippedName, ignoreCase = true) }
         }
     }
 }
