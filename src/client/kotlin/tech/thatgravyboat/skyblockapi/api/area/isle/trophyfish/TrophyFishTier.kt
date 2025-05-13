@@ -36,7 +36,7 @@ enum class TrophyFishTier(val nameSuffix: Component, val displayName: String) {
 
     companion object {
         fun getByName(name: String): TrophyFishTier {
-            return entries.firstOrNull { it.name.equals(name, ignoreCase = true) } ?: NONE
+            return entries.find { it.name.equals(name, ignoreCase = true) } ?: NONE
         }
     }
 }
