@@ -12,7 +12,7 @@ enum class TrophyFishRank(val displayName: Component) {
 
     companion object {
         fun getById(id: Int): TrophyFishRank? {
-            return entries.firstOrNull { it.ordinal == id }
+            return entries.find { it.ordinal == id }
         }
     }
 }
