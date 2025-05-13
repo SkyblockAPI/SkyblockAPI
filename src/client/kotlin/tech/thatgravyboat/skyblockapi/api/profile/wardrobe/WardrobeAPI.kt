@@ -6,9 +6,9 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.WardrobeStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -86,10 +86,10 @@ object WardrobeAPI {
     fun isCurrentSlotInCurrentPage() = WardrobeStorage.currentSlot?.let { it in 9 * currentPage - 8..9 * currentPage } == true
 
     @Subscription
-    fun onInventoryUpdate(event: ContainerChangeEvent) {
+    fun onInventoryUpdate(event: InventoryChangeEvent) {
         inWardrobe = inventoryNameRegex.matches(event.title)
 
-        if (inWardrobe) processInventory(event.title, event.inventory)
+        if (inWardrobe) processInventory(event.title, event.itemStacks)
     }
 
     @Subscription

@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ChangedSackItem
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.SacksChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
@@ -61,7 +61,8 @@ object SacksAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onInventoryUpdate(event: ContainerChangeEvent) {
+    fun onInventoryUpdate(event: InventoryChangeEvent) {
+        if (event.isInPlayerInventory) return
         if (!sackTitleRegex.matches(event.title)) return
         val item = event.item
         val id = event.item.getData(DataTypes.ID) ?: return

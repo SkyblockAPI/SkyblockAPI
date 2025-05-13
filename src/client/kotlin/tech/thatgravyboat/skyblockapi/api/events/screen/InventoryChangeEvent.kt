@@ -19,6 +19,7 @@ class InventoryChangeEvent(
 ) : SkyBlockEvent() {
     val isInPlayerInventory = slot.container is Inventory
     val title = titleComponent.stripped
+    val itemStacks = inventory.map { it.item }
 
     val isSkyBlockFiller = item.isEmpty or (item in ItemTag.GLASS_PANES)
 

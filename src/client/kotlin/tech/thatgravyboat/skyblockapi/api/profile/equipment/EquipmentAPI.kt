@@ -8,8 +8,8 @@ import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.RightClickEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -44,9 +44,9 @@ object EquipmentAPI {
     }
 
     @Subscription
-    fun onInventoryChange(event: ContainerChangeEvent) {
+    fun onInventoryChange(event: InventoryChangeEvent) {
         if (!inventoryNameRegex.matches(event.title)) return
-        val slot = EquipmentSlot.entries.find { it.slot == event.slot } ?: return
+        val slot = EquipmentSlot.entries.find { it.slot == event.slot.index } ?: return
         handleInventoryItem(slot, event.item)
     }
 
