@@ -386,7 +386,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/mining/CommissionsAPI
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/mining/CommissionsAPI;
 	public final fun getCommissions ()Ljava/util/List;
 	public final fun onDisconnect (Ltech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent;)V
-	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerChangeEvent;)V
+	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onProfileChange (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
 	public final fun onTabWidgetUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
 }
@@ -2232,6 +2232,24 @@ public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderScreen
 	public final fun getGraphics ()Lnet/minecraft/client/gui/GuiGraphics;
 }
 
+public class tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Lnet/fabricmc/fabric/api/client/rendering/v1/WorldRenderContext;)V
+	public final fun atCamera (Lkotlin/jvm/functions/Function1;)V
+	public final fun getBuffer ()Lnet/minecraft/client/renderer/MultiBufferSource;
+	public final fun getCamera ()Lnet/minecraft/client/Camera;
+	public final fun getCtx ()Lnet/fabricmc/fabric/api/client/rendering/v1/WorldRenderContext;
+	public final fun getPoseStack ()Lcom/mojang/blaze3d/vertex/PoseStack;
+	public final fun pushPop (Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent$AfterEntities : tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent {
+	public fun <init> (Lnet/fabricmc/fabric/api/client/rendering/v1/WorldRenderContext;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent$AfterTranslucent : tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent {
+	public fun <init> (Lnet/fabricmc/fabric/api/client/rendering/v1/WorldRenderContext;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ContainerChangeEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public fun <init> (Lnet/minecraft/world/item/ItemStack;ILnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;Ljava/util/List;)V
 	public final fun getInventory ()Ljava/util/List;
@@ -2258,11 +2276,20 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/InventoryCha
 	public fun <init> (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/inventory/Slot;Lnet/minecraft/network/chat/Component;Ljava/util/List;Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;)V
 	public final fun getInventory ()Ljava/util/List;
 	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getItemStacks ()Ljava/util/List;
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;
 	public final fun getSlot ()Lnet/minecraft/world/inventory/Slot;
 	public final fun getTitle ()Ljava/lang/String;
 	public final fun getTitleComponent ()Lnet/minecraft/network/chat/Component;
+	public final fun isInBottomRow ()Z
+	public final fun isInMainPart ()Z
 	public final fun isInPlayerInventory ()Z
+	public final fun isInTopRow ()Z
+	public final fun isInTopRowOrBottomRow ()Z
+	public final fun isOnLeftColumn ()Z
+	public final fun isOnRightColumn ()Z
+	public final fun isOnSides ()Z
+	public final fun isSkyBlockFiller ()Z
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ItemDebugTooltipEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -2460,6 +2487,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/LocationAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/location/LocationAPI;
 	public final fun getArea ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getIsland ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
+	public final fun getServerId ()Ljava/lang/String;
 	public final fun isOnSkyBlock ()Z
 	public final fun onScoreboardChange (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onServerChange (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ServerChangeEvent;)V
@@ -2822,7 +2850,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/equipment/Equipmen
 	public final fun getEquipment ()Ljava/util/Map;
 	public final fun getEquipment (Ltech/thatgravyboat/skyblockapi/api/profile/equipment/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
-	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerChangeEvent;)V
+	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onInventoryFullyLoad (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerInitializedEvent;)V
 	public final fun onRightClick (Ltech/thatgravyboat/skyblockapi/api/events/level/RightClickEvent;)V
 }
@@ -2941,7 +2969,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onCommandRegister (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 	public final fun onInventoryFullyOpened (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerInitializedEvent;)V
-	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerChangeEvent;)V
+	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower {
@@ -3103,7 +3131,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/quiver/QuiverAPI {
 	public final fun getCurrentAmount ()Ljava/lang/Integer;
 	public final fun getCurrentArrow ()Ljava/lang/String;
 	public final fun onHotbarChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerHotbarChangeEvent;)V
-	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerChangeEvent;)V
+	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onInventoryInitialized (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerInitializedEvent;)V
 }
 
@@ -3136,7 +3164,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/sacks/SacksAPI {
 	public final fun getSackMessageRegex ()Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;
 	public final fun getSackTitleRegex ()Lkotlin/text/Regex;
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent;)V
-	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerChangeEvent;)V
+	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/sacks/SacksData {
@@ -3193,7 +3221,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/storage/StorageAPI
 	public final fun getBackpacks ()Ljava/util/List;
 	public final fun getEnderchests ()Ljava/util/List;
 	public final fun getRiftStorage ()Ljava/util/List;
-	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerChangeEvent;)V
+	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onInventoryLoad (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerInitializedEvent;)V
 }
 
@@ -3227,7 +3255,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/wardrobe/WardrobeA
 	public final fun onCommandsRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 	public final fun onInventoryClose (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerCloseEvent;)V
 	public final fun onInventoryOpen (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerInitializedEvent;)V
-	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerChangeEvent;)V
+	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onProfileSwitch (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
 }
 
@@ -3690,6 +3718,14 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/CollectionExt
 	public static final fun chunked (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
 	public static final fun mapValuesNotNull (Ljava/util/Map;Lkotlin/jvm/functions/Function1;)Ljava/util/Map;
 	public static final fun peek (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/extentions/EntityExtensionsKt {
+	public static final fun getArmor (Lnet/minecraft/world/entity/LivingEntity;)Ljava/util/List;
+	public static final fun getBoots (Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;
+	public static final fun getChestplate (Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;
+	public static final fun getHelmet (Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;
+	public static final fun getLeggings (Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/extentions/GraphicsExtensionsKt {
