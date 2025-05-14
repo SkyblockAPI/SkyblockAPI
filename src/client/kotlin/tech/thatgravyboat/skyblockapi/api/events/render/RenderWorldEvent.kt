@@ -7,9 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.pushPop
 
-open class RenderWorldEvent(
-    val ctx: WorldRenderContext,
-) : SkyBlockEvent() {
+open class RenderWorldEvent(val ctx: WorldRenderContext) : SkyBlockEvent() {
     class AfterEntities(ctx: WorldRenderContext) : RenderWorldEvent(ctx)
     class AfterTranslucent(ctx: WorldRenderContext) : RenderWorldEvent(ctx)
 
