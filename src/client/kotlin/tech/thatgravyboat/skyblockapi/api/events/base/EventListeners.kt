@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
+import kotlinx.coroutines.Runnable
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import java.lang.invoke.LambdaMetafactory
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
@@ -16,16 +18,31 @@ internal class EventListeners {
 
     fun <T> addListener(callback: (T) -> Unit, priority: Int, receiveCancelled: Boolean) {
         @Suppress("UNCHECKED_CAST")
-        listeners.add(Listener(
-            callback,
-            { callback(it as T) },
-            priority,
-            receiveCancelled,
-            EventPredicates(listOf { event, _ -> receiveCancelled || !event.isCancelled })
-        ))
+        listeners.add(
+            Listener(
+                callback,
+                { callback(it as T) },
+                priority,
+                receiveCancelled,
+                EventPredicates(listOf { event, _ -> receiveCancelled || !event.isCancelled }),
+            ),
+        )
     }
 
     fun addListener(method: Method, instance: Any, options: Subscription) {
+        if (method.parameterCount == 0 && options.event != Default::class) {
+            val name = "${method.declaringClass.name}.${method.name}()"
+            listeners.add(
+                Listener(
+                    method,
+                    createNoArgEventConsumer(name, instance, method),
+                    options.priority,
+                    options.receiveCancelled,
+                    EventPredicates(method),
+                ),
+            )
+            return
+        }
         val name = "${method.declaringClass.name}.${method.name}${
             method.parameterTypes.joinTo(
                 StringBuilder(),
@@ -35,13 +52,32 @@ internal class EventListeners {
                 transform = Class<*>::getTypeName,
             )
         }"
-        listeners.add(Listener(
-            method,
-            createEventConsumer(name, instance, method),
-            options.priority,
-            options.receiveCancelled,
-            EventPredicates(method)
-        ))
+        listeners.add(
+            Listener(
+                method,
+                createEventConsumer(name, instance, method),
+                options.priority,
+                options.receiveCancelled,
+                EventPredicates(method),
+            ),
+        )
+    }
+
+    private fun createNoArgEventConsumer(name: String, instance: Any, method: Method): Consumer<Any> {
+        try {
+            val handle = MethodHandles.lookup().unreflect(method)
+            val runnable = LambdaMetafactory.metafactory(
+                MethodHandles.lookup(),
+                "run",
+                MethodType.methodType(Runnable::class.java, instance::class.java),
+                MethodType.methodType(Nothing::class.javaPrimitiveType),
+                handle,
+                MethodType.methodType(Nothing::class.javaPrimitiveType),
+            ).target.bindTo(instance).invokeExact() as Runnable
+            return Consumer { _ -> runnable.run() }
+        } catch (e: Throwable) {
+            throw IllegalArgumentException("Method $name is not a valid consumer", e)
+        }
     }
 
     /**

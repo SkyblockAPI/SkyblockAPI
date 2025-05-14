@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
+import kotlin.reflect.KClass
+
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class Subscription(
@@ -12,6 +14,11 @@ annotation class Subscription(
      * If the event is cancelled & receiveCancelled is true, then the method will still invoke.
      */
     val receiveCancelled: Boolean = false,
+
+    /**
+     * The event that will be received, only is required if there is no parameters.
+     */
+    val event: KClass<out SkyBlockEvent> = Default::class,
 ) {
 
     companion object {

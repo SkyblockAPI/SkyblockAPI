@@ -36,21 +36,19 @@ class EventBus {
     fun post(
         event: SkyBlockEvent,
         context: Any? = null,
-        onError: ((Throwable) -> Unit)? = null
+        onError: ((Throwable) -> Unit)? = null,
     ): Boolean = getHandler(event.javaClass).post(event, context, onError)
 
     @Suppress("UNCHECKED_CAST")
     private fun <T : SkyBlockEvent> getHandler(event: Class<T>): EventHandler<T> = handlers.getOrPut(event) {
         EventHandler(
             event,
-            getEventClasses(event).mapNotNull { listeners[it] }.flatMap(EventListeners::getListeners)
+            getEventClasses(event).mapNotNull { listeners[it] }.flatMap(EventListeners::getListeners),
         )
     } as EventHandler<T>
 
     private fun unregisterMethod(method: Method) {
-        if (method.parameterCount != 1) return
-        method.getAnnotation(Subscription::class.java) ?: return
-        val event = method.parameterTypes[0]
+        val (_, event) = getEventClass(method) ?: return
         if (!SkyBlockEvent::class.java.isAssignableFrom(event)) return
         unregisterHandler(event)
         listeners.values.forEach { it.removeListener(method) }
@@ -58,12 +56,19 @@ class EventBus {
 
     @Suppress("UNCHECKED_CAST")
     private fun registerMethod(method: Method, instance: Any) {
-        if (method.parameterCount != 1) return
-        val options = method.getAnnotation(Subscription::class.java) ?: return
-        val event = method.parameterTypes[0]
+        val (options, event) = getEventClass(method) ?: return
         if (!SkyBlockEvent::class.java.isAssignableFrom(event)) return
         unregisterHandler(event)
         listeners.getOrPut(event as Class<SkyBlockEvent>) { EventListeners() }.addListener(method, instance, options)
+    }
+
+    private fun getEventClass(method: Method): Pair<Subscription, Class<*>>? {
+        val options = method.getAnnotation(Subscription::class.java) ?: return null
+        if (method.parameterCount == 0 && options.event != Default::class) {
+            return options to options.event.java
+        }
+        if (method.parameterTypes.size != 1) return null
+        return options to (method.parameterTypes.firstOrNull() ?: options.event.java)
     }
 
     private fun unregisterHandler(clazz: Class<*>) = this.handlers.keys
