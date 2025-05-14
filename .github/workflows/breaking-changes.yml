@@ -1,7 +1,7 @@
 name: Breaking Changes Checker
 
 on:
-    pull_request:
+    pull_request_target:
         branches: [ "1.x" ]
 
 permissions:
