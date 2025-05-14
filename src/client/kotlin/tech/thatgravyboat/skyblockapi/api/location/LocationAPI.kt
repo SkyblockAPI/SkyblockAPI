@@ -28,6 +28,9 @@ object LocationAPI {
     var area: SkyBlockArea = SkyBlockAreas.NONE
         private set
 
+    var serverId: String? = null
+        private set
+
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
         isOnSkyBlock = event.type == GameType.SKYBLOCK
@@ -38,6 +41,8 @@ object LocationAPI {
             null
         }
         IslandChangeEvent(old, island).post()
+
+        serverId = event.name
     }
 
     @Subscription
