@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import java.lang.reflect.Method
 
 class EventBus {
@@ -73,11 +72,10 @@ class EventBus {
         if (!SkyBlockEvent::class.java.isAssignableFrom(event)) return
         unregisterHandler(event)
         val listeners = listeners.getOrPut(event as Class<SkyBlockEvent>) { EventListeners() }
-        if (method.parameterCount == 1) {
-            listeners.addListener(method, instance, options)
-        } else {
-            SkyBlockAPI.logger.info("Registering no arg listener for ${method.declaringClass.name}::${method.name} for event ${event.name}")
-            listeners.addNoArgListener(method, instance, options)
+        when (method.parameterCount) {
+            1 -> listeners.addListener(method, instance, options)
+            0 -> listeners.addNoArgListener(method, instance, options)
+            else -> throw IllegalStateException("Expected method with zero or one parameters got %s".format(method.parameterCount))
         }
     }
 
