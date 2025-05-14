@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import java.lang.reflect.Method
 
 class EventBus {
@@ -48,28 +49,51 @@ class EventBus {
     } as EventHandler<T>
 
     private fun unregisterMethod(method: Method) {
-        val (_, event) = getEventClass(method) ?: return
+        val (_, event) = getEventData(method) ?: return
+        event.forEach {
+            unregisterMethodInternal(method, it)
+        }
+    }
+
+    private fun unregisterMethodInternal(method: Method, event: Class<*>) {
         if (!SkyBlockEvent::class.java.isAssignableFrom(event)) return
         unregisterHandler(event)
         listeners.values.forEach { it.removeListener(method) }
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun registerMethod(method: Method, instance: Any) {
-        val (options, event) = getEventClass(method) ?: return
-        if (!SkyBlockEvent::class.java.isAssignableFrom(event)) return
-        unregisterHandler(event)
-        listeners.getOrPut(event as Class<SkyBlockEvent>) { EventListeners() }.addListener(method, instance, options)
+        val (options, events) = getEventData(method) ?: return
+        events.forEach {
+            registerMethodInternal(method, instance, it, options)
+        }
     }
 
-    private fun getEventClass(method: Method): Pair<Subscription, Class<*>>? {
+    @Suppress("UNCHECKED_CAST")
+    private fun registerMethodInternal(method: Method, instance: Any, event: Class<*>, options: Subscription) {
+        if (!SkyBlockEvent::class.java.isAssignableFrom(event)) return
+        unregisterHandler(event)
+        val listeners = listeners.getOrPut(event as Class<SkyBlockEvent>) { EventListeners() }
+        if (method.parameterCount == 1) {
+            listeners.addListener(method, instance, options)
+        } else {
+            SkyBlockAPI.logger.info("Registering no arg listener for ${method.declaringClass.name}::${method.name} for event ${event.name}")
+            listeners.addNoArgListener(method, instance, options)
+        }
+    }
+
+    private fun getEventData(method: Method): EventData? {
         val options = method.getAnnotation(Subscription::class.java) ?: return null
-        if (method.parameterCount == 0 && options.event != Default::class) {
-            return options to options.event.java
+        if (method.parameterCount == 0 && options.event.isNotEmpty()) {
+            return EventData(options, options.event.toList().map { it.java })
         }
         if (method.parameterTypes.size != 1) return null
-        return method.parameterTypes.firstOrNull()?.let { options to it }
+        return method.parameterTypes.firstOrNull()?.let { EventData(options, listOf(it)) }
     }
+
+    data class EventData(
+        val options: Subscription,
+        val events: List<Class<*>>,
+    )
 
     private fun unregisterHandler(clazz: Class<*>) = this.handlers.keys
         .filter { it.isAssignableFrom(clazz) }

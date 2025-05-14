@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
 import kotlinx.coroutines.Runnable
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import java.lang.invoke.LambdaMetafactory
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
@@ -29,20 +28,20 @@ internal class EventListeners {
         )
     }
 
+    fun addNoArgListener(method: Method, instance: Any, options: Subscription) {
+        val name = "${method.declaringClass.name}.${method.name}()"
+        listeners.add(
+            Listener(
+                method,
+                createNoArgEventConsumer(name, instance, method),
+                options.priority,
+                options.receiveCancelled,
+                EventPredicates(method),
+            ),
+        )
+    }
+
     fun addListener(method: Method, instance: Any, options: Subscription) {
-        if (method.parameterCount == 0 && options.event != Default::class) {
-            val name = "${method.declaringClass.name}.${method.name}()"
-            listeners.add(
-                Listener(
-                    method,
-                    createNoArgEventConsumer(name, instance, method),
-                    options.priority,
-                    options.receiveCancelled,
-                    EventPredicates(method),
-                ),
-            )
-            return
-        }
         val name = "${method.declaringClass.name}.${method.name}${
             method.parameterTypes.joinTo(
                 StringBuilder(),

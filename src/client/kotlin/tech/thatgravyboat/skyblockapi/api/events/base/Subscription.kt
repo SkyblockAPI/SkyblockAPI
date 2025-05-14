@@ -18,7 +18,7 @@ annotation class Subscription(
     /**
      * The event that will be received, only is required if there are no parameters.
      */
-    val event: KClass<out SkyBlockEvent> = Default::class,
+    vararg val event: KClass<out SkyBlockEvent> = [],
 ) {
 
     companion object {
