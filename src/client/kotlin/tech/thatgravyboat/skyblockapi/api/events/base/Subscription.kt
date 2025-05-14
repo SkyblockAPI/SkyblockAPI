@@ -16,7 +16,7 @@ annotation class Subscription(
     val receiveCancelled: Boolean = false,
 
     /**
-     * The event that will be received, only is required if there is no parameters.
+     * The event that will be received, only is required if there are no parameters.
      */
     val event: KClass<out SkyBlockEvent> = Default::class,
 ) {

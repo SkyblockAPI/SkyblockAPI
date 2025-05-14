@@ -68,7 +68,7 @@ class EventBus {
             return options to options.event.java
         }
         if (method.parameterTypes.size != 1) return null
-        return options to (method.parameterTypes.firstOrNull() ?: options.event.java)
+        return method.parameterTypes.firstOrNull()?.let { options to it }
     }
 
     private fun unregisterHandler(clazz: Class<*>) = this.handlers.keys
