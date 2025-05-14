@@ -30,5 +30,5 @@ class InventoryChangeEvent(
 
     val isOnSides = isOnLeftColumn || isOnRightColumn
     val isInTopRowOrBottomRow = isInTopRow || isInBottomRow
-    val isInMainPart = !isOnSides || !isInTopRowOrBottomRow
+    val isInMainPart = !isOnSides && !isInTopRowOrBottomRow
 }
