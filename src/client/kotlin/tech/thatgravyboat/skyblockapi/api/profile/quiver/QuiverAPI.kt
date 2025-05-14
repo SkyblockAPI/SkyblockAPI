@@ -6,8 +6,8 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.QuiverStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 import tech.thatgravyboat.skyblockapi.modules.Module
@@ -69,8 +69,8 @@ object QuiverAPI {
     }
 
     @Subscription
-    fun onInventoryChange(event: ContainerChangeEvent) {
-        handleQuiverInventory(event.title, event.inventory)
+    fun onInventoryChange(event: InventoryChangeEvent) {
+        handleQuiverInventory(event.title, event.itemStacks)
     }
 
     private fun handleQuiverInventory(title: String, items: List<ItemStack>) {

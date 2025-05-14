@@ -7,7 +7,6 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
-import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
@@ -48,9 +47,9 @@ object TrophyFishingAPI {
     fun onInventory(event: InventoryChangeEvent) {
         if (event.title != "Trophy Fishing") return
         if (event.isInPlayerInventory) return
-        if (event.slot.index < 10 || event.slot.index > 43) return
-        if (event.item.isEmpty) return
-        if (event.item in ItemTag.GLASS_PANES) return
+        if (!event.isInMainPart) return
+        if (event.isSkyBlockFiller) return
+
         val byName = TrophyFishType.getByDisplayName(event.item.cleanName) ?: return
         val caught = mutableMapOf<TrophyFishTier, Int>()
         event.item.getRawLore().forEach {

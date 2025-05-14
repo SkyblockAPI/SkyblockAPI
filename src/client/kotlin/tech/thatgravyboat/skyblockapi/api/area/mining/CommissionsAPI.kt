@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
@@ -51,8 +51,8 @@ object CommissionsAPI {
         private set
 
     @Subscription
-    fun onInventoryUpdate(event: ContainerChangeEvent) {
-        val commissionAreaStack = event.inventory.find { it.cleanName == "Filter" } ?: return
+    fun onInventoryUpdate(event: InventoryChangeEvent) {
+        val commissionAreaStack = event.itemStacks.find { it.cleanName == "Filter" } ?: return
         val commissionArea = commissionAreaRegex.run {
             var matchedArea: String? = null
             anyMatch(commissionAreaStack.getRawLore(), "area") { (area) ->
@@ -61,7 +61,7 @@ object CommissionsAPI {
             CommissionArea.byName(matchedArea)
         } ?: return
 
-        event.inventory.filter { commissionItemRegex.match(it.cleanName) }
+        event.itemStacks.filter { commissionItemRegex.match(it.cleanName) }
             .map {
                 var progress = 0f
                 commissionProgressRegex.anyMatch(it.getRawLore(), "progress") { (percent) ->

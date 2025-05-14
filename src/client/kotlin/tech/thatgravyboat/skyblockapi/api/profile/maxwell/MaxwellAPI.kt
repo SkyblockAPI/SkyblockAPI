@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.maxwell
 
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockStat
 import tech.thatgravyboat.skyblockapi.api.data.stored.MaxwellStorage
@@ -11,8 +10,8 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
@@ -142,7 +141,10 @@ object MaxwellAPI {
     // These need to be on ContainerChangeEvent because you can interact with the GUI and update data
     @OnlyOnSkyBlock
     @Subscription
-    fun onInventoryUpdate(event: ContainerChangeEvent) {
+    fun onInventoryUpdate(event: InventoryChangeEvent) {
+        if (event.isInPlayerInventory) return
+        if (event.isSkyBlockFiller) return
+
         if (handleThaumaturgyGui(event)) return
         if (handleAccessoryBagGui(event)) return
         if (handleTuningsGui(event)) return
@@ -154,9 +156,9 @@ object MaxwellAPI {
         if (handleBagsGui(event)) return
     }
 
-    private fun handleThaumaturgyGui(event: ContainerChangeEvent): Boolean {
+    private fun handleThaumaturgyGui(event: InventoryChangeEvent): Boolean {
         if (!thaumaturgyTitleRegex.contains(event.title)) return false
-        val items = event.inventory
+        val items = event.itemStacks
 
         for (row in 0 until THAUMATURGY_GUI_ROWS) {
             for (column in 0 until THAUMATURGY_GUI_COLUMNS) {
@@ -196,13 +198,11 @@ object MaxwellAPI {
         }
     }
 
-    private fun handleAccessoryBagGui(event: ContainerChangeEvent): Boolean {
+    private fun handleAccessoryBagGui(event: InventoryChangeEvent): Boolean {
         val match = accessoryBagTitleRegex.find(event.title) ?: return false
         val currentPage = match.groups["current"]?.value?.parseFormattedInt(1) ?: 1
-        // TODO: remove player inventory inside ContainerInitializedEvent
         val items = buildList {
-            for (stack in event.inventory) {
-                if (stack.item == Items.BLACK_STAINED_GLASS_PANE) break
+            for (stack in event.itemStacks) {
                 if (isAccessoryOrEmpty(stack)) add(stack)
             }
         }
@@ -256,9 +256,9 @@ object MaxwellAPI {
         return true
     }
 
-    private fun handleTuningsGui(event: ContainerChangeEvent): Boolean {
+    private fun handleTuningsGui(event: InventoryChangeEvent): Boolean {
         if (!tuningsTitleRegex.contains(event.title)) return false
-        val items = event.inventory
+        val items = event.itemStacks
         val tunings = buildList {
             for (slot in tuningGuiSlots) {
                 val item = items.getOrNull(slot) ?: continue
