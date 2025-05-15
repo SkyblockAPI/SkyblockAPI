@@ -36,35 +36,62 @@ class EventBus {
     fun post(
         event: SkyBlockEvent,
         context: Any? = null,
-        onError: ((Throwable) -> Unit)? = null
+        onError: ((Throwable) -> Unit)? = null,
     ): Boolean = getHandler(event.javaClass).post(event, context, onError)
 
     @Suppress("UNCHECKED_CAST")
     private fun <T : SkyBlockEvent> getHandler(event: Class<T>): EventHandler<T> = handlers.getOrPut(event) {
         EventHandler(
             event,
-            getEventClasses(event).mapNotNull { listeners[it] }.flatMap(EventListeners::getListeners)
+            getEventClasses(event).mapNotNull { listeners[it] }.flatMap(EventListeners::getListeners),
         )
     } as EventHandler<T>
 
     private fun unregisterMethod(method: Method) {
-        if (method.parameterCount != 1) return
-        method.getAnnotation(Subscription::class.java) ?: return
-        val event = method.parameterTypes[0]
+        val (_, event) = getEventData(method) ?: return
+        event.forEach {
+            unregisterMethodInternal(method, it)
+        }
+    }
+
+    private fun unregisterMethodInternal(method: Method, event: Class<*>) {
         if (!SkyBlockEvent::class.java.isAssignableFrom(event)) return
         unregisterHandler(event)
         listeners.values.forEach { it.removeListener(method) }
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun registerMethod(method: Method, instance: Any) {
-        if (method.parameterCount != 1) return
-        val options = method.getAnnotation(Subscription::class.java) ?: return
-        val event = method.parameterTypes[0]
+        val (options, events) = getEventData(method) ?: return
+        events.forEach {
+            registerMethodInternal(method, instance, it, options)
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun registerMethodInternal(method: Method, instance: Any, event: Class<*>, options: Subscription) {
         if (!SkyBlockEvent::class.java.isAssignableFrom(event)) return
         unregisterHandler(event)
-        listeners.getOrPut(event as Class<SkyBlockEvent>) { EventListeners() }.addListener(method, instance, options)
+        val listeners = listeners.getOrPut(event as Class<SkyBlockEvent>) { EventListeners() }
+        when (method.parameterCount) {
+            1 -> listeners.addListener(method, instance, options)
+            0 -> listeners.addNoArgListener(method, instance, options)
+            else -> throw IllegalStateException("Expected method with zero or one parameters got %s".format(method.parameterCount))
+        }
     }
+
+    private fun getEventData(method: Method): EventData? {
+        val options = method.getAnnotation(Subscription::class.java) ?: return null
+        if (method.parameterCount == 0 && options.event.isNotEmpty()) {
+            return EventData(options, options.event.toList().map { it.java })
+        }
+        if (method.parameterTypes.size != 1) return null
+        return method.parameterTypes.firstOrNull()?.let { EventData(options, listOf(it)) }
+    }
+
+    data class EventData(
+        val options: Subscription,
+        val events: List<Class<*>>,
+    )
 
     private fun unregisterHandler(clazz: Class<*>) = this.handlers.keys
         .filter { it.isAssignableFrom(clazz) }
