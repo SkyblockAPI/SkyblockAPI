@@ -1481,6 +1481,19 @@ public final class tech/thatgravyboat/skyblockapi/api/events/base/EventBus {
 	public final fun unregister (Ljava/lang/Object;)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/base/EventBus$EventData {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/events/base/Subscription;Ljava/util/List;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/events/base/Subscription;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/events/base/Subscription;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus$EventData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus$EventData;Ltech/thatgravyboat/skyblockapi/api/events/base/Subscription;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus$EventData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEvents ()Ljava/util/List;
+	public final fun getOptions ()Ltech/thatgravyboat/skyblockapi/api/events/base/Subscription;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class tech/thatgravyboat/skyblockapi/api/events/base/EventPredicateProvider {
 	public abstract fun getPredicate (Ljava/lang/reflect/Method;)Lkotlin/jvm/functions/Function2;
 }
@@ -1505,6 +1518,7 @@ public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/ev
 	public static final field HIGHEST I
 	public static final field LOW I
 	public static final field LOWEST I
+	public abstract fun event ()[Ljava/lang/Class;
 	public abstract fun priority ()I
 	public abstract fun receiveCancelled ()Z
 }
