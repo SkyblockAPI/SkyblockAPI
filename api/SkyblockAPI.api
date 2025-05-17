@@ -1647,6 +1647,11 @@ public final class tech/thatgravyboat/skyblockapi/api/events/entity/ComponentAtt
 	public fun <init> (Lnet/minecraft/network/chat/Component;Lnet/minecraft/world/entity/Entity;)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityAddedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Lnet/minecraft/world/entity/Entity;)V
+	public final fun getEntity ()Lnet/minecraft/world/entity/Entity;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityEvents {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/entity/EntityEvents;
 	public final fun getDebug ()Z
@@ -1665,6 +1670,11 @@ public class tech/thatgravyboat/skyblockapi/api/events/entity/EntityInfoLineEven
 	public final fun getComponent ()Lnet/minecraft/network/chat/Component;
 	public final fun getInfoLineEntity ()Lnet/minecraft/world/entity/Entity;
 	public final fun getLiteralComponent ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityRemovedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Lnet/minecraft/world/entity/Entity;)V
+	public final fun getEntity ()Lnet/minecraft/world/entity/Entity;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/entity/NameChangedEvent : tech/thatgravyboat/skyblockapi/api/events/entity/EntityInfoLineEvent {
@@ -2184,6 +2194,20 @@ public final class tech/thatgravyboat/skyblockapi/api/events/profile/ProfileLeve
 	public final fun getXp ()I
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Lcom/google/gson/JsonObject;)V
+	public final fun component1 ()Lcom/google/gson/JsonObject;
+	public final fun copy (Lcom/google/gson/JsonObject;)Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;Lcom/google/gson/JsonObject;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getProfileData ()Lcom/google/gson/JsonObject;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvRequired : java/lang/annotation/Annotation {
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/render/HudElement : java/lang/Enum {
