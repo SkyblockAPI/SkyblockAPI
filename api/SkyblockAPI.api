@@ -3952,6 +3952,11 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/Destructured {
 	public final fun getString ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/utils/regex/MatchSwitchKt {
+	public static final fun findWhen (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Z
+	public static final fun matchWhen (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Z
+}
+
 public final class tech/thatgravyboat/skyblockapi/utils/regex/RegexGroup {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/utils/regex/RegexGroup$Companion;
 	public fun <init> (Ljava/lang/String;)V
@@ -3968,6 +3973,12 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/RegexGroup$Compani
 	public final fun getSCOREBOARD ()Ltech/thatgravyboat/skyblockapi/utils/regex/RegexGroup;
 	public final fun getTABLIST ()Ltech/thatgravyboat/skyblockapi/utils/regex/RegexGroup;
 	public final fun getTABLIST_WIDGET ()Ltech/thatgravyboat/skyblockapi/utils/regex/RegexGroup;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/regex/RegexSwitch {
+	public fun <init> ()V
+	public final fun case (Lkotlin/text/Regex;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun case$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexSwitch;Lkotlin/text/Regex;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/regex/RegexUtils {
