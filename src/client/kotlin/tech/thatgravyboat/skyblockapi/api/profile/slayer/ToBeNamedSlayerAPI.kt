@@ -8,9 +8,11 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.remote.repo.RepoSlayerData
-import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
+import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
@@ -55,7 +57,7 @@ object ToBeNamedSlayerAPI {
     @OnlyOnSkyBlock
     @OptIn(SkyBlockPvRequired::class)
     fun onPv(event: SkyBlockPvOpenedEvent) {
-        event.profileData.getPath("members.${McPlayer.uuid.toDashlessString()}.slayer.slayer_bosses").asMap { k, v ->
+        event.member.getPath("slayer.slayer_bosses").asMap { k, v ->
             SlayerType.fromName(k) to v.asJsonObject["xp"].asLong(0)
         }.filterKeys { it != null }.mapKeys { it.key!! }.forEach { t, u ->
             SlayerStorage.setXp(t, u)
