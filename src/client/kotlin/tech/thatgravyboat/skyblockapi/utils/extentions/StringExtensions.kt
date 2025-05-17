@@ -4,6 +4,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.util.*
 import kotlin.math.pow
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -148,6 +149,7 @@ fun String.cleanPlayerName(): String {
     return cleanPlayerNameRegex.findGroup(this, "name") ?: this
 }
 
+fun Number.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
 fun Int.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
 fun Long.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
 fun Float.toFormattedString(): String = DecimalFormat.getNumberInstance().format(this)
@@ -188,3 +190,5 @@ fun String.trimIgnoreColor(): String {
     val trimmed = this.removePrefix(start).removeSuffix(end)
     return start.replace(" ", "") + trimmed + end.replace(" ", "")
 }
+
+fun UUID.toDashlessString(): String = toString().replace("-", "")
