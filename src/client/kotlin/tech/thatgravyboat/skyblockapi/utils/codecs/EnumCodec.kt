@@ -33,7 +33,7 @@ class EnumCodec<T> private constructor(private val codec: Codec<T>) : Codec<T> {
         private fun <T> constantCodec(constants: Array<T>): Codec<T> = Codec.STRING.flatXmap(
             { name: String ->
                 runCatching {
-                    DataResult.success(constants.first { (it as Enum<*>).name == name })
+                    DataResult.success(constants.first { (it as Enum<*>).name.equals(name, true) })
                 }.getOrElse {
                     DataResult.error { "Unknown enum name: $name" }
                 }

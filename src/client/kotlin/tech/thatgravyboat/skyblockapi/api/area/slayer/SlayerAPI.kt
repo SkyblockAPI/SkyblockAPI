@@ -14,7 +14,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import java.util.WeakHashMap
+import java.util.*
 
 @Module
 object SlayerAPI {
@@ -144,20 +144,24 @@ enum class SlayerDemon(override val displayName: String, val slayerType: SlayerT
     TYPHOEUS("ⓉⓎⓅⒽⓄⒺⓊⓈ", SlayerType.INFERNO_DEMONLORD)
 }
 
-enum class SlayerType(override val displayName: String) : SlayerMob {
-    REVENANT_HORROR("Revenant Horror"),
-    TARANTULA_BROODFATHER("Tarantula Broodfather"),
-    SVEN_PACKMASTER("Sven Packmaster"),
-    VOIDGLOOM_SERAPH("Voidgloom Seraph"),
-    RIFTSTALKER_BLOODFIEND("Riftstalker Bloodfiend") {
+enum class SlayerType(override val displayName: String, val otherName: String) : SlayerMob {
+    REVENANT_HORROR("Revenant Horror", "Zombie"),
+    TARANTULA_BROODFATHER("Tarantula Broodfather", "Spider"),
+    SVEN_PACKMASTER("Sven Packmaster", "Wolf"),
+    VOIDGLOOM_SERAPH("Voidgloom Seraph", "Enderman"),
+    RIFTSTALKER_BLOODFIEND("Riftstalker Bloodfiend", "Vampire") {
         override val inGameName get() = "Bloodfiend"
     },
-    INFERNO_DEMONLORD("Inferno Demonlord"),
+    INFERNO_DEMONLORD("Inferno Demonlord", "Blaze"),
     ;
 
+    val apiName = otherName.lowercase()
+
     companion object {
-        fun fromDisplayName(displayName: String): SlayerType? = entries.firstOrNull {
+        fun fromDisplayName(displayName: String): SlayerType? = entries.find {
             it.displayName.equals(displayName, ignoreCase = true)
         }
+
+        fun fromName(name: String): SlayerType? = entries.find { it.otherName.equals(name, ignoreCase = true) } ?: fromDisplayName(name)
     }
 }

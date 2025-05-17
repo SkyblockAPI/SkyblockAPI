@@ -145,4 +145,6 @@ publishing {
 
 compactingResources {
     this.basePath = "repo"
+
+    substituteFromDifferentFile("slayer", "slayers")
 }
