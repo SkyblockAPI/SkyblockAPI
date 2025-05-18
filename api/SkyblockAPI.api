@@ -2044,7 +2044,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/level/MiningBlockMi
 	public final fun getPos ()Lnet/minecraft/core/BlockPos;
 }
 
-public class tech/thatgravyboat/skyblockapi/api/events/level/PacketEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+public class tech/thatgravyboat/skyblockapi/api/events/level/PacketEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public fun <init> (Lnet/minecraft/network/protocol/Packet;)V
 	public final fun getPacket ()Lnet/minecraft/network/protocol/Packet;
 	public fun post (Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;)Z
