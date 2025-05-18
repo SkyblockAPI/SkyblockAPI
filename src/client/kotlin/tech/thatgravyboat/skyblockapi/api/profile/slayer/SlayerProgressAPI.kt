@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.slayer
 
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerAPI
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
+import tech.thatgravyboat.skyblockapi.api.data.Perk
 import tech.thatgravyboat.skyblockapi.api.data.stored.SlayerStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
@@ -50,10 +51,11 @@ object SlayerProgressAPI {
                 lastType?.let {
                     val slayerData = RepoSlayerData.getData(it)
                     val lastXp = SlayerStorage.getXp(it).coerceAtLeast(slayerData.leveling.max())
-                    val gain = slayerData.bossXp.getOrNull(SlayerAPI.level - 1) ?: 0
+                    val gain = (slayerData.bossXp.getOrNull(SlayerAPI.level - 1) ?: 0).let { xp ->
+                        if (Perk.SLAYER_XP_BUFF.active) (xp * 1.25).toInt() else xp
+                    }
                     SlayerStorage.setXp(it, lastXp + gain)
                 }
-
             }
             case(chatMeterRegex, "xp") { (meterXp) ->
                 lastType?.let { SlayerStorage.setMeter(it, meterXp.toLongValue()) }
