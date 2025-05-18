@@ -1,0 +1,22 @@
+{
+    "@default": [
+        5,
+        25,
+        100,
+        500
+    ],
+    "revenant_slayer_boss_xp": [
+        5,
+        25,
+        100,
+        500,
+        1500
+    ],
+    "vampire_slayer_boss_xp": [
+        10,
+        25,
+        60,
+        120,
+        150
+    ]
+}

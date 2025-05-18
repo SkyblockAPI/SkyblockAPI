@@ -1,7 +1,10 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
@@ -13,18 +16,18 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
-import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
-import tech.thatgravyboat.skyblockapi.utils.extentions.getTexture
+import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
+import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 @Module
-object DebugInventory {
+internal object DebugInventory {
 
     private var enabled = false
 
@@ -33,15 +36,26 @@ object DebugInventory {
         event.register("sbapi inventory") {
             callback {
                 enabled = !enabled
-                Text.multiline(
-                    "[SkyBlockAPI] Debug inventory: $enabled",
-                    "Use [C] to copy the raw item data.",
-                    "Use [S] to copy the skin.",
-                    "Use [I] to copy the id.",
-                    "Use [D] to copy the custom data.",
-                ) {
+                Text.of("[SkyBlockAPI] Debug inventory: ") {
+                    append(enabled) {
+                        this.color = if (enabled) TextColor.GREEN else TextColor.RED
+                    }
+
                     this.color = TextColor.YELLOW
                 }.send()
+                if (!enabled) return@callback
+
+                CopyType.entries.forEach {
+                    Text.of {
+                        append("Press ")
+                        append("[") { this.color = TextColor.GOLD }
+                        append(it.keyName) { this.color = TextColor.AQUA }
+                        append("]") { this.color = TextColor.GOLD }
+                        append(" to copy the ")
+                        append(it.title) { this.color = TextColor.YELLOW }
+                        append(".")
+                    }.send()
+                }
             }
         }
     }
@@ -50,44 +64,9 @@ object DebugInventory {
     fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
         if (!enabled) return
         val slot = McScreen.asMenu?.getHoveredSlot() ?: return
-        val cancel = when (event.key) {
-            InputConstants.KEY_S -> copySkin(slot)
-            InputConstants.KEY_C -> copyItem(slot)
-            InputConstants.KEY_I -> copyId(slot)
-            InputConstants.KEY_D -> copyCustomData(slot)
-            else -> false
-        }
+        val cancel = CopyType.entries.find { it.key == event.key }?.initCopy(slot) ?: false
 
         if (cancel) event.cancel()
-    }
-
-    private fun copyCustomData(slot: Slot): Boolean {
-        McClient.clipboard = slot.item.get(DataComponents.CUSTOM_DATA)?.toJson(CustomData.CODEC).toPrettyString()
-        Text.debug("Copied custom data to clipboard.").send()
-        return true
-    }
-
-    private fun copyId(slot: Slot): Boolean {
-        McClient.clipboard = slot.item.getSkyBlockId()
-        Text.debug("Copied item id to clipboard.").send()
-        return true
-    }
-
-    private fun copySkin(slot: Slot): Boolean {
-        val texture = slot.item.getTexture() ?: run {
-            Text.debug("Unable to get Texture of Item").send()
-            return false
-        }
-
-        McClient.clipboard = texture
-        Text.debug("Copied skin data to clipboard.").send()
-        return true
-    }
-
-    private fun copyItem(slot: Slot): Boolean {
-        McClient.clipboard = slot.item.toJson(ItemStack.CODEC).toPrettyString()
-        Text.debug("Copied item data to clipboard.").send()
-        return true
     }
 
     @Subscription
@@ -96,13 +75,65 @@ object DebugInventory {
         val menuScreen = McScreen.asMenu ?: return
         val slot = menuScreen.getHoveredSlot() ?: return
 
-        event.graphics.drawCenteredString(
-            McFont.self,
-            "${slot.index}",
-            8,
-            8,
-            0xFFFFFF,
-        )
+        buildList {
+            add("Slot: ${slot.index}")
+            add("")
+            add("Copy options:")
+            CopyType.entries.forEach {
+                add("  [${it.keyName.stripped}] ${it.title}")
+            }
+        }.forEachIndexed { index, line ->
+            event.graphics.drawString(
+                McFont.self,
+                line,
+                8,
+                8 + index * McFont.height,
+                0xFFFFFF,
+            )
+        }
+    }
+
+    enum class CopyType(
+        val key: Int,
+        val copy: (Slot) -> String?,
+    ) {
+        RAW_ITEM_DATA(
+            InputConstants.KEY_C,
+            { it.item.toJson(ItemStack.CODEC).toPrettyString() },
+        ),
+        SKIN(
+            InputConstants.KEY_S,
+            { it.item.getTexture() },
+        ),
+        ID(
+            InputConstants.KEY_I,
+            { it.item.getSkyBlockId() },
+        ),
+        CUSTOM_DATA(
+            InputConstants.KEY_D,
+            { it.item.get(DataComponents.CUSTOM_DATA)?.toJson(CustomData.CODEC).toPrettyString() },
+        ),
+        DESCRIPTION(
+            InputConstants.KEY_A,
+            {
+                if (Screen.hasShiftDown()) {
+                    it.item.getRawLore().joinToString("\n")
+                } else {
+                    it.item.getLore().toJson(ComponentSerialization.CODEC.listOf()).toPrettyString()
+                }
+            },
+        ),
+        ;
+
+        val title = name.toTitleCase()
+        val keyName: Component = InputConstants.getKey(key, -1).displayName
+
+        fun initCopy(slot: Slot): Boolean {
+            val data = copy(slot) ?: return false
+            McClient.clipboard = data
+            Text.debug("Copied item $title to clipboard.").send()
+            return true
+        }
     }
 
 }
