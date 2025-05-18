@@ -23,6 +23,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 @Module
@@ -74,13 +75,22 @@ internal object DebugInventory {
         val menuScreen = McScreen.asMenu ?: return
         val slot = menuScreen.getHoveredSlot() ?: return
 
-        event.graphics.drawCenteredString(
-            McFont.self,
-            "${slot.index}",
-            8,
-            8,
-            0xFFFFFF,
-        )
+        buildList {
+            add("Slot: ${slot.index}")
+            add("")
+            add("Copy options:")
+            CopyType.entries.forEach {
+                add("  [${it.keyName.stripped}] ${it.title}")
+            }
+        }.forEachIndexed { index, line ->
+            event.graphics.drawString(
+                McFont.self,
+                line,
+                8,
+                8 + index * McFont.height,
+                0xFFFFFF,
+            )
+        }
     }
 
     enum class CopyType(
