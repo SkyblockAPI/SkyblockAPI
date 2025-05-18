@@ -18,7 +18,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.findWhen
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
 @Module
-object ToBeNamedSlayerAPI {
+object SlayerProgressAPI {
     private var lastType: SlayerType? = null
 
     val chatGroup = RegexGroup.CHAT.group("slayer")
@@ -93,8 +93,6 @@ object ToBeNamedSlayerAPI {
     fun onPv(event: SkyBlockPvOpenedEvent) {
         event.member.getPath("slayer.slayer_bosses").asMap { k, v ->
             SlayerType.fromName(k) to v.asJsonObject["xp"].asLong(0)
-        }.filterKeys { it != null }.mapKeys { it.key!! }.forEach { t, u ->
-            SlayerStorage.setXp(t, u)
-        }
+        }.filterKeys { it != null }.mapKeys { it.key!! }.forEach(SlayerStorage::setXp)
     }
 }
