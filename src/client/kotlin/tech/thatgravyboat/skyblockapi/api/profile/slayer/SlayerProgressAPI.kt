@@ -55,7 +55,7 @@ object SlayerProgressAPI {
                 lastType?.let {
                     val slayerData = RepoSlayerData.getData(it)
                     val lastXp = SlayerStorage.getXp(it).coerceAtLeast(slayerData.leveling.max())
-                    val gain = (slayerData.bossXp.getOrNull(SlayerAPI.level - 1) ?: 0).let { xp ->
+                    val gain = (slayerData.bossXp.getOrNull(SlayerAPI.lastLevel - 1) ?: 0).let { xp ->
                         if (Perk.SLAYER_XP_BUFF.active) (xp * 1.25).toInt() else xp
                     }
                     SlayerStorage.setXp(it, lastXp + gain)
