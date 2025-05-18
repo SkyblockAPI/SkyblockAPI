@@ -1,6 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api
 
+import com.google.gson.JsonElement
 import com.mojang.logging.LogUtils
+import com.mojang.serialization.Codec
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.resources.ResourceLocation
 import tech.thatgravyboat.repolib.api.RepoAPI
@@ -8,6 +10,9 @@ import tech.thatgravyboat.repolib.api.RepoVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.generated.Modules
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
+import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
+import java.nio.file.Files
 
 object SkyBlockAPI {
 
@@ -32,4 +37,6 @@ object SkyBlockAPI {
     }
 
     internal fun id(path: String) = ResourceLocation.fromNamespaceAndPath("skyblockapi", path)
+    internal fun <C : Any> getRepo(file: String, codec: Codec<C>) =
+        mod.findPath("repo/$file.json").orElseThrow()?.let(Files::readString)?.readJson<JsonElement>().toDataOrThrow(codec)
 }
