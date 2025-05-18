@@ -30,4 +30,6 @@ internal object SlayerStorage {
         SLAYER.save()
     }
 
+    fun getXp(key: SlayerType) = SLAYER.get()?.slayers?.get(key)?.xp ?: 0L
+
 }

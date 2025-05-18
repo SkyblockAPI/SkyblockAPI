@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.slayer
 
+import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerAPI
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
 import tech.thatgravyboat.skyblockapi.api.data.stored.SlayerStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -45,9 +46,13 @@ object SlayerProgressAPI {
                 }
             }
             case(chatXpMaxedRegex, "type", "maxedLevel") { (type, _) ->
-                // TODO: track xp over max lvl
                 lastType = SlayerType.fromName(type)
-                lastType?.let { SlayerStorage.setXp(it, RepoSlayerData.getData(it).leveling.max()) }
+                lastType?.let {
+                    val slayerData = RepoSlayerData.getData(it)
+                    val lastXp = SlayerStorage.getXp(it).coerceAtLeast(slayerData.leveling.max())
+                    val gain = slayerData.bossXp.getOrNull(SlayerAPI.level - 1) ?: 0
+                    SlayerStorage.setXp(it, lastXp + gain)
+                }
 
             }
             case(chatMeterRegex, "xp") { (meterXp) ->
