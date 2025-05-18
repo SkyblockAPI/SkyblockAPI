@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
 import tech.thatgravyboat.skyblockapi.api.data.Perk
 import tech.thatgravyboat.skyblockapi.api.data.stored.SlayerStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -16,6 +17,7 @@ import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
 import tech.thatgravyboat.skyblockapi.utils.regex.findWhen
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
@@ -23,6 +25,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 object SlayerProgressAPI {
     private var lastType: SlayerType? = null
 
+    const val NOT_AVAILABLE = "N/A"
     val chatGroup = RegexGroup.CHAT.group("slayer")
     val inventoryGroup = RegexGroup.INVENTORY.group("slayer")
     val chatXpRegex = chatGroup.create("xp", "\\s+(?<type>.*) Slayer LVL (?<level>\\d+) - Next LVL in (?<xp>[\\d.,]+) XP!")
@@ -32,6 +35,7 @@ object SlayerProgressAPI {
     val inventoryMaxedRegex = inventoryGroup.create("maxedXp", "\\s*Reached max level!")
     val inventoryRngSelected = inventoryGroup.create("rngSelected", "Progress: [\\d.]+%\\n\\s*(?<stored>[\\d,]+)/.*?")
     val inventoryRngNonSelected = inventoryGroup.create("rngNonSelected", "Stored Slayer XP: (?<stored>[\\d,]+)")
+    val inventoryLeaderBoardXp = inventoryGroup.create("leaderboardXp", "(?<type>.*?): (?<xp>[\\d,]+|$NOT_AVAILABLE).*")
 
     val slayerData: Map<SlayerType, SlayerEntry> get() = SlayerStorage.data
 
@@ -74,16 +78,18 @@ object SlayerProgressAPI {
 
         //Text.of(event.slot.item.hoverName.stripped).send()
         when (event.slot.index) {
-            28 -> findWhen(event.slot.item.getRawLore().joinToString("\n")) {
+            28 -> findWhen(event.getLore()) {
                 case(inventoryXpRegex, "xp") { (xp) ->
                     SlayerStorage.setXp(slayerType, xp.toLongValue())
                 }
                 case(inventoryMaxedRegex) { _ ->
+                    val maxXp = RepoSlayerData.getData(slayerType).leveling.max()
+                    if (SlayerStorage.getXp(slayerType) > maxXp) return@case
                     SlayerStorage.setXp(slayerType, RepoSlayerData.getData(slayerType).leveling.max())
                 }
             }
 
-            34 -> findWhen(event.slot.item.getRawLore().joinToString("\n")) {
+            34 -> findWhen(event.getLore()) {
                 case(inventoryRngSelected, "stored") { (stored) ->
                     SlayerStorage.setMeter(slayerType, stored.toLongValue())
                 }
@@ -93,6 +99,23 @@ object SlayerProgressAPI {
             }
         }
     }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    @MustBeContainer
+    @InventoryTitle("Slayer")
+    fun onSlayerInventory(event: InventoryChangeEvent) {
+        if (event.slot.index != 29) return
+        if (event.slot.item.cleanName != "Slayer Leaderboards") return
+        inventoryLeaderBoardXp.findAll(event.getLoreLines(), "type", "xp") { (type, xp) ->
+            val type = SlayerType.fromName(type) ?: return@findAll
+            val xp = xp.takeUnless { it == NOT_AVAILABLE }?.toLongValue() ?: return@findAll
+            SlayerStorage.setXp(type, xp)
+        }
+    }
+
+    fun InventoryChangeEvent.getLoreLines() = this.slot.item.getRawLore()
+    fun InventoryChangeEvent.getLore() = this.getLoreLines().joinToString("\n")
 
     @Subscription
     @OnlyOnSkyBlock
