@@ -224,8 +224,8 @@ object TextStyle {
 }
 
 object TextBuilder {
-
     fun MutableComponent.append(like: ComponentLike) = this.append(like.toComponent())
+    fun MutableComponent.append(component: Component, init: MutableComponent.() -> Unit) = this.append(component.copy().apply(init))
     fun MutableComponent.append(text: String, init: MutableComponent.() -> Unit = {}) = this.append(text.asComponent(init))
     fun MutableComponent.append(number: Number, init: MutableComponent.() -> Unit = {}) = this.append(number.toString().asComponent(init))
     fun MutableComponent.append(boolean: Boolean, init: MutableComponent.() -> Unit = {}) = this.append(boolean.toString().asComponent(init))

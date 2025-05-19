@@ -2,6 +2,9 @@ package tech.thatgravyboat.skyblockapi.api.events.remote
 
 import com.google.gson.JsonObject
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.utils.extentions.toDashlessString
+import tech.thatgravyboat.skyblockapi.utils.json.getPath
 
 /**
  * This event is fired when the user opens the SkyBlockPv viewer on their own profile.
@@ -27,8 +30,10 @@ import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
  * It will only return the JsonObject of the selected profile.
  */
 @SkyBlockPvRequired
-data class SkyBlockPvOpenedEvent(val profileData: JsonObject) : SkyBlockEvent()
-
+data class SkyBlockPvOpenedEvent(val profileData: JsonObject) : SkyBlockEvent() {
+    /** member data of the McPlayer in the currently selected profile */
+    val member: JsonObject = profileData.getPath("members.${McPlayer.uuid.toDashlessString()}")?.asJsonObject!!
+}
 @RequiresOptIn(
     message = """
         This event only gets fired when SkyBlockPv is actually installed.
