@@ -80,6 +80,8 @@ object GenericDataTypes {
         event.register(MODIFIER)
         event.register(TIMESTAMP)
         event.register(SECONDS_HELD)
+        event.register(BOTTLE_OF_JYRRE_SECONDS)
+        event.register(RIFT_DISCRITE_SECONDS)
         event.register(PICKONIMBUS_DURABILITY)
         event.register(RARITY_UPGRADES)
         event.register(QUIVER_ARROW)
