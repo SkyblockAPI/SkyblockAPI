@@ -1200,6 +1200,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getAPPLIED_DYE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCATEGORY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOOLDOWN_ABILITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1229,6 +1230,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getQUIVER_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRARITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRARITY_UPGRADES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getRIFT_DISCRITE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRIGHT_CLICK_MANA_ABILITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSECONDS_HELD ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSINKER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1318,6 +1320,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getAPPLIED_DYE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCROPS_BROKEN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDIVAN_POWDER_COATING ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1340,6 +1343,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getPOWER_ABILITY_SCROLL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getQUIVER_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRARITY_UPGRADES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getRIFT_DISCRITE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSECONDS_HELD ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSINKER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSTAR_COUNT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
