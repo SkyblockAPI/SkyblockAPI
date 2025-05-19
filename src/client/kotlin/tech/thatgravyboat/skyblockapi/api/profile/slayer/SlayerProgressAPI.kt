@@ -21,11 +21,12 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
 import tech.thatgravyboat.skyblockapi.utils.regex.findWhen
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
+private const val NOT_AVAILABLE = "N/A"
+
 @Module
 object SlayerProgressAPI {
-    private var lastType: SlayerType? = null
 
-    private const val NOT_AVAILABLE = "N/A"
+    private var lastType: SlayerType? = null
     private val chatGroup = RegexGroup.CHAT.group("slayer")
     private val inventoryGroup = RegexGroup.INVENTORY.group("slayer")
     private val chatXpRegex = chatGroup.create("xp", "\\s+(?<type>.*) Slayer LVL (?<level>\\d+) - Next LVL in (?<xp>[\\d.,]+) XP!")
