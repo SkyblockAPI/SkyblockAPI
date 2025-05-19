@@ -36,10 +36,9 @@ internal class StoredProfileData<T : Any>(
     }
 
     fun get(): T? {
+        val storedData = storedData.get()
         val profile = ProfileAPI.profileName ?: return null
-        return storedData.get()
-            .getOrPut(McPlayer.uuid, ::mutableMapOf)
-            .getOrPut(profile, data)
+        return storedData.getOrPut(McPlayer.uuid, ::mutableMapOf).getOrPut(profile, data)
     }
 
     fun save() = storedData.save()

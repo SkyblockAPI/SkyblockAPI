@@ -21,21 +21,22 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
 import tech.thatgravyboat.skyblockapi.utils.regex.findWhen
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
+private const val NOT_AVAILABLE = "N/A"
+
 @Module
 object SlayerProgressAPI {
-    private var lastType: SlayerType? = null
 
-    const val NOT_AVAILABLE = "N/A"
-    val chatGroup = RegexGroup.CHAT.group("slayer")
-    val inventoryGroup = RegexGroup.INVENTORY.group("slayer")
-    val chatXpRegex = chatGroup.create("xp", "\\s+(?<type>.*) Slayer LVL (?<level>\\d+) - Next LVL in (?<xp>[\\d.,]+) XP!")
-    val chatXpMaxedRegex = chatGroup.create("maxedXp", "\\s+(?<type>.*) Slayer LVL (?<maxedLevel>\\d+) - LVL MAXED OUT!")
-    val chatMeterRegex = chatGroup.create("meter", "\\s+RNG Meter - (?<xp>[\\d.,]+) Stored XP")
-    val inventoryXpRegex = inventoryGroup.create("xp", "\\s*(?<type>.*) XP to LVL (?<lvl>\\d):\\n\\s*(?<xp>[\\d,]+)/.*?")
-    val inventoryMaxedRegex = inventoryGroup.create("maxedXp", "\\s*Reached max level!")
-    val inventoryRngSelected = inventoryGroup.create("rngSelected", "Progress: [\\d.]+%\\n\\s*(?<stored>[\\d,]+)/.*?")
-    val inventoryRngNonSelected = inventoryGroup.create("rngNonSelected", "Stored Slayer XP: (?<stored>[\\d,]+)")
-    val inventoryLeaderBoardXp = inventoryGroup.create("leaderboardXp", "(?<type>.*?): (?<xp>[\\d,]+|$NOT_AVAILABLE).*")
+    private var lastType: SlayerType? = null
+    private val chatGroup = RegexGroup.CHAT.group("slayer")
+    private val inventoryGroup = RegexGroup.INVENTORY.group("slayer")
+    private val chatXpRegex = chatGroup.create("xp", "\\s+(?<type>.*) Slayer LVL (?<level>\\d+) - Next LVL in (?<xp>[\\d.,]+) XP!")
+    private val chatXpMaxedRegex = chatGroup.create("maxedXp", "\\s+(?<type>.*) Slayer LVL (?<maxedLevel>\\d+) - LVL MAXED OUT!")
+    private val chatMeterRegex = chatGroup.create("meter", "\\s+RNG Meter - (?<xp>[\\d.,]+) Stored XP")
+    private val inventoryXpRegex = inventoryGroup.create("xp", "\\s*(?<type>.*) XP to LVL (?<lvl>\\d):\\n\\s*(?<xp>[\\d,]+)/.*?")
+    private val inventoryMaxedRegex = inventoryGroup.create("maxedXp", "\\s*Reached max level!")
+    private val inventoryRngSelected = inventoryGroup.create("rngSelected", "Progress: [\\d.]+%\\n\\s*(?<stored>[\\d,]+)/.*?")
+    private val inventoryRngNonSelected = inventoryGroup.create("rngNonSelected", "Stored Slayer XP: (?<stored>[\\d,]+)")
+    private val inventoryLeaderBoardXp = inventoryGroup.create("leaderboardXp", "(?<type>.*?): (?<xp>[\\d,]+|$NOT_AVAILABLE).*")
 
     val slayerData: Map<SlayerType, SlayerEntry> get() = SlayerStorage.data
 
@@ -114,8 +115,8 @@ object SlayerProgressAPI {
         }
     }
 
-    fun InventoryChangeEvent.getLoreLines() = this.slot.item.getRawLore()
-    fun InventoryChangeEvent.getLore() = this.getLoreLines().joinToString("\n")
+    private fun InventoryChangeEvent.getLoreLines() = this.slot.item.getRawLore()
+    private fun InventoryChangeEvent.getLore() = this.getLoreLines().joinToString("\n")
 
     @Subscription
     @OnlyOnSkyBlock

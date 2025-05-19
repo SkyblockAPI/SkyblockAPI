@@ -31,7 +31,6 @@ object DataTypes {
     // Misc (idfk)
     val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = LoreDataTypes.RIGHT_CLICK_MANA_ABILITY
     val COOLDOWN_ABILITY: DataType<Pair<String, Duration>> = LoreDataTypes.COOLDOWN_ABILITY
-    val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD
     val QUIVER_ARROW: DataType<Boolean> = GenericDataTypes.QUIVER_ARROW
     val PERSONAL_COMPACTOR_ITEMS: DataType<List<String?>> = PersonalAccessoryDataTypes.PERSONAL_COMPACTOR_ITEMS
     val PERSONAL_DELETOR_ITEMS: DataType<List<String?>> = PersonalAccessoryDataTypes.PERSONAL_DELETOR_ITEMS
@@ -44,6 +43,11 @@ object DataTypes {
     val APPLIED_DYE: DataType<String> = GenericDataTypes.APPLIED_DYE
     val PET_DATA: DataType<PetData> = GenericDataTypes.PET_DATA
     val SNOWBALLS: DataType<Pair<Int, Int>> = LoreDataTypes.SNOWBALLS
+
+    // Aging Items
+    val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD
+    val BOTTLE_OF_JYRRE_SECONDS: DataType<Int> = GenericDataTypes.BOTTLE_OF_JYRRE_SECONDS
+    val RIFT_DISCRITE_SECONDS: DataType<Int> = GenericDataTypes.RIFT_DISCRITE_SECONDS
 
     // Dungeons
     val DUNGEON_ITEM: DataType<Boolean> = GenericDataTypes.DUNGEON_ITEM

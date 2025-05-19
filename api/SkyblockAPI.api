@@ -744,16 +744,19 @@ public class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType : java/la
 	public static final field SVEN_PACKMASTER Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 	public static final field TARANTULA_BROODFATHER Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 	public static final field VOIDGLOOM_SERAPH Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
-	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getApiName ()Ljava/lang/String;
 	public fun getDisplayName ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getInGameName ()Ljava/lang/String;
+	public final fun getOtherName ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType$Companion {
 	public final fun fromDisplayName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
+	public final fun fromName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/data/CachedPlayer {
@@ -1197,6 +1200,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getAPPLIED_DYE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCATEGORY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOOLDOWN_ABILITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1226,6 +1230,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getQUIVER_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRARITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRARITY_UPGRADES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getRIFT_DISCRITE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRIGHT_CLICK_MANA_ABILITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSECONDS_HELD ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSINKER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1315,6 +1320,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getAPPLIED_DYE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCROPS_BROKEN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDIVAN_POWDER_COATING ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1337,6 +1343,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getPOWER_ABILITY_SCROLL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getQUIVER_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRARITY_UPGRADES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getRIFT_DISCRITE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSECONDS_HELD ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSINKER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSTAR_COUNT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1533,6 +1540,18 @@ public final class tech/thatgravyboat/skyblockapi/api/events/base/Subscription$C
 public final class tech/thatgravyboat/skyblockapi/api/events/base/predicates/CancellableEventPredicateProvider : tech/thatgravyboat/skyblockapi/api/events/base/EventPredicateProvider {
 	public fun <init> ()V
 	public fun getPredicate (Ljava/lang/reflect/Method;)Lkotlin/jvm/functions/Function2;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/base/predicates/InventoryPredicates : tech/thatgravyboat/skyblockapi/api/events/base/EventPredicateProvider {
+	public fun <init> ()V
+	public fun getPredicate (Ljava/lang/reflect/Method;)Lkotlin/jvm/functions/Function2;
+}
+
+public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/base/predicates/InventoryTitle : java/lang/annotation/Annotation {
+	public abstract fun title ()[Ljava/lang/String;
+}
+
+public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/base/predicates/MustBeContainer : java/lang/annotation/Annotation {
 }
 
 public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/base/predicates/MustBeOwnedByPlayer : java/lang/annotation/Annotation {
@@ -2202,6 +2221,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOp
 	public final fun copy (Lcom/google/gson/JsonObject;)Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;Lcom/google/gson/JsonObject;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMember ()Lcom/google/gson/JsonObject;
 	public final fun getProfileData ()Lcom/google/gson/JsonObject;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -3224,6 +3244,51 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/sacks/SacksData$Co
 	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerData {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerData$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/Map;)Ltech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerData;Ljava/util/Map;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSlayers ()Ljava/util/Map;
+	public fun hashCode ()I
+	public final fun setSlayers (Ljava/util/Map;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerData$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerEntry {
+	public fun <init> ()V
+	public fun <init> (JJ)V
+	public synthetic fun <init> (JJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun copy (JJ)Ltech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerEntry;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerEntry;JJILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMeterXp ()J
+	public final fun getXp ()J
+	public fun hashCode ()I
+	public final fun setMeterXp (J)V
+	public final fun setXp (J)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerProgressAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerProgressAPI;
+	public final fun getSlayerData ()Ljava/util/Map;
+	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
+	public final fun onInventory (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+	public final fun onPv (Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;)V
+	public final fun onSlayerInventory (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/profile/storage/PlayerStorageData {
 	public fun <init> ()V
 	public fun <init> (Ljava/util/List;Ljava/util/List;)V
@@ -3576,6 +3641,37 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/pricing/Pricing {
 	public final fun getPrice (Ljava/lang/String;)J
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData;
+	public final fun getData ()Ljava/util/Map;
+	public final fun getData (Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;)Ltech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData$RepoSlayerData;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData$RepoSlayerData {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData$RepoSlayerData$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData$RepoSlayerData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData$RepoSlayerData;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData$RepoSlayerData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBossXp ()Ljava/util/List;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getLevel (J)I
+	public final fun getLeveling ()Ljava/util/List;
+	public final fun getMaxBossTier ()I
+	public final fun getMaxLevel ()I
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData$RepoSlayerData$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+}
+
 public final class tech/thatgravyboat/skyblockapi/generated/KCodec {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/generated/KCodec;
 	public final fun getCodec (Ljava/lang/Class;)Lcom/mojang/serialization/Codec;
@@ -3617,6 +3713,7 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McFont {
 
 public final class tech/thatgravyboat/skyblockapi/helpers/McLevel {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/helpers/McLevel;
+	public final fun get (III)Lnet/minecraft/world/level/block/state/BlockState;
 	public final fun get (Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;
 	public final fun getHasLevel ()Z
 	public final fun getRegistry ()Lnet/minecraft/core/RegistryAccess;
@@ -3743,6 +3840,25 @@ public final class tech/thatgravyboat/skyblockapi/utils/codecs/EnumCodec$Compani
 	public final fun of ([Ljava/lang/Enum;)Ltech/thatgravyboat/skyblockapi/utils/codecs/EnumCodec;
 }
 
+public final class tech/thatgravyboat/skyblockapi/utils/extentions/BlockPosExtensionsKt {
+	public static final fun component1 (Lnet/minecraft/core/BlockPos;)I
+	public static final fun component2 (Lnet/minecraft/core/BlockPos;)I
+	public static final fun component3 (Lnet/minecraft/core/BlockPos;)I
+	public static final fun div (Lnet/minecraft/core/BlockPos;I)Lnet/minecraft/core/BlockPos;
+	public static final fun forEachAbove (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun forEachBelow (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun forEachEast (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun forEachNorth (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun forEachRelative (Lnet/minecraft/core/BlockPos;ILnet/minecraft/core/Direction;Lkotlin/jvm/functions/Function1;)V
+	public static final fun forEachSouth (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun forEachWest (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun minus (Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
+	public static final fun plus (Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
+	public static final fun times (Lnet/minecraft/core/BlockPos;I)Lnet/minecraft/core/BlockPos;
+	public static final fun toBlockPos (J)Lnet/minecraft/core/BlockPos;
+	public static final fun toLong (Lnet/minecraft/core/BlockPos;)J
+}
+
 public final class tech/thatgravyboat/skyblockapi/utils/extentions/CodecExtensionsKt {
 	public static final fun forNullGetter (Lcom/mojang/serialization/MapCodec;Lkotlin/jvm/functions/Function1;)Lcom/mojang/serialization/codecs/RecordCodecBuilder;
 }
@@ -3851,12 +3967,14 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/StringExtensi
 	public static final fun parseRomanOrArabic (Ljava/lang/String;)I
 	public static final fun parseWordDuration (Ljava/lang/String;)Lkotlin/time/Duration;
 	public static final fun stripColor (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun toDashlessString (Ljava/util/UUID;)Ljava/lang/String;
 	public static final fun toFloatValue (Ljava/lang/String;)F
 	public static final fun toFormattedName (Ljava/lang/Enum;)Ljava/lang/String;
 	public static final fun toFormattedString (D)Ljava/lang/String;
 	public static final fun toFormattedString (F)Ljava/lang/String;
 	public static final fun toFormattedString (I)Ljava/lang/String;
 	public static final fun toFormattedString (J)Ljava/lang/String;
+	public static final fun toFormattedString (Ljava/lang/Number;)Ljava/lang/String;
 	public static final fun toIntValue (Ljava/lang/String;)I
 	public static final fun toLongValue (Ljava/lang/String;)J
 	public static final fun toRomanNumeral (IZ)Ljava/lang/String;
@@ -4113,6 +4231,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/TextBuilder {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/utils/text/TextBuilder;
 	public final fun append (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/Number;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun append (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
+	public final fun append (Lnet/minecraft/network/chat/MutableComponent;Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun append (Lnet/minecraft/network/chat/MutableComponent;Ltech/thatgravyboat/skyblockapi/utils/text/ComponentLike;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun append (Lnet/minecraft/network/chat/MutableComponent;ZLkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
 	public static synthetic fun append$default (Ltech/thatgravyboat/skyblockapi/utils/text/TextBuilder;Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/Number;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;

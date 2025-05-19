@@ -32,6 +32,9 @@ object GenericDataTypes {
     val MODIFIER: DataType<String> = DataType("modifier") { it.tag?.getStringOrNull("modifier") }
     val TIMESTAMP: DataType<Instant> = DataType("timestamp") { it.tag?.getLongOrNull("timestamp")?.let(Instant::fromEpochMilliseconds) }
     val SECONDS_HELD: DataType<Int> = DataType("seconds_held") { it.tag?.getIntOrNull("seconds_held") }
+    val BOTTLE_OF_JYRRE_SECONDS: DataType<Int> = DataType("bottle_of_jyrre_seconds") { it.tag?.getIntOrNull("bottle_of_jyrre_seconds") }
+    val RIFT_DISCRITE_SECONDS: DataType<Int> = DataType("rift_discrite_seconds") { it.tag?.getIntOrNull("rift_discrite_seconds") }
+
     val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") { it.tag?.getIntOrNull("pickonimbus_durability") }
     val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.tag?.getIntOrNull("rarity_upgrades") }
     val QUIVER_ARROW: DataType<Boolean> = DataType("quiver_arrow") { it.tag?.getStringOrNull("quiver_arrow")?.equals("true") }
