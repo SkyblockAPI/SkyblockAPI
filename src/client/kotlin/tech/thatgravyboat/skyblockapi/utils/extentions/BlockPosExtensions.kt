@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.utils.extentions
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 
-fun BlockPos.forEachRelative(distance: Int, direction: Direction, forEach: (BlockPos.MutableBlockPos) -> Unit) {
+inline fun BlockPos.forEachRelative(distance: Int, direction: Direction, forEach: (BlockPos.MutableBlockPos) -> Unit) {
     val mutable = this.mutable()
     repeat(distance) {
         mutable.move(direction)
@@ -11,12 +11,12 @@ fun BlockPos.forEachRelative(distance: Int, direction: Direction, forEach: (Bloc
     }
 }
 
-fun BlockPos.forEachBelow(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.DOWN, block)
-fun BlockPos.forEachAbove(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.UP, block)
-fun BlockPos.forEachNorth(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.NORTH, block)
-fun BlockPos.forEachSouth(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.SOUTH, block)
-fun BlockPos.forEachWest(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.WEST, block)
-fun BlockPos.forEachEast(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.EAST, block)
+inline fun BlockPos.forEachBelow(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.DOWN, block)
+inline fun BlockPos.forEachAbove(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.UP, block)
+inline fun BlockPos.forEachNorth(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.NORTH, block)
+inline fun BlockPos.forEachSouth(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.SOUTH, block)
+inline fun BlockPos.forEachWest(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.WEST, block)
+inline fun BlockPos.forEachEast(distance: Int, block: (BlockPos.MutableBlockPos) -> Unit) = forEachRelative(distance, Direction.EAST, block)
 
 operator fun BlockPos.component1(): Int = this.x
 operator fun BlockPos.component2(): Int = this.y
