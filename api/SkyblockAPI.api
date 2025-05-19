@@ -3617,6 +3617,7 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McFont {
 
 public final class tech/thatgravyboat/skyblockapi/helpers/McLevel {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/helpers/McLevel;
+	public final fun get (III)Lnet/minecraft/world/level/block/state/BlockState;
 	public final fun get (Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;
 	public final fun getHasLevel ()Z
 	public final fun getRegistry ()Lnet/minecraft/core/RegistryAccess;
@@ -3741,6 +3742,25 @@ public final class tech/thatgravyboat/skyblockapi/utils/codecs/EnumCodec : com/m
 
 public final class tech/thatgravyboat/skyblockapi/utils/codecs/EnumCodec$Companion {
 	public final fun of ([Ljava/lang/Enum;)Ltech/thatgravyboat/skyblockapi/utils/codecs/EnumCodec;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/extentions/BlockPosExtensionsKt {
+	public static final fun component1 (Lnet/minecraft/core/BlockPos;)I
+	public static final fun component2 (Lnet/minecraft/core/BlockPos;)I
+	public static final fun component3 (Lnet/minecraft/core/BlockPos;)I
+	public static final fun div (Lnet/minecraft/core/BlockPos;I)Lnet/minecraft/core/BlockPos;
+	public static final fun forEachAbove (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun forEachBelow (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun forEachEast (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun forEachNorth (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun forEachRelative (Lnet/minecraft/core/BlockPos;ILnet/minecraft/core/Direction;Lkotlin/jvm/functions/Function1;)V
+	public static final fun forEachSouth (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun forEachWest (Lnet/minecraft/core/BlockPos;ILkotlin/jvm/functions/Function1;)V
+	public static final fun minus (Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
+	public static final fun plus (Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
+	public static final fun times (Lnet/minecraft/core/BlockPos;I)Lnet/minecraft/core/BlockPos;
+	public static final fun toBlockPos (J)Lnet/minecraft/core/BlockPos;
+	public static final fun toLong (Lnet/minecraft/core/BlockPos;)J
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/extentions/CodecExtensionsKt {
