@@ -21,7 +21,7 @@ object TrophyFishingAPI {
 
     private val trophyFishCaughtRegex = chatGroup.create(
         "caught",
-        "♔ TROPHY FISH! You caught a (?<type>.+?) (?<tier>${TrophyFishTier.entries.joinToString("|", transform = { it.name })})!",
+        "♔ TROPHY FISH! You caught an? (?<type>.+?) (?<tier>${TrophyFishTier.entries.joinToString("|", transform = { it.name })})!",
     )
 
     private val trophyFishDescription = inventoryGroup.create(
