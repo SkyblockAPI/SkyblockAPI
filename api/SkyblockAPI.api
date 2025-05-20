@@ -347,6 +347,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/Troph
 	public final fun getCaught (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;)Ljava/util/Map;
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onInventory (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+	public final fun onPv (Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/mining/Commission {
@@ -3870,6 +3871,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/CollectionExt
 	public static final fun addOrPut (Ljava/util/Map;Ljava/lang/Object;J)J
 	public static final fun asReversedIterator (Ljava/util/List;)Ljava/util/Iterator;
 	public static final fun chunked (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
+	public static final fun filterKeysNotNull (Ljava/util/Map;)Ljava/util/Map;
 	public static final fun mapValuesNotNull (Ljava/util/Map;Lkotlin/jvm/functions/Function1;)Ljava/util/Map;
 	public static final fun peek (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
 }
