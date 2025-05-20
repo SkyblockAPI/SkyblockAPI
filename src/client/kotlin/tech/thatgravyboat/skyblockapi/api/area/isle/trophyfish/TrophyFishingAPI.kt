@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterKeysNotNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
@@ -73,8 +74,8 @@ object TrophyFishingAPI {
     @OnlyOnSkyBlock
     fun onPv(event: SkyBlockPvOpenedEvent) {
         val obtained = event.member["trophy_fish"].asMap { key, value ->
-            if (!value.isJsonPrimitive) return@mapNotNull null to 0
-            return@mapNotNull key to value.asInt(0)
+            if (!value.isJsonPrimitive) null to 0
+            else key to value.asInt(0)
         }.filterKeysNotNull()
 
         val grouped = obtained.entries.groupBy { group -> TrophyFishType.entries.find { group.key.startsWith(it.internalName, true) } }.filterKeysNotNull()
