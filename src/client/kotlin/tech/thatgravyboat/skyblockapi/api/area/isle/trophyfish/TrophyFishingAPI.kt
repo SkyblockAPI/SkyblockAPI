@@ -79,7 +79,7 @@ object TrophyFishingAPI {
 
         val grouped = obtained.entries.groupBy { group -> TrophyFishType.entries.find { group.key.startsWith(it.internalName, true) } }.filterKeysNotNull()
         val unlocked = grouped.mapValues { entry ->
-            entry.value.map { value -> TrophyFishTier.entries.find { value.key.endsWith(it.name, true) } to value.value }.toMap().filterKeysNotNull()
+            entry.value.associate { value -> TrophyFishTier.entries.find { value.key.endsWith(it.name, true) } to value.value }.filterKeysNotNull()
         }
 
         unlocked.forEach(TrophyFishStorage::setAmounts)
