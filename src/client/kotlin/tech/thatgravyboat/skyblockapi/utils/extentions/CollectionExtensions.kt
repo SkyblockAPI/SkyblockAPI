@@ -59,3 +59,5 @@ internal fun <T : Any> MutableCollection<T>.addIfNotNull(element: T?): Boolean =
 fun <K, V> Map<K, V>.mapValuesNotNull(transform: (Map.Entry<K, V>) -> V?): Map<K, V> {
     return this.mapNotNull { transform(it)?.let { value -> it.key to value } }.toMap()
 }
+
+fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null }.mapKeys { it.key!! }
