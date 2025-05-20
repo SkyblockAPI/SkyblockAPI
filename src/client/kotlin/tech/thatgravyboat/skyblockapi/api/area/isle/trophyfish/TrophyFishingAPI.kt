@@ -72,10 +72,10 @@ object TrophyFishingAPI {
     @Subscription
     @OnlyOnSkyBlock
     fun onPv(event: SkyBlockPvOpenedEvent) {
-        val obtained = event.member.getAsJsonObject("trophy_fish")?.entrySet()?.mapNotNull {
-            if (!it.value.isJsonPrimitive) return@mapNotNull null
-            return@mapNotNull it.key to it.value.asInt(0)
-        }?.toMap() ?: emptyMap()
+        val obtained = event.member["trophy_fish"].asMap { key, value ->
+            if (!value.isJsonPrimitive) return@mapNotNull null to 0
+            return@mapNotNull key to value.asInt(0)
+        }.filterKeysNotNull()
 
         val grouped = obtained.entries.groupBy { group -> TrophyFishType.entries.find { group.key.startsWith(it.internalName, true) } }.filterKeysNotNull()
         val unlocked = grouped.mapValues { entry ->
