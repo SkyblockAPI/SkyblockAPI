@@ -662,13 +662,18 @@ public final class tech/thatgravyboat/skyblockapi/api/area/rift/RiftAPI {
 public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerAPI;
 	public final fun getCurrent ()I
+	public final fun getLastLevel ()I
+	public final fun getLastType ()Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 	public final fun getLevel ()I
 	public final fun getMax ()I
+	public final fun getQuestFinished ()Lkotlinx/datetime/Instant;
 	public final fun getText ()Ljava/lang/String;
 	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
+	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onNameChangeEvent (Ltech/thatgravyboat/skyblockapi/api/events/entity/NameChangedEvent;)V
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onSlayerBarUpdate (Ltech/thatgravyboat/skyblockapi/api/events/entity/ComponentAttachEvent;)V
+	public final fun setQuestFinished (Lkotlinx/datetime/Instant;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerAPIKt {
