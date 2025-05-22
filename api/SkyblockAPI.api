@@ -3815,6 +3815,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/builders/TooltipBuilder 
 	public fun <init> ()V
 	public fun <init> (Ljava/util/List;)V
 	public final fun add (Ljava/lang/Number;Lkotlin/jvm/functions/Function1;)Z
+	public final fun add (Ljava/lang/String;I)Z
 	public final fun add (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Z
 	public final fun add (Lkotlin/jvm/functions/Function1;)Z
 	public final fun add (Lnet/minecraft/network/chat/Component;)Z
