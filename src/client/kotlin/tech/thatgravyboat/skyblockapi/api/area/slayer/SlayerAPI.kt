@@ -1,8 +1,10 @@
 package tech.thatgravyboat.skyblockapi.api.area.slayer
 
+import kotlinx.datetime.Instant
 import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.ComponentAttachEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineAttachEvent
@@ -15,12 +17,17 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import java.util.*
+import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
+import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.time.since
+import kotlin.time.Duration.Companion.milliseconds
 
 @Module
 object SlayerAPI {
 
     private val slayerBosses: WeakHashMap<Entity, SlayerInfo> = WeakHashMap()
     private val slayerGroup = RegexGroup.SCOREBOARD.group("slayer")
+    private val chatSlayerGroup = RegexGroup.CHAT.group("slayer")
     private val slayerQuestRegex = slayerGroup.create("quest", "Slayer Quest")
     private val slayerTypeRegex = slayerGroup.create("type", "(?<type>[\\w ]+) (?<level>[MDCLXVI]+)")
     private val slayerAmountRegex = slayerGroup.create(
@@ -31,6 +38,8 @@ object SlayerAPI {
         "boss",
         "(?<text>Slay the boss!|Boss slain!)",
     )
+    private val questStarted = chatSlayerGroup.create("started", "\\s+SLAYER QUEST STARTED!")
+    private val questCompleted = chatSlayerGroup.create("completed", "\\s+SLAYER QUEST COMPLETE!")
 
     var type: SlayerType? = null
         private set
@@ -43,6 +52,13 @@ object SlayerAPI {
         private set
     var max: Int = 0
         private set
+
+    var lastType: SlayerType? = null
+        private set
+    var lastLevel: Int = 0
+        private set
+
+    var questFinished: Instant = Instant.DISTANT_PAST
 
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
@@ -67,12 +83,30 @@ object SlayerAPI {
         }
     }
 
+    @Subscription
+    fun onChat(event: ChatReceivedEvent.Pre) {
+        matchWhen(event.text) {
+            case(questStarted) {
+                if (questFinished.since() < 50.milliseconds) { // we can safely assume that this is auto slayer since it's so fast.
+                    level = lastLevel
+                    type = lastType
+                }
+            }
+            case(questCompleted) {
+                reset()
+                questFinished = currentInstant()
+            }
+        }
+    }
+
     private fun reset() {
+        lastType = type
         type = null
-        text = null
+        lastLevel = level
         level = 0
         current = 0
         max = 0
+        text = null
     }
 
 
@@ -108,7 +142,7 @@ val SLAYER_MOBS: List<SlayerMob> = listOf(
     SlayerMiniBoss.entries,
     SlayerDemon.entries,
     SlayerType.entries,
-).flatMap { listOf(*it.toTypedArray()) }
+).flatMap { listOf(*it.toTypedArray<SlayerMob>()) }
 
 enum class SlayerMiniBoss(
     override val displayName: String,
