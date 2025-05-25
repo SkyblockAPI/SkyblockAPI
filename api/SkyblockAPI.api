@@ -2388,7 +2388,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenInitia
 	public final fun getWidgets ()Ljava/util/List;
 }
 
-public class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+public class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
 	public final fun getKey ()I
 	public final fun getModifiers ()I
@@ -2400,12 +2400,11 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPre
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent, tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent$Cancellable {
+public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent {
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
-	public fun cancel ()V
 }
 
-public class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+public class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
 	public final fun getKey ()I
 	public final fun getModifiers ()I
@@ -2417,12 +2416,11 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyRel
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent, tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent$Cancellable {
+public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent {
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
-	public fun cancel ()V
 }
 
-public class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+public class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
 	public final fun getButton ()I
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/Screen;
@@ -2434,12 +2432,11 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseC
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent, tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent$Cancellable {
+public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent {
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
-	public fun cancel ()V
 }
 
-public class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+public class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
 	public final fun getButton ()I
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/Screen;
@@ -2451,9 +2448,8 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseR
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent, tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent$Cancellable {
+public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent {
 	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
-	public fun cancel ()V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/time/TickEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
