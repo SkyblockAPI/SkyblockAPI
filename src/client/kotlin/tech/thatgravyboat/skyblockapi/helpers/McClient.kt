@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
+import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 
@@ -90,6 +91,11 @@ object McClient {
     }
 
     fun sendCommand(command: String) {
+        self.connection?.send(ServerboundChatCommandPacket(command.removePrefix("/")))
+    }
+
+    /** Sends a command that first goes through client side commands, and then server commands */
+    fun sendClientCommand(command: String) {
         self.connection?.sendCommand(command.removePrefix("/"))
     }
 
