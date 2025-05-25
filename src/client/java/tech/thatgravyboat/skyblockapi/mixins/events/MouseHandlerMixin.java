@@ -20,8 +20,9 @@ public class MouseHandlerMixin {
     private boolean mouseClicked(Screen screen, double mouseX, double mouseY, int button, Operation<Boolean> original) {
         var pre = new ScreenMouseClickEvent.Pre(screen, mouseX, mouseY, button);
         var result = pre.post(SkyBlockAPI.getEventBus()) || original.call(screen, mouseX, mouseY, button);
-        new ScreenMouseClickEvent.Post(screen, mouseX, mouseY, button).post(SkyBlockAPI.getEventBus());
-        return result;
+        var post = new ScreenMouseClickEvent.Post(screen, mouseX, mouseY, button);
+        if (result) post.cancel();
+        return post.post(SkyBlockAPI.getEventBus()) || result;
     }
 
     @WrapOperation(
@@ -31,8 +32,9 @@ public class MouseHandlerMixin {
     private boolean mouseReleased(Screen instance, double mouseX, double mouseY, int button, Operation<Boolean> original) {
         var pre = new ScreenMouseReleasedEvent.Pre(instance, mouseX, mouseY, button);
         var result = pre.post(SkyBlockAPI.getEventBus()) || original.call(instance, mouseX, mouseY, button);
-        new ScreenMouseReleasedEvent.Post(instance, mouseX, mouseY, button).post(SkyBlockAPI.getEventBus());
-        return result;
+        var post = new ScreenMouseReleasedEvent.Post(instance, mouseX, mouseY, button);
+        if (result) post.cancel();
+        return post.post(SkyBlockAPI.getEventBus()) || result;
     }
 
 }

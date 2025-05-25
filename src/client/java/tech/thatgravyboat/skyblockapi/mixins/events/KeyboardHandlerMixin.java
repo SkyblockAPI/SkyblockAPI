@@ -20,8 +20,9 @@ public class KeyboardHandlerMixin {
     private boolean keyPressed(Screen screen, int keycode, int scancode, int modifiers, Operation<Boolean> original) {
         var pre = new ScreenKeyPressedEvent.Pre(screen, keycode, scancode, modifiers);
         var result = pre.post(SkyBlockAPI.getEventBus()) || original.call(screen, keycode, scancode, modifiers);
-        new ScreenKeyPressedEvent.Post(screen, keycode, scancode, modifiers).post(SkyBlockAPI.getEventBus());
-        return result;
+        var post = new ScreenKeyPressedEvent.Post(screen, keycode, scancode, modifiers);
+        if (result) post.cancel();
+        return post.post(SkyBlockAPI.getEventBus()) || result;
     }
 
     @WrapOperation(
@@ -31,8 +32,9 @@ public class KeyboardHandlerMixin {
     private boolean keyReleased(Screen screen, int keycode, int scancode, int modifiers, Operation<Boolean> original) {
         var pre = new ScreenKeyReleasedEvent.Pre(screen, keycode, scancode, modifiers);
         var result = pre.post(SkyBlockAPI.getEventBus()) || original.call(screen, keycode, scancode, modifiers);
-        new ScreenKeyReleasedEvent.Post(screen, keycode, scancode, modifiers).post(SkyBlockAPI.getEventBus());
-        return result;
+        var post = new ScreenKeyReleasedEvent.Post(screen, keycode, scancode, modifiers);
+        if (result) post.cancel();
+        return post.post(SkyBlockAPI.getEventBus()) || result;
     }
 
 
