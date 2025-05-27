@@ -43,19 +43,14 @@ object HypixelSkillAPI {
 
             init {
                 runBlocking {
-                    load()
-                    println(skills)
-                }
-            }
+                    val skills = Http.getResult<JsonObject>(url = API_URL).getOrNull()?.getAsJsonObject("skills") ?: return@runBlocking
+                    this@Companion.skills = skills.entrySet().mapNotNull { (key, value) ->
+                        val skillData = value.asJsonObject.toSkillData()
 
-            suspend fun load() {
-                val skills = Http.getResult<JsonObject>(url = API_URL).getOrNull()?.getAsJsonObject("skills") ?: return
-                this.skills = skills.entrySet().mapNotNull { (key, value) ->
-                    val skillData = value.asJsonObject.toSkillData()
-
-                    runCatching {
-                        valueOf(key).also { skill -> skill.internalSkillData = skillData }
-                    }.getOrNull()
+                        runCatching {
+                            valueOf(key).also { skill -> skill.internalSkillData = skillData }
+                        }.getOrNull()
+                    }
                 }
             }
         }
