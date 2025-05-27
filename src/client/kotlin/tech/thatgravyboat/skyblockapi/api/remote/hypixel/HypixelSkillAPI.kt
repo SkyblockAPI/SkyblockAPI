@@ -12,7 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.http.Http
 private const val API_URL = "https://api.hypixel.net/v2/resources/skyblock/skills"
 
 object HypixelSkillAPI {
-    enum class OtherSkill : SkillType {
+    enum class Skill : SkillType {
         COMBAT,
         FORAGING,
         MINING,
@@ -36,7 +36,7 @@ object HypixelSkillAPI {
 
         @Module
         companion object {
-            var skills = emptyList<OtherSkill>()
+            var skills = emptyList<Skill>()
                 private set
 
             init {

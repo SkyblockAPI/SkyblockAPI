@@ -70,8 +70,9 @@ object ActionBarEventHandler {
         // §b-100 Mana (§6Dragon Rage§b)
         ActionBarWidgetType(ActionBarWidget.ABILITY, "§.-?(?<amount>[\\d,]+) Mana \\(§.(?<ability>[^)]+)§.\\)"),
         // §3+1.7 Mining (38.19%)
+        ActionBarWidgetType(ActionBarWidget.SKILL_XP_PERCENT, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)"),
         // §3+87.8 Mining (127,630,594/0)
-        ActionBarWidgetType(ActionBarWidget.SKILL_XP, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)"),
+        ActionBarWidgetType(ActionBarWidget.SKILL_XP_LITERAL, "§.\\+(?<amount>[\\d.,]+) (?<skill>\\w+) \\((?<current>[\\d,]+)/(?<needed>[\\d,]+[kmb]?)\\)"),
         // §7⏣ §bLava Springs
         ActionBarWidgetType(ActionBarWidget.LOCATION, "§.⏣ §.(?<location>.+)"),
         // §750m40sф Left
