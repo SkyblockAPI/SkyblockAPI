@@ -3,10 +3,10 @@ package tech.thatgravyboat.skyblockapi.api.remote.itemdata
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import me.owdding.ktcodecs.IncludedCodec
 import tech.thatgravyboat.skyblockapi.api.data.Essence
 import tech.thatgravyboat.skyblockapi.api.remote.pricing.Pricing
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.IncludedCodec
 
 enum class CostTypes(val codec: MapCodec<out Cost>) {
     COINS(CoinCost.CODEC),

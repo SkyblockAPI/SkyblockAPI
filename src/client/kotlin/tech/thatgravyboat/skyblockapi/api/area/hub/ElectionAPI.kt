@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.area.hub
 
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.Candidate
 import tech.thatgravyboat.skyblockapi.api.data.ElectionJson
 import tech.thatgravyboat.skyblockapi.api.data.Perk
@@ -7,7 +8,6 @@ import tech.thatgravyboat.skyblockapi.api.data.PerkJson
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.MayorUpdateEvent
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.http.Http
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup

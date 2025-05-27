@@ -1,12 +1,12 @@
 package tech.thatgravyboat.skyblockapi.api.remote.repo
 
 import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.FieldName
+import me.owdding.ktcodecs.GenerateCodec
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
-import tech.thatgravyboat.skyblockapi.modules.FieldName
-import tech.thatgravyboat.skyblockapi.modules.Module
 
 @Module
 object RepoSlayerData {

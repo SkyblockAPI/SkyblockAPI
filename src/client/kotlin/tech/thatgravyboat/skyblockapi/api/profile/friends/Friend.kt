@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.friends
 
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
+import me.owdding.ktcodecs.GenerateCodec
 import java.util.*
 
 @GenerateCodec

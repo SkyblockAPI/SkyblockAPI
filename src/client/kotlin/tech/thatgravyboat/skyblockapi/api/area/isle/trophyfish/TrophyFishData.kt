@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 
+import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class TrophyFishData(

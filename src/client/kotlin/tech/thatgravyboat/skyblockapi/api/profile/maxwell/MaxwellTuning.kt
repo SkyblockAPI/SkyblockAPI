@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.maxwell
 
+import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockStat
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class MaxwellTuning(

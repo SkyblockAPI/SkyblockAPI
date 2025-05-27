@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl.events
 
 import com.google.common.cache.CacheBuilder
+import me.owdding.ktmodules.Module
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.level.block.state.BlockState
@@ -12,7 +13,6 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.*
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
-import tech.thatgravyboat.skyblockapi.modules.Module
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 

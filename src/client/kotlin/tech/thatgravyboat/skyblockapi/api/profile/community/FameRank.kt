@@ -1,8 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.community
 
 import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.IncludedCodec
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.IncludedCodec
 
 data class FameRank(val id: String, val name: String, val multiplier: Double) {
     companion object {

@@ -48,7 +48,6 @@ apiValidation {
     additionalSourceSets += "client"
     nonPublicMarkers += "org.jetbrains.annotations.ApiStatus\$Internal"
 
-    ignoredProjects += "annotations"
     ignoredPackages += "tech.thatgravyboat.skyblockapi.mixins"
     ignoredPackages += "tech.thatgravyboat.skyblockapi.impl"
 }
@@ -61,7 +60,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly(ksp(project(":annotations"))!!)
+    compileOnly(ksp("me.owdding.ktmodules:KtModules:1.0.3")!!)
+    compileOnly(ksp("me.owdding.ktcodecs:KtCodecs:1.0.16")!!)
 
     // To change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
@@ -147,4 +147,11 @@ compactingResources {
     this.basePath = "repo"
 
     substituteFromDifferentFile("slayer", "slayers")
+}
+
+ksp {
+    arg("meowdding.modules.project_name", project.name)
+    arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
+    arg("meowdding.codecs.project_name", project.name)
+    arg("meowdding.codecs.package", "tech.thatgravyboat.skyblockapi.generated")
 }

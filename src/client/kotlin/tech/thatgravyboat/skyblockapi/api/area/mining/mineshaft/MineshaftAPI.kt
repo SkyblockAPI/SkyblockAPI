@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.area.mining.mineshaft
 
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -11,7 +12,6 @@ import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseSpawnE
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftEnteredEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftFoundEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound

@@ -1,12 +1,12 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPower
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPowers
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class MaxwellData(
