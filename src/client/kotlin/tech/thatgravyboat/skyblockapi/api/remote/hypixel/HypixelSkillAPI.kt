@@ -9,8 +9,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
 import tech.thatgravyboat.skyblockapi.utils.extentions.asString
 import tech.thatgravyboat.skyblockapi.utils.http.Http
 
-// §63,538/3,163❤     §3+87.8 Mining (127,630,594/0)     §236,127/50k Drill Fuel
-
 private const val API_URL = "https://api.hypixel.net/v2/resources/skyblock/skills"
 
 object HypixelSkillAPI {
@@ -43,8 +41,8 @@ object HypixelSkillAPI {
 
             init {
                 runBlocking {
-                    val skills = Http.getResult<JsonObject>(url = API_URL).getOrNull()?.getAsJsonObject("skills") ?: return@runBlocking
-                    this@Companion.skills = skills.entrySet().mapNotNull { (key, value) ->
+                    val skillsObject = Http.getResult<JsonObject>(url = API_URL).getOrNull()?.getAsJsonObject("skills") ?: return@runBlocking
+                    skills = skillsObject.entrySet().mapNotNull { (key, value) ->
                         val skillData = value.asJsonObject.toSkillData()
 
                         runCatching {
