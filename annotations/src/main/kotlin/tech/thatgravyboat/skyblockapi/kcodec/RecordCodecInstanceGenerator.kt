@@ -37,7 +37,7 @@ object RecordCodecInstanceGenerator {
             }
             add("obj\n")
         } else {
-            val possibilities = powerSet(defaults.map { it.first })
+            val possibilities = powerSet(defaults.map { it.first }).sortedByDescending { it.size }
 
             add("when {\n")
             indent()

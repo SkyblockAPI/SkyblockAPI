@@ -9,6 +9,7 @@ import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import tech.thatgravyboat.skyblockapi.modules.FieldName
 import tech.thatgravyboat.skyblockapi.utils.CodeLineBuilder
+import tech.thatgravyboat.skyblockapi.utils.resolveClassName
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -25,8 +26,8 @@ object RecordCodecGenerator {
         } else if (parameter.hasDefault && ksType.isMarkedNullable) {
             logger.error("parameter $name is nullable and has a default value")
         } else {
-            val isMap =
-                ksType.starProjection().toClassName() == Map::class.asClassName() || ksType.starProjection().toClassName() == MutableMap::class.asClassName()
+            val isMap = ksType.starProjection().toTypeName() == Map::class.asTypeName()
+                || ksType.starProjection().toTypeName() == MutableMap::class.asTypeName()
             if (isMap) {
                 val keyType = ksType.arguments.getRef(0)
                 if (Modifier.ENUM !in keyType.modifiers && !builtinCodecs.isStringType(keyType.resolve().toTypeName().copy(false))) {
@@ -68,7 +69,7 @@ object RecordCodecGenerator {
     }
 
     private fun CodeLineBuilder.addCodec(type: KSType) {
-        when (type.starProjection().toClassName()) {
+        when (type.resolveClassName()) {
             List::class.asClassName() -> {
                 addCodec(type.arguments[0].type!!.resolve())
                 add(".listOf()")
@@ -214,6 +215,5 @@ object RecordCodecGenerator {
     }
 
     private fun List<KSTypeArgument>.getRef(index: Int): KSTypeReference = this[index].type!!
-
     private fun List<KSTypeArgument>.getType(index: Int): TypeName = getRef(index).resolve().toTypeName().copy(nullable = false)
 }

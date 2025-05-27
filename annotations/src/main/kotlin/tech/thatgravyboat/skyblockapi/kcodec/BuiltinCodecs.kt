@@ -10,8 +10,8 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
+import tech.thatgravyboat.skyblockapi.utils.resolveClassName
 
 class BuiltinCodecs {
 
@@ -69,7 +69,7 @@ class BuiltinCodecs {
             declaration as KSPropertyDeclaration
             val type = declaration.type.resolve().arguments[0].toTypeName()
             val isKeyable = declaration.getAnnotationsByType(IncludedCodec::class).first().keyable
-            val isMapCodec = declaration.type.resolve().starProjection().toClassName() == MAP_CODEC_TYPE
+            val isMapCodec = declaration.type.resolve().resolveClassName() == MAP_CODEC_TYPE
 
             if (!add(type, declaration.qualifiedName!!.asString(), isKeyable, isMapCodec)) {
                 logger.error("Duplicate included codec for $type")
@@ -95,15 +95,14 @@ class BuiltinCodecs {
                 logger.error("@IncludedCodec can only be applied to public properties in objects")
             } else if (!declaration.parentDeclaration!!.isPublic() && !declaration.parentDeclaration!!.isInternal()) {
                 logger.error("@IncludedCodec can only be applied to public properties in public objects")
-            } else if (declaration.type.resolve().starProjection().toClassName() != CODEC_TYPE
-                && declaration.type.resolve().starProjection().toClassName() != MAP_CODEC_TYPE
-            ) {
+            } else if (declaration.type.resolveClassName() != CODEC_TYPE && declaration.type.resolveClassName() != MAP_CODEC_TYPE) {
                 logger.error("@IncludedCodec can only be applied to properties that are Codec<T> or MapCodec<T>")
             } else {
                 return true
             }
             return false
         }
+
     }
 }
 

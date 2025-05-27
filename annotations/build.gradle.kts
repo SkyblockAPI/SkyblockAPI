@@ -8,6 +8,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 repositories {
     mavenCentral()
+    maven("https://maven.teamresourceful.com/repository/maven-public/")
 }
 
 dependencies {
@@ -16,6 +17,6 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.13.1")
 
-    implementation("com.squareup:kotlinpoet:1.13.0")
-    implementation("com.squareup:kotlinpoet-ksp:1.13.0")
+    implementation("me.owdding.kotlinpoet:kotlinpoet-jvm:2.2.0-SNAPSHOT")
+    implementation("me.owdding.kotlinpoet:ksp:2.2.0-SNAPSHOT")
 }
