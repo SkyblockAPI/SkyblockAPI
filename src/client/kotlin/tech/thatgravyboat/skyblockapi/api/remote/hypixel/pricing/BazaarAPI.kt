@@ -22,24 +22,20 @@ object BazaarAPI {
 
     init {
         Scheduling.schedule(0.seconds, 2.hours) {
-            fetch()
-        }
-    }
-
-    private suspend fun fetch() {
-        Http.getResult<JsonObject>(URL).let { res ->
-            val response = res.getOrNull() ?: return
-            products = response.getAsJsonObject("products").asMap { id, prod ->
-                val obj = prod.asJsonObject
-                val quick = obj.getAsJsonObject("quick_status")
-                id to BazaarProduct(
-                    id,
-                    quick.getAsJsonPrimitive("sellPrice").asDouble(0.0),
-                    quick.getAsJsonPrimitive("sellVolume").asLong(0),
-                    quick.getAsJsonPrimitive("buyPrice").asDouble(0.0),
-                    quick.getAsJsonPrimitive("buyVolume").asLong(0),
-                )
-            }.map { it.value }
+            Http.getResult<JsonObject>(URL).let { res ->
+                val response = res.getOrNull() ?: return@schedule
+                products = response.getAsJsonObject("products").asMap { id, prod ->
+                    val obj = prod.asJsonObject
+                    val quick = obj.getAsJsonObject("quick_status")
+                    id to BazaarProduct(
+                        id,
+                        quick.getAsJsonPrimitive("sellPrice").asDouble(0.0),
+                        quick.getAsJsonPrimitive("sellVolume").asLong(0),
+                        quick.getAsJsonPrimitive("buyPrice").asDouble(0.0),
+                        quick.getAsJsonPrimitive("buyVolume").asLong(0),
+                    )
+                }.map { it.value }
+            }
         }
     }
 

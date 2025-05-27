@@ -23,21 +23,17 @@ object LowestBinAPI {
 
     init {
         Scheduling.schedule(0.seconds, 2.hours) {
-            fetch()
-        }
-    }
-
-    private suspend fun fetch() {
-        Http.getResult<JsonObject>(URL).let { res ->
-            val response = res.getOrNull() ?: return
-            items = response.asMap { id, item ->
-                val obj = item.asJsonObject
-                id to AuctionItem(
-                    obj["lowest"].asLong(0),
-                    obj["highest"].asLong(0),
-                    obj["median"].asLong(0),
-                    obj["mean"].asDouble(0.0),
-                )
+            Http.getResult<JsonObject>(URL).let { res ->
+                val response = res.getOrNull() ?: return@schedule
+                items = response.asMap { id, item ->
+                    val obj = item.asJsonObject
+                    id to AuctionItem(
+                        obj["lowest"].asLong(0),
+                        obj["highest"].asLong(0),
+                        obj["median"].asLong(0),
+                        obj["mean"].asDouble(0.0),
+                    )
+                }
             }
         }
     }

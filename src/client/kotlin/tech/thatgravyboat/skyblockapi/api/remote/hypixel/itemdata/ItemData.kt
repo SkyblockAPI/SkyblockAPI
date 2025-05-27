@@ -28,6 +28,6 @@ data class HypixelApiItem(
     @param:FieldName("dungeon_item_conversion_cost") val conversionCost: EssenceCost?,
 ) {
     companion object {
-        val CODEC: Codec<HypixelApiItem> = KCodec.getCodec<HypixelApiItem>()
+        internal val CODEC: Codec<HypixelApiItem> = KCodec.getCodec<HypixelApiItem>()
     }
 }
