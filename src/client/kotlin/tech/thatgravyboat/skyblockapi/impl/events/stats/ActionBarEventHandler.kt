@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.data.item.ArmorStack
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.*
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
@@ -70,9 +71,29 @@ object ActionBarEventHandler {
         // §b-100 Mana (§6Dragon Rage§b)
         ActionBarWidgetType(ActionBarWidget.ABILITY, "§.-?(?<amount>[\\d,]+) Mana \\(§.(?<ability>[^)]+)§.\\)"),
         // §3+1.7 Mining (38.19%)
-        ActionBarWidgetType(ActionBarWidget.SKILL_XP_PERCENT, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)"),
+        ActionBarWidgetType(ActionBarWidget.SKILL_XP_PERCENT, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)") { old, it ->
+            SkillXpPercentActionBarWidgetChangeEvent(
+                it["amount"].toFloatValue(),
+                HypixelSkillAPI.Skill.getByName(it["skill"].toString()),
+                it["percent"].toFloatValue() / 100f,
+                old,
+                it.string,
+            )
+        },
         // §3+87.8 Mining (127,630,594/0)
-        ActionBarWidgetType(ActionBarWidget.SKILL_XP_LITERAL, "§.\\+(?<amount>[\\d.,]+) (?<skill>\\w+) \\((?<current>[\\d,]+)/(?<needed>[\\d,]+[kmb]?)\\)"),
+        ActionBarWidgetType(
+            ActionBarWidget.SKILL_XP_LITERAL,
+            "§.\\+(?<amount>[\\d.,]+) (?<skill>\\w+) \\((?<current>[\\d,]+)/(?<needed>[\\d,]+[kmb]?)\\)",
+        ) { old, it ->
+            SkillXpLiteralActionBarWidgetChangeEvent(
+                it["amount"].toFloatValue(),
+                HypixelSkillAPI.Skill.getByName(it["skill"].toString()),
+                it["current"].parseFormattedInt(),
+                it["needed"].parseFormattedInt(),
+                old,
+                it.string,
+            )
+        },
         // §7⏣ §bLava Springs
         ActionBarWidgetType(ActionBarWidget.LOCATION, "§.⏣ §.(?<location>.+)"),
         // §750m40sф Left

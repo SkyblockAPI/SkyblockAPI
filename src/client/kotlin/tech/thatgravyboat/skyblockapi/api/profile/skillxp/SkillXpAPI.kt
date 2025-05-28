@@ -39,10 +39,8 @@ object SkillXpAPI {
 
             itemLoreXpRegex.anyMatch(event.item.getRawLore(), "current") { (current) ->
                 val xp = if (skill.data.maxLevel == level) {
-                    println("Setting XP for ${skill.id} to ${current.toFloatValue()} at max level $level")
                     current.toFloatValue()
                 } else {
-                    println("Setting XP for ${skill.id} to ${current.toFloatValue()} at level $level")
                     val xpTillLevel = skill.data.getTotalExpForLevel(level)
                     xpTillLevel.toFloat() + current.toFloatValue()
                 }
