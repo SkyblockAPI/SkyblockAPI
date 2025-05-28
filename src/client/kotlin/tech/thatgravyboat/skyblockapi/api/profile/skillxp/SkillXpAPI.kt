@@ -10,16 +10,21 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
 import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
-import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 @Module
 object SkillXpAPI {
 
-    val skills: Map<HypixelSkillAPI.Skill, Long>? get() = SkillXpStorage.data?.xp
+    val skills: Map<HypixelSkillAPI.Skill, Float>? get() = SkillXpStorage.data?.xp
 
-    private val regex = RegexGroup.INVENTORY.create("aaa", "(?<name>.*) (?<level>\\d+)")
+    private val group = RegexGroup.INVENTORY.group("skillxp")
+    private val itemNameRegex = group.create("itemName", "(?<name>.*) (?<level>\\d+)")
+    private val itemLoreXpRegex = group.create("itemLoreXp", "\\s+(?<current>[\\d,.]+)(?:/(?<needed>[\\d,.]+[kmbKMB]?))?")
 
     @Subscription
     @OnlyOnSkyBlock
@@ -28,11 +33,22 @@ object SkillXpAPI {
         if (!event.isInMainPart) return
         if (event.isSkyBlockFiller) return
 
-        regex.match(event.item.cleanName, "name", "level") { (name, level) ->
+        itemNameRegex.match(event.item.cleanName, "name", "level") { (name, level) ->
             val skill = HypixelSkillAPI.Skill.getByName(name) ?: return@match
-            val xp = level.toLongValue() * 150L
+            val level = level.toIntValue()
 
-            SkillXpStorage.setXp(skill, xp)
+            itemLoreXpRegex.anyMatch(event.item.getRawLore(), "current") { (current) ->
+                val xp = if (skill.data.maxLevel == level) {
+                    println("Setting XP for ${skill.id} to ${current.toFloatValue()} at max level $level")
+                    current.toFloatValue()
+                } else {
+                    println("Setting XP for ${skill.id} to ${current.toFloatValue()} at level $level")
+                    val xpTillLevel = skill.data.getTotalExpForLevel(level)
+                    xpTillLevel.toFloat() + current.toFloatValue()
+                }
+
+                SkillXpStorage.setXp(skill, xp)
+            }
         }
     }
 

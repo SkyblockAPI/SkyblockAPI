@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class SkillXpData(
-    val xp: MutableMap<HypixelSkillAPI.Skill, Long> = mutableMapOf(),
+    val xp: MutableMap<HypixelSkillAPI.Skill, Float> = mutableMapOf(),
 ) {
     companion object {
         internal val CODEC = KCodec.getCodec<SkillXpData>()

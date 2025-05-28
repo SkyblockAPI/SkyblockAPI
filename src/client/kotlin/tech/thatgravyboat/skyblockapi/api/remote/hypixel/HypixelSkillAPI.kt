@@ -60,6 +60,8 @@ object HypixelSkillAPI {
         val maxLevel: Int,
         val skillLevels: Map<Int, Long>,
     ) {
+        fun getTotalExpForLevel(level: Int) = skillLevels[level] ?: skillLevels.entries.lastOrNull()?.value ?: 0L
+
         companion object {
             internal fun JsonObject.toSkillData() = SkillData(
                 this["name"].asString(""),
