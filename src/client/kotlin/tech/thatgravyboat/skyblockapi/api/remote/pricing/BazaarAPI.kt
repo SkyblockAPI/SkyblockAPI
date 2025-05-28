@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.remote.pricing
 
+import org.jetbrains.annotations.ApiStatus
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.BazaarAPI
 import com.google.gson.JsonObject
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
@@ -10,37 +12,21 @@ import tech.thatgravyboat.skyblockapi.utils.http.Http
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
-private const val URL = "https://api.hypixel.net/v2/skyblock/bazaar"
-
-@Module
+@Deprecated("Moved to remote.hypixel.pricing.BazaarAPI")
+@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
 object BazaarAPI {
 
-    var products = listOf<BazaarProduct>()
-        private set
+    val products get() = BazaarAPI.products
+    fun getProduct(id: String?): BazaarProduct? {
+        val product = BazaarAPI.getProduct(id) ?: return null
 
-    fun getProduct(id: String?) = products.find { it.productId.equals(id, true) }
-
-    init {
-        Scheduling.schedule(0.seconds, 2.hours) {
-            fetch()
-        }
-    }
-
-    private suspend fun fetch() {
-        Http.getResult<JsonObject>(URL).let { res ->
-            val response = res.getOrNull() ?: return
-            products = response.getAsJsonObject("products").asMap { id, prod ->
-                val obj = prod.asJsonObject
-                val quick = obj.getAsJsonObject("quick_status")
-                id to BazaarProduct(
-                    id,
-                    quick.getAsJsonPrimitive("sellPrice").asDouble(0.0),
-                    quick.getAsJsonPrimitive("sellVolume").asLong(0),
-                    quick.getAsJsonPrimitive("buyPrice").asDouble(0.0),
-                    quick.getAsJsonPrimitive("buyVolume").asLong(0),
-                )
-            }.map { it.value }
-        }
+        return BazaarProduct(
+            productId = product.productId,
+            sellPrice = product.sellPrice,
+            sellVolume = product.sellVolume,
+            buyPrice = product.buyPrice,
+            buyVolume = product.buyVolume,
+        )
     }
 
     data class BazaarProduct(

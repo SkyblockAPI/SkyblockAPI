@@ -1,60 +1,35 @@
 package tech.thatgravyboat.skyblockapi.api.remote.itemdata
 
-import com.mojang.serialization.Codec
-import me.owdding.ktcodecs.FieldName
-import me.owdding.ktcodecs.GenerateCodec
-import me.owdding.ktcodecs.GenerateDispatchCodec
+import com.mojang.serialization.MapCodec
+import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.api.data.Essence
 import tech.thatgravyboat.skyblockapi.api.remote.pricing.Pricing
-import tech.thatgravyboat.skyblockapi.generated.DispatchHelper
-import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
-import kotlin.reflect.KClass
 
-@GenerateDispatchCodec(Cost::class)
-enum class CostTypes(override val type: KClass<out Cost>) : DispatchHelper<Cost> {
-    COINS(CoinCost::class),
-    ITEM(ItemCost::class),
-    ESSENCE(EssenceCost::class),
+@Deprecated("Moved to remote.hypixel.itemdata")
+@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+enum class CostTypes(val codec: MapCodec<out tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.Cost>) {
+    COINS(tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.CoinCost.CODEC),
+    ITEM(tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemCost.CODEC),
+    ESSENCE(tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.EssenceCost.CODEC),
     ;
-
-    companion object {
-        fun getType(id: String) = entries.first { it.id.equals(id, true) }
-    }
 }
 
-@GenerateCodec
-data class EssenceCost(
-    @FieldName("essence_type") val essenceType: Essence,
-    val amount: Int,
-) : Cost(CostTypes.ESSENCE) {
-    companion object {
-        val CODEC = SkyblockAPICodecs.EssenceCostCodec
-    }
-}
+@Deprecated("Moved to remote.hypixel.itemdata")
+@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+data class EssenceCost(val essenceType: Essence, val amount: Int) : Cost(CostTypes.ESSENCE)
 
-@GenerateCodec
-data class ItemCost(
-    @FieldName("item_id") val itemId: String,
-    val amount: Int,
-) : Cost(CostTypes.ITEM) {
-    companion object {
-        val CODEC = SkyblockAPICodecs.ItemCostCodec
-    }
-}
+@Deprecated("Moved to remote.hypixel.itemdata")
+@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+data class ItemCost(val itemId: String, val amount: Int) : Cost(CostTypes.ITEM)
 
-@GenerateCodec
-data class CoinCost(
-    @FieldName("coins") val amount: Int,
-) : Cost(CostTypes.COINS) {
-    companion object {
-        val CODEC = SkyblockAPICodecs.CoinCostCodec
-    }
-}
+@Deprecated("Moved to remote.hypixel.itemdata")
+@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+data class CoinCost(val amount: Int) : Cost(CostTypes.COINS)
 
+@Deprecated("Moved to remote.hypixel.itemdata")
+@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
 abstract class Cost(val type: CostTypes) {
     companion object {
-        val CODEC: Codec<Cost> = SkyblockAPICodecs.CostCodec.codec()
-
         fun calculateCost(cost: Cost) = when (cost) {
             is CoinCost -> cost.amount.toLong()
             is ItemCost -> cost.amount * Pricing.getPrice(cost.itemId)

@@ -4,7 +4,7 @@ import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.remote.pricing.BazaarAPI
 
 @RemoveNextVersion(
-    replaceWith = ReplaceWith("BazaarAPI", "tech.thatgravyboat.skyblockapi.api.remote.pricing.BazaarAPI"),
+    replaceWith = ReplaceWith("BazaarAPI", "tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.BazaarAPI"),
 )
 object BazaarAPI {
 
