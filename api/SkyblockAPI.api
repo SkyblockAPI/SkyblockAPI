@@ -3486,7 +3486,6 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/Co
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CoinCost$Companion {
-	public final fun getCODEC ()Lcom/mojang/serialization/MapCodec;
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/Cost {
@@ -3497,17 +3496,24 @@ public abstract class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/Cost$Companion {
 	public final fun calculateCost (Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/Cost;)J
-	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CostTypes : java/lang/Enum {
+public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CostTypes : java/lang/Enum, tech/thatgravyboat/skyblockapi/generated/DispatchHelper {
 	public static final field COINS Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CostTypes;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CostTypes$Companion;
 	public static final field ESSENCE Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CostTypes;
 	public static final field ITEM Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CostTypes;
-	public final fun getCodec ()Lcom/mojang/serialization/MapCodec;
+	public fun getCodec ()Lcom/mojang/serialization/MapCodec;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getId ()Ljava/lang/String;
+	public synthetic fun getName ()Ljava/lang/String;
+	public fun getType ()Lkotlin/reflect/KClass;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CostTypes;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CostTypes;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CostTypes$Companion {
+	public final fun getType (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CostTypes;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost : tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/Cost {
@@ -3525,7 +3531,6 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/Es
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost$Companion {
-	public final fun getCODEC ()Lcom/mojang/serialization/MapCodec;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/GemstoneCost {
@@ -3580,7 +3585,6 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/It
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/ItemCost$Companion {
-	public final fun getCODEC ()Lcom/mojang/serialization/MapCodec;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/ItemData {
@@ -3644,6 +3648,7 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/pricing/Pri
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/CoinCost : tech/thatgravyboat/skyblockapi/api/remote/itemdata/Cost {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/itemdata/CoinCost$Companion;
 	public fun <init> (I)V
 	public final fun component1 ()I
 	public final fun copy (I)Ltech/thatgravyboat/skyblockapi/api/remote/itemdata/CoinCost;
@@ -3654,6 +3659,10 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/CoinCost :
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/CoinCost$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/MapCodec;
+}
+
 public abstract class tech/thatgravyboat/skyblockapi/api/remote/itemdata/Cost {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/itemdata/Cost$Companion;
 	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/remote/itemdata/CostTypes;)V
@@ -3662,6 +3671,7 @@ public abstract class tech/thatgravyboat/skyblockapi/api/remote/itemdata/Cost {
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/Cost$Companion {
 	public final fun calculateCost (Ltech/thatgravyboat/skyblockapi/api/remote/itemdata/Cost;)J
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/CostTypes : java/lang/Enum {
@@ -3675,6 +3685,7 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/CostTypes 
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/EssenceCost : tech/thatgravyboat/skyblockapi/api/remote/itemdata/Cost {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/itemdata/EssenceCost$Companion;
 	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/data/Essence;I)V
 	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public final fun component2 ()I
@@ -3685,6 +3696,10 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/EssenceCos
 	public final fun getEssenceType ()Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/EssenceCost$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/MapCodec;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/GemstoneCost {
@@ -3720,6 +3735,7 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/HypixelApi
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/ItemCost : tech/thatgravyboat/skyblockapi/api/remote/itemdata/Cost {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/itemdata/ItemCost$Companion;
 	public fun <init> (Ljava/lang/String;I)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()I
@@ -3730,6 +3746,10 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/ItemCost :
 	public final fun getItemId ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/ItemCost$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/MapCodec;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/itemdata/ItemData {
