@@ -36,13 +36,10 @@ object HypixelSkillAPI {
 
         @Module
         companion object {
-            var skills = emptyList<Skill>()
-                private set
-
             init {
                 runBlocking {
                     val skillsObject = Http.getResult<JsonObject>(url = API_URL).getOrNull()?.getAsJsonObject("skills") ?: return@runBlocking
-                    skills = skillsObject.entrySet().mapNotNull { (key, value) ->
+                    skillsObject.entrySet().mapNotNull { (key, value) ->
                         val skillData = value.asJsonObject.toSkillData()
 
                         runCatching {
@@ -50,6 +47,10 @@ object HypixelSkillAPI {
                         }.getOrNull()
                     }
                 }
+            }
+
+            fun getByName(name: String) = Skill.entries.find {
+                it.name.equals(name, true) || it.skillApiId.equals(name, true) || it.data.name.equals(name, true)
             }
         }
     }
