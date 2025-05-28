@@ -1,15 +1,71 @@
 [versions]
+google-autoservice = "1.1.1"
+google-autoservice-ksp = "1.2.0"
+google-gson = "2.12.1"
+
+meowdding-modules = "1.0.3"
+meowdding-ktcodecs = "1.0.16"
+meowdding-resources = "1.0.0"
+
+minecraft = "1.21.5"
+
+fabric-loom = "1.10-SNAPSHOT"
+fabric-loader = "0.16.10"
+fabric-api = "0.119.5+1.21.5"
+fabric-language-kotlin = "1.13.0+kotlin.2.1.0"
+
 kotlin = "2.1.0"
+kotlin-gradle-plugin = "2.1.0"
 ksp = "2.1.0-1.0.29"
+binary-compatibility-checker = "0.17.0"
 
-autoservice = "1.1.1"
-autoservice-ksp = "1.2.0"
+hypixel-modapi = "1.0.1"
+hypixel-modapi-fabric = "1.0.1+build.1+mc1.21"
 
-[plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+skyblockapi-repolib = "1.5.1"
+
+# Dev versions
+devauth-fabric = "1.2.1"
 
 [libraries]
-auto-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoservice" }
-auto-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "autoservice-ksp" }
+google-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson" }
+google-auto-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "google-autoservice" }
+google-auto-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "google-autoservice-ksp" }
+
+meowdding-modules = { module = "me.owdding.ktmodules:KtModules", version.ref = "meowdding-modules" }
+meowdding-ktcodecs = { module = "me.owdding.ktcodecs:KtCodecs", version.ref = "meowdding-ktcodecs" }
+meowdding-resources = { module = "me.owdding.repo:compacting-resources", version.ref = "meowdding-resources" }
+
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+
+fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-language-kotlin" }
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
+fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
+
 kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle-plugin" }
+kotlin-gradle-plugin-api = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin-api", version.ref = "kotlin-gradle-plugin" }
+
+hypixel-modapi = { module = "net.hypixel:mod-api", version.ref = "hypixel-modapi" }
+hypixel-modapi-fabric = { module = "maven.modrinth:hypixel-mod-api", version.ref = "hypixel-modapi-fabric" }
+
+skyblockapi-repolib = { module = "tech.thatgravyboat.repo-lib:repo-lib", version.ref = "skyblockapi-repolib" }
+devauth = { module = "me.djtheredstoner:DevAuth-fabric", version.ref = "devauth-fabric" }
+
+[bundles]
+fabric = ["fabric-loader", "fabric-language-kotlin", "fabric-api"]
+meowdding = ["meowdding-ktcodecs", "meowdding-modules"]
+hypixel = ["hypixel-modapi", "hypixel-modapi-fabric"]
+
+kotlin-gradle-plugin = ["kotlin-gradle-plugin", "kotlin-gradle-plugin-api"]
+
+[plugins]
+
+fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }
+
+meowdding-resources = { id = "me.owdding.resources" }
+
+kotlin-binary-compatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-checker" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

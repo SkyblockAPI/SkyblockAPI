@@ -16,6 +16,6 @@ tasks.test.configure {
 
 dependencies {
     compileOnly(libs.kotlin.compiler)
-    ksp(libs.auto.ksp)
-    compileOnly(libs.auto.annotations)
+    ksp(libs.google.auto.ksp)
+    compileOnly(libs.google.auto.annotations)
 }
