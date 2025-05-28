@@ -1,15 +1,14 @@
 package tech.thatgravyboat.skyblockapi.api.remote.pricing
 
-import org.jetbrains.annotations.ApiStatus
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing as NewPricing
 
-@Deprecated("Moved", ReplaceWith("remote.hypixel.pricing.Pricing.getPrice(id)"))
-@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+@RemoveNextVersion(
+    replaceWith = ReplaceWith(
+        "Pricing",
+        "tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing",
+    ),
+)
 object Pricing {
-    fun getPrice(id: String?): Long {
-        val product = BazaarAPI.getProduct(id)
-        if (product != null) {
-            return product.sellPrice.toLong()
-        }
-        return LowestBinAPI.getLowestPrice(id) ?: 0L
-    }
+    fun getPrice(id: String?) = NewPricing.getPrice(id)
 }

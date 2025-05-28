@@ -1,25 +1,20 @@
 package tech.thatgravyboat.skyblockapi.api.remote.pricing
 
-import org.jetbrains.annotations.ApiStatus
-import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.LowestBinAPI
-import com.google.gson.JsonObject
-import me.owdding.ktmodules.Module
-import tech.thatgravyboat.skyblockapi.utils.Scheduling
-import tech.thatgravyboat.skyblockapi.utils.extentions.asDouble
-import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
-import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
-import tech.thatgravyboat.skyblockapi.utils.http.Http
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.seconds
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.LowestBinAPI as NewLowestBinAPI
 
-@Deprecated("Moved to remote.hypixel.pricing.LowestBinAPI")
-@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+@RemoveNextVersion(
+    ReplaceWith(
+        "LowestBinAPI",
+        "tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing",
+    ),
+)
 object LowestBinAPI {
     /** Hypixel Item Id to Prices */
-    val items get() = LowestBinAPI.items
+    val items get() = NewLowestBinAPI.items
 
     fun getPrice(id: String?): AuctionItem? {
-        val item = LowestBinAPI.getPrice(id) ?: return null
+        val item = NewLowestBinAPI.getPrice(id) ?: return null
 
         return AuctionItem(
             lowest = item.lowest,
@@ -29,7 +24,7 @@ object LowestBinAPI {
         )
     }
 
-    fun getLowestPrice(id: String?): Long? = LowestBinAPI.getLowestPrice(id)
+    fun getLowestPrice(id: String?): Long? = NewLowestBinAPI.getLowestPrice(id)
 
     data class AuctionItem(
         val lowest: Long,

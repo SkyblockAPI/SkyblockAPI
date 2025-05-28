@@ -1,24 +1,19 @@
 package tech.thatgravyboat.skyblockapi.api.remote.pricing
 
-import org.jetbrains.annotations.ApiStatus
-import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.BazaarAPI
-import com.google.gson.JsonObject
-import me.owdding.ktmodules.Module
-import tech.thatgravyboat.skyblockapi.utils.Scheduling
-import tech.thatgravyboat.skyblockapi.utils.extentions.asDouble
-import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
-import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
-import tech.thatgravyboat.skyblockapi.utils.http.Http
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.seconds
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.BazaarAPI as NewBazaarAPI
 
-@Deprecated("Moved to remote.hypixel.pricing.BazaarAPI")
-@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+@RemoveNextVersion(
+    replaceWith = ReplaceWith(
+        "BazaarAPI",
+        "tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.BazaarAPI",
+    ),
+)
 object BazaarAPI {
 
-    val products get() = BazaarAPI.products
+    val products get() = NewBazaarAPI.products
     fun getProduct(id: String?): BazaarProduct? {
-        val product = BazaarAPI.getProduct(id) ?: return null
+        val product = NewBazaarAPI.getProduct(id) ?: return null
 
         return BazaarProduct(
             productId = product.productId,
