@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.area.slayer
 
 import kotlinx.datetime.Instant
+import me.owdding.ktmodules.Module
 import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -10,16 +11,15 @@ import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineAttachEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import java.util.*
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.time.since
+import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 
 @Module

@@ -1,8 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.storage
 
+import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class StorageData(

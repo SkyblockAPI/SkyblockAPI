@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.sacks
 
+import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.SacksStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
@@ -11,7 +12,6 @@ import tech.thatgravyboat.skyblockapi.api.events.hypixel.ChangedSackItem
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.SacksChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup

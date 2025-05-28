@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.quiver
 
+import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.stored.QuiverStorage
@@ -10,7 +11,6 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEven
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue

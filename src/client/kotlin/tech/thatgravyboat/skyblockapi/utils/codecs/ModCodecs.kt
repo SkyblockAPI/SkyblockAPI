@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils.codecs
 
 import com.mojang.serialization.Codec
 import kotlinx.datetime.Instant
-import tech.thatgravyboat.skyblockapi.kcodec.IncludedCodec
+import me.owdding.ktcodecs.IncludedCodec
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 

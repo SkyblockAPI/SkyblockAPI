@@ -9,4 +9,5 @@ pluginManagement {
     }
 }
 
-include("annotations")
+include(":annotations")
+include(":compiler")

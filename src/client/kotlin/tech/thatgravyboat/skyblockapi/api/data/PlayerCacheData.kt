@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
+import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 import java.util.*
 
 @GenerateCodec

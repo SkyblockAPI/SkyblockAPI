@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.entity
 
+import me.owdding.ktmodules.Module
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
@@ -7,7 +8,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.getAttachedTo
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 

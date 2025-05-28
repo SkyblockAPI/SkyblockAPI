@@ -1,13 +1,13 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.mojang.brigadier.arguments.StringArgumentType
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.ActionBarWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.RenderActionBarWidgetEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.profile.StatsAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor

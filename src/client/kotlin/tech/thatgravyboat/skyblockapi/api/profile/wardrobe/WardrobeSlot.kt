@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.wardrobe
 
+import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class WardrobeSlot(

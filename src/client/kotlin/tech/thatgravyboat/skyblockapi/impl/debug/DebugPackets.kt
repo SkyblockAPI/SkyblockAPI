@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.mojang.brigadier.arguments.StringArgumentType
+import me.owdding.ktmodules.Module
 import net.minecraft.network.protocol.PacketType
 import net.minecraft.network.protocol.game.GameProtocols
 import net.minecraft.resources.ResourceLocation
@@ -9,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketSentEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor

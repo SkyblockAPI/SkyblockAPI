@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.mojang.blaze3d.platform.InputConstants
+import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
@@ -15,7 +16,6 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString

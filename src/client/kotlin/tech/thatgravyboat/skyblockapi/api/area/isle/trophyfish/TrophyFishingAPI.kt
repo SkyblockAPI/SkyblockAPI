@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.TrophyFishStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
@@ -10,12 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
-import tech.thatgravyboat.skyblockapi.modules.Module
-import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
-import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
-import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
-import tech.thatgravyboat.skyblockapi.utils.extentions.filterKeysNotNull
-import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 

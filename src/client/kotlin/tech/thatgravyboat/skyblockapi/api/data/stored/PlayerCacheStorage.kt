@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.CachedPlayer
 import tech.thatgravyboat.skyblockapi.api.data.PlayerCacheData
 import tech.thatgravyboat.skyblockapi.api.data.StoredData
@@ -8,7 +9,6 @@ import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
-import tech.thatgravyboat.skyblockapi.modules.Module
 import java.util.*
 
 private const val MAX_REMOVE_TIME = 10 * 24 * 60 * 60 * 1000 // 10 days

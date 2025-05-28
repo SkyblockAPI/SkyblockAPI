@@ -1,19 +1,20 @@
 import com.google.devtools.ksp.gradle.KspTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import tech.thatgravyboat.skyblockapi.item.deprecationMessage
 
 plugins {
-    kotlin("jvm") version "2.1.0"
-    id("fabric-loom") version "1.10-SNAPSHOT"
-    id("maven-publish")
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.17.0"
-    id("me.owdding.resources")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.fabric.loom)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.binary.compatibility)
+    alias(libs.plugins.meowdding.resources)
+    `maven-publish`
+    `remove-next-version`
     `item-data`
 }
 
-version = project.property("mod_version") as String
-group = project.property("maven_group") as String
+deprecationMessage = "This will be removed with the next minecraft version (1.21.6/1.22). Consider migrating to the new api before it is removed!"
 
 base {
     archivesName.set(project.property("archives_base_name") as String)
@@ -49,6 +50,7 @@ apiValidation {
     nonPublicMarkers += "org.jetbrains.annotations.ApiStatus\$Internal"
 
     ignoredProjects += "annotations"
+    ignoredProjects += "compiler"
     ignoredPackages += "tech.thatgravyboat.skyblockapi.mixins"
     ignoredPackages += "tech.thatgravyboat.skyblockapi.impl"
 }
@@ -61,36 +63,37 @@ repositories {
 }
 
 dependencies {
-    compileOnly(ksp(project(":annotations"))!!)
+    add("kotlinCompilerPluginClasspathClient", project(":compiler"))
+    compileOnly(project(":annotations"))
+    ksp(libs.bundles.meowdding)
+    compileOnly(libs.bundles.meowdding)
 
     // To change the versions see the gradle.properties file
-    minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
+    minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-    modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
+    modImplementation(libs.bundles.fabric)
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
+    modImplementation(libs.bundles.hypixel)
+    include(libs.bundles.hypixel)
 
-    include(modImplementation("net.hypixel:mod-api:1.0.1")!!)
-    include(modImplementation("maven.modrinth:hypixel-mod-api:1.0.1+build.1+mc1.21")!!)
-    include(implementation("tech.thatgravyboat.repo-lib:repo-lib:1.5.1")!!)
+    include(libs.skyblockapi.repolib)
+    implementation(libs.skyblockapi.repolib)
 
-    modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.1")
+    modRuntimeOnly(libs.devauth)
 }
 
 tasks.processResources {
     inputs.property("version", project.version)
-    inputs.property("minecraft_version", project.property("minecraft_version"))
-    inputs.property("loader_version", project.property("loader_version"))
+    inputs.property("minecraft_version", libs.versions.minecraft.get())
+    inputs.property("loader_version", libs.versions.fabric.loader.get())
     filteringCharset = "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand(
             "version" to project.version,
-            "minecraft_version" to project.property("minecraft_version"),
-            "loader_version" to project.property("loader_version"),
-            "kotlin_loader_version" to project.property("kotlin_loader_version")
+            "minecraft_version" to libs.versions.minecraft.get(),
+            "loader_version" to libs.versions.fabric.loader.get(),
+            "kotlin_loader_version" to libs.versions.fabric.language.kotlin.get()
         )
     }
 }
@@ -117,7 +120,7 @@ tasks.apiCheck { enabled = false }
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            artifactId = "skyblock-api-${project.property("minecraft_version")}"
+            artifactId = "skyblock-api-${libs.versions.minecraft.get()}"
             from(components["java"])
 
             pom {
@@ -147,4 +150,11 @@ compactingResources {
     this.basePath = "repo"
 
     substituteFromDifferentFile("slayer", "slayers")
+}
+
+ksp {
+    arg("meowdding.modules.project_name", project.name)
+    arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
+    arg("meowdding.codecs.project_name", project.name)
+    arg("meowdding.codecs.package", "tech.thatgravyboat.skyblockapi.generated")
 }

@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.friends
 
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.suggestion.SuggestionProvider
+import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
@@ -12,7 +13,6 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.FriendEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup

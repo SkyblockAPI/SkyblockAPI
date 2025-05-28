@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.impl.events
 
+import me.owdding.ktmodules.Module
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ClientboundTabListPacket
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
@@ -15,7 +16,6 @@ import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extentions.chunked
 import tech.thatgravyboat.skyblockapi.utils.extentions.peek

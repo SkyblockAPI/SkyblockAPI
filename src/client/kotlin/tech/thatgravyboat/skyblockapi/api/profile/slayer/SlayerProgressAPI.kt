@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.slayer
 
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerAPI
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
 import tech.thatgravyboat.skyblockapi.api.data.Perk
@@ -13,7 +14,6 @@ import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.repo.RepoSlayerData
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup

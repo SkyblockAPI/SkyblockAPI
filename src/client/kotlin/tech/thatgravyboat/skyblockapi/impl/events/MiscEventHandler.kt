@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl.events
 
 import com.google.common.cache.CacheBuilder
+import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
@@ -28,7 +29,6 @@ import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatComponentExtension
-import tech.thatgravyboat.skyblockapi.modules.Module
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
