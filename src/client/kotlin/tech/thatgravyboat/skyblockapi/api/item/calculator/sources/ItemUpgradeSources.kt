@@ -7,9 +7,9 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.IntDataTypeCalculator
 import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI
 import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI.getApplyCost
-import tech.thatgravyboat.skyblockapi.api.remote.itemdata.Cost
-import tech.thatgravyboat.skyblockapi.api.remote.itemdata.ItemData
-import tech.thatgravyboat.skyblockapi.api.remote.pricing.Pricing
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.Cost
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 
 internal object RecombobulatorCalculator : IntDataTypeCalculator(DataTypes.RARITY_UPGRADES, "RECOMBOBULATOR_3000")
 
