@@ -1,6 +1,7 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
+    alias(libs.plugins.kotlin.binary.compatibility) apply false
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ksp)
 }
@@ -8,6 +9,8 @@ plugins {
 repositories {
     mavenCentral()
 }
+
+listOf("apiDump", "apiBuild").forEach { tasks.getByName(it) { enabled = false } }
 
 tasks.test.configure {
     testLogging { events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED) }
