@@ -1,11 +1,10 @@
-package tech.thatgravyboat.skyblockapi.api.remote.itemdata
+package tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata
 
-import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlot
+import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 import tech.thatgravyboat.skyblockapi.modules.FieldName
 
-@Deprecated("Moved to remote.hypixel.itemdata")
-@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+@GenerateCodec
 data class GemstoneCost(
     @param:FieldName("slot_type") val slotType: GemstoneSlot,
     @FieldName("costs") val cost: List<Cost> = emptyList(),
