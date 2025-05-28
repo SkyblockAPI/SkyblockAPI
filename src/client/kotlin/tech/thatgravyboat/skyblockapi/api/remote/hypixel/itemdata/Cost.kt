@@ -18,7 +18,7 @@ enum class CostTypes(val codec: MapCodec<out Cost>) {
 data class EssenceCost(val essenceType: Essence, val amount: Int) : Cost(CostTypes.ESSENCE) {
     companion object {
         @IncludedCodec
-        internal val CODEC: MapCodec<EssenceCost> = RecordCodecBuilder.mapCodec {
+        val CODEC: MapCodec<EssenceCost> = RecordCodecBuilder.mapCodec {
             it.group(
                 KCodec.getCodec<Essence>().fieldOf("essence_type").forGetter(EssenceCost::essenceType),
                 Codec.INT.fieldOf("amount").forGetter(EssenceCost::amount),
@@ -29,7 +29,7 @@ data class EssenceCost(val essenceType: Essence, val amount: Int) : Cost(CostTyp
 
 data class ItemCost(val itemId: String, val amount: Int) : Cost(CostTypes.ITEM) {
     companion object {
-        internal val CODEC: MapCodec<ItemCost> = RecordCodecBuilder.mapCodec {
+        val CODEC: MapCodec<ItemCost> = RecordCodecBuilder.mapCodec {
             it.group(
                 Codec.STRING.fieldOf("item_id").forGetter(ItemCost::itemId),
                 Codec.INT.fieldOf("amount").forGetter(ItemCost::amount),
@@ -40,14 +40,14 @@ data class ItemCost(val itemId: String, val amount: Int) : Cost(CostTypes.ITEM) 
 
 data class CoinCost(val amount: Int) : Cost(CostTypes.COINS) {
     companion object {
-        internal val CODEC: MapCodec<CoinCost> = Codec.INT.fieldOf("coins").xmap(::CoinCost, CoinCost::amount)
+        val CODEC: MapCodec<CoinCost> = Codec.INT.fieldOf("coins").xmap(::CoinCost, CoinCost::amount)
     }
 }
 
 abstract class Cost(val type: CostTypes) {
     companion object {
         @IncludedCodec
-        internal val CODEC: Codec<Cost> = Codec.STRING.dispatch({ it.type.name }, { CostTypes.valueOf(it).codec })
+        val CODEC: Codec<Cost> = Codec.STRING.dispatch({ it.type.name }, { CostTypes.valueOf(it).codec })
 
         fun calculateCost(cost: Cost) = when (cost) {
             is CoinCost -> cost.amount.toLong()
