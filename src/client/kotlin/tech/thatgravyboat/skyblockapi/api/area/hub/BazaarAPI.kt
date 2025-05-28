@@ -1,10 +1,11 @@
 package tech.thatgravyboat.skyblockapi.api.area.hub
 
-import org.jetbrains.annotations.ApiStatus
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.remote.pricing.BazaarAPI
 
-@Deprecated("Moved to remote.pricing.BazaarAPI")
-@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+@RemoveNextVersion(
+    replaceWith = ReplaceWith("BazaarAPI", "tech.thatgravyboat.skyblockapi.api.remote.pricing.BazaarAPI"),
+)
 object BazaarAPI {
 
     val products get() = BazaarAPI.products

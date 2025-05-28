@@ -1,19 +1,23 @@
 import com.google.devtools.ksp.gradle.KspTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import tech.thatgravyboat.skyblockapi.item.deprecationMessage
 
 plugins {
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm")
     id("fabric-loom") version "1.10-SNAPSHOT"
     id("maven-publish")
     id("com.google.devtools.ksp") version "2.1.0-1.0.29"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.17.0"
     id("me.owdding.resources")
+    id("remove-next-version")
     `item-data`
 }
 
 version = project.property("mod_version") as String
 group = project.property("maven_group") as String
+
+deprecationMessage = "This will be removed with the next minecraft version (1.21.6/1.22). Consider migrating to the new api before it is removed!"
 
 base {
     archivesName.set(project.property("archives_base_name") as String)
@@ -60,6 +64,8 @@ repositories {
 }
 
 dependencies {
+    add("kotlinCompilerPluginClasspathClient", project(":compiler"))
+    compileOnly(project(":annotations"))
     compileOnly(ksp("me.owdding.ktmodules:KtModules:1.0.3")!!)
     compileOnly(ksp("me.owdding.ktcodecs:KtCodecs:1.0.16")!!)
 

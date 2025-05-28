@@ -1,0 +1,15 @@
+[versions]
+kotlin = "2.1.0"
+ksp = "2.1.0-1.0.29"
+
+autoservice = "1.1.1"
+autoservice-ksp = "1.2.0"
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+[libraries]
+auto-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoservice" }
+auto-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "autoservice-ksp" }
+kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }

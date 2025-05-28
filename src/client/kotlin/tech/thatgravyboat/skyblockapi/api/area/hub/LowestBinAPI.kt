@@ -1,10 +1,11 @@
 package tech.thatgravyboat.skyblockapi.api.area.hub
 
-import org.jetbrains.annotations.ApiStatus
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.remote.pricing.LowestBinAPI
 
-@Deprecated("Moved to remote.pricing.LowestBinAPI")
-@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+@RemoveNextVersion(
+    replaceWith = ReplaceWith("LowestBinAPI", "tech.thatgravyboat.skyblockapi.api.remote.pricing.LowestBinAPI"),
+)
 object LowestBinAPI {
     /** Hypixel Item Id to Prices */
     val items get() = LowestBinAPI.items
