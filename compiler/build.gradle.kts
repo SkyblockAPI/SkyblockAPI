@@ -10,8 +10,6 @@ repositories {
     mavenCentral()
 }
 
-listOf("apiDump", "apiBuild").forEach { tasks.getByName(it) { enabled = false } }
-
 tasks.test.configure {
     testLogging { events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED) }
     useJUnitPlatform()

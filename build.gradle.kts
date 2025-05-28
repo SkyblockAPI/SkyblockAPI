@@ -49,6 +49,8 @@ apiValidation {
     additionalSourceSets += "client"
     nonPublicMarkers += "org.jetbrains.annotations.ApiStatus\$Internal"
 
+    ignoredProjects += "annotations"
+    ignoredProjects += "compiler"
     ignoredPackages += "tech.thatgravyboat.skyblockapi.mixins"
     ignoredPackages += "tech.thatgravyboat.skyblockapi.impl"
 }
