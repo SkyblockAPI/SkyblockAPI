@@ -11,8 +11,8 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 @Module
 object AccessoryBagAPI {
-    internal val group = RegexGroup.INVENTORY.group("accessory_bag")
-    internal val titleRegex = group.create(
+    private val group = RegexGroup.INVENTORY.group("accessory_bag")
+    private val titleRegex = group.create(
         "title",
         "Accessory Bag(?: \\((?<currentPage>.*?)/(?<maxPage>.*?)\\))?",
     )
