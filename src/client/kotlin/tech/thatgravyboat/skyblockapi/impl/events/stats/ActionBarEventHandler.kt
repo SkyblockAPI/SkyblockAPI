@@ -9,7 +9,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.*
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -89,8 +88,8 @@ object ActionBarEventHandler {
             SkillXpLiteralActionBarWidgetChangeEvent(
                 it["amount"].toFloatValue(),
                 HypixelSkillAPI.Skill.getByName(it["skill"].toString()),
-                it["current"].parseFormattedInt(),
-                it["needed"].parseFormattedInt(),
+                it["current"].parseFormattedLong(),
+                it["needed"].parseFormattedLong(),
                 old,
                 it.string,
             )

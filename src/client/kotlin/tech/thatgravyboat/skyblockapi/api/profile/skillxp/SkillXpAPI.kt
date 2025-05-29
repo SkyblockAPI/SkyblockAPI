@@ -1,6 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.skillxp
 
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.SkillXpStorage
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
@@ -8,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpLiteralActionBarWid
 import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpPercentActionBarWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
@@ -16,6 +17,8 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 @Module
 object SkillXpAPI {
@@ -52,11 +55,30 @@ object SkillXpAPI {
 
     @Subscription
     fun onActionbarLiteral(event: SkillXpLiteralActionBarWidgetChangeEvent) {
+        val skill = event.skill ?: return
 
+        val old = SkillXpStorage.getXp(skill)
+        val diff = event.current - old
+        if (diff != 0f) {
+            SkillXpStorage.addXp(skill, diff)
+            SkillXpGainedEvent(skill, diff, event.current.toFloat()).post()
+        }
     }
 
     @Subscription
     fun onActionbarPercent(event: SkillXpPercentActionBarWidgetChangeEvent) {
 
     }
+
+    @Subscription
+    fun onEvent(event: SkillXpGainedEvent) {
+        Text.of("You gained ${event.amount} XP in ${event.skill.name} (${event.currentXp})").send()
+    }
 }
+
+// Todo move into correct package
+data class SkillXpGainedEvent(
+    val skill: HypixelSkillAPI.Skill,
+    val amount: Float,
+    val currentXp: Float,
+) : SkyBlockEvent()

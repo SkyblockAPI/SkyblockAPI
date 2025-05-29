@@ -13,6 +13,8 @@ internal object SkillXpStorage {
 
     val data get() = SKILL_XP.get()
 
+    fun getXp(skill: HypixelSkillAPI.Skill) = SKILL_XP.get()?.xp?.get(skill) ?: 0f
+
     fun setXp(skill: HypixelSkillAPI.Skill, xp: Float) {
         SKILL_XP.get()?.xp[skill] = xp
         SKILL_XP.save()
