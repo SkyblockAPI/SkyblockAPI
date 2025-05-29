@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing
 
 import com.google.gson.JsonObject
-import tech.thatgravyboat.skyblockapi.modules.Module
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.extentions.asDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.asLong

@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.impl.events
 
+import me.owdding.ktmodules.Module
 import net.hypixel.modapi.HypixelModAPI
 import net.hypixel.modapi.fabric.event.HypixelModAPICallback
 import net.hypixel.modapi.packet.HypixelPacket
@@ -8,7 +9,6 @@ import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacke
 import net.hypixel.modapi.packet.impl.serverbound.ServerboundPartyInfoPacket
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.PartyInfoEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
-import tech.thatgravyboat.skyblockapi.modules.Module
 import kotlin.jvm.optionals.getOrNull
 
 @Module

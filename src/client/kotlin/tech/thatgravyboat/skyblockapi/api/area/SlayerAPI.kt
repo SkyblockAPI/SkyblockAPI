@@ -1,14 +1,12 @@
 package tech.thatgravyboat.skyblockapi.api.area
 
-import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerAPI as NewSlayerAPI
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType as NewSlayerType
 
-@Deprecated(
-    message = "Use slayer.SlayerAPI instead",
-    replaceWith = ReplaceWith("SlayerAPI", "tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerAPI"),
+@RemoveNextVersion(
+    replaceWith = ReplaceWith("SlayerType", "tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerAPI"),
 )
-@ScheduledForRemoval
 object SlayerAPI {
     val type: SlayerType? get() = NewSlayerAPI.type?.let { SlayerType.fromNewType(it) }
     val level: Int get() = NewSlayerAPI.level
@@ -17,11 +15,9 @@ object SlayerAPI {
     val max: Int get() = NewSlayerAPI.max
 }
 
-@Deprecated(
-    message = "Use slayer.SlayerType instead",
+@RemoveNextVersion(
     replaceWith = ReplaceWith("SlayerType", "tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType"),
 )
-@ScheduledForRemoval
 enum class SlayerType(val displayName: String) {
     REVENANT_HORROR("Revenant Horror"),
     TARANTULA_BROODFATHER("Tarantula Broodfather"),

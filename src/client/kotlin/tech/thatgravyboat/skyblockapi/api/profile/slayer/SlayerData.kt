@@ -1,8 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.slayer
 
+import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class SlayerData(

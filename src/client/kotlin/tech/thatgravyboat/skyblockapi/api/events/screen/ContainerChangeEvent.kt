@@ -3,11 +3,11 @@ package tech.thatgravyboat.skyblockapi.api.events.screen
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-//TODO remove when updating to new version
-@Deprecated("Will be removed when the next minecraft update (1.22/1.21.6) releases!", replaceWith = ReplaceWith("InventoryChangeEvent"))
+@RemoveNextVersion
 class ContainerChangeEvent(
     val item: ItemStack,
     val slot: Int,

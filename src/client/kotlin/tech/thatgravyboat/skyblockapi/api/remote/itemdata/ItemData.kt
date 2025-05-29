@@ -1,21 +1,43 @@
 package tech.thatgravyboat.skyblockapi.api.remote.itemdata
 
-import org.jetbrains.annotations.ApiStatus
-import tech.thatgravyboat.skyblockapi.modules.FieldName
-import tech.thatgravyboat.skyblockapi.modules.Module
+import me.owdding.ktcodecs.FieldName
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData as NewItemData
 
-@Module
-@Deprecated("Moved to remote.hypixel.itemdata")
-@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+@RemoveNextVersion(
+    ReplaceWith(
+        "ItemData",
+        "tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData",
+    ),
+)
 object ItemData {
-
-    val itemData: List<HypixelApiItem> = emptyList()
+    val itemData: List<HypixelApiItem> by lazy {
+        NewItemData.itemData.map {
+            HypixelApiItem(
+                id = it.id,
+                gemstones = it.gemstones.map {
+                    GemstoneCost(
+                        slotType = it.slotType,
+                        cost = it.cost.mapNotNull { Cost.fromNew(it) },
+                    )
+                },
+                conversionCost = Cost.fromNew(it.conversionCost) as? EssenceCost,
+                upgradeCost = it.upgradeCost.map {
+                    it.mapNotNull { Cost.fromNew(it) }
+                },
+            )
+        }
+    }
 
     fun getItemData(id: String) = itemData.firstOrNull { it.id == id }
 }
 
-@Deprecated("Moved to remote.hypixel.itemdata")
-@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+@RemoveNextVersion(
+    ReplaceWith(
+        "HypixelApiItem",
+        "tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.HypixelApiItem",
+    ),
+)
 data class HypixelApiItem(
     val id: String,
     @param:FieldName("gemstone_slots") val gemstones: List<GemstoneCost> = emptyList(),

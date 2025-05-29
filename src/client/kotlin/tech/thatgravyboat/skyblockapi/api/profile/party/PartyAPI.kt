@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.party
 
+import me.owdding.ktmodules.Module
 import net.hypixel.modapi.packet.impl.clientbound.ClientboundPartyInfoPacket
 import net.minecraft.network.chat.ClickEvent
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerCacheStorage
@@ -10,7 +11,6 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.events.HypixelEventHandler
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanPlayerName
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup

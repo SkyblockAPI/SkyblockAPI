@@ -1,8 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.effects
 
 import kotlinx.datetime.Instant
+import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 import kotlin.time.Duration
 
 @GenerateCodec

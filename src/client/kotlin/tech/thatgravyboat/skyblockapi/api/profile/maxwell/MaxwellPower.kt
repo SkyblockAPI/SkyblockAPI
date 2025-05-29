@@ -1,8 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.maxwell
 
 import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.IncludedCodec
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.IncludedCodec
 
 data class MaxwellPower(val name: String, val internalName: String) {
     companion object {

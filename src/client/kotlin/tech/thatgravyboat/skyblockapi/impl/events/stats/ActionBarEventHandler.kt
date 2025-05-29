@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.impl.events.stats
 
+import me.owdding.ktmodules.Module
 import net.minecraft.util.StringUtil
 import org.intellij.lang.annotations.Language
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI

@@ -2,18 +2,17 @@ package tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata
 
 import com.google.gson.JsonArray
 import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.FieldName
+import me.owdding.ktcodecs.GenerateCodec
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
-import tech.thatgravyboat.skyblockapi.modules.FieldName
-import tech.thatgravyboat.skyblockapi.modules.Module
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import java.nio.file.Files
 
 @Module
 object ItemData {
-
     val itemData: List<HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
         ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
 
@@ -28,6 +27,6 @@ data class HypixelApiItem(
     @param:FieldName("dungeon_item_conversion_cost") val conversionCost: EssenceCost?,
 ) {
     companion object {
-        val CODEC: Codec<HypixelApiItem> = KCodec.getCodec<HypixelApiItem>()
+        val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()
     }
 }

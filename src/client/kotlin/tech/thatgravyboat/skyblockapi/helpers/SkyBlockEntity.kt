@@ -1,12 +1,12 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
+import me.owdding.ktmodules.Module
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent
 import tech.thatgravyboat.skyblockapi.helpers.EntityAttachmentAccessor.Companion.asAccessor
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.lang.ref.WeakReference

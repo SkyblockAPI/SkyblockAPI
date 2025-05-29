@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ResolvableProfile
-import org.jetbrains.annotations.ApiStatus
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -51,8 +51,7 @@ fun ItemStack.getApiId() = getData(DataTypes.API_ID)
 
 val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
 
-@Deprecated("")
-@ApiStatus.ScheduledForRemoval(inVersion = "1.21.6 or 1.22")
+@RemoveNextVersion
 object ItemUtils {
 
     fun createSkull(textureBase64: String): ItemStack {

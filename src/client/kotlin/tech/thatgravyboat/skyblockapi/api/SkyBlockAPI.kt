@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RepoVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
-import tech.thatgravyboat.skyblockapi.generated.Modules
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIModules
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
@@ -27,7 +27,7 @@ object SkyBlockAPI {
 
     @JvmStatic
     internal fun init() {
-        Modules.load()
+        SkyblockAPIModules.init { eventBus.register(it) }
         RepoAPI.setup(RepoVersion.V1_21_5)
     }
 

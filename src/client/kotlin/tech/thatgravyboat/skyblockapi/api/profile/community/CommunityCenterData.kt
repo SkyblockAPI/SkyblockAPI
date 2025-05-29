@@ -1,8 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.community
 
 import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.KCodec
-import tech.thatgravyboat.skyblockapi.kcodec.GenerateCodec
 
 @GenerateCodec
 data class CommunityCenterData(

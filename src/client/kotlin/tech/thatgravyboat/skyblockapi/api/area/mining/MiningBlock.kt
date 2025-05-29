@@ -1,10 +1,10 @@
 package tech.thatgravyboat.skyblockapi.api.area.mining
 
+import me.owdding.ktmodules.Module
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.BlockHitResult
-import tech.thatgravyboat.skyblockapi.api.area.mining.MiningBlock.entries
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockMinedEvent
@@ -18,7 +18,6 @@ import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.*
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
