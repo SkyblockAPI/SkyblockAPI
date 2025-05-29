@@ -2,8 +2,8 @@ package tech.thatgravyboat.skyblockapi.api.remote.hypixel
 
 import com.google.gson.JsonObject
 import kotlinx.coroutines.runBlocking
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI.SkillData.Companion.toSkillData
-import tech.thatgravyboat.skyblockapi.modules.Module
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
 import tech.thatgravyboat.skyblockapi.utils.extentions.asString
