@@ -24,7 +24,7 @@ class InventoryChangeEvent(
     val isSkyBlockFiller = item.isEmpty || item in ItemTag.GLASS_PANES
 
     val isInTopRow = slot.index < 9
-    val isInBottomRow = (screen as? ContainerScreenAccessor)?.containerRows?.let { (slot.index - 1) >= it * 9 } ?: false
+    val isInBottomRow = (screen as? ContainerScreenAccessor)?.containerRows?.let { (slot.index) >= (it - 1) * 9 } ?: false
     val isOnLeftColumn = slot.index % 9 == 0
     val isOnRightColumn = slot.index % 9 == 8
 
