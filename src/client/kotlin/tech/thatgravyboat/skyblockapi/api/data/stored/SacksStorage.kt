@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
-import tech.thatgravyboat.skyblockapi.api.profile.sacks.SacksData
+import tech.thatgravyboat.skyblockapi.api.profile.items.sacks.SacksData
 
 internal object SacksStorage {
     private val SACKS = StoredProfileData(

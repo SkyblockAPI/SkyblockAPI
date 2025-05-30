@@ -1,13 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.sacks
 
-import me.owdding.ktcodecs.GenerateCodec
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
-@GenerateCodec
+@RemoveNextVersion
 data class SacksData(
     var items: MutableMap<String, Int> = mutableMapOf(),
-) {
-    companion object {
-        val CODEC = KCodec.getCodec<SacksData>()
-    }
-}
+)

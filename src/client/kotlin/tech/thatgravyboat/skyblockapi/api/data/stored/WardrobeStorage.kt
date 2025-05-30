@@ -1,8 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
-import tech.thatgravyboat.skyblockapi.api.profile.wardrobe.WardrobeData
-import tech.thatgravyboat.skyblockapi.api.profile.wardrobe.WardrobeSlot
+import tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe.WardrobeData
+import tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe.WardrobeSlot
 
 internal object WardrobeStorage {
     private val WARDROBE = StoredProfileData(
