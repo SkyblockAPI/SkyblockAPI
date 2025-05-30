@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
-import tech.thatgravyboat.skyblockapi.api.profile.accessory.AccessoryBagItem
+import tech.thatgravyboat.skyblockapi.api.profile.items.accessory.AccessoryBagItem
 import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 

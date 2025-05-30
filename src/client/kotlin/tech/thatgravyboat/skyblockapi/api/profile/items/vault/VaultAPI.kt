@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.api.area.hub
+package tech.thatgravyboat.skyblockapi.api.profile.items.vault
 
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
