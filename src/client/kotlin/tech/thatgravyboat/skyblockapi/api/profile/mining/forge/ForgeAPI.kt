@@ -33,4 +33,6 @@ object ForgeAPI {
         }
     }
 
+    fun getForgeSlots(): Map<Int, ForgeSlot> = ForgeStorage.data.toMap()
+
 }
