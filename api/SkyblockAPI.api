@@ -3129,6 +3129,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellTun
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/mining/forge/ForgeAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/mining/forge/ForgeAPI;
+	public final fun getForgeSlots ()Ljava/util/Map;
 	public final fun onInvUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 }
 
