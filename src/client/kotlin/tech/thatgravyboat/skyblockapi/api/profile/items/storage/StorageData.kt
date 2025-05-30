@@ -10,7 +10,7 @@ data class StorageData(
     val rift: MutableList<PlayerStorageInstance> = mutableListOf(),
 ) {
     companion object {
-        val CODEC = KCodec.getCodec<StorageData>()
+        internal val CODEC = KCodec.getCodec<StorageData>()
     }
 }
 

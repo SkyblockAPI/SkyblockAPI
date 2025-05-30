@@ -8,6 +8,6 @@ data class SacksData(
     var items: MutableMap<String, Int> = mutableMapOf(),
 ) {
     companion object {
-        val CODEC = KCodec.getCodec<SacksData>()
+        internal val CODEC = KCodec.getCodec<SacksData>()
     }
 }
