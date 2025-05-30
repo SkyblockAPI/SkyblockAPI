@@ -52,7 +52,7 @@ object EffectsAPI {
 
     val boosterCookieExpireTime get() = EffectsStorage.boosterCookieExpireTime
     val godPotionDuration get() = EffectsStorage.godPotionDuration
-
+    val isBoosterCookieActive get() = EffectsStorage.boosterCookieExpireTime.until().isPositive()
 
     @Subscription
     fun onChat(event: ChatReceivedEvent.Pre) {
