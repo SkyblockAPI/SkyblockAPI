@@ -11,6 +11,6 @@ data class EquipmentData(
     val riftSlots: MutableMap<EquipmentSlot, ItemStack> = mutableMapOf(),
 ) {
     companion object {
-        val CODEC: Codec<EquipmentData> = SkyblockAPICodecs.EquipmentDataCodec.codec()
+        internal val CODEC: Codec<EquipmentData> = SkyblockAPICodecs.EquipmentDataCodec.codec()
     }
 }
