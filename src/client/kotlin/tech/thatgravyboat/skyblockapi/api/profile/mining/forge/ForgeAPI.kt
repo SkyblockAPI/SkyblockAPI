@@ -11,7 +11,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import java.util.*
 
 @Module
 object ForgeAPI {
@@ -34,6 +33,10 @@ object ForgeAPI {
         }
     }
 
-    fun getForgeSlots(): Map<Int, ForgeSlot> = Collections.unmodifiableMap(ForgeStorage.data)
+    init {
+        ForgeStorage.data.toMap()
+    }
+
+    fun getForgeSlots(): Map<Int, ForgeSlot> = ForgeStorage.data.toMap()
 
 }
