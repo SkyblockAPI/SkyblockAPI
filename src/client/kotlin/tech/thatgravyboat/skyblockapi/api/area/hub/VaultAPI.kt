@@ -7,7 +7,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import java.util.*
 
 @Module
 object VaultAPI {
@@ -20,5 +19,5 @@ object VaultAPI {
         VaultStorage.addItem(this.item)
     }
 
-    fun getItems(): List<ItemStack> = Collections.unmodifiableList(VaultStorage.getItems())
+    fun getItems(): List<ItemStack> = VaultStorage.getItems().toList()
 }
