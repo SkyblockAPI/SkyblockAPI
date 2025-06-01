@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.area.farming.garden
 
-enum class Tool(val multipleTiers: Boolean = true) {
+enum class FarmingTool(val multipleTiers: Boolean = true) {
     THEORETICAL_HOE_WHEAT,
     THEORETICAL_HOE_CARROT,
     THEORETICAL_HOE_POTATO,
