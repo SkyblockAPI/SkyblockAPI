@@ -18,4 +18,5 @@ enum class Vinyl {
 
     val displayName: Component by lazy { RepoItemsAPI.getItemName(name) }
     val apiId: String = "VINYL_$name"
+    val itemStack by RepoItemsAPI.getItemLazy(apiId)
 }
