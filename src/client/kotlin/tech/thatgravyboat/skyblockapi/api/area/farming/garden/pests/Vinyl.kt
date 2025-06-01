@@ -1,20 +1,21 @@
 package tech.thatgravyboat.skyblockapi.api.area.farming.garden.pests
 
-import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+import net.minecraft.network.chat.Component
+import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 
-enum class Vinyl(displayName: String? = null) {
+enum class Vinyl {
     PRETTY_FLY,
     EARTHWORM_ENSEMBLE,
     CICADA_SYMPHONY,
-    BUZZIN_BEATS("Buzzin' Beats"),
+    BUZZIN_BEATS,
     CRICKET_CHOIR,
     RODENT_REVOLUTION,
-    DYNAMITES("DynaMITES"),
-    BEETLE("Not Just a Pest"),
-    SLOW_AND_GROOVY("Slow and Groovy"),
-    WINGS_OF_HARMONY("Wings of Harmony"),
+    DYNAMITES,
+    BEETLE,
+    SLOW_AND_GROOVY,
+    WINGS_OF_HARMONY,
     ;
 
-    val displayName: String = displayName ?: toFormattedName()
+    val displayName: Component by lazy { RepoItemsAPI.getItemName(name) }
     val apiId: String = "VINYL_$name"
 }

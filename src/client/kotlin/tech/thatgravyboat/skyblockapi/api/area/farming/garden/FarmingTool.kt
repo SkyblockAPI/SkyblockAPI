@@ -10,6 +10,6 @@ enum class FarmingTool(val multipleTiers: Boolean = true) {
     CACTUS_KNIFE(false),
     COCO_CHOPPER(false),
     FUNGI_CUTTER(false),
-    THEORETICAL_HOE_WARTS(false)
+    THEORETICAL_HOE_WARTS,
     ;
 }
