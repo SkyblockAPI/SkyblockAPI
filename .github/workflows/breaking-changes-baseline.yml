@@ -9,7 +9,7 @@ permissions:
     pull-requests: write
 
 jobs:
-    build:
+    baseline-updater:
 
         runs-on: ubuntu-latest
 
