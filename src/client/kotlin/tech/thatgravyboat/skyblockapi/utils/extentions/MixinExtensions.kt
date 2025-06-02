@@ -14,8 +14,8 @@ fun AbstractContainerScreen<*>.getHoveredSlot(): Slot? = (this as AbstractContai
 val AbstractContainerScreen<*>.left: Int get() = (this as AbstractContainerScreenAccessor).leftPos
 val AbstractContainerScreen<*>.top: Int get() = (this as AbstractContainerScreenAccessor).topPos
 
-val AbstractContainerScreen<*>.containerWidth: Int get() = (this as AbstractContainerScreenAccessor).imageWidth
-val AbstractContainerScreen<*>.containerHeight: Int get() = (this as AbstractContainerScreenAccessor).imageHeight
+val AbstractContainerScreen<*>.containerWidth: Int get() = (this as AbstractContainerScreenAccessor).containerWidth
+val AbstractContainerScreen<*>.containerHeight: Int get() = (this as AbstractContainerScreenAccessor).containerHeight
 
-val AbstractContainerScreen<*>.right: Int get() = left + imageWidth
-val AbstractContainerScreen<*>.bottom: Int get() = top + imageHeight
+val AbstractContainerScreen<*>.right: Int get() = left + containerWidth
+val AbstractContainerScreen<*>.bottom: Int get() = top + containerHeight
