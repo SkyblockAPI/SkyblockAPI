@@ -36,16 +36,23 @@ public abstract class GuiGraphicsMixin {
         itemStack.set(visualItem);
     }
 
-    @Inject(method = {
-        "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;IIII)V",
-    }, at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"))
-    public void renderBackgroundItem(CallbackInfo ci, @Local(argsOnly = true) ItemStack itemStack) {
+    @Inject(
+        method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;IIII)V",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getItemModelResolver()Lnet/minecraft/client/renderer/item/ItemModelResolver;")
+    )
+    public void renderBackgroundItem(
+        CallbackInfo ci,
+        @Local(argsOnly = true) ItemStack itemStack,
+        @Local(argsOnly = true, ordinal = 0) int x,
+        @Local(argsOnly = true, ordinal = 1) int y,
+        @Local(argsOnly = true, ordinal = 3) int z
+    ) {
         var backgroundItem = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack).skyblockapi$getBackgroundItem();
         if (backgroundItem != null) {
-            int z = 200;
-            this.pose.translate(-8, -8, -z);
+            this.pose.pushPose();
+            this.pose.translate(x, y, z - 200);
             this.renderItem(backgroundItem, 0, 0);
-            this.pose.translate(8, 8, z);
+            this.pose.popPose();
         }
     }
 
