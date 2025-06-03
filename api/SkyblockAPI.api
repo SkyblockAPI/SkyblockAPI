@@ -175,6 +175,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/Farmin
 public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest : java/lang/Enum {
 	public static final field BEETLE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field CRICKET Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest$Companion;
 	public static final field EARTHWORM Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field FIELD_MOUSE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field FLY Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
@@ -185,11 +186,16 @@ public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/
 	public static final field RAT Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field SLUG Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public final fun getCrop ()Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
+	public final fun getDisplayName ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getSpray ()Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Spray;
 	public final fun getVinyl ()Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest$Companion {
+	public final fun getPests (Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Spray;)Ljava/util/List;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Spray : java/lang/Enum {
@@ -4321,6 +4327,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder {
 	public final fun applyFrom (Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
 	public final fun build ()Lnet/minecraft/world/item/ItemStack;
 	public final fun copyFrom (Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
+	public final fun getBackgroundItem ()Lnet/minecraft/world/item/ItemStack;
 	public final fun getCount ()I
 	public final fun getCustomSlotText ()Ljava/lang/String;
 	public final fun getItem ()Lnet/minecraft/world/item/Item;
@@ -4328,6 +4335,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder {
 	public final fun name (Lnet/minecraft/network/chat/Component;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
 	public final fun onClick (Lkotlin/jvm/functions/Function1;)V
 	public final fun set (Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)V
+	public final fun setBackgroundItem (Lnet/minecraft/world/item/ItemStack;)V
 	public final fun setCount (I)V
 	public final fun setCustomSlotText (Ljava/lang/String;)V
 	public final fun setItem (Lnet/minecraft/world/item/Item;)V
@@ -4466,6 +4474,8 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/JsonExtension
 
 public final class tech/thatgravyboat/skyblockapi/utils/extentions/MixinExtensionsKt {
 	public static final fun getBottom (Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;)I
+	public static final fun getContainerHeight (Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;)I
+	public static final fun getContainerWidth (Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;)I
 	public static final fun getHoveredSlot (Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;)Lnet/minecraft/world/inventory/Slot;
 	public static final fun getLeft (Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;)I
 	public static final fun getRight (Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;)I
