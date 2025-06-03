@@ -18,6 +18,7 @@ class ItemBuilder {
     private var components = DataComponentPatch.builder()
     private var clickAction: ((Int) -> Unit)? = null
     var customSlotText: String? = null
+    var backgroundItem: ItemStack? = null
 
     /**
      * Copies the state of the stack to this builder. Replacing existing components, item, and count.
@@ -34,7 +35,7 @@ class ItemBuilder {
         this.item = stack.item
         this.count = stack.count
 
-        var patch = stack.componentsPatch.entrySet()
+        val patch = stack.componentsPatch.entrySet()
         patch.forEach { (type, data) ->
             val data = data.getOrNull() ?: return@forEach
             @Suppress("UNCHECKED_CAST")
@@ -78,6 +79,7 @@ class ItemBuilder {
             this.asVisualItemAccessor().let {
                 it.`skyblockapi$setSlotText`(customSlotText)
                 it.`skyblockapi$setOnClickAction`(clickAction)
+                it.`skyblockapi$setBackgroundItem`(backgroundItem)
             }
         }
     }

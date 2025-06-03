@@ -28,6 +28,8 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     private String slotText;
     @Unique
     private IntConsumer clickAction;
+    @Unique
+    private ItemStack backgroundItem;
 
     @Override
     public void skyblockapi$setVisualItem(@Nullable ItemStack item) {
@@ -73,5 +75,15 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     @Override
     public @Nullable IntConsumer skyblockapi$getOnClickAction() {
         return clickAction;
+    }
+
+    @Override
+    public void skyblockapi$setBackgroundItem(@Nullable ItemStack item) {
+        this.backgroundItem = item;
+    }
+
+    @Override
+    public ItemStack skyblockapi$getBackgroundItem() {
+        return this.backgroundItem;
     }
 }
