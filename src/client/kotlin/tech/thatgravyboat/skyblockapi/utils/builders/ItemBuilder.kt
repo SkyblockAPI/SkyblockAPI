@@ -62,7 +62,7 @@ class ItemBuilder {
         components.set(
             DataComponents.CUSTOM_NAME,
             Text.join(
-                prefix,
+                prefix.copy().setItalic(),
                 customItemName?.copy()?.setItalic() ?: CommonText.EMPTY,
             ),
         )
@@ -83,7 +83,7 @@ class ItemBuilder {
             DataComponents.CUSTOM_NAME,
             Text.join(
                 customItemName?.copy()?.setItalic() ?: CommonText.EMPTY,
-                suffix,
+                suffix.copy().setItalic(),
             ),
         )
     }
