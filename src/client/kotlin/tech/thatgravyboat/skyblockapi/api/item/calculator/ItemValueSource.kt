@@ -25,7 +25,6 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     companion object {
         fun calculate(lowestBin: Long, stack: ItemStack): ItemValueResult {
             val id = stack.getSkyBlockId() ?: return ItemValueResult.EMPTY
-            entries.map { entry -> entry.calc }
             val sources = entries.associateWith { it.calc.calculate(id, stack) }.mapNotNull { (key, value) -> value?.let { GroupedEntry(key, value) } }
             return ItemValueResult(
                 lowestBin,
