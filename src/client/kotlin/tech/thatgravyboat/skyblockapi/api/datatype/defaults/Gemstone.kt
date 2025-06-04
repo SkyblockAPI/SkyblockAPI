@@ -54,7 +54,7 @@ enum class GemstoneSlot(vararg val gemstones: Gemstone) {
 }
 
 data class GemstoneSlotData(val gemstone: Gemstone, val slot: GemstoneSlot, val quality: GemstoneQuality) {
-    val itemId by lazy { "${quality.name}_${gemstone.name}_GEM" }
+    val itemId = "${quality.name}_${gemstone.name}_GEM"
 }
 
 fun parseGemstones(tag: CompoundTag?): List<GemstoneSlotData>? {

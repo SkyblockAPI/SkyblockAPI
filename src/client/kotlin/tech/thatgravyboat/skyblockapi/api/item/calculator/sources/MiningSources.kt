@@ -29,11 +29,13 @@ internal object GemstoneCalculator : Calculator {
 internal object SilexCalculator : SingleEntryCalculator {
     const val SILEX = "SIL_EX"
     const val LIMIT = 5
+    const val STONK = "STONK_PICKAXE"
+    const val MAX_EFFICIENCY = 5
 
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
-        if (id == "STONK_PICKAXE") return null
+        if (id == STONK) return null
         val efficiency = stack.getData(DataTypes.ENCHANTMENTS)?.get("efficiency") ?: return null
-        val amount = (efficiency - 5).coerceAtLeast(0).takeUnless { it <= 0 } ?: return null
+        val amount = (efficiency - MAX_EFFICIENCY).takeUnless { it <= 0 } ?: return null
         return ItemWithLimitEntry(SILEX, amount * Pricing.getPrice(SILEX), amount, LIMIT)
     }
 }
