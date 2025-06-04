@@ -55,13 +55,15 @@ class ItemBuilder {
         }
     }
 
+    private val customItemName get() = components.build().get(DataComponents.CUSTOM_NAME)?.getOrNull()
+
     fun namePrefix(prefix: String) = namePrefix(Component.literal(prefix))
     fun namePrefix(prefix: Component) = apply {
         components.set(
             DataComponents.CUSTOM_NAME,
             Text.join(
                 prefix,
-                components.build().get(DataComponents.CUSTOM_NAME)?.getOrNull()?.copy()?.setItalic() ?: CommonText.EMPTY,
+                customItemName?.copy()?.setItalic() ?: CommonText.EMPTY,
             ),
         )
     }
@@ -80,7 +82,7 @@ class ItemBuilder {
         components.set(
             DataComponents.CUSTOM_NAME,
             Text.join(
-                components.build().get(DataComponents.CUSTOM_NAME)?.getOrNull()?.copy()?.setItalic() ?: CommonText.EMPTY,
+                customItemName?.copy()?.setItalic() ?: CommonText.EMPTY,
                 suffix,
             ),
         )
