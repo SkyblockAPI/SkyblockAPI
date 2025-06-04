@@ -6,23 +6,35 @@ import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 
 interface Calculator {
-    fun calculate(id: String, stack: ItemStack): Long
+    fun calculate(id: String, stack: ItemStack): List<CalculationEntry>?
 }
 
-open class DataTypeCalculator(private val dataType: DataType<String>) : Calculator {
-    override fun calculate(id: String, stack: ItemStack): Long {
-        return Pricing.getPrice(stack.getData(dataType) ?: return 0L)
+interface SingleEntryCalculator : Calculator {
+
+    override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? = getEntry(id, stack)?.let { listOf(it) }
+
+    fun getEntry(id: String, stack: ItemStack): CalculationEntry?
+}
+
+open class DataTypeCalculator(private val dataType: DataType<String>) : SingleEntryCalculator {
+    override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
+        val data = stack.getData(dataType) ?: return null
+        return ItemEntry(data)
     }
 }
 
 open class DataTypesCalculator(private vararg val dataTypes: DataType<String>) : Calculator {
-    override fun calculate(id: String, stack: ItemStack): Long {
-        return dataTypes.sumOf { Pricing.getPrice(stack.getData(it) ?: return@sumOf 0L) }
+    override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? {
+        val data = dataTypes.mapNotNull { stack.getData(it) }.takeUnless { it.isEmpty() } ?: return null
+
+        return data.map { ItemEntry(it) }
     }
 }
 
-open class IntDataTypeCalculator(private val dataType: DataType<Int>, private val itemId: String) : Calculator {
-    override fun calculate(id: String, stack: ItemStack): Long {
-        return Pricing.getPrice(itemId) * (stack.getData(dataType) ?: 0)
+open class IntDataTypeCalculator(private val dataType: DataType<Int>, private val itemId: String) : SingleEntryCalculator {
+    override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
+        val amount = stack.getData(dataType) ?: return null
+
+        return ItemEntry(itemId, Pricing.getPrice(itemId) * amount, amount)
     }
 }
