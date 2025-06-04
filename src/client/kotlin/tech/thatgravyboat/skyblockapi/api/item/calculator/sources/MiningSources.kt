@@ -29,7 +29,7 @@ internal object SilexCalculator : SingleEntryCalculator {
     const val SILEX = "SIL_EX"
     const val LIMIT = 5
     const val MAX_EFFICIENCY = 5
-    val ILLEGAL_ITEMS: Array<String> = arrayOf("STONK_PICKAXE", "PROMISING_SPADE", "PROMISING_AXE", "PROMISING_PICKAXE", "PROMISING_HOE")
+    val ILLEGAL_ITEMS: Array<String> = arrayOf("STONK_PICKAXE", "PROMISING_SPADE", "PROMISING_AXE", "PROMISING_HOE")
 
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
         if (id in ILLEGAL_ITEMS) return null
