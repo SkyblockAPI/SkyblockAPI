@@ -88,12 +88,7 @@ class ItemBuilder {
         )
     }
 
-    private fun MutableComponent.setItalic() = style {
-        if (!this.isItalic) {
-            return@style this.withItalic(false)
-        }
-        this
-    }
+    private fun MutableComponent.setItalic() = style { this.withItalic(this@setItalic.style.isItalic) }
 
     fun tooltip(init: TooltipBuilder.() -> Unit) = apply {
         val builder = TooltipBuilder()
