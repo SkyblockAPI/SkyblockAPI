@@ -53,7 +53,9 @@ enum class GemstoneSlot(vararg val gemstones: Gemstone) {
     OFFENSIVE(Gemstone.SAPPHIRE, Gemstone.JASPER) // apparently unused
 }
 
-data class GemstoneSlotData(val gemstone: Gemstone, val slot: GemstoneSlot, val quality: GemstoneQuality)
+data class GemstoneSlotData(val gemstone: Gemstone, val slot: GemstoneSlot, val quality: GemstoneQuality) {
+    val itemId by lazy { "${quality.name}_${gemstone.name}_GEM" }
+}
 
 fun parseGemstones(tag: CompoundTag?): List<GemstoneSlotData>? {
     tag ?: return null
