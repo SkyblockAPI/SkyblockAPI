@@ -4333,6 +4333,10 @@ public final class tech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder {
 	public final fun getItem ()Lnet/minecraft/world/item/Item;
 	public final fun name (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
 	public final fun name (Lnet/minecraft/network/chat/Component;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
+	public final fun namePrefix (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
+	public final fun namePrefix (Lnet/minecraft/network/chat/Component;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
+	public final fun nameSuffix (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
+	public final fun nameSuffix (Lnet/minecraft/network/chat/Component;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
 	public final fun onClick (Lkotlin/jvm/functions/Function1;)V
 	public final fun set (Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)V
 	public final fun setBackgroundItem (Lnet/minecraft/world/item/ItemStack;)V
