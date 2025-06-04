@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.utils.builders
 
-import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.component.DataComponents
@@ -8,17 +7,9 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
-import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.item.asVisualItemAccessor
-import tech.thatgravyboat.skyblockapi.api.item.replaceVisually
-import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.holder
-import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
 import kotlin.jvm.optionals.getOrNull
@@ -96,26 +87,6 @@ class ItemBuilder {
                 it.`skyblockapi$setSlotText`(customSlotText)
                 it.`skyblockapi$setOnClickAction`(clickAction)
                 it.`skyblockapi$setBackgroundItem`(backgroundItem)
-            }
-        }
-    }
-}
-
-@Module
-object Pest {
-    val regex = "ൠ This plot has (?<amount>.*) Pests?!".toRegex()
-
-    @Subscription
-    @InventoryTitle("Configure Plots")
-    fun onInv(event: InventoryChangeEvent) {
-        regex.anyMatch(event.item.getRawLore(), "amount") { (amount) ->
-            val amount = amount.toIntValue().takeUnless { it == 0 } ?: return@anyMatch
-            event.item.replaceVisually {
-                copyFrom(event.item)
-                namePrefix("testing")
-                nameSuffix("aaaaaa")
-                backgroundItem = Items.LIME_STAINED_GLASS_PANE.defaultInstance
-                customSlotText = "$amount"
             }
         }
     }
