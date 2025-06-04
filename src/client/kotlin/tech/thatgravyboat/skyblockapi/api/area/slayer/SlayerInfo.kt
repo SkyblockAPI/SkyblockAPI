@@ -7,7 +7,10 @@ import tech.thatgravyboat.skyblockapi.utils.DiscoverableValue
 
 data class SlayerInfo(val entity: Entity) {
     private fun discoverTypeIfNeeded(): SlayerMob? {
-        return SLAYER_MOBS.find { mob -> entity.getStrippedAttachedLines().any { it.contains(mob.inGameName) } }
+        return SLAYER_MOBS.find { mob ->
+            val inGameNames = mob.inGameNames
+            entity.getStrippedAttachedLines().any { line -> inGameNames.any { line.contains(it) } }
+        }
     }
 
     private fun discoverOwner(): String? {
