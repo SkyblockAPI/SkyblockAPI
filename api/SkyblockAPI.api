@@ -779,6 +779,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerDemon : 
 	public fun getDisplayName ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getInGameName ()Ljava/lang/String;
+	public fun getInGameNames ()Ljava/util/List;
 	public final fun getSlayerType ()Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerDemon;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerDemon;
@@ -819,6 +820,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMiniBoss
 	public fun getDisplayName ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getInGameName ()Ljava/lang/String;
+	public fun getInGameNames ()Ljava/util/List;
 	public final fun getSlayerType ()Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 	public final fun getTier ()I
 	public final fun isBigBoy ()Z
@@ -829,10 +831,12 @@ public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMiniBoss
 public abstract interface class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMob {
 	public abstract fun getDisplayName ()Ljava/lang/String;
 	public abstract fun getInGameName ()Ljava/lang/String;
+	public abstract fun getInGameNames ()Ljava/util/List;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMob$DefaultImpls {
 	public static fun getInGameName (Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMob;)Ljava/lang/String;
+	public static fun getInGameNames (Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMob;)Ljava/util/List;
 }
 
 public class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType : java/lang/Enum, tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMob {
@@ -848,6 +852,7 @@ public class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType : java/la
 	public fun getDisplayName ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getInGameName ()Ljava/lang/String;
+	public fun getInGameNames ()Ljava/util/List;
 	public final fun getOtherName ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
