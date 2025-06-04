@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.item.calculator
 
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.*
 import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 
@@ -39,7 +40,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
 data class ItemValueResult(
     val rawPrice: Long,
     val price: Long,
-    val sources: Map<ItemValueSource, Long>,
+    @RemoveNextVersion val sources: Map<ItemValueSource, Long>,
     val entryTree: List<GroupedEntry>,
 ) {
     companion object {

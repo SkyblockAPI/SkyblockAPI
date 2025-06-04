@@ -7,8 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.*
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 
-internal object DrillComponentsCalculator :
-    DataTypesCalculator(DataTypes.FUEL_TANK, DataTypes.ENGINE, DataTypes.UPGRADE_MODULE)
+internal object DrillComponentsCalculator : DataTypesCalculator(DataTypes.FUEL_TANK, DataTypes.ENGINE, DataTypes.UPGRADE_MODULE)
 
 internal object GemstoneCalculator : Calculator {
     override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? {
@@ -35,7 +34,7 @@ internal object SilexCalculator : SingleEntryCalculator {
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
         if (id == STONK) return null
         val efficiency = stack.getData(DataTypes.ENCHANTMENTS)?.get("efficiency") ?: return null
-        val amount = (efficiency - MAX_EFFICIENCY).takeUnless { it <= 0 } ?: return null
+        val amount = (efficiency - MAX_EFFICIENCY).takeIf { it > 0 } ?: return null
         return ItemWithLimitEntry(SILEX, amount * Pricing.getPrice(SILEX), amount, LIMIT)
     }
 }
