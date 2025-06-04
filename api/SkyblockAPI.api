@@ -1419,6 +1419,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/Gemstone
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneSlotData;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/Gemstone;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneSlot;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneQuality;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneSlotData;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getGemstone ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/Gemstone;
+	public final fun getItemId ()Ljava/lang/String;
 	public final fun getQuality ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneQuality;
 	public final fun getSlot ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneSlot;
 	public fun hashCode ()I
@@ -2568,23 +2569,108 @@ public final class tech/thatgravyboat/skyblockapi/api/item/VisualItemAccessorKt 
 	public static final fun replaceVisually (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)V
 }
 
-public abstract interface class tech/thatgravyboat/skyblockapi/api/item/calculator/Calculator {
-	public abstract fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)J
+public abstract interface class tech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry {
+	public abstract fun getPrice ()J
 }
 
-public class tech/thatgravyboat/skyblockapi/api/item/calculator/DataTypeCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/Calculator {
+public abstract interface class tech/thatgravyboat/skyblockapi/api/item/calculator/Calculator {
+	public abstract fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/item/calculator/CostEntries : tech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/CostEntries;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/item/calculator/CostEntries;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/CostEntries;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCost ()Ljava/util/List;
+	public fun getPrice ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public class tech/thatgravyboat/skyblockapi/api/item/calculator/DataTypeCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/SingleEntryCalculator {
 	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;)V
-	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)J
+	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+	public fun getEntry (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;
 }
 
 public class tech/thatgravyboat/skyblockapi/api/item/calculator/DataTypesCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/Calculator {
 	public fun <init> ([Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;)V
-	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)J
+	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
 }
 
-public class tech/thatgravyboat/skyblockapi/api/item/calculator/IntDataTypeCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/Calculator {
+public final class tech/thatgravyboat/skyblockapi/api/item/calculator/GemstoneSlotEntry : tech/thatgravyboat/skyblockapi/api/item/calculator/ItemLikeEntry {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneSlotData;Ltech/thatgravyboat/skyblockapi/api/item/calculator/CostEntries;J)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneSlotData;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/item/calculator/CostEntries;
+	public final fun component3 ()J
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneSlotData;Ltech/thatgravyboat/skyblockapi/api/item/calculator/CostEntries;J)Ltech/thatgravyboat/skyblockapi/api/item/calculator/GemstoneSlotEntry;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/item/calculator/GemstoneSlotEntry;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneSlotData;Ltech/thatgravyboat/skyblockapi/api/item/calculator/CostEntries;JILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/GemstoneSlotEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGemstone ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GemstoneSlotData;
+	public fun getItemId ()Ljava/lang/String;
+	public fun getItemStack ()Lnet/minecraft/world/item/ItemStack;
+	public fun getPrice ()J
+	public final fun getUnlockingCost ()Ltech/thatgravyboat/skyblockapi/api/item/calculator/CostEntries;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/item/calculator/GroupedEntry : tech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;Ljava/util/List;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/GroupedEntry;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/item/calculator/GroupedEntry;Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/GroupedEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEntries ()Ljava/util/List;
+	public fun getPrice ()J
+	public final fun getSource ()Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public class tech/thatgravyboat/skyblockapi/api/item/calculator/IntDataTypeCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/SingleEntryCalculator {
 	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;Ljava/lang/String;)V
-	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)J
+	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+	public fun getEntry (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemEntry : tech/thatgravyboat/skyblockapi/api/item/calculator/ItemLikeEntry {
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;JI)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()I
+	public final fun copy (Ljava/lang/String;JI)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemEntry;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemEntry;Ljava/lang/String;JIILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAmount ()I
+	public fun getItemId ()Ljava/lang/String;
+	public fun getItemStack ()Lnet/minecraft/world/item/ItemStack;
+	public fun getPrice ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemLikeEntry : tech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry {
+	public abstract fun getItemId ()Ljava/lang/String;
+	public abstract fun getItemStack ()Lnet/minecraft/world/item/ItemStack;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemStarEntry : tech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;Ljava/util/List;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemStarEntry;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemStarEntry;Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemStarEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getConversionCost ()Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;
+	public fun getPrice ()J
+	public final fun getStars ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueCalculator {
@@ -2598,13 +2684,15 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueI
 public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueResult {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueResult$Companion;
 	public static final field EMPTY Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueResult;
-	public fun <init> (JJLjava/util/Map;)V
+	public fun <init> (JJLjava/util/Map;Ljava/util/List;)V
 	public final fun component1 ()J
 	public final fun component2 ()J
 	public final fun component3 ()Ljava/util/Map;
-	public final fun copy (JJLjava/util/Map;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueResult;
-	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueResult;JJLjava/util/Map;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueResult;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (JJLjava/util/Map;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueResult;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueResult;JJLjava/util/Map;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueResult;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEntryTree ()Ljava/util/List;
 	public final fun getPrice ()J
 	public final fun getRawPrice ()J
 	public final fun getSources ()Ljava/util/Map;
@@ -2632,7 +2720,7 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueS
 	public static final field RECOMBOBULATOR Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field REFORGE Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field SILEX Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
-	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)J
+	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
 	public final fun getCalc ()Ltech/thatgravyboat/skyblockapi/api/item/calculator/Calculator;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
@@ -2643,9 +2731,51 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueS
 	public final fun calculate (JLnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueResult;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemWithLimitEntry : tech/thatgravyboat/skyblockapi/api/item/calculator/ItemLikeEntry {
+	public fun <init> (Ljava/lang/String;JII)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun copy (Ljava/lang/String;JII)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemWithLimitEntry;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemWithLimitEntry;Ljava/lang/String;JIIILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemWithLimitEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAmount ()I
+	public fun getItemId ()Ljava/lang/String;
+	public fun getItemStack ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getLimit ()I
+	public fun getPrice ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/item/calculator/Pricing {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/item/calculator/Pricing;
 	public final fun getPrice (Ljava/lang/String;)J
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ReforgeEntry : tech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry {
+	public fun <init> (Ljava/lang/String;JJ)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()J
+	public final fun copy (Ljava/lang/String;JJ)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ReforgeEntry;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/item/calculator/ReforgeEntry;Ljava/lang/String;JJILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/ReforgeEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApplyCost ()J
+	public fun getPrice ()J
+	public final fun getReforge ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/api/item/calculator/SingleEntryCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/Calculator {
+	public abstract fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+	public abstract fun getEntry (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/item/calculator/SingleEntryCalculator$DefaultImpls {
+	public static fun calculate (Ltech/thatgravyboat/skyblockapi/api/item/calculator/SingleEntryCalculator;Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/location/LocationAPI {
