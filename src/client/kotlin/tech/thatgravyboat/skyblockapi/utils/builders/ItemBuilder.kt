@@ -4,11 +4,13 @@ import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemLore
 import tech.thatgravyboat.skyblockapi.api.item.asVisualItemAccessor
 import tech.thatgravyboat.skyblockapi.utils.extentions.holder
+import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
 import kotlin.jvm.optionals.getOrNull
 
@@ -43,18 +45,23 @@ class ItemBuilder {
         }
     }
 
+    private val customItemName get() = components.build().get(DataComponents.CUSTOM_NAME)?.getOrNull()
+
+    fun namePrefix(prefix: String) = namePrefix(Component.literal(prefix))
+    fun namePrefix(prefix: Component) = name(Text.join(prefix, customItemName))
+
     fun name(name: String) = name(Component.literal(name))
     fun name(name: Component) = apply {
         components.set(
             DataComponents.CUSTOM_NAME,
-            name.copy().style {
-                if (!this.isItalic) {
-                    return@style this.withItalic(false)
-                }
-                this
-            },
+            name.copy().setItalic(),
         )
     }
+
+    fun nameSuffix(suffix: String) = nameSuffix(Component.literal(suffix))
+    fun nameSuffix(suffix: Component) = name(Text.join(customItemName, suffix))
+
+    private fun MutableComponent.setItalic() = style { this.withItalic(this@setItalic.style.isItalic) }
 
     fun tooltip(init: TooltipBuilder.() -> Unit) = apply {
         val builder = TooltipBuilder()
