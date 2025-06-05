@@ -8,11 +8,15 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
 @Module
 object LocationAPI {
+
+    private val unknownIslands = mutableMapOf<String, SkyBlockIsland?>()
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
         "location",
@@ -52,6 +56,11 @@ object LocationAPI {
             val old = area
             area = SkyBlockArea(location)
             AreaChangeEvent(old, area).post()
+
+            val knownArea = SkyBlockAreas.registeredAreas.entries.find { it.value.name == location } != null
+            if (!knownArea) {
+                unknownIslands.putIfAbsent(location, island)
+            }
         }
     }
 
@@ -62,4 +71,11 @@ object LocationAPI {
 
     @Subscription
     fun onServerDisconnect(event: ServerDisconnectEvent) = reset()
+
+    @Subscription
+    fun onCommand(event: RegisterCommandsEvent) {
+        event.registerWithCallback("sbapi unknownareas") {
+            McClient.clipboard = unknownIslands.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
+        }
+    }
 }

@@ -12,7 +12,7 @@ data class SkyBlockArea(val name: String) {
 @Suppress("unused")
 object SkyBlockAreas {
 
-    private val registeredAreas = mutableMapOf<String, SkyBlockArea>()
+    internal val registeredAreas = mutableMapOf<String, SkyBlockArea>()
 
     private fun register(key: String, name: String) = registeredAreas.getOrPut(key) { SkyBlockArea(name) }
 
