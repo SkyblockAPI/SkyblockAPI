@@ -90,7 +90,7 @@ enum class SkyBlockStat(
     SWEEP('∮', TextColor.DARK_GREEN),
     RESPIRATION('⚶', TextColor.DARK_AQUA),
     PRESSURE_RESISTANCE('❍', TextColor.BLUE),
-    SYPHON_LUCK('♣', TextColor.LIGHT_PURPLE)
+    SYPHON_LUCK('♣', TextColor.LIGHT_PURPLE),
     ;
 
     constructor(stat: SkyBlockStat) : this(stat.icon, stat.color)
