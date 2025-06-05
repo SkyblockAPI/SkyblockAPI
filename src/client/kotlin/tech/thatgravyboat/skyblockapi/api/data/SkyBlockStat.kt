@@ -53,6 +53,8 @@ enum class SkyBlockStat(
     SUGAR_CANE_FORTUNE(BASE_FORTUNE),
     NETHER_WART_FORTUNE(BASE_FORTUNE),
     COCOA_BEANS_FORTUNE(BASE_FORTUNE),
+    FIG_FORTUNE(BASE_FORTUNE),
+    MANGROVE_FORTUNE(BASE_FORTUNE),
 
     // Wisdom Stats
 
@@ -68,6 +70,7 @@ enum class SkyBlockStat(
     RUNECRAFTING_WISDOM(BASE_WISDOM),
     SOCIAL_WISDOM(BASE_WISDOM),
     TAMING_WISDOM(BASE_WISDOM),
+    HUNTING_WISDOM(BASE_WISDOM),
 
     // Misc Stats
 
@@ -82,9 +85,15 @@ enum class SkyBlockStat(
     HEAT_RESISTANCE('♨', TextColor.RED),
     COLD_RESISTANCE('❄', TextColor.AQUA),
     FEAR('☠', TextColor.DARK_PURPLE),
+
+    PULL('ᛷ', TextColor.AQUA),
+    SWEEP('∮', TextColor.DARK_GREEN),
+    RESPIRATION('⚶', TextColor.DARK_AQUA),
+    PRESSURE_RESISTANCE('❍', TextColor.BLUE),
+    SYPHON_LUCK('♣', TextColor.LIGHT_PURPLE)
     ;
 
-    constructor(stat: SkyBlockStat) : this(stat.icon, stat.color) {}
+    constructor(stat: SkyBlockStat) : this(stat.icon, stat.color)
 
     private val displayName: String = name ?: toFormattedName()
 
