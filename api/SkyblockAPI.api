@@ -2951,6 +2951,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland : 
 	public static final field DEEP_CAVERNS Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field DUNGEON_HUB Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field DWARVEN_MINES Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
+	public static final field GALATEA Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field GARDEN Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field GOLD_MINES Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field HUB Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
@@ -3446,7 +3447,6 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/storage/Stor
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/vault/VaultAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/vault/VaultAPI;
 	public final fun getItems ()Ljava/util/List;
-	public final fun onInventory (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/wardrobe/WardrobeAPI {
