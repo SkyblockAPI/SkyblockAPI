@@ -41,6 +41,9 @@ class SecretsActionBarWidgetChangeEvent(val current: Int, val max: Int, old: Str
 class DrillActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.DRILL_FUEL, old, new)
 
+class PressureActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.PRESSURE, old, new)
+
 enum class ActionBarWidget {
     HEALTH,
     DEFENSE,
@@ -58,6 +61,7 @@ enum class ActionBarWidget {
     ARMOR_STACK,
     CELLS_ALIGNMENT,
     SECRETS,
+    PRESSURE,
     ;
 
     private val string = toFormattedName()

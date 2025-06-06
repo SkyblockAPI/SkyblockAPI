@@ -56,6 +56,8 @@ enum class TabWidget {
     REPUTATION,
     TROPHY_FISH,
     FACTION_QUESTS,
+    FOREST_WHISPERS,
+    MOONGLADE_BEACON,
     ;
 
     private val string = toFormattedName()
