@@ -79,7 +79,6 @@ class EventBus {
                 The method ${method.name} in class ${method.declaringClass.name} is public and has an extension receiver.
                 """.trimIndent())
             }
-            kotlin.isAccessible = true
         }
 
         events.forEach {
