@@ -12,6 +12,8 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 @Module
 object LocationAPI {
@@ -76,6 +78,7 @@ object LocationAPI {
     fun onCommand(event: RegisterCommandsEvent) {
         event.registerWithCallback("sbapi unknownareas") {
             McClient.clipboard = unknownIslands.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
+            Text.of("Copied ${unknownIslands.size} unknown areas to clipboard!").send()
         }
     }
 }

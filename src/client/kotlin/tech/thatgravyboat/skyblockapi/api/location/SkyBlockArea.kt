@@ -18,6 +18,7 @@ object SkyBlockAreas {
 
     val NONE = register("none", "None")
     val PRIVATE_ISLAND = register("private_island", "Your Island")
+    val GARDEN = register("garden", "Your Garden")
 
     // Hub
     val VILLAGE = register("village", "Village")
@@ -127,6 +128,8 @@ object SkyBlockAreas {
     val ZEALOT_BRUISER_HIDEOUT = register("zealot_bruiser_hideout", "Zealot Bruiser Hideout")
 
     // Farming Islands
+    val THE_BARN = register("the_barn", "The Barn")
+    val MUSHROOM_DESERT = register("mushroom_desert", "Mushroom Desert")
     val WINDMILL = register("windmill", "Windmill")
     val DESERT_SETTLEMENT = register("desert_settlement", "Desert Settlement")
     val GLOWING_MUSHROOM_CAVE = register("glowing_mushroom_cave", "Glowing Mushroom Cave")
@@ -150,6 +153,7 @@ object SkyBlockAreas {
     val JUNGLE_ISLAND = register("jungle_island", "Jungle Island")
 
     // Deep Caverns
+    val DEEP_CAVERNS = register("deep_caverns", "Deep Caverns")
     val GUNPOWDER_MINES = register("gunpowder_mines", "Gunpowder Mines")
     val LAPIS_QUARRY = register("lapis_quarry", "Lapis Quarry")
     val PIGMENS_DEN = register("pigmens_den", "Pigmen's Den")
@@ -174,4 +178,47 @@ object SkyBlockAreas {
 
     // Backwater Bayou
     val BACKWATER_BAYOU = register("backwater_bayou", "Backwater Bayou") // The full island uses this
+
+    // Galatea
+    val TANGLEBURG_PATH = register("tangleburg_path", "Tangleburg's Path")
+    val TANGLEBURG = register("tangleburg", "Tangleburg")
+    val NORTH_REACHES = register("north_reaches", "North Reaches")
+    val WEST_REACHES = register("west_reaches", "West Reaches")
+    val SOUTH_REACHES = register("south_reaches", "South Reaches")
+    val MOONGLADE_MARSH = register("moonglade_marsh", "Moonglade Marsh")
+    val MOONGLADE_EDGE = register("moonglade_edge", "Moonglade's Edge")
+    val VERDANT_SUMMIT = register("verdant_summit", "Verdant Summit")
+    val NORTH_WETLANDS = register("north_wetlands", "North Wetlands")
+    val WESTBOUND_WETLANDS = register("westbound_wetlands", "Westbound Wetlands")
+    val SOUTH_WETLANDS = register("south_wetlands", "South Wetlands")
+    val MURKWATER_LOCH = register("murkwater_loch", "Murkwater Loch")
+    val WYRMGROVE_TOMB = register("wyrmgrove_tomb", "Wyrmgrove Tomb")
+    val EVERGREEN_PLATEAU = register("evergreen_plateau", "Evergreen Plateau")
+    val MURKWATER_OUTPOST = register("murkwater_outpost", "Murkwater Outpost")
+    val MURKWATER_DEPTHS = register("murkwater_depths", "Murkwater Depths")
+    val ANCIENT_RUINS = register("ancient_ruins", "Ancient Ruins")
+
+    // Dwarven Mines
+    val THE_LIFT = register("the_lift", "The Lift")
+    val DWARVEN_VILLAGE = register("dwarven_village", "Dwarven Village")
+    val DWARVEN_MINES = register("dwarven_mines", "Dwarven Mines")
+    val LAVA_SPRINGS = register("lava_springs", "Lava Springs")
+    val PALACE_BRIDGE = register("palace_bridge", "Palace Bridge")
+    val ROYAL_PALACE = register("royal_palace", "Royal Palace")
+    val GRAND_LIBRARY = register("grand_library", "Grand Library")
+    val ROYAL_QUARTERS = register("royal_quarters", "Royal Quarters")
+    val BARRACKS_OF_HEROES = register("barracks_of_heroes", "Barracks of Heroes")
+    val HANGING_COURT = register("hanging_court", "Hanging Court")
+    val GREAT_ICE_WALL = register("great_ice_wall", "Great Ice Wall")
+    val ARISTOCRAT_PASSAGE = register("aristocrat_passage", "Aristocrat Passage")
+    val ROYAL_MINES = register("royal_mines", "Royal Mines")
+    val THE_MIST = register("the_mist", "The Mist")
+    val DIVANS_GATEWAY = register("divans_gateway", "Divan's Gateway")
+    val CLIFFSIDE_VEINS = register("cliffside_veins", "Cliffside Veins")
+    val FORGE_BASIN = register("forge_basin", "Forge Basin")
+    val THE_FORGE = register("the_forge", "The Forge")
+    val RAMPARTS_QUARRY = register("ramparts_quarry", "Rampart's Quarry")
+    val FAR_RESERVE = register("far_reserve", "Far Reserve")
+    val UPPER_MINES = register("upper_mines", "Upper Mines")
+    val ABANDONED_QUARRY = register("abandoned_quarry", "Abandoned Quarry")
 }
