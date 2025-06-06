@@ -19,6 +19,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 object LocationAPI {
 
     private val unknownIslands = mutableMapOf<String, SkyBlockIsland?>()
+    private var sendUnknownChatMessage = false
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
         "location",
@@ -62,6 +63,9 @@ object LocationAPI {
             val knownArea = SkyBlockAreas.registeredAreas.entries.find { it.value.name == location } != null
             if (!knownArea) {
                 unknownIslands.putIfAbsent(location, island)
+                if (sendUnknownChatMessage) {
+                    Text.of("Unknown area detected: $location").send()
+                }
             }
         }
     }
@@ -79,6 +83,7 @@ object LocationAPI {
         event.registerWithCallback("sbapi unknownareas") {
             McClient.clipboard = unknownIslands.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
             Text.of("Copied ${unknownIslands.size} unknown areas to clipboard!").send()
+            sendUnknownChatMessage != sendUnknownChatMessage
         }
     }
 }
