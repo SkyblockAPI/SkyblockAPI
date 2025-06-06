@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.location
 
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
-enum class SkyBlockIsland(val id: String, val displayName: String? = null) {
+enum class SkyBlockIsland(val id: String, displayName: String? = null) {
     PRIVATE_ISLAND("dynamic"),
     HUB("hub"),
     DUNGEON_HUB("dungeon_hub"),
@@ -18,6 +18,7 @@ enum class SkyBlockIsland(val id: String, val displayName: String? = null) {
     CRIMSON_ISLE("crimson_isle"),
     GARDEN("garden"),
     BACKWATER_BAYOU("fishing_1"),
+    GALATEA("foraging_2"),
 
     THE_RIFT("rift"),
     DARK_AUCTION("dark_auction"),
@@ -28,9 +29,9 @@ enum class SkyBlockIsland(val id: String, val displayName: String? = null) {
 
     fun inIsland() = LocationAPI.island == this
 
-    private val string = toFormattedName()
+    val displayName = displayName ?: toFormattedName()
 
-    override fun toString() = displayName ?: string
+    override fun toString() = displayName
 
     companion object {
 
