@@ -14,7 +14,7 @@ object VaultAPI {
     @Subscription
     @MustBeContainer
     @InventoryTitle("Personal Vault")
-    fun InventoryChangeEvent.onInventory() {
+    private fun InventoryChangeEvent.onInventory() {
         if (this.slot.index == 0) VaultStorage.invalidate()
         VaultStorage.addItem(this.item)
     }

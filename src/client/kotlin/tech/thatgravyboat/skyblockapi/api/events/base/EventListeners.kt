@@ -86,9 +86,10 @@ internal class EventListeners {
     @Suppress("UNCHECKED_CAST")
     private fun createEventConsumer(name: String, instance: Any, method: Method): Consumer<Any> {
         try {
-            val handle = MethodHandles.lookup().unreflect(method)
+            val lookup = MethodHandles.privateLookupIn(instance.javaClass, MethodHandles.lookup())
+            val handle = lookup.unreflect(method)
             return LambdaMetafactory.metafactory(
-                MethodHandles.lookup(),
+                lookup,
                 "accept",
                 MethodType.methodType(Consumer::class.java, instance::class.java),
                 MethodType.methodType(Nothing::class.javaPrimitiveType, Object::class.java),

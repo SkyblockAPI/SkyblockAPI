@@ -1,6 +1,11 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import java.lang.reflect.Method
+import java.lang.reflect.Modifier
+import kotlin.reflect.full.extensionReceiverParameter
+import kotlin.reflect.jvm.isAccessible
+import kotlin.reflect.jvm.kotlinFunction
 
 class EventBus {
 
@@ -62,6 +67,21 @@ class EventBus {
 
     private fun registerMethod(method: Method, instance: Any) {
         val (options, events) = getEventData(method) ?: return
+
+        val kotlin = method.kotlinFunction
+        if (kotlin != null && kotlin.extensionReceiverParameter != null) {
+            if (Modifier.isPublic(method.modifiers)) {
+                SkyBlockAPI.logger.warn("""
+                
+                Public extension functions for events are unrecommended as they will populate the auto complete for the subscribed events.
+                You can make extensions be private for subscriptions.
+                
+                The method ${method.name} in class ${method.declaringClass.name} is public and has an extension receiver.
+                """.trimIndent())
+            }
+            kotlin.isAccessible = true
+        }
+
         events.forEach {
             registerMethodInternal(method, instance, it, options)
         }
