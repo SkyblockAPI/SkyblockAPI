@@ -1462,6 +1462,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getTIMESTAMP ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUPGRADE_MODULE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUUID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getVISIBLE_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun onDataTypeRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterDataTypesEvent;)V
 }
 
