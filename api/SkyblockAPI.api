@@ -1329,6 +1329,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMODIFIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPERSONAL_ACCESSORY_ACTIVE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPERSONAL_COMPACTOR_ITEMS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPERSONAL_DELETOR_ITEMS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1447,6 +1448,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMODIFIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPET_DATA ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPICKONIMBUS_DURABILITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPOLARVOID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -2596,6 +2598,12 @@ public class tech/thatgravyboat/skyblockapi/api/item/calculator/DataTypeCalculat
 	public fun getEntry (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;
 }
 
+public class tech/thatgravyboat/skyblockapi/api/item/calculator/DataTypeListCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/MultiEntryCalculator {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;)V
+	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+	public fun getEntries (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+}
+
 public class tech/thatgravyboat/skyblockapi/api/item/calculator/DataTypesCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/Calculator {
 	public fun <init> ([Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;)V
 	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
@@ -2716,6 +2724,7 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueS
 	public static final field HELMET_SKIN Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field HOT_POTATO Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field ITEM_STARS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field NECRON_SCROLLS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field POLARVOID Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field POWER_ABILITY_SCROLL Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field RECOMBOBULATOR Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
@@ -2748,6 +2757,15 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemWithLi
 	public fun getPrice ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/api/item/calculator/MultiEntryCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/Calculator {
+	public abstract fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+	public abstract fun getEntries (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/item/calculator/MultiEntryCalculator$DefaultImpls {
+	public static fun calculate (Ltech/thatgravyboat/skyblockapi/api/item/calculator/MultiEntryCalculator;Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/item/calculator/Pricing {
