@@ -1932,6 +1932,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidge
 	public static final field MANA Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field NO_MANA Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field OVERFLOW_MANA Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
+	public static final field PRESSURE Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field RIFT_TIME Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field SECRETS Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field SKILL_XP Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
@@ -1991,6 +1992,11 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/MayorUpdateEve
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/info/OverflowManaActionBarWidgetChangeEvent : tech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidgetChangeEvent {
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;)V
+	public final fun getCurrent ()I
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/info/PressureActionBarWidgetChangeEvent : tech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidgetChangeEvent {
 	public fun <init> (ILjava/lang/String;Ljava/lang/String;)V
 	public final fun getCurrent ()I
 }
@@ -2095,12 +2101,14 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/TabWidget : ja
 	public static final field EVENT Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field EVENT_TRACKERS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field FACTION_QUESTS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
+	public static final field FOREST_WHISPERS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field FORGES Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field FROZEN_CORPSES Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field GOOD_TO_KNOW Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field JACOBS_CONTEST Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field MINING_EVENT Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field MINIONS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
+	public static final field MOONGLADE_BEACON Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field PARTY Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field PESTS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field PET Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
