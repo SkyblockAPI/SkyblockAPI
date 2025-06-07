@@ -111,6 +111,7 @@ internal class StoredData<T : Any>(
     companion object {
         val defaultPath: Path = FabricLoader.getInstance().configDir.resolve("skyblockapi")
 
+        /** Only use if [T] has an empty constructor. */
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
@@ -119,6 +120,7 @@ internal class StoredData<T : Any>(
             return create(T::class, file, version) { codec }
         }
 
+        /** Only use if [T] has an empty constructor. */
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,

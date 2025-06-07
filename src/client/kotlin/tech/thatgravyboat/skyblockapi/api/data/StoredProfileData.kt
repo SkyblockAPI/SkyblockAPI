@@ -23,6 +23,7 @@ internal class StoredProfileData<T : Any>(
     )
 
     companion object {
+        /** Only use if [T] has an empty constructor. */
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
@@ -31,6 +32,7 @@ internal class StoredProfileData<T : Any>(
             return create(T::class, file, version) { codec }
         }
 
+        /** Only use if [T] has an empty constructor. */
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
