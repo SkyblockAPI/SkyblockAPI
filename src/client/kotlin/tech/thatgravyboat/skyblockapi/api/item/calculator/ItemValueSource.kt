@@ -30,7 +30,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
             val sources = entries.associateWith { it.calc.calculate(id, stack) }.mapNotNull { (key, value) -> value?.let { GroupedEntry(key, value) } }
             return ItemValueResult(
                 lowestBin,
-                sources.sumOf { it.price } * stack.count,
+                lowestBin + sources.sumOf { it.price } * stack.count,
                 sources.associate { it.source to it.price },
                 sources,
             )
