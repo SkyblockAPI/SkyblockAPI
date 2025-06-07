@@ -16,10 +16,29 @@ interface SingleEntryCalculator : Calculator {
     fun getEntry(id: String, stack: ItemStack): CalculationEntry?
 }
 
+interface MultiEntryCalculator : Calculator {
+
+    override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? {
+        val entries = getEntries(id, stack) ?: return null
+        return entries.ifEmpty { null }
+    }
+
+    fun getEntries(id: String, stack: ItemStack): List<CalculationEntry>?
+}
+
 open class DataTypeCalculator(private val dataType: DataType<String>) : SingleEntryCalculator {
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
         val data = stack.getData(dataType) ?: return null
         return ItemEntry(data)
+    }
+}
+
+open class DataTypeListCalculator(private val dataType: DataType<List<String>>) : MultiEntryCalculator {
+    override fun getEntries(id: String, stack: ItemStack): List<CalculationEntry>? {
+        val data = stack.getData(dataType) ?: return null
+        if (data.isEmpty()) return null
+
+        return data.map { ItemEntry(it) }
     }
 }
 

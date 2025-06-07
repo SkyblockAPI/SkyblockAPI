@@ -54,6 +54,19 @@ object GenericDataTypes {
     val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
     val COMPACT_BLOCKS: DataType<Long> = DataType("compact_blocks") { it.tag?.getLongOrNull("compact_blocks") }
     val STAR_COUNT: DataType<Int> = DataType("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
+    val NECRON_SCROLLS: DataType<List<String>> = DataType("necron_scrolls") {
+        val list = it.tag?.getList("ability_scroll")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull() }
+
+        return@DataType if (list?.contains("ULTIMATE_WITHER_SCROLL") == true) {
+            list.filter { it == "ULTIMATE_WITHER_SCROLL" }.toMutableList().apply {
+                add("WITHER_SHIELD_SCROLL")
+                add("SHADOW_WARP_SCROLL")
+                add("IMPLOSION_SCROLL")
+            }
+        } else {
+            list
+        }
+    }
     val DUNGEON_ITEM: DataType<Boolean> = DataType("dungeon_item") { it.tag?.getBoolean("dungeon_item")?.getOrNull() }
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType("applied_rune") { getAppliedRune(it.tag ?: return@DataType null) }
     val APPLIED_DYE: DataType<String> = DataType("applied_dye") { it.tag?.getStringOrNull("dye_item") }
@@ -93,6 +106,7 @@ object GenericDataTypes {
         event.register(CROPS_BROKEN)
         event.register(COMPACT_BLOCKS)
         event.register(STAR_COUNT)
+        event.register(NECRON_SCROLLS)
         event.register(DUNGEON_ITEM)
         event.register(APPLIED_RUNE)
         event.register(APPLIED_DYE)
