@@ -52,6 +52,7 @@ object DataTypes {
     // Dungeons
     val DUNGEON_ITEM: DataType<Boolean> = GenericDataTypes.DUNGEON_ITEM
     val STAR_COUNT: DataType<Int> = GenericDataTypes.STAR_COUNT
+    val NECRON_SCROLLS: DataType<List<String>> = GenericDataTypes.NECRON_SCROLLS
 
     // Fishing Rod
     val HOOK: DataType<Pair<UUID, String>> = GenericDataTypes.HOOK

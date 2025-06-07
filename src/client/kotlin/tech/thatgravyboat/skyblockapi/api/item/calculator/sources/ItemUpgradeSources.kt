@@ -99,3 +99,5 @@ internal object ItemStarsCalculator : Calculator {
         }
     }
 }
+
+internal object NecronScrollsCalculator : DataTypeListCalculator(DataTypes.NECRON_SCROLLS)
