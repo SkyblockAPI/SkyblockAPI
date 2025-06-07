@@ -58,11 +58,7 @@ object GenericDataTypes {
         val list = it.tag?.getList("ability_scroll")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull() }
 
         return@DataType if (list?.contains("ULTIMATE_WITHER_SCROLL") == true) {
-            list.filter { it == "ULTIMATE_WITHER_SCROLL" }.toMutableList().apply {
-                add("WITHER_SHIELD_SCROLL")
-                add("SHADOW_WARP_SCROLL")
-                add("IMPLOSION_SCROLL")
-            }
+            listOf("WITHER_SHIELD_SCROLL","SHADOW_WARP_SCROLL","IMPLOSION_SCROLL")
         } else {
             list
         }
