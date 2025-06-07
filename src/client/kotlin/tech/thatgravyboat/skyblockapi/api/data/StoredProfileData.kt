@@ -15,27 +15,33 @@ internal class StoredProfileData<T : Any>(
     file: String,
     codec: (Int) -> Codec<T>,
 ) {
+    constructor(data: () -> T, codec: Codec<T>, file: String) : this(
+        0,
+        data,
+        file,
+        { codec },
+    )
 
     companion object {
-        inline operator fun <reified T : Any> invoke(file: String): StoredProfileData<T> {
-            val codec = KCodec.getCodec<T>()
-            return create(T::class, 0, file) { codec }
+        inline operator fun <reified T : Any> invoke(
+            file: String,
+            version: Int = 0,
+            codec: Codec<T> = KCodec.getCodec<T>(),
+        ): StoredProfileData<T> {
+            return create(T::class, file, version) { codec }
         }
 
-        inline operator fun <reified T : Any> invoke(codec: Codec<T>, file: String) =
-            create(T::class, 0, file) { codec }
-
         inline operator fun <reified T : Any> invoke(
-            version: Int = 0,
             file: String,
+            version: Int = 0,
             noinline codec: (Int) -> Codec<T>,
-        ) = create(T::class, version, file, codec)
+        ) = create(T::class, file, version, codec)
 
 
         fun <T : Any> create(
             kClass: KClass<T>,
-            version: Int = 0,
             file: String,
+            version: Int,
             codec: (Int) -> Codec<T>,
         ): StoredProfileData<T> {
             val constructor = kClass.getEmptyConstructor()
@@ -46,13 +52,6 @@ internal class StoredProfileData<T : Any>(
             return StoredProfileData(version, data, file, codec)
         }
     }
-
-    constructor(data: () -> T, codec: Codec<T>, file: String) : this(
-        0,
-        data,
-        file,
-        { codec },
-    )
 
     private val storedData = StoredData(
         version,

@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.generated.KCodec
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
+import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import java.util.*
+import kotlin.reflect.KClass
 
 internal class StoredPlayerData<T : Any>(
     version: Int = 0,
@@ -33,4 +35,36 @@ internal class StoredPlayerData<T : Any>(
     fun get(): T = storedData.get().getOrPut(McPlayer.uuid, data)
 
     fun save() = storedData.save()
+
+
+    companion object {
+        inline operator fun <reified T : Any> invoke(
+            file: String,
+            version: Int = 0,
+            codec: Codec<T> = KCodec.getCodec<T>(),
+        ): StoredPlayerData<T> {
+            return create(T::class, file, version) { codec }
+        }
+
+        inline operator fun <reified T : Any> invoke(
+            file: String,
+            version: Int = 0,
+            noinline codec: (Int) -> Codec<T>,
+        ) = create(T::class, file, version, codec)
+
+
+        fun <T : Any> create(
+            kClass: KClass<T>,
+            file: String,
+            version: Int,
+            codec: (Int) -> Codec<T>,
+        ): StoredPlayerData<T> {
+            val constructor = kClass.getEmptyConstructor()
+            requireNotNull(constructor) { "No empty constructor found for ${kClass.simpleName}" }
+            val data: () -> T = {
+                constructor.callBy(emptyMap())
+            }
+            return StoredPlayerData(version, data, file, codec)
+        }
+    }
 }
