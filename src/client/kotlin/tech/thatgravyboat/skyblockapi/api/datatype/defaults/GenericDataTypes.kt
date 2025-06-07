@@ -4,7 +4,10 @@ import com.google.gson.JsonObject
 import kotlinx.datetime.Instant
 import me.owdding.ktmodules.Module
 import net.minecraft.Util
+import net.minecraft.core.component.DataComponents
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.item.Item
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -71,6 +74,9 @@ object GenericDataTypes {
     val ENGINE: DataType<String> = DataType("drill_part_engine") { it.tag?.getStringOrNull("drill_part_engine") }
     val UPGRADE_MODULE: DataType<String> = DataType("drill_part_upgrade_module") { it.tag?.getStringOrNull("drill_part_upgrade_module") }
 
+    /** In SkyBlock items that are only avaliable in new versions are showned via `DataComponents.ITEM_MODEL` this returns that item that is displayed. */
+    val VISIBLE_ITEM: DataType<Item> = DataType("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
+
     @Subscription
     fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
         event.register(ID)
@@ -107,6 +113,7 @@ object GenericDataTypes {
         event.register(FUEL_TANK)
         event.register(ENGINE)
         event.register(UPGRADE_MODULE)
+        event.register(VISIBLE_ITEM)
     }
 
     private fun getFishingRodPartDataType(name: String) = DataType(name) {
