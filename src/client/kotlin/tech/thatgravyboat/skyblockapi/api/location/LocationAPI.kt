@@ -8,11 +8,18 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 @Module
 object LocationAPI {
+
+    private val unknownIslands = mutableMapOf<String, SkyBlockIsland?>()
+    private var sendUnknownChatMessage = false
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
         "location",
@@ -52,6 +59,14 @@ object LocationAPI {
             val old = area
             area = SkyBlockArea(location)
             AreaChangeEvent(old, area).post()
+
+            val knownArea = SkyBlockAreas.registeredAreas.entries.find { it.value.name == location } != null
+            if (!knownArea) {
+                unknownIslands.putIfAbsent(location, island)
+                if (sendUnknownChatMessage) {
+                    Text.of("Unknown area detected: $location").send()
+                }
+            }
         }
     }
 
@@ -62,4 +77,13 @@ object LocationAPI {
 
     @Subscription
     fun onServerDisconnect(event: ServerDisconnectEvent) = reset()
+
+    @Subscription
+    fun onCommand(event: RegisterCommandsEvent) {
+        event.registerWithCallback("sbapi unknownareas") {
+            McClient.clipboard = unknownIslands.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
+            Text.of("Copied ${unknownIslands.size} unknown areas to clipboard!").send()
+            sendUnknownChatMessage != sendUnknownChatMessage
+        }
+    }
 }
