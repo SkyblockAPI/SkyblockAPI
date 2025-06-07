@@ -5,7 +5,7 @@ import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
 import net.fabricmc.loader.api.FabricLoader
 import org.apache.commons.io.FileUtils
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
@@ -115,7 +115,7 @@ internal class StoredData<T : Any>(
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
-            codec: Codec<T> = KCodec.getCodec<T>(),
+            codec: Codec<T> = SkyblockAPICodecs.getCodec<T>(),
         ): StoredData<T> {
             return create(T::class, file, version) { codec }
         }

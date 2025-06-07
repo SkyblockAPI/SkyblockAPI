@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.data
 import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
@@ -27,7 +28,7 @@ internal class StoredProfileData<T : Any>(
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
-            codec: Codec<T> = KCodec.getCodec<T>(),
+            codec: Codec<T> = SkyblockAPICodecs.getCodec<T>(),
         ): StoredProfileData<T> {
             return create(T::class, file, version) { codec }
         }
