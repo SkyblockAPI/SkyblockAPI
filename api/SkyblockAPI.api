@@ -4081,8 +4081,11 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/RepoReforgeStonesAP
 public final class tech/thatgravyboat/skyblockapi/api/remote/RepoRunesAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/RepoRunesAPI;
 	public final fun getId (Ltech/thatgravyboat/repolib/api/RunesAPI$Rune;)Ljava/lang/String;
+	public final fun getItem (Ltech/thatgravyboat/repolib/api/RunesAPI$Rune;)Lnet/minecraft/world/item/ItemStack;
 	public final fun getRune (Ljava/lang/String;)Ltech/thatgravyboat/repolib/api/RunesAPI$Rune;
 	public final fun getRune (Ljava/lang/String;I)Ltech/thatgravyboat/repolib/api/RunesAPI$Rune;
+	public final fun getRuneAsItem (Ljava/lang/String;I)Lnet/minecraft/world/item/ItemStack;
+	public final fun getRuneAsItemOrNull (Ljava/lang/String;I)Lnet/minecraft/world/item/ItemStack;
 	public final fun getRuneById (Ljava/lang/String;)Ljava/util/List;
 }
 
