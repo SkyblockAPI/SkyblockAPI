@@ -41,6 +41,6 @@ internal object SilexCalculator : SingleEntryCalculator {
 
 internal object DivanPowderCoatingCalculator : IntDataTypeCalculator(DataTypes.DIVAN_POWDER_COATING, "DIVAN_POWDER_COATING")
 
-internal object PolarVoidCalculator : IntDataTypeCalculator(DataTypes.POLARVOID, "POLARVOID_BOOK")
+internal object PolarVoidCalculator : IntDataTypeWithLimitCalculator(DataTypes.POLARVOID, "POLARVOID_BOOK", 5)
 
 internal object PowerAbilityScrollCalculator : DataTypeCalculator(DataTypes.POWER_ABILITY_SCROLL)

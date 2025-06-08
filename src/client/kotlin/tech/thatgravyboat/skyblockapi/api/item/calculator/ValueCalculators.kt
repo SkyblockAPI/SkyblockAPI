@@ -57,3 +57,11 @@ open class IntDataTypeCalculator(private val dataType: DataType<Int>, private va
         return ItemEntry(itemId, Pricing.getPrice(itemId) * amount, amount)
     }
 }
+
+open class IntDataTypeWithLimitCalculator(private val dataType: DataType<Int>, private val itemId: String, private val limit: Int) : SingleEntryCalculator {
+    override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
+        val amount = stack.getData(dataType) ?: return null
+
+        return ItemWithLimitEntry(itemId, Pricing.getPrice(itemId) * amount, amount, limit)
+    }
+}
