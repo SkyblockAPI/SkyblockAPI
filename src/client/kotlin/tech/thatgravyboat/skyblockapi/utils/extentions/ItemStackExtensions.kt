@@ -48,6 +48,7 @@ fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
 
 fun ItemStack.getSkyBlockId() = getData(DataTypes.ID)
 fun ItemStack.getApiId() = getData(DataTypes.API_ID)
+fun ItemStack.getItemModel(): Item = getData(DataTypes.VISIBLE_ITEM) ?: item
 
 val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
 

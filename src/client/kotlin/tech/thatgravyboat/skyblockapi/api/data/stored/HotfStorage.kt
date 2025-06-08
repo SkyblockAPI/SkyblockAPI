@@ -1,34 +1,43 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
-import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
+import tech.thatgravyboat.skyblockapi.api.profile.hotf.HotfData
 import tech.thatgravyboat.skyblockapi.api.profile.hotf.HotfPerk
-import tech.thatgravyboat.skyblockapi.generated.CodecUtils
-import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 internal object HotfStorage {
 
     private val HOTF = StoredProfileData(
-        { mutableMapOf() },
-        CodecUtils.map(Codec.STRING, SkyblockAPICodecs.HotfPerkCodec.codec()),
+        { HotfData() },
+        HotfData.CODEC,
         "hotf.json",
     )
 
-    var perks: MutableMap<String, HotfPerk>
-        get() = HOTF.get() ?: mutableMapOf()
-        private set(value) {
-            HOTF.get().apply {
-                this?.clear()
-                this?.putAll(value)
-            }
-            HOTF.save()
+    val perks: MutableMap<String, HotfPerk>
+        get() = HOTF.get()?.perks ?: mutableMapOf()
+
+    var tokens: Int
+        get() = HOTF.get()?.tokens ?: 1
+        internal set(value) {
+            if (this.tokens == value) return
+            HOTF.get()?.tokens = value
+            save()
+        }
+
+    var whispers: Long
+        get() = HOTF.get()?.whispers ?: 0
+        internal set(value) {
+            if (this.whispers == value) return
+            HOTF.get()?.whispers = value
+            save()
         }
 
     fun setPerk(name: String, perk: HotfPerk) {
         if (perks[name] == perk) return
         perks[name] = perk
-        HOTF.save()
+        save()
     }
+
+    private fun save() = HOTF.save()
 
 }
 
