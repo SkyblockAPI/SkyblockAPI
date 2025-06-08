@@ -46,6 +46,9 @@ object GenericDataTypes {
         }
     }
     val HOT_POTATO_BOOKS: DataType<Int> = DataType("hot_potato_count") { it.tag?.getIntOrNull("hot_potato_count") }
+    val ART_OF_WAR: DataType<Boolean> = DataType("art_of_war") { item -> item.tag?.getBooleanOrNull("art_of_war_count") }
+    val ART_OF_PEACE: DataType<Boolean> = DataType("art_of_peace") { it.tag?.getBooleanOrNull("artOfPeaceApplied") }
+    val BOOK_OF_STATS: DataType<Int> = DataType("book_of_stats") { it.tag?.getIntOrNull("stats_book") }
     val GEMSTONES: DataType<List<GemstoneSlotData>> = DataType("gemstones") { it.tag?.let(::parseGemstones) }
     val POTION: DataType<String> = DataType("potion") { it.tag?.getStringOrNull("potion") }
     val POTION_LEVEL: DataType<Int> = DataType("potion_level") { it.tag?.getIntOrNull("potion_level") }
@@ -74,6 +77,7 @@ object GenericDataTypes {
     val DIVAN_POWDER_COATING: DataType<Int> = DataType("divan_powder_coating") { it.tag?.getIntOrNull("divan_powder_coating") }
     val POLARVOID: DataType<Int> = DataType("polarvoid") { it.tag?.getIntOrNull("polarvoid") }
     val POWER_ABILITY_SCROLL: DataType<String> = DataType("power_ability_scroll") { it.tag?.getStringOrNull("power_ability_scroll") }
+    val JALAPENO_BOOK: DataType<Int> = DataType("jalapeno_book") { it.tag?.getIntOrNull("jalapeno_count") }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
@@ -101,6 +105,9 @@ object GenericDataTypes {
         event.register(QUIVER_ARROW)
         event.register(ENCHANTMENTS)
         event.register(HOT_POTATO_BOOKS)
+        event.register(ART_OF_WAR)
+        event.register(ART_OF_PEACE)
+        event.register(BOOK_OF_STATS)
         event.register(GEMSTONES)
         event.register(POTION)
         event.register(POTION_LEVEL)
@@ -117,6 +124,7 @@ object GenericDataTypes {
         event.register(DIVAN_POWDER_COATING)
         event.register(POLARVOID)
         event.register(POWER_ABILITY_SCROLL)
+        event.register(JALAPENO_BOOK)
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)

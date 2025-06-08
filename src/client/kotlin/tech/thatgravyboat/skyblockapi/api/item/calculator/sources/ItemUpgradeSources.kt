@@ -60,6 +60,13 @@ internal object HotPotatoCalculator : Calculator {
     }
 }
 
+internal object ArtOfWarCalculator : BoolDataTypeCalculator(DataTypes.ART_OF_WAR, "THE_ART_OF_WAR")
+
+internal object ArtOfPeaceCalculator : BoolDataTypeCalculator(DataTypes.ART_OF_PEACE, "THE_ART_OF_PEACE")
+
+// TODO: add max of 1
+internal object JalapenoBookCalculator : IntDataTypeCalculator(DataTypes.JALAPENO_BOOK, "JALAPENO_BOOK")
+
 internal object ItemStarsCalculator : Calculator {
     val masterStars = listOf(
         "FIRST",

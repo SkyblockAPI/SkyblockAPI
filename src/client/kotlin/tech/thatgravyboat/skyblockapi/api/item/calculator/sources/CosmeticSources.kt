@@ -17,3 +17,10 @@ internal object AppliedRuneCalculator : SingleEntryCalculator {
         return ItemEntry("rune:${rune.first}:${rune.second}")
     }
 }
+
+internal object BookOfStatsCalculator : SingleEntryCalculator {
+    override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
+        stack.getData(DataTypes.BOOK_OF_STATS) ?: return null
+        return ItemEntry("BOOK_OF_STATS")
+    }
+}

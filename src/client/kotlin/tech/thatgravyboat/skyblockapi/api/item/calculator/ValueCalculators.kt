@@ -57,3 +57,11 @@ open class IntDataTypeCalculator(private val dataType: DataType<Int>, private va
         return ItemEntry(itemId, Pricing.getPrice(itemId) * amount, amount)
     }
 }
+
+open class BoolDataTypeCalculator(private val dataType: DataType<Boolean>, private val itemId: String) : SingleEntryCalculator {
+    override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
+        val value = stack.getData(dataType) ?: return null
+
+        return if (value) ItemEntry(itemId) else null
+    }
+}
