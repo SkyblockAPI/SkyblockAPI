@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 import kotlinx.datetime.Instant
+import net.minecraft.world.item.Item
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlotData
@@ -20,6 +21,7 @@ object DataTypes {
     val TIMESTAMP: DataType<Instant> = GenericDataTypes.TIMESTAMP
     val RARITY: DataType<SkyBlockRarity> = LoreDataTypes.RARITY
     val CATEGORY: DataType<SkyBlockCategory> = LoreDataTypes.CATEGORY
+    val VISIBLE_ITEM: DataType<Item> = GenericDataTypes.VISIBLE_ITEM
 
     // Item Modifiers
     val MODIFIER: DataType<String> = GenericDataTypes.MODIFIER
