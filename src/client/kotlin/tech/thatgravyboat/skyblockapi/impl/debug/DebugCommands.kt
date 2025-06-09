@@ -134,6 +134,21 @@ object DebugCommands {
                     }
                 }
             }
+            then("folder") {
+                val gameDir = McClient.self.gameDirectory.toPath()
+
+                listOf("config", "mods", "logs").forEach {
+                    then(it) {
+                        callback {
+                            McClient.openUri(gameDir.resolve(it).toUri())
+                        }
+                    }
+                }
+
+                callback {
+                    McClient.openUri(gameDir.toUri())
+                }
+            }
         }
     }
 }

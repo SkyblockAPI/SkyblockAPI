@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.helpers
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.client.Options
 import net.minecraft.client.gui.Gui
@@ -16,6 +17,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
+import java.net.URI
 
 object McClient {
 
@@ -75,6 +77,10 @@ object McClient {
     val gui: Gui get() = self.gui
     val chat: ChatComponent get() = gui.chat
     val options: Options get() = self.options
+
+    fun openUri(uri: URI) {
+        Util.getPlatform().openUri(uri)
+    }
 
     fun tell(action: () -> Unit) {
         self.schedule(action)
