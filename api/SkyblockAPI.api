@@ -1346,6 +1346,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getTIMESTAMP ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUPGRADE_MODULE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUUID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getVISIBLE_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/Gemstone : java/lang/Enum {
@@ -3357,6 +3358,51 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/friends/FriendsAPI
 	public final fun onDisconnect (Ltech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent;)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/HotfAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfAPI;
+	public final fun getActivePerks ()Ljava/util/Map;
+	public final fun getPerks ()Ljava/util/Map;
+	public final fun getTokens ()I
+	public final fun getUnlockedPerks ()Ljava/util/Map;
+	public final fun getWhispers ()J
+	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+	public final fun onTabWidgetChange (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Map;IJ)V
+	public synthetic fun <init> (Ljava/util/Map;IJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun component2 ()I
+	public final fun component3 ()J
+	public final fun copy (Ljava/util/Map;IJ)Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData;Ljava/util/Map;IJILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPerks ()Ljava/util/Map;
+	public final fun getTokens ()I
+	public final fun getWhispers ()J
+	public fun hashCode ()I
+	public final fun setTokens (I)V
+	public final fun setWhispers (J)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/HotfPerk {
+	public fun <init> (IZZ)V
+	public final fun component1 ()I
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun copy (IZZ)Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfPerk;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfPerk;IZZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfPerk;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDisabled ()Z
+	public final fun getLevel ()I
+	public final fun getUnlocked ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/HotmAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/hotm/HotmAPI;
 	public final fun getActivePerks ()Ljava/util/Map;
@@ -4711,6 +4757,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/ItemStackExte
 	public static final fun getApiId (Lnet/minecraft/world/item/ItemStack;)Ljava/lang/String;
 	public static final fun getCleanName (Lnet/minecraft/world/item/ItemStack;)Ljava/lang/String;
 	public static final fun getHolder (Lnet/minecraft/world/item/Item;)Lnet/minecraft/core/Holder;
+	public static final fun getItemModel (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/Item;
 	public static final fun getLore (Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
 	public static final fun getRawLore (Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
 	public static final fun getSkyBlockId (Lnet/minecraft/world/item/ItemStack;)Ljava/lang/String;
