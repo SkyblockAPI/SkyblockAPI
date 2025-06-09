@@ -8,6 +8,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.item.Item
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -40,7 +41,9 @@ object GenericDataTypes {
     val RIFT_DISCRITE_SECONDS: DataType<Int> = DataType("rift_discrite_seconds") { it.tag?.getIntOrNull("rift_discrite_seconds") }
 
     val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") { it.tag?.getIntOrNull("pickonimbus_durability") }
+    @RemoveNextVersion
     val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.tag?.getIntOrNull("rarity_upgrades") }
+    val RECOMBOBULATOR: DataType<Boolean> = DataType("recombobulator") { item -> item.tag?.getIntOrNull("rarity_upgrades")?.let { it > 0 } }
     val QUIVER_ARROW: DataType<Boolean> = DataType("quiver_arrow") { it.tag?.getStringOrNull("quiver_arrow")?.equals("true") }
     val ENCHANTMENTS: DataType<Map<String, Int>> = DataType("enchantments") {
         it.tag?.getCompoundOrEmpty("enchantments")?.let { tag ->
@@ -79,7 +82,7 @@ object GenericDataTypes {
     val DIVAN_POWDER_COATING: DataType<Int> = DataType("divan_powder_coating") { it.tag?.getIntOrNull("divan_powder_coating") }
     val POLARVOID: DataType<Int> = DataType("polarvoid") { it.tag?.getIntOrNull("polarvoid") }
     val POWER_ABILITY_SCROLL: DataType<String> = DataType("power_ability_scroll") { it.tag?.getStringOrNull("power_ability_scroll") }
-    val JALAPENO_BOOK: DataType<Int> = DataType("jalapeno_book") { it.tag?.getIntOrNull("jalapeno_count") }
+    val JALAPENO_BOOK: DataType<Boolean> = DataType("jalapeno_book") { it.tag?.getBooleanOrNull("jalapeno_count") }
 
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
@@ -104,6 +107,7 @@ object GenericDataTypes {
         event.register(RIFT_DISCRITE_SECONDS)
         event.register(PICKONIMBUS_DURABILITY)
         event.register(RARITY_UPGRADES)
+        event.register(RECOMBOBULATOR)
         event.register(QUIVER_ARROW)
         event.register(ENCHANTMENTS)
         event.register(HOT_POTATO_BOOKS)

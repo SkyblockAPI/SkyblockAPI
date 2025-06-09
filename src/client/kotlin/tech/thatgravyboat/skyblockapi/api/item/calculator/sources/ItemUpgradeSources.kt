@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI.getApplyCo
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 
-internal object RecombobulatorCalculator : IntDataTypeCalculator(DataTypes.RARITY_UPGRADES, "RECOMBOBULATOR_3000")
+internal object RecombobulatorCalculator : BoolDataTypeCalculator(DataTypes.RECOMBOBULATOR, "RECOMBOBULATOR_3000")
 
 internal object ReforgeCalculator : Calculator {
     override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? {
@@ -64,7 +64,7 @@ internal object ArtOfWarCalculator : BoolDataTypeCalculator(DataTypes.ART_OF_WAR
 
 internal object ArtOfPeaceCalculator : BoolDataTypeCalculator(DataTypes.ART_OF_PEACE, "THE_ART_OF_PEACE")
 
-internal object JalapenoBookCalculator : IntDataTypeCalculator(DataTypes.JALAPENO_BOOK, "JALAPENO_BOOK")
+internal object JalapenoBookCalculator : BoolDataTypeCalculator(DataTypes.JALAPENO_BOOK, "JALAPENO_BOOK")
 
 internal object ItemStarsCalculator : Calculator {
     val masterStars = listOf(
