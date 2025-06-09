@@ -49,16 +49,14 @@ object DebugCommands {
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
         event.register("sbapi") {
-            then("price") {
-                then("id", StringArgumentType.greedyString()) {
-                    callback {
-                        val id = this.getArgument("id", String::class.java)
-                        val price = Pricing.getPrice(id)
+            then("price id", StringArgumentType.greedyString()) {
+                callback {
+                    val id = this.getArgument("id", String::class.java)
+                    val price = Pricing.getPrice(id)
 
-                        Text.of("[SkyBlockAPI] Price of $id is ${price.toFormattedString()}.") {
-                            this.color = TextColor.YELLOW
-                        }.send()
-                    }
+                    Text.of("[SkyBlockAPI] Price of $id is ${price.toFormattedString()}.") {
+                        this.color = TextColor.YELLOW
+                    }.send()
                 }
             }
             then("copy") {

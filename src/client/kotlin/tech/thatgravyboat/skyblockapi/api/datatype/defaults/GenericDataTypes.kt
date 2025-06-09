@@ -23,12 +23,14 @@ object GenericDataTypes {
     val ID: DataType<String> = DataType("id") { it.tag?.getStringOrNull("id") }
     val API_ID: DataType<String> = DataType("api_id") {
         val id = it.tag?.getStringOrNull("id")
-        if (id == "RUNE") {
-            val rune = getAppliedRune(it.tag ?: return@DataType null)
-            "rune:${rune?.first}:${rune?.second}"
-        } else if (id == "PET") {
-            getPetData(it.tag ?: return@DataType null)?.apiId ?: return@DataType null
-        } else id
+        when (id) {
+            "RUNE", "UNIQUE_RUNE" -> {
+                val rune = getAppliedRune(it.tag ?: return@DataType null)
+                "rune:${rune?.first}:${rune?.second}"
+            }
+            "PET" -> getPetData(it.tag ?: return@DataType null)?.apiId ?: return@DataType null
+            else -> id
+        }
     }
     val UUID: DataType<UUID> = DataType("uuid") { it.tag?.getUuidOrNull("uuid") }
     val MODIFIER: DataType<String> = DataType("modifier") { it.tag?.getStringOrNull("modifier") }
