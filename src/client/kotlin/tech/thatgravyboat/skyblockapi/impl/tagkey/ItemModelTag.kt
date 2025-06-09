@@ -7,7 +7,6 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 
 
 enum class ItemModelTag(path: String) : ItemModelTagKey {
-
     HOTF_PERK_ITEMS("hotf_perk_items"),
     ;
 
