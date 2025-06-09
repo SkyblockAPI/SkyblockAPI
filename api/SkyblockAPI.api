@@ -2895,6 +2895,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getDRAGONTAIL_TOWNSQUARE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getDREADFARM ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getDRIPTOAD_DELVE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getDRIPTOAD_PASS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getDROWNED_RELIQUARY ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getDWARVEN_MINES ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getDWARVEN_VILLAGE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
@@ -3010,6 +3011,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getSHEPHERDS_KEEP ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSHERRYS_SHOWROOM ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSHIFTED_TAVERN ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getSIDE_EMBER_WAY ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSLIMEHILL ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSMOLDERING_TOMB ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSOUTH_REACHES ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
@@ -3039,6 +3041,8 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getTIME_CHAMBER ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTOMB_FLOODWAY ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTRADE_CENTER ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getTRANQUILITY_SANCTUM ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getTRANQUIL_PASS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTRAPPERS_DEN ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTREASURE_HUNTER_CAMP ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTRIAL_GROUNDS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
