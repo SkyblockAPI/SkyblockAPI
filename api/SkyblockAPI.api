@@ -1215,6 +1215,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockStat : java/l
 	public static final field FARMING_WISDOM Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field FEAR Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field FEROCITY Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
+	public static final field FIG_FORTUNE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field FISHING_SPEED Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field FISHING_WISDOM Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field FORAGING_FORTUNE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
@@ -1224,8 +1225,10 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockStat : java/l
 	public static final field HEALTH Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field HEALTH_REGEN Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field HEAT_RESISTANCE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
+	public static final field HUNTING_WISDOM Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field INTELLIGENCE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field MAGIC_FIND Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
+	public static final field MANGROVE_FORTUNE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field MELON_FORTUNE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field MENDING Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field MINING_FORTUNE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
@@ -1237,15 +1240,20 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockStat : java/l
 	public static final field ORE_FORTUNE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field PET_LUCK Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field POTATO_FORTUNE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
+	public static final field PRESSURE_RESISTANCE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field PRISTINE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
+	public static final field PULL Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field PUMPKIN_FORTUNE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
+	public static final field RESPIRATION Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field RUNECRAFTING_WISDOM Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field SEA_CREATURE_CHANCE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field SOCIAL_WISDOM Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field SPEED Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field STRENGTH Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field SUGAR_CANE_FORTUNE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
+	public static final field SWEEP Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field SWING_RANGE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
+	public static final field SYPHON_LUCK Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TAMING_WISDOM Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TROPHY_FISH_CHANCE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TRUE_DEFENSE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
@@ -1305,7 +1313,10 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getAPI_ID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_DYE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getART_OF_PEACE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getART_OF_WAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCATEGORY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1322,6 +1333,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getHOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHOT_POTATO_BOOKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getJALAPENO_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMODIFIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1337,6 +1349,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getQUIVER_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRARITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRARITY_UPGRADES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getRECOMBOBULATOR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRIFT_DISCRITE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRIGHT_CLICK_MANA_ABILITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSECONDS_HELD ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1428,7 +1441,10 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getAPI_ID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_DYE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getART_OF_PEACE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getART_OF_WAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCROPS_BROKEN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1442,6 +1458,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getHOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHOT_POTATO_BOOKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getJALAPENO_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMODIFIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1453,6 +1470,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getPOWER_ABILITY_SCROLL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getQUIVER_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRARITY_UPGRADES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getRECOMBOBULATOR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRIFT_DISCRITE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSECONDS_HELD ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSINKER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -2576,6 +2594,12 @@ public final class tech/thatgravyboat/skyblockapi/api/item/VisualItemAccessorKt 
 	public static final fun replaceVisually (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)V
 }
 
+public class tech/thatgravyboat/skyblockapi/api/item/calculator/BoolDataTypeCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/SingleEntryCalculator {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;Ljava/lang/String;)V
+	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+	public fun getEntry (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;
+}
+
 public abstract interface class tech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry {
 	public abstract fun getPrice ()J
 }
@@ -2725,6 +2749,9 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueR
 public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource : java/lang/Enum, tech/thatgravyboat/skyblockapi/api/item/calculator/Calculator {
 	public static final field APPLIED_DYE Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field APPLIED_RUNE Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field ART_OF_PEACE Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field ART_OF_WAR Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field BOOK_OF_STATS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource$Companion;
 	public static final field DIVAN_POWDER_COATING Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field DRILL_COMPONENTS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
@@ -2734,6 +2761,7 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueS
 	public static final field HELMET_SKIN Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field HOT_POTATO Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field ITEM_STARS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field JALAPENO_BOOK Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field NECRON_SCROLLS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field POLARVOID Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field POWER_ABILITY_SCROLL Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
