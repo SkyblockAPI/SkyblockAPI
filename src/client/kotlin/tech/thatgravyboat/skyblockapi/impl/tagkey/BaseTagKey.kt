@@ -1,13 +1,11 @@
 package tech.thatgravyboat.skyblockapi.impl.tagkey
 
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags
-import net.minecraft.core.component.DataComponents
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Block
+import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 
 interface BaseTagKey<T> {
     val key: TagKey<T>
@@ -29,6 +27,5 @@ interface ItemTagKey : BaseTagKey<Item> {
 }
 
 interface ItemModelTagKey : ItemTagKey {
-    override operator fun contains(stack: ItemStack): Boolean =
-        super.contains(stack) || stack.get(DataComponents.ITEM_MODEL)?.let { BuiltInRegistries.ITEM.getOptional(it).orElse(Items.AIR) in this } == true
+    override operator fun contains(stack: ItemStack): Boolean = stack.getItemModel() in this
 }
