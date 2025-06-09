@@ -2654,6 +2654,12 @@ public class tech/thatgravyboat/skyblockapi/api/item/calculator/IntDataTypeCalcu
 	public fun getEntry (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;
 }
 
+public class tech/thatgravyboat/skyblockapi/api/item/calculator/IntDataTypeWithLimitCalculator : tech/thatgravyboat/skyblockapi/api/item/calculator/SingleEntryCalculator {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;Ljava/lang/String;I)V
+	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+	public fun getEntry (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemEntry : tech/thatgravyboat/skyblockapi/api/item/calculator/ItemLikeEntry {
 	public fun <init> (Ljava/lang/String;)V
 	public fun <init> (Ljava/lang/String;JI)V
