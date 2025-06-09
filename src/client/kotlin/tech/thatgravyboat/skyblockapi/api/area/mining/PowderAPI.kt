@@ -45,11 +45,8 @@ object PowderAPI {
         }
     }
 
-    @Subscription
-    fun onDisconnect(event: ServerDisconnectEvent) = reset()
-
-    @Subscription
-    fun onProfileChange(event: ProfileChangeEvent) = reset()
+    @Subscription(ProfileChangeEvent::class, ServerDisconnectEvent::class)
+    fun onProfileChange() = reset()
 
     private fun reset() {
         this.mithril = 0

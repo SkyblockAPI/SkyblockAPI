@@ -6,6 +6,11 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.FUNCTION)
 annotation class Subscription(
     /**
+     * The event that will be received, only is required if there are no parameters.
+     */
+    vararg val event: KClass<out SkyBlockEvent> = [],
+
+    /**
      * The priority of when the event will be called, lower priority will be called first, see the companion object.
      */
     val priority: Int = 0,
@@ -14,11 +19,6 @@ annotation class Subscription(
      * If the event is cancelled & receiveCancelled is true, then the method will still invoke.
      */
     val receiveCancelled: Boolean = false,
-
-    /**
-     * The event that will be received, only is required if there are no parameters.
-     */
-    vararg val event: KClass<out SkyBlockEvent> = [],
 ) {
 
     companion object {
