@@ -248,6 +248,7 @@ object SkyBlockAreas {
     val FUSION_HOUSE = register("fusion_house", "Fusion House")
     val SWAMP_CUT_INC = register("swamp_cut_inc", "SwampCut Inc.")
     val TANGLEBURG_LIBRARY = register("tangleburg_library", "Tangleburg Library")
+    val FOREST_TEMPLE = register("forest_temple", "Forest Temple")
 
     // Dwarven Mines
     val THE_LIFT = register("the_lift", "The Lift")
