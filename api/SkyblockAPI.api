@@ -113,8 +113,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/farming/TrapperAPI {
 	public final fun getTrackedLocation ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTrackedType ()Ltech/thatgravyboat/skyblockapi/api/area/farming/TrapperAnimalType;
 	public final fun onChatMessage (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
-	public final fun onDisconnect (Ltech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent;)V
-	public final fun onProfileChange (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
+	public final fun onProfileChange ()V
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onTabListWidgetUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
 }
@@ -259,9 +258,8 @@ public final class tech/thatgravyboat/skyblockapi/api/area/hub/CarnivalAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/hub/CarnivalAPI;
 	public final fun getDuration-UwyO8pc ()J
 	public final fun getTokens ()I
-	public final fun onDisconnect (Ltech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent;)V
+	public final fun onProfileChange ()V
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
-	public final fun onSwapProfile (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/hub/ElectionAPI {
@@ -312,8 +310,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/hub/SpookyFestivalAPI
 	public final fun getOnGoing ()Z
 	public final fun getPoints ()I
 	public final fun getPurpleCandy ()I
-	public final fun onDisconnect (Ltech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent;)V
-	public final fun onProfileChange (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
+	public final fun onProfileChange ()V
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onTabListFooterUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/TabListHeaderFooterChangeEvent;)V
 }
@@ -479,9 +476,8 @@ public final class tech/thatgravyboat/skyblockapi/api/area/mining/CommissionArea
 public final class tech/thatgravyboat/skyblockapi/api/area/mining/CommissionsAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/mining/CommissionsAPI;
 	public final fun getCommissions ()Ljava/util/List;
-	public final fun onDisconnect (Ltech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent;)V
 	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
-	public final fun onProfileChange (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
+	public final fun onProfileChange ()V
 	public final fun onTabWidgetUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
 }
 
@@ -608,8 +604,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/mining/PowderAPI {
 	public final fun getGemstone ()J
 	public final fun getGlacite ()J
 	public final fun getMithril ()J
-	public final fun onDisconnect (Ltech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent;)V
-	public final fun onProfileChange (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
+	public final fun onProfileChange ()V
 	public final fun onTabWidgetChange (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
 }
 
