@@ -2912,6 +2912,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getFISHING_OUTPOST ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getFLOWER_HOUSE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getFOREST ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getFOREST_TEMPLE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getFORGE_BASIN ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getFORGOTTEN_SKULL ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getFOSSIL_RESEARCH ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
