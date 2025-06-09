@@ -85,6 +85,7 @@ object PacketEventHandler {
     }
 
     private fun postBlockChange(pos: BlockPos, new: BlockState) {
+        if (!McLevel.hasLevel) return
         val old = McLevel[pos]
 
         val lastChance = lastBlockChanges.getIfPresent(pos)
