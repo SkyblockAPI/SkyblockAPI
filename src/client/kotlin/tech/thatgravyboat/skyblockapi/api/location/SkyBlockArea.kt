@@ -236,6 +236,7 @@ object SkyBlockAreas {
     val MURKWATER_SHALLOWS = register("murkwater_shallows", "Murkwater Shallows")
     val DIVE_EMBER_PASS = register("dive_ember_pass", "Dive-Ember Pass")
     val STRIDE_EMBER_FISSURE = register("stride_ember_fissure", "Stride-Ember Fissure")
+    val SIDE_EMBER_WAY = register("side_ember_way", "Side-Ember Way")
     val REEFGUARD_DEPTHS = register("reefguard_depths", "Reefguard Depths")
     val REEFGUARD_PASS = register("reefguard_pass", "Reefguard Pass")
     val DROWNED_RELIQUARY = register("drowned_reliquary", "Drowned Reliquary")
@@ -244,11 +245,14 @@ object SkyBlockAreas {
     val RED_HOUSE = register("red_house", "Red House")
     val TOMB_FLOODWAY = register("tomb_floodway", "Tomb Floodway")
     val DRIPTOAD_DELVE = register("driptoad_delve", "Driptoad Delve")
+    val DRIPTOAD_PASS = register("driptoad_pass", "Driptoad Pass")
     val TANGLEBURG_BANK = register("tangleburg_bank", "Tangleburg Bank")
     val FUSION_HOUSE = register("fusion_house", "Fusion House")
     val SWAMP_CUT_INC = register("swamp_cut_inc", "SwampCut Inc.")
     val TANGLEBURG_LIBRARY = register("tangleburg_library", "Tangleburg Library")
     val FOREST_TEMPLE = register("forest_temple", "Forest Temple")
+    val TRANQUILITY_SANCTUM = register("tranquility_sanctum", "Tranquility Sanctum")
+    val TRANQUIL_PASS = register("tranquil_pass", "Tranquil Pass")
 
     // Dwarven Mines
     val THE_LIFT = register("the_lift", "The Lift")
