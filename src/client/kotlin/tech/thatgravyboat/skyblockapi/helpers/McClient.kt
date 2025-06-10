@@ -11,6 +11,7 @@ import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
@@ -18,6 +19,7 @@ import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 import java.net.URI
+import java.nio.file.Path
 
 object McClient {
 
@@ -28,8 +30,10 @@ object McClient {
     )
 
     val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
+    val config: Path = FabricLoader.getInstance().configDir
 
     val self: Minecraft get() = Minecraft.getInstance()
+    val connection: ClientPacketListener? get() = self.connection
 
     val window: Window
         get() = self.window
@@ -47,7 +51,7 @@ object McClient {
         )
 
     val tablist: List<PlayerInfo>
-        get() = self.connection
+        get() = connection
             ?.listedOnlinePlayers
             ?.sortedWith(tabListComparator)
             ?: emptyList()
@@ -71,7 +75,7 @@ object McClient {
         }
 
     val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
-    val serverCommands: CommandDispatcher<SharedSuggestionProvider>? get() = self.connection?.commands
+    val serverCommands: CommandDispatcher<SharedSuggestionProvider>? get() = connection?.commands
 
     val toasts: ToastManager get() = self.toastManager
     val gui: Gui get() = self.gui
@@ -97,12 +101,12 @@ object McClient {
     }
 
     fun sendCommand(command: String) {
-        self.connection?.send(ServerboundChatCommandPacket(command.removePrefix("/")))
+        connection?.send(ServerboundChatCommandPacket(command.removePrefix("/")))
     }
 
     /** Sends a command that first goes through client side commands, and then server commands */
     fun sendClientCommand(command: String) {
-        self.connection?.sendCommand(command.removePrefix("/"))
+        connection?.sendCommand(command.removePrefix("/"))
     }
 
 }
