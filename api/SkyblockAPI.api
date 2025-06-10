@@ -4566,6 +4566,7 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McClient {
 	public final fun getToasts ()Lnet/minecraft/client/gui/components/toasts/ToastManager;
 	public final fun getWindow ()Lcom/mojang/blaze3d/platform/Window;
 	public final fun isDev ()Z
+	public final fun openUri (Ljava/net/URI;)V
 	public final fun sendClientCommand (Ljava/lang/String;)V
 	public final fun sendCommand (Ljava/lang/String;)V
 	public final fun setClipboard (Ljava/lang/String;)V
