@@ -4554,6 +4554,8 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McClient {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/helpers/McClient;
 	public final fun getChat ()Lnet/minecraft/client/gui/components/ChatComponent;
 	public final fun getClipboard ()Ljava/lang/String;
+	public final fun getConfig ()Ljava/nio/file/Path;
+	public final fun getConnection ()Lnet/minecraft/client/multiplayer/ClientPacketListener;
 	public final fun getGui ()Lnet/minecraft/client/gui/Gui;
 	public final fun getMouse ()Lkotlin/Pair;
 	public final fun getOptions ()Lnet/minecraft/client/Options;
