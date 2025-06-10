@@ -143,13 +143,6 @@ object DebugCommands {
             then("save") {
                 then("biomes") {
                     callback {
-                        
-                    }
-                }
-            }
-            then("save") {
-                then("biomes") {
-                    callback {
                         val outputs = McClient.config.resolve(".skyblock-debug").resolve("biomes")
                         outputs.createDirectories()
 
