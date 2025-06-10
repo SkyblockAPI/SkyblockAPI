@@ -26,6 +26,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     APPLIED_RUNE(AppliedRuneCalculator),
     APPLIED_DYE(AppliedDyeCalculator),
     HELMET_SKIN(HelmetSkinCalculator),
+    BASE_ITEM(BaseItemSource)
     ;
 
     companion object {
@@ -34,7 +35,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
             val sources = entries.associateWith { it.calc.calculate(id, stack) }.mapNotNull { (key, value) -> value?.let { GroupedEntry(key, value) } }
             return ItemValueResult(
                 lowestBin,
-                lowestBin + sources.sumOf { it.price } * stack.count,
+                sources.sumOf { it.price } * stack.count,
                 sources.associate { it.source to it.price },
                 sources,
             )
