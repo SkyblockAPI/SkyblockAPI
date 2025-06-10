@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.*
 import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 
 enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
+    BASE_ITEM(BaseItemSource),
     RECOMBOBULATOR(RecombobulatorCalculator),
     REFORGE(ReforgeCalculator),
     ENCHANTMENT(EnchantmentCalculator),
@@ -26,7 +27,6 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     APPLIED_RUNE(AppliedRuneCalculator),
     APPLIED_DYE(AppliedDyeCalculator),
     HELMET_SKIN(HelmetSkinCalculator),
-    BASE_ITEM(BaseItemSource)
     ;
 
     companion object {
