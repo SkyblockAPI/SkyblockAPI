@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.*
 import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 
 enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
+    BASE_ITEM(BaseItemSource),
     RECOMBOBULATOR(RecombobulatorCalculator),
     REFORGE(ReforgeCalculator),
     ENCHANTMENT(EnchantmentCalculator),
@@ -34,7 +35,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
             val sources = entries.associateWith { it.calc.calculate(id, stack) }.mapNotNull { (key, value) -> value?.let { GroupedEntry(key, value) } }
             return ItemValueResult(
                 lowestBin,
-                lowestBin + sources.sumOf { it.price } * stack.count,
+                sources.sumOf { it.price } * stack.count,
                 sources.associate { it.source to it.price },
                 sources,
             )
