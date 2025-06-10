@@ -2751,6 +2751,7 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueS
 	public static final field APPLIED_RUNE Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field ART_OF_PEACE Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field ART_OF_WAR Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field BASE_ITEM Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field BOOK_OF_STATS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource$Companion;
 	public static final field DIVAN_POWDER_COATING Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
@@ -2833,6 +2834,12 @@ public abstract interface class tech/thatgravyboat/skyblockapi/api/item/calculat
 
 public final class tech/thatgravyboat/skyblockapi/api/item/calculator/SingleEntryCalculator$DefaultImpls {
 	public static fun calculate (Ltech/thatgravyboat/skyblockapi/api/item/calculator/SingleEntryCalculator;Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/item/calculator/sources/BaseItemSource : tech/thatgravyboat/skyblockapi/api/item/calculator/SingleEntryCalculator {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/item/calculator/sources/BaseItemSource;
+	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
+	public fun getEntry (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/item/calculator/CalculationEntry;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/location/LocationAPI {
