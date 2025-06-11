@@ -94,7 +94,7 @@ object MineshaftAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.DWARVEN_MINES)
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         if (mineshaftFoundRegex.matches(event.text)) {
             MineshaftFoundEvent.post()
         }

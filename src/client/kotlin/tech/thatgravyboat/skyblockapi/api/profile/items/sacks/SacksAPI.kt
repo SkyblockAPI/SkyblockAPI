@@ -41,7 +41,7 @@ object SacksAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         sackMessageRegex.match(event.component) {
             val gainedHoverComponents = it["gained"]?.copy()?.hover?.splitLines() ?: emptyList()
             val lostHoverComponents = it["lost"]?.copy()?.hover?.splitLines() ?: emptyList()
