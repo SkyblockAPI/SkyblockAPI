@@ -684,7 +684,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/Mine
 	public final fun getMineshaftType ()Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/MineshaftType;
 	public final fun getScrap ()I
 	public final fun isCrystal ()Z
-	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent;)V
+	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onWidgetUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
 	public final fun onWorldChange (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ServerChangeEvent;)V
@@ -3572,7 +3572,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/sacks/SacksA
 	public final fun getSackItems ()Ljava/util/Map;
 	public final fun getSackMessageRegex ()Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;
 	public final fun getSackTitleRegex ()Lkotlin/text/Regex;
-	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent;)V
+	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 }
 
