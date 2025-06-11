@@ -19,6 +19,8 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.match
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
@@ -41,7 +43,7 @@ object SacksAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onChat(event: ChatReceivedEvent) {
+    fun onChat(event: ChatReceivedEvent.Pre) {
         sackMessageRegex.match(event.component) {
             val gainedHoverComponents = it["gained"]?.copy()?.hover?.splitLines() ?: emptyList()
             val lostHoverComponents = it["lost"]?.copy()?.hover?.splitLines() ?: emptyList()
@@ -52,6 +54,10 @@ object SacksAPI {
                     val id = RepoItemsAPI.getItemIdByName(item) ?: return@findOrNull null
                     return@findOrNull id to amount.replace("+", "").toIntValue()
                 }
+            }
+
+            changedItems.forEach {
+                Text.of(it.toString()).send()
             }
 
             changedItems.forEach { (item, amount) -> SacksStorage.updateItemValue(item, amount) }
