@@ -4666,6 +4666,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/DiscoverableValue : kotl
 
 public final class tech/thatgravyboat/skyblockapi/utils/Scheduling {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/utils/Scheduling;
+	public final fun async (Lkotlin/jvm/functions/Function1;)V
 	public final fun schedule-NqJ4yvY (JJLkotlin/jvm/functions/Function1;)Ljava/util/concurrent/ScheduledFuture;
 	public final fun schedule-VtjQ1oo (JLkotlin/jvm/functions/Function1;)Ljava/util/concurrent/ScheduledFuture;
 }
@@ -5102,6 +5103,12 @@ public abstract interface class tech/thatgravyboat/skyblockapi/utils/text/Compon
 	public abstract fun toComponent ()Lnet/minecraft/network/chat/Component;
 }
 
+public final class tech/thatgravyboat/skyblockapi/utils/text/RunnableClickEvent : net/minecraft/network/chat/ClickEvent {
+	public fun <init> (Lkotlin/jvm/functions/Function0;)V
+	public fun action ()Lnet/minecraft/network/chat/ClickEvent$Action;
+	public final fun getRunnable ()Lkotlin/jvm/functions/Function0;
+}
+
 public final class tech/thatgravyboat/skyblockapi/utils/text/Text {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/utils/text/Text;
 	public final fun asComponent (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
@@ -5183,6 +5190,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/TextStyle {
 	public final fun getUnderlined (Lnet/minecraft/network/chat/MutableComponent;)Z
 	public final fun getUri (Lnet/minecraft/network/chat/MutableComponent;)Ljava/net/URI;
 	public final fun getUrl (Lnet/minecraft/network/chat/MutableComponent;)Ljava/lang/String;
+	public final fun onClick (Lnet/minecraft/network/chat/MutableComponent;Lkotlin/jvm/functions/Function0;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun setBold (Lnet/minecraft/network/chat/MutableComponent;Z)V
 	public final fun setColor (Lnet/minecraft/network/chat/MutableComponent;I)V
 	public final fun setCommand (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;)V
