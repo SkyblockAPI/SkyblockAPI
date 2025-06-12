@@ -98,11 +98,11 @@ object McClient {
     @RemoveNextVersion(ReplaceWith("runNextTick(action)"))
     fun tell(action: () -> Unit) = runNextTick(action)
 
-    fun setScreenAsync(screen: () -> Screen?) = tell { self.setScreen(screen()) }
+    fun setScreenAsync(screen: () -> Screen?) = runNextTick { self.setScreen(screen()) }
 
     /** Bad because with this method the screen gets init too early **/
     @RemoveNextVersion(ReplaceWith("The other setScreenAsync method that takes in a Screen supplier"))
-    fun setScreenAsync(screen: Screen?) = tell { self.setScreen(screen) }
+    fun setScreenAsync(screen: Screen?) = runNextTick { self.setScreen(screen) }
 
     fun setScreen(screen: Screen?) {
         if (self.screen is ChatScreen) {
