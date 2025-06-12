@@ -17,6 +17,7 @@ object ItemData {
         ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
 
     fun getItemData(id: String) = itemData.firstOrNull { it.id == id }
+    fun getNpcPrice(id: String): Int? = getItemData(id)?.npcSellPrice
 }
 
 @GenerateCodec
@@ -25,6 +26,7 @@ data class HypixelApiItem(
     @param:FieldName("gemstone_slots") val gemstones: List<GemstoneCost> = emptyList(),
     @param:FieldName("upgrade_costs") val upgradeCost: List<List<Cost>> = emptyList(),
     @param:FieldName("dungeon_item_conversion_cost") val conversionCost: EssenceCost?,
+    @param:FieldName("npc_sell_price") val npcSellPrice: Int?,
 ) {
     companion object {
         val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()
