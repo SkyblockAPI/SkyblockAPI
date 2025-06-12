@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import java.net.URI
 import java.nio.file.Path
 
@@ -82,6 +83,10 @@ object McClient {
     val chat: ChatComponent get() = gui.chat
     val options: Options get() = self.options
 
+    fun openUri(uri: String) {
+        openUri(URI.create(uri))
+    }
+
     fun openUri(uri: URI) {
         Util.getPlatform().openUri(uri)
     }
@@ -90,6 +95,9 @@ object McClient {
         self.schedule(action)
     }
 
+    fun setScreenAsync(screen: () -> Screen?) = tell { self.setScreen(screen()) }
+
+    @RemoveNextVersion
     fun setScreenAsync(screen: Screen?) = tell { self.setScreen(screen) }
 
     fun setScreen(screen: Screen?) {
