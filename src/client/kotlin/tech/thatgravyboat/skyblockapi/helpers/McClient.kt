@@ -83,9 +83,9 @@ object McClient {
     val chat: ChatComponent get() = gui.chat
     val options: Options get() = self.options
 
-    fun openUri(uri: String) {
+    fun openUri(uri: String): Boolean = runCatching {
         openUri(URI.create(uri))
-    }
+    }.getOrNull() != null
 
     fun openUri(uri: URI) {
         Util.getPlatform().openUri(uri)
