@@ -13,6 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
@@ -63,6 +64,21 @@ object DebugCommands {
                     Text.of("[SkyBlockAPI] Price of $id is ${price.toFormattedString()}.") {
                         this.color = TextColor.YELLOW
                     }.send()
+                }
+            }
+            then("itemdata id", StringArgumentType.greedyString()) {
+                callback {
+                    val id = this.getArgument("id", String::class.java)
+                    val itemData = ItemData.getItemData(id) ?: run {
+                        Text.debug("ItemData for $id not found.") {
+                            this.color = TextColor.RED
+                        }.send()
+                        return@callback
+                    }
+
+                    McClient.clipboard = itemData.toString()
+
+                    Text.debug("ItemData of $id copied to clipboard.").send()
                 }
             }
             then("copy") {
