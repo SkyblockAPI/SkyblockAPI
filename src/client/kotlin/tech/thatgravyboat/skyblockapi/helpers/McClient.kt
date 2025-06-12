@@ -85,15 +85,18 @@ object McClient {
 
     fun openUri(uri: String): Boolean = runCatching {
         openUri(URI.create(uri))
-    }.getOrNull() != null
+    }.isSuccess
 
     fun openUri(uri: URI) {
         Util.getPlatform().openUri(uri)
     }
 
-    fun tell(action: () -> Unit) {
+    fun runNextTick(action: () -> Unit) {
         self.schedule(action)
     }
+
+    @RemoveNextVersion(ReplaceWith("runNextTick(action)"))
+    fun tell(action: () -> Unit) = runNextTick(action)
 
     fun setScreenAsync(screen: () -> Screen?) = tell { self.setScreen(screen()) }
 
