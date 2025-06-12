@@ -97,7 +97,8 @@ object McClient {
 
     fun setScreenAsync(screen: () -> Screen?) = tell { self.setScreen(screen()) }
 
-    @RemoveNextVersion
+    /** Bad because with this method the screen gets init too early **/
+    @RemoveNextVersion(ReplaceWith("The other setScreenAsync method that takes in a Screen supplier"))
     fun setScreenAsync(screen: Screen?) = tell { self.setScreen(screen) }
 
     fun setScreen(screen: Screen?) {
