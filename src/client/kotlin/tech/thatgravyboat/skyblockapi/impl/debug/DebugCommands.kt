@@ -78,9 +78,7 @@ object DebugCommands {
 
                     McClient.clipboard = itemData.toString()
 
-                    Text.of("[SkyBlockAPI] ItemData of $id copied to clipboard.") {
-                        this.color = TextColor.YELLOW
-                    }.send()
+                    Text.debug("ItemData of $id copied to clipboard.").send()
                 }
             }
             then("copy") {
