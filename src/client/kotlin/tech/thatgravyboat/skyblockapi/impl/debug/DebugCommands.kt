@@ -70,7 +70,7 @@ object DebugCommands {
                 callback {
                     val id = this.getArgument("id", String::class.java)
                     val itemData = ItemData.getItemData(id) ?: run {
-                        Text.of("[SkyBlockAPI] ItemData for $id not found.") {
+                        Text.debug("ItemData for $id not found.") {
                             this.color = TextColor.RED
                         }.send()
                         return@callback
