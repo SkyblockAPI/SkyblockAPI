@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import java.net.URI
 import java.nio.file.Path
 
@@ -82,15 +83,26 @@ object McClient {
     val chat: ChatComponent get() = gui.chat
     val options: Options get() = self.options
 
+    fun openUri(uri: String): Boolean = runCatching {
+        openUri(URI.create(uri))
+    }.isSuccess
+
     fun openUri(uri: URI) {
         Util.getPlatform().openUri(uri)
     }
 
-    fun tell(action: () -> Unit) {
+    fun runNextTick(action: () -> Unit) {
         self.schedule(action)
     }
 
-    fun setScreenAsync(screen: Screen?) = tell { self.setScreen(screen) }
+    @RemoveNextVersion(ReplaceWith("runNextTick(action)"))
+    fun tell(action: () -> Unit) = runNextTick(action)
+
+    fun setScreenAsync(screen: () -> Screen?) = runNextTick { self.setScreen(screen()) }
+
+    /** Bad because with this method the screen gets init too early **/
+    @RemoveNextVersion(ReplaceWith("The other setScreenAsync method that takes in a Screen supplier"))
+    fun setScreenAsync(screen: Screen?) = runNextTick { self.setScreen(screen) }
 
     fun setScreen(screen: Screen?) {
         if (self.screen is ChatScreen) {
