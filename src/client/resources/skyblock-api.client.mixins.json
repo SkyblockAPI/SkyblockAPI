@@ -16,6 +16,7 @@
         "events.MouseHandlerMixin",
         "events.ScreenMixin",
         "features.GuiGraphicsMixin",
+        "features.ScreenMixin",
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin",
         "tagattachments.ClientLevelMixin",

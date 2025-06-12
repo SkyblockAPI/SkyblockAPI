@@ -150,6 +150,10 @@ object TextStyle {
         return this
     }
 
+    fun MutableComponent.onClick(runnable: () -> Unit): MutableComponent = this.style {
+        withClickEvent(RunnableClickEvent(runnable))
+    }
+
     var MutableComponent.font: ResourceLocation?
         get() = this.style.font
         set(value) {
