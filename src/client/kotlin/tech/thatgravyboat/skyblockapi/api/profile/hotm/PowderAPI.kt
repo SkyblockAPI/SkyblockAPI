@@ -138,19 +138,16 @@ object PowderAPI {
         val lore = mainItem.getRawLore()
         for (line in lore) {
             mithrilPowderItemRegex.match(line, "amount") { (amount) ->
-                val formatted = amount.toLongValue()
-                this.mithril = formatted
-                mithrilTotal += formatted
+                this.mithril = amount.toLongValue()
+                mithrilTotal += this.mithril
             }
             gemstonePowderItemRegex.match(line, "amount") { (amount) ->
-                val formatted = amount.toLongValue()
-                this.gemstone = formatted
-                gemstoneTotal += formatted
+                this.gemstone = amount.toLongValue()
+                gemstoneTotal += this.gemstone
             }
             glacitePowderItemRegex.match(line, "amount") { (amount) ->
-                val formatted = amount.toLongValue()
-                this.glacite = formatted
-                glaciteTotal += formatted
+                this.glacite = amount.toLongValue()
+                glaciteTotal += this.glacite
             }
         }
 
@@ -182,19 +179,10 @@ object PowderAPI {
                 Text.debug("Glacite Powder: ${glacite}/${glaciteTotal}").send()
             }
             thenCallback("reset") {
-                reset()
+                PowderStorage.reset()
                 Text.debug("Powder reset.").send()
             }
         }
-    }
-
-    private fun reset() {
-        mithril = 0
-        gemstone = 0
-        glacite = 0
-        mithrilTotal = 0
-        gemstoneTotal = 0
-        glaciteTotal = 0
     }
 
 }
