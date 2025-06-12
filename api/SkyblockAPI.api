@@ -604,8 +604,6 @@ public final class tech/thatgravyboat/skyblockapi/api/area/mining/PowderAPI {
 	public final fun getGemstone ()J
 	public final fun getGlacite ()J
 	public final fun getMithril ()J
-	public final fun onProfileChange ()V
-	public final fun onTabWidgetChange (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/mining/events/GoblinRaidEvent : tech/thatgravyboat/skyblockapi/api/area/mining/events/MiningEvent {
@@ -2312,6 +2310,10 @@ public final class tech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder
 	public final fun then (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
 	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
 	public static synthetic fun then$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+	public final fun thenCallback (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+	public final fun thenCallback (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+	public final fun thenCallback ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+	public static synthetic fun thenCallback$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -3478,6 +3480,53 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/HotmPerk {
 	public final fun getLevel ()I
 	public final fun getUnlocked ()Z
 	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/PowderAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderAPI;
+	public final fun getGemstone ()J
+	public final fun getGemstoneTotal ()J
+	public final fun getGlacite ()J
+	public final fun getGlaciteTotal ()J
+	public final fun getMithril ()J
+	public final fun getMithrilTotal ()J
+	public final fun onCommand (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+	public final fun onTabWidgetChange (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/PowderData {
+	public fun <init> ()V
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;
+	public final fun component3 ()Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;)Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderData;Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGemstone ()Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;
+	public final fun getGlacite ()Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;
+	public final fun getMithril ()Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo {
+	public fun <init> ()V
+	public fun <init> (JJ)V
+	public synthetic fun <init> (JJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun copy (JJ)Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;JJILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/hotm/PowderInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrent ()J
+	public final fun getTotal ()J
+	public fun hashCode ()I
+	public final fun setCurrent (J)V
+	public final fun setTotal (J)V
 	public fun toString ()Ljava/lang/String;
 }
 
