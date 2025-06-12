@@ -4258,18 +4258,20 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/Ge
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/HypixelApiItem {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/HypixelApiItem$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/util/List;
 	public final fun component3 ()Ljava/util/List;
 	public final fun component4 ()Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost;
-	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/HypixelApiItem;
-	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/HypixelApiItem;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/HypixelApiItem;
+	public final fun component5 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost;Ljava/lang/Integer;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/HypixelApiItem;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/HypixelApiItem;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost;Ljava/lang/Integer;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/HypixelApiItem;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getConversionCost ()Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/EssenceCost;
 	public final fun getGemstones ()Ljava/util/List;
 	public final fun getId ()Ljava/lang/String;
+	public final fun getNpcSellPrice ()Ljava/lang/Integer;
 	public final fun getUpgradeCost ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -4300,6 +4302,7 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/It
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/ItemData;
 	public final fun getItemData ()Ljava/util/List;
 	public final fun getItemData (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/HypixelApiItem;
+	public final fun getNpcPrice (Ljava/lang/String;)Ljava/lang/Integer;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/pricing/BazaarAPI {
@@ -4575,11 +4578,14 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McClient {
 	public final fun getToasts ()Lnet/minecraft/client/gui/components/toasts/ToastManager;
 	public final fun getWindow ()Lcom/mojang/blaze3d/platform/Window;
 	public final fun isDev ()Z
+	public final fun openUri (Ljava/lang/String;)Z
 	public final fun openUri (Ljava/net/URI;)V
+	public final fun runNextTick (Lkotlin/jvm/functions/Function0;)V
 	public final fun sendClientCommand (Ljava/lang/String;)V
 	public final fun sendCommand (Ljava/lang/String;)V
 	public final fun setClipboard (Ljava/lang/String;)V
 	public final fun setScreen (Lnet/minecraft/client/gui/screens/Screen;)V
+	public final fun setScreenAsync (Lkotlin/jvm/functions/Function0;)V
 	public final fun setScreenAsync (Lnet/minecraft/client/gui/screens/Screen;)V
 	public final fun tell (Lkotlin/jvm/functions/Function0;)V
 }
