@@ -18,6 +18,7 @@ object CommonText {
     val SPACE = " ".asComponent()
     val EMPTY = "".asComponent()
 
+    internal val PREFIX = Text.of("[SkyBlockAPI] ").withColor(TextColor.YELLOW)
 }
 
 object Text {
@@ -67,6 +68,8 @@ object Text {
     fun MutableComponent.send(id: String) = McClient.chat.setMessageId(id) {
         this.send()
     }
+
+    internal fun Component.sendWithPrefix() = join(CommonText.PREFIX, this).send()
 }
 
 object TextProperties {
