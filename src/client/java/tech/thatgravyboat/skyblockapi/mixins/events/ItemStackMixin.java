@@ -40,6 +40,8 @@ public class ItemStackMixin {
         ordinal = 0
     ))
     private void getTooltipLines(Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Player player, TooltipFlag tooltipFlag, Consumer<Component> consumer, CallbackInfo ci) {
+        if (this.list.get() == null) return; // Vanilla calls this method themselves when getting a crossbow tooltip without calling the normal item tooltip, we don't want to post an event in that case.
+
         ItemStack stack = (ItemStack) (Object) this;
         new ItemTooltipEvent(stack, this.list.get()).post(SkyBlockAPI.getEventBus());
         this.list.remove();
