@@ -51,10 +51,10 @@ object LoreDataTypes {
 
         for (lore in it.getRawLore()) {
             rightClickAbilityRegex.match(lore, "ability") { (ability) -> outputAbility = ability }
-            if (manaCostRegex.match(lore, "mana") { (mana) -> outputMana = mana.parseFormattedInt() }) break
+            if (outputAbility != null && manaCostRegex.match(lore, "mana") { (mana) -> outputMana = mana.parseFormattedInt() }) break
         }
 
-        if (outputAbility != null && outputMana != null) outputAbility!! to outputMana!! else null
+        if (outputAbility != null && outputMana != null) outputAbility to outputMana else null
     }
 
     val COOLDOWN_ABILITY: DataType<Pair<String, Duration>> = DataType("cooldown_ability") {
@@ -63,10 +63,10 @@ object LoreDataTypes {
 
         for (lore in it.getRawLore()) {
             rightClickAbilityRegex.match(lore, "ability") { (ability) -> outputAbility = ability }
-            if (cooldownRegex.match(lore, "cooldown") { (cooldown) -> outputDuration = cooldown.toLongValue().seconds }) break
+            if (outputAbility != null && cooldownRegex.match(lore, "cooldown") { (cooldown) -> outputDuration = cooldown.toLongValue().seconds }) break
         }
 
-        if (outputAbility != null && outputDuration != null) outputAbility!! to outputDuration!! else null
+        if (outputAbility != null && outputDuration != null) outputAbility to outputDuration else null
     }
 
     private fun getRarityLine(stack: ItemStack): Pair<String, SkyBlockRarity>? {
