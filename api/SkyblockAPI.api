@@ -2369,6 +2369,13 @@ public final class tech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOp
 public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvRequired : java/lang/annotation/Annotation {
 }
 
+public abstract class tech/thatgravyboat/skyblockapi/api/events/render/BaseRenderEntityEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> ()V
+	public final fun clear ()V
+	public abstract fun getEntity ()Lnet/minecraft/world/entity/Entity;
+	public abstract fun getState ()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/render/HudElement : java/lang/Enum {
 	public static final field AIR Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
 	public static final field ARMOR Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
@@ -2383,6 +2390,42 @@ public final class tech/thatgravyboat/skyblockapi/api/events/render/HudElement :
 	public fun toString ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/render/HumanoidRenderEvent : tech/thatgravyboat/skyblockapi/api/events/render/BaseRenderEntityEvent {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/render/HumanoidRenderEvent;
+	public synthetic fun getEntity ()Lnet/minecraft/world/entity/Entity;
+	public fun getEntity ()Lnet/minecraft/world/entity/LivingEntity;
+	public synthetic fun getState ()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;
+	public fun getState ()Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;
+	public synthetic fun setEntity$skyblock_api_client (Lnet/minecraft/world/entity/Entity;)V
+	public synthetic fun setState$skyblock_api_client (Lnet/minecraft/client/renderer/entity/state/EntityRenderState;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/render/LivingEntityRenderEvent : tech/thatgravyboat/skyblockapi/api/events/render/BaseRenderEntityEvent {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/render/LivingEntityRenderEvent;
+	public synthetic fun getEntity ()Lnet/minecraft/world/entity/Entity;
+	public fun getEntity ()Lnet/minecraft/world/entity/LivingEntity;
+	public synthetic fun getState ()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;
+	public fun getState ()Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;
+	public synthetic fun setEntity$skyblock_api_client (Lnet/minecraft/world/entity/Entity;)V
+	public synthetic fun setState$skyblock_api_client (Lnet/minecraft/client/renderer/entity/state/EntityRenderState;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/render/PlayerRenderEvent : tech/thatgravyboat/skyblockapi/api/events/render/BaseRenderEntityEvent {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/render/PlayerRenderEvent;
+	public fun getEntity ()Lnet/minecraft/client/player/AbstractClientPlayer;
+	public synthetic fun getEntity ()Lnet/minecraft/world/entity/Entity;
+	public synthetic fun getState ()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;
+	public fun getState ()Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;
+	public synthetic fun setEntity$skyblock_api_client (Lnet/minecraft/world/entity/Entity;)V
+	public synthetic fun setState$skyblock_api_client (Lnet/minecraft/client/renderer/entity/state/EntityRenderState;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderEntityEvent : tech/thatgravyboat/skyblockapi/api/events/render/BaseRenderEntityEvent {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/render/RenderEntityEvent;
+	public fun getEntity ()Lnet/minecraft/world/entity/Entity;
+	public fun getState ()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderHudElementEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
