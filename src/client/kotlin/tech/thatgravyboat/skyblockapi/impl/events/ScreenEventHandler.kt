@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenMouseClickEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.api.item.getClickAction
 import tech.thatgravyboat.skyblockapi.api.item.getVisualItem
 import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
@@ -22,8 +23,14 @@ object ScreenEventHandler {
 
     @Subscription
     fun preScreenClick(event: ScreenMouseClickEvent.Pre) {
-        if (event.screen !is AbstractContainerScreen<*>) return
-        val consumer = event.screen.getHoveredSlot()?.item?.getVisualItem()?.getClickAction() ?: return
+        val screen = event.screen as? AbstractContainerScreen<*> ?: return
+        val slot = screen.getHoveredSlot() ?: return
+        if (SlotClickEvent(slot.item, slot, event.button, screen).post()) event.cancel()
+    }
+
+    @Subscription(priority = Subscription.HIGHEST)
+    fun onSlotClick(event: SlotClickEvent) {
+        val consumer = event.item.getVisualItem()?.getClickAction() ?: return
         consumer.accept(event.button)
         event.cancel()
     }

@@ -6,8 +6,8 @@ import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
-import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.mixins.accessors.ContainerScreenAccessor
+import tech.thatgravyboat.skyblockapi.utils.extentions.isSkyblockFiller
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 class InventoryChangeEvent(
@@ -21,7 +21,7 @@ class InventoryChangeEvent(
     val title = titleComponent.stripped
     val itemStacks = inventory.map { it.item }
 
-    val isSkyBlockFiller = item.isEmpty || item in ItemTag.GLASS_PANES
+    val isSkyBlockFiller = item.isSkyblockFiller()
 
     val isInTopRow = slot.index < 9
     val isInBottomRow = (screen as? ContainerScreenAccessor)?.containerRows?.let { (slot.index) >= (it - 1) * 9 } ?: false

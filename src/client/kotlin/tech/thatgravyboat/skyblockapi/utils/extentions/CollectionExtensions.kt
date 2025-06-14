@@ -60,4 +60,8 @@ fun <K, V> Map<K, V>.mapValuesNotNull(transform: (Map.Entry<K, V>) -> V?): Map<K
     return this.mapNotNull { transform(it)?.let { value -> it.key to value } }.toMap()
 }
 
-fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null }.mapKeys { it.key!! }
+@Suppress("UNCHECKED_CAST")
+fun <K, V> Map<K, V?>.filterValuesNotNull(): Map<K, V> = this.filterValues { it != null } as Map<K, V>
+
+@Suppress("UNCHECKED_CAST")
+fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null } as Map<K, V>
