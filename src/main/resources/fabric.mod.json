@@ -7,7 +7,7 @@
     "authors": [ ],
     "contact": { },
     "license": "MIT",
-    "icon": "assets/skyblock-api/icon.png",
+    "icon": "assets/skyblockapi/icon.png",
     "environment": "*",
     "entrypoints": {
         "client": [ "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit\$skyblock_api_client" ],
