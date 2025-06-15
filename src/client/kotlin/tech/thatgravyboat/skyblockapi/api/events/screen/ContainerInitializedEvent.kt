@@ -2,6 +2,8 @@ package tech.thatgravyboat.skyblockapi.api.events.screen
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.chat.Component
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.mixins.accessors.ContainerScreenAccessor
@@ -16,9 +18,6 @@ class ContainerInitializedEvent(
     val title: String = titleComponent.stripped
     val rowCount: Int? = (screen as? ContainerScreenAccessor)?.containerRows
 
-    // TODO: find a better way to do this
-    val notPlayerInventoryItems by lazy {
-        val rows = rowCount ?: return@lazy emptyList()
-        return@lazy itemStacks.subList(0, (rows * 9) - 1)
-    }
+    val containerSlots: List<Slot> = screen.menu.slots.takeWhile { it.container !is Inventory }
+    val containerItems: List<ItemStack> = containerSlots.map { it.item }
 }

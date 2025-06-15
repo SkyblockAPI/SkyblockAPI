@@ -72,8 +72,9 @@ internal object MuseumStorage {
         var shouldSave = false
         for ((internalName, item) in items) {
             val prev = armorSet.items[internalName]
-            if (!item.isSameItem(prev)) {
-                armorSet.items[internalName] = item
+            val cleanedItem = item.removeMuseumLines()
+            if (!cleanedItem.isSameItem(prev)) {
+                armorSet.items[internalName] = cleanedItem
                 shouldSave = true
             }
         }
@@ -99,6 +100,7 @@ internal object MuseumStorage {
         if (data.armorSets.remove(armorSetName) != null) save()
     }
 
+    /** Shouldn't be directly edited and should only be used for debugging purposes. */
     fun getRawData() = data
 
     fun getAllItems(): List<ItemStack> {
@@ -126,6 +128,6 @@ internal object MuseumStorage {
         save()
     }
 
-    fun save() = MUSEUM.save()
+    private fun save() = MUSEUM.save()
 
 }

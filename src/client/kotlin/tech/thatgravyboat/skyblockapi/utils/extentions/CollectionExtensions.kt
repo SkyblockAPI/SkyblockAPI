@@ -65,3 +65,7 @@ fun <K, V> Map<K, V?>.filterValuesNotNull(): Map<K, V> = this.filterValues { it 
 
 @Suppress("UNCHECKED_CAST")
 fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null } as Map<K, V>
+
+inline fun <T, K> Iterable<T>.associateByNotNull(keySelector: (T) -> K?): Map<K, T> = buildMap {
+    for (element in this@associateByNotNull) put(keySelector(element) ?: continue, element)
+}

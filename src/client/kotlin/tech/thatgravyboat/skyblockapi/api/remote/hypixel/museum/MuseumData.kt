@@ -16,6 +16,7 @@ object MuseumData {
     val museumData: RepoMuseumData = SkyBlockAPI.mod.findPath("repo/museum_data.json").orElseThrow()
         ?.let(Files::readString)?.readJson<JsonObject>().toDataOrThrow(RepoMuseumData.CODEC)
 
+    //region Data
     private val exceptions = mapOf(
         "prospector's outfit" to "miner outfit",
         "miner armor" to "tank_miner",
@@ -32,16 +33,20 @@ object MuseumData {
     )
 
     private val armorNames = listOf(
-        "set",
-        "suit",
-        "armor",
-        "outfit",
-        "equipment",
-        "'s special armor",
-        "'s armor",
-        "armor of",
-        "tuxedo",
+        "set", "suit", "armor", "outfit", "equipment",
+        "'s special armor", "'s armor", "armor of", "tuxedo",
     )
+    //endregion
+
+    fun getArmorSetIdFromName(name: String): String? {
+        val lowercase = name.lowercase().trim()
+        fun String.format() = trim().uppercase().replace(" ", "_")
+        val id = exceptions.getOrElse(lowercase) {
+            armorNames.map { lowercase.replace(it, "").trim() }.minBy(String::length)
+        }.format()
+        if (museumData.armorSets.containsKey(id)) return id
+        return lowercase.format().takeIf { museumData.armorSets.containsKey(it) }
+    }
 
     fun getArmorSetFromId(id: String): List<String>? = museumData.armorSets[id]
 
@@ -50,16 +55,6 @@ object MuseumData {
         return museumData.armorSets[id]
     }
 
-    fun getArmorSetIdFromName(name: String): String? {
-        val lowercase = name.lowercase().trim()
-        val id = exceptions.getOrElse(lowercase) {
-            armorNames.map { lowercase.replace(it, "").trim() }.minBy(String::length)
-        }.trim().uppercase().replace(" ", "_")
-        val secondId = lowercase.trim().uppercase().replace(" ", "_")
-        return if (museumData.armorSets.containsKey(id)) id
-        else if (museumData.armorSets.containsKey(secondId)) secondId
-        else null
-    }
 }
 
 
@@ -68,6 +63,6 @@ data class RepoMuseumData(
     @FieldName("armor_sets") val armorSets: Map<String, List<String>> = emptyMap(),
 ) {
     companion object {
-        val CODEC: Codec<RepoMuseumData> = SkyblockAPICodecs.getCodec<RepoMuseumData>()
+        val CODEC: Codec<RepoMuseumData> = SkyblockAPICodecs.RepoMuseumDataCodec.codec()
     }
 }

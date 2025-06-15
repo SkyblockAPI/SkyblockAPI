@@ -73,21 +73,21 @@ object MuseumAPI {
         if (item.cleanName != "Confirm Donation") return
         val (armorSetId, armors) = lastArmor ?: return
         MuseumStorage.addArmorSet(armorSetId, armors)
+        lastArmor = null
     }
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB)
     fun onInventoryOpen(event: ContainerInitializedEvent) {
-        val items = event.notPlayerInventoryItems
-        if (donateTitleRegex.match(event.title)) {
+        val items = event.containerItems
+        if (donateTitleRegex.match(event.title)) { // Store the armor in the current donation inventory
             if (lastCategory != MuseumCategory.ARMOR_SETS) return
-            val armors = items.filterNot(::isFiller).associateBy { it.getSkyBlockId() }.filterKeysNotNull().ifEmpty { null }
-            if (armors == null) {
+            val armors = items.associateByNotNull { it.getSkyBlockId() }
+            if (armors.isEmpty()) {
                 lastArmor = null
                 return
             }
-            val armorSetId = getArmorSetInternalName(armors.keys)
-            if (armorSetId == null) {
+            val armorSetId = getArmorSetInternalName(armors.keys) ?: run {
                 lastArmor = null
                 return
             }
@@ -97,15 +97,16 @@ object MuseumAPI {
         inventoryTitleRegex.findThenNull(event.title, "category") { (categoryName) ->
             val category = MuseumCategory.fromName(categoryName) ?: return@findThenNull
             lastCategory = category
+            val filtered = items.filterNot { it.isSkyblockFiller() }
             when(category) {
                 MuseumCategory.ARMOR_SETS -> {
-                    for (item in items.filterNot { it.isSkyblockFiller() }) {
-                        if (item.isNotDonated()) continue // This would require storing the name shown of every single armor set id and idk how to do that
-                        if (item.isNotStored()) {
+                    for (item in filtered) {
+                        if (item.isNotDonated()) {
+                            val id = MuseumData.getArmorSetIdFromName(item.cleanName) ?: continue
+                            MuseumStorage.deleteArmorSet(id)
+                        } else if (item.isNotStored()) {
                             val id = MuseumData.getArmorSetIdFromName(item.cleanName) ?: continue
                             MuseumStorage.addNotStoredArmorSet(id)
-                        } else {
-                            // Cant get enough data from here
                         }
                     }
                 }
@@ -113,21 +114,24 @@ object MuseumAPI {
                     // TODO implement special items
                 }
                 else -> {
-                    items.forEach {
-                        if (it.isNotDonated()) {
-                            val id = RepoItemsAPI.getItemIdByName(it.cleanName) ?: return@forEach
+                    filtered.forEach { item ->
+                        if (item.isNotDonated()) {
+                            val id = RepoItemsAPI.getItemIdByName(item.cleanName) ?: return@forEach
                             MuseumStorage.deleteItem(id)
-                        } else if (it.isNotStored()) {
-                            val id = RepoItemsAPI.getItemIdByName(it.cleanName) ?: return@forEach
+                        } else if (item.isNotStored()) {
+                            val id = RepoItemsAPI.getItemIdByName(item.cleanName) ?: return@forEach
                             MuseumStorage.addNotStoredItem(category, id)
                         } else {
-                            val id = it.getSkyBlockId() ?: return@forEach
-                            MuseumStorage.addItem(category, id, it)
+                            val id = item.getSkyBlockId() ?: return@forEach
+                            MuseumStorage.addItem(category, id, item)
                         }
                     }
                 }
             }
         } ?: return
+
+        val id = MuseumData.getArmorSetIdFromName(event.title) ?: return
+        // TODO: find better way to do this
         val rows = event.rowCount ?: return
         for (row in (rows - 1) downTo 0) {
             val index = 3 + (row * 9)
@@ -137,10 +141,9 @@ object MuseumAPI {
             inventoryTitleRegex.findThenNull(first, "category") { (categoryName) ->
                 val category = MuseumCategory.fromName(categoryName) ?: return@findThenNull
                 if (category != MuseumCategory.ARMOR_SETS) return@findThenNull
-                val newSublist = items.subList(0, index).filterNot(::isFiller).associateBy { it.getSkyBlockId() }.filterKeysNotNull()
-                if (newSublist.isEmpty()) return@findThenNull
-                val id = MuseumData.getArmorSetIdFromName(event.title) ?: return@findThenNull
-                MuseumStorage.addArmorSet(id, newSublist)
+                val map = items.associateByNotNull { it.getSkyBlockId() }
+                if (map.isEmpty()) return@findThenNull
+                MuseumStorage.addArmorSet(id, map)
             } ?: break
         }
     }
@@ -152,14 +155,12 @@ object MuseumAPI {
                 MuseumStorage.reset()
                 Text.debug("Museum data has been reset.").send()
             }
-            callback {
-                val items = MuseumStorage.getRawData() ?: return@callback
+            thenCallback("copy") {
+                val items = MuseumStorage.getRawData() ?: return@thenCallback
                 McClient.clipboard = items.toJson(SkyblockAPICodecs.MuseumStorageDataCodec.codec()).toPrettyString()
                 Text.debug("Copied Museum data to clipboard.").send()
             }
         }
     }
-
-    private fun isFiller(item: ItemStack): Boolean = item.isSkyblockFiller() || item.getSkyBlockId() == null
 
 }
