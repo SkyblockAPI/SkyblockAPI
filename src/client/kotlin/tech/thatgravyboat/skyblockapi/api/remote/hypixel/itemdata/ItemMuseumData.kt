@@ -6,7 +6,7 @@ import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumCategory
 
 @GenerateCodec
-data class RepoMuseumData(
+data class ItemMuseumData(
     @FieldName("type") val category: MuseumCategory,
     @Compact @FieldName("armor_set") val armorSets: List<String> = emptyList(),
     @FieldName("parent") val parents: Map<String, String> = emptyMap()

@@ -6,17 +6,17 @@ import net.minecraft.world.item.component.ItemLore
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumArmorData
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumCategory
-import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumData
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumItemData
+import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumStorageData
 import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRarityLineIndex
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 
 internal object MuseumStorage {
 
-    private val MUSEUM = StoredProfileData<MuseumData>("museum.json")
+    private val MUSEUM = StoredProfileData<MuseumStorageData>("museum.json")
 
-    private val data: MuseumData? get() = MUSEUM.get()
+    private val data: MuseumStorageData? get() = MUSEUM.get()
 
     private fun ItemStack.removeMuseumLines(): ItemStack {
         val index = getRarityLineIndex()
@@ -121,6 +121,8 @@ internal object MuseumStorage {
     fun reset() {
         val data = data ?: return
         data.categories.clear()
+        data.armorSets.clear()
+        data.specialItems.clear()
         save()
     }
 

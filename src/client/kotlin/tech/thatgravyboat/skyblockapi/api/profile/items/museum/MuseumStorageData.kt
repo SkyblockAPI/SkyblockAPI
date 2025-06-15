@@ -5,7 +5,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
 
 @GenerateCodec
-data class MuseumData(
+data class MuseumStorageData(
     val categories: MutableMap<MuseumCategory, MutableMap<String, MuseumItemData>> = enumMapOf(),
     val armorSets: MutableMap<String, MuseumArmorData> = mutableMapOf(),
     val specialItems: MutableList<ItemStack> = mutableListOf(),
