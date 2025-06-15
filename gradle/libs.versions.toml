@@ -3,21 +3,22 @@ google-autoservice = "1.1.1"
 google-autoservice-ksp = "1.2.0"
 google-gson = "2.12.1"
 
-meowdding-modules = "1.0.3"
-meowdding-ktcodecs = "1.0.17"
+meowdding-modules = "1.0.5"
+meowdding-ktcodecs = "1.0.22"
 meowdding-resources = "1.0.0"
 
 minecraft = "1.21.5"
 
-fabric-loom = "1.10-SNAPSHOT"
+terrarium-cloche = "0.10.2"
+
 fabric-loader = "0.16.10"
-fabric-api = "0.119.5+1.21.5"
+fabric-api = "0.126.0"
 fabric-language-kotlin = "1.13.0+kotlin.2.1.0"
 
 kotlin = "2.1.0"
 kotlin-gradle-plugin = "2.1.0"
-ksp = "2.1.0-1.0.29"
-binary-compatibility-checker = "0.17.0"
+kotlin-binary-compatibility-checker = "0.17.0"
+kotlin-symbol-processor = "2.1.0-1.0.29"
 
 hypixel-modapi = "1.0.1"
 hypixel-modapi-fabric = "1.0.1+build.1+mc1.21"
@@ -62,10 +63,10 @@ kotlin-gradle-plugin = ["kotlin-gradle-plugin", "kotlin-gradle-plugin-api"]
 
 [plugins]
 
-fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }
+terrarium-cloche = { id = "earth.terrarium.cloche", version.ref = "terrarium-cloche" }
 
 meowdding-resources = { id = "me.owdding.resources" }
 
-kotlin-binary-compatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-checker" }
+kotlin-binary-compatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlin-binary-compatibility-checker" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-symbol-processor = { id = "com.google.devtools.ksp", version.ref = "kotlin-symbol-processor" }

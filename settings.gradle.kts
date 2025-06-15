@@ -2,10 +2,9 @@ rootProject.name = "SkyblockAPI"
 
 pluginManagement {
     repositories {
-        maven("https://maven.fabricmc.net/") {
-            name = "Fabric"
-        }
         gradlePluginPortal()
+        maven(url = "https://maven.msrandom.net/repository/cloche")
+        maven(url = "https://maven.fabricmc.net/")
     }
 }
 

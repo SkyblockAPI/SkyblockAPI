@@ -1,0 +1,66 @@
+package tech.thatgravyboat.skyblockapi.api.events.info
+
+import net.minecraft.network.chat.Component
+import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+import tech.thatgravyboat.skyblockapi.utils.extensions.toFormattedName
+
+data class TabWidgetChangeEvent(
+    val widget: TabWidget,
+    val old: List<String>,
+    val new: List<String>,
+    val newComponents: List<Component>,
+) : SkyBlockEvent() {
+
+    override fun post(bus: EventBus): Boolean =
+        bus.post(this, this.widget)
+}
+
+enum class TabWidget {
+    AREA,
+    PROFILE,
+    PET,
+    DAILY_QUESTS,
+    FORGES,
+    COMMISSIONS,
+    SKILLS,
+    POWDERS,
+    ELECTION,
+    CRYSTALS,
+    BESTIARY,
+    COLLECTION,
+    STATS,
+    EVENT,
+    PARTY,
+    MINIONS,
+    DUNGEONS,
+    ESSENCE,
+    GOOD_TO_KNOW,
+    SHEN,
+    ADVERTISEMENT,
+    TRAPPER,
+    EVENT_TRACKERS,
+    FROZEN_CORPSES,
+    ACTIVE_EFFECTS,
+    MINING_EVENT,
+    TIMERS,
+    COMPOSTER,
+    JACOBS_CONTEST,
+    PESTS,
+    VISITORS,
+    RNG_METER,
+    DOWNED,
+    TEAM_DEATHS,
+    DISCOVERIES,
+    PUZZLES,
+    REPUTATION,
+    TROPHY_FISH,
+    FACTION_QUESTS,
+    FOREST_WHISPERS,
+    MOONGLADE_BEACON,
+    ;
+
+    private val string = toFormattedName()
+
+    override fun toString() = string
+}
