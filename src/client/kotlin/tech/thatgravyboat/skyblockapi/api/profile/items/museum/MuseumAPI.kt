@@ -22,7 +22,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 @Module
 object MuseumAPI {
@@ -130,7 +129,7 @@ object MuseumAPI {
             }
         } ?: return
 
-        val id = MuseumData.getArmorSetIdFromName(event.title) ?: return
+        val setId = MuseumData.getArmorSetIdFromName(event.title) ?: return
         // TODO: find better way to do this
         val rows = event.rowCount ?: return
         for (row in (rows - 1) downTo 0) {
@@ -143,7 +142,7 @@ object MuseumAPI {
                 if (category != MuseumCategory.ARMOR_SETS) return@findThenNull
                 val map = items.associateByNotNull { it.getSkyBlockId() }
                 if (map.isEmpty()) return@findThenNull
-                MuseumStorage.addArmorSet(id, map)
+                MuseumStorage.addArmorSet(setId, map)
             } ?: break
         }
     }
@@ -153,12 +152,27 @@ object MuseumAPI {
         event.register("sbapi museum") {
             thenCallback("reset") {
                 MuseumStorage.reset()
-                Text.debug("Museum data has been reset.").send()
+                Text.sendDebug("Museum data has been reset.")
             }
-            thenCallback("copy") {
-                val items = MuseumStorage.getRawData() ?: return@thenCallback
-                McClient.clipboard = items.toJson(SkyblockAPICodecs.MuseumStorageDataCodec.codec()).toPrettyString()
-                Text.debug("Copied Museum data to clipboard.").send()
+            then("copy") {
+                thenCallback("raw") {
+                    val items = MuseumStorage.getRawData() ?: return@thenCallback
+                    McClient.clipboard = items.toJson(SkyblockAPICodecs.MuseumStorageDataCodec.codec()).toPrettyString()
+                    Text.sendDebug("Copied raw Museum data to clipboard.")
+                }
+                callback {
+                    val items = MuseumStorage.getItemsWithCategory()
+                    McClient.clipboard = buildString {
+                        appendLine("Museum Items:")
+                        for ((category, itemList) in items) {
+                            appendLine("- $category: ${itemList.size} items")
+                            for (item in itemList) {
+                                appendLine("  - ${item.cleanName} (${item.getSkyBlockId()})")
+                            }
+                        }
+                    }
+                    Text.sendDebug("Copied Museum data to clipboard.")
+                }
             }
         }
     }
