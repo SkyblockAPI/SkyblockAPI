@@ -193,8 +193,9 @@ fun String.trimIgnoreColor(): String {
 
 fun UUID.toDashlessString(): String = toString().replace("-", "")
 
-fun String.removeTrailingChar(target: Char): String {
-    var i = lastIndex
-    while (i >= 0 && this[i] == target) i--
-    return if (i < lastIndex) substring(0, i + 1) else this
-}
+fun String.toScreamingSnakeCase(): String = this
+    .replace(" ", "_")
+    .replace("-", "_")
+    .uppercase()
+
+fun String.removeTrailingChar(target: Char): String = dropLastWhile {  it == target }

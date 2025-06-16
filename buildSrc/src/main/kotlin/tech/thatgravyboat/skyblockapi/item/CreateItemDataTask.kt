@@ -43,7 +43,7 @@ abstract class CreateItemDataTask : DefaultTask() {
         fun write(element: JsonElement, file: File) = write(GsonBuilder().setPrettyPrinting().create().toJson(element).toByteArray(), file)
 
         doFirst {
-            if (/*downloadCache.isCached(itemDataCacheKey)*/false) {
+            if (downloadCache.isCached(itemDataCacheKey)) {
                 write(downloadCache.read(itemDataCacheKey), itemDataFile)
                 return@doFirst
             }

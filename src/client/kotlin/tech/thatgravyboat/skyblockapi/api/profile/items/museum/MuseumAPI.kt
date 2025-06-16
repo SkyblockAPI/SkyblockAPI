@@ -130,7 +130,6 @@ object MuseumAPI {
         } ?: return
 
         val setId = MuseumData.getArmorSetIdFromName(event.title) ?: return
-        // TODO: find better way to do this
         val rows = event.rowCount ?: return
         for (row in (rows - 1) downTo 0) {
             val index = 3 + (row * 9)

@@ -7,6 +7,7 @@ import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.utils.extentions.toScreamingSnakeCase
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import java.nio.file.Files
@@ -40,12 +41,11 @@ object MuseumData {
 
     fun getArmorSetIdFromName(name: String): String? {
         val lowercase = name.lowercase().trim()
-        fun String.format() = trim().uppercase().replace(" ", "_")
         val id = exceptions.getOrElse(lowercase) {
             armorNames.map { lowercase.replace(it, "").trim() }.minBy(String::length)
-        }.format()
+        }.toScreamingSnakeCase()
         if (museumData.armorSets.containsKey(id)) return id
-        return lowercase.format().takeIf { museumData.armorSets.containsKey(it) }
+        return lowercase.toScreamingSnakeCase().takeIf { museumData.armorSets.containsKey(it) }
     }
 
     fun getArmorSetFromId(id: String): List<String>? = museumData.armorSets[id]
