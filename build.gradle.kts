@@ -27,10 +27,15 @@ java {
     withSourcesJar()
 }
 
-tasks.withType<KotlinCompile> {
+
+afterEvaluate {
+    val commonSources = kotlin.sourceSets.main.get().kotlin.joinToString(",")
+}
+kotlin.compilerOptions.freeCompilerArgs.addAll("-Xmulti-platform", "-Xno-check-actual", "-Xexpect-actual-classes")
+
+tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
         languageVersion = KotlinVersion.KOTLIN_2_0
-        freeCompilerArgs = listOf("-Xmulti-platform", "-Xno-check-actual", "-Xexpect-actual-classes")
     }
 }
 
@@ -46,9 +51,10 @@ val kspAll: Configuration by configurations.creating {
 }
 
 dependencies {
-    compilerAll(rootProject.project(":compiler"))
     ksp(libs.bundles.meowdding)
     compileOnly(project(":annotations"))
+    compilerAll(rootProject.project(":compiler"))
+
     compileOnly(libs.bundles.meowdding)
     configurations.forEach {
         if (it.name.startsWith("kotlinCompilerPluginClasspath")) {
@@ -66,6 +72,19 @@ cloche {
         license = "MIT"
     }
 
+    common {
+        dependencies {
+            compileOnly(project(":annotations"))
+            modImplementation(libs.fabric.language.kotlin)
+            modImplementation.bundle(libs.bundles.hypixel)
+            modCompileOnly.bundle(libs.bundles.meowdding)
+            modCompileOnlyApi.bundle(libs.bundles.meowdding)
+
+            modImplementation(libs.skyblockapi.repolib)
+            modRuntimeOnly(libs.devauth)
+        }
+    }
+
     fun createVersion(
         name: String,
         version: String = name,
@@ -76,24 +95,19 @@ cloche {
             includedClient()
             minecraftVersion = version
             this.loaderVersion = loaderVersion.get()
-            include.bundle(libs.bundles.hypixel)
-            include(libs.skyblockapi.repolib)
             dependencies {
                 fabricApi(fabricApiVersion, name)
-                modImplementation(libs.fabric.language.kotlin)
-                modImplementation.bundle(libs.bundles.hypixel)
-                modCompileOnly(project(":annotations"))
-                modCompileOnly.bundle(libs.bundles.meowdding)
-                modCompileOnlyApi.bundle(libs.bundles.meowdding)
+            }
 
-                modImplementation(libs.skyblockapi.repolib)
-                modRuntimeOnly(libs.devauth)
+            runs {
+                client()
             }
         }
     }
 
     createVersion("1.21.5")
     createVersion("1.21.6", "1.21.6-rc1")
+
 
     mappings {
         official()
@@ -189,9 +203,6 @@ compactingResources {
     substituteFromDifferentFile("slayer", "slayers")
 }
 
-tasks.withType<KspTask>().configureEach {
-
-}
 ksp {
     this@ksp.excludedSources.from(sourceSets.getByName("1215").kotlin.srcDirs)
     this@ksp.excludedSources.from(sourceSets.getByName("1216").kotlin.srcDirs)
