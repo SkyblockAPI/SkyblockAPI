@@ -127,7 +127,7 @@ abstract class CreateItemDataTask : DefaultTask() {
                 if (!museumArmorData.isEmpty) {
                     museumData.add("armor_sets", museumArmorData)
                 }
-                downloadCache.write(itemDataCacheKey, museumData.toString().toByteArray())
+                downloadCache.write(museumDataCacheKey, museumData.toString().toByteArray())
 
                 write(museumData, museumDataFile)
             }
