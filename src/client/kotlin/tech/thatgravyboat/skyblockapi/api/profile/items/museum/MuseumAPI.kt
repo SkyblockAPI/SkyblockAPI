@@ -7,6 +7,8 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.MuseumStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvMuseumOpenedEvent
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
@@ -144,6 +146,12 @@ object MuseumAPI {
                 MuseumStorage.addArmorSet(setId, map)
             } ?: break
         }
+    }
+
+    @OptIn(SkyBlockPvRequired::class)
+    @Subscription
+    fun onPvOpen(event: SkyBlockPvMuseumOpenedEvent) {
+        // TODO: implement :3
     }
 
     @Subscription

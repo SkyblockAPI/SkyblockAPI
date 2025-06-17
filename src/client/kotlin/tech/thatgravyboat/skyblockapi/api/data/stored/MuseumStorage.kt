@@ -43,6 +43,7 @@ internal object MuseumStorage {
         save()
     }
 
+    /** Should only be called for Weapons and Rarities */
     fun addNotStoredItem(category: MuseumCategory, internalName: String) {
         val data = data ?: return
         val items = data.categories.getOrPut(category, ::LinkedHashMap)
@@ -56,7 +57,10 @@ internal object MuseumStorage {
         save()
     }
 
-    /** Completely removes said item from the museum storage. */
+    /**
+     * Completely removes said item from the museum storage.
+     * Should only be called for Weapons and Rarities
+     */
     fun deleteItem(internalName: String) {
         val data = data ?: return
         var shouldSave = false
@@ -112,7 +116,7 @@ internal object MuseumStorage {
         return when(category) {
             MuseumCategory.ARMOR_SETS -> data.armorSets.values.flatMap { it.items.values }
             MuseumCategory.SPECIAL_ITEMS -> data.specialItems
-            else -> data.categories[category]?.values?.mapNotNull(MuseumItemData::item) ?: emptyList()
+            else -> data.categories[category]?.values?.mapNotNull(MuseumItemData::item).orEmpty()
         }
     }
 
