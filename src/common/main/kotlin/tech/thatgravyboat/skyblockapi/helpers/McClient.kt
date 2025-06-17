@@ -25,7 +25,7 @@ expect object McClient {
 
     val window: Window
 
-    var clipboard: String?
+    var clipboard: String
 
     val mouse: Pair<Double, Double>
 

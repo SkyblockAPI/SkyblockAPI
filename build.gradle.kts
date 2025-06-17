@@ -27,15 +27,14 @@ java {
     withSourcesJar()
 }
 
-
-afterEvaluate {
-    val commonSources = kotlin.sourceSets.main.get().kotlin.joinToString(",")
-}
-kotlin.compilerOptions.freeCompilerArgs.addAll("-Xmulti-platform", "-Xno-check-actual", "-Xexpect-actual-classes")
-
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
         languageVersion = KotlinVersion.KOTLIN_2_0
+        freeCompilerArgs.addAll(
+            "-Xmulti-platform",
+            "-Xno-check-actual",
+            "-Xexpect-actual-classes",
+        )
     }
 }
 
@@ -131,6 +130,7 @@ repositories {
     maven(url = "https://api.modrinth.com/maven")
     maven(url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
     maven(url = "https://maven.teamresourceful.com/repository/maven-public/")
+    mavenLocal()
 }
 
 tasks.processResources {

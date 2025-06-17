@@ -106,7 +106,7 @@ object DebugEntities {
                 callback {
                     getHoveredEntity()?.let {
                         if (it is AbstractClientPlayer) {
-                            McClient.clipboard = it.skin.textureUrl()
+                            it.skin.textureUrl()?.let { McClient.clipboard = it }
                             Text.debug("Copied texture to clipboard.").send()
                         } else {
                             Text.debug("Hovered entity is not a player, cannot copy texture.").send()
