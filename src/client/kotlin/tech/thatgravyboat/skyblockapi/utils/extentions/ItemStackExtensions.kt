@@ -56,6 +56,8 @@ fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
     return stack
 }
 
+operator fun Item.contains(item: ItemStack): Boolean = item.item == this
+
 fun ItemStack.getSkyBlockId() = getData(DataTypes.ID)
 fun ItemStack.getApiId() = getData(DataTypes.API_ID)
 fun ItemStack.getItemModel(): Item = getData(DataTypes.VISIBLE_ITEM) ?: item

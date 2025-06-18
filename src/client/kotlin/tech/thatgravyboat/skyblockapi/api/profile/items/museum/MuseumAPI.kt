@@ -40,6 +40,10 @@ object MuseumAPI {
         "donate.title",
         "Confirm Donation",
     )
+    private val confirmDonateItem = inventoryGroup.create(
+        "donate.item",
+        "Confirm Donation",
+    )
     //endregion
 
     fun getAllItems(): List<ItemStack> = MuseumStorage.getAllItems()
@@ -49,8 +53,8 @@ object MuseumAPI {
     private var lastCategory: MuseumCategory? = null
     private var lastArmor: Pair<String, Map<String, ItemStack>>? = null
 
-    private fun ItemStack.isNotDonated(): Boolean = `is`(Items.GRAY_DYE)
-    private fun ItemStack.isNotStored(): Boolean = `is`(Items.LIME_DYE)
+    private fun ItemStack.isNotDonated(): Boolean = this in Items.GRAY_DYE
+    private fun ItemStack.isNotStored(): Boolean = this in Items.LIME_DYE
 
     private fun getArmorSetInternalName(list: Collection<String>): String? {
         if (list.isEmpty()) return null
@@ -70,8 +74,8 @@ object MuseumAPI {
         if (lastCategory != MuseumCategory.ARMOR_SETS) return
         if (!donateTitleRegex.match(event.title)) return
         val item = event.item
-        if (!item.`is`(Items.LIME_TERRACOTTA)) return
-        if (item.cleanName != "Confirm Donation") return
+        if (item !in Items.LIME_TERRACOTTA) return
+        if (!confirmDonateItem.match(item.cleanName)) return
         val (armorSetId, armors) = lastArmor ?: return
         MuseumStorage.addArmorSet(armorSetId, armors)
         lastArmor = null
