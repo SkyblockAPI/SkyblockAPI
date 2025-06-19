@@ -193,9 +193,8 @@ fun String.trimIgnoreColor(): String {
 
 fun UUID.toDashlessString(): String = toString().replace("-", "")
 
-fun String.toScreamingSnakeCase(): String = this
-    .replace(" ", "_")
-    .replace("-", "_")
-    .uppercase()
+private val screamingSnakeCaseRegex = "\\W+".toRegex()
+
+fun String.toScreamingSnakeCase(): String = replace(screamingSnakeCaseRegex, "_").uppercase()
 
 fun String.removeTrailingChar(target: Char): String = dropLastWhile {  it == target }
