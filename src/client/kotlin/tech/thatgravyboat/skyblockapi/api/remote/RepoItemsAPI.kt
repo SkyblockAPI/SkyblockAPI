@@ -19,7 +19,8 @@ object RepoItemsAPI {
         RepoAPI.items().items().mapNotNull { entry ->
             val json = entry.value.getPath("['components'].['minecraft:custom_name'].['text']") ?: return@mapNotNull null
             val text = Text.of(json.asString("")).stripped.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
-            text.lowercase() to entry.key.uppercase()
+            // neu does some fucked stuff and doesn't store them with : like hypixel does, we however use the hypixel format for eas of use
+            text.lowercase() to entry.key.uppercase().replace("-", ":")
         }.toMap()
     }
 
