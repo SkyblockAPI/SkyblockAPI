@@ -9,6 +9,7 @@ import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
+import tech.thatgravyboat.skyblockapi.api.datatype.getDataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
@@ -123,6 +124,12 @@ internal object DebugInventory {
                 }
             },
         ),
+        DATA_COMPONENT(
+            InputConstants.KEY_E,
+            {
+                it.item.getDataTypes().map { (k, v) -> "${k.id}: ${v.toString()}" }.joinToString("\n")
+            },
+        )
         ;
 
         val title = name.toTitleCase()
