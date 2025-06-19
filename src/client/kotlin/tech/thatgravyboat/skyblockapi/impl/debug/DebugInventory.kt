@@ -125,7 +125,7 @@ internal object DebugInventory {
             },
         ),
         DATA_COMPONENT(
-            InputConstants.KEY_E,
+            InputConstants.KEY_F25,
             {
                 it.item.getDataTypes().map { (k, v) -> "${k.id}: ${v.toString()}" }.joinToString("\n")
             },
