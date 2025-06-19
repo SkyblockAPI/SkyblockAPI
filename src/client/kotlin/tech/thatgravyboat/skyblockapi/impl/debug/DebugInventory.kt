@@ -81,7 +81,7 @@ internal object DebugInventory {
             add("")
             add("Copy options:")
             CopyType.entries.forEach {
-                add("  [${it.keyName.stripped}] ${it.title} ${it.extraDescription?.let { d -> "($d)" } ?: ""}")
+                add("  [${it.keyName.stripped}] ${it.title}${it.extraDescription?.let { d -> " ($d)" } ?: ""}")
             }
         }.forEachIndexed { index, line ->
             event.graphics.drawString(
