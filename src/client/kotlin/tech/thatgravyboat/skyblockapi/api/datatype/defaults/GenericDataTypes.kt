@@ -74,7 +74,10 @@ object GenericDataTypes {
             list
         }
     }
-    val DUNGEON_ITEM: DataType<Boolean> = DataType("dungeon_item") { it.tag?.getBoolean("dungeon_item")?.getOrNull() }
+    val DUNGEON_ITEM: DataType<Boolean> = DataType("dungeon_item") { it.tag?.getBooleanOrNull("dungeon_item") }
+    val DUNGEON_TIER: DataType<Int> = DataType("dungeon_tier") { it.tag?.getIntOrNull("item_tier") }
+    val DUNGEON_QUALITY: DataType<Int> = DataType("dungeon_quality") { it.tag?.getIntOrNull("baseStatBoostPercentage") }
+
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType("applied_rune") { getAppliedRune(it.tag ?: return@DataType null) }
     val APPLIED_DYE: DataType<String> = DataType("applied_dye") { it.tag?.getStringOrNull("dye_item") }
     val HELMET_SKIN: DataType<String> = DataType("helmet_skin") { it.tag?.getStringOrNull("skin") }
@@ -123,6 +126,8 @@ object GenericDataTypes {
         event.register(STAR_COUNT)
         event.register(NECRON_SCROLLS)
         event.register(DUNGEON_ITEM)
+        event.register(DUNGEON_TIER)
+        event.register(DUNGEON_QUALITY)
         event.register(APPLIED_RUNE)
         event.register(APPLIED_DYE)
         event.register(HELMET_SKIN)
