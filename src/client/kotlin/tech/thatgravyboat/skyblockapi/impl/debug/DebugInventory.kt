@@ -81,7 +81,7 @@ internal object DebugInventory {
             add("")
             add("Copy options:")
             CopyType.entries.forEach {
-                add("  [${it.keyName.stripped}] ${it.title}")
+                add("  [${it.keyName.stripped}] ${it.title} ${it.extraDescription?.let { d -> "($d)" } ?: ""}")
             }
         }.forEachIndexed { index, line ->
             event.graphics.drawString(
@@ -97,6 +97,7 @@ internal object DebugInventory {
     enum class CopyType(
         val key: Int,
         val copy: (Slot) -> String?,
+        val extraDescription: String? = null,
     ) {
         RAW_ITEM_DATA(
             InputConstants.KEY_R,
@@ -123,6 +124,7 @@ internal object DebugInventory {
                     it.item.getLore().toJson(ComponentSerialization.CODEC.listOf()).toPrettyString()
                 }
             },
+            "Hold Shift for raw lore",
         ),
         DATA_COMPONENT(
             InputConstants.KEY_C,
