@@ -99,7 +99,7 @@ internal object DebugInventory {
         val copy: (Slot) -> String?,
     ) {
         RAW_ITEM_DATA(
-            InputConstants.KEY_C,
+            InputConstants.KEY_R,
             { it.item.toJson(ItemStack.CODEC).toPrettyString() },
         ),
         SKIN(
@@ -114,8 +114,8 @@ internal object DebugInventory {
             InputConstants.KEY_D,
             { it.item.get(DataComponents.CUSTOM_DATA)?.toJson(CustomData.CODEC).toPrettyString() },
         ),
-        DESCRIPTION(
-            InputConstants.KEY_A,
+        LORE(
+            InputConstants.KEY_L,
             {
                 if (Screen.hasShiftDown()) {
                     it.item.getRawLore().joinToString("\n")
@@ -125,7 +125,7 @@ internal object DebugInventory {
             },
         ),
         DATA_COMPONENT(
-            InputConstants.KEY_F25,
+            InputConstants.KEY_C,
             {
                 it.item.getDataTypes().map { (k, v) -> "${k.id}: ${v.toString()}" }.joinToString("\n")
             },
