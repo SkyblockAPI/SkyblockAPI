@@ -45,8 +45,8 @@ object PacketEventHandler {
             is ClientboundBlockUpdatePacket -> postBlockChange(event.packet.pos, event.packet.blockState)
             is ClientboundSectionBlocksUpdatePacket -> event.packet.runUpdates { mutablePos, state -> postBlockChange(mutablePos.immutable(), state) }
             is ClientboundContainerSetContentPacket -> {
-                McClient.tell {
-                    val container = McScreen.asMenu?.takeIf { it.menu?.containerId == event.packet.containerId } ?: return@tell
+                McClient.runNextTick {
+                    val container = McScreen.asMenu?.takeIf { it.menu?.containerId == event.packet.containerId } ?: return@runNextTick
                     ContainerInitializedEvent(event.packet.items, container).post()
                 }
             }
@@ -57,7 +57,7 @@ object PacketEventHandler {
             }
 
             is ClientboundContainerSetSlotPacket -> {
-                McClient.tell {
+                McClient.runNextTick {
                     val containerId = event.packet.containerId
                     when (containerId) {
                         PLAYER_HOTBAR_CONTAINER_ID -> {
@@ -67,7 +67,7 @@ object PacketEventHandler {
 
                         PLAYER_INVENTORY_CONTAINER_ID -> PlayerInventoryChangeEvent(event.packet.slot, event.packet.item).post()
                         else -> {
-                            val container = McScreen.asMenu?.takeIf { it.menu?.containerId == containerId } ?: return@tell
+                            val container = McScreen.asMenu?.takeIf { it.menu?.containerId == containerId } ?: return@runNextTick
                             val currentItems = container.menu?.slots?.map { it.item } ?: emptyList()
 
                             val updatedItems = currentItems.toMutableList().apply {
@@ -85,6 +85,7 @@ object PacketEventHandler {
     }
 
     private fun postBlockChange(pos: BlockPos, new: BlockState) {
+        if (!McLevel.hasLevel) return
         val old = McLevel[pos]
 
         val lastChance = lastBlockChanges.getIfPresent(pos)

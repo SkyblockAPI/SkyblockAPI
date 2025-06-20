@@ -12,12 +12,13 @@ data class SkyBlockArea(val name: String) {
 @Suppress("unused")
 object SkyBlockAreas {
 
-    private val registeredAreas = mutableMapOf<String, SkyBlockArea>()
+    internal val registeredAreas = mutableMapOf<String, SkyBlockArea>()
 
     private fun register(key: String, name: String) = registeredAreas.getOrPut(key) { SkyBlockArea(name) }
 
     val NONE = register("none", "None")
     val PRIVATE_ISLAND = register("private_island", "Your Island")
+    val GARDEN = register("garden", "Your Garden")
 
     // Hub
     val VILLAGE = register("village", "Village")
@@ -82,6 +83,14 @@ object SkyBlockAreas {
     val BARRY_HQ = register("barry_hq", "Barry HQ")
     val RIFT_GALLERY = register("rift_gallery", "Rift Gallery")
     val RIFT_GALLERY_ENTRANCE = register("rift_gallery_entrance", "Rift Gallery Entrance")
+    val THE_MOUNTAINTOP = register("the_mountaintop", "The Mountaintop")
+    val WIZARDMAN_BUREAU = register("wizardman_bureau", "Wizardman Bureau")
+    val THE_VENTS = register("the_vents", "The Vents")
+    val CEREBRAL_CITADEL = register("cerebral_citadel", "Cerebral Citadel")
+    val WALK_OF_FAME = register("walk_of_fame", "Walk of Fame")
+    val TRIAL_GROUNDS = register("trial_grounds", "Trial Grounds")
+    val CONTINUUM = register("continuum", "Continuum")
+    val TIME_CHAMBER = register("time_chamber", "Time Chamber")
 
     // Rift-Slayer
     val PHOTON_PATHWAY = register("photon_pathway", "Photon Pathway")
@@ -99,6 +108,34 @@ object SkyBlockAreas {
     val DOJO = register("dojo", "Dojo")
     val DOJO_ARENA = register("dojo_arena", "Dojo Arena")
     val MAGMA_CHAMBER = register("magma_chamber", "Magma Chamber")
+    val CRIMSON_ISLE = register("crimson_isle", "Crimson Isle")
+    val CRIMSON_FIELDS = register("crimson_fields", "Crimson Fields")
+    val BURNING_DESERT = register("burning_desert", "Burning Desert")
+    val DRAGONTAIL = register("dragontail", "Dragontail")
+    val DRAGONTAIL_BLACKSMITH = register("dragontail_blacksmith", "Dragontail Blacksmith")
+    val DRAGONTAIL_BANK = register("dragontail_bank", "Dragontail Bank")
+    val DRAGONTAIL_TOWNSQUARE = register("dragontail_townsquare", "Dragontail Townsquare")
+    val DRAGONTAIL_AUCTION_HOUS = register("dragontail_auction_hous", "Dragontail Auction Hous")
+    val MINION_SHOP = register("minion_shop", "Minion Shop")
+    val THE_DUKEDOM = register("the_dukedom", "The Dukedom")
+    val BLAZING_VOLCANO = register("blazing_volcano", "Blazing Volcano")
+    val ODGER_HUT = register("odger_hut", "Odger's Hut")
+    val THE_WASTELAND = register("the_wasteland", "The Wasteland")
+    val FORGOTTEN_SKULL = register("forgotten_skull", "Forgotten Skull")
+    val SCARLETON = register("scarleton", "Scarleton")
+    val COURTYARD = register("courtyard", "Courtyard")
+    val SCARLETON_BANK = register("scarleton_bank", "Scarleton Bank")
+    val SCARLETON_PLAZA = register("scarleton_plaza", "Scarleton Plaza")
+    val SCARLETON_AUCTION_HOUSE = register("scarleton_auction_house", "Scarleton Auction House")
+    val SCARLETON_BAZAAR = register("scarleton_bazaar", "Scarleton Bazaar")
+    val SCARLETON_MINION_SHOP = register("scarleton_minion_shop", "Scarleton Minion Shop")
+    val SCARLETON_BLACKSMITH = register("scarleton_blacksmith", "Scarleton Blacksmith")
+    val CATHEDRAL = register("cathedral", "Cathedral")
+    val MYSTIC_MARSH = register("mystic_marsh", "Mystic Marsh")
+    val MATRIARCH_LAIR = register("matriarch_lair", "Matriarch's Lair")
+    val BELLY_OF_THE_BEAST = register("belly_of_the_beast", "Belly of the Beast")
+    val SMOLDERING_TOMB = register("smoldering_tomb", "Smoldering Tomb")
+
 
     // Jerry
     val GLACIAL_CAVE = register("glacial_cave", "Glacial Cave")
@@ -127,6 +164,8 @@ object SkyBlockAreas {
     val ZEALOT_BRUISER_HIDEOUT = register("zealot_bruiser_hideout", "Zealot Bruiser Hideout")
 
     // Farming Islands
+    val THE_BARN = register("the_barn", "The Barn")
+    val MUSHROOM_DESERT = register("mushroom_desert", "Mushroom Desert")
     val WINDMILL = register("windmill", "Windmill")
     val DESERT_SETTLEMENT = register("desert_settlement", "Desert Settlement")
     val GLOWING_MUSHROOM_CAVE = register("glowing_mushroom_cave", "Glowing Mushroom Cave")
@@ -150,6 +189,7 @@ object SkyBlockAreas {
     val JUNGLE_ISLAND = register("jungle_island", "Jungle Island")
 
     // Deep Caverns
+    val DEEP_CAVERNS = register("deep_caverns", "Deep Caverns")
     val GUNPOWDER_MINES = register("gunpowder_mines", "Gunpowder Mines")
     val LAPIS_QUARRY = register("lapis_quarry", "Lapis Quarry")
     val PIGMENS_DEN = register("pigmens_den", "Pigmen's Den")
@@ -166,7 +206,7 @@ object SkyBlockAreas {
     val PRECURSOR_REMNANTS = register("precursor_remnants", "Precursor Remnants")
     val LOST_PRECURSOR_CITY = register("lost_precursor_city", "Lost Precursor City")
     val MITHRIL_DEPOSITS = register("mithril_deposits", "Mithril Deposits")
-    val DRAGONS_LAIR = register("dragons_lair", "Dragon's Lair")
+    val DRAGONS_LAIR = register("dragons_lair", "Dragon's Lair") // also in galatea
     val MINES_OF_DIVAN = register("mines_of_divan", "Mines of Divan")
     val MAGMA_FIELDS = register("magma_fields", "Magma Fields")
     val KHAZAD_DUM = register("khazad_dum", "Khazad-dûm")
@@ -174,4 +214,67 @@ object SkyBlockAreas {
 
     // Backwater Bayou
     val BACKWATER_BAYOU = register("backwater_bayou", "Backwater Bayou") // The full island uses this
+
+    // Galatea
+    val TANGLEBURG_PATH = register("tangleburg_path", "Tangleburg's Path")
+    val TANGLEBURG = register("tangleburg", "Tangleburg")
+    val NORTH_REACHES = register("north_reaches", "North Reaches")
+    val WEST_REACHES = register("west_reaches", "West Reaches")
+    val SOUTH_REACHES = register("south_reaches", "South Reaches")
+    val MOONGLADE_MARSH = register("moonglade_marsh", "Moonglade Marsh")
+    val MOONGLADE_EDGE = register("moonglade_edge", "Moonglade's Edge")
+    val VERDANT_SUMMIT = register("verdant_summit", "Verdant Summit")
+    val NORTH_WETLANDS = register("north_wetlands", "North Wetlands")
+    val WESTBOUND_WETLANDS = register("westbound_wetlands", "Westbound Wetlands")
+    val SOUTH_WETLANDS = register("south_wetlands", "South Wetlands")
+    val MURKWATER_LOCH = register("murkwater_loch", "Murkwater Loch")
+    val WYRMGROVE_TOMB = register("wyrmgrove_tomb", "Wyrmgrove Tomb")
+    val EVERGREEN_PLATEAU = register("evergreen_plateau", "Evergreen Plateau")
+    val MURKWATER_OUTPOST = register("murkwater_outpost", "Murkwater Outpost")
+    val MURKWATER_DEPTHS = register("murkwater_depths", "Murkwater Depths")
+    val ANCIENT_RUINS = register("ancient_ruins", "Ancient Ruins")
+    val MURKWATER_SHALLOWS = register("murkwater_shallows", "Murkwater Shallows")
+    val DIVE_EMBER_PASS = register("dive_ember_pass", "Dive-Ember Pass")
+    val STRIDE_EMBER_FISSURE = register("stride_ember_fissure", "Stride-Ember Fissure")
+    val SIDE_EMBER_WAY = register("side_ember_way", "Side-Ember Way")
+    val REEFGUARD_DEPTHS = register("reefguard_depths", "Reefguard Depths")
+    val REEFGUARD_PASS = register("reefguard_pass", "Reefguard Pass")
+    val DROWNED_RELIQUARY = register("drowned_reliquary", "Drowned Reliquary")
+    val BUBBLEBOOST_COLUMN = register("bubbleboost_column", "Bubbleboost Column")
+    val KELPWOVEN_TUNNELS = register("kelpwoven_tunnels", "Kelpwoven Tunnels")
+    val RED_HOUSE = register("red_house", "Red House")
+    val TOMB_FLOODWAY = register("tomb_floodway", "Tomb Floodway")
+    val DRIPTOAD_DELVE = register("driptoad_delve", "Driptoad Delve")
+    val DRIPTOAD_PASS = register("driptoad_pass", "Driptoad Pass")
+    val TANGLEBURG_BANK = register("tangleburg_bank", "Tangleburg Bank")
+    val FUSION_HOUSE = register("fusion_house", "Fusion House")
+    val SWAMP_CUT_INC = register("swamp_cut_inc", "SwampCut Inc.")
+    val TANGLEBURG_LIBRARY = register("tangleburg_library", "Tangleburg Library")
+    val FOREST_TEMPLE = register("forest_temple", "Forest Temple")
+    val TRANQUILITY_SANCTUM = register("tranquility_sanctum", "Tranquility Sanctum")
+    val TRANQUIL_PASS = register("tranquil_pass", "Tranquil Pass")
+
+    // Dwarven Mines
+    val THE_LIFT = register("the_lift", "The Lift")
+    val DWARVEN_VILLAGE = register("dwarven_village", "Dwarven Village")
+    val DWARVEN_MINES = register("dwarven_mines", "Dwarven Mines")
+    val LAVA_SPRINGS = register("lava_springs", "Lava Springs")
+    val PALACE_BRIDGE = register("palace_bridge", "Palace Bridge")
+    val ROYAL_PALACE = register("royal_palace", "Royal Palace")
+    val GRAND_LIBRARY = register("grand_library", "Grand Library")
+    val ROYAL_QUARTERS = register("royal_quarters", "Royal Quarters")
+    val BARRACKS_OF_HEROES = register("barracks_of_heroes", "Barracks of Heroes")
+    val HANGING_COURT = register("hanging_court", "Hanging Court")
+    val GREAT_ICE_WALL = register("great_ice_wall", "Great Ice Wall")
+    val ARISTOCRAT_PASSAGE = register("aristocrat_passage", "Aristocrat Passage")
+    val ROYAL_MINES = register("royal_mines", "Royal Mines")
+    val THE_MIST = register("the_mist", "The Mist")
+    val DIVANS_GATEWAY = register("divans_gateway", "Divan's Gateway")
+    val CLIFFSIDE_VEINS = register("cliffside_veins", "Cliffside Veins")
+    val FORGE_BASIN = register("forge_basin", "Forge Basin")
+    val THE_FORGE = register("the_forge", "The Forge")
+    val RAMPARTS_QUARRY = register("ramparts_quarry", "Rampart's Quarry")
+    val FAR_RESERVE = register("far_reserve", "Far Reserve")
+    val UPPER_MINES = register("upper_mines", "Upper Mines")
+    val ABANDONED_QUARRY = register("abandoned_quarry", "Abandoned Quarry")
 }

@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.helpers
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.client.Options
 import net.minecraft.client.gui.Gui
@@ -10,12 +11,16 @@ import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import java.net.URI
+import java.nio.file.Path
 
 object McClient {
 
@@ -26,8 +31,10 @@ object McClient {
     )
 
     val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
+    val config: Path = FabricLoader.getInstance().configDir
 
     val self: Minecraft get() = Minecraft.getInstance()
+    val connection: ClientPacketListener? get() = self.connection
 
     val window: Window
         get() = self.window
@@ -45,7 +52,7 @@ object McClient {
         )
 
     val tablist: List<PlayerInfo>
-        get() = self.connection
+        get() = connection
             ?.listedOnlinePlayers
             ?.sortedWith(tabListComparator)
             ?: emptyList()
@@ -69,18 +76,33 @@ object McClient {
         }
 
     val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
-    val serverCommands: CommandDispatcher<SharedSuggestionProvider>? get() = self.connection?.commands
+    val serverCommands: CommandDispatcher<SharedSuggestionProvider>? get() = connection?.commands
 
     val toasts: ToastManager get() = self.toastManager
     val gui: Gui get() = self.gui
     val chat: ChatComponent get() = gui.chat
     val options: Options get() = self.options
 
-    fun tell(action: () -> Unit) {
+    fun openUri(uri: String): Boolean = runCatching {
+        openUri(URI.create(uri))
+    }.isSuccess
+
+    fun openUri(uri: URI) {
+        Util.getPlatform().openUri(uri)
+    }
+
+    fun runNextTick(action: () -> Unit) {
         self.schedule(action)
     }
 
-    fun setScreenAsync(screen: Screen?) = tell { self.setScreen(screen) }
+    @RemoveNextVersion(ReplaceWith("runNextTick(action)"))
+    fun tell(action: () -> Unit) = runNextTick(action)
+
+    fun setScreenAsync(screen: () -> Screen?) = runNextTick { self.setScreen(screen()) }
+
+    /** Bad because with this method the screen gets init too early **/
+    @RemoveNextVersion(ReplaceWith("The other setScreenAsync method that takes in a Screen supplier"))
+    fun setScreenAsync(screen: Screen?) = runNextTick { self.setScreen(screen) }
 
     fun setScreen(screen: Screen?) {
         if (self.screen is ChatScreen) {
@@ -91,12 +113,12 @@ object McClient {
     }
 
     fun sendCommand(command: String) {
-        self.connection?.send(ServerboundChatCommandPacket(command.removePrefix("/")))
+        connection?.send(ServerboundChatCommandPacket(command.removePrefix("/")))
     }
 
     /** Sends a command that first goes through client side commands, and then server commands */
     fun sendClientCommand(command: String) {
-        self.connection?.sendCommand(command.removePrefix("/"))
+        connection?.sendCommand(command.removePrefix("/"))
     }
 
 }

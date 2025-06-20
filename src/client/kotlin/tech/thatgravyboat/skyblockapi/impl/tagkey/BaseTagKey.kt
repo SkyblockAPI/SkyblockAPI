@@ -5,6 +5,7 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
+import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 
 interface BaseTagKey<T> {
     val key: TagKey<T>
@@ -23,4 +24,8 @@ interface ItemTagKey : BaseTagKey<Item> {
 
     operator fun contains(stack: ItemStack): Boolean = stack.item in this
     override operator fun contains(element: Item): Boolean = ClientTags.isInWithLocalFallback(key, element)
+}
+
+interface ItemModelTagKey : ItemTagKey {
+    override operator fun contains(stack: ItemStack): Boolean = stack.getItemModel() in this
 }

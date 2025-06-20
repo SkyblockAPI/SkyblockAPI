@@ -125,6 +125,15 @@ object ActionBarEventHandler {
         ) { old, it ->
             SecretsActionBarWidgetChangeEvent(it["current"].toIntValue(), it["max"].toIntValue(), old, it.string)
         },
+        // §9Pressure: ❍8%
+        ActionBarWidgetType(
+            ActionBarWidget.PRESSURE, "§9Pressure: ❍(?<pressure>\\d+)%",
+            {
+                PressureActionBarWidgetChangeEvent(0, it.string, "")
+            },
+        ) { old, it ->
+            PressureActionBarWidgetChangeEvent(it["pressure"].toIntValue(), old, it.string)
+        },
         // §2936/3k Drill Fuel
         ActionBarWidgetType(ActionBarWidget.DRILL_FUEL, "§2(?<current>\\d+)/(?<max>\\d+[kmb]?) Drill Fuel") { old, it ->
             DrillActionBarWidgetChangeEvent(it["current"].parseFormattedInt(), it["max"].parseFormattedInt(), old, it.string)

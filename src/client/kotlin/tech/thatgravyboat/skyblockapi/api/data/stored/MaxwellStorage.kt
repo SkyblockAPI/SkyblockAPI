@@ -14,11 +14,7 @@ private const val MINIMUM_DIFFERENCE_TUNING_CHANGE = 1.5
 
 internal object MaxwellStorage {
 
-    private val DATA = StoredProfileData(
-        ::MaxwellData,
-        MaxwellData.CODEC,
-        "maxwell.json"
-    )
+    private val DATA = StoredProfileData<MaxwellData>("maxwell.json")
 
     private inline val data: MaxwellData? get() = DATA.get()
 

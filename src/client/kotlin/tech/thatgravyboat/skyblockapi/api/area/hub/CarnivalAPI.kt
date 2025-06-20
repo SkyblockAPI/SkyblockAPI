@@ -50,9 +50,6 @@ object CarnivalAPI {
         duration = Duration.ZERO
     }
 
-    @Subscription
-    fun onDisconnect(event: ServerDisconnectEvent) = reset()
-
-    @Subscription
-    fun onSwapProfile(event: ProfileChangeEvent) = reset()
+    @Subscription(ProfileChangeEvent::class, ServerDisconnectEvent::class)
+    fun onProfileChange() = reset()
 }

@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.area.slayer
 import kotlinx.datetime.Instant
 import me.owdding.ktmodules.Module
 import net.minecraft.world.entity.Entity
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -135,7 +136,9 @@ object SlayerAPI {
 
 interface SlayerMob {
     val displayName: String
+    @RemoveNextVersion
     val inGameName: String get() = displayName
+    val inGameNames: List<String> get() = listOf(displayName)
 }
 
 val SLAYER_MOBS: List<SlayerMob> = listOf(
@@ -179,12 +182,14 @@ enum class SlayerDemon(override val displayName: String, val slayerType: SlayerT
 }
 
 enum class SlayerType(override val displayName: String, val otherName: String) : SlayerMob {
-    REVENANT_HORROR("Revenant Horror", "Zombie"),
+    REVENANT_HORROR("Revenant Horror", "Zombie") {
+        override val inGameNames = listOf("Revenant Horror", "Atoned Horror")
+    },
     TARANTULA_BROODFATHER("Tarantula Broodfather", "Spider"),
     SVEN_PACKMASTER("Sven Packmaster", "Wolf"),
     VOIDGLOOM_SERAPH("Voidgloom Seraph", "Enderman"),
     RIFTSTALKER_BLOODFIEND("Riftstalker Bloodfiend", "Vampire") {
-        override val inGameName get() = "Bloodfiend"
+        override val inGameNames = listOf("Bloodfiend")
     },
     INFERNO_DEMONLORD("Inferno Demonlord", "Blaze"),
     ;

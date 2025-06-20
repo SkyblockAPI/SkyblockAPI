@@ -61,34 +61,38 @@ object MiscEventHandler {
             val stack = player.getItemInHand(hand)
             if (RightClickItemEvent(stack).post(SkyBlockAPI.eventBus)) {
                 InteractionResult.FAIL
+            } else {
+                InteractionResult.PASS
             }
-            InteractionResult.PASS
         }
         UseBlockCallback.EVENT.register { player, _, hand, result ->
             val stack = player.getItemInHand(hand)
             if (RightClickBlockEvent(result.blockPos, stack).post(SkyBlockAPI.eventBus)) {
                 InteractionResult.FAIL
+            } else {
+                InteractionResult.PASS
             }
-            InteractionResult.PASS
         }
         UseEntityCallback.EVENT.register { player, _, hand, entity, _ ->
             val stack = player.getItemInHand(hand)
             if (RightClickEntityEvent(entity, stack).post(SkyBlockAPI.eventBus)) {
                 InteractionResult.FAIL
+            } else {
+                InteractionResult.PASS
             }
-            InteractionResult.PASS
         }
         AttackEntityCallback.EVENT.register { player, _, hand, entity, _ ->
             val stack = player.getItemInHand(hand)
             if (LeftClickEntityEvent(entity, stack).post(SkyBlockAPI.eventBus)) {
                 InteractionResult.FAIL
+            } else {
+                InteractionResult.PASS
             }
-            InteractionResult.PASS
         }
         AttackBlockCallback.EVENT.register { player, _, hand, pos, _ ->
             val stack = player.getItemInHand(hand)
             if (LeftClickBlockEvent(pos, stack).post(SkyBlockAPI.eventBus)) {
-                InteractionResult.FAIL
+                return@register InteractionResult.FAIL
             }
             blocksClicked.put(pos, Unit)
             lastBlockClicked = pos

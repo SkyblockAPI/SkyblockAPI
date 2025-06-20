@@ -51,7 +51,7 @@ abstract class CreateItemDataTask : DefaultTask() {
                 var keep = false
 
                 output.add("id", item.get("id"))
-                val objectsToKeep = listOf("upgrade_costs", "dungeon_item_conversion_cost", "gemstone_slots")
+                val objectsToKeep = listOf("upgrade_costs", "dungeon_item_conversion_cost", "gemstone_slots", "npc_sell_price")
                 for (objectToKeep in objectsToKeep) {
                     if (item.has(objectToKeep)) {
                         output.add(objectToKeep, item.get(objectToKeep))

@@ -5,8 +5,10 @@ import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
 import net.fabricmc.loader.api.FabricLoader
 import org.apache.commons.io.FileUtils
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
+import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
@@ -15,6 +17,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.ScheduledFuture
+import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 
 private const val SAVE_DELAY = 1000 * 10
@@ -107,5 +110,34 @@ internal class StoredData<T : Any>(
 
     companion object {
         val defaultPath: Path = FabricLoader.getInstance().configDir.resolve("skyblockapi")
+
+        /** Only use if [T] has an empty constructor. */
+        inline operator fun <reified T : Any> invoke(
+            file: String,
+            version: Int = 0,
+            codec: Codec<T> = SkyblockAPICodecs.getCodec<T>(),
+        ): StoredData<T> {
+            return create(T::class, file, version) { codec }
+        }
+
+        /** Only use if [T] has an empty constructor. */
+        inline operator fun <reified T : Any> invoke(
+            file: String,
+            version: Int = 0,
+            noinline codec: (Int) -> Codec<T>,
+        ) = create(T::class, file, version, codec)
+
+
+        fun <T : Any> create(
+            kClass: KClass<T>,
+            file: String,
+            version: Int,
+            codec: (Int) -> Codec<T>,
+        ): StoredData<T> {
+            val constructor = kClass.getEmptyConstructor()
+            requireNotNull(constructor) { "No empty constructor found for ${kClass.simpleName}" }
+            val data = constructor.callBy(emptyMap())
+            return StoredData(version, data, file, codec)
+        }
     }
 }

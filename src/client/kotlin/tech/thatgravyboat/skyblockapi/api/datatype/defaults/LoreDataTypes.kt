@@ -51,10 +51,10 @@ object LoreDataTypes {
 
         for (lore in it.getRawLore()) {
             rightClickAbilityRegex.match(lore, "ability") { (ability) -> outputAbility = ability }
-            if (manaCostRegex.match(lore, "mana") { (mana) -> outputMana = mana.parseFormattedInt() }) break
+            if (outputAbility != null && manaCostRegex.match(lore, "mana") { (mana) -> outputMana = mana.parseFormattedInt() }) break
         }
 
-        if (outputAbility != null && outputMana != null) outputAbility!! to outputMana!! else null
+        if (outputAbility != null && outputMana != null) outputAbility to outputMana else null
     }
 
     val COOLDOWN_ABILITY: DataType<Pair<String, Duration>> = DataType("cooldown_ability") {
@@ -63,14 +63,14 @@ object LoreDataTypes {
 
         for (lore in it.getRawLore()) {
             rightClickAbilityRegex.match(lore, "ability") { (ability) -> outputAbility = ability }
-            if (cooldownRegex.match(lore, "cooldown") { (cooldown) -> outputDuration = cooldown.toLongValue().seconds }) break
+            if (outputAbility != null && cooldownRegex.match(lore, "cooldown") { (cooldown) -> outputDuration = cooldown.toLongValue().seconds }) break
         }
 
-        if (outputAbility != null && outputDuration != null) outputAbility!! to outputDuration!! else null
+        if (outputAbility != null && outputDuration != null) outputAbility to outputDuration else null
     }
 
     private fun getRarityLine(stack: ItemStack): Pair<String, SkyBlockRarity>? {
-        val isUpgraded = DataTypes.RARITY_UPGRADES.factory(stack) != null
+        val isUpgraded = DataTypes.RECOMBOBULATOR.factory(stack) == true
         for (line in stack.getRawLore().asReversedIterator()) {
             val rarityLine = if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim()
             val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.name, ignoreCase = true) }

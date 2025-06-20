@@ -101,4 +101,30 @@ class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal
         this.builder.then(builder.builder)
         return this
     }
+
+    fun thenCallback(vararg names: String, block: CommandContext<FabricClientCommandSource>.() -> Unit): CommandBuilder<B> {
+        return then(*names) {
+            this.callback(block)
+        }
+    }
+
+    fun <T> thenCallback(
+        name: String,
+        argument: ArgumentType<T>,
+        suggestions: Collection<String>,
+        block: CommandContext<FabricClientCommandSource>.() -> Unit,
+    ): CommandBuilder<B> = then(name, argument, suggestions) {
+        this.callback(block)
+    }
+
+
+    fun <T> thenCallback(
+        name: String,
+        argument: ArgumentType<T>,
+        suggestions: SuggestionProvider<FabricClientCommandSource>? = null,
+        block: CommandContext<FabricClientCommandSource>.() -> Unit,
+    ): CommandBuilder<B> = then(name, argument, suggestions) {
+        this.callback(block)
+    }
+
 }

@@ -11,6 +11,8 @@ internal interface VisualItemAccessor {
     fun `skyblockapi$getSlotText`(): String?
     fun `skyblockapi$setOnClickAction`(clickAction: IntConsumer?)
     fun `skyblockapi$getOnClickAction`(): IntConsumer?
+    fun `skyblockapi$setBackgroundItem`(item: ItemStack?)
+    fun `skyblockapi$getBackgroundItem`(): ItemStack?
 
     companion object {
         fun getVisualItemAccessor(item: ItemStack?): VisualItemAccessor {

@@ -63,11 +63,8 @@ object SpookyFestivalAPI {
         } ?: reset()
     }
 
-    @Subscription
-    fun onProfileChange(event: ProfileChangeEvent) = reset()
-
-    @Subscription
-    fun onDisconnect(event: ServerDisconnectEvent) = reset()
+    @Subscription(ProfileChangeEvent::class, ServerDisconnectEvent::class)
+    fun onProfileChange() = reset()
 
     private fun reset() {
         onGoing = false

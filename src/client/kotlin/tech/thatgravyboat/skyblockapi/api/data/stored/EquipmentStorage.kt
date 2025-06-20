@@ -3,8 +3,8 @@ package tech.thatgravyboat.skyblockapi.api.data.stored
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
-import tech.thatgravyboat.skyblockapi.api.profile.equipment.EquipmentData
-import tech.thatgravyboat.skyblockapi.api.profile.equipment.EquipmentSlot
+import tech.thatgravyboat.skyblockapi.api.profile.items.equipment.EquipmentData
+import tech.thatgravyboat.skyblockapi.api.profile.items.equipment.EquipmentSlot
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 
 internal object EquipmentStorage {
@@ -15,10 +15,10 @@ internal object EquipmentStorage {
         "equipment.json",
     )
 
-    private val normalEquipment: MutableMap<EquipmentSlot, ItemStack>
+    val normalEquipment: MutableMap<EquipmentSlot, ItemStack>
         get() = EQUIPMENT.get()?.slots ?: emptyEquipment()
 
-    private val riftEquipment: MutableMap<EquipmentSlot, ItemStack>
+    val riftEquipment: MutableMap<EquipmentSlot, ItemStack>
         get() = EQUIPMENT.get()?.riftSlots ?: emptyEquipment()
 
     private fun emptyEquipment(): MutableMap<EquipmentSlot, ItemStack> =
