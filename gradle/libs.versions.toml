@@ -9,7 +9,7 @@ meowdding-resources = "1.0.0"
 
 minecraft = "1.21.5"
 
-terrarium-cloche = "0.10.4"
+terrarium-cloche = "0.8.28"
 
 fabric-loader = "0.16.13"
 fabric-api = "0.126.0"

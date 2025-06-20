@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.mixins.features;
+package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
 @Mixin(GuiGraphics.class)
-public abstract class GuiGraphicsMixin {
+public abstract class GuiGraphicsVisualItemMixin {
 
     @Shadow
     @Final

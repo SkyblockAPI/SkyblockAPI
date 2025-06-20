@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.mixins.events;
+package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(GuiGraphics.class)
-public class GuiGraphicsMixin {
+public class GuiGraphicsTooltipMixin {
 
     @Unique
     private ThreadLocal<ItemStack> lastStack = ThreadLocal.withInitial(() -> ItemStack.EMPTY);
@@ -53,31 +53,31 @@ public class GuiGraphicsMixin {
         return original.call(instance);
     }
 
-    @Inject(method = "renderTooltip(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V", at = @At("HEAD"))
-    private void onRenderTooltipHead(net.minecraft.client.gui.Font font, ItemStack stack, int x, int y, CallbackInfo ci) {
+    @Inject(method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V", at = @At("HEAD"))
+    private void onRenderTooltipHead(Font font, ItemStack stack, int x, int y, CallbackInfo ci) {
         lastStack.set(stack);
     }
 
     @WrapOperation(
-        method = "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V",
+        method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/GuiGraphics;renderTooltipInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/ResourceLocation;)V"
+            target = "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/ResourceLocation;Z)V"
         )
     )
     private void onRenderTooltipInternal(
         GuiGraphics instance,
         Font font,
         List<ClientTooltipComponent> list,
-        int i,
-        int j,
+        int x, int y,
         ClientTooltipPositioner positioner,
         ResourceLocation texture,
+        boolean force,
         Operation<Void> operation
     ) {
         List<ClientTooltipComponent> listCopy = new ArrayList<>(list);
         GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
         event.post(SkyBlockAPI.getEventBus());
-        operation.call(instance, font, listCopy, i, j, positioner, texture);
+        operation.call(instance, font, listCopy, x, y, positioner, texture, force);
     }
 }

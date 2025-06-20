@@ -13,5 +13,4 @@ fun LivingEntity.getBoots() = getItemBySlot(EquipmentSlot.FEET)
 
 fun LivingEntity.getArmor() = listOf(getHelmet(), getChestplate(), getLeggings(), getBoots())
 
-@Stub
-expect fun Entity.saveWithoutId(tag: CompoundTag): CompoundTag
+expect fun Entity.save(): CompoundTag

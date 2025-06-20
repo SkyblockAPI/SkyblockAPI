@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.mixins.features;
+package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

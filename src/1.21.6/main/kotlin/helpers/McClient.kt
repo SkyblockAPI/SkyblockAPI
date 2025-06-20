@@ -29,37 +29,36 @@ actual object McClient {
         { it.profile.name.lowercase() },
     )
 
-    val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
-    val config: Path = FabricLoader.getInstance().configDir
+    actual val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
+    actual val config: Path = FabricLoader.getInstance().configDir
 
-    val self: Minecraft get() = Minecraft.getInstance()
-    val connection: ClientPacketListener? get() = self.connection
+    actual val self: Minecraft get() = Minecraft.getInstance()
+    actual val connection: ClientPacketListener? get() = self.connection
 
-    val window: Window
-        get() = self.window
+    actual val window: Window by self::window
 
-    var clipboard: String?
-        get() = self.keyboardHandler?.clipboard
+    actual var clipboard: String
+        get() = self.keyboardHandler.clipboard
         set(value) {
-            self.keyboardHandler?.clipboard = value
+            self.keyboardHandler.clipboard = value
         }
 
-    val mouse: Pair<Double, Double>
+    actual val mouse: Pair<Double, Double>
         get() = Pair(
             self.mouseHandler.xpos() * (window.guiScaledWidth / window.screenWidth.coerceAtLeast(1).toDouble()),
             self.mouseHandler.ypos() * (window.guiScaledHeight / window.screenHeight.coerceAtLeast(1).toDouble()),
         )
 
-    val tablist: List<PlayerInfo>
+    actual val tablist: List<PlayerInfo>
         get() = connection
             ?.listedOnlinePlayers
             ?.sortedWith(tabListComparator)
             ?: emptyList()
 
-    val players: List<PlayerInfo>
+    actual val players: List<PlayerInfo>
         get() = tablist.filter { it.profile.id.version() == 4 }
 
-    val scoreboard: Collection<Component>
+    actual val scoreboard: Collection<Component>
         get() {
             val scoreboard = self.level?.scoreboard ?: return emptyList()
             val objective = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return emptyList()
@@ -74,29 +73,29 @@ actual object McClient {
                 }
         }
 
-    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
-    val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
+    actual val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
+    actual val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
 
-    val toasts: ToastManager get() = self.toastManager
-    val gui: Gui get() = self.gui
-    val chat: ChatComponent get() = gui.chat
-    val options: Options get() = self.options
+    actual val toasts: ToastManager get() = self.toastManager
+    actual val gui: Gui get() = self.gui
+    actual val chat: ChatComponent get() = gui.chat
+    actual val options: Options get() = self.options
 
-    fun openUri(uri: String): Boolean = runCatching {
+    actual fun openUri(uri: String): Boolean = runCatching {
         openUri(URI.create(uri))
     }.isSuccess
 
-    fun openUri(uri: URI) {
+    actual fun openUri(uri: URI) {
         Util.getPlatform().openUri(uri)
     }
 
-    fun runNextTick(action: () -> Unit) {
+    actual fun runNextTick(action: () -> Unit) {
         self.schedule(action)
     }
 
-    fun setScreenAsync(screen: () -> Screen?) = runNextTick { self.setScreen(screen()) }
+    actual fun setScreenAsync(screen: () -> Screen?) = runNextTick { self.setScreen(screen()) }
 
-    fun setScreen(screen: Screen?) {
+    actual fun setScreen(screen: Screen?) {
         if (self.screen is ChatScreen) {
             setScreenAsync { screen }
         } else {
@@ -104,12 +103,12 @@ actual object McClient {
         }
     }
 
-    fun sendCommand(command: String) {
+    actual fun sendCommand(command: String) {
         connection?.send(ServerboundChatCommandPacket(command.removePrefix("/")))
     }
 
     /** Sends a command that first goes through client side commands, and then server commands */
-    fun sendClientCommand(command: String) {
+    actual fun sendClientCommand(command: String) {
         connection?.sendCommand(command.removePrefix("/"))
     }
 

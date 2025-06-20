@@ -18,6 +18,8 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.utils.extensions.save
+import tech.thatgravyboat.skyblockapi.utils.extensions.saveWithoutId
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonArray
@@ -53,12 +55,7 @@ object DebugEntities {
         val filteredEntities = entities.filter { entity -> filter(entity.type) }
 
         val savedEntities = filteredEntities.mapNotNull { entity ->
-            runCatching {
-                val tag = CompoundTag()
-                tag.putString("id", EntityType.getKey(entity.type).toString())
-                // todo entity.saveWithoutId(tag)
-                tag
-            }.getOrNull()
+            runCatching { entity.save() }.getOrNull()
         }
 
         val json = JsonArray {
@@ -120,10 +117,7 @@ object DebugEntities {
                 if (hoveredEntity == null) {
                     Text.debug("No entity is currently hovered.").send()
                 } else {
-                    val tag = CompoundTag()
-                    tag.putString("id", EntityType.getKey(hoveredEntity.type).toString())
-                    // todo hoveredEntity.saveWithoutId(tag)
-                    val json = tag.toJson(CompoundTag.CODEC).toPrettyString()
+                    val json = hoveredEntity.save().toJson(CompoundTag.CODEC).toPrettyString()
                     McClient.clipboard = json
                     Text.debug("Copied entity ${hoveredEntity.name} to clipboard: $json").send()
                 }

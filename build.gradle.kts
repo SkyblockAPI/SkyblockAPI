@@ -95,8 +95,11 @@ cloche {
             minecraftVersion = version
             this.loaderVersion = loaderVersion.get()
             dependencies {
-                fabricApi(fabricApiVersion, name)
+                fabricApi("${fabricApiVersion.get()}+${name}")
             }
+
+            mixins.from("src/common/main/mixins/skyblock-api.client.mixins.json")
+            mixins.from("src/common/main/mixins/skyblock-api.versioned.mixins.json")
 
             runs {
                 client()
@@ -105,7 +108,7 @@ cloche {
     }
 
     createVersion("1.21.5")
-    createVersion("1.21.6", "1.21.6-rc1")
+    createVersion("1.21.6")
 
 
     mappings {

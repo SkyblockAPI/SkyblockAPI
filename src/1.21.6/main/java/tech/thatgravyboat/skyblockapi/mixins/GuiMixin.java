@@ -1,21 +1,23 @@
-package tech.thatgravyboat.skyblockapi.mixins.events;
+package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.entity.PlayerRideableJumping;
+import net.minecraft.client.gui.contextualbar.ContextualBarRenderer;
+import net.minecraft.client.gui.contextualbar.ExperienceBarRenderer;
+import net.minecraft.client.gui.contextualbar.JumpableVehicleBarRenderer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.Objective;
+import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.HudElement;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
@@ -27,6 +29,9 @@ public class GuiMixin {
     @Shadow
     @Final
     private Minecraft minecraft;
+
+    @Shadow
+    private Pair<Enum<?>, ContextualBarRenderer> contextualInfoBar;
 
     @Inject(method = "renderSleepOverlay", at = @At("HEAD"))
     private void onRenderSleepOverlay(GuiGraphics graphics, DeltaTracker delta, CallbackInfo ci) {
@@ -40,9 +45,23 @@ public class GuiMixin {
         return !new RenderHudElementEvent(HudElement.HOTBAR, graphics).post(SkyBlockAPI.getEventBus());
     }
 
-    @WrapWithCondition(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderJumpMeter(Lnet/minecraft/world/entity/PlayerRideableJumping;Lnet/minecraft/client/gui/GuiGraphics;I)V"))
-    private boolean onRenderJumpBar(Gui instance, PlayerRideableJumping playerRideableJumping, GuiGraphics graphics, int i, @Local(argsOnly = true) DeltaTracker delta) {
-        return !new RenderHudElementEvent(HudElement.JUMP, graphics).post(SkyBlockAPI.getEventBus());
+    @Inject(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/contextualbar/ContextualBarRenderer;renderBackground(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V"))
+    private void onRenderBar(GuiGraphics graphics, DeltaTracker $$1, CallbackInfo ci) {
+        var renderer = this.contextualInfoBar.getRight();
+        if (renderer instanceof ExperienceBarRenderer) {
+            if (new RenderHudElementEvent(HudElement.EXPERIENCE, graphics).post(SkyBlockAPI.getEventBus())) {
+                this.contextualInfoBar = Pair.of(this.contextualInfoBar.getLeft(), ContextualBarRenderer.EMPTY);
+            }
+        } else if (renderer instanceof JumpableVehicleBarRenderer) {
+            if (new RenderHudElementEvent(HudElement.JUMP, graphics).post(SkyBlockAPI.getEventBus())) {
+                this.contextualInfoBar = Pair.of(this.contextualInfoBar.getLeft(), ContextualBarRenderer.EMPTY);
+            }
+        }
+    }
+
+    @WrapWithCondition(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/contextualbar/ContextualBarRenderer;renderExperienceLevel(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;I)V"))
+    private boolean onRenderExperienceLevel(GuiGraphics $$0, Font $$1, int $$2) {
+        return this.contextualInfoBar.getKey().ordinal() != 1 || this.contextualInfoBar.getValue() != ContextualBarRenderer.EMPTY;
     }
 
     @WrapWithCondition(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderVehicleHealth(Lnet/minecraft/client/gui/GuiGraphics;)V"))
@@ -81,13 +100,6 @@ public class GuiMixin {
     private void onEffectsRender(GuiGraphics graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (new RenderHudElementEvent(HudElement.EFFECTS, graphics).post(SkyBlockAPI.getEventBus())) {
             ci.cancel();
-        }
-    }
-
-    @Inject(method = "isExperienceBarVisible", at = @At("HEAD"), cancellable = true)
-    private void onExperienceBarVisible(CallbackInfoReturnable<Boolean> cir) {
-        if (new RenderHudElementEvent(HudElement.EXPERIENCE, null).post(SkyBlockAPI.getEventBus())) {
-            cir.setReturnValue(false);
         }
     }
 
