@@ -45,6 +45,12 @@ class DrillActionBarWidgetChangeEvent(val current: Int, val max: Int, old: Strin
 class PressureActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.PRESSURE, old, new)
 
+class SkillXpPercentActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val percent: Float, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP_PERCENT, old, new)
+
+class SkillXpLiteralActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val current: Long, val needed: Long, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP_LITERAL, old, new)
+
 enum class ActionBarWidget {
     HEALTH,
     DEFENSE,
