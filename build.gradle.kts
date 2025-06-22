@@ -95,7 +95,7 @@ cloche {
             minecraftVersion = version
             this.loaderVersion = loaderVersion.get()
             dependencies {
-                fabricApi("${fabricApiVersion.get()}+${name}")
+                fabricApi(fabricApiVersion.get(), name)
             }
 
             mixins.from("src/common/main/mixins/skyblock-api.client.mixins.json")
