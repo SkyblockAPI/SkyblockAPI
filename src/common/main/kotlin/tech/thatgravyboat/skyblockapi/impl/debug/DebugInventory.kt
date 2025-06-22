@@ -9,6 +9,7 @@ import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
+import tech.thatgravyboat.skyblockapi.api.datatype.getDataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
@@ -79,7 +80,7 @@ internal object DebugInventory {
             add("")
             add("Copy options:")
             CopyType.entries.forEach {
-                add("  [${it.keyName.stripped}] ${it.title}")
+                add("  [${it.keyName.stripped}] ${it.title}${it.extraDescription?.let { d -> " ($d)" } ?: ""}")
             }
         }.forEachIndexed { index, line ->
             /*todo  event.graphics.drawString(
@@ -95,9 +96,10 @@ internal object DebugInventory {
     enum class CopyType(
         val key: Int,
         val copy: (Slot) -> String?,
+        val extraDescription: String? = null,
     ) {
         RAW_ITEM_DATA(
-            InputConstants.KEY_C,
+            InputConstants.KEY_R,
             { it.item.toJson(ItemStack.CODEC).toPrettyString() },
         ),
         SKIN(
@@ -112,8 +114,8 @@ internal object DebugInventory {
             InputConstants.KEY_D,
             { it.item.get(DataComponents.CUSTOM_DATA)?.toJson(CustomData.CODEC).toPrettyString() },
         ),
-        DESCRIPTION(
-            InputConstants.KEY_A,
+        LORE(
+            InputConstants.KEY_L,
             {
                 if (Screen.hasShiftDown()) {
                     it.item.getRawLore().joinToString("\n")
@@ -121,7 +123,14 @@ internal object DebugInventory {
                     it.item.getLore().toJson(ComponentSerialization.CODEC.listOf()).toPrettyString()
                 }
             },
+            "Hold Shift for raw lore",
         ),
+        DATA_COMPONENT(
+            InputConstants.KEY_C,
+            {
+                it.item.getDataTypes().map { (k, v) -> "${k.id}: ${v.toString()}" }.joinToString("\n")
+            },
+        )
         ;
 
         val title = name.toTitleCase()

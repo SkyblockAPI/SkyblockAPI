@@ -8,6 +8,7 @@ import net.minecraft.world.item.Items
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extensions.asString
+import tech.thatgravyboat.skyblockapi.utils.extentions.removeTrailingChar
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -19,7 +20,8 @@ object RepoItemsAPI {
         RepoAPI.items().items().mapNotNull { entry ->
             val json = entry.value.getPath("['components'].['minecraft:custom_name'].['text']") ?: return@mapNotNull null
             val text = Text.of(json.asString("")).stripped.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
-            text.lowercase() to entry.key.uppercase()
+            // neu does some fucked stuff and doesn't store them with : like hypixel does, we however use the hypixel format for eas of use
+            text.lowercase() to entry.key.uppercase().replace("-", ":")
         }.toMap()
     }
 
@@ -41,5 +43,16 @@ object RepoItemsAPI {
 
     fun getItemName(id: String): Component = getItem(id).hoverName
 
-    fun getItemIdByName(name: String): String? = nameCache[name.lowercase()]
+    fun getItemIdByName(name: String): String? = resolveItemIdFromName(name)
+
+    private fun resolveItemIdFromName(name: String): String? {
+        val lowercase = name.lowercase()
+        nameCache[lowercase]?.let { return it }
+        val noStars = lowercase.removeTrailingChar('✪').trim()
+        nameCache[noStars]?.let { return it }
+        val firstWhitespace = noStars.indexOf(' ')
+        if (firstWhitespace == -1) return null
+        val withoutFirstWord = noStars.substring(firstWhitespace) // In case the item has a reforge
+        return nameCache[withoutFirstWord]
+    }
 }

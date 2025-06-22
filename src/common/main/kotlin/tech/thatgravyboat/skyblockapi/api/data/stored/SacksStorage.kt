@@ -16,15 +16,11 @@ internal object SacksStorage {
         }
     }
 
-    var items: MutableMap<String, Int>
+    val items: MutableMap<String, Int>
         get() = SACKS.get()?.items ?: mutableMapOf()
-        private set(value) {
-            SACKS.get()?.items = value
-        }
 
     fun updateItem(item: String, amount: Int) {
-        val prevAmount = items[item] ?: 0
-        if (amount == prevAmount) return
+        if (items[item] == amount) return
         items[item] = amount
         SACKS.save()
     }
