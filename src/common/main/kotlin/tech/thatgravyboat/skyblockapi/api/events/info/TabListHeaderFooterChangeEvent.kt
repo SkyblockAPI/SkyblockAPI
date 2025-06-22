@@ -2,8 +2,8 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
-import tech.thatgravyboat.skyblockapi.utils.extensions.chunked
-import tech.thatgravyboat.skyblockapi.utils.extensions.stripColor
+import tech.thatgravyboat.skyblockapi.utils.extentions.chunked
+import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 
 data class TabListHeaderFooterChangeEvent(
     val oldFooter: Component,

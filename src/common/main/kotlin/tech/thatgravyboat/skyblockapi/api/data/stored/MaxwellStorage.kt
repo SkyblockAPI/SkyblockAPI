@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPower
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPowers
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
-import tech.thatgravyboat.skyblockapi.utils.extensions.isSameItem
+import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 import kotlin.math.absoluteValue
 
 private const val MAX_ACCESSORIES_PER_PAGE = 9 * 5

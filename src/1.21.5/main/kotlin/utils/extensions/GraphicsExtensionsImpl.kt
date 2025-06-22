@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.utils.extensions
+package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics

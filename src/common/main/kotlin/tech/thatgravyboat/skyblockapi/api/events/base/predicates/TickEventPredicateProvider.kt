@@ -2,8 +2,8 @@ package tech.thatgravyboat.skyblockapi.api.events.base.predicates
 
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
-import tech.thatgravyboat.skyblockapi.utils.extensions.getAnnotation
-import tech.thatgravyboat.skyblockapi.utils.extensions.parseDuration
+import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
 import java.lang.reflect.Method
 
 @Retention(AnnotationRetention.RUNTIME)

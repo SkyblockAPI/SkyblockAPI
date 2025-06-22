@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.utils.extensions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color

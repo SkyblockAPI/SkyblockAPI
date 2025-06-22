@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.utils.extensions
+package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction

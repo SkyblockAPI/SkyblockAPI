@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.utils.extensions
+package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes

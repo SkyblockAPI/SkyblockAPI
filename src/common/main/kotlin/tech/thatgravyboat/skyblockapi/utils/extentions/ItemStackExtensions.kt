@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.utils.extensions
+package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property

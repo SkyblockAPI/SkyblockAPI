@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
-import tech.thatgravyboat.skyblockapi.utils.extensions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 data class TabWidgetChangeEvent(
     val widget: TabWidget,

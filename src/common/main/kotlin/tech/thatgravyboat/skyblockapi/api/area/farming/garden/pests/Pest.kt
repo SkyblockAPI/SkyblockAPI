@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.area.farming.garden.pests
 
 import tech.thatgravyboat.skyblockapi.api.area.farming.garden.Crop
-import tech.thatgravyboat.skyblockapi.utils.extensions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 enum class Pest(val spray: Spray? = null, val vinyl: Vinyl? = null, val crop: Crop? = null) {
     BEETLE(Spray.DUNG, Vinyl.BEETLE, Crop.NETHER_WART),

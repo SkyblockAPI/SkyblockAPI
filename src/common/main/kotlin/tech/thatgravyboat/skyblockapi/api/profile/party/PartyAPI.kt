@@ -11,7 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.events.HypixelEventHandler
-import tech.thatgravyboat.skyblockapi.utils.extensions.cleanPlayerName
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanPlayerName
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains

@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.equipment
 
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
-import tech.thatgravyboat.skyblockapi.utils.extensions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.api.profile.items.equipment.EquipmentSlot as NewEquipmentSlot
 
 @RemoveNextVersion

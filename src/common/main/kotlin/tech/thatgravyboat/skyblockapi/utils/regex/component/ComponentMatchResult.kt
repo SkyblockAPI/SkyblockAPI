@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils.regex.component
 
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import tech.thatgravyboat.skyblockapi.utils.extensions.stripColor
+import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import java.util.*
 
 class ComponentMatchResult(component: Component, private val result: MatchResult) {

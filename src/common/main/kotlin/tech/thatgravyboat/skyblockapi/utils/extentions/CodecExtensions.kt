@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.utils.extensions
+package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder

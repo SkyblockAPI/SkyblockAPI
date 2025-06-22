@@ -22,7 +22,7 @@ internal object MuseumStorage {
         val index = getRarityLineIndex()
         if (index == -1) return this
         val newItem = this.copy()
-        val lore = newItem.get(DataComponents.LORE)?.lines ?: return this
+        val lore = newItem.get(DataComponents.LORE)?.lines() ?: return this
         val fixedLore = lore.subList(0, index.coerceAtMost(lore.size))
         newItem.set(DataComponents.LORE, ItemLore(fixedLore))
         return newItem

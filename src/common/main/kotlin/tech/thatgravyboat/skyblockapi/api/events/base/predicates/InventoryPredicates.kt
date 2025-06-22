@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.utils.extensions.getAnnotation
+import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import java.lang.reflect.Method
 

@@ -17,8 +17,8 @@ import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.Logger
-import tech.thatgravyboat.skyblockapi.utils.extensions.chunked
-import tech.thatgravyboat.skyblockapi.utils.extensions.peek
+import tech.thatgravyboat.skyblockapi.utils.extentions.chunked
+import tech.thatgravyboat.skyblockapi.utils.extentions.peek
 import tech.thatgravyboat.skyblockapi.utils.mc.displayName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains

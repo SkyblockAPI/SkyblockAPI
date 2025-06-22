@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.equipment
 
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
-import tech.thatgravyboat.skyblockapi.utils.extensions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 enum class EquipmentSlot(
     internal val slot: Int,

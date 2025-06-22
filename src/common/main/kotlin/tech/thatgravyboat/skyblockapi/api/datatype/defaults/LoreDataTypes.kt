@@ -8,10 +8,10 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
-import tech.thatgravyboat.skyblockapi.utils.extensions.asReversedIterator
-import tech.thatgravyboat.skyblockapi.utils.extensions.getRawLore
-import tech.thatgravyboat.skyblockapi.utils.extensions.parseFormattedInt
-import tech.thatgravyboat.skyblockapi.utils.extensions.toLongValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.asReversedIterator
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes

@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.remote
 import com.google.gson.JsonObject
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
-import tech.thatgravyboat.skyblockapi.utils.extensions.toDashlessString
+import tech.thatgravyboat.skyblockapi.utils.extentions.toDashlessString
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
 
 /**

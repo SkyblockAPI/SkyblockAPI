@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.events.render
 
 import net.minecraft.client.gui.GuiGraphics
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
-import tech.thatgravyboat.skyblockapi.utils.extensions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 class RenderHudElementEvent(
     val element: HudElement,

@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.area.mining.mineshaft
 
-import tech.thatgravyboat.skyblockapi.utils.extensions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 enum class CorpseType(val key: String? = null) {
     LAPIS,

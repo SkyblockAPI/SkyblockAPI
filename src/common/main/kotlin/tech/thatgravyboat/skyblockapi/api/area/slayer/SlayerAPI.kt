@@ -12,8 +12,8 @@ import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineAttachEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
-import tech.thatgravyboat.skyblockapi.utils.extensions.parseRomanNumeral
-import tech.thatgravyboat.skyblockapi.utils.extensions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match

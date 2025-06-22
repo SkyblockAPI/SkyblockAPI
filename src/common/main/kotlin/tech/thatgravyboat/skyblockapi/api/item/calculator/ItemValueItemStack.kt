@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.item.calculator
 import net.minecraft.world.item.ItemStack
 import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
-import tech.thatgravyboat.skyblockapi.utils.extensions.getSkyBlockId
+import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 
 internal interface ItemValueItemStack {
 

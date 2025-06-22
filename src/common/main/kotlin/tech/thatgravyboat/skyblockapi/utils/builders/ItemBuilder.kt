@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemLore
 import tech.thatgravyboat.skyblockapi.api.item.asVisualItemAccessor
-import tech.thatgravyboat.skyblockapi.utils.extensions.holder
+import tech.thatgravyboat.skyblockapi.utils.extentions.holder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
 import kotlin.jvm.optionals.getOrNull

@@ -3,9 +3,9 @@ package tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing
 import com.google.gson.JsonObject
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
-import tech.thatgravyboat.skyblockapi.utils.extensions.asDouble
-import tech.thatgravyboat.skyblockapi.utils.extensions.asLong
-import tech.thatgravyboat.skyblockapi.utils.extensions.asMap
+import tech.thatgravyboat.skyblockapi.utils.extentions.asDouble
+import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
+import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
 import tech.thatgravyboat.skyblockapi.utils.http.Http
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds

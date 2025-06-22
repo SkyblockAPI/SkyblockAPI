@@ -4,7 +4,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
-import tech.thatgravyboat.skyblockapi.utils.extensions.getAnnotation
+import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import java.lang.reflect.Method
 
 @Retention(AnnotationRetention.RUNTIME)

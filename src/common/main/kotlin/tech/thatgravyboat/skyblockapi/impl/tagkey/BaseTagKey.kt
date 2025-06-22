@@ -5,7 +5,7 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
-import tech.thatgravyboat.skyblockapi.utils.extensions.getItemModel
+import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 
 interface BaseTagKey<T> {
     val key: TagKey<T>

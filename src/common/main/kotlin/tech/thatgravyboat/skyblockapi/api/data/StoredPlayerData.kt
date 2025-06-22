@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.generated.KCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
-import tech.thatgravyboat.skyblockapi.utils.extensions.getEmptyConstructor
+import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import java.util.*
 import kotlin.reflect.KClass
 

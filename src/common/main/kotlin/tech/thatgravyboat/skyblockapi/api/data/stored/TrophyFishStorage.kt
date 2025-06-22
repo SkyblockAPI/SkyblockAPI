@@ -4,7 +4,7 @@ import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishData
 import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishTier
 import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishType
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
-import tech.thatgravyboat.skyblockapi.utils.extensions.addOrPut
+import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
 
 internal object TrophyFishStorage {
     private val TROPHY_FISH = StoredProfileData(

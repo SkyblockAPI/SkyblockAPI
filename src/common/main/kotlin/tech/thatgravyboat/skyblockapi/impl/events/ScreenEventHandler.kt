@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenMouseClickEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.api.item.getClickAction
 import tech.thatgravyboat.skyblockapi.api.item.getVisualItem
-import tech.thatgravyboat.skyblockapi.utils.extensions.getHoveredSlot
+import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
 
 @Module
 object ScreenEventHandler {

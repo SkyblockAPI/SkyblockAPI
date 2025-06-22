@@ -8,7 +8,7 @@ import org.apache.commons.io.FileUtils
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
-import tech.thatgravyboat.skyblockapi.utils.extensions.getEmptyConstructor
+import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson

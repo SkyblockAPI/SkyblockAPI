@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.item.calculator
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.*
-import tech.thatgravyboat.skyblockapi.utils.extensions.getSkyBlockId
+import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 
 enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     BASE_ITEM(BaseItemSource),

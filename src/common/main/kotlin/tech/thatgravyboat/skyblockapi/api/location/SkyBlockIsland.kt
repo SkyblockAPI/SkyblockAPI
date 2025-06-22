@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
-import tech.thatgravyboat.skyblockapi.utils.extensions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 enum class SkyBlockIsland(val id: String, displayName: String? = null) {
     PRIVATE_ISLAND("dynamic"),
