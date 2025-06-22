@@ -27,6 +27,7 @@ data class HypixelApiItem(
     @param:FieldName("upgrade_costs") val upgradeCost: List<List<Cost>> = emptyList(),
     @param:FieldName("dungeon_item_conversion_cost") val conversionCost: EssenceCost?,
     @param:FieldName("npc_sell_price") val npcSellPrice: Int?,
+    @param:FieldName("museum_data") val museumData: ItemMuseumData?,
 ) {
     companion object {
         val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()

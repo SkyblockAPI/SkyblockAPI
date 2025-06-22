@@ -8,6 +8,7 @@ import net.minecraft.world.item.Items
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extentions.asString
+import tech.thatgravyboat.skyblockapi.utils.extentions.removeTrailingChar
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -42,5 +43,16 @@ object RepoItemsAPI {
 
     fun getItemName(id: String): Component = getItem(id).hoverName
 
-    fun getItemIdByName(name: String): String? = nameCache[name.lowercase()]
+    fun getItemIdByName(name: String): String? = resolveItemIdFromName(name)
+
+    private fun resolveItemIdFromName(name: String): String? {
+        val lowercase = name.lowercase()
+        nameCache[lowercase]?.let { return it }
+        val noStars = lowercase.removeTrailingChar('✪').trim()
+        nameCache[noStars]?.let { return it }
+        val firstWhitespace = noStars.indexOf(' ')
+        if (firstWhitespace == -1) return null
+        val withoutFirstWord = noStars.substring(firstWhitespace) // In case the item has a reforge
+        return nameCache[withoutFirstWord]
+    }
 }
