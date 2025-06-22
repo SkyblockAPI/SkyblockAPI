@@ -74,12 +74,13 @@ cloche {
     common {
         dependencies {
             compileOnly(project(":annotations"))
-            modImplementation(libs.fabric.language.kotlin)
-            modImplementation.bundle(libs.bundles.hypixel)
             modCompileOnly.bundle(libs.bundles.meowdding)
             modCompileOnlyApi.bundle(libs.bundles.meowdding)
 
+            modImplementation(libs.fabric.language.kotlin)
+            modImplementation.bundle(libs.bundles.hypixel)
             modImplementation(libs.skyblockapi.repolib)
+
             modRuntimeOnly(libs.devauth)
         }
     }
@@ -94,6 +95,10 @@ cloche {
             includedClient()
             minecraftVersion = version
             this.loaderVersion = loaderVersion.get()
+
+            include(libs.skyblockapi.repolib)
+            include(libs.hypixel.modapi.fabric)
+
             dependencies {
                 fabricApi(fabricApiVersion.get(), name)
             }
