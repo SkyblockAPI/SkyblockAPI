@@ -39,16 +39,18 @@ public class GuiGraphicsMixin {
 
     @WrapOperation(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getBarWidth()I"))
     private int itemBarWidth(ItemStack instance, Operation<Integer> original, @Share("bar") LocalRef<RenderItemBarEvent> bar) {
-        if (bar.get() != null) {
-            return (int) (Mth.clamp(bar.get().getPercent() * 13, 0, 13));
+        var event = bar.get();
+        if (event != null && event.getPercent() >= 0f) {
+            return (int) (Mth.clamp(event.getPercent() * 13, 0, 13));
         }
         return original.call(instance);
     }
 
     @WrapOperation(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getBarColor()I"))
     private int itemBarColor(ItemStack instance, Operation<Integer> original, @Share("bar") LocalRef<RenderItemBarEvent> bar) {
-        if (bar.get() != null) {
-            return bar.get().getColor();
+        var event = bar.get();
+        if (event != null && event.getColor() != 0) {
+            return event.getColor();
         }
         return original.call(instance);
     }
