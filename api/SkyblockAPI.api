@@ -947,6 +947,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/Essence : java/lang/E
 	public static final field CRIMSON Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field DIAMOND Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field DRAGON Ltech/thatgravyboat/skyblockapi/api/data/Essence;
+	public static final field FOREST Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field GOLD Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field ICE Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field SPIDER Ltech/thatgravyboat/skyblockapi/api/data/Essence;
