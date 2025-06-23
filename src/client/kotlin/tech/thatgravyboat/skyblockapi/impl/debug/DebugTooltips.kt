@@ -3,15 +3,18 @@ package tech.thatgravyboat.skyblockapi.impl.debug
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.screens.Screen
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.getDataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.api.item.calculator.getItemValue
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
@@ -23,8 +26,13 @@ object DebugTooltips {
     private var keys = emptyList<DataType<*>>()
     private var index = 0
 
+    private val defaultEnabled = System.getenv("SKYBLOCK_API_DEBUG_TOOLTIPS")?.toBoolean() == true || SkyBlockAPI.isDebug
+    private var toggle: Boolean? = null
+    private val isEnabled: Boolean get() = toggle ?: defaultEnabled
+
     @Subscription
     fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
+        if (!isEnabled) return
         if (keys.isEmpty()) return
         if (!Screen.hasAltDown()) return
 
@@ -35,7 +43,16 @@ object DebugTooltips {
     }
 
     @Subscription
+    fun onCommandRegistration(event: RegisterCommandsEvent) {
+        event.registerWithCallback("sbapi tooltips") {
+            toggle = toggle == null || toggle != true
+            Text.debug("Debug tooltips are now ${if (isEnabled) "enabled" else "disabled"}").send()
+        }
+    }
+
+    @Subscription
     fun onGetDebugTooltip(event: ItemDebugTooltipEvent) {
+        if (!isEnabled) return
         val types = event.item.getDataTypes()
         if (types.isEmpty()) return
 
