@@ -69,6 +69,10 @@ cloche {
         modId = "skyblock-api"
         name = "skyblock-api"
         license = "MIT"
+        icon = "assets/skyblockapi/icon.png"
+        clientOnly = true
+
+        custom("modmenu" to mapOf("badges" to listOf("library")))
     }
 
     common {
@@ -98,6 +102,24 @@ cloche {
 
             include(libs.skyblockapi.repolib)
             include(libs.hypixel.modapi.fabric)
+
+            metadata {
+                entrypoint("client", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit")
+                entrypoint("main", "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load")
+                entrypoint("main", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init")
+
+                dependency {
+                    modId = "fabric-language-kotlin"
+                    required = true
+                    version("*")
+                }
+
+                dependency {
+                    modId = "fabric"
+                    required = true
+                    version("*")
+                }
+            }
 
             dependencies {
                 fabricApi(fabricApiVersion.get(), name)

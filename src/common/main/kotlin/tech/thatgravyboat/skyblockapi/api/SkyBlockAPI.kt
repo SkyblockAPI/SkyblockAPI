@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils
 import com.mojang.serialization.Codec
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.resources.ResourceLocation
+import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.api.RepoAPI
@@ -28,13 +29,15 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI")  {
     internal val isDebug get() = System.getProperty("skyblockapi.debug")?.lowercase() == "true"
 
     @JvmStatic
-    internal fun init() {
+    @ApiStatus.Internal
+    fun init() {
         SkyblockAPIModules.init { eventBus.register(it) }
         RepoAPI.setup(RepoVersion.V1_21_5)
     }
 
     @JvmStatic
-    internal fun postInit() {
+    @ApiStatus.Internal
+    fun postInit() {
         DataTypesRegistry.load()
     }
 
