@@ -1637,6 +1637,9 @@ public abstract interface class tech/thatgravyboat/skyblockapi/api/events/base/E
 	public abstract fun getPredicate (Ljava/lang/reflect/Method;)Lkotlin/jvm/functions/Function2;
 }
 
+public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/base/OffThreadEvent : java/lang/annotation/Annotation {
+}
+
 public abstract class tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	protected fun <init> ()V
 	public final fun isCancelled ()Z
@@ -2299,6 +2302,23 @@ public final class tech/thatgravyboat/skyblockapi/api/events/location/mineshaft/
 
 public final class tech/thatgravyboat/skyblockapi/api/events/location/mineshaft/MineshaftFoundEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/location/mineshaft/MineshaftFoundEvent;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/minecraft/sounds/SoundPlayedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
+	public fun <init> (Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/phys/Vec3;FF)V
+	public final fun component1 ()Lnet/minecraft/sounds/SoundEvent;
+	public final fun component2 ()Lnet/minecraft/world/phys/Vec3;
+	public final fun component3 ()F
+	public final fun component4 ()F
+	public final fun copy (Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/phys/Vec3;FF)Ltech/thatgravyboat/skyblockapi/api/events/minecraft/sounds/SoundPlayedEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/minecraft/sounds/SoundPlayedEvent;Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/phys/Vec3;FFILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/minecraft/sounds/SoundPlayedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPitch ()F
+	public final fun getPos ()Lnet/minecraft/world/phys/Vec3;
+	public final fun getSound ()Lnet/minecraft/sounds/SoundEvent;
+	public final fun getVolume ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/minecraft/ui/GatherItemTooltipComponentsEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
