@@ -19,12 +19,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.minecraft.ui.GatherItemTooltipComponentsEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderItemBarEvent;
+import tech.thatgravyboat.skyblockapi.hooks.GuiGraphicsHook;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(GuiGraphics.class)
-public class GuiGraphicsMixin {
+public class GuiGraphicsMixin implements GuiGraphicsHook {
 
     @Unique
     private ThreadLocal<ItemStack> lastStack = ThreadLocal.withInitial(() -> ItemStack.EMPTY);
@@ -81,5 +82,11 @@ public class GuiGraphicsMixin {
         GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
         event.post(SkyBlockAPI.getEventBus());
         operation.call(instance, font, listCopy, i, j, positioner, texture);
+        lastStack.set(ItemStack.EMPTY);
+    }
+
+    @Override
+    public void skyblockapi$setHoveredItem(ItemStack stack) {
+        this.lastStack.set(stack);
     }
 }
