@@ -1316,6 +1316,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getART_OF_WAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOOSTERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCATEGORY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1446,6 +1447,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getART_OF_WAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOOSTERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCROPS_BROKEN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -2862,6 +2864,7 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueS
 	public static final field ART_OF_WAR Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field BASE_ITEM Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field BOOK_OF_STATS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field BOOSTERS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource$Companion;
 	public static final field DIVAN_POWDER_COATING Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field DRILL_COMPONENTS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
