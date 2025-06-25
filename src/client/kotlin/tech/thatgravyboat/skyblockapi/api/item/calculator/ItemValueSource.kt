@@ -14,6 +14,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     ART_OF_WAR(ArtOfWarCalculator),
     ART_OF_PEACE(ArtOfPeaceCalculator),
     JALAPENO_BOOK(JalapenoBookCalculator),
+    BOOSTERS(BoostersCalculator),
     NECRON_SCROLLS(NecronScrollsCalculator),
     ITEM_STARS(ItemStarsCalculator),
     DRILL_COMPONENTS(DrillComponentsCalculator),

@@ -64,6 +64,8 @@ internal object ArtOfWarCalculator : BoolDataTypeCalculator(DataTypes.ART_OF_WAR
 
 internal object ArtOfPeaceCalculator : BoolDataTypeCalculator(DataTypes.ART_OF_PEACE, "THE_ART_OF_PEACE")
 
+internal object BoostersCalculator : DataTypeListCalculator(DataTypes.BOOSTERS)
+
 internal object JalapenoBookCalculator : BoolDataTypeCalculator(DataTypes.JALAPENO_BOOK, "JALAPENO_BOOK")
 
 internal object ItemStarsCalculator : Calculator {
