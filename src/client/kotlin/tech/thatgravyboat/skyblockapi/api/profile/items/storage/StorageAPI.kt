@@ -20,8 +20,20 @@ object StorageAPI {
     private val backpackRegex = inventoryGroup.create("backpack", ".* Backpack \\(Slot #(?<page>\\d+)\\)")
     private val riftStorageRegex = inventoryGroup.create("rift", "Rift Storage \\((?<page>\\d+)/\\d+\\)")
 
+
+    /**
+     * Note: The index of the storage are stored in the PlayerStorageInstance and the index in the list is not representative of the page.
+     */
     val enderchests get(): List<PlayerStorageInstance> = PlayerStorageStorage.enderchests
+
+    /**
+     * Note: The index of the storage are stored in the PlayerStorageInstance and the index in the list is not representative of the page.
+     */
     val backpacks get(): List<PlayerStorageInstance> = PlayerStorageStorage.backpacks
+
+    /**
+     * Note: The index of the storage are stored in the PlayerStorageInstance and the index in the list is not representative of the page.
+     */
     val riftStorage get(): List<PlayerStorageInstance> = PlayerStorageStorage.riftStorage
 
     @Subscription
