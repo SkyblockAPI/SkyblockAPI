@@ -12,10 +12,11 @@ import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import net.msrandom.stub.Stub
 import java.net.URI
 import java.nio.file.Path
 
+@Stub
 expect object McClient {
     val isDev: Boolean
     val config: Path

@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
+import net.msrandom.stub.Stub
 
 fun LivingEntity.getHelmet() = getItemBySlot(EquipmentSlot.HEAD)
 fun LivingEntity.getChestplate() = getItemBySlot(EquipmentSlot.CHEST)
@@ -12,4 +13,5 @@ fun LivingEntity.getBoots() = getItemBySlot(EquipmentSlot.FEET)
 
 fun LivingEntity.getArmor() = listOf(getHelmet(), getChestplate(), getLeggings(), getBoots())
 
+@Stub
 expect fun Entity.save(): CompoundTag

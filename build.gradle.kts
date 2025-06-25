@@ -201,8 +201,13 @@ tasks.apiCheck { enabled = false }
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            artifactId = "skyblock-api-${libs.versions.minecraft.get()}"
-            from(components["java"])
+            artifactId = "skyblock-api"
+
+            artifact(tasks["1215JarInJar"])
+            artifact(tasks["1216JarInJar"])
+            artifact(tasks["generateMetadataFileForMavenPublication"].outputs.files.first()) {
+                extension = "module"
+            }
 
             pom {
                 name.set("SkyblockAPI")
