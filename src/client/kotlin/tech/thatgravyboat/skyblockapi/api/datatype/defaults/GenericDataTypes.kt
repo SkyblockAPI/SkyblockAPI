@@ -87,6 +87,10 @@ object GenericDataTypes {
     val POWER_ABILITY_SCROLL: DataType<String> = DataType("power_ability_scroll") { it.tag?.getStringOrNull("power_ability_scroll") }
     val JALAPENO_BOOK: DataType<Boolean> = DataType("jalapeno_book") { it.tag?.getBooleanOrNull("jalapeno_count") }
 
+    val BOOSTERS: DataType<List<String>> = DataType("boosters") {
+        it.tag?.getList("boosters")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull()?.let { "${it}_BOOSTER" } } ?: emptyList()
+    }
+
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
     val SINKER: DataType<Pair<UUID, String>> = getFishingRodPartDataType("sinker")
@@ -143,6 +147,7 @@ object GenericDataTypes {
         event.register(ENGINE)
         event.register(UPGRADE_MODULE)
         event.register(VISIBLE_ITEM)
+        event.register(BOOSTERS)
     }
 
     private fun getFishingRodPartDataType(name: String) = DataType(name) {

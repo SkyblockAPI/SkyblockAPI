@@ -34,6 +34,8 @@ object DataTypes {
     val HOT_POTATO_BOOKS: DataType<Int> = GenericDataTypes.HOT_POTATO_BOOKS
     val ART_OF_WAR: DataType<Boolean> = GenericDataTypes.ART_OF_WAR
     val ART_OF_PEACE: DataType<Boolean> = GenericDataTypes.ART_OF_PEACE
+    val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS
+    val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
 
     // Misc (idfk)
     val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = LoreDataTypes.RIGHT_CLICK_MANA_ABILITY
@@ -46,7 +48,6 @@ object DataTypes {
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
     val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
     val BOOK_OF_STATS: DataType<Int> = GenericDataTypes.BOOK_OF_STATS
-    val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
     val APPLIED_RUNE: DataType<Pair<String, Int>> = GenericDataTypes.APPLIED_RUNE
     val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN
     val APPLIED_DYE: DataType<String> = GenericDataTypes.APPLIED_DYE
