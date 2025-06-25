@@ -55,11 +55,11 @@ object SlayerAPI {
         private set
 
     @RemoveNextVersion
-    val current: Int get() = slayerProgress?.current ?: 0
+    val current: Int get() = progress?.current ?: 0
     @RemoveNextVersion
-    val max: Int get() = slayerProgress?.max ?: 0
+    val max: Int get() = progress?.max ?: 0
 
-    var slayerProgress: SlayerProgress? = null
+    var progress: SlayerProgress? = null
         private set
 
     var lastType: SlayerType? = null
@@ -88,7 +88,7 @@ object SlayerAPI {
             slayerAmountRegex.anyFound(event.added, "amount", "total", "dynamic") { (amount, total, dynamic) ->
                 val current = amount.parseFormattedInt()
                 val max = total.parseFormattedInt()
-                slayerProgress = if (dynamic == "Kills") SlayerKillProgress(current, max)
+                progress = if (dynamic == "Kills") SlayerKillProgress(current, max)
                 else SlayerXpProgress(current, max)
             }
             slayerBossTextRegex.anyMatch(event.added, "text") { (text) ->
@@ -118,7 +118,7 @@ object SlayerAPI {
         type = null
         lastLevel = level
         level = 0
-        slayerProgress = null
+        progress = null
         text = null
     }
 
@@ -149,7 +149,7 @@ object SlayerAPI {
     fun onRegisterCommands(event: RegisterCommandsEvent) {
         event.register("sbapi slayer") {
             thenCallback("progress") {
-                val progress = slayerProgress
+                val progress = progress
                 if (progress == null) {
                     Text.sendDebug("No slayer progress found.")
                     return@thenCallback
