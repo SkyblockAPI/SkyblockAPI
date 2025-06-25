@@ -156,34 +156,41 @@ object DebugCommands {
                     }
                 }
             }
-            then("save") {
-                then("biomes") {
-                    callback {
-                        val outputs = McClient.config.resolve(".skyblock-debug").resolve("biomes")
-                        outputs.createDirectories()
+            then("folder") {
+                val gameDir = McClient.self.gameDirectory.toPath()
 
-                        val connection = McClient.connection ?: return@callback
-                        val biomes = connection.registryAccess().lookupOrThrow(Registries.BIOME).entrySet()
-
-                        biomes.forEach { (key, biome) ->
-                            val location = key.location()
-                            val path = outputs.resolve(location.namespace)
-                                .resolve("worldgen")
-                                .resolve("biome")
-                                .resolve("${location.path}.json")
-
-                            path.parent.createDirectories()
-
-                            path.toFile().writeText(biome.toJson(Biome.DIRECT_CODEC).toPrettyString())
-                        }
-
-                        Text.debug("Saved ${biomes.size} biomes. Click to open folder.") {
-                            this.style {
-                                this.withClickEvent(ClickEvent.OpenFile(outputs))
-                                this.withHoverEvent(HoverEvent.ShowText(Text.of("Click to open the folder.")))
-                            }
-                        }.send()
+                listOf("config", "mods", "logs").forEach {
+                    thenCallback(it) {
+                        McClient.openUri(gameDir.resolve(it).toUri())
                     }
+                }
+            }
+            then("save") {
+                thenCallback("biomes") {
+                    val outputs = McClient.config.resolve(".skyblock-debug").resolve("biomes")
+                    outputs.createDirectories()
+
+                    val connection = McClient.connection ?: return@thenCallback
+                    val biomes = connection.registryAccess().lookupOrThrow(Registries.BIOME).entrySet()
+
+                    biomes.forEach { (key, biome) ->
+                        val location = key.location()
+                        val path = outputs.resolve(location.namespace)
+                            .resolve("worldgen")
+                            .resolve("biome")
+                            .resolve("${location.path}.json")
+
+                        path.parent.createDirectories()
+
+                        path.toFile().writeText(biome.toJson(Biome.DIRECT_CODEC).toPrettyString())
+                    }
+
+                    Text.debug("Saved ${biomes.size} biomes. Click to open folder.") {
+                        this.style {
+                            this.withClickEvent(ClickEvent.OpenFile(outputs))
+                            this.withHoverEvent(HoverEvent.ShowText(Text.of("Click to open the folder.")))
+                        }
+                    }.send()
                 }
             }
         }

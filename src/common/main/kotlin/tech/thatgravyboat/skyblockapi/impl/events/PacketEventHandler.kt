@@ -5,10 +5,12 @@ import me.owdding.ktmodules.Module
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.Vec3
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketSentEvent
+import tech.thatgravyboat.skyblockapi.api.events.minecraft.sounds.SoundPlayedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.*
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
@@ -41,44 +43,51 @@ object PacketEventHandler {
 
     @Subscription
     fun onPacketReceived(event: PacketReceivedEvent) {
-        when (event.packet) {
-            is ClientboundBlockUpdatePacket -> postBlockChange(event.packet.pos, event.packet.blockState)
-            is ClientboundSectionBlocksUpdatePacket -> event.packet.runUpdates { mutablePos, state -> postBlockChange(mutablePos.immutable(), state) }
+        val packet = event.packet
+        when (packet) {
+            is ClientboundBlockUpdatePacket -> postBlockChange(packet.pos, packet.blockState)
+            is ClientboundSectionBlocksUpdatePacket -> packet.runUpdates { mutablePos, state -> postBlockChange(mutablePos.immutable(), state) }
             is ClientboundContainerSetContentPacket -> {
                 McClient.runNextTick {
-                    val container = McScreen.asMenu?.takeIf { it.menu?.containerId == event.packet.containerId() } ?: return@runNextTick
-                    ContainerInitializedEvent(event.packet.items(), container).post()
+                    val container = McScreen.asMenu?.takeIf { it.menu?.containerId == packet.containerId() } ?: return@runNextTick
+                    ContainerInitializedEvent(packet.items(), container).post()
                 }
             }
 
             is ClientboundContainerClosePacket -> {
-                if (event.packet.containerId == lastContainerCloseId) return
+                if (packet.containerId == lastContainerCloseId) return
                 ContainerCloseEvent.post()
             }
 
             is ClientboundContainerSetSlotPacket -> {
                 McClient.runNextTick {
-                    val containerId = event.packet.containerId
+                    val containerId = packet.containerId
                     when (containerId) {
                         PLAYER_HOTBAR_CONTAINER_ID -> {
-                            PlayerHotbarChangeEvent(event.packet.slot - FIRST_HOTBAR_SLOT, event.packet.item).post()
-                            PlayerInventoryChangeEvent(event.packet.slot, event.packet.item).post()
+                            PlayerHotbarChangeEvent(packet.slot - FIRST_HOTBAR_SLOT, packet.item).post()
+                            PlayerInventoryChangeEvent(packet.slot, packet.item).post()
                         }
 
-                        PLAYER_INVENTORY_CONTAINER_ID -> PlayerInventoryChangeEvent(event.packet.slot, event.packet.item).post()
+                        PLAYER_INVENTORY_CONTAINER_ID -> PlayerInventoryChangeEvent(packet.slot, packet.item).post()
                         else -> {
                             val container = McScreen.asMenu?.takeIf { it.menu?.containerId == containerId } ?: return@runNextTick
                             val currentItems = container.menu?.slots?.map { it.item } ?: emptyList()
 
                             val updatedItems = currentItems.toMutableList().apply {
-                                if (event.packet.slot in indices) {
-                                    this[event.packet.slot] = event.packet.item
+                                if (packet.slot in indices) {
+                                    this[packet.slot] = packet.item
                                 }
                             }
 
-                            ContainerChangeEvent(event.packet.item, event.packet.slot, container, updatedItems).post()
+                            ContainerChangeEvent(packet.item, packet.slot, container, updatedItems).post()
                         }
                     }
+                }
+            }
+
+            is ClientboundSoundPacket -> {
+                if (packet.sound.isBound && SoundPlayedEvent(packet.sound.value(), Vec3(packet.x, packet.y, packet.z), packet.volume, packet.pitch).post()) {
+                    event.cancel()
                 }
             }
         }

@@ -23,7 +23,7 @@ kotlin-symbol-processor = "2.1.0-1.0.29"
 hypixel-modapi = "1.0.1"
 hypixel-modapi-fabric = "1.0.1+build.1+mc1.21"
 
-skyblockapi-repolib = "1.5.1"
+skyblockapi-repolib = "1.5.2"
 
 # Dev versions
 devauth-fabric = "1.2.1"

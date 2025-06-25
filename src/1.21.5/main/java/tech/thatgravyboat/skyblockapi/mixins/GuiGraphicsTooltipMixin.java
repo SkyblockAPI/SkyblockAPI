@@ -19,12 +19,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.minecraft.ui.GatherItemTooltipComponentsEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderItemBarEvent;
+import tech.thatgravyboat.skyblockapi.hooks.GuiGraphicsHook;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(GuiGraphics.class)
-public class GuiGraphicsTooltipMixin {
+public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
 
     @Unique
     private ThreadLocal<ItemStack> lastStack = ThreadLocal.withInitial(() -> ItemStack.EMPTY);
@@ -39,16 +40,18 @@ public class GuiGraphicsTooltipMixin {
 
     @WrapOperation(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getBarWidth()I"))
     private int itemBarWidth(ItemStack instance, Operation<Integer> original, @Share("bar") LocalRef<RenderItemBarEvent> bar) {
-        if (bar.get() != null) {
-            return (int) (Mth.clamp(bar.get().getPercent() * 13, 0, 13));
+        var event = bar.get();
+        if (event != null && event.getPercent() >= 0f) {
+            return (int) (Mth.clamp(event.getPercent() * 13, 0, 13));
         }
         return original.call(instance);
     }
 
     @WrapOperation(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getBarColor()I"))
     private int itemBarColor(ItemStack instance, Operation<Integer> original, @Share("bar") LocalRef<RenderItemBarEvent> bar) {
-        if (bar.get() != null) {
-            return bar.get().getColor();
+        var event = bar.get();
+        if (event != null && event.getColor() != 0) {
+            return event.getColor();
         }
         return original.call(instance);
     }
@@ -79,5 +82,11 @@ public class GuiGraphicsTooltipMixin {
         GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
         event.post(SkyBlockAPI.getEventBus());
         operation.call(instance, font, listCopy, i, j, positioner, texture);
+        lastStack.set(ItemStack.EMPTY);
+    }
+
+    @Override
+    public void skyblockapi$setHoveredItem(ItemStack stack) {
+        this.lastStack.set(stack);
     }
 }

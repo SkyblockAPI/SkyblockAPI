@@ -947,6 +947,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/Essence : java/lang/E
 	public static final field CRIMSON Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field DIAMOND Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field DRAGON Ltech/thatgravyboat/skyblockapi/api/data/Essence;
+	public static final field FOREST Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field GOLD Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field ICE Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field SPIDER Ltech/thatgravyboat/skyblockapi/api/data/Essence;
@@ -1315,6 +1316,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getART_OF_WAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOOSTERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCATEGORY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1445,6 +1447,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getART_OF_WAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOOSTERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCROPS_BROKEN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1634,6 +1637,9 @@ public final class tech/thatgravyboat/skyblockapi/api/events/base/EventBus$Event
 
 public abstract interface class tech/thatgravyboat/skyblockapi/api/events/base/EventPredicateProvider {
 	public abstract fun getPredicate (Ljava/lang/reflect/Method;)Lkotlin/jvm/functions/Function2;
+}
+
+public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/base/OffThreadEvent : java/lang/annotation/Annotation {
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -2300,6 +2306,23 @@ public final class tech/thatgravyboat/skyblockapi/api/events/location/mineshaft/
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/location/mineshaft/MineshaftFoundEvent;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/minecraft/sounds/SoundPlayedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
+	public fun <init> (Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/phys/Vec3;FF)V
+	public final fun component1 ()Lnet/minecraft/sounds/SoundEvent;
+	public final fun component2 ()Lnet/minecraft/world/phys/Vec3;
+	public final fun component3 ()F
+	public final fun component4 ()F
+	public final fun copy (Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/phys/Vec3;FF)Ltech/thatgravyboat/skyblockapi/api/events/minecraft/sounds/SoundPlayedEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/minecraft/sounds/SoundPlayedEvent;Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/phys/Vec3;FFILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/minecraft/sounds/SoundPlayedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPitch ()F
+	public final fun getPos ()Lnet/minecraft/world/phys/Vec3;
+	public final fun getSound ()Lnet/minecraft/sounds/SoundEvent;
+	public final fun getVolume ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/minecraft/ui/GatherItemTooltipComponentsEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public fun <init> (Lnet/minecraft/world/item/ItemStack;Ljava/util/List;)V
 	public final fun add (Lnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipComponent;)Z
@@ -2841,6 +2864,7 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueS
 	public static final field ART_OF_WAR Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field BASE_ITEM Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field BOOK_OF_STATS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field BOOSTERS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource$Companion;
 	public static final field DIVAN_POWDER_COATING Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field DRILL_COMPONENTS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;

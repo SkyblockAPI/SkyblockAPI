@@ -6,6 +6,7 @@
     "client": [
         "accessors.AbstractContainerScreenAccessor",
         "accessors.ContainerScreenAccessor",
+        "events.AbstractContainerScreenMixin",
         "events.ChatComponentMixin",
         "events.ChatListenerMixin",
         "events.ClientCommonPacketListenerImplMixin",
