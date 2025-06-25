@@ -12,12 +12,16 @@ import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineAttachEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
-import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
+import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.time.since
 import java.util.*
@@ -33,7 +37,7 @@ object SlayerAPI {
     private val slayerTypeRegex = slayerGroup.create("type", "(?<type>[\\w ]+) (?<level>[MDCLXVI]+)")
     private val slayerAmountRegex = slayerGroup.create(
         "amount",
-        " \\(?(?<amount>[\\d,]+)/(?<total>[\\d,]+)\\)? (Combat XP|Kills)",
+        " \\(?(?<amount>[\\d,]+)/(?<total>[\\d,]+)\\)? (?<dynamic>Combat XP|Kills)",
     )
     private val slayerBossTextRegex = slayerGroup.create(
         "boss",
@@ -49,9 +53,13 @@ object SlayerAPI {
 
     var text: String? = null
         private set
-    var current: Int = 0
-        private set
-    var max: Int = 0
+
+    @RemoveNextVersion
+    val current: Int get() = slayerProgress?.current ?: 0
+    @RemoveNextVersion
+    val max: Int get() = slayerProgress?.max ?: 0
+
+    var slayerProgress: SlayerProgress? = null
         private set
 
     var lastType: SlayerType? = null
@@ -73,10 +81,15 @@ object SlayerAPI {
                     SlayerAPI.level = level.parseRomanNumeral()
                 }
             }
-        } else if (event.added.isNotEmpty()) {
-            slayerAmountRegex.anyMatch(event.added, "amount", "total") { (amount, total) ->
-                current = amount.toIntValue()
-                max = total.toIntValue()
+        }
+        // this needs to be in another if statement because both slayerTypeRegex and
+        // slayerAmountRegex can be added at the same time under certain circumstances
+        if (event.added.isNotEmpty()) {
+            slayerAmountRegex.anyFound(event.added, "amount", "total", "dynamic") { (amount, total, dynamic) ->
+                val current = amount.parseFormattedInt()
+                val max = total.parseFormattedInt()
+                slayerProgress = if (dynamic == "Kills") SlayerKillProgress(current, max)
+                else SlayerXpProgress(current, max)
             }
             slayerBossTextRegex.anyMatch(event.added, "text") { (text) ->
                 SlayerAPI.text = text
@@ -105,8 +118,7 @@ object SlayerAPI {
         type = null
         lastLevel = level
         level = 0
-        current = 0
-        max = 0
+        slayerProgress = null
         text = null
     }
 
@@ -132,10 +144,28 @@ object SlayerAPI {
     }
 
     private fun isSlayerLine(line: String) = line.startsWith("☠") || (line.endsWith("❤") || line.endsWith("❤ ✯"))
+
+    @Subscription
+    fun onRegisterCommands(event: RegisterCommandsEvent) {
+        event.register("sbapi slayer") {
+            thenCallback("progress") {
+                val progress = slayerProgress
+                if (progress == null) {
+                    Text.sendDebug("No slayer progress found.")
+                    return@thenCallback
+                }
+                Text.sendDebug(
+                    "Slayer Progress: ${progress.current}/${progress.max}" +
+                        "(${progress::class.simpleName}) [${progress.percentage.toFormattedString()}%]"
+                )
+            }
+        }
+    }
 }
 
 interface SlayerMob {
     val displayName: String
+
     @RemoveNextVersion
     val inGameName: String get() = displayName
     val inGameNames: List<String> get() = listOf(displayName)
