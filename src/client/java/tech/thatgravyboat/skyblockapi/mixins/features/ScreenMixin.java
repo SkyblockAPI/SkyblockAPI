@@ -13,7 +13,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.RunnableClickEvent;
 @Mixin(Screen.class)
 public class ScreenMixin {
 
-    @WrapOperation(method = "handleComponentClicked", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V"))
+    @WrapOperation(method = "handleComponentClicked", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false))
     private void handleComponentClickedError(Logger instance, String string, Object o, Operation<Void> original, @Local(ordinal = 0) ClickEvent event) {
         if (event instanceof RunnableClickEvent runnable) {
             runnable.getRunnable().invoke();

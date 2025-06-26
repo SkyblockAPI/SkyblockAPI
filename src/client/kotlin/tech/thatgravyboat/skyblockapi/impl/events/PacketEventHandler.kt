@@ -84,12 +84,6 @@ object PacketEventHandler {
                     }
                 }
             }
-
-            is ClientboundSoundPacket -> {
-                if (packet.sound.isBound && SoundPlayedEvent(packet.sound.value(), Vec3(packet.x, packet.y, packet.z), packet.volume, packet.pitch).post()) {
-                    event.cancel()
-                }
-            }
         }
     }
 
