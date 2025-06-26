@@ -20,21 +20,21 @@ public class AbstractSoundInstanceMixin implements SoundInstanceAccessor {
     @Shadow
     protected float pitch;
     @Unique
-    private SoundEvent skyblockapi$sound;
+    private SoundEvent sound;
 
     @Inject(method = "<init>(Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;Lnet/minecraft/util/RandomSource;)V", at = @At("TAIL"))
     public void init(SoundEvent soundEvent, SoundSource soundSource, RandomSource randomSource, CallbackInfo ci) {
-        this.skyblockapi$sound = soundEvent;
+        this.sound = soundEvent;
     }
 
     @Override
     public SoundEvent skyblockapi$getSoundEvent() {
-        return skyblockapi$sound;
+        return sound;
     }
 
     @Override
     public void skyblockapi$setSoundEvent(SoundEvent event) {
-        this.skyblockapi$sound = event;
+        this.sound = event;
     }
 
     @Override
