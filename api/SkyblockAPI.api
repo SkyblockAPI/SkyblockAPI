@@ -752,11 +752,13 @@ public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerAPI {
 	public final fun getLastType ()Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 	public final fun getLevel ()I
 	public final fun getMax ()I
+	public final fun getProgress ()Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerProgress;
 	public final fun getQuestFinished ()Lkotlinx/datetime/Instant;
 	public final fun getText ()Ljava/lang/String;
 	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onNameChangeEvent (Ltech/thatgravyboat/skyblockapi/api/events/entity/NameChangedEvent;)V
+	public final fun onRegisterCommands (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onSlayerBarUpdate (Ltech/thatgravyboat/skyblockapi/api/events/entity/ComponentAttachEvent;)V
 	public final fun setQuestFinished (Lkotlinx/datetime/Instant;)V
@@ -789,6 +791,20 @@ public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerInfo {
 	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMob;
 	public fun hashCode ()I
 	public final fun isOwnedByPlayer ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerKillProgress : tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerProgress {
+	public fun <init> (II)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerKillProgress;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerKillProgress;IIILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerKillProgress;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getCurrent ()I
+	public fun getMax ()I
+	public fun getPercentage ()F
+	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -832,6 +848,16 @@ public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMob$Defa
 	public static fun getInGameNames (Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMob;)Ljava/util/List;
 }
 
+public abstract interface class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerProgress {
+	public abstract fun getCurrent ()I
+	public abstract fun getMax ()I
+	public abstract fun getPercentage ()F
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerProgress$DefaultImpls {
+	public static fun getPercentage (Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerProgress;)F
+}
+
 public class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType : java/lang/Enum, tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerMob {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType$Companion;
 	public static final field INFERNO_DEMONLORD Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
@@ -854,6 +880,20 @@ public class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType : java/la
 public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType$Companion {
 	public final fun fromDisplayName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
 	public final fun fromName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerType;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerXpProgress : tech/thatgravyboat/skyblockapi/api/area/slayer/SlayerProgress {
+	public fun <init> (II)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerXpProgress;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerXpProgress;IIILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/area/slayer/SlayerXpProgress;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getCurrent ()I
+	public fun getMax ()I
+	public fun getPercentage ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/data/CachedPlayer {
@@ -2958,12 +2998,17 @@ public final class tech/thatgravyboat/skyblockapi/api/location/LocationAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/location/LocationAPI;
 	public final fun getArea ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getIsland ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
+	public final fun getMaxPlayercount ()Ljava/lang/Integer;
+	public final fun getPlayerCount ()I
 	public final fun getServerId ()Ljava/lang/String;
+	public final fun isGuest ()Z
 	public final fun isOnSkyBlock ()Z
 	public final fun onCommand (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 	public final fun onScoreboardChange (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
+	public final fun onScoreboardTitleUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardTitleUpdateEvent;)V
 	public final fun onServerChange (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ServerChangeEvent;)V
 	public final fun onServerDisconnect (Ltech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent;)V
+	public final fun onTabListUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/TabListChangeEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockArea {
@@ -4930,6 +4975,13 @@ public final class tech/thatgravyboat/skyblockapi/helpers/SkyBlockEntityKt {
 	public static final fun getAttachedTo (Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/entity/Entity;
 	public static final fun getMobLevel (Lnet/minecraft/world/entity/Entity;)Ljava/lang/Integer;
 	public static final fun getStrippedAttachedLines (Lnet/minecraft/world/entity/Entity;)Ljava/util/List;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/hooks/SoundInstanceAccessor {
+	public abstract fun skyblockapi$getSoundEvent ()Lnet/minecraft/sounds/SoundEvent;
+	public abstract fun skyblockapi$pitch ()F
+	public abstract fun skyblockapi$setSoundEvent (Lnet/minecraft/sounds/SoundEvent;)V
+	public abstract fun skyblockapi$volume ()F
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/DiscoverableValue : kotlin/Lazy {
