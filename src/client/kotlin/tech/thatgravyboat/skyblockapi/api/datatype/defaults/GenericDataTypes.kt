@@ -71,7 +71,7 @@ object GenericDataTypes {
     val NECRON_SCROLLS: DataType<List<String>> = DataType("necron_scrolls") {
         val list = it.tag?.getList("ability_scroll")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull() }
 
-        return@DataType if (list?.contains("ULTIMATE_WITHER_SCROLL")==true) {
+        return@DataType if (list?.contains("ULTIMATE_WITHER_SCROLL") == true) {
             listOf("WITHER_SHIELD_SCROLL", "SHADOW_WARP_SCROLL", "IMPLOSION_SCROLL")
         } else {
             list
