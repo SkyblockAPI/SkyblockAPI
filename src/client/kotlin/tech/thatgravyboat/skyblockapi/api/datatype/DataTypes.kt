@@ -53,6 +53,7 @@ object DataTypes {
     val APPLIED_DYE: DataType<String> = GenericDataTypes.APPLIED_DYE
     val PET_DATA: DataType<PetData> = GenericDataTypes.PET_DATA
     val SNOWBALLS: DataType<Pair<Int, Int>> = LoreDataTypes.SNOWBALLS
+    val ABSORB_LOGS: DataType<Long> = GenericDataTypes.ABSORB_LOGS
 
     // Aging Items
     val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD

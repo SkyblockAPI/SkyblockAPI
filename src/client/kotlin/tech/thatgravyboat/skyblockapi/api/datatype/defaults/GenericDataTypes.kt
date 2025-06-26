@@ -29,6 +29,7 @@ object GenericDataTypes {
                 val rune = getAppliedRune(it.tag ?: return@DataType null)
                 "rune:${rune?.first}:${rune?.second}"
             }
+
             "PET" -> getPetData(it.tag ?: return@DataType null)?.apiId ?: return@DataType null
             else -> id
         }
@@ -41,6 +42,7 @@ object GenericDataTypes {
     val RIFT_DISCRITE_SECONDS: DataType<Int> = DataType("rift_discrite_seconds") { it.tag?.getIntOrNull("rift_discrite_seconds") }
 
     val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") { it.tag?.getIntOrNull("pickonimbus_durability") }
+
     @RemoveNextVersion
     val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.tag?.getIntOrNull("rarity_upgrades") }
     val RECOMBOBULATOR: DataType<Boolean> = DataType("recombobulator") { item -> item.tag?.getIntOrNull("rarity_upgrades")?.let { it > 0 } }
@@ -64,12 +66,13 @@ object GenericDataTypes {
     }
     val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
     val COMPACT_BLOCKS: DataType<Long> = DataType("compact_blocks") { it.tag?.getLongOrNull("compact_blocks") }
+    val ABSORB_LOGS: DataType<Long> = DataType("absorb_logs_chopped") { it.tag?.getLongOrNull("absorb_logs_chopped") }
     val STAR_COUNT: DataType<Int> = DataType("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
     val NECRON_SCROLLS: DataType<List<String>> = DataType("necron_scrolls") {
         val list = it.tag?.getList("ability_scroll")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull() }
 
-        return@DataType if (list?.contains("ULTIMATE_WITHER_SCROLL") == true) {
-            listOf("WITHER_SHIELD_SCROLL","SHADOW_WARP_SCROLL","IMPLOSION_SCROLL")
+        return@DataType if (list?.contains("ULTIMATE_WITHER_SCROLL")==true) {
+            listOf("WITHER_SHIELD_SCROLL", "SHADOW_WARP_SCROLL", "IMPLOSION_SCROLL")
         } else {
             list
         }
@@ -148,6 +151,7 @@ object GenericDataTypes {
         event.register(UPGRADE_MODULE)
         event.register(VISIBLE_ITEM)
         event.register(BOOSTERS)
+        event.register(ABSORB_LOGS)
     }
 
     private fun getFishingRodPartDataType(name: String) = DataType(name) {
