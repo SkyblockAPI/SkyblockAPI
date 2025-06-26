@@ -120,7 +120,7 @@ object LocationAPI {
             }
         }
 
-        guestRegex.anyMatch(event.added, "guests", "max") { (current, _) ->
+        guestRegex.anyMatch(event.added, "guests") { (current) ->
             playerCount = current.toIntOrNull() ?: 0
         }
     }
