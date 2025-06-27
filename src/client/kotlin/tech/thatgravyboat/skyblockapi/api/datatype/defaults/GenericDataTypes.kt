@@ -153,6 +153,7 @@ object GenericDataTypes {
         event.register(VISIBLE_ITEM)
         event.register(BOOSTERS)
         event.register(ABSORB_LOGS)
+        event.register(LOGS_CUT)
     }
 
     private fun getFishingRodPartDataType(name: String) = DataType(name) {
