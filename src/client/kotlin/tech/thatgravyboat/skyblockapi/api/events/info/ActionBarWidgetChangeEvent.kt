@@ -46,7 +46,7 @@ class PressureActionBarWidgetChangeEvent(val current: Int, old: String, new: Str
     ActionBarWidgetChangeEvent(ActionBarWidget.PRESSURE, old, new)
 
 class SkillXpPercentActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val percent: Float, old: String, new: String) :
-    ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP_PERCENT, old, new)
+    ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP, old, new)
 
 class SkillXpLiteralActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val current: Long, val needed: Long, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP_LITERAL, old, new)
@@ -60,10 +60,7 @@ enum class ActionBarWidget {
     DRILL_FUEL,
     ABILITY,
     LOCATION,
-
-    @Deprecated("Use SKILL_XP_PERCENT instead", ReplaceWith("SKILL_XP_PERCENT"))
     SKILL_XP,
-    SKILL_XP_PERCENT,
     SKILL_XP_LITERAL,
     SKYBLOCK_XP,
     RIFT_TIME,
