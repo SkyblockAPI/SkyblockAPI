@@ -1349,6 +1349,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypeItemStack
 
 public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/datatype/DataTypes;
+	public final fun getABSORB_LOGS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPI_ID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_DYE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1377,6 +1378,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getJALAPENO_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getLOGS_CUT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMODIFIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPERSONAL_ACCESSORY_ACTIVE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1480,6 +1482,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/Gemstone
 
 public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericDataTypes {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericDataTypes;
+	public final fun getABSORB_LOGS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPI_ID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_DYE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getAPPLIED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1505,6 +1508,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getJALAPENO_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getLOGS_CUT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMODIFIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPET_DATA ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
