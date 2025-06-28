@@ -67,7 +67,7 @@ object GenericDataTypes {
     val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
     val COMPACT_BLOCKS: DataType<Long> = DataType("compact_blocks") { it.tag?.getLongOrNull("compact_blocks") }
     val ABSORB_LOGS: DataType<Long> = DataType("absorb_logs_chopped") { it.tag?.getLongOrNull("absorb_logs_chopped") }
-    val LOGS_CUT: DataType<Long> = DataType("logs_cut") { it.tag?.getLongOrNull("logs_cut)") }
+    val LOGS_CUT: DataType<Long> = DataType("logs_cut") { it.tag?.getLongOrNull("logs_cut") }
     val STAR_COUNT: DataType<Int> = DataType("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
     val NECRON_SCROLLS: DataType<List<String>> = DataType("necron_scrolls") {
         val list = it.tag?.getList("ability_scroll")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull() }
