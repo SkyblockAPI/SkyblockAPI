@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI.SkillDa
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
 import tech.thatgravyboat.skyblockapi.utils.extentions.asString
+import tech.thatgravyboat.skyblockapi.utils.extentions.valueOfOrNull
 import tech.thatgravyboat.skyblockapi.utils.http.Http
 import tech.thatgravyboat.skyblockapi.utils.runCatchBlocking
 
@@ -41,7 +42,7 @@ object HypixelSkillAPI {
                     skillsObject.entrySet().mapNotNull { (key, value) ->
                         val skillData = value.asJsonObject.toSkillData()
 
-                        valueOf(key).also { skill -> skill.internalSkillData = skillData }
+                        valueOfOrNull<Skill>(key)?.also { skill -> skill.internalSkillData = skillData }
                     }
                 }
             }
