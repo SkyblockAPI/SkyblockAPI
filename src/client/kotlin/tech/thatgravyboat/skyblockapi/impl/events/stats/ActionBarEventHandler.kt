@@ -71,7 +71,7 @@ object ActionBarEventHandler {
         // §b-100 Mana (§6Dragon Rage§b)
         ActionBarWidgetType(ActionBarWidget.ABILITY, "§.-?(?<amount>[\\d,]+) Mana \\(§.(?<ability>[^)]+)§.\\)"),
         // §3+1.7 Mining (38.19%)
-        ActionBarWidgetType(ActionBarWidget.SKILL, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)") { old, it ->
+        ActionBarWidgetType(ActionBarWidget.SKILL_XP, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)") { old, it ->
             SkillXpPercentActionBarWidgetChangeEvent(
                 it["amount"].toFloatValue(),
                 HypixelSkillAPI.Skill.getByName(it["skill"].toString()),

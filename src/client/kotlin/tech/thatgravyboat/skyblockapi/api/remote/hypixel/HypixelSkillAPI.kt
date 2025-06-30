@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.remote.hypixel
 
 import com.google.gson.JsonObject
-import kotlinx.coroutines.runBlocking
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI.SkillData.Companion.toSkillData
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
@@ -22,9 +21,7 @@ object HypixelSkillAPI {
         FISHING,
         ENCHANTING,
         ALCHEMY,
-        TAMING {
-            override fun hasFloatingLevelCap(): Boolean = true
-        },
+        TAMING(true),
         CARPENTRY,
         RUNECRAFTING,
         SOCIAL,
