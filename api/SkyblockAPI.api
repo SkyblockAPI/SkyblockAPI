@@ -2002,6 +2002,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidge
 	public static final field RIFT_TIME Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field SECRETS Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field SKILL_XP Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
+	public static final field SKILL_XP_LITERAL Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field SKYBLOCK_XP Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun toString ()Ljava/lang/String;
@@ -2113,6 +2114,21 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/SecretsActionB
 	public fun <init> (IILjava/lang/String;Ljava/lang/String;)V
 	public final fun getCurrent ()I
 	public final fun getMax ()I
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/info/SkillXpLiteralActionBarWidgetChangeEvent : tech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidgetChangeEvent {
+	public fun <init> (FLtech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;JJLjava/lang/String;Ljava/lang/String;)V
+	public final fun getAmount ()F
+	public final fun getCurrent ()J
+	public final fun getNeeded ()J
+	public final fun getSkill ()Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/info/SkillXpPercentActionBarWidgetChangeEvent : tech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidgetChangeEvent {
+	public fun <init> (FLtech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;FLjava/lang/String;Ljava/lang/String;)V
+	public final fun getAmount ()F
+	public final fun getPercent ()F
+	public final fun getSkill ()Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/info/TabListChangeEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -4461,6 +4477,69 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/SkyBlockItems {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/SkyBlockItems;
 	public final fun getIdByDisplayName (Ljava/lang/String;)Ljava/lang/String;
 	public final fun getNameToId ()Ljava/util/Map;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill : java/lang/Enum, tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillType {
+	public static final field ALCHEMY Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field CARPENTRY Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field COMBAT Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill$Companion;
+	public static final field ENCHANTING Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field FARMING Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field FISHING Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field FORAGING Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field HUNTING Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field MINING Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field RUNECRAFTING Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field SOCIAL Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static final field TAMING Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public fun getData ()Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getId ()Ljava/lang/String;
+	public fun getSkillApiId ()Ljava/lang/String;
+	public fun hasFloatingLevelCap ()Z
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill$Companion {
+	public final fun getByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData$Companion;
+	public fun <init> (Ljava/lang/String;ILjava/util/Map;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/util/Map;
+	public final fun copy (Ljava/lang/String;ILjava/util/Map;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData;Ljava/lang/String;ILjava/util/Map;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMaxLevel ()I
+	public final fun getName ()Ljava/lang/String;
+	public final fun getSkillLevels ()Ljava/util/Map;
+	public final fun getTotalExpForLevel (I)J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData$Companion {
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillType {
+	public abstract fun getData ()Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData;
+	public abstract fun getId ()Ljava/lang/String;
+	public abstract fun getSkillApiId ()Ljava/lang/String;
+	public abstract fun hasFloatingLevelCap ()Z
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillType$DefaultImpls {
+	public static fun getSkillApiId (Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillType;)Ljava/lang/String;
+	public static fun hasFloatingLevelCap (Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillType;)Z
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/CoinCost : tech/thatgravyboat/skyblockapi/api/remote/hypixel/itemdata/Cost {
