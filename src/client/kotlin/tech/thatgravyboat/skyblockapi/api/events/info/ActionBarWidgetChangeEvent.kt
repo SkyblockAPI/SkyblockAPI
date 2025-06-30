@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 import tech.thatgravyboat.skyblockapi.api.data.item.ArmorStack
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI.Skill
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import kotlin.time.Duration
 
@@ -44,6 +45,12 @@ class DrillActionBarWidgetChangeEvent(val current: Int, val max: Int, old: Strin
 class PressureActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.PRESSURE, old, new)
 
+class SkillXpPercentActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val percent: Float, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP, old, new)
+
+class SkillXpLiteralActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val current: Long, val needed: Long, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP_LITERAL, old, new)
+
 enum class ActionBarWidget {
     HEALTH,
     DEFENSE,
@@ -54,6 +61,7 @@ enum class ActionBarWidget {
     ABILITY,
     LOCATION,
     SKILL_XP,
+    SKILL_XP_LITERAL,
     SKYBLOCK_XP,
     RIFT_TIME,
     ARMADILLO,

@@ -2,6 +2,8 @@ package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import java.util.*
 
+// todo: move into enum extensions with 1.21.6
+
 inline fun <reified E : Enum<E>> emptyEnumSet(): EnumSet<E> = EnumSet.noneOf(E::class.java)
 
 inline fun <reified E : Enum<E>> enumSetOf(): EnumSet<E> = emptyEnumSet<E>()
