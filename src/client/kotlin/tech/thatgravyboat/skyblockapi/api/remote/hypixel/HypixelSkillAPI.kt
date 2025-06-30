@@ -21,6 +21,7 @@ object HypixelSkillAPI {
         FISHING,
         ENCHANTING,
         ALCHEMY,
+        HUNTING,
         TAMING(true),
         CARPENTRY,
         RUNECRAFTING,
