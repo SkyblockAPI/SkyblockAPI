@@ -22,8 +22,9 @@ object HypixelSkillAPI {
         FISHING,
         ENCHANTING,
         ALCHEMY,
-        HUNTING,
-        TAMING(true),
+        TAMING {
+            override fun hasFloatingLevelCap(): Boolean = true
+        },
         CARPENTRY,
         RUNECRAFTING,
         SOCIAL,
