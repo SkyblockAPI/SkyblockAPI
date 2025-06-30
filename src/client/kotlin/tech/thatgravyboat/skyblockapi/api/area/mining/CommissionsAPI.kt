@@ -96,10 +96,7 @@ object CommissionsAPI {
         this.commissions = emptyList()
     }
 
-    @Subscription
-    fun onDisconnect(event: ServerDisconnectEvent) = reset()
-
-    @Subscription
-    fun onProfileChange(event: ProfileChangeEvent) = reset()
+    @Subscription(ProfileChangeEvent::class, ServerDisconnectEvent::class)
+    fun onProfileChange() = reset()
 }
 

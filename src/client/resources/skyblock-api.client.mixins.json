@@ -4,18 +4,27 @@
     "package": "tech.thatgravyboat.skyblockapi.mixins",
     "compatibilityLevel": "JAVA_21",
     "client": [
+        "AbstractSoundInstanceMixin",
+        "SimpleSoundInstanceMixin",
         "accessors.AbstractContainerScreenAccessor",
         "accessors.ContainerScreenAccessor",
+        "events.AbstractContainerScreenMixin",
         "events.ChatComponentMixin",
         "events.ChatListenerMixin",
         "events.ClientCommonPacketListenerImplMixin",
+        "events.EntityRendererMixin",
         "events.GuiGraphicsMixin",
         "events.GuiMessageMixin",
         "events.GuiMixin",
+        "events.HumanoidRendererMixin",
         "events.KeyboardHandlerMixin",
+        "events.LivingEntityRendererMixin",
         "events.MouseHandlerMixin",
+        "events.PlayerRendererMixin",
         "events.ScreenMixin",
+        "events.SoundManagerMixin",
         "features.GuiGraphicsMixin",
+        "features.ScreenMixin",
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin",
         "tagattachments.ClientLevelMixin",
@@ -38,5 +47,5 @@
         "fixes.ScoreboardMixin",
         "fixes.YggdrasilMinecraftSessionServiceMixin",
         "fixes.YggdrasilServicesKeyInfoMixin"
-    ]
+  ]
 }

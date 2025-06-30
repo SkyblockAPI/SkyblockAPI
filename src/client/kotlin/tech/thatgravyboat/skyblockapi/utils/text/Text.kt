@@ -18,6 +18,7 @@ object CommonText {
     val SPACE = " ".asComponent()
     val EMPTY = "".asComponent()
 
+    internal val PREFIX = Text.of("[SkyBlockAPI] ") { color = TextColor.YELLOW }
 }
 
 object Text {
@@ -26,11 +27,6 @@ object Text {
     fun of(init: MutableComponent.() -> Unit = {}) = "".asComponent(init)
     fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
     fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
-    internal fun debug(text: String, init: MutableComponent.() -> Unit = {}) =
-        of("[SkyBlockAPI] $text") {
-            this.color = TextColor.YELLOW
-            init.invoke(this)
-        }
 
     @JvmOverloads
     fun multiline(vararg lines: Any?, init: MutableComponent.() -> Unit = {}) = join(*lines, separator = CommonText.NEWLINE, init = init)
@@ -67,6 +63,14 @@ object Text {
     fun MutableComponent.send(id: String) = McClient.chat.setMessageId(id) {
         this.send()
     }
+
+    internal fun debug(text: String, init: MutableComponent.() -> Unit = {}) =
+        of("[SkyBlockAPI] $text") {
+            this.color = TextColor.YELLOW
+            init.invoke(this)
+        }
+    internal fun sendDebug(text: String, init: MutableComponent.() -> Unit = {}) = debug(text, init).send()
+    internal fun Component.sendWithPrefix() = join(CommonText.PREFIX, this).send()
 }
 
 object TextProperties {
@@ -148,6 +152,10 @@ object TextStyle {
     fun MutableComponent.style(init: Style.() -> Style): MutableComponent {
         this.withStyle { init.invoke(style) }
         return this
+    }
+
+    fun MutableComponent.onClick(runnable: () -> Unit): MutableComponent = this.style {
+        withClickEvent(RunnableClickEvent(runnable))
     }
 
     var MutableComponent.font: ResourceLocation?

@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.area.slayer
 import kotlinx.datetime.Instant
 import me.owdding.ktmodules.Module
 import net.minecraft.world.entity.Entity
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -11,12 +12,16 @@ import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineAttachEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
-import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
+import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.time.since
 import java.util.*
@@ -32,7 +37,7 @@ object SlayerAPI {
     private val slayerTypeRegex = slayerGroup.create("type", "(?<type>[\\w ]+) (?<level>[MDCLXVI]+)")
     private val slayerAmountRegex = slayerGroup.create(
         "amount",
-        " \\(?(?<amount>[\\d,]+)/(?<total>[\\d,]+)\\)? (Combat XP|Kills)",
+        " \\(?(?<amount>[\\d,]+)/(?<total>[\\d,]+)\\)? (?<dynamic>Combat XP|Kills)",
     )
     private val slayerBossTextRegex = slayerGroup.create(
         "boss",
@@ -48,9 +53,13 @@ object SlayerAPI {
 
     var text: String? = null
         private set
-    var current: Int = 0
-        private set
-    var max: Int = 0
+
+    @RemoveNextVersion
+    val current: Int get() = progress?.current ?: 0
+    @RemoveNextVersion
+    val max: Int get() = progress?.max ?: 0
+
+    var progress: SlayerProgress? = null
         private set
 
     var lastType: SlayerType? = null
@@ -72,10 +81,15 @@ object SlayerAPI {
                     SlayerAPI.level = level.parseRomanNumeral()
                 }
             }
-        } else if (event.added.isNotEmpty()) {
-            slayerAmountRegex.anyMatch(event.added, "amount", "total") { (amount, total) ->
-                current = amount.toIntValue()
-                max = total.toIntValue()
+        }
+        // this needs to be in another if statement because both slayerTypeRegex and
+        // slayerAmountRegex can be added at the same time under certain circumstances
+        if (event.added.isNotEmpty()) {
+            slayerAmountRegex.anyFound(event.added, "amount", "total", "dynamic") { (amount, total, dynamic) ->
+                val current = amount.parseFormattedInt()
+                val max = total.parseFormattedInt()
+                progress = if (dynamic == "Kills") SlayerKillProgress(current, max)
+                else SlayerXpProgress(current, max)
             }
             slayerBossTextRegex.anyMatch(event.added, "text") { (text) ->
                 SlayerAPI.text = text
@@ -104,8 +118,7 @@ object SlayerAPI {
         type = null
         lastLevel = level
         level = 0
-        current = 0
-        max = 0
+        progress = null
         text = null
     }
 
@@ -131,11 +144,31 @@ object SlayerAPI {
     }
 
     private fun isSlayerLine(line: String) = line.startsWith("☠") || (line.endsWith("❤") || line.endsWith("❤ ✯"))
+
+    @Subscription
+    fun onRegisterCommands(event: RegisterCommandsEvent) {
+        event.register("sbapi slayer") {
+            thenCallback("progress") {
+                val progress = progress
+                if (progress == null) {
+                    Text.sendDebug("No slayer progress found.")
+                    return@thenCallback
+                }
+                Text.sendDebug(
+                    "Slayer Progress: ${progress.current}/${progress.max}" +
+                        "(${progress::class.simpleName}) [${progress.percentage.toFormattedString()}%]"
+                )
+            }
+        }
+    }
 }
 
 interface SlayerMob {
     val displayName: String
+
+    @RemoveNextVersion
     val inGameName: String get() = displayName
+    val inGameNames: List<String> get() = listOf(displayName)
 }
 
 val SLAYER_MOBS: List<SlayerMob> = listOf(
@@ -179,12 +212,14 @@ enum class SlayerDemon(override val displayName: String, val slayerType: SlayerT
 }
 
 enum class SlayerType(override val displayName: String, val otherName: String) : SlayerMob {
-    REVENANT_HORROR("Revenant Horror", "Zombie"),
+    REVENANT_HORROR("Revenant Horror", "Zombie") {
+        override val inGameNames = listOf("Revenant Horror", "Atoned Horror")
+    },
     TARANTULA_BROODFATHER("Tarantula Broodfather", "Spider"),
     SVEN_PACKMASTER("Sven Packmaster", "Wolf"),
     VOIDGLOOM_SERAPH("Voidgloom Seraph", "Enderman"),
     RIFTSTALKER_BLOODFIEND("Riftstalker Bloodfiend", "Vampire") {
-        override val inGameName get() = "Bloodfiend"
+        override val inGameNames = listOf("Bloodfiend")
     },
     INFERNO_DEMONLORD("Inferno Demonlord", "Blaze"),
     ;

@@ -42,8 +42,11 @@ class SecretsActionBarWidgetChangeEvent(val current: Int, val max: Int, old: Str
 class DrillActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.DRILL_FUEL, old, new)
 
+class PressureActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.PRESSURE, old, new)
+
 class SkillXpPercentActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val percent: Float, old: String, new: String) :
-    ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP_PERCENT, old, new)
+    ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP, old, new)
 
 class SkillXpLiteralActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val current: Long, val needed: Long, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP_LITERAL, old, new)
@@ -57,9 +60,7 @@ enum class ActionBarWidget {
     DRILL_FUEL,
     ABILITY,
     LOCATION,
-    @Deprecated("Use SKILL_XP_PERCENT instead", ReplaceWith("SKILL_XP_PERCENT"))
     SKILL_XP,
-    SKILL_XP_PERCENT,
     SKILL_XP_LITERAL,
     SKYBLOCK_XP,
     RIFT_TIME,
@@ -68,6 +69,7 @@ enum class ActionBarWidget {
     ARMOR_STACK,
     CELLS_ALIGNMENT,
     SECRETS,
+    PRESSURE,
     ;
 
     private val string = toFormattedName()

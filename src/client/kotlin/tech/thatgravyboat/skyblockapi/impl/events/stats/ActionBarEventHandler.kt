@@ -71,7 +71,7 @@ object ActionBarEventHandler {
         // §b-100 Mana (§6Dragon Rage§b)
         ActionBarWidgetType(ActionBarWidget.ABILITY, "§.-?(?<amount>[\\d,]+) Mana \\(§.(?<ability>[^)]+)§.\\)"),
         // §3+1.7 Mining (38.19%)
-        ActionBarWidgetType(ActionBarWidget.SKILL_XP_PERCENT, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)") { old, it ->
+        ActionBarWidgetType(ActionBarWidget.SKILL, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)") { old, it ->
             SkillXpPercentActionBarWidgetChangeEvent(
                 it["amount"].toFloatValue(),
                 HypixelSkillAPI.Skill.getByName(it["skill"].toString()),
@@ -124,6 +124,15 @@ object ActionBarEventHandler {
             },
         ) { old, it ->
             SecretsActionBarWidgetChangeEvent(it["current"].toIntValue(), it["max"].toIntValue(), old, it.string)
+        },
+        // §9Pressure: ❍8%
+        ActionBarWidgetType(
+            ActionBarWidget.PRESSURE, "§9Pressure: ❍(?<pressure>\\d+)%",
+            {
+                PressureActionBarWidgetChangeEvent(0, it.string, "")
+            },
+        ) { old, it ->
+            PressureActionBarWidgetChangeEvent(it["pressure"].toIntValue(), old, it.string)
         },
         // §2936/3k Drill Fuel
         ActionBarWidgetType(ActionBarWidget.DRILL_FUEL, "§2(?<current>\\d+)/(?<max>\\d+[kmb]?) Drill Fuel") { old, it ->

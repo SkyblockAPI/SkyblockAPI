@@ -1,6 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 import kotlinx.datetime.Instant
+import net.minecraft.world.item.Item
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlotData
@@ -20,13 +22,19 @@ object DataTypes {
     val TIMESTAMP: DataType<Instant> = GenericDataTypes.TIMESTAMP
     val RARITY: DataType<SkyBlockRarity> = LoreDataTypes.RARITY
     val CATEGORY: DataType<SkyBlockCategory> = LoreDataTypes.CATEGORY
+    val VISIBLE_ITEM: DataType<Item> = GenericDataTypes.VISIBLE_ITEM
 
     // Item Modifiers
     val MODIFIER: DataType<String> = GenericDataTypes.MODIFIER
-    val RARITY_UPGRADES: DataType<Int> = GenericDataTypes.RARITY_UPGRADES
+    @RemoveNextVersion val RARITY_UPGRADES: DataType<Int> = GenericDataTypes.RARITY_UPGRADES
+    val RECOMBOBULATOR: DataType<Boolean> = GenericDataTypes.RECOMBOBULATOR
     val ENCHANTMENTS: DataType<Map<String, Int>> = GenericDataTypes.ENCHANTMENTS
-    val ATTRIBUTES: DataType<Map<String, Int>> = GenericDataTypes.ATTRIBUTES
+    @RemoveNextVersion val ATTRIBUTES: DataType<Map<String, Int>> = GenericDataTypes.ATTRIBUTES
     val HOT_POTATO_BOOKS: DataType<Int> = GenericDataTypes.HOT_POTATO_BOOKS
+    val ART_OF_WAR: DataType<Boolean> = GenericDataTypes.ART_OF_WAR
+    val ART_OF_PEACE: DataType<Boolean> = GenericDataTypes.ART_OF_PEACE
+    val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS
+    val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
 
     // Misc (idfk)
     val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = LoreDataTypes.RIGHT_CLICK_MANA_ABILITY
@@ -38,11 +46,14 @@ object DataTypes {
     val POTION: DataType<String> = GenericDataTypes.POTION
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
     val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
+    val BOOK_OF_STATS: DataType<Int> = GenericDataTypes.BOOK_OF_STATS
     val APPLIED_RUNE: DataType<Pair<String, Int>> = GenericDataTypes.APPLIED_RUNE
     val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN
     val APPLIED_DYE: DataType<String> = GenericDataTypes.APPLIED_DYE
     val PET_DATA: DataType<PetData> = GenericDataTypes.PET_DATA
     val SNOWBALLS: DataType<Pair<Int, Int>> = LoreDataTypes.SNOWBALLS
+    val ABSORB_LOGS: DataType<Long> = GenericDataTypes.ABSORB_LOGS
+    val LOGS_CUT: DataType<Long> = GenericDataTypes.LOGS_CUT
 
     // Aging Items
     val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD
@@ -52,6 +63,9 @@ object DataTypes {
     // Dungeons
     val DUNGEON_ITEM: DataType<Boolean> = GenericDataTypes.DUNGEON_ITEM
     val STAR_COUNT: DataType<Int> = GenericDataTypes.STAR_COUNT
+    val NECRON_SCROLLS: DataType<List<String>> = GenericDataTypes.NECRON_SCROLLS
+    val DUNGEON_TIER: DataType<Int> = GenericDataTypes.DUNGEON_TIER
+    val DUNGEON_QUALITY: DataType<Int> = GenericDataTypes.DUNGEON_QUALITY
 
     // Fishing Rod
     val HOOK: DataType<Pair<UUID, String>> = GenericDataTypes.HOOK

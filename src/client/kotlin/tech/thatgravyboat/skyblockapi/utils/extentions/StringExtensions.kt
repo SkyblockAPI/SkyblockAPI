@@ -134,6 +134,7 @@ fun String?.parseRomanNumeral(): Int = runCatching {
     return@runCatching total
 }.getOrDefault(0)
 
+// todo: move into enum extensions with 1.21.6
 fun <T : Enum<T>> Enum<T>.toFormattedName(): String = name.toTitleCase()
 
 private val regexGroup = Regexes.group("string")
@@ -192,3 +193,9 @@ fun String.trimIgnoreColor(): String {
 }
 
 fun UUID.toDashlessString(): String = toString().replace("-", "")
+
+private val screamingSnakeCaseRegex = "\\W+".toRegex()
+
+fun String.toScreamingSnakeCase(): String = replace(screamingSnakeCaseRegex, "_").uppercase()
+
+fun String.removeTrailingChar(target: Char): String = dropLastWhile {  it == target }
