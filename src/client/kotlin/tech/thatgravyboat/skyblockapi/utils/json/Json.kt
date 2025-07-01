@@ -28,6 +28,11 @@ object Json {
         return codec.encodeStart(ops, this).result().getOrNull()
     }
 
+    fun <T : Any> T.toJsonOrThrow(codec: Codec<T>): JsonElement {
+        val ops = if (McLevel.hasLevel) McLevel.registry.createSerializationContext(JsonOps.INSTANCE) else JsonOps.INSTANCE
+        return codec.encodeStart(ops, this).getOrThrow()
+    }
+
     fun <T : Any> JsonElement?.toData(codec: Codec<T>): T? {
         val ops = if (McLevel.hasLevel) McLevel.registry.createSerializationContext(JsonOps.INSTANCE) else JsonOps.INSTANCE
         return codec.parse(ops, this).result().getOrNull()

@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toJsonOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
 import java.nio.file.Files
@@ -88,11 +89,11 @@ internal class StoredData<T : Any>(
             val codec = this.codec(version)
             val json = JsonObject {
                 this["@skyblockapi:version"] = version
-                this["@skyblockapi:data"] = data.toJson(codec) ?: return Logger.warn("Failed to encode {} to json", data)
+                this["@skyblockapi:data"] = data.toJsonOrThrow(codec)
             }
             FileUtils.write(file.toFile(), json.toPrettyString(), Charsets.UTF_8)
             Logger.debug("saved {}", file)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Logger.error("Failed to save {} to file", data)
             e.printStackTrace()
         }
