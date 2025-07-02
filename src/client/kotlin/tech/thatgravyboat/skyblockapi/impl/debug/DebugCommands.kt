@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
+import com.google.gson.JsonArray
 import com.mojang.brigadier.arguments.StringArgumentType
 import me.owdding.ktmodules.Module
 import net.minecraft.core.registries.Registries
@@ -166,6 +167,24 @@ object DebugCommands {
                 }
             }
             then("save") {
+                thenCallback("registries") {
+                    val outputs = McClient.config.resolve(".skyblock-debug").resolve("registries")
+                    outputs.createDirectories()
+
+                    val connection = McClient.connection ?: return@thenCallback
+                    val registries = connection.registryAccess().registries()
+
+                    registries.forEach { registry ->
+                        val location = registry.key.location()
+                        val path = outputs.resolve("${location.namespace}-${location.path.replace("/", "-")}.json")
+                        val data = JsonArray()
+
+                        registry.value.keySet().forEach { data.add(it.toString()) }
+
+                        path.toFile().writeText(data.toPrettyString())
+                    }
+                }
+
                 thenCallback("biomes") {
                     val outputs = McClient.config.resolve(".skyblock-debug").resolve("biomes")
                     outputs.createDirectories()

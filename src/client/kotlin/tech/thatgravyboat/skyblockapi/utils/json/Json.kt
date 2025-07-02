@@ -4,8 +4,10 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.mojang.serialization.Codec
+import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.JsonOps
-import tech.thatgravyboat.skyblockapi.helpers.McLevel
+import net.minecraft.data.registries.VanillaRegistries
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import java.io.InputStream
 import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.jvm.javaType
@@ -14,6 +16,10 @@ import kotlin.reflect.typeOf
 object Json {
 
     val gson: Gson = GsonBuilder().setPrettyPrinting().create()
+    internal val ops: DynamicOps<JsonElement> get() {
+        val registry = McClient.connection?.registryAccess() ?: VanillaRegistries.createLookup()
+        return registry.createSerializationContext(JsonOps.INSTANCE)
+    }
 
     inline fun <reified T : Any> InputStream.readJson(): T =
         gson.fromJson(bufferedReader(), typeOf<T>().javaType)
@@ -24,22 +30,18 @@ object Json {
     val JsonElement.isString get() = isJsonPrimitive && asJsonPrimitive.isString
 
     fun <T : Any> T.toJson(codec: Codec<T>): JsonElement? {
-        val ops = if (McLevel.hasLevel) McLevel.registry.createSerializationContext(JsonOps.INSTANCE) else JsonOps.INSTANCE
         return codec.encodeStart(ops, this).result().getOrNull()
     }
 
     fun <T : Any> T.toJsonOrThrow(codec: Codec<T>): JsonElement {
-        val ops = if (McLevel.hasLevel) McLevel.registry.createSerializationContext(JsonOps.INSTANCE) else JsonOps.INSTANCE
         return codec.encodeStart(ops, this).getOrThrow()
     }
 
     fun <T : Any> JsonElement?.toData(codec: Codec<T>): T? {
-        val ops = if (McLevel.hasLevel) McLevel.registry.createSerializationContext(JsonOps.INSTANCE) else JsonOps.INSTANCE
         return codec.parse(ops, this).result().getOrNull()
     }
 
     fun <T : Any> JsonElement?.toDataOrThrow(codec: Codec<T>): T {
-        val ops = if (McLevel.hasLevel) McLevel.registry.createSerializationContext(JsonOps.INSTANCE) else JsonOps.INSTANCE
         return codec.parse(ops, this).getOrThrow()
     }
 
