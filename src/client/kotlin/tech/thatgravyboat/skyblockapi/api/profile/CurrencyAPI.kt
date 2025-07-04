@@ -138,6 +138,7 @@ object CurrencyAPI {
         bits = 0
         copper = 0
         northStars = 0
+        soulflow = 0
     }
 
     @Subscription
