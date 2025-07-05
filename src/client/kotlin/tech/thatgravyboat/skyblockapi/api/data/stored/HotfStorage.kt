@@ -32,6 +32,14 @@ internal object HotfStorage {
             save()
         }
 
+    var whispersTotal: Long
+        get() = HOTF.get()?.whispersTotal ?: 0
+        internal set(value) {
+            if (this.whispersTotal == value) return
+            HOTF.get()?.whispersTotal = value
+            save()
+        }
+
     fun setPerk(name: String, perk: HotfPerk) {
         if (perks[name] == perk) return
         perks[name] = perk

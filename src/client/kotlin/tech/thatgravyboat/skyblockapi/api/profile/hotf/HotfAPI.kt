@@ -59,6 +59,9 @@ object HotfAPI {
     val whispers: Long
         get() = HotfStorage.whispers
 
+    val whispersTotal: Long
+        get() = HotfStorage.whispersTotal
+
     val tokens: Int
         get() = HotfStorage.tokens
 
@@ -66,7 +69,10 @@ object HotfAPI {
     @OnlyWidget(TabWidget.FOREST_WHISPERS)
     fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         forestWhispersRegex.anyMatch(event.new, "amount") { (amount) ->
-            HotfStorage.whispers = amount.toLongValue()
+            val amount = amount.toLongValue()
+            val diff = amount - HotfStorage.whispers
+            HotfStorage.whispers = amount
+            if (diff > 0) HotfStorage.whispersTotal += diff
         }
     }
 
