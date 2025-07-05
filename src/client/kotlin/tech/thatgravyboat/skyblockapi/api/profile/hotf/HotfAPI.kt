@@ -12,6 +12,10 @@ import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemModelTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+
+private const val MAIN_SLOT = 49
+private const val RESET_SLOT = 52
 
 @Module
 object HotfAPI {
@@ -39,13 +43,22 @@ object HotfAPI {
         "Heart of the Forest",
     )
 
+    private val whispersItemRegex = inventoryGroup.create(
+        "whispers.current",
+        "Forest Whispers: (?<amount>[\\d,.]+)",
+    )
+    private val whispersSpentItemRegex = inventoryGroup.create(
+        "whispers.spent",
+        "\\s*-\\s*(?<amount>[\\d,.]+) Forest Whispers",
+    )
+
     private val tokensRegex = inventoryGroup.create(
         "tokens",
         "Tokens of the Forest: (?<tokens>\\d+)",
     )
     private val forestWhispersRegex = RegexGroup.TABLIST_WIDGET.group("hotf").create(
         "whispers",
-        "Forest Whispers: (?<amount>[\\d,.]+)",
+        "Forest Whispers: (?<amount>[\\w,.]+)",
     )
     //endregion
 
@@ -69,7 +82,7 @@ object HotfAPI {
     @OnlyWidget(TabWidget.FOREST_WHISPERS)
     fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         forestWhispersRegex.anyMatch(event.new, "amount") { (amount) ->
-            val amount = amount.toLongValue()
+            val amount = amount.parseFormattedLong()
             val diff = amount - HotfStorage.whispers
             HotfStorage.whispers = amount
             if (diff > 0) HotfStorage.whispersTotal += diff
@@ -89,16 +102,42 @@ object HotfAPI {
             }
             return
         }
-        if (event.item !in ItemModelTag.HOTF_PERK_ITEMS) return
 
-        val model = event.item.getItemModel()
+        if (event.item in ItemModelTag.HOTF_PERK_ITEMS) {
+            val model = event.item.getItemModel()
 
-        var level = 1
-        levelRegex.anyMatch(lore, "level") { (_level) ->
-            level = _level.toIntValue()
+            var level = 1
+            levelRegex.anyMatch(lore, "level") { (_level) ->
+                level = _level.toIntValue()
+            }
+            val disabled = disabledRegex.anyMatch(lore)
+            val unlocked = model != Items.MANGROVE_ROOTS && model != Items.PALE_OAK_SAPLING && model != Items.PALE_OAK_BUTTON
+            HotfStorage.setPerk(cleanName, HotfPerk(level, unlocked, disabled))
+            return
         }
-        val disabled = disabledRegex.anyMatch(lore)
-        val unlocked = model != Items.MANGROVE_ROOTS && model != Items.PALE_OAK_SAPLING && model != Items.PALE_OAK_BUTTON
-        HotfStorage.setPerk(cleanName, HotfPerk(level, unlocked, disabled))
+
+        // Whispers and Total Whispers
+        val mainItem = event.itemStacks.getOrNull(MAIN_SLOT) ?: return
+        val resetItem = event.itemStacks.getOrNull(RESET_SLOT)
+
+        var whispersTotal = 0L
+
+        val mainLore = mainItem.getRawLore()
+        for (line in mainLore) {
+            whispersItemRegex.match(line, "amount") { (amount) ->
+                HotfStorage.whispers = amount.toLongValue()
+                whispersTotal += this.whispers
+            }
+        }
+
+        if (resetItem != null) {
+            for (line in resetItem.getRawLore()) {
+                whispersSpentItemRegex.match(line, "amount") { (amount) ->
+                    whispersTotal += amount.toLongValue()
+                }
+            }
+        }
+
+        HotfStorage.whispersTotal = whispersTotal
     }
 }
