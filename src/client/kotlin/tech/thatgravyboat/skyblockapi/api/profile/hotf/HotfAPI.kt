@@ -131,10 +131,8 @@ object HotfAPI {
         }
 
         if (resetItem != null) {
-            for (line in resetItem.getRawLore()) {
-                whispersSpentItemRegex.match(line, "amount") { (amount) ->
-                    whispersTotal += amount.toLongValue()
-                }
+            whispersSpentItemRegex.anyMatch(resetItem.getRawLore(), "amount") { (amount) ->
+                whispersTotal += amount.toLongValue()
             }
         }
 
