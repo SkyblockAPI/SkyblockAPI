@@ -29,7 +29,7 @@ object DataTypes {
     @RemoveNextVersion val RARITY_UPGRADES: DataType<Int> = GenericDataTypes.RARITY_UPGRADES
     val RECOMBOBULATOR: DataType<Boolean> = GenericDataTypes.RECOMBOBULATOR
     val ENCHANTMENTS: DataType<Map<String, Int>> = GenericDataTypes.ENCHANTMENTS
-    @RemoveNextVersion val ATTRIBUTES: DataType<Map<String, Int>> = GenericDataTypes.ATTRIBUTES
+    val ATTRIBUTES: DataType<Map<String, Int>> = GenericDataTypes.ATTRIBUTES
     val HOT_POTATO_BOOKS: DataType<Int> = GenericDataTypes.HOT_POTATO_BOOKS
     val ART_OF_WAR: DataType<Boolean> = GenericDataTypes.ART_OF_WAR
     val ART_OF_PEACE: DataType<Boolean> = GenericDataTypes.ART_OF_PEACE
