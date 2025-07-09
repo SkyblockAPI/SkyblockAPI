@@ -1,17 +1,22 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
+import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.hotf.HotfData
 import tech.thatgravyboat.skyblockapi.api.profile.hotf.HotfPerk
-import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 internal object HotfStorage {
 
     private val HOTF = StoredProfileData(
-        { HotfData() },
-        SkyblockAPICodecs.HotfDataCodec.codec(),
+        1,
+        ::HotfData,
         "hotf.json",
-    )
+    ) { version ->
+        when (version) {
+            1 -> TODO()
+            else -> Codec.unit { HotfData() }
+        }
+    }
 
     val perks: MutableMap<String, HotfPerk>
         get() = HOTF.get()?.perks ?: mutableMapOf()
