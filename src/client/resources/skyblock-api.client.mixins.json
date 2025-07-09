@@ -14,6 +14,7 @@
         "events.ClientCommonPacketListenerImplMixin",
         "events.EntityRendererMixin",
         "events.GuiGraphicsMixin",
+        "events.GuiMessageLineMixin",
         "events.GuiMessageMixin",
         "events.GuiMixin",
         "events.HumanoidRendererMixin",
