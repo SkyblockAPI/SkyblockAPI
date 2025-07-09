@@ -41,11 +41,11 @@ object WhispersAPI {
     )
     //endregion
 
-    val whispers: Long
-        get() = HotfStorage.whispers
+    val forest: Long
+        get() = HotfStorage.forest
 
-    val whispersTotal: Long
-        get() = HotfStorage.whispersTotal
+    val forestTotal: Long
+        get() = HotfStorage.forestTotal
 
 
     @Subscription
@@ -53,9 +53,9 @@ object WhispersAPI {
     fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         forestWhispersRegex.anyMatch(event.new, "amount") { (amount) ->
             val amount = amount.parseFormattedLong()
-            val diff = amount - HotfStorage.whispers
-            HotfStorage.whispers = amount
-            if (diff > 0) HotfStorage.whispersTotal += diff
+            val diff = amount - HotfStorage.forest
+            HotfStorage.forest = amount
+            if (diff > 0) HotfStorage.forestTotal += diff
         }
     }
 
@@ -70,8 +70,8 @@ object WhispersAPI {
         val mainLore = mainItem.getRawLore()
         for (line in mainLore) {
             whispersItemRegex.match(line, "amount") { (amount) ->
-                HotfStorage.whispers = amount.toLongValue()
-                whispersTotal += this.whispers
+                HotfStorage.forest = amount.toLongValue()
+                whispersTotal += this.forest
             }
         }
 
@@ -81,7 +81,7 @@ object WhispersAPI {
             }
         }
 
-        HotfStorage.whispersTotal = whispersTotal
+        HotfStorage.forestTotal = whispersTotal
     }
 
 }

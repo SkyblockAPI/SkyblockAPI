@@ -54,12 +54,10 @@ object HotfAPI {
         get() = perks.filter { it.value.unlocked && !it.value.disabled }
 
     @RemoveNextVersion(ReplaceWith("Use WhispersAPI instead"))
-    val whispers: Long
-        get() = HotfStorage.whispers
+    val whispers: Long get() = WhispersAPI.forest
 
     @RemoveNextVersion(ReplaceWith("Use WhispersAPI instead"))
-    val whispersTotal: Long
-        get() = HotfStorage.whispersTotal
+    val whispersTotal: Long get() = HotfStorage.forestTotal
 
     val tokens: Int
         get() = HotfStorage.tokens

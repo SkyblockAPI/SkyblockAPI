@@ -24,19 +24,19 @@ internal object HotfStorage {
             save()
         }
 
-    var whispers: Long
-        get() = HOTF.get()?.whispers ?: 0
+    var forest: Long
+        get() = HOTF.get()?.forest ?: 0
         internal set(value) {
-            if (this.whispers == value) return
-            HOTF.get()?.whispers = value
+            if (this.forest == value) return
+            HOTF.get()?.forest = value
             save()
         }
 
-    var whispersTotal: Long
-        get() = HOTF.get()?.whispersTotal ?: 0
+    var forestTotal: Long
+        get() = HOTF.get()?.forestTotal ?: 0
         internal set(value) {
-            if (this.whispersTotal == value) return
-            HOTF.get()?.whispersTotal = value
+            if (this.forestTotal == value) return
+            HOTF.get()?.forestTotal = value
             save()
         }
 

@@ -6,8 +6,8 @@ import me.owdding.ktcodecs.GenerateCodec
 data class HotfData(
     val perks: MutableMap<String, HotfPerk> = mutableMapOf(),
     var tokens: Int = 0,
-    var whispers: Long = 0,
-    var whispersTotal: Long = 0,
+    var forest: Long = 0,
+    var forestTotal: Long = 0,
 )
 
 @GenerateCodec
