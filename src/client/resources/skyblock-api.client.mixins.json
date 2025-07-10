@@ -38,7 +38,7 @@
         "defaultRequire": 1
     },
     "mixins": [
-        "events.AbstractContainerMenuMixin",
+        "events.SlotMixin",
         "events.ConnectionMixin",
         "events.ItemStackMixin",
         "features.ItemStackExtensionMixin",
