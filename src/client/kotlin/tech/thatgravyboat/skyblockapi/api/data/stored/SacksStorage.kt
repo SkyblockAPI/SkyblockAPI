@@ -1,14 +1,17 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import com.mojang.serialization.Codec
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.items.sacks.SacksData
 
+@Module
 internal object SacksStorage {
     private val SACKS = StoredProfileData(
         1,
         ::SacksData,
         "sacks.json",
+        true,
     ) { version ->
         when (version) {
             1 -> SacksData.CODEC
