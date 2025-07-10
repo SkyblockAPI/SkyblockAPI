@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.mixins.events;
 
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,12 +15,12 @@ public class SlotMixin {
 
     @Inject(method = "set", at = @At("HEAD"))
     public void set(ItemStack itemStack, CallbackInfo ci) {
+        var slot = (Slot) (Object) this;
         var self = McScreen.INSTANCE.getAsMenu();
-        if (self == null) {
-            return;
-        }
+        if (self == null) return;
+        if (!(slot.container instanceof Inventory) && !self.getMenu().isValidSlotIndex(slot.index)) return;
 
-        new InventoryChangeEvent(itemStack, (Slot) (Object) this, self.getTitle(), self.getMenu().slots, self).post$skyblock_api_client();
+        new InventoryChangeEvent(itemStack, slot, self.getTitle(), self.getMenu().slots, self).post$skyblock_api_client();
     }
 
 }
