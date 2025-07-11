@@ -2415,6 +2415,17 @@ public final class tech/thatgravyboat/skyblockapi/api/events/misc/RegisterDataTy
 	public final fun register (Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/misc/RepoStatusEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Ltech/thatgravyboat/repolib/api/RepoStatus;)V
+	public final fun component1 ()Ltech/thatgravyboat/repolib/api/RepoStatus;
+	public final fun copy (Ltech/thatgravyboat/repolib/api/RepoStatus;)Ltech/thatgravyboat/skyblockapi/api/events/misc/RepoStatusEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/RepoStatusEvent;Ltech/thatgravyboat/repolib/api/RepoStatus;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/misc/RepoStatusEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getStatus ()Ltech/thatgravyboat/repolib/api/RepoStatus;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
