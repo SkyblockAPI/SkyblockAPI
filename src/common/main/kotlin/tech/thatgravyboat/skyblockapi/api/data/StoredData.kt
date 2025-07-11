@@ -11,11 +11,13 @@ import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
-import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toJsonOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
+import tech.thatgravyboat.skyblockapi.utils.runCatchingWithPrint
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ScheduledFuture
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
@@ -35,6 +37,7 @@ internal class StoredData<T : Any>(
     private var lastScheduler: ScheduledFuture<*>? = null
     private var saveTime: Long = -1L
     private var loadedData: JsonElement? = null
+    private var loadingFuture: CompletableFuture<Void>? = null
 
     init {
         if (Files.isRegularFile(this.file)) {
@@ -48,24 +51,39 @@ internal class StoredData<T : Any>(
         }
     }
 
-    private fun load() {
-        if (this.loadedData != null) {
-            try {
-                val data = this.loadedData as? JsonObject
-                if (data != null && data.has("@skyblockapi:version") && data.has("@skyblockapi:data")) {
-                    val version = data.get("@skyblockapi:version").asInt
-                    val dataElement = data.getAsJsonObject("@skyblockapi:data")
+    private fun loadData(json: JsonElement): T? {
+        try {
+            val data = json as? JsonObject
+            if (data != null && data.has("@skyblockapi:version") && data.has("@skyblockapi:data")) {
+                val version = data.get("@skyblockapi:version").asInt
+                val dataElement = data.getAsJsonObject("@skyblockapi:data")
 
-                    this.data = dataElement.toDataOrThrow(this.codec(version))
-                } else {
-                    this.data = this.loadedData.toDataOrThrow(this.codec(0))
-                }
-            } catch (e: Exception) {
-                Logger.error("Failed to load {} data", this.loadedData ?: "")
-                e.printStackTrace()
+                return dataElement.toDataOrThrow(this.codec(version))
+            } else {
+                return json.toDataOrThrow(this.codec(0))
             }
-            this.loadedData = null
+        } catch (e: Exception) {
+            Logger.error("Failed to load {} data", json)
+            e.printStackTrace()
         }
+
+        return null
+    }
+
+    internal fun loadAsync(): CompletableFuture<Void> {
+        if (this.loadingFuture == null) {
+            if (this.loadedData == null) {
+                this.loadingFuture = CompletableFuture.completedFuture(null)
+            } else {
+                val json = this.loadedData!!
+                this.loadingFuture = CompletableFuture.runAsync {
+                    this.data = loadData(json) ?: this.data
+                    this.loadedData = null
+                }
+            }
+        }
+
+        return this.loadingFuture!!
     }
 
     private fun scheduleSave() {
@@ -88,18 +106,20 @@ internal class StoredData<T : Any>(
             val codec = this.codec(version)
             val json = JsonObject {
                 this["@skyblockapi:version"] = version
-                this["@skyblockapi:data"] = data.toJson(codec) ?: return Logger.warn("Failed to encode {} to json", data)
+                this["@skyblockapi:data"] = data.toJsonOrThrow(codec)
             }
             FileUtils.write(file.toFile(), json.toPrettyString(), Charsets.UTF_8)
             Logger.debug("saved {}", file)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Logger.error("Failed to save {} to file", data)
             e.printStackTrace()
         }
     }
 
     fun get(): T {
-        load()
+        if (this.loadedData != null) {
+            runCatchingWithPrint { this.loadAsync().join() }
+        }
         return this.data
     }
 

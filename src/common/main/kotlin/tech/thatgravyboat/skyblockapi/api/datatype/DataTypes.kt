@@ -26,8 +26,7 @@ object DataTypes {
 
     // Item Modifiers
     val MODIFIER: DataType<String> = GenericDataTypes.MODIFIER
-    @RemoveNextVersion
-    val RARITY_UPGRADES: DataType<Int> = GenericDataTypes.RARITY_UPGRADES
+    @RemoveNextVersion val RARITY_UPGRADES: DataType<Int> = GenericDataTypes.RARITY_UPGRADES
     val RECOMBOBULATOR: DataType<Boolean> = GenericDataTypes.RECOMBOBULATOR
     val ENCHANTMENTS: DataType<Map<String, Int>> = GenericDataTypes.ENCHANTMENTS
     val ATTRIBUTES: DataType<Map<String, Int>> = GenericDataTypes.ATTRIBUTES
@@ -53,6 +52,8 @@ object DataTypes {
     val APPLIED_DYE: DataType<String> = GenericDataTypes.APPLIED_DYE
     val PET_DATA: DataType<PetData> = GenericDataTypes.PET_DATA
     val SNOWBALLS: DataType<Pair<Int, Int>> = LoreDataTypes.SNOWBALLS
+    val ABSORB_LOGS: DataType<Long> = GenericDataTypes.ABSORB_LOGS
+    val LOGS_CUT: DataType<Long> = GenericDataTypes.LOGS_CUT
 
     // Aging Items
     val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD

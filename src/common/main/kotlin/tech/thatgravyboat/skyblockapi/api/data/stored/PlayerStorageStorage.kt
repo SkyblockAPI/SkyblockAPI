@@ -1,16 +1,19 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.items.storage.PlayerStorageData
 import tech.thatgravyboat.skyblockapi.api.profile.items.storage.PlayerStorageInstance
 import tech.thatgravyboat.skyblockapi.api.profile.items.storage.StorageData
 
+@Module
 internal object PlayerStorageStorage {
 
     private val PLAYER_STORAGE = StoredProfileData(
         ::StorageData,
         StorageData.CODEC,
         "player_storage.json",
+        true
     )
 
     private inline val storage: StorageData? get() = PLAYER_STORAGE.get()

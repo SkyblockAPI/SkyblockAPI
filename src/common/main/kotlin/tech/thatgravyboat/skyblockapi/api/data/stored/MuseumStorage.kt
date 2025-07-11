@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
+import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemLore
@@ -12,9 +13,10 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRarityLineIndex
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 
+@Module
 internal object MuseumStorage {
 
-    private val MUSEUM = StoredProfileData<MuseumStorageData>("museum.json")
+    private val MUSEUM = StoredProfileData<MuseumStorageData>("museum.json", autoLoadOnProfileSwap = true)
 
     private val data: MuseumStorageData? get() = MUSEUM.get()
 

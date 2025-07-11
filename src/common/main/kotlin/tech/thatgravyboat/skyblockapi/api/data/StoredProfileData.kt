@@ -1,6 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import com.mojang.serialization.Codec
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.generated.KCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
@@ -14,12 +16,14 @@ internal class StoredProfileData<T : Any>(
     version: Int = 0,
     private val data: () -> T,
     file: String,
+    autoLoadOnProfileSwap: Boolean = false,
     codec: (Int) -> Codec<T>,
 ) {
-    constructor(data: () -> T, codec: Codec<T>, file: String) : this(
+    constructor(data: () -> T, codec: Codec<T>, file: String, autoLoadOnProfileSwap: Boolean = false) : this(
         0,
         data,
         file,
+        autoLoadOnProfileSwap,
         { codec },
     )
 
@@ -28,23 +32,26 @@ internal class StoredProfileData<T : Any>(
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
+            autoLoadOnProfileSwap: Boolean = false,
             codec: Codec<T> = SkyblockAPICodecs.getCodec<T>(),
         ): StoredProfileData<T> {
-            return create(T::class, file, version) { codec }
+            return create(T::class, file, version, autoLoadOnProfileSwap) { codec }
         }
 
         /** Only use if [T] has an empty constructor. */
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
+            autoLoadOnProfileSwap: Boolean = false,
             noinline codec: (Int) -> Codec<T>,
-        ) = create(T::class, file, version, codec)
+        ) = create(T::class, file, version, autoLoadOnProfileSwap, codec)
 
 
-        fun <T : Any> create(
+        private fun <T : Any> create(
             kClass: KClass<T>,
             file: String,
             version: Int,
+            autoLoadOnProfileSwap: Boolean = false,
             codec: (Int) -> Codec<T>,
         ): StoredProfileData<T> {
             val constructor = kClass.getEmptyConstructor()
@@ -52,7 +59,7 @@ internal class StoredProfileData<T : Any>(
             val data: () -> T = {
                 constructor.callBy(emptyMap())
             }
-            return StoredProfileData(version, data, file, codec)
+            return StoredProfileData(version, data, file, autoLoadOnProfileSwap, codec)
         }
     }
 
@@ -68,6 +75,12 @@ internal class StoredProfileData<T : Any>(
                 codec(it),
             ),
         )
+    }
+
+    init {
+        if (autoLoadOnProfileSwap) {
+            SkyBlockAPI.eventBus.register<ProfileChangeEvent> { storedData.loadAsync() }
+        }
     }
 
     fun get(): T? {
