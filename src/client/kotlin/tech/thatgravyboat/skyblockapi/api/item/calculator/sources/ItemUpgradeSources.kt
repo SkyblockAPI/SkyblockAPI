@@ -82,33 +82,27 @@ internal object ItemStarsCalculator : Calculator {
 
         val data = ItemData.getItemData(id)
         val starCost = data?.upgradeCost ?: emptyList()
+        val conversionCost = data?.conversionCost?.let { CostEntries(listOf(it)) }
 
         return if (stack.getData(DataTypes.CATEGORY)?.isDungeon == true) {
             val dungeonStars = stars.coerceAtMost(5)
             val masterStars = (stars - dungeonStars).coerceAtLeast(0)
 
-            listOf(
-                ItemStarEntry(
-                    data?.conversionCost?.let { CostEntries(listOf(it)) },
-                    buildList {
-                        starCost.forEach {
-                            add(CostEntries(it))
-                        }
+            ItemStarEntry(
+                conversionCost,
+                buildList {
+                    starCost.forEach {
+                        add(CostEntries(it))
+                    }
 
-                        ItemStarsCalculator.masterStars.take(masterStars).forEach {
-                            add(ItemEntry(it))
-                        }
-                    },
-                ),
+                    ItemStarsCalculator.masterStars.take(masterStars).forEach {
+                        add(ItemEntry(it))
+                    }
+                },
             )
         } else {
-            listOf(
-                ItemStarEntry(
-                    data?.conversionCost?.let { CostEntries(listOf(it)) },
-                    starCost.map { CostEntries(it) },
-                ),
-            )
-        }
+            ItemStarEntry(conversionCost, starCost.map { CostEntries(it) })
+        }.let(::listOf)
     }
 }
 
