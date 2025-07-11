@@ -14,6 +14,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
+import tech.thatgravyboat.skyblockapi.api.item.calculator.getItemValue
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
@@ -131,7 +132,20 @@ internal object DebugInventory {
             {
                 it.item.getDataTypes().map { (k, v) -> "${k.id}: ${v.toString()}" }.joinToString("\n")
             },
-        )
+        ),
+        ITEM_VALUE(
+            InputConstants.KEY_P,
+            { slot ->
+                buildList {
+                    add("Item Value: ${slot.item.getItemValue().price.toFormattedString()}")
+                    add("")
+                    add("Sources:")
+                    slot.item.getItemValue().sources.entries.sortedByDescending { it.value }.forEach {
+                        add(" ${it.key.name}: ${it.value.toFormattedString()}")
+                    }
+                }.joinToString("\n")
+            },
+        ),
         ;
 
         val title = name.toTitleCase()
