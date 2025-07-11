@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import me.owdding.ktcodecs.GenerateCodec
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import java.util.*
 
 @GenerateCodec
@@ -9,7 +9,7 @@ data class PlayerCacheData(
     val players: MutableMap<UUID, CachedPlayer> = mutableMapOf()
 ) {
     companion object {
-        val CODEC = KCodec.getCodec<PlayerCacheData>()
+        val CODEC = SkyblockAPICodecs.getCodec<PlayerCacheData>()
     }
 }
 

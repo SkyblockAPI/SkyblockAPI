@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe
 
 import me.owdding.ktcodecs.GenerateCodec
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 data class WardrobeData(
@@ -9,7 +9,7 @@ data class WardrobeData(
     var slots: MutableList<WardrobeSlot> = mutableListOf(),
 ) {
     companion object {
-        val CODEC = KCodec.getCodec<WardrobeData>()
+        val CODEC = SkyblockAPICodecs.getCodec<WardrobeData>()
     }
 }
 

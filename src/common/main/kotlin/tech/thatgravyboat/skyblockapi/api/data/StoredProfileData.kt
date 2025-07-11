@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
-import tech.thatgravyboat.skyblockapi.generated.KCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
@@ -69,9 +68,9 @@ internal class StoredProfileData<T : Any>(
         file,
     ) {
         CodecUtils.map(
-            KCodec.getCodec<UUID>(),
+            SkyblockAPICodecs.getCodec<UUID>(),
             CodecUtils.map(
-                KCodec.getCodec<String>(),
+                SkyblockAPICodecs.getCodec<String>(),
                 codec(it),
             ),
         )

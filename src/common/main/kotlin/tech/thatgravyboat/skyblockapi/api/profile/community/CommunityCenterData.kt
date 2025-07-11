@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.community
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.GenerateCodec
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 data class CommunityCenterData(
@@ -10,6 +10,6 @@ data class CommunityCenterData(
     val bitsAvailable: MutableMap<String, Long> = mutableMapOf(),
 ) {
     companion object {
-        val CODEC: Codec<CommunityCenterData> = KCodec.getCodec<CommunityCenterData>()
+        val CODEC: Codec<CommunityCenterData> = SkyblockAPICodecs.getCodec<CommunityCenterData>()
     }
 }

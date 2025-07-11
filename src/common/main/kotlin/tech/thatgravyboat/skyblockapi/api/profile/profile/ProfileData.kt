@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.profile
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.GenerateCodec
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 data class ProfileData(
@@ -12,6 +12,6 @@ data class ProfileData(
     val coop: MutableMap<String, Boolean> = mutableMapOf(),
 ) {
     companion object {
-        val CODEC: Codec<ProfileData> = KCodec.getCodec<ProfileData>()
+        val CODEC: Codec<ProfileData> = SkyblockAPICodecs.getCodec<ProfileData>()
     }
 }

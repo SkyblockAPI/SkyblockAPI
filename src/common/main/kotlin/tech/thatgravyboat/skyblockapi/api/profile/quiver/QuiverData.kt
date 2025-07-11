@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.quiver
 
 import me.owdding.ktcodecs.GenerateCodec
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 data class QuiverData(
@@ -11,6 +11,6 @@ data class QuiverData(
     constructor() : this(null)
 
     companion object {
-        val CODEC = KCodec.getCodec<QuiverData>()
+        val CODEC = SkyblockAPICodecs.getCodec<QuiverData>()
     }
 }

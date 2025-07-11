@@ -2,14 +2,14 @@ package tech.thatgravyboat.skyblockapi.api.profile.slayer
 
 import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 data class SlayerData(
     var slayers: MutableMap<SlayerType, SlayerEntry> = mutableMapOf(),
 ) {
     companion object {
-        val CODEC = KCodec.getCodec<SlayerData>()
+        val CODEC = SkyblockAPICodecs.getCodec<SlayerData>()
     }
 }
 

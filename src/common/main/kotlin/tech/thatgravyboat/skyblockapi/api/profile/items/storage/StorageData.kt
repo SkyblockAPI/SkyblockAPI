@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.storage
 
 import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 data class StorageData(
@@ -10,7 +10,7 @@ data class StorageData(
     val rift: MutableList<PlayerStorageInstance> = mutableListOf(),
 ) {
     companion object {
-        internal val CODEC = KCodec.getCodec<StorageData>()
+        internal val CODEC = SkyblockAPICodecs.getCodec<StorageData>()
     }
 }
 

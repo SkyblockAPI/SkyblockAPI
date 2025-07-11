@@ -21,9 +21,8 @@ base {
     archivesName.set(project.property("archives_base_name") as String)
 }
 
-val targetJavaVersion = 21
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
     withSourcesJar()
 }
 
@@ -111,13 +110,11 @@ cloche {
                 dependency {
                     modId = "fabric-language-kotlin"
                     required = true
-//                     version("*")
                 }
 
                 dependency {
                     modId = "fabric"
                     required = true
-//                     version("*")
                 }
             }
 
@@ -136,7 +133,6 @@ cloche {
 
     createVersion("1.21.5")
     createVersion("1.21.6")
-
 
     mappings {
         official()
@@ -163,6 +159,12 @@ repositories {
     mavenLocal()
 }
 
+compactingResources {
+    this.basePath = "repo"
+
+    substituteFromDifferentFile("slayer", "slayers")
+}
+
 tasks.processResources {
     inputs.property("version", project.version)
     inputs.property("minecraft_version", libs.versions.minecraft.get())
@@ -181,11 +183,11 @@ tasks.processResources {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    options.release.set(targetJavaVersion)
+    options.release.set(21)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion.toString()))
+    compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
 }
 
 tasks.withType<KspTask> {
@@ -231,13 +233,6 @@ publishing {
         }
     }
 }
-
-compactingResources {
-    this.basePath = "repo"
-
-    substituteFromDifferentFile("slayer", "slayers")
-}
-
 ksp {
     this@ksp.excludedSources.from(sourceSets.getByName("1215").kotlin.srcDirs)
     this@ksp.excludedSources.from(sourceSets.getByName("1216").kotlin.srcDirs)

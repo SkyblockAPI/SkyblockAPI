@@ -1,14 +1,14 @@
 package tech.thatgravyboat.skyblockapi.api.profile.hotm
 
 import me.owdding.ktcodecs.GenerateCodec
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 data class HotmData(
     var perks: MutableMap<String, HotmPerk> = mutableMapOf(),
 ) {
     companion object {
-        val CODEC = KCodec.getCodec<HotmData>()
+        val CODEC = SkyblockAPICodecs.getCodec<HotmData>()
     }
 }
 

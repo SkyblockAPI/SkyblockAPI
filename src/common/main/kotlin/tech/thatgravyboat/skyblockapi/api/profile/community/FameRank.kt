@@ -2,13 +2,13 @@ package tech.thatgravyboat.skyblockapi.api.profile.community
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 data class FameRank(val id: String, val name: String, val multiplier: Double) {
     companion object {
 
         @IncludedCodec(keyable = true)
-        val CODEC: Codec<FameRank> = KCodec.getCodec<String>().xmap(FameRanks::getById, FameRank::id)
+        val CODEC: Codec<FameRank> = SkyblockAPICodecs.getCodec<String>().xmap(FameRanks::getById, FameRank::id)
     }
 }
 

@@ -20,6 +20,7 @@ import java.nio.file.Path
 expect object McClient {
     val isDev: Boolean
     val config: Path
+    val version: String
 
     val self: Minecraft
     val connection: ClientPacketListener?

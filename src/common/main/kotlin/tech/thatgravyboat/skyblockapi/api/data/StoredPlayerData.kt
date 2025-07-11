@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import com.mojang.serialization.Codec
-import tech.thatgravyboat.skyblockapi.generated.KCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
@@ -28,7 +27,7 @@ internal class StoredPlayerData<T : Any>(
         file,
     ) {
         CodecUtils.map(
-            KCodec.getCodec<UUID>(),
+            SkyblockAPICodecs.getCodec<UUID>(),
             codec(it)
         )
     }

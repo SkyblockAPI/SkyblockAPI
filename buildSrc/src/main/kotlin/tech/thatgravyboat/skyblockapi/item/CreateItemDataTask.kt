@@ -10,6 +10,7 @@ import org.gradle.api.tasks.Internal
 import org.gradle.kotlin.dsl.getByType
 import java.io.File
 import java.nio.file.StandardOpenOption
+import java.util.Objects
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writeBytes
 import kotlin.time.Duration.Companion.hours
@@ -31,7 +32,14 @@ abstract class CreateItemDataTask : DefaultTask() {
 
     init {
         val configuration = project.extensions.getByType<CompactingResourcesExtension>()
-        fun file(name: String) = project.layout.buildDirectory.file("generated/meowdding/item_data/${configuration.basePath!!}/$name.json").get().asFile
+        fun file(name: String) = project.layout.buildDirectory
+            .file("generated/meowdding/item_data/${Objects.requireNonNull(
+                Objects.requireNonNull(configuration, "Configuration cannot be null").basePath, 
+                "Base path cannot be null"
+            )}/$name.json")
+            .get()
+            .asFile
+
         val itemDataFile = file("item_data")
         val museumDataFile = file("museum_data")
         fun write(byteArray: ByteArray, file: File) {

@@ -6,12 +6,12 @@ import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
-import tech.thatgravyboat.skyblockapi.generated.KCodec
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @Module
 object RepoSlayerData {
 
-    val data: Map<SlayerType, RepoSlayerData> = SkyBlockAPI.getRepo("slayer", Codec.unboundedMap(KCodec.getCodec<SlayerType>(), RepoSlayerData.CODEC))
+    val data: Map<SlayerType, RepoSlayerData> = SkyBlockAPI.getRepo("slayer", Codec.unboundedMap(SkyblockAPICodecs.getCodec<SlayerType>(), RepoSlayerData.CODEC))
 
     fun getData(type: SlayerType) = data[type] ?: error("No slayer data found for $type")
 
@@ -28,7 +28,7 @@ object RepoSlayerData {
         fun getLevel(xp: Long) = leveling.indexOfLast { it <= xp } + 1
 
         companion object {
-            val CODEC: Codec<RepoSlayerData> = KCodec.getCodec<RepoSlayerData>()
+            val CODEC: Codec<RepoSlayerData> = SkyblockAPICodecs.getCodec<RepoSlayerData>()
         }
     }
 }

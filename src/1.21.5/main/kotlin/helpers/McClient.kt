@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.helpers
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.SharedConstants
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.client.Options
@@ -32,6 +33,8 @@ actual object McClient {
 
     actual val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
     actual val config: Path = FabricLoader.getInstance().configDir
+    actual val version: String = SharedConstants.getCurrentVersion().name
+
     actual val self: Minecraft get() = Minecraft.getInstance()
     actual val connection: ClientPacketListener? get() = self.connection
     actual val window: Window get() = self.window

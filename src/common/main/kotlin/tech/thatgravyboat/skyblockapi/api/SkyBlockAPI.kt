@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api
 
 import com.google.gson.JsonElement
-import com.mojang.logging.LogUtils
 import com.mojang.serialization.Codec
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.resources.ResourceLocation
@@ -13,12 +12,13 @@ import tech.thatgravyboat.repolib.api.RepoVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIModules
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import java.nio.file.Files
 
-object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI")  {
+object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal val mod = FabricLoader.getInstance().getModContainer("skyblock-api").orElseThrow()
 
@@ -33,7 +33,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI")  {
     @ApiStatus.Internal
     fun init() {
         SkyblockAPIModules.init { eventBus.register(it) }
-        RepoAPI.setup(RepoVersion.V1_21_5) { status ->
+        RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_6) { status ->
             RepoStatusEvent(status).post()
         }
     }
