@@ -81,7 +81,7 @@ internal object ItemStarsCalculator : Calculator {
         val stars = stack.getData(DataTypes.STAR_COUNT) ?: return null
 
         val data = ItemData.getItemData(id)
-        val starCost = data?.upgradeCost ?: emptyList()
+        val starCost = data?.upgradeCost?.take(stars) ?: emptyList()
         val conversionCost = data?.conversionCost?.let { CostEntries(listOf(it)) }
 
         return if (stack.getData(DataTypes.CATEGORY)?.isDungeon == true) {
