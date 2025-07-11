@@ -24,7 +24,10 @@ object ForgeAPI {
         if (event.isSkyBlockFiller) return
 
         val index = event.slot.index - 9
-        val id = event.item.getSkyBlockId() ?: return
+        val id = event.item.getSkyBlockId() ?: run {
+            ForgeStorage.clearSlot(index)
+            return
+        }
 
         durationRegex.anyMatch(event.item.getRawLore(), "duration") { (duration) ->
             val duration = duration.parseDuration() ?: return@anyMatch
