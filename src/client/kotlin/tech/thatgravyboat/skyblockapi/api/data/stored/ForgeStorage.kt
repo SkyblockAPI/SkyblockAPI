@@ -21,4 +21,9 @@ internal object ForgeStorage {
         FORGE.get()?.put(slot, forgeSlot)
         FORGE.save()
     }
+
+    fun clearSlot(slot: Int) {
+        FORGE.get()?.remove(slot)
+        FORGE.save()
+    }
 }
