@@ -111,13 +111,13 @@ cloche {
                 dependency {
                     modId = "fabric-language-kotlin"
                     required = true
-                    version("*")
+//                     version("*")
                 }
 
                 dependency {
                     modId = "fabric"
                     required = true
-                    version("*")
+//                     version("*")
                 }
             }
 

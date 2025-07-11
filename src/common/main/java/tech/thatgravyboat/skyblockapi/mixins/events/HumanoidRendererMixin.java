@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.HumanoidRenderEvent;
 
 @Mixin(HumanoidMobRenderer.class)
@@ -22,7 +23,7 @@ public class HumanoidRendererMixin {
         var event = HumanoidRenderEvent.INSTANCE;
         event.setEntity(entity);
         event.setState(entityRenderState);
-        event.post$sbapi();
+        event.post(SkyBlockAPI.getEventBus());
         event.clear();
     }
 

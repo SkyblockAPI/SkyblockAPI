@@ -7,7 +7,9 @@
         "ScreenMixin",
         "GuiMixin",
         "GuiGraphicsTooltipMixin",
-        "GuiGraphicsVisualItemMixin"
+        "GuiGraphicsVisualItemMixin",
+        "AbstractContainerScreenMixin",
+        "SoundManagerMixin"
     ],
     "injectors": {
         "defaultRequire": 1

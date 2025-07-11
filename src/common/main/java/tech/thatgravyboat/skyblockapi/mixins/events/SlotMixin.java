@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent;
 import tech.thatgravyboat.skyblockapi.helpers.McScreen;
 
@@ -20,7 +21,7 @@ public class SlotMixin {
         if (self == null) return;
         if (!(slot.container instanceof Inventory) && !self.getMenu().isValidSlotIndex(slot.index)) return;
 
-        new InventoryChangeEvent(itemStack, slot, self.getTitle(), self.getMenu().slots, self).post$skyblock_api_client();
+        new InventoryChangeEvent(itemStack, slot, self.getTitle(), self.getMenu().slots, self).post(SkyBlockAPI.getEventBus());
     }
 
 }

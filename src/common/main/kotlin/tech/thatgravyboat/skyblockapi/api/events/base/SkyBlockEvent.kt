@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
-import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 
 abstract class SkyBlockEvent protected constructor() {
@@ -11,8 +10,6 @@ abstract class SkyBlockEvent protected constructor() {
     open fun post(bus: EventBus): Boolean =
         bus.post(this)
 
-    @ApiStatus.Internal
-    fun `post$sbapi`() = post(SkyBlockAPI.eventBus)
     internal fun post(): Boolean = post(SkyBlockAPI.eventBus)
 
     interface Cancellable {
