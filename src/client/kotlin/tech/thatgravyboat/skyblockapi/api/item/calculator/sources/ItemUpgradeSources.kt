@@ -80,31 +80,29 @@ internal object ItemStarsCalculator : Calculator {
     override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? {
         val stars = stack.getData(DataTypes.STAR_COUNT) ?: return null
 
+        val data = ItemData.getItemData(id)
+        val starCost = data?.upgradeCost?.take(stars) ?: emptyList()
+        val conversionCost = data?.conversionCost?.let { CostEntries(listOf(it)) }
+
         return if (stack.getData(DataTypes.CATEGORY)?.isDungeon == true) {
             val dungeonStars = stars.coerceAtMost(5)
             val masterStars = (stars - dungeonStars).coerceAtLeast(0)
 
-            val data = ItemData.getItemData(id)
-            val starCost = data?.upgradeCost ?: emptyList()
+            ItemStarEntry(
+                conversionCost,
+                buildList {
+                    starCost.forEach {
+                        add(CostEntries(it))
+                    }
 
-            listOf(
-                ItemStarEntry(
-                    data?.conversionCost?.let { CostEntries(listOf(it)) },
-                    buildList {
-                        starCost.forEach {
-                            add(CostEntries(it))
-                        }
-
-                        ItemStarsCalculator.masterStars.take(masterStars).forEach {
-                            add(ItemEntry(it))
-                        }
-                    },
-                ),
+                    ItemStarsCalculator.masterStars.take(masterStars).forEach {
+                        add(ItemEntry(it))
+                    }
+                },
             )
         } else {
-            // TODO @Mona :3
-            null
-        }
+            ItemStarEntry(conversionCost, starCost.map { CostEntries(it) })
+        }.let(::listOf)
     }
 }
 
