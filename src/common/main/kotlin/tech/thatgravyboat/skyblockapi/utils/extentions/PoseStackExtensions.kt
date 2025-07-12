@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import com.mojang.blaze3d.vertex.PoseStack
-import net.minecraft.client.gui.GuiGraphics
 
 fun PoseStack.translate(x: Number, y: Number, z: Number) {
     this.translate(x.toFloat(), y.toFloat(), z.toFloat())
@@ -11,18 +10,6 @@ inline fun PoseStack.pushPop(action: PoseStack.() -> Unit) {
     this.pushPose()
     this.action()
     this.popPose()
-}
-
-inline fun GuiGraphics.scissor(x: Int, y: Int, width: Int, height: Int, action: () -> Unit) {
-    this.enableScissor(x, y, x + width, y + height)
-    action()
-    this.disableScissor()
-}
-
-inline fun GuiGraphics.scissorRange(x: IntRange, y: IntRange, action: () -> Unit) {
-    this.enableScissor(x.start, y.start, x.endInclusive, y.endInclusive)
-    action()
-    this.disableScissor()
 }
 
 inline fun PoseStack.translated(x: Number = 0, y: Number = 0, z: Number = 0, action: PoseStack.() -> Unit) {

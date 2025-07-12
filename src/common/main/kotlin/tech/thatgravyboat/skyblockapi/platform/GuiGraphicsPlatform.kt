@@ -5,6 +5,10 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.msrandom.stub.Stub
 
+@Stub expect inline fun GuiGraphics.pushPop(block: () -> Unit)
+@Stub expect fun GuiGraphics.translate(x: Number, y: Number)
+@Stub expect fun GuiGraphics.scale(x: Number, y: Number)
+
 @Stub expect fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int = -1, shadow: Boolean = false)
 @Stub expect fun GuiGraphics.drawString(text: Component, x: Int, y: Int, color: Int = -1, shadow: Boolean = false)
 
