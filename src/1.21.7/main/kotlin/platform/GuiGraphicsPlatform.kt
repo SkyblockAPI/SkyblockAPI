@@ -17,8 +17,12 @@ actual inline fun GuiGraphics.pushPop(block: () -> Unit) {
     this.pose().popMatrix()
 }
 
-actual fun GuiGraphics.translate(x: Number, y: Number) = this.pose().translate(x.toFloat(), y.toFloat())
-actual fun GuiGraphics.scale(x: Number, y: Number) = this.pose().scale(x.toFloat(), y.toFloat())
+actual fun GuiGraphics.translate(x: Number, y: Number) {
+    this.pose().translate(x.toFloat(), y.toFloat())
+}
+actual fun GuiGraphics.scale(x: Number, y: Number) {
+    this.pose().scale(x.toFloat(), y.toFloat())
+}
 
 actual fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int, shadow: Boolean) {
     this.drawString(McFont.self, text, x, y, color, shadow)
