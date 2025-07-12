@@ -33,7 +33,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
     @ApiStatus.Internal
     fun init() {
         SkyblockAPIModules.init { eventBus.register(it) }
-        RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_6) { status ->
+        RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
             RepoStatusEvent(status).post()
         }
     }

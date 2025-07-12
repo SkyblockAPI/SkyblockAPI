@@ -71,9 +71,6 @@ private class DebugChatScreen(val messages: List<Pair<Instant, Component>>) : Sc
         this.layout.visitWidgets {
             it.width = this.width
             it.render(graphics, mouseX, mouseY, partialTicks)
-
-//             if (mouseX in it.x until it.x + it.width && mouseY in it.y until it.y + it.height) {
-//             }
         }
     }
 

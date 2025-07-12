@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.google.devtools.ksp.gradle.KspTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
