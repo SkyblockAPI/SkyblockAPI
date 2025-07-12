@@ -9,10 +9,10 @@ meowdding-resources = "1.0.0"
 
 minecraft = "1.21.5"
 
-terrarium-cloche = "0.11.4"
+terrarium-cloche = "0.11.5"
 
 fabric-loader = "0.16.13"
-fabric-api = "0.127.1"
+fabric-api = "0.128.1"
 fabric-language-kotlin = "1.13.0+kotlin.2.1.0"
 
 kotlin = "2.1.0"

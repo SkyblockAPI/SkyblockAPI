@@ -9,6 +9,7 @@ import kotlinx.datetime.format.char
 import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.components.toasts.SystemToast
 import net.minecraft.client.gui.components.toasts.SystemToast.SystemToastId
 import net.minecraft.client.gui.layouts.LinearLayout
@@ -65,16 +66,14 @@ private class DebugChatScreen(val messages: List<Pair<Instant, Component>>) : Sc
     }
 
     override fun render(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
-        renderBackground(graphics, mouseX, mouseY, partialTicks)
+        renderTransparentBackground(graphics)
 
         this.layout.visitWidgets {
             it.width = this.width
             it.render(graphics, mouseX, mouseY, partialTicks)
 
-            if (mouseX in it.x until it.x + it.width && mouseY in it.y until it.y + it.height) {
-                // todo val tooltip = it.tooltip ?: return@visitWidgets
-                // TODO setTooltipForNextRenderPass(tooltip, DefaultTooltipPositioner.INSTANCE, true)
-            }
+//             if (mouseX in it.x until it.x + it.width && mouseY in it.y until it.y + it.height) {
+//             }
         }
     }
 
@@ -109,7 +108,14 @@ private class Widget(timestamp: Instant, val content: Component) : StringWidget(
 
     init {
         alignLeft()
-        // todo tooltip = Tooltip.create(this.content)
+        setTooltip(Tooltip.create(this.content))
+    }
+
+    override fun renderWidget(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
+        if (this.isHoveredOrFocused) {
+            graphics.fill(this.x - 1, this.y - 1, this.x + this.width + 2, this.y + this.height + 1, 0x50DDDDDD.toInt())
+        }
+        super.renderWidget(graphics, mouseX, mouseY, partialTicks)
     }
 
     override fun onClick(d: Double, e: Double) {

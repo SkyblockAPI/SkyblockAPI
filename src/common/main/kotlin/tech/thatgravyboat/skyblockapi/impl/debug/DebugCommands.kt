@@ -175,11 +175,11 @@ object DebugCommands {
                     val registries = connection.registryAccess().registries()
 
                     registries.forEach { registry ->
-                        val location = registry.key.location()
+                        val location = registry.key().location()
                         val path = outputs.resolve("${location.namespace}-${location.path.replace("/", "-")}.json")
                         val data = JsonArray()
 
-                        registry.value.keySet().forEach { data.add(it.toString()) }
+                        registry.value().keySet().forEach { data.add(it.toString()) }
 
                         path.toFile().writeText(data.toPrettyString())
                     }

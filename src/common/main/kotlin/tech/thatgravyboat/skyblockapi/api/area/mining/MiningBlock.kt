@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.BlockHitResult
+import tech.thatgravyboat.skyblockapi.api.area.mining.MiningBlock.entries
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockMinedEvent
@@ -17,6 +18,7 @@ import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.*
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
+import tech.thatgravyboat.skyblockapi.platform.drawString
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
@@ -384,7 +386,7 @@ enum class MiningBlock(
             if (!debugToggle) return
             val lookingAt = McClient.self.cameraEntity?.pick(20.0, 0f, false) as? BlockHitResult ?: return
             val block = currentlyActiveBlocks.find { it.blocks.contains(McLevel[lookingAt.blockPos].block) } ?: return
-            // todo event.graphics.drawString(McFont.self, "Looking at: ${block.name}", 8, 8, 0xFFFFFF)
+            event.graphics.drawString("Looking at: ${block.name}", 8, 8, 0xFFFFFF)
         }
 
         @Subscription

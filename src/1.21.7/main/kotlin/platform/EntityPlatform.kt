@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.utils.extentions
+package tech.thatgravyboat.skyblockapi.platform
 
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.ProblemReporter

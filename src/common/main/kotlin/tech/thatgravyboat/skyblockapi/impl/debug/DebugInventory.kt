@@ -16,7 +16,9 @@ import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEv
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.api.item.calculator.getItemValue
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
+import tech.thatgravyboat.skyblockapi.platform.drawString
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
@@ -84,13 +86,12 @@ internal object DebugInventory {
                 add("  [${it.keyName.stripped}] ${it.title}${it.extraDescription?.let { d -> " ($d)" } ?: ""}")
             }
         }.forEachIndexed { index, line ->
-            /*todo  event.graphics.drawString(
-                 McFont.self,
-                 line,
-                 8,
-                 8 + index * McFont.height,
-                 0xFFFFFF,
-             )*/
+            event.graphics.drawString(
+                line,
+                8,
+                8 + index * McFont.height,
+                0xFFFFFFFF.toInt(),
+            )
         }
     }
 
