@@ -119,7 +119,7 @@ cloche {
             }
 
             dependencies {
-                fabricApi(fabricApiVersion.get(), name)
+                fabricApi(fabricApiVersion.get(), version)
             }
 
             mixins.from("src/common/main/mixins/skyblock-api.client.mixins.json")
@@ -132,7 +132,7 @@ cloche {
     }
 
     createVersion("1.21.5")
-    createVersion("1.21.6")
+    createVersion("1.21.7", fabricApiVersion = provider { "0.129.0" })
 
     mappings {
         official()
@@ -206,7 +206,7 @@ publishing {
             artifactId = "skyblock-api"
 
             artifact(tasks["1215JarInJar"])
-            artifact(tasks["1216JarInJar"])
+            artifact(tasks["1217JarInJar"])
             artifact(tasks["generateMetadataFileForMavenPublication"].outputs.files.first()) {
                 extension = "module"
             }
@@ -235,7 +235,7 @@ publishing {
 }
 ksp {
     this@ksp.excludedSources.from(sourceSets.getByName("1215").kotlin.srcDirs)
-    this@ksp.excludedSources.from(sourceSets.getByName("1216").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("1217").kotlin.srcDirs)
     arg("meowdding.modules.project_name", project.name)
     arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
     arg("meowdding.codecs.project_name", project.name)
