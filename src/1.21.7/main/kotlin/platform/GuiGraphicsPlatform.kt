@@ -7,7 +7,6 @@ import net.minecraft.client.gui.render.state.BlitRenderState
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import net.msrandom.stub.Stub
 import org.joml.Matrix3x2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
