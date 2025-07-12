@@ -46,7 +46,7 @@ object ProfileAPI {
         "You are playing on profile: (?<name>.+)",
     )
 
-    private val bingoLevelRegex = RegexGroup.SCOREBOARD.group("profile").create(
+    private val bingoRankRegex = RegexGroup.SCOREBOARD.group("profile").create(
         "bingo",
         " (?<level>Ⓑ )Bingo",
     ).toComponentRegex()
@@ -166,7 +166,7 @@ object ProfileAPI {
 
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
-        bingoLevelRegex.anyMatch(event.addedComponents, "level") { (level) ->
+        bingoRankRegex.anyMatch(event.addedComponents, "level") { (level) ->
             val bingoLevel = level.style.color?.let { SkyBlockRarity.fromColorOrNull(it.value) }
             ProfileStorage.setBingoRank(bingoLevel)
         }
