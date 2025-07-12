@@ -1,11 +1,13 @@
 package tech.thatgravyboat.skyblockapi.platform
 
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.gui.render.state.BlitRenderState
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.msrandom.stub.Stub
 import org.joml.Matrix3x2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
@@ -35,4 +37,8 @@ actual fun GuiGraphics.drawTexture(texture: ResourceLocation, x: Int, y: Int, wi
             this.scissorStack.peek(),
         ),
     )
+}
+
+actual fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int) {
+    this.setTooltipForNextFrame(Tooltip.splitTooltip(McClient.self, text), x, y)
 }

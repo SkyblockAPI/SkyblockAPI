@@ -1,10 +1,15 @@
 package tech.thatgravyboat.skyblockapi.platform
 
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Tooltip
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
+import tech.thatgravyboat.skyblockapi.helpers.McScreen
 
 actual fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int, shadow: Boolean) {
     this.drawString(McFont.self, text, x, y, color, shadow)
@@ -33,4 +38,15 @@ actual fun GuiGraphics.drawTexture(texture: ResourceLocation, x: Int, y: Int, wi
         buffer.addVertex(matrix, maxx, maxy, 0f).setColor(color).setUv(u1, v1)
         buffer.addVertex(matrix, maxx, miny, 0f).setColor(color).setUv(u1, v0)
     }
+}
+
+actual fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int) {
+    val screen = McScreen.self ?: return
+    screen.setTooltipForNextRenderPass(
+        Tooltip.splitTooltip(McClient.self, text),
+        ClientTooltipPositioner { screenWidth, screenHeight, _, _, width, height ->
+            DefaultTooltipPositioner.INSTANCE.positionTooltip(screenWidth, screenHeight, x, y, width, height)
+        },
+        true
+    )
 }

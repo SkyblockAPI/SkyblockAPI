@@ -14,3 +14,5 @@ import net.msrandom.stub.Stub
     u0: Float = 0f, v0: Float = 0f, u1: Float = 1f, v1: Float = 1f,
     color: Int = -1
 )
+
+@Stub expect fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int)
