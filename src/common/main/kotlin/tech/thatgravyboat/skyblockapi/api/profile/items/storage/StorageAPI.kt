@@ -17,7 +17,7 @@ object StorageAPI {
     private val inventoryGroup = RegexGroup.INVENTORY.group("storage")
 
     private val enderchestRegex = inventoryGroup.create("enderchest", "Ender Chest \\((?<page>\\d+)/\\d+\\)")
-    private val backpackRegex = inventoryGroup.create("backpack", ".* Backpack \\(Slot #(?<page>\\d+)\\)")
+    private val backpackRegex = inventoryGroup.create("backpack", ".* Backpack (?:✦ )?\\(Slot #(?<page>\\d+)\\)")
     private val riftStorageRegex = inventoryGroup.create("rift", "Rift Storage \\((?<page>\\d+)/\\d+\\)")
 
 
