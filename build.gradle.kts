@@ -206,12 +206,13 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             artifactId = "skyblock-api"
+            from(components["java"])
 
             artifact(tasks["1215JarInJar"])
             artifact(tasks["1217JarInJar"])
-            artifact(tasks["generateMetadataFileForMavenPublication"].outputs.files.first()) {
-                extension = "module"
-            }
+//             artifact(tasks["generateMetadataFileForMavenPublication"].outputs.files.first()) {
+//                 extension = "module"
+//             }
 
             pom {
                 name.set("SkyblockAPI")
