@@ -20,6 +20,7 @@ enum class ItemValueSource(val calc: Calculator) : Calculator by calc {
     DRILL_COMPONENTS(DrillComponentsCalculator),
     GEMSTONE(GemstoneCalculator),
     FISHING_ROD_PARTS(RodPartCalculator),
+    WET_BOOK(WetBookCalculator),
     SILEX(SilexCalculator),
     DIVAN_POWDER_COATING(DivanPowderCoatingCalculator),
     POLARVOID(PolarVoidCalculator),

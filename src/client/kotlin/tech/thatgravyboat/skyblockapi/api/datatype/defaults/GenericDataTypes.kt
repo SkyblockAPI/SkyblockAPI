@@ -95,6 +95,7 @@ object GenericDataTypes {
         it.tag?.getList("boosters")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull()?.let { "${it}_BOOSTER" } } ?: emptyList()
     }
 
+    val WET_BOOK: DataType<Int> = DataType("wet_book") { it.tag?.getIntOrNull("wet_book_count") }
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
     val SINKER: DataType<Pair<UUID, String>> = getFishingRodPartDataType("sinker")
@@ -103,7 +104,7 @@ object GenericDataTypes {
     val ENGINE: DataType<String> = DataType("drill_part_engine") { it.tag?.getStringOrNull("drill_part_engine") }
     val UPGRADE_MODULE: DataType<String> = DataType("drill_part_upgrade_module") { it.tag?.getStringOrNull("drill_part_upgrade_module") }
 
-    /** In SkyBlock items that are only avaliable in new versions are showned via `DataComponents.ITEM_MODEL` this returns that item that is displayed. */
+    /** In SkyBlock items that are only available in new versions are shown via `DataComponents.ITEM_MODEL`, this returns the item that is displayed. */
     val VISIBLE_ITEM: DataType<Item> = DataType("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
 
     @Subscription
@@ -144,6 +145,7 @@ object GenericDataTypes {
         event.register(POLARVOID)
         event.register(POWER_ABILITY_SCROLL)
         event.register(JALAPENO_BOOK)
+        event.register(WET_BOOK)
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)

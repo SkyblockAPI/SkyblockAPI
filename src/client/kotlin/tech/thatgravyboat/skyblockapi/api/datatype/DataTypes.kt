@@ -68,6 +68,7 @@ object DataTypes {
     val DUNGEON_QUALITY: DataType<Int> = GenericDataTypes.DUNGEON_QUALITY
 
     // Fishing Rod
+    val WET_BOOK: DataType<Int> = GenericDataTypes.WET_BOOK
     val HOOK: DataType<Pair<UUID, String>> = GenericDataTypes.HOOK
     val LINE: DataType<Pair<UUID, String>> = GenericDataTypes.LINE
     val SINKER: DataType<Pair<UUID, String>> = GenericDataTypes.SINKER
