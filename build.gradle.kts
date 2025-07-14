@@ -211,7 +211,6 @@ artifacts {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            artifactId = "skyblock-api"
             from(components["java"])
 
             pom {
@@ -240,8 +239,8 @@ publishing {
 ksp {
     this@ksp.excludedSources.from(sourceSets.getByName("1215").kotlin.srcDirs)
     this@ksp.excludedSources.from(sourceSets.getByName("1217").kotlin.srcDirs)
-    arg("meowdding.modules.project_name", project.name)
+    arg("meowdding.modules.project_name", "SkyblockAPI")
     arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
-    arg("meowdding.codecs.project_name", project.name)
+    arg("meowdding.codecs.project_name", "SkyblockAPI")
     arg("meowdding.codecs.package", "tech.thatgravyboat.skyblockapi.generated")
 }
