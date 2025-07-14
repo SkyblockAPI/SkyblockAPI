@@ -4,20 +4,22 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.gui.render.state.BlitRenderState
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.FormattedText
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.ARGB
 import net.minecraft.util.FormattedCharSequence
-import net.minecraft.world.item.ItemStack
-import net.msrandom.stub.Stub
 import org.joml.Matrix3x2f
 import org.joml.Vector2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
-import tech.thatgravyboat.skyblockapi.helpers.McScreen
+
+// in 1.21.5 this was done in Font, in 1.21.7 this is no longer the case
+private inline fun adjustColor(color: Int): Int {
+    return if ((color and 0xfc000000.toInt()) == 0) ARGB.opaque(color) else color
+}
 
 actual inline fun GuiGraphics.pushPop(block: () -> Unit) {
     this.pose().pushMatrix()
@@ -33,15 +35,15 @@ actual fun GuiGraphics.scale(x: Number, y: Number) {
 }
 
 actual fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int, shadow: Boolean) {
-    this.drawString(McFont.self, text, x, y, color, shadow)
+    this.drawString(McFont.self, text, x, y, adjustColor(color), shadow)
 }
 
 actual fun GuiGraphics.drawString(text: FormattedText, x: Int, y: Int, color: Int, shadow: Boolean) {
-    this.drawString(McFont.self, Language.getInstance().getVisualOrder(text), x, y, color, shadow)
+    this.drawString(McFont.self, Language.getInstance().getVisualOrder(text), x, y, adjustColor(color), shadow)
 }
 
 actual fun GuiGraphics.drawString(text: FormattedCharSequence, x: Int, y: Int, color: Int, shadow: Boolean) {
-    this.drawString(McFont.self, text, x, y, color, shadow)
+    this.drawString(McFont.self, text, x, y, adjustColor(color), shadow)
 }
 
 actual fun GuiGraphics.drawSprite(texture: ResourceLocation, x: Int, y: Int, width: Int, height: Int, color: Int) {
