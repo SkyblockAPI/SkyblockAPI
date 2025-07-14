@@ -77,6 +77,8 @@ cloche {
     }
 
     common {
+        withPublication()
+
         dependencies {
             compileOnly(project(":annotations"))
             modCompileOnly.bundle(libs.bundles.meowdding)
@@ -121,12 +123,11 @@ cloche {
             }
 
             dependencies {
-                fabricApi(fabricApiVersion.get(), version)
+                fabricApi(fabricApiVersion.get(), minecraftVersion)
             }
 
             mixins.from("src/common/main/mixins/skyblock-api.client.mixins.json")
             mixins.from("src/common/main/mixins/skyblock-api.versioned.mixins.json")
-
             runs {
                 client()
             }
@@ -202,17 +203,16 @@ tasks.withType<Jar> {
 
 tasks.apiCheck { enabled = false }
 
+artifacts {
+    add("1215RuntimeElements", tasks["1215JarInJar"])
+    add("1217RuntimeElements", tasks["1217JarInJar"])
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
             artifactId = "skyblock-api"
             from(components["java"])
-
-            artifact(tasks["1215JarInJar"])
-            artifact(tasks["1217JarInJar"])
-//             artifact(tasks["generateMetadataFileForMavenPublication"].outputs.files.first()) {
-//                 extension = "module"
-//             }
 
             pom {
                 name.set("SkyblockAPI")

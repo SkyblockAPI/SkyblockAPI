@@ -5,8 +5,11 @@ import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.client.renderer.RenderType
+import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.FormattedText
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.FormattedCharSequence
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
@@ -24,7 +27,11 @@ actual fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int, shad
     this.drawString(McFont.self, text, x, y, color, shadow)
 }
 
-actual fun GuiGraphics.drawString(text: Component, x: Int, y: Int, color: Int, shadow: Boolean) {
+actual fun GuiGraphics.drawString(text: FormattedText, x: Int, y: Int, color: Int, shadow: Boolean) {
+    this.drawString(McFont.self, Language.getInstance().getVisualOrder(text), x, y, color, shadow)
+}
+
+actual fun GuiGraphics.drawString(text: FormattedCharSequence, x: Int, y: Int, color: Int, shadow: Boolean) {
     this.drawString(McFont.self, text, x, y, color, shadow)
 }
 
