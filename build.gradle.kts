@@ -1,12 +1,15 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.google.devtools.ksp.gradle.KspTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import tech.thatgravyboat.skyblockapi.item.deprecationMessage
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.fabric.loom)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.terrarium.cloche)
+    alias(libs.plugins.kotlin.symbol.processor)
     alias(libs.plugins.kotlin.binary.compatibility)
     alias(libs.plugins.meowdding.resources)
     `maven-publish`
@@ -20,28 +23,122 @@ base {
     archivesName.set(project.property("archives_base_name") as String)
 }
 
-val targetJavaVersion = 21
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
     withSourcesJar()
 }
 
-loom {
-    splitEnvironmentSourceSets()
+tasks.withType<KotlinCompile>().configureEach {
+    compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_2_0
+        freeCompilerArgs.addAll(
+            "-Xmulti-platform",
+            "-Xno-check-actual",
+            "-Xexpect-actual-classes",
+        )
+    }
+}
 
-    runs {
-        getByName("client") {
-            programArg("--quickPlayMultiplayer=hypixel.net")
-            vmArg("-Ddevauth.enabled=true")
-            vmArg("-Dskyblockapi.debug=true")
+
+val compilerAll: Configuration by configurations.creating {
+    isCanBeResolved = true
+    isCanBeConsumed = true
+}
+
+val kspAll: Configuration by configurations.creating {
+    isCanBeResolved = true
+    isCanBeConsumed = true
+}
+
+dependencies {
+    ksp(libs.bundles.meowdding)
+    compileOnly(project(":annotations"))
+    compilerAll(rootProject.project(":compiler"))
+
+    compileOnly(libs.bundles.meowdding)
+    configurations.forEach {
+        if (it.name.startsWith("kotlinCompilerPluginClasspath")) {
+            compilerAll.allDependencies.forEach { dependency -> add(it.name, dependency) }
+        } else if (it.name.startsWith("ksp") && !it.name.contains("classpath", true) && !it.name.contains("all", true)) {
+            kspAll.allDependencies.forEach { dependency -> add(it.name, dependency) }
+        }
+    }
+}
+
+cloche {
+    metadata {
+        modId = "skyblock-api"
+        name = "skyblock-api"
+        license = "MIT"
+        icon = "assets/skyblockapi/icon.png"
+        clientOnly = true
+
+        custom("modmenu" to mapOf("badges" to listOf("library")))
+    }
+
+    common {
+        withPublication()
+
+        dependencies {
+            compileOnly(project(":annotations"))
+            modCompileOnly.bundle(libs.bundles.meowdding)
+            modCompileOnlyApi.bundle(libs.bundles.meowdding)
+
+            modImplementation(libs.fabric.language.kotlin)
+            modImplementation.bundle(libs.bundles.hypixel)
+            modImplementation(libs.skyblockapi.repolib)
+
+            modRuntimeOnly(libs.devauth)
         }
     }
 
-    mods {
-        register("skyblock-api") {
-            sourceSet("main")
-            sourceSet("client")
+    fun createVersion(
+        name: String,
+        version: String = name,
+        loaderVersion: Provider<String> = libs.versions.fabric.loader,
+        fabricApiVersion: Provider<String> = libs.versions.fabric.api,
+    ) {
+        fabric(name) {
+            includedClient()
+            minecraftVersion = version
+            this.loaderVersion = loaderVersion.get()
+
+            include(libs.skyblockapi.repolib)
+            include(libs.hypixel.modapi.fabric)
+
+            metadata {
+                entrypoint("client", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit")
+                entrypoint("main", "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load")
+                entrypoint("main", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init")
+
+                dependency {
+                    modId = "fabric-language-kotlin"
+                    required = true
+                }
+
+                dependency {
+                    modId = "fabric"
+                    required = true
+                }
+            }
+
+            dependencies {
+                fabricApi(fabricApiVersion.get(), minecraftVersion)
+            }
+
+            mixins.from("src/common/main/mixins/skyblock-api.client.mixins.json")
+            mixins.from("src/common/main/mixins/skyblock-api.versioned.mixins.json")
+            runs {
+                client()
+            }
         }
+    }
+
+    createVersion("1.21.5")
+    createVersion("1.21.7", fabricApiVersion = provider { "0.129.0" })
+
+    mappings {
+        official()
     }
 }
 
@@ -57,29 +154,18 @@ apiValidation {
 
 repositories {
     maven(url = "https://repo.hypixel.net/repository/Hypixel/")
+    maven(url = "https://maven.msrandom.net/repository/cloche")
+    maven(url = "https://maven.msrandom.net/repository/root")
     maven(url = "https://api.modrinth.com/maven")
     maven(url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
     maven(url = "https://maven.teamresourceful.com/repository/maven-public/")
+    mavenLocal()
 }
 
-dependencies {
-    add("kotlinCompilerPluginClasspathClient", project(":compiler"))
-    compileOnly(project(":annotations"))
-    ksp(libs.bundles.meowdding)
-    compileOnly(libs.bundles.meowdding)
+compactingResources {
+    this.basePath = "repo"
 
-    // To change the versions see the gradle.properties file
-    minecraft(libs.minecraft)
-    mappings(loom.officialMojangMappings())
-    modImplementation(libs.bundles.fabric)
-
-    modImplementation(libs.bundles.hypixel)
-    include(libs.bundles.hypixel)
-
-    include(libs.skyblockapi.repolib)
-    implementation(libs.skyblockapi.repolib)
-
-    modRuntimeOnly(libs.devauth)
+    substituteFromDifferentFile("slayer", "slayers")
 }
 
 tasks.processResources {
@@ -100,11 +186,11 @@ tasks.processResources {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    options.release.set(targetJavaVersion)
+    options.release.set(21)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion.toString()))
+    compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
 }
 
 tasks.withType<KspTask> {
@@ -117,10 +203,14 @@ tasks.withType<Jar> {
 
 tasks.apiCheck { enabled = false }
 
+artifacts {
+    add("1215RuntimeElements", tasks["1215JarInJar"])
+    add("1217RuntimeElements", tasks["1217JarInJar"])
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            artifactId = "skyblock-api-${libs.versions.minecraft.get()}"
             from(components["java"])
 
             pom {
@@ -146,15 +236,11 @@ publishing {
     }
 }
 
-compactingResources {
-    this.basePath = "repo"
-
-    substituteFromDifferentFile("slayer", "slayers")
-}
-
 ksp {
-    arg("meowdding.modules.project_name", project.name)
+    this@ksp.excludedSources.from(sourceSets.getByName("1215").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("1217").kotlin.srcDirs)
+    arg("meowdding.modules.project_name", "SkyblockAPI")
     arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
-    arg("meowdding.codecs.project_name", project.name)
+    arg("meowdding.codecs.project_name", "SkyblockAPI")
     arg("meowdding.codecs.package", "tech.thatgravyboat.skyblockapi.generated")
 }

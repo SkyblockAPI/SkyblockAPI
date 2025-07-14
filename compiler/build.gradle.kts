@@ -2,8 +2,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     alias(libs.plugins.kotlin.binary.compatibility) apply false
+    alias(libs.plugins.kotlin.symbol.processor)
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.ksp)
 }
 
 repositories {
