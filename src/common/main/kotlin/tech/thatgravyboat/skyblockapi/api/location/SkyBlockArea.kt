@@ -180,6 +180,8 @@ object SkyBlockAreas {
     // Park
     val BIRCH_PARK = register("birch_park", "Birch Park")
     val HOWLING_CAVE = register("howling_cave", "Howling Cave")
+    val SOUL_CAVE = register("soul_cave", "Soul Cave")
+    val SPIRIT_CAVE = register("spirit_cave", "Spirit Cave")
     val SPRUCE_WOODS = register("spruce_woods", "Spruce Woods")
     val LONELY_ISLAND = register("lonely_island", "Lonely Island")
     val VIKING_LONGHOUSE = register("viking_longhouse", "Viking Longhouse")
