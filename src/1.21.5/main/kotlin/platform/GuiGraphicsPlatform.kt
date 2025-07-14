@@ -10,6 +10,8 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.FormattedText
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FormattedCharSequence
+import net.minecraft.world.item.ItemStack
+import org.joml.Vector2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
@@ -56,6 +58,15 @@ actual fun GuiGraphics.drawTexture(texture: ResourceLocation, x: Int, y: Int, wi
     }
 }
 
+actual fun GuiGraphics.showTooltip(text: Component) {
+    val screen = McScreen.self ?: return
+    screen.setTooltipForNextRenderPass(
+        Tooltip.splitTooltip(McClient.self, text),
+        DefaultTooltipPositioner.INSTANCE,
+        true
+    )
+}
+
 actual fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int) {
     val screen = McScreen.self ?: return
     screen.setTooltipForNextRenderPass(
@@ -66,3 +77,6 @@ actual fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int) {
         true
     )
 }
+
+actual fun GuiGraphics.getTranslation(): Vector2f = Vector2f(this.pose().last().pose().m30(), this.pose().last().pose().m31())
+actual fun GuiGraphics.getScale(): Vector2f = Vector2f(this.pose().last().pose().m00(), this.pose().last().pose().m11())

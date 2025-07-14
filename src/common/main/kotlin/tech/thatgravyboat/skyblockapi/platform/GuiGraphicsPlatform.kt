@@ -6,6 +6,7 @@ import net.minecraft.network.chat.FormattedText
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FormattedCharSequence
 import net.msrandom.stub.Stub
+import org.joml.Vector2f
 
 @Stub expect inline fun GuiGraphics.pushPop(block: () -> Unit)
 @Stub expect fun GuiGraphics.translate(x: Number, y: Number)
@@ -22,4 +23,8 @@ import net.msrandom.stub.Stub
     color: Int = -1
 )
 
+@Stub expect fun GuiGraphics.showTooltip(text: Component)
 @Stub expect fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int)
+
+@Stub expect fun GuiGraphics.getTranslation(): Vector2f
+@Stub expect fun GuiGraphics.getScale(): Vector2f
