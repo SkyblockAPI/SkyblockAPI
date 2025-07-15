@@ -128,6 +128,7 @@ cloche {
 
             mixins.from("src/common/main/mixins/skyblock-api.client.mixins.json")
             mixins.from("src/common/main/mixins/skyblock-api.versioned.mixins.json")
+            mixins.from("src/common/main/mixins/skyblock-api.versioned.${version.replace(".", "")}.mixins.json")
             runs {
                 client()
             }

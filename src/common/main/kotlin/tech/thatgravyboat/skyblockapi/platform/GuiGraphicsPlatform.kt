@@ -28,3 +28,5 @@ import org.joml.Vector2f
 
 @Stub expect fun GuiGraphics.getTranslation(): Vector2f
 @Stub expect fun GuiGraphics.getScale(): Vector2f
+
+@Stub expect fun GuiGraphics.applyBackgroundBlur()

@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.FormattedText
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FormattedCharSequence
-import net.minecraft.world.item.ItemStack
 import org.joml.Vector2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
@@ -80,3 +79,8 @@ actual fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int) {
 
 actual fun GuiGraphics.getTranslation(): Vector2f = Vector2f(this.pose().last().pose().m30(), this.pose().last().pose().m31())
 actual fun GuiGraphics.getScale(): Vector2f = Vector2f(this.pose().last().pose().m00(), this.pose().last().pose().m11())
+
+actual fun GuiGraphics.applyBackgroundBlur() {
+    McClient.self.gameRenderer.processBlurEffect()
+}
+

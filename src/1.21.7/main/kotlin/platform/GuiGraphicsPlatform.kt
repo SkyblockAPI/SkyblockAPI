@@ -75,3 +75,7 @@ actual fun GuiGraphics.showTooltip(text: Component) {
 
 actual fun GuiGraphics.getTranslation(): Vector2f = Vector2f(this.pose().m20(), this.pose().m21())
 actual fun GuiGraphics.getScale(): Vector2f = Vector2f(this.pose().m00(), this.pose().m11())
+
+actual fun GuiGraphics.applyBackgroundBlur() {
+    this.blurBeforeThisStratum()
+}
