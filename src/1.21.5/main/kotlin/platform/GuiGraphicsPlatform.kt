@@ -1,8 +1,7 @@
 package tech.thatgravyboat.skyblockapi.platform
 
+import com.mojang.math.Axis
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.components.Tooltip
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.locale.Language
@@ -23,6 +22,7 @@ actual inline fun GuiGraphics.pushPop(block: () -> Unit) {
 
 actual fun GuiGraphics.translate(x: Number, y: Number) = this.pose().translate(x.toFloat(), y.toFloat(), 0f)
 actual fun GuiGraphics.scale(x: Number, y: Number) = this.pose().scale(x.toFloat(), y.toFloat(), 1f)
+actual fun GuiGraphics.rotate(angle: Number) = this.pose().rotateAround(Axis.ZP.rotationDegrees(angle.toFloat()), 0f, 0f, 0f)
 
 actual fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int, shadow: Boolean) {
     this.drawString(McFont.self, text, x, y, color, shadow)
@@ -57,23 +57,23 @@ actual fun GuiGraphics.drawTexture(texture: ResourceLocation, x: Int, y: Int, wi
     }
 }
 
-actual fun GuiGraphics.showTooltip(text: Component) {
+actual fun GuiGraphics.showTooltip(text: Component, maxWidth: Int, force: Boolean) {
     val screen = McScreen.self ?: return
     screen.setTooltipForNextRenderPass(
-        Tooltip.splitTooltip(McClient.self, text),
+        McFont.split(text, maxWidth),
         DefaultTooltipPositioner.INSTANCE,
-        true
+        force
     )
 }
 
-actual fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int) {
+actual fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int, force: Boolean) {
     val screen = McScreen.self ?: return
     screen.setTooltipForNextRenderPass(
-        Tooltip.splitTooltip(McClient.self, text),
-        ClientTooltipPositioner { screenWidth, screenHeight, _, _, width, height ->
+        McFont.split(text, maxWidth),
+        { screenWidth, screenHeight, _, _, width, height ->
             DefaultTooltipPositioner.INSTANCE.positionTooltip(screenWidth, screenHeight, x, y, width, height)
         },
-        true
+        force
     )
 }
 

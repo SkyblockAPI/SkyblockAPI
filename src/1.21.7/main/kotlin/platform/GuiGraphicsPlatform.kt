@@ -1,9 +1,9 @@
 package tech.thatgravyboat.skyblockapi.platform
 
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.gui.render.state.BlitRenderState
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
@@ -32,6 +32,9 @@ actual fun GuiGraphics.translate(x: Number, y: Number) {
 }
 actual fun GuiGraphics.scale(x: Number, y: Number) {
     this.pose().scale(x.toFloat(), y.toFloat())
+}
+actual fun GuiGraphics.rotate(angle: Number) {
+    this.pose().rotate(angle.toFloat())
 }
 
 actual fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int, shadow: Boolean) {
@@ -65,13 +68,15 @@ actual fun GuiGraphics.drawTexture(texture: ResourceLocation, x: Int, y: Int, wi
     )
 }
 
-actual fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int) {
-    this.setTooltipForNextFrame(Tooltip.splitTooltip(McClient.self, text), x, y)
-}
-actual fun GuiGraphics.showTooltip(text: Component) {
+actual fun GuiGraphics.showTooltip(text: Component, maxWidth: Int, force: Boolean) {
     val (x, y) = McClient.mouse
-    this.setTooltipForNextFrame(Tooltip.splitTooltip(McClient.self, text), x.toInt(), y.toInt())
+    this.setTooltipForNextFrame(McFont.self, McFont.split(text, maxWidth), DefaultTooltipPositioner.INSTANCE, x.toInt(), y.toInt(), false)
 }
+
+actual fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int, force: Boolean) {
+    this.setTooltipForNextFrame(McFont.self, McFont.split(text, maxWidth), DefaultTooltipPositioner.INSTANCE, x.toInt(), y.toInt(), false)
+}
+
 
 actual fun GuiGraphics.getTranslation(): Vector2f = Vector2f(this.pose().m20(), this.pose().m21())
 actual fun GuiGraphics.getScale(): Vector2f = Vector2f(this.pose().m00(), this.pose().m11())
