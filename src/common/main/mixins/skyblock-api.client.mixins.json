@@ -19,7 +19,6 @@
         "events.LivingEntityRendererMixin",
         "events.MouseHandlerMixin",
         "events.PlayerRendererMixin",
-        "events.ScreenMixin",
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin",
         "tagattachments.ClientLevelMixin",
