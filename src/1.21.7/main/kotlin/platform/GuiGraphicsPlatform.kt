@@ -11,6 +11,7 @@ import net.minecraft.network.chat.FormattedText
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.ARGB
 import net.minecraft.util.FormattedCharSequence
+import net.minecraft.util.Mth
 import org.joml.Matrix3x2f
 import org.joml.Vector2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -34,7 +35,7 @@ actual fun GuiGraphics.scale(x: Number, y: Number) {
     this.pose().scale(x.toFloat(), y.toFloat())
 }
 actual fun GuiGraphics.rotate(angle: Number) {
-    this.pose().rotate(angle.toFloat())
+    this.pose().rotate(angle.toFloat() * Mth.DEG_TO_RAD)
 }
 
 actual fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int, shadow: Boolean) {
