@@ -6,6 +6,7 @@ import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,6 +32,7 @@ public class SoundManagerMixin {
         }
     }
 
+    @Unique
     private static boolean tryPlay(SoundInstance soundInstance) {
         if (!(soundInstance instanceof SoundInstanceAccessor accessor)) return false;
         if (accessor.skyblockapi$getSoundEvent() == null) return false;

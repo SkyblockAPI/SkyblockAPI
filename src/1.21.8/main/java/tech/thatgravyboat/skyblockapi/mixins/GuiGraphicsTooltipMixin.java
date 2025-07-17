@@ -19,15 +19,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.minecraft.ui.GatherItemTooltipComponentsEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderItemBarEvent;
+import tech.thatgravyboat.skyblockapi.hooks.GuiGraphicsHook;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(GuiGraphics.class)
-public class GuiGraphicsTooltipMixin {
+public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
 
     @Unique
-    private ThreadLocal<ItemStack> lastStack = ThreadLocal.withInitial(() -> ItemStack.EMPTY);
+    private final ThreadLocal<ItemStack> lastStack = ThreadLocal.withInitial(() -> ItemStack.EMPTY);
 
     @WrapOperation(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isBarVisible()Z"))
     private boolean itemBarVisible(ItemStack instance, Operation<Boolean> original, @Share("bar") LocalRef<RenderItemBarEvent> bar) {
@@ -81,5 +82,10 @@ public class GuiGraphicsTooltipMixin {
         GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
         event.post(SkyBlockAPI.getEventBus());
         operation.call(instance, font, listCopy, x, y, positioner, texture, force);
+    }
+
+    @Override
+    public void skyblockapi$setHoveredItem(ItemStack stack) {
+        this.lastStack.set(stack);
     }
 }

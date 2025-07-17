@@ -126,9 +126,9 @@ cloche {
                 fabricApi(fabricApiVersion.get(), minecraftVersion)
             }
 
-            mixins.from("src/common/main/mixins/skyblock-api.client.mixins.json")
-            mixins.from("src/common/main/mixins/skyblock-api.versioned.mixins.json")
-            mixins.from("src/common/main/mixins/skyblock-api.versioned.${version.replace(".", "")}.mixins.json")
+            mixins.from("src/mixins/skyblock-api.client.mixins.json")
+            mixins.from("src/mixins/skyblock-api.versioned.mixins.json")
+            mixins.from("src/mixins/skyblock-api.versioned.${version.replace(".", "")}.mixins.json")
             runs {
                 client()
             }
@@ -136,7 +136,7 @@ cloche {
     }
 
     createVersion("1.21.5")
-    createVersion("1.21.7", fabricApiVersion = provider { "0.129.0" })
+    createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" })
 
     mappings {
         official()
@@ -206,7 +206,7 @@ tasks.apiCheck { enabled = false }
 
 artifacts {
     add("1215RuntimeElements", tasks["1215JarInJar"])
-    add("1217RuntimeElements", tasks["1217JarInJar"])
+    add("1218RuntimeElements", tasks["1218JarInJar"])
 }
 
 publishing {
@@ -239,7 +239,7 @@ publishing {
 
 ksp {
     this@ksp.excludedSources.from(sourceSets.getByName("1215").kotlin.srcDirs)
-    this@ksp.excludedSources.from(sourceSets.getByName("1217").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("1218").kotlin.srcDirs)
     arg("meowdding.modules.project_name", "SkyblockAPI")
     arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
     arg("meowdding.codecs.project_name", "SkyblockAPI")
