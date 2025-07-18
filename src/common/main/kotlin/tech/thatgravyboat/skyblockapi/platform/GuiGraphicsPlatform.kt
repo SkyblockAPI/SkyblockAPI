@@ -11,8 +11,7 @@ import org.joml.Vector2f
 @Stub expect inline fun GuiGraphics.pushPop(block: () -> Unit)
 @Stub expect fun GuiGraphics.translate(x: Number, y: Number)
 @Stub expect fun GuiGraphics.scale(x: Number, y: Number)
-@Stub
-expect fun GuiGraphics.rotate(angle: Number, x: Number = 0f, y: Number = 0f)
+@Stub expect fun GuiGraphics.rotate(angle: Number, x: Number = 0f, y: Number = 0f)
 
 @Stub expect fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int = -1, shadow: Boolean = false)
 @Stub expect fun GuiGraphics.drawString(text: FormattedText, x: Int, y: Int, color: Int = -1, shadow: Boolean = false)
@@ -25,15 +24,10 @@ expect fun GuiGraphics.rotate(angle: Number, x: Number = 0f, y: Number = 0f)
     color: Int = -1
 )
 
-@Stub
-expect fun GuiGraphics.showTooltip(text: Component, maxWidth: Int = 170, force: Boolean = true)
-@Stub
-expect fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = 170, force: Boolean = true)
+@Stub expect fun GuiGraphics.showTooltip(text: Component, maxWidth: Int = 170, force: Boolean = true)
+@Stub expect fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = 170, force: Boolean = true)
 
-@Stub
-expect fun GuiGraphics.getTranslation(): Vector2f
-@Stub
-expect fun GuiGraphics.getScale(): Vector2f
+@Stub expect fun GuiGraphics.getTranslation(): Vector2f
+@Stub expect fun GuiGraphics.getScale(): Vector2f
 
-@Stub
-expect fun GuiGraphics.applyBackgroundBlur()
+@Stub expect fun GuiGraphics.applyBackgroundBlur()
