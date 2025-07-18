@@ -1,0 +1,1 @@
+package tech.thatgravyboat.skyblockapi

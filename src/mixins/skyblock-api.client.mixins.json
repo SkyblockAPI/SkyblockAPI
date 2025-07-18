@@ -1,0 +1,45 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "tech.thatgravyboat.skyblockapi.mixins",
+    "compatibilityLevel": "JAVA_21",
+    "client": [
+        "AbstractSoundInstanceMixin",
+        "SimpleSoundInstanceMixin",
+        "accessors.AbstractContainerScreenAccessor",
+        "accessors.ContainerScreenAccessor",
+        "events.ChatComponentMixin",
+        "events.ChatListenerMixin",
+        "events.ClientCommonPacketListenerImplMixin",
+        "events.EntityRendererMixin",
+        "events.GuiMessageLineMixin",
+        "events.GuiMessageMixin",
+        "events.HumanoidRendererMixin",
+        "events.KeyboardHandlerMixin",
+        "events.LivingEntityRendererMixin",
+        "events.MouseHandlerMixin",
+        "events.PlayerRendererMixin",
+        "fixes.ClientPacketListenerMixin",
+        "fixes.SkinManagerMixin",
+        "tagattachments.ClientLevelMixin",
+        "tagattachments.DebugScreenOverlayMixin",
+        "tagattachments.EntityMixin",
+        "tagattachments.EntityRendererMixin",
+        "tagattachments.EntityRenderStateMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "mixins": [
+        "events.SlotMixin",
+        "events.ConnectionMixin",
+        "events.ItemStackMixin",
+        "features.ItemStackExtensionMixin",
+        "features.VisualItemMixin",
+        "fixes.FishingHookMixin",
+        "fixes.NarratorMixin",
+        "fixes.ScoreboardMixin",
+        "fixes.YggdrasilMinecraftSessionServiceMixin",
+        "fixes.YggdrasilServicesKeyInfoMixin"
+    ]
+}
