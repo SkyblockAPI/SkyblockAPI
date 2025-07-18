@@ -1,0 +1,64 @@
+package tech.thatgravyboat.skyblockapi.helpers
+
+import com.mojang.blaze3d.platform.Window
+import com.mojang.brigadier.CommandDispatcher
+import net.minecraft.client.Minecraft
+import net.minecraft.client.Options
+import net.minecraft.client.gui.Gui
+import net.minecraft.client.gui.components.ChatComponent
+import net.minecraft.client.gui.components.toasts.ToastManager
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.multiplayer.ClientPacketListener
+import net.minecraft.client.multiplayer.PlayerInfo
+import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.network.chat.Component
+import net.msrandom.stub.Stub
+import java.net.URI
+import java.nio.file.Path
+
+@Stub
+expect object McClient {
+    val isDev: Boolean
+    val config: Path
+    val version: String
+
+    val self: Minecraft
+    val connection: ClientPacketListener?
+
+    val window: Window
+
+    var clipboard: String
+
+    val mouse: Pair<Double, Double>
+
+    val tablist: List<PlayerInfo>
+
+    val players: List<PlayerInfo>
+
+    val scoreboard: Collection<Component>
+
+    val scoreboardTitle: Component?
+    val serverCommands: CommandDispatcher<out SharedSuggestionProvider>?
+
+    val toasts: ToastManager
+    val gui: Gui
+    val chat: ChatComponent
+    val options: Options
+
+    fun openUri(uri: String): Boolean
+
+    fun openUri(uri: URI)
+
+    fun runNextTick(action: () -> Unit)
+
+    fun setScreenAsync(screen: () -> Screen?)
+
+    fun setScreen(screen: Screen?)
+
+    fun sendCommand(command: String)
+
+    /** Sends a command that first goes through client side commands, and then server commands */
+    fun sendClientCommand(command: String)
+
+}
+
