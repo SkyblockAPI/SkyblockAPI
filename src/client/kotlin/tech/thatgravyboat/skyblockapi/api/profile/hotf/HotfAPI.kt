@@ -45,7 +45,7 @@ object HotfAPI {
     )
     private val forestWhispersRegex = RegexGroup.TABLIST_WIDGET.group("hotf").create(
         "whispers",
-        "Forest Whispers: (?<amount>[\\d,.]+)",
+        "Forest Whispers: (?<amount>[\\d,.kmb]+)",
     )
     //endregion
 
@@ -66,7 +66,7 @@ object HotfAPI {
     @OnlyWidget(TabWidget.FOREST_WHISPERS)
     fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         forestWhispersRegex.anyMatch(event.new, "amount") { (amount) ->
-            HotfStorage.whispers = amount.toLongValue()
+            HotfStorage.whispers = amount.parseFormattedLong()
         }
     }
 
