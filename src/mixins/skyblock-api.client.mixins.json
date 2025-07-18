@@ -19,7 +19,16 @@
         "events.LivingEntityRendererMixin",
         "events.MouseHandlerMixin",
         "events.PlayerRendererMixin",
+        <<<<<<<<
+        HEAD
+        :
+        src/common/main/mixins/skyblock-api.client.mixins.json
         "events.ScreenMixin",
+        ========
+        >>>>>>>>
+        1.x
+        :
+        src/mixins/skyblock-api.client.mixins.json
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin",
         "tagattachments.ClientLevelMixin",
@@ -32,9 +41,9 @@
         "defaultRequire": 1
     },
     "mixins": [
-        "events.SlotMixin",
         "events.ConnectionMixin",
         "events.ItemStackMixin",
+        "events.SlotMixin",
         "features.ItemStackExtensionMixin",
         "features.VisualItemMixin",
         "fixes.FishingHookMixin",
