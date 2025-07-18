@@ -77,7 +77,7 @@ object TabListEventHandler {
         TabWidget.REPUTATION to widgetGroup.create("reputation", "(?:Mage|Barbarian) Reputation:"),
         TabWidget.TROPHY_FISH to widgetGroup.create("trophy_fish", "Trophy Fish:"),
         TabWidget.FACTION_QUESTS to widgetGroup.create("faction_quests", "Faction Quests:"),
-        TabWidget.FOREST_WHISPERS to widgetGroup.create("forest_whispers", "Forest Whispers: (?<amount>[\\w,.]+)"),
+        TabWidget.FOREST_WHISPERS to widgetGroup.create("forest_whispers", "Forest Whispers: (?<amount>[\\dkmb,.]+)"),
         TabWidget.MOONGLADE_BEACON to widgetGroup.create("moonglade_beacon", "Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
     )
 

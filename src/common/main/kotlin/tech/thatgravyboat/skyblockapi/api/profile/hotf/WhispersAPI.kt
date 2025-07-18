@@ -37,7 +37,7 @@ object WhispersAPI {
     )
     private val forestWhispersRegex = RegexGroup.TABLIST_WIDGET.group("whispers").create(
         "forest",
-        "Forest Whispers: (?<amount>[\\w,.]+)",
+        "Forest Whispers: (?<amount>[\\dkmb,.]+)",
     )
     //endregion
 
