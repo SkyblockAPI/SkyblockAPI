@@ -2,7 +2,7 @@ name: API Baseline Updater
 
 on:
     push:
-        branches: [ "1.x" ]
+        branches: [ "2.0" ]
 
 permissions:
     contents: write
