@@ -18,9 +18,9 @@ object ItemData {
 
     fun getItemData(id: String) = itemData.firstOrNull { it.id == id }
 
-    @Deprecated("Use getNpcPriceFloat instead", ReplaceWith("getNpcPriceFloat(id)"), DeprecationLevel.ERROR)
+    @Deprecated("Use getNpcSellPrice instead", ReplaceWith("getNpcSellPrice(id)"), DeprecationLevel.ERROR)
     fun getNpcPrice(id: String): Int? = getItemData(id)?.npcSellPrice
-    fun getNpcPriceFloat(id: String): Float? = getItemData(id)?.npcSellPriceFloat
+    fun getNpcSellPrice(id: String): Float? = getItemData(id)?.npcSellPriceFloat
 }
 
 @GenerateCodec
