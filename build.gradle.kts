@@ -129,8 +129,14 @@ cloche {
             mixins.from("src/mixins/skyblock-api.client.mixins.json")
             mixins.from("src/mixins/skyblock-api.versioned.mixins.json")
             mixins.from("src/mixins/skyblock-api.versioned.${version.replace(".", "")}.mixins.json")
+
             runs {
-                client()
+                client {
+                    args("--quickPlayMultiplayer=hypixel.net")
+
+                    jvmArgs("-Ddevauth.enabled=true")
+                    jvmArgs("-Dskyblockapi.debug=true")
+                }
             }
         }
     }
