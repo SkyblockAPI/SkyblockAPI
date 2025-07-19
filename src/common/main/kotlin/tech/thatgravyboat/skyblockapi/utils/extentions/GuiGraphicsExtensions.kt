@@ -17,16 +17,16 @@ inline fun GuiGraphics.scissor(x: IntRange, y: IntRange, action: () -> Unit) {
     this.disableScissor()
 }
 
-inline fun GuiGraphics.translated(x: Number = 0, y: Number = 0, action: () -> Unit) {
+inline fun GuiGraphics.translated(x: Number = 0, y: Number = 0, z: Number = 0, action: () -> Unit) {
     this.pushPop {
-        this.translate(x.toFloat(), y.toFloat())
+        this.translate(x.toFloat(), y.toFloat(), z.toFloat())
         action()
     }
 }
 
-inline fun GuiGraphics.scaled(x: Number = 1, y: Number = 1, action: () -> Unit) {
+inline fun GuiGraphics.scaled(x: Number = 1, y: Number = 1, z: Number = 1, action: () -> Unit) {
     this.pushPop {
-        this.scale(x.toFloat(), y.toFloat())
+        this.scale(x.toFloat(), y.toFloat(), z.toFloat())
         action()
     }
 }

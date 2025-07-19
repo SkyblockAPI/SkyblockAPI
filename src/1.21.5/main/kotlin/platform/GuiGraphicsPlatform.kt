@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.FormattedText
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FormattedCharSequence
-import net.minecraft.util.Mth
 import org.joml.Vector2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
@@ -21,8 +20,8 @@ actual inline fun GuiGraphics.pushPop(block: () -> Unit) {
     this.pose().popPose()
 }
 
-actual fun GuiGraphics.translate(x: Number, y: Number) = pose().translate(x.toFloat(), y.toFloat(), 0f)
-actual fun GuiGraphics.scale(x: Number, y: Number) = pose().scale(x.toFloat(), y.toFloat(), 1f)
+actual fun GuiGraphics.translate(x: Number, y: Number, z: Number) = pose().translate(x.toFloat(), y.toFloat(), z.toFloat())
+actual fun GuiGraphics.scale(x: Number, y: Number, z: Number) = pose().scale(x.toFloat(), y.toFloat(), z.toFloat())
 actual fun GuiGraphics.rotate(angle: Number, x: Number, y: Number) = pose().rotateAround(Axis.ZP.rotationDegrees(angle.toFloat()), x.toFloat(), y.toFloat(), 0f)
 
 actual fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int, shadow: Boolean) {

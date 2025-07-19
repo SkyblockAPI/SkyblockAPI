@@ -9,8 +9,10 @@ import net.msrandom.stub.Stub
 import org.joml.Vector2f
 
 @Stub expect inline fun GuiGraphics.pushPop(block: () -> Unit)
-@Stub expect fun GuiGraphics.translate(x: Number, y: Number)
-@Stub expect fun GuiGraphics.scale(x: Number, y: Number)
+@Stub
+expect fun GuiGraphics.translate(x: Number, y: Number, z: Number = 0f)
+@Stub
+expect fun GuiGraphics.scale(x: Number, y: Number, z: Number = 1f)
 @Stub expect fun GuiGraphics.rotate(angle: Number, x: Number = 0f, y: Number = 0f)
 
 @Stub expect fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int = -1, shadow: Boolean = false)
