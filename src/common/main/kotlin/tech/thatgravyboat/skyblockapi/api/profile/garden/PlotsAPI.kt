@@ -176,6 +176,8 @@ object PlotAPI {
     @Subscription
     @OnlyIn(SkyBlockIsland.GARDEN)
     fun onChat(event: ChatReceivedEvent.Pre) {
+        // TODO
+        //  §6§lGROSS! §7While you were offline, §2Pests §7spawned in §aPlots §b18§7, §b15§7, §b20§7, §b22§7, §b24§7 and §b19§7!
         matchWhen(event.text) {
             case(chatSingularSpawnRegex, "name") { (name) ->
                 val plot = getPlotByName(name) ?: return@case
