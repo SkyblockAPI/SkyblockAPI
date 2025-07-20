@@ -17,7 +17,10 @@ object ItemData {
         ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
 
     fun getItemData(id: String) = itemData.firstOrNull { it.id == id }
+
+    @Deprecated("Use getNpcSellPrice instead", ReplaceWith("getNpcSellPrice(id)"), DeprecationLevel.ERROR)
     fun getNpcPrice(id: String): Int? = getItemData(id)?.npcSellPrice
+    fun getNpcSellPrice(id: String): Float? = getItemData(id)?.npcSellPriceFloat
 }
 
 @GenerateCodec
@@ -27,6 +30,7 @@ data class HypixelApiItem(
     @param:FieldName("upgrade_costs") val upgradeCost: List<List<Cost>> = emptyList(),
     @param:FieldName("dungeon_item_conversion_cost") val conversionCost: EssenceCost?,
     @param:FieldName("npc_sell_price") val npcSellPrice: Int?,
+    @param:FieldName("npc_sell_price") val npcSellPriceFloat: Float?,
     @param:FieldName("museum_data") val museumData: ItemMuseumData?,
 ) {
     companion object {

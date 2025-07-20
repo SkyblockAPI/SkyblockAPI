@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.profile
 
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.data.stored.ProfileStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
@@ -9,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
@@ -19,6 +21,8 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 
 @Module
@@ -41,6 +45,11 @@ object ProfileAPI {
         "name",
         "You are playing on profile: (?<name>.+)",
     )
+
+    private val bingoRankRegex = RegexGroup.SCOREBOARD.group("profile").create(
+        "bingo",
+        " (?<level>Ⓑ )Bingo",
+    ).toComponentRegex()
 
     private val levelColors = mapOf(
         0..39 to TextColor.GRAY,
@@ -73,6 +82,9 @@ object ProfileAPI {
     val sbLevelProgress: Int get() = ProfileStorage.getSkyBlockLevelProgress()
 
     val coop: Boolean get() = ProfileStorage.isCoop()
+
+    val bingoRank: SkyBlockRarity? get() = ProfileStorage.getBingoRank()
+
 
     fun getLevelColor(): Int = getLevelColor(sbLevel)
 
@@ -150,6 +162,14 @@ object ProfileAPI {
     @Subscription
     fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
         ProfileStorage.setSkyBlockLevel(event.level)
+    }
+
+    @Subscription
+    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+        bingoRankRegex.anyMatch(event.addedComponents, "level") { (level) ->
+            val bingoLevel = level.style.color?.let { SkyBlockRarity.fromColorOrNull(it.value) }
+            ProfileStorage.setBingoRank(bingoLevel)
+        }
     }
 
     @Subscription

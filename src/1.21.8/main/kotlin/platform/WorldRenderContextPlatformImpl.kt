@@ -13,19 +13,19 @@ actual fun WorldRenderContext.drawString(
     dropShadow: Boolean,
     displayMode: Font.DisplayMode,
     backgroundColor: UInt,
-    light: Int
+    light: Int,
 ) {
     val consumers = this.consumers() ?: return
     val pose = this.matrixStack()?.last()?.pose() ?: return
     McFont.self.drawInBatch(
         text,
-        x,y,
+        x, y,
         color.toInt(),
         dropShadow,
         pose,
         consumers,
         displayMode,
         backgroundColor.toInt(),
-        light
+        light,
     )
 }

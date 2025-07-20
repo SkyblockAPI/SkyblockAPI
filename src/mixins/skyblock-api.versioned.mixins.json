@@ -4,11 +4,11 @@
     "package": "tech.thatgravyboat.skyblockapi.mixins",
     "compatibilityLevel": "JAVA_21",
     "client": [
-        "ScreenMixin",
-        "GuiMixin",
+        "AbstractContainerScreenMixin",
         "GuiGraphicsTooltipMixin",
         "GuiGraphicsVisualItemMixin",
-        "AbstractContainerScreenMixin",
+        "GuiMixin",
+        "ScreenMixin",
         "SoundManagerMixin"
     ],
     "injectors": {
