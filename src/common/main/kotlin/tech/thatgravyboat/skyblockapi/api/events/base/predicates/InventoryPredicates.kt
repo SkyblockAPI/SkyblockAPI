@@ -29,11 +29,11 @@ class InventoryPredicates : EventPredicateProvider {
         val disallowPlayerInventory = method.getAnnotation<MustBeContainer>() != null
         val ignoreFiller = method.getAnnotation<IgnoreFiller>() != null
 
-        if (inventoryTitle == null && !disallowPlayerInventory) {
-            return null
-        }
-
         return predicate@{ event, _ ->
+            if (inventoryTitle == null && !disallowPlayerInventory) {
+                return@predicate true
+            }
+
             if (event !is ContainerInitializedEvent && event !is InventoryChangeEvent) {
                 return@predicate true
             }
@@ -52,3 +52,4 @@ class InventoryPredicates : EventPredicateProvider {
         }
     }
 }
+
