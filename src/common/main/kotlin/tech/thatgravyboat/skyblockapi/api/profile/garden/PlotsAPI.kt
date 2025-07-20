@@ -76,16 +76,16 @@ object PlotAPI {
 
     private val chatSingularSpawnRegex = chatGroup.create(
         "singular_spawn",
-        ".*! A Pest has appeared in Plot - (?<name>.+)!",
+        "[^:]*! A Pest has appeared in Plot - (?<name>.+)!",
     )
     private val chatPluralSpawnRegex = chatGroup.create(
         "plural_spawn",
-        ".*! (?<amount>\\d+) Pests have spawned in Plot - (?<name>.+)!",
+        "[^:]+! (?<amount>\\d+) Pests have spawned in Plot - (?<name>.+)!",
     )
 
     //endregion
 
-    private var slot = 1
+    private var currentPlotSlot = 1
 
     val plots = listOf(
         listOf(21, 13, 9, 14, 22),
@@ -100,9 +100,9 @@ object PlotAPI {
             val maxX = x * 96 - 144.0
             val maxZ = z * 96 - 144.0
             val aabb = AABB(minX, 0.0, minZ, maxX, 256.0, maxZ)
-            slot++
-            Plot(id, slot, aabb)
-        }.also { slot += 4 }
+            currentPlotSlot++
+            Plot(id, currentPlotSlot, aabb)
+        }.also { currentPlotSlot += 4 }
     }
 
     var currentPestAmount = 0
