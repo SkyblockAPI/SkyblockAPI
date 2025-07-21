@@ -297,7 +297,7 @@ tasks.withType<WriteClasspathFile>().configureEach {
 }
 
 tasks.register("release") {
-    group = "meowdding"
+    group = "skyblock-api"
     sourceSets.filterNot { it.name == SourceSet.MAIN_SOURCE_SET_NAME || it.name == SourceSet.TEST_SOURCE_SET_NAME }.forEach {
         tasks.getByName("${it.name}JarInJar").let { task ->
             dependsOn(task)
@@ -307,7 +307,7 @@ tasks.register("release") {
 }
 
 tasks.register("cleanRelease") {
-    group = "meowdding"
+    group = "skyblock-api"
     listOf("clean", "release").forEach {
         tasks.getByName(it).let { task ->
             dependsOn(task)
