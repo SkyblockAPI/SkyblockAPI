@@ -1,6 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.google.devtools.ksp.gradle.KspTask
+import earth.terrarium.cloche.api.metadata.FabricMetadata
+import earth.terrarium.cloche.api.metadata.ModMetadata
 import net.msrandom.minecraftcodev.core.utils.toPath
 import net.msrandom.minecraftcodev.runs.task.WriteClasspathFile
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -101,6 +103,11 @@ cloche {
         version: String = name,
         loaderVersion: Provider<String> = libs.versions.fabric.loader,
         fabricApiVersion: Provider<String> = libs.versions.fabric.api,
+        minecraftVersionRange: ModMetadata.VersionRange.() -> Unit = {
+            start = version
+            end = version
+            endExclusive = false
+        }
     ) {
         fabric(name) {
             includedClient()
@@ -112,17 +119,38 @@ cloche {
 
             metadata {
                 entrypoint("client", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit")
-                entrypoint("main", "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load")
-                entrypoint("main", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init")
+                entrypoint(
+                    "main",
+                    listOf(
+                        "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load",
+                        "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init"
+                    ).map { entrypoint ->
+                        Action<FabricMetadata.Entrypoint> {
+                            this.value.set(entrypoint)
+                        }
+                    }
+                )
 
-                dependency {
-                    modId = "fabric-language-kotlin"
-                    required = true
+
+                fun dependency(modId: String, version: Provider<String>? = null) {
+                    dependency {
+                        this.modId = modId
+                        this.required = true
+                        if (version != null) version {
+                            this.start = version
+                        }
+                    }
                 }
 
+                dependency("fabric-language-kotlin")
+                dependency("fabric")
+                dependency("fabricloader", loaderVersion)
+                dependency("tech_thatgravyboat_repo-lib_repo-lib", libs.versions.skyblockapi.repolib)
+                dependency("hypixel-mod-api", libs.versions.hypixel.modapi.fabric)
                 dependency {
-                    modId = "fabric"
+                    modId = "minecraft"
                     required = true
+                    version(minecraftVersionRange)
                 }
             }
 
@@ -146,7 +174,9 @@ cloche {
     }
 
     createVersion("1.21.5")
-    createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" })
+    createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" }) {
+        start = "1.21.6"
+    }
 
     mappings {
         official()
@@ -263,5 +293,25 @@ tasks.withType<WriteClasspathFile>().configureEach {
         generate()
         val file = output.get().toPath()
         file.writeText(file.readText().lines().joinToString(File.pathSeparator))
+    }
+}
+
+tasks.register("release") {
+    group = "meowdding"
+    sourceSets.filterNot { it.name == SourceSet.MAIN_SOURCE_SET_NAME || it.name == SourceSet.TEST_SOURCE_SET_NAME }.forEach {
+        tasks.getByName("${it.name}JarInJar").let { task ->
+            dependsOn(task)
+            mustRunAfter(task)
+        }
+    }
+}
+
+tasks.register("cleanRelease") {
+    group = "meowdding"
+    listOf("clean", "release").forEach {
+        tasks.getByName(it).let { task ->
+            dependsOn(task)
+            mustRunAfter(task)
+        }
     }
 }
