@@ -6,6 +6,7 @@ data class SkyBlockArea(val name: String) {
     companion object {
 
         fun inAnyArea(vararg areas: SkyBlockArea) = LocationAPI.area in areas
+        fun inAnyArea(areas: Collection<SkyBlockArea>) = LocationAPI.area in areas
     }
 }
 
@@ -18,7 +19,7 @@ object SkyBlockAreas {
 
     val NONE = register("none", "None")
     val PRIVATE_ISLAND = register("private_island", "Your Island")
-    val GARDEN = register("garden", "Your Garden")
+    val GARDEN = register("garden", "The Garden")
 
     // Hub
     val VILLAGE = register("village", "Village")

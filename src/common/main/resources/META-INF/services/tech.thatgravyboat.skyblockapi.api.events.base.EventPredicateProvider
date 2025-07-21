@@ -5,3 +5,4 @@ tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlockEventPre
 tech.thatgravyboat.skyblockapi.api.events.base.predicates.TickEventPredicateProvider
 tech.thatgravyboat.skyblockapi.api.events.base.predicates.SlayerEventPredicateProvider
 tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryPredicates
+tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryFillerPredicate

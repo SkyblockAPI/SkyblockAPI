@@ -60,6 +60,7 @@ dependencies {
     ksp(libs.bundles.meowdding)
     compileOnly(project(":annotations"))
     compilerAll(rootProject.project(":compiler"))
+    compileOnly(kotlin("stdlib-jdk8"))
 
     compileOnly(libs.bundles.meowdding)
     configurations.forEach {
