@@ -145,7 +145,6 @@ cloche {
                 dependency("fabric-language-kotlin")
                 dependency("fabric")
                 dependency("fabricloader", loaderVersion)
-                dependency("tech_thatgravyboat_repo-lib_repo-lib", libs.versions.skyblockapi.repolib)
                 dependency("hypixel-mod-api", libs.versions.hypixel.modapi.fabric)
                 dependency {
                     modId = "minecraft"
