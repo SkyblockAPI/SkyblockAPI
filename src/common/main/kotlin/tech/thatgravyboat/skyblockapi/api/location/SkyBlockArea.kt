@@ -6,6 +6,7 @@ data class SkyBlockArea(val name: String) {
     companion object {
 
         fun inAnyArea(vararg areas: SkyBlockArea) = LocationAPI.area in areas
+        fun inAnyArea(areas: Collection<SkyBlockArea>) = LocationAPI.area in areas
     }
 }
 
