@@ -23,9 +23,10 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer.contains
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.matchOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
@@ -157,10 +158,7 @@ object PlotAPI {
             BuiltInRegistries.ITEM.getKey(it.asItem()).toString()
         }
 
-        var name = ""
-        deskPlotNameRegex.match(item.cleanName, "name") { (plotName) ->
-            name = plotName
-        }
+        val name = deskPlotNameRegex.matchOrNull(item.cleanName, "name", action = Destructured::component1) ?: ""
         var pests = 0
         deskPestsRegex.anyMatch(item.getRawLore(), "amount") { (amount) ->
             pests = amount.toIntValue()
