@@ -82,6 +82,10 @@ object PlotAPI {
         "plural_spawn",
         "[^:]+! (?<amount>\\d+) Pests have spawned in Plot - (?<name>.+)!",
     )
+    private val chatOfflineSpawnRegex = chatGroup.create(
+        "offline",
+        "[^:]+! While you were offline, Pests spawned in Plots (?<plots>.*)!",
+    )
 
     //endregion
 
@@ -176,8 +180,6 @@ object PlotAPI {
     @Subscription
     @OnlyIn(SkyBlockIsland.GARDEN)
     fun onChat(event: ChatReceivedEvent.Pre) {
-        // TODO
-        //  §6§lGROSS! §7While you were offline, §2Pests §7spawned in §aPlots §b18§7, §b15§7, §b20§7, §b22§7, §b24§7 and §b19§7!
         matchWhen(event.text) {
             case(chatSingularSpawnRegex, "name") { (name) ->
                 val plot = getPlotByName(name) ?: return@case
@@ -191,6 +193,20 @@ object PlotAPI {
                 plot.data?.pest?.let {
                     it.pest += amount.toIntValue()
                     plot.data?.save()
+                }
+            }
+            case(chatOfflineSpawnRegex, "plots") { (plotsLiteral) ->
+                val plots = mutableListOf<String>()
+                plotsLiteral.split(", ", " and ").forEach { plotName ->
+                    plots.add(plotName)
+                }
+
+                if (plots.isEmpty()) return@case
+
+                plots.mapNotNull { plotName -> getPlotByName(plotName)?.data }.forEach { plot ->
+                    plot.pest.inaccurate = true
+                    plot.pest.pest += 1
+                    plot.save()
                 }
             }
         }
