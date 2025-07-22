@@ -12,6 +12,13 @@
         500,
         1500
     ],
+    "tarantula_slayer_boss_xp": [
+        5,
+        25,
+        100,
+        500,
+        1500
+    ],
     "vampire_slayer_boss_xp": [
         10,
         25,
