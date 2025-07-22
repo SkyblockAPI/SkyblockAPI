@@ -75,7 +75,7 @@ object SlayerAPI {
             reset()
         } else if (type == null && level == 0) {
             val index = event.added.indexOfFirst { slayerQuestRegex.matches(it) }
-            if (index != -1 && event.added.size > index) {
+            if (index != -1 && event.new.size > index) {
                 slayerTypeRegex.match(event.added[index + 1], "type", "level") { (type, level) ->
                     SlayerAPI.type = SlayerType.fromDisplayName(type)
                     SlayerAPI.level = level.parseRomanNumeral()
