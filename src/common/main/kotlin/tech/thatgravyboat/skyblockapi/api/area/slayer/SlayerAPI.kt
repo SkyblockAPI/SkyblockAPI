@@ -81,7 +81,7 @@ object SlayerAPI {
                         SlayerAPI.type = SlayerType.fromDisplayName(type)
                         SlayerAPI.level = level.parseRomanNumeral()
                     }
-                }
+                }.getOrNull()
             }
         }
         // this needs to be in another if statement because both slayerTypeRegex and
