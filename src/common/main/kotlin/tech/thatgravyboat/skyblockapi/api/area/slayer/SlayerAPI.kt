@@ -56,6 +56,7 @@ object SlayerAPI {
 
     @RemoveNextVersion
     val current: Int get() = progress?.current ?: 0
+
     @RemoveNextVersion
     val max: Int get() = progress?.max ?: 0
 
@@ -76,12 +77,10 @@ object SlayerAPI {
         } else if (type == null && level == 0) {
             val index = event.added.indexOfFirst { slayerQuestRegex.matches(it) }
             if (index != -1 && index < event.added.size - 1) {
-                runCatching {
-                    slayerTypeRegex.match(event.added[index + 1], "type", "level") { (type, level) ->
-                        SlayerAPI.type = SlayerType.fromDisplayName(type)
-                        SlayerAPI.level = level.parseRomanNumeral()
-                    }
-                }.getOrNull()
+                slayerTypeRegex.match(event.added[index + 1], "type", "level") { (type, level) ->
+                    SlayerAPI.type = SlayerType.fromDisplayName(type)
+                    SlayerAPI.level = level.parseRomanNumeral()
+                }
             }
         }
         // this needs to be in another if statement because both slayerTypeRegex and
@@ -158,7 +157,7 @@ object SlayerAPI {
                 }
                 Text.sendDebug(
                     "Slayer Progress: ${progress.current}/${progress.max}" +
-                        "(${progress::class.simpleName}) [${progress.percentage.toFormattedString()}%]"
+                        "(${progress::class.simpleName}) [${progress.percentage.toFormattedString()}%]",
                 )
             }
         }
