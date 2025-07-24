@@ -91,6 +91,7 @@ cloche {
             modCompileOnly.bundle(libs.bundles.meowdding)
             modCompileOnlyApi.bundle(libs.bundles.meowdding)
 
+            modImplementation(libs.meowdding.item.dfu)
             modImplementation(libs.fabric.language.kotlin)
             modImplementation.bundle(libs.bundles.hypixel)
             modImplementation(libs.skyblockapi.repolib)
@@ -117,6 +118,7 @@ cloche {
 
             include(libs.skyblockapi.repolib)
             include(libs.hypixel.modapi.fabric)
+            include(libs.meowdding.item.dfu)
 
             metadata {
                 entrypoint("client", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit")

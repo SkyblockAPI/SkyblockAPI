@@ -4,6 +4,8 @@ import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerStorageStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
@@ -84,6 +86,12 @@ object StorageAPI {
             instance.items.setAt(index - 9, event.item)
             PlayerStorageStorage.setRiftStorage(instance)
         }
+    }
+
+    @Subscription
+    @OptIn(SkyBlockPvRequired::class)
+    fun onPvData(event: SkyBlockPvOpenedEvent) {
+
     }
 
     private fun MutableList<ItemStack>.setAt(index: Int, item: ItemStack) {
