@@ -134,7 +134,7 @@ object StorageAPI {
 
         enderchest.forEachIndexed { index, items ->
             val lastUpdate = enderchests.find { it.index == index }?.lastUpdated
-            val isInvalid = lastUpdate?.since()?.let { it < 15.minutes } == true
+            val isInvalid = lastUpdate?.since()?.let { it < 10.minutes } == true
             if (isInvalid) {
                 return@forEachIndexed
             }
