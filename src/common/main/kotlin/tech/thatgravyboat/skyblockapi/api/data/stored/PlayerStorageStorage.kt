@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.items.storage.PlayerStorageData
 import tech.thatgravyboat.skyblockapi.api.profile.items.storage.PlayerStorageInstance
 import tech.thatgravyboat.skyblockapi.api.profile.items.storage.StorageData
+import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
 
 @Module
 internal object PlayerStorageStorage {
@@ -38,6 +39,7 @@ internal object PlayerStorageStorage {
 
     private fun MutableList<PlayerStorageInstance>.setStorageInstance(data: PlayerStorageInstance) {
         val old = find { it.index == data.index }
+        data.lastUpdate = currentInstant()
         if (old == null) {
             add(data)
             PLAYER_STORAGE.save()

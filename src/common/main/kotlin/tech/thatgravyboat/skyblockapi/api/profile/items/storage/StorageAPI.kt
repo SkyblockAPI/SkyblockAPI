@@ -1,17 +1,27 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.storage
 
+import com.google.gson.JsonObject
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerStorageStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
+import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.parseInvData
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.time.since
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.DurationUnit
 
 @Module
 object StorageAPI {
@@ -88,10 +98,70 @@ object StorageAPI {
         }
     }
 
-    @Subscription
-    @OptIn(SkyBlockPvRequired::class)
-    fun onPvData(event: SkyBlockPvOpenedEvent) {
+    fun Duration.toReadableTime(biggestUnit: DurationUnit = DurationUnit.DAYS, maxUnits: Int = 2, allowMs: Boolean = false): String {
+        val units = listOfNotNull(
+            DurationUnit.DAYS to this.inWholeDays,
+            DurationUnit.HOURS to this.inWholeHours % 24,
+            DurationUnit.MINUTES to this.inWholeMinutes % 60,
+            DurationUnit.SECONDS to this.inWholeSeconds % 60,
+            (DurationUnit.MILLISECONDS to this.inWholeMilliseconds % 1000).takeIf { allowMs },
+        )
 
+        val unitNames = listOfNotNull(
+            DurationUnit.DAYS to "d",
+            DurationUnit.HOURS to "h",
+            DurationUnit.MINUTES to "min",
+            DurationUnit.SECONDS to "s",
+            (DurationUnit.MILLISECONDS to "ms").takeIf { allowMs },
+        ).toMap()
+
+        val filteredUnits = units.dropWhile { it.first != biggestUnit }
+            .filter { it.second > 0 }
+            .take(maxUnits)
+
+        return filteredUnits.joinToString(", ") { (unit, value) ->
+            "$value${unitNames[unit]}"
+        }.ifEmpty { "0 seconds" }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    @OptIn(SkyBlockPvRequired::class)
+    private fun SkyBlockPvOpenedEvent.parseEnderChest() {
+        val rawEnderchestData = member.getPath("inventory.ender_chest_contents") as? JsonObject ?: return
+        val enderchestData = rawEnderchestData.parseInvData().takeUnless { it.isEmpty() } ?: return
+        val enderchest = enderchestData.chunked(45)
+
+        enderchest.forEachIndexed { index, items ->
+            val lastUpdate = enderchests.find { it.index == index }?.lastUpdated
+            val isInvalid = lastUpdate?.since()?.let { it < 15.minutes } == true
+            if (isInvalid) {
+                return@forEachIndexed
+            }
+
+            PvLoadingHelper.markLoaded(LoadedData.ENDERCHEST)
+            PlayerStorageStorage.setEnderchest(PlayerStorageInstance(index, items.toMutableList()))
+        }
+    }
+
+
+    @Subscription
+    @OnlyOnSkyBlock
+    @OptIn(SkyBlockPvRequired::class)
+    private fun SkyBlockPvOpenedEvent.parseBackPacks() {
+        val rawBackPackData = member.getPath("inventory.backpack_contents") as? JsonObject ?: return
+        rawBackPackData.entrySet().forEach { (index, json) ->
+            val index = index.toIntValue()
+            val lastUpdate = backpacks.find { it.index == index }?.lastUpdated
+            val isInvalid = lastUpdate?.since()?.let { it < 15.minutes } == true
+            if (isInvalid) {
+                return@forEach
+            }
+            val data = (json as? JsonObject)?.parseInvData() ?: return@forEach
+
+            PvLoadingHelper.markLoaded(LoadedData.BACKPACK)
+            PlayerStorageStorage.setBackpack(PlayerStorageInstance(index, data.toMutableList()))
+        }
     }
 
     private fun MutableList<ItemStack>.setAt(index: Int, item: ItemStack) {

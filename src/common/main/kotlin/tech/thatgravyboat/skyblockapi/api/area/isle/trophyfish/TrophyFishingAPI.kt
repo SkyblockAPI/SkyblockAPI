@@ -11,9 +11,12 @@ import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
+import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
+import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import kotlin.math.max
 
 @Module
 object TrophyFishingAPI {
@@ -73,12 +76,27 @@ object TrophyFishingAPI {
             if (!value.isJsonPrimitive) null to 0
             else key to value.asInt(0)
         }.filterKeysNotNull()
+        var hasLoadedAny = false
 
         val grouped = obtained.entries.groupBy { group -> TrophyFishType.entries.find { group.key.startsWith(it.internalName, true) } }.filterKeysNotNull()
         val unlocked = grouped.mapValues { entry ->
-            entry.value.associate { value -> TrophyFishTier.entries.find { value.key.endsWith(it.name, true) } to value.value }.filterKeysNotNull()
+            val caught = getCaught(entry.key)
+            entry.value.associate { value ->
+                val tier = TrophyFishTier.entries.find { value.key.endsWith(it.name, true) }
+                val previous = tier?.let(caught::get) ?: 0
+                val value = value.value
+
+                if (tier != null && value > previous) {
+                    hasLoadedAny = true
+                }
+
+                tier to max(value, previous)
+            }.filterKeysNotNull()
         }
 
+        if (hasLoadedAny) {
+            PvLoadingHelper.markLoaded(LoadedData.TROPHY_FISH)
+        }
         unlocked.forEach(TrophyFishStorage::setAmounts)
     }
 

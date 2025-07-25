@@ -10,6 +10,10 @@ class TooltipBuilder() {
         this.lines.addAll(lines)
     }
 
+    companion object {
+        fun multiline(init: TooltipBuilder.() -> Unit): MutableComponent = Text.multiline(TooltipBuilder().also(init).lines)
+    }
+
     private val lines = mutableListOf<Component>()
 
     fun add(line: Component) = lines.add(line)

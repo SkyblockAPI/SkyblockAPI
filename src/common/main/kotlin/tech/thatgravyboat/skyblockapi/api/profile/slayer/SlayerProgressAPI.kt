@@ -13,6 +13,8 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
+import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.repo.RepoSlayerData
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
@@ -124,6 +126,8 @@ object SlayerProgressAPI {
     fun onPv(event: SkyBlockPvOpenedEvent) {
         event.member.getPath("slayer.slayer_bosses").asMap { k, v ->
             SlayerType.fromName(k) to v.asJsonObject["xp"].asLong(0)
-        }.filterKeys { it != null }.mapKeys { it.key!! }.forEach(SlayerStorage::setXp)
+        }.filter { (key, xp) -> key != null && xp > SlayerStorage.getXp(key) }.mapKeys { it.key!! }.also {
+            if (it.isNotEmpty()) PvLoadingHelper.markLoaded(LoadedData.SLAYER)
+        }.forEach(SlayerStorage::setXp)
     }
 }
