@@ -46,10 +46,12 @@ object PvLoadingHelper {
 }
 
 enum class LoadedData(val component: MutableComponent) {
-    TROPHY_FISH(Text.of("Trophy Fish Data")),
-    SLAYER(Text.of("Slayer Progress")),
-    ENDERCHEST(Text.of("Storage (Ender Chest)")),
-    BACKPACK(Text.of("Storage (Backpack)")),
-    SACKS(Text.of("Sacks"))
+    TROPHY_FISH("Trophy Fish Data"),
+    SLAYER("Slayer Progress"),
+    ENDERCHEST("Storage (Ender Chest)"),
+    BACKPACK("Storage (Backpack)"),
+    SACKS("Sacks"),
     ;
+    
+    constructor(string: String) : this(Text.of(string))
 }
