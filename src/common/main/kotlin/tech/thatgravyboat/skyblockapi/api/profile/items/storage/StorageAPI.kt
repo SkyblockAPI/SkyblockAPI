@@ -153,7 +153,7 @@ object StorageAPI {
         rawBackPackData.entrySet().forEach { (index, json) ->
             val index = index.toIntValue()
             val lastUpdate = backpacks.find { it.index == index }?.lastUpdated
-            val isInvalid = lastUpdate?.since()?.let { it < 15.minutes } == true
+            val isInvalid = lastUpdate?.since()?.let { it < 10.minutes } == true
             if (isInvalid) {
                 return@forEach
             }
