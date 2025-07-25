@@ -126,8 +126,8 @@ object SlayerProgressAPI {
     fun onPv(event: SkyBlockPvOpenedEvent) {
         event.member.getPath("slayer.slayer_bosses").asMap { k, v ->
             SlayerType.fromName(k) to v.asJsonObject["xp"].asLong(0)
-        }.filter { (key, xp) -> key != null && xp > SlayerStorage.getXp(key) }.mapKeys { it.key!! }.also {
-            if (it.isNotEmpty()) PvLoadingHelper.markLoaded(LoadedData.SLAYER)
+        }.filter { (key, xp) -> key != null && xp > SlayerStorage.getXp(key) }.mapKeys { it.key!! }.apply {
+            if (isNotEmpty()) PvLoadingHelper.markLoaded(LoadedData.SLAYER)
         }.forEach(SlayerStorage::setXp)
     }
 }
