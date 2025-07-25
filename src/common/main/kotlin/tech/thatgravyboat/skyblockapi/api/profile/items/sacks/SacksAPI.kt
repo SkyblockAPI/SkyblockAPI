@@ -102,7 +102,7 @@ object SacksAPI {
             if (amount == previousAmount) {
                 return@forEach
             }
-            val isInvalid = entry?.lastUpdated?.since()?.let { it < 1.minutes } == true
+            val isInvalid = entry?.lastUpdated?.since()?.let { it < 15.minutes } == true
             if (isInvalid) {
                 return@forEach
             }
