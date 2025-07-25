@@ -50,5 +50,6 @@ enum class LoadedData(val component: MutableComponent) {
     SLAYER(Text.of("Slayer Progress")),
     ENDERCHEST(Text.of("Storage (Ender Chest)")),
     BACKPACK(Text.of("Storage (Backpack)")),
+    SACKS(Text.of("Sacks"))
     ;
 }
