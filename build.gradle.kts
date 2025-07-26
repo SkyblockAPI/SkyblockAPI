@@ -1,4 +1,5 @@
 @file:Suppress("UnstableApiUsage")
+@file:OptIn(ExperimentalPathApi::class)
 
 import com.google.devtools.ksp.gradle.KspTask
 import earth.terrarium.cloche.api.metadata.FabricMetadata
@@ -9,6 +10,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import tech.thatgravyboat.skyblockapi.item.deprecationMessage
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
+import java.util.zip.ZipFile
 import kotlin.io.path.*
 
 plugins {
@@ -158,11 +162,37 @@ cloche {
             dependencies {
                 fabricApi(fabricApiVersion.get(), minecraftVersion)
 
-                project.layout.projectDirectory.toPath().resolve("run/${sourceSet.name}Mods").takeIf { it.exists() }?.listDirectoryEntries()
-                    ?.filter { it.isRegularFile() }?.forEach { file ->
-                        println("Adding runtime mod ${file.name}")
-                        modRuntimeOnly(files(file))
+                val mods = project.layout.buildDirectory.get().toPath().resolve("tmp/extracted${sourceSet.name}RuntimeMods")
+                val modsTmp = project.layout.buildDirectory.get().toPath().resolve("tmp/extracted${sourceSet.name}RuntimeMods/tmp")
+
+                mods.deleteRecursively()
+                modsTmp.createDirectories()
+                mods.createDirectories()
+
+                fun extractMods(file: Path) {
+                    println("Adding runtime mod ${file.name}")
+                    val extracted = mods.resolve(file.name)
+                    file.copyTo(extracted, overwrite = true)
+                    modRuntimeOnly(files(extracted))
+                    ZipFile(extracted.toFile()).use {
+                        it.entries().asIterator().forEach { file ->
+                            val name = file.name.replace(File.separator, "/")
+                            if (name.startsWith("META-INF/jars/") && name.endsWith(".jar")) {
+                                val data = it.getInputStream(file).readAllBytes()
+                                val file = modsTmp.resolve(name.substringAfterLast("/"))
+                                file.writeBytes(data, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)
+                                extractMods(file)
+                            }
+                        }
                     }
+                }
+
+                project.layout.projectDirectory.toPath().resolve("run/${sourceSet.name}Mods").takeIf { it.exists() }
+                    ?.listDirectoryEntries()?.filter { it.isRegularFile() }?.forEach { file ->
+                        extractMods(file)
+                    }
+
+                modsTmp.deleteRecursively()
             }
 
             mixins.from("src/mixins/skyblock-api.client.mixins.json")
@@ -175,6 +205,8 @@ cloche {
 
                     jvmArgs("-Ddevauth.enabled=true")
                     jvmArgs("-Dskyblockapi.debug=true")
+
+                    beforeRun
                 }
             }
         }

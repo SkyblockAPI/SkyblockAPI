@@ -13,6 +13,8 @@ import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.msrandom.stub.Stub
+import tech.thatgravyboat.skyblockapi.utils.McVersion
+import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 import java.net.URI
 import java.nio.file.Path
 
@@ -20,6 +22,9 @@ import java.nio.file.Path
 expect object McClient {
     val isDev: Boolean
     val config: Path
+
+    val mcVersionGroup: McVersionGroup
+    val mcVersion: McVersion
     val version: String
 
     val self: Minecraft
@@ -59,6 +64,5 @@ expect object McClient {
 
     /** Sends a command that first goes through client side commands, and then server commands */
     fun sendClientCommand(command: String)
-
 }
 
