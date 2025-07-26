@@ -9,8 +9,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import tech.thatgravyboat.skyblockapi.item.deprecationMessage
-import kotlin.io.path.readText
-import kotlin.io.path.writeText
+import kotlin.io.path.*
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -91,6 +90,7 @@ cloche {
             modCompileOnly.bundle(libs.bundles.meowdding)
             modCompileOnlyApi.bundle(libs.bundles.meowdding)
 
+            modImplementation(libs.meowdding.item.dfu)
             modImplementation(libs.fabric.language.kotlin)
             modImplementation.bundle(libs.bundles.hypixel)
             modImplementation(libs.skyblockapi.repolib)
@@ -108,7 +108,7 @@ cloche {
             start = version
             end = version
             endExclusive = false
-        }
+        },
     ) {
         fabric(name) {
             includedClient()
@@ -117,6 +117,7 @@ cloche {
 
             include(libs.skyblockapi.repolib)
             include(libs.hypixel.modapi.fabric)
+            include(libs.meowdding.item.dfu)
 
             metadata {
                 entrypoint("client", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit")
@@ -156,6 +157,12 @@ cloche {
 
             dependencies {
                 fabricApi(fabricApiVersion.get(), minecraftVersion)
+
+                project.layout.projectDirectory.toPath().resolve("run/${sourceSet.name}Mods").takeIf { it.exists() }?.listDirectoryEntries()
+                    ?.filter { it.isRegularFile() }?.forEach { file ->
+                        println("Adding runtime mod ${file.name}")
+                        modRuntimeOnly(files(file))
+                    }
             }
 
             mixins.from("src/mixins/skyblock-api.client.mixins.json")

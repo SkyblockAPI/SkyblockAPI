@@ -1,15 +1,24 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.storage
 
+import com.google.gson.JsonObject
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerStorageStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
+import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.parseInvData
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.time.since
 
 @Module
 object StorageAPI {
@@ -83,6 +92,45 @@ object StorageAPI {
             val instance = PlayerStorageStorage.riftStorage.find { it.index == pageId - 1 } ?: return@match
             instance.items.setAt(index - 9, event.item)
             PlayerStorageStorage.setRiftStorage(instance)
+        }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    @OptIn(SkyBlockPvRequired::class)
+    private fun SkyBlockPvOpenedEvent.parseEnderChest() {
+        val rawEnderchestData = member.getPath("inventory.ender_chest_contents") as? JsonObject ?: return
+        val enderchestData = rawEnderchestData.parseInvData().takeUnless { it.isEmpty() } ?: return
+        val enderchest = enderchestData.chunked(45)
+
+        enderchest.forEachIndexed { index, items ->
+            val lastUpdate = enderchests.find { it.index == index }?.lastUpdated
+            val isInvalid = lastUpdate?.since()?.let { it < PvLoadingHelper.timeToLive } == true
+            if (isInvalid) {
+                return@forEachIndexed
+            }
+
+            PvLoadingHelper.markLoaded(LoadedData.ENDERCHEST)
+            PlayerStorageStorage.setEnderchest(PlayerStorageInstance(index, items.toMutableList()))
+        }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    @OptIn(SkyBlockPvRequired::class)
+    private fun SkyBlockPvOpenedEvent.parseBackPacks() {
+        val rawBackPackData = member.getPath("inventory.backpack_contents") as? JsonObject ?: return
+        rawBackPackData.entrySet().forEach { (index, json) ->
+            val index = index.toIntValue()
+            val lastUpdate = backpacks.find { it.index == index }?.lastUpdated
+            val isInvalid = lastUpdate?.since()?.let { it < PvLoadingHelper.timeToLive } == true
+            if (isInvalid) {
+                return@forEach
+            }
+            val data = (json as? JsonObject)?.parseInvData() ?: return@forEach
+
+            PvLoadingHelper.markLoaded(LoadedData.BACKPACK)
+            PlayerStorageStorage.setBackpack(PlayerStorageInstance(index, data.toMutableList()))
         }
     }
 

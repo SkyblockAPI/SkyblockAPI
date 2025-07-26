@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api
 
 import com.google.gson.JsonElement
 import com.mojang.serialization.Codec
+import me.owdding.dfu.item.MeowddingItemDfu
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.resources.ResourceLocation
 import org.jetbrains.annotations.ApiStatus
@@ -36,6 +37,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
             RepoStatusEvent(status).post()
         }
+        MeowddingItemDfu.load()
     }
 
     @JvmStatic

@@ -4,8 +4,9 @@ google-autoservice-ksp = "1.2.0"
 google-gson = "2.12.1"
 
 meowdding-modules = "1.0.5"
-meowdding-ktcodecs = "1.0.25"
+meowdding-ktcodecs = "1.0.26"
 meowdding-resources = "1.0.0"
+meowdding-item-dfu = "1.0.0"
 
 minecraft = "1.21.5"
 
@@ -36,6 +37,7 @@ google-auto-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", versi
 meowdding-modules = { module = "me.owdding.ktmodules:KtModules", version.ref = "meowdding-modules" }
 meowdding-ktcodecs = { module = "me.owdding.ktcodecs:KtCodecs", version.ref = "meowdding-ktcodecs" }
 meowdding-resources = { module = "me.owdding.repo:compacting-resources", version.ref = "meowdding-resources" }
+meowdding-item-dfu = { module = "me.owdding:item-data-fixer", version.ref = "meowdding-item-dfu" }
 
 fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-language-kotlin" }
 fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
