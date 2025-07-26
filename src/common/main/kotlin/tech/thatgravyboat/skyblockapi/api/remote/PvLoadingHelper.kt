@@ -13,12 +13,12 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
 @Module
 internal object PvLoadingHelper {
 
-    val timeToLive = 10.seconds
+    val timeToLive = 10.minutes
 
     private val list: MutableSet<LoadedData> = mutableSetOf()
 
