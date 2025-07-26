@@ -13,9 +13,12 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
+import kotlin.time.Duration.Companion.seconds
 
 @Module
-object PvLoadingHelper {
+internal object PvLoadingHelper {
+
+    val timeToLive = 10.seconds
 
     private val list: MutableSet<LoadedData> = mutableSetOf()
 
@@ -45,7 +48,7 @@ object PvLoadingHelper {
     }
 }
 
-enum class LoadedData(val component: MutableComponent) {
+internal enum class LoadedData(val component: MutableComponent) {
     TROPHY_FISH("Trophy Fish Data"),
     SLAYER("Slayer Progress"),
     ENDERCHEST("Storage (Ender Chest)"),

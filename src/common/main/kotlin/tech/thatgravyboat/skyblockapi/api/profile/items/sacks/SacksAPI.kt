@@ -30,7 +30,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 import tech.thatgravyboat.skyblockapi.utils.time.since
-import kotlin.time.Duration.Companion.minutes
 
 @Module
 object SacksAPI {
@@ -102,7 +101,7 @@ object SacksAPI {
             if (amount == previousAmount) {
                 return@forEach
             }
-            val isInvalid = entry?.lastUpdated?.since()?.let { it < 10.minutes } == true
+            val isInvalid = entry?.lastUpdated?.since()?.let { it < PvLoadingHelper.timeToLive } == true
             if (isInvalid) {
                 return@forEach
             }

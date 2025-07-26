@@ -6,16 +6,16 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
 
 @GenerateCodec(createCodecMethod = true)
-data class SacksData(
+internal data class SacksData(
     var items: MutableList<SackEntry> = mutableListOf(),
 ) {
     companion object {
-        internal val CODEC = SkyblockAPICodecs.getCodec<SacksData>()
+        internal val CODEC = SkyblockAPICodecs.SacksDataCodec.codec()
     }
 }
 
 @GenerateCodec
-data class SackEntry(
+internal data class SackEntry(
     val id: String,
     val amount: Int,
     val lastUpdated: Instant = currentInstant(),

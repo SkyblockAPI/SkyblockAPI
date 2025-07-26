@@ -19,9 +19,6 @@ import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.time.since
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.DurationUnit
 
 @Module
 object StorageAPI {
@@ -98,32 +95,6 @@ object StorageAPI {
         }
     }
 
-    fun Duration.toReadableTime(biggestUnit: DurationUnit = DurationUnit.DAYS, maxUnits: Int = 2, allowMs: Boolean = false): String {
-        val units = listOfNotNull(
-            DurationUnit.DAYS to this.inWholeDays,
-            DurationUnit.HOURS to this.inWholeHours % 24,
-            DurationUnit.MINUTES to this.inWholeMinutes % 60,
-            DurationUnit.SECONDS to this.inWholeSeconds % 60,
-            (DurationUnit.MILLISECONDS to this.inWholeMilliseconds % 1000).takeIf { allowMs },
-        )
-
-        val unitNames = listOfNotNull(
-            DurationUnit.DAYS to "d",
-            DurationUnit.HOURS to "h",
-            DurationUnit.MINUTES to "min",
-            DurationUnit.SECONDS to "s",
-            (DurationUnit.MILLISECONDS to "ms").takeIf { allowMs },
-        ).toMap()
-
-        val filteredUnits = units.dropWhile { it.first != biggestUnit }
-            .filter { it.second > 0 }
-            .take(maxUnits)
-
-        return filteredUnits.joinToString(", ") { (unit, value) ->
-            "$value${unitNames[unit]}"
-        }.ifEmpty { "0 seconds" }
-    }
-
     @Subscription
     @OnlyOnSkyBlock
     @OptIn(SkyBlockPvRequired::class)
@@ -134,7 +105,7 @@ object StorageAPI {
 
         enderchest.forEachIndexed { index, items ->
             val lastUpdate = enderchests.find { it.index == index }?.lastUpdated
-            val isInvalid = lastUpdate?.since()?.let { it < 10.minutes } == true
+            val isInvalid = lastUpdate?.since()?.let { it < PvLoadingHelper.timeToLive } == true
             if (isInvalid) {
                 return@forEachIndexed
             }
@@ -144,7 +115,6 @@ object StorageAPI {
         }
     }
 
-
     @Subscription
     @OnlyOnSkyBlock
     @OptIn(SkyBlockPvRequired::class)
@@ -153,7 +123,7 @@ object StorageAPI {
         rawBackPackData.entrySet().forEach { (index, json) ->
             val index = index.toIntValue()
             val lastUpdate = backpacks.find { it.index == index }?.lastUpdated
-            val isInvalid = lastUpdate?.since()?.let { it < 10.minutes } == true
+            val isInvalid = lastUpdate?.since()?.let { it < PvLoadingHelper.timeToLive } == true
             if (isInvalid) {
                 return@forEach
             }
