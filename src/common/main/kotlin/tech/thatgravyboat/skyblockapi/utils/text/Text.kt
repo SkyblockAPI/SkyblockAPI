@@ -229,6 +229,12 @@ object TextStyle {
         set(value) {
             this.style { withStrikethrough(value) }
         }
+
+    var MutableComponent.obfuscated: Boolean
+        get() = this.style.isObfuscated
+        set(value) {
+            this.style { withObfuscated(value) }
+        }
 }
 
 object TextBuilder {
