@@ -70,6 +70,18 @@ fun ItemStack.getItemModel(): Item = getData(DataTypes.VISIBLE_ITEM) ?: item
 
 val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
 
+fun createSkull(textureBase64: String): ItemStack {
+    val profile = GameProfile(UUID.randomUUID(), "a")
+    profile.properties.put("textures", Property("textures", textureBase64))
+    return createSkull(profile)
+}
+
+fun createSkull(profile: GameProfile): ItemStack {
+    val stack = ItemStack(Items.PLAYER_HEAD)
+    stack.set(DataComponents.PROFILE, ResolvableProfile(profile))
+    return stack
+}
+
 @RemoveNextVersion
 object ItemUtils {
 

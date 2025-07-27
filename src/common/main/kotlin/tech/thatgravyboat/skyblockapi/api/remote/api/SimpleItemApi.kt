@@ -31,10 +31,10 @@ object SimpleItemApi {
 
     init {
         val start = currentInstant()
-        RepoAPI.pets().pets().entries.associate { (id, data) -> data.name() to pet(id) }
-            .let(nameCache::putAll)
+        RepoAPI.pets().pets().map { (id, data) -> data.name() to pet(id) }
+            .toMap().let(nameCache::putAll)
 
-        RepoAPI.runes().runes().entries.flatMap { (id, data) ->
+        RepoAPI.runes().runes().flatMap { (id, data) ->
             data.map { rune ->
                 rune.name().stripColor() to rune("$id:${rune.tier()}")
             }
@@ -53,7 +53,7 @@ object SimpleItemApi {
             )
         }.toMap().let(nameCache::putAll)
 
-        RepoAPI.items().items().entries.mapNotNull { (id, element) ->
+        RepoAPI.items().items().mapNotNull { (id, element) ->
             val components =
                 element.getPath("['components'].['minecraft:custom_name'].['text']") ?: return@mapNotNull null
             components.asString.stripColor() to item(id)
@@ -77,10 +77,10 @@ object SimpleItemApi {
         val itemId = id.cleanId.uppercase()
 
         if (itemId == UNKNOWN) {
-            return null
+            return@getOrPut null
         }
 
-        return RepoItemsAPI.getItemOrNull(itemId)
+        return@getOrPut RepoItemsAPI.getItemOrNull(itemId)
     }
 
     fun getItemById(id: SkyBlockId): ItemStack = getItemByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {
@@ -96,7 +96,7 @@ object SimpleItemApi {
 
         if (petId.contains(":")) {
             val (petId, rarity) = petId.split(":")
-            val sbRarity = runCatching { SkyBlockRarity.valueOf(rarity) }.getOrNull()
+            val sbRarity = SkyBlockRarity.fromNameOrNull(rarity)
             val pet = runCatching {
                 sbRarity?.let { RepoPetsAPI.getPetAsItemOrNull(PetQuery(petId, it, 1)) }
             }.getOrNull()
@@ -127,11 +127,7 @@ object SimpleItemApi {
             RepoRunesAPI.getRuneAsItemOrNull(runeId, level)?.let { return@getOrPut it }
         }
 
-        for (i in 3 downTo 0) {
-            RepoRunesAPI.getRuneAsItemOrNull(runeId.substringBefore(":"), i)?.let { return@getOrPut it }
-        }
-
-        return@getOrPut null
+        RepoRunesAPI.getRuneAsItemOrNull(runeId.substringBefore(":"))
     }
 
     fun getRuneById(id: SkyBlockId) = getRuneByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {
@@ -169,9 +165,7 @@ object SimpleItemApi {
             return@getOrPut null
         }
 
-        RepoAttributeApi.getAttributeByIdOrNull(attributeId)?.let { return@getOrPut it }
-
-        return@getOrPut null
+        RepoAttributeApi.getAttributeByIdOrNull(attributeId)
     }
 
     fun getAttributeById(id: SkyBlockId): ItemStack = getAttributeByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {

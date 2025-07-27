@@ -27,13 +27,13 @@ object RepoAttributeApi {
         val attribute = RepoAPI.attributes().getAttribute(id)
         if (attribute == null) return@getOrPut null
 
-        val item = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(attribute.item().lowercase()))
-            .takeUnless { it == Items.AIR }
+        val item = ResourceLocation.tryParse(attribute.item().lowercase())?.let { BuiltInRegistries.ITEM.getValue(it) }
+            ?.takeUnless { it == Items.AIR }
             ?: Items.BARRIER
 
         ItemBuilder(item) {
             if (attribute.texture() != null) {
-                copyFrom(ItemUtils.createSkull(attribute.texture()!!))
+                copyFrom(createSkull(attribute.texture()!!))
             }
             this[DataComponents.ITEM_NAME] = attribute.shardName().asComponent()
             this[DataComponents.CUSTOM_NAME] = Text.of(attribute.shardName()) {

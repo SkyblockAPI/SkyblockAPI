@@ -13,7 +13,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 object RepoEnchantmentApi {
     private val cache: MutableMap<String, ItemStack?> = mutableMapOf()
 
-    fun getEnchantmentAsItemOrNull(id: String, level: Int) = cache.getOrPut(id) {
+    fun getEnchantmentAsItemOrNull(id: String, level: Int? = null) = cache.getOrPut("$id:$level") {
         val enchantment = RepoAPI.enchantments().getEnchantment(id)
         if (enchantment == null) return@getOrPut null
 
