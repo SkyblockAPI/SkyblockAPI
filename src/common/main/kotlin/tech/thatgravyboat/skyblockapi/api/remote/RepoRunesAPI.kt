@@ -28,8 +28,13 @@ object RepoRunesAPI {
         return getRune(id, tier)
     }
 
-    fun getRuneAsItemOrNull(id: String, tier: Int): ItemStack? = cache.getOrPut("rune:$id:$tier") {
-        val rune = getRune(id, tier) ?: return@getOrPut null
+    @JvmOverloads
+    fun getRuneAsItemOrNull(id: String, tier: Int? = null): ItemStack? = cache.getOrPut("$id:$tier") {
+        val rune = if (tier == null) {
+            getRuneById(id).maxByOrNull(Rune::tier)
+        } else {
+            getRune(id, tier)
+        } ?: return@getOrPut null
 
         val item = ItemStack(Items.PLAYER_HEAD)
         item[DataComponents.PROFILE] = ResolvableProfile(

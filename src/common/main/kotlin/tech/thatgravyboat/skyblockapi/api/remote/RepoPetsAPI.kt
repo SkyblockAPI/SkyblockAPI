@@ -23,16 +23,12 @@ object RepoPetsAPI {
 
     private val cache: MutableMap<PetQuery, ItemStack?> = mutableMapOf()
 
-    fun getPetInfo(id: String): PetsAPI.Data? {
-        return RepoAPI.pets().getPet(id)
-    }
+    fun getPetInfo(id: String): PetsAPI.Data? = RepoAPI.pets().getPet(id)
 
     fun getPetAsItemOrNull(query: PetQuery): ItemStack? = cache.getOrPut(query) {
-        val data = RepoAPI.pets().getPet(query.id)
-        val pet = data.tiers()[query.rarity.name]
+        val data = RepoAPI.pets().getPet(query.id) ?: return@getOrPut null
+        val pet = data.tiers()[query.rarity.name] ?: return@getOrPut null
         val skin = query.skin?.let { RepoItemsAPI.getItem("PET_SKIN_$it") }
-
-        if (pet == null) return@getOrPut null
 
         val base = skin ?: ItemStack(Items.PLAYER_HEAD) {
             this[DataComponents.PROFILE] = ResolvableProfile(

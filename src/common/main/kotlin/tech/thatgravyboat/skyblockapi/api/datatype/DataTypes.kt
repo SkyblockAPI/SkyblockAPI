@@ -10,12 +10,14 @@ import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes.PetData
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.PersonalAccessoryDataTypes
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import java.util.*
 import kotlin.time.Duration
 
 object DataTypes {
 
     // General
+    val SKYBLOCK_ID: DataType<SkyBlockId> = GenericDataTypes.SKYBLOCK_ID
     val ID: DataType<String> = GenericDataTypes.ID
     val API_ID: DataType<String> = GenericDataTypes.API_ID
     val UUID: DataType<UUID> = GenericDataTypes.UUID

@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing
 
 import com.google.gson.JsonObject
 import me.owdding.ktmodules.Module
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.extentions.asDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
@@ -17,6 +18,8 @@ object BazaarAPI {
 
     var products = listOf<BazaarProduct>()
         private set
+
+    fun getProduct(skyBlockId: SkyBlockId) = getProduct(skyBlockId.bazaarId)
 
     fun getProduct(id: String?) = products.find { it.productId.equals(id, true) }
 
