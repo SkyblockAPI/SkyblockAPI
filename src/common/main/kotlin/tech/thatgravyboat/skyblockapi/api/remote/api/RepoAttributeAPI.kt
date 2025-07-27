@@ -17,7 +17,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
 
-object RepoAttributeApi {
+object RepoAttributeAPI {
 
     private val cache: MutableMap<String, ItemStack?> = mutableMapOf()
 

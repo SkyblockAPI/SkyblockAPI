@@ -31,7 +31,7 @@ object RepoRunesAPI {
     @JvmOverloads
     fun getRuneAsItemOrNull(id: String, tier: Int? = null): ItemStack? = cache.getOrPut("$id:$tier") {
         val rune = if (tier == null) {
-            (3 downTo 0).firstNotNullOfOrNull { getRune(id, it) }
+            getRuneById(id).maxByOrNull(Rune::tier)
         } else {
             getRune(id, tier)
         } ?: return@getOrPut null

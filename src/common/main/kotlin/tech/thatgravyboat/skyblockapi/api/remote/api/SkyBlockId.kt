@@ -52,7 +52,7 @@ value class SkyBlockId private constructor(val id: String) {
                 name = name.substringBeforeLast(" x")
             }
 
-            return SimpleItemApi.findIdByName(name.trim()) ?: if (dropLast) SimpleItemApi.findIdByName(name.substringBeforeLast(" ").trim()) else null
+            return SimpleItemAPI.findIdByName(name.trim()) ?: if (dropLast) SimpleItemAPI.findIdByName(name.substringBeforeLast(" ").trim()) else null
         }
 
         fun unknownType(input: String): SkyBlockId? {
@@ -62,11 +62,11 @@ value class SkyBlockId private constructor(val id: String) {
                 return runCatching { init() }.getOrNull()
             }
 
-            safe { SimpleItemApi.getItemByIdOrNull(unsafeId) }?.let { return item(input) }
-            safe { SimpleItemApi.getPetByIdOrNull(unsafeId) }?.let { return pet(input) }
-            safe { SimpleItemApi.getEnchantmentByIdOrNull(unsafeId) }?.let { return enchantment(input) }
-            safe { SimpleItemApi.getAttributeByIdOrNull(unsafeId) }?.let { return attribute(input) }
-            safe { SimpleItemApi.getRuneByIdOrNull(unsafeId) }?.let { return rune(input) }
+            safe { SimpleItemAPI.getItemByIdOrNull(unsafeId) }?.let { return item(input) }
+            safe { SimpleItemAPI.getPetByIdOrNull(unsafeId) }?.let { return pet(input) }
+            safe { SimpleItemAPI.getEnchantmentByIdOrNull(unsafeId) }?.let { return enchantment(input) }
+            safe { SimpleItemAPI.getAttributeByIdOrNull(unsafeId) }?.let { return attribute(input) }
+            safe { SimpleItemAPI.getRuneByIdOrNull(unsafeId) }?.let { return rune(input) }
 
             return null
         }
@@ -96,7 +96,7 @@ value class SkyBlockId private constructor(val id: String) {
             }
 
             isAttribute -> {
-                "${RepoAttributeApi.getAttributeDataById(cleanId)?.shardName()}_SHARD"
+                "${RepoAttributeAPI.getAttributeDataById(cleanId)?.shardName()}_SHARD"
             }
 
             else -> cleanId
@@ -104,7 +104,7 @@ value class SkyBlockId private constructor(val id: String) {
     val bazaarId: String
         get() = when {
 
-            isAttribute -> "SHARD_${RepoAttributeApi.getAttributeDataById(cleanId)?.shardName()}"
+            isAttribute -> "SHARD_${RepoAttributeAPI.getAttributeDataById(cleanId)?.shardName()}"
             isEnchantment -> "ENCHANTMENT_${cleanId.substringBeforeLast(DELIMITER)}_${cleanId.substringAfterLast(DELIMITER)}"
 
             else -> skyblockId
@@ -125,11 +125,11 @@ value class SkyBlockId private constructor(val id: String) {
         }
     }
 
-    private fun getItem(): ItemStack = SimpleItemApi.getItemById(this)
-    private fun getPet(): ItemStack = SimpleItemApi.getPetById(this)
-    private fun getRune(): ItemStack = SimpleItemApi.getRuneById(this)
-    private fun getEnchantment(): ItemStack = SimpleItemApi.getEnchantmentById(this)
-    private fun getAttribute(): ItemStack = SimpleItemApi.getAttributeById(this)
+    private fun getItem(): ItemStack = SimpleItemAPI.getItemById(this)
+    private fun getPet(): ItemStack = SimpleItemAPI.getPetById(this)
+    private fun getRune(): ItemStack = SimpleItemAPI.getRuneById(this)
+    private fun getEnchantment(): ItemStack = SimpleItemAPI.getEnchantmentById(this)
+    private fun getAttribute(): ItemStack = SimpleItemAPI.getAttributeById(this)
 
 }
 

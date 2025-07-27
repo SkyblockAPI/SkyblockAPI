@@ -4,23 +4,25 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
+import tech.thatgravyboat.repolib.api.EnchantsAPI
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 
-object RepoEnchantmentApi {
+object RepoEnchantmentAPI {
     private val cache: MutableMap<String, ItemStack?> = mutableMapOf()
 
-    fun getEnchantmentAsItemOrNull(id: String, level: Int? = null) = cache.getOrPut("$id:$level") {
-        val enchantment = RepoAPI.enchantments().getEnchantment(id)
-        if (enchantment == null) return@getOrPut null
+    fun getEnchantmentById(id: String) = RepoAPI.enchantments().getEnchantment(id)
 
-        val level = enchantment.levels().entries.sortedBy { (key) -> key }.firstOrElseLast { (key) -> key == level }.value
-        if (level == null) return@getOrPut ItemStack(Items.BARRIER) {
-            this[DataComponents.ITEM_NAME] = Text.of("Unknown Enchantment Level: $id")
-        }
+    fun getEnchantmentAsItemOrNull(id: String, level: Int? = null) = cache.getOrPut("$id:$level") {
+        val enchantment = getEnchantmentById(id) ?: return@getOrPut null
+        val level = enchantment.levels().values
+            .sortedBy(EnchantsAPI.EnchantLevel::level)
+            .firstOrElseLast { it.level() == level }
+
+        if (level == null) return@getOrPut null
         val lore = level.lore().map { it.asComponent() }
 
         ItemBuilder(Items.ENCHANTED_BOOK) {
@@ -32,6 +34,12 @@ object RepoEnchantmentApi {
                     putInt(enchantment.id(), level.level())
                 }
             }.toData()
+        }
+    }
+
+    fun getEnchantmentAsItem(id: String, level: Int? = null): ItemStack {
+        return getEnchantmentAsItemOrNull(id, level) ?: ItemStack(Items.BARRIER) {
+            this[DataComponents.ITEM_NAME] = Text.of("Unknown Enchantment: $id:${level ?: "?"}")
         }
     }
 
