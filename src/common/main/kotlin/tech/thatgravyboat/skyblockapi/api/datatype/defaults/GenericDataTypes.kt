@@ -13,6 +13,8 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import java.util.*
@@ -21,6 +23,7 @@ import kotlin.jvm.optionals.getOrNull
 @Module
 object GenericDataTypes {
 
+    val SKYBLOCK_ID: DataType<SkyBlockId> = DataType("skyblock_id") { it.getSkyBlockId() }
     val ID: DataType<String> = DataType("id") { it.tag?.getStringOrNull("id") }
     val API_ID: DataType<String> = DataType("api_id") {
         val id = it.tag?.getStringOrNull("id")
@@ -156,6 +159,7 @@ object GenericDataTypes {
         event.register(BOOSTERS)
         event.register(ABSORB_LOGS)
         event.register(LOGS_CUT)
+        event.register(SKYBLOCK_ID)
     }
 
     private fun getFishingRodPartDataType(name: String) = DataType(name) {
@@ -165,9 +169,9 @@ object GenericDataTypes {
     }
 
     private fun getAppliedRune(tag: CompoundTag): Pair<String, Int>? {
-        return tag.getCompoundOrEmpty("runes")?.let { tag ->
+        return tag.getCompoundOrEmpty("runes").let { tag ->
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
-        }?.entries?.firstOrNull()?.toPair()
+        }.entries.firstOrNull()?.toPair()
     }
 
     private fun getPetData(tag: CompoundTag): PetData? {

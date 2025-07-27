@@ -192,3 +192,6 @@ private val screamingSnakeCaseRegex = "\\W+".toRegex()
 fun String.toScreamingSnakeCase(): String = replace(screamingSnakeCaseRegex, "_").uppercase()
 
 fun String.removeTrailingChar(target: Char): String = dropLastWhile {  it == target }
+
+private val validChars = listOf(' ', '_', '-', ':')
+fun String.sanitizeForCommandInput() = this.filter { it.isDigit() || it.isLetter() || it in validChars }.trim()

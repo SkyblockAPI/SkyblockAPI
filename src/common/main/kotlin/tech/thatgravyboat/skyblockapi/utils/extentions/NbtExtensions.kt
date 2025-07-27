@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.item.component.CustomData
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -15,3 +16,7 @@ fun CompoundTag.getBooleanOrNull(key: String): Boolean? = this.getBoolean(key).g
 fun CompoundTag.getObjectOrNull(key: String): CompoundTag? = this.getCompound(key).getOrNull()
 
 fun CompoundTag.getUuidOrNull(key: String): UUID? = this.getStringOrNull(key)?.runCatching(UUID::fromString)?.getOrNull()
+
+fun compoundTag(init: CompoundTag.() -> Unit) = CompoundTag().apply(init)
+fun CompoundTag.putCompound(key: String, init: CompoundTag.() -> Unit) = this.put(key, compoundTag(init))
+fun CompoundTag.toData(): CustomData = CustomData.of(this)

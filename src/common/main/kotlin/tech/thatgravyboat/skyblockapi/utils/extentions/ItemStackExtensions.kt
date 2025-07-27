@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.utils.extentions
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import net.minecraft.core.Holder
+import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
@@ -15,6 +16,7 @@ import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
+import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.*
 
@@ -57,6 +59,10 @@ fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
 }
 
 operator fun Item.contains(item: ItemStack): Boolean = item.item == this
+
+operator fun <T> ItemBuilder.set(type: DataComponentType<T>, value: T) = this.set(type, value)
+operator fun <T> ItemStack.get(type: DataComponentType<T>): T? = this.get(type)
+operator fun <T> ItemStack.set(type: DataComponentType<T>, value: T) = this.set(type, value)
 
 fun ItemStack.getSkyBlockId() = getData(DataTypes.ID)
 fun ItemStack.getApiId() = getData(DataTypes.API_ID)
