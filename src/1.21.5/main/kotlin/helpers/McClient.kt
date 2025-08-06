@@ -22,6 +22,7 @@ import net.minecraft.world.scores.DisplaySlot
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
+import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import java.net.URI
 import java.nio.file.Path
 
@@ -104,7 +105,7 @@ actual object McClient {
 
     actual fun setTitle(title: Component, subtitle: Component?, fadeInTime: Float, stayTime: Float, fadeOutTime: Float) {
         gui.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
-        subtitle?.let { gui.setSubtitle(it) }
+        gui.setSubtitle(subtitle ?: CommonText.EMPTY)
         gui.setTitle(title)
     }
 
