@@ -25,13 +25,16 @@ object RepoItemsAPI {
         }.toMap()
     }
 
-    fun getItemOrNull(id: String): ItemStack? = cache.getOrPut(id.uppercase()) {
-        val id = id.uppercase().replace(":", "-").takeUnless { it == "MUSHROOM_COLLECTION" } ?: "RED_MUSHROOM"
-        val json = RepoAPI.items().getItem(id) ?: return@getOrPut null
-        ItemStack.CODEC.parse(JsonOps.INSTANCE, json)
-            .ifError { Logger.error(it.message()) }
-            .result()
-            .orElse(null)
+    fun getItemOrNull(id: String): ItemStack? {
+        if (!RepoAPI.isInitialized()) return null
+        return cache.getOrPut(id.uppercase()) {
+            val id = id.uppercase().replace(":", "-").takeUnless { it == "MUSHROOM_COLLECTION" } ?: "RED_MUSHROOM"
+            val json = RepoAPI.items().getItem(id) ?: return@getOrPut null
+            ItemStack.CODEC.parse(JsonOps.INSTANCE, json)
+                .ifError { Logger.error(it.message()) }
+                .result()
+                .orElse(null)
+        }
     }
 
     fun getItem(id: String): ItemStack = getItemOrNull(id) ?: ItemStack(Items.BARRIER).apply {
@@ -46,6 +49,8 @@ object RepoItemsAPI {
     fun getItemIdByName(name: String): String? = resolveItemIdFromName(name)
 
     private fun resolveItemIdFromName(name: String): String? {
+        if (!RepoAPI.isInitialized()) return null
+
         val lowercase = name.lowercase()
         nameCache[lowercase]?.let { return it }
         val noStars = lowercase.removeTrailingChar('✪').trim()

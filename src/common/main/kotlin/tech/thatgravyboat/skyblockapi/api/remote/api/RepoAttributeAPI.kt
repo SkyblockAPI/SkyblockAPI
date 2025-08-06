@@ -21,39 +21,45 @@ object RepoAttributeAPI {
 
     private val cache: MutableMap<String, ItemStack?> = mutableMapOf()
 
-    fun getAttributeDataById(id: String): AttributesAPI.Attribute? = RepoAPI.attributes().getAttribute(id)
+    fun getAttributeDataById(id: String): AttributesAPI.Attribute? {
+        if (!RepoAPI.isInitialized()) return null
+        return RepoAPI.attributes().getAttribute(id)
+    }
 
-    fun getAttributeByIdOrNull(id: String) = cache.getOrPut(id) {
-        val attribute = RepoAPI.attributes().getAttribute(id)
-        if (attribute == null) return@getOrPut null
+    fun getAttributeByIdOrNull(id: String): ItemStack? {
+        if (!RepoAPI.isInitialized()) return null
+        return cache.getOrPut(id) {
+            val attribute = RepoAPI.attributes().getAttribute(id)
+            if (attribute == null) return@getOrPut null
 
-        val item = ResourceLocation.tryParse(attribute.item().lowercase())?.let { BuiltInRegistries.ITEM.getValue(it) }
-            ?.takeUnless { it == Items.AIR }
-            ?: Items.BARRIER
+            val item = ResourceLocation.tryParse(attribute.item().lowercase())?.let { BuiltInRegistries.ITEM.getValue(it) }
+                ?.takeUnless { it == Items.AIR }
+                ?: Items.BARRIER
 
-        ItemBuilder(item) {
-            if (attribute.texture() != null) {
-                copyFrom(createSkull(attribute.texture()!!))
-            }
-            this[DataComponents.ITEM_NAME] = attribute.shardName().asComponent()
-            this[DataComponents.CUSTOM_NAME] = Text.of(attribute.shardName()) {
-                this.italic = false
-                runCatching {
-                    this.color = SkyBlockRarity.valueOf(attribute.rarity()).color
+            ItemBuilder(item) {
+                if (attribute.texture() != null) {
+                    copyFrom(createSkull(attribute.texture()!!))
                 }
-            }
-
-            val rawLore = attribute.lore()
-            val lore = rawLore.map { it.asComponent() }.toMutableList()
-                .also { it.addFirst(Text.of(attribute.name()) { this.color = TextColor.GOLD }) }.toList()
-
-            this[DataComponents.LORE] = ItemLore(lore, lore)
-            this[DataComponents.CUSTOM_DATA] = compoundTag {
-                putString("id", "ATTRIBUTE_SHARD")
-                putCompound("attributes") {
-                    putInt(attribute.id(), 1)
+                this[DataComponents.ITEM_NAME] = attribute.shardName().asComponent()
+                this[DataComponents.CUSTOM_NAME] = Text.of(attribute.shardName()) {
+                    this.italic = false
+                    runCatching {
+                        this.color = SkyBlockRarity.valueOf(attribute.rarity()).color
+                    }
                 }
-            }.toData()
+
+                val rawLore = attribute.lore()
+                val lore = rawLore.map { it.asComponent() }.toMutableList()
+                    .also { it.addFirst(Text.of(attribute.name()) { this.color = TextColor.GOLD }) }.toList()
+
+                this[DataComponents.LORE] = ItemLore(lore, lore)
+                this[DataComponents.CUSTOM_DATA] = compoundTag {
+                    putString("id", "ATTRIBUTE_SHARD")
+                    putCompound("attributes") {
+                        putInt(attribute.id(), 1)
+                    }
+                }.toData()
+            }
         }
     }
 

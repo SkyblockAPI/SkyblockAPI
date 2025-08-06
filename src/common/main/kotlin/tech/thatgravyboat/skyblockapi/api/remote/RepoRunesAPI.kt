@@ -16,8 +16,11 @@ object RepoRunesAPI {
 
     private val cache: MutableMap<String, ItemStack?> = mutableMapOf()
 
-    fun getRuneById(id: String) = RepoAPI.runes().getRunes(id)
-    fun getRune(id: String, tier: Int) = RepoAPI.runes().getRunes(id).find { it.tier() == tier }
+    fun getRuneById(id: String): List<Rune>? {
+        if (!RepoAPI.isInitialized()) return null
+        return RepoAPI.runes().getRunes(id)
+    }
+    fun getRune(id: String, tier: Int) = getRuneById(id)?.find { it.tier() == tier }
 
     fun getRune(string: String): Rune? {
         val split = string.split(":")
@@ -29,23 +32,26 @@ object RepoRunesAPI {
     }
 
     @JvmOverloads
-    fun getRuneAsItemOrNull(id: String, tier: Int? = null): ItemStack? = cache.getOrPut("$id:$tier") {
-        val rune = if (tier == null) {
-            getRuneById(id).maxByOrNull(Rune::tier)
-        } else {
-            getRune(id, tier)
-        } ?: return@getOrPut null
+    fun getRuneAsItemOrNull(id: String, tier: Int? = null): ItemStack? {
+        if (!RepoAPI.isInitialized()) return null
+        return cache.getOrPut("$id:$tier") {
+            val rune = if (tier == null) {
+                getRuneById(id)?.maxByOrNull(Rune::tier)
+            } else {
+                getRune(id, tier)
+            } ?: return@getOrPut null
 
-        val item = ItemStack(Items.PLAYER_HEAD)
-        item[DataComponents.PROFILE] = ResolvableProfile(
-            Optional.empty(),
-            Optional.empty(),
-            PropertyMap().apply { put("textures", Property("textures", rune.texture())) },
-        )
-        item[DataComponents.CUSTOM_NAME] = Text.of(rune.name())
-        item[DataComponents.LORE] = ItemLore(rune.lore().map(Text::of))
+            val item = ItemStack(Items.PLAYER_HEAD)
+            item[DataComponents.PROFILE] = ResolvableProfile(
+                Optional.empty(),
+                Optional.empty(),
+                PropertyMap().apply { put("textures", Property("textures", rune.texture())) },
+            )
+            item[DataComponents.CUSTOM_NAME] = Text.of(rune.name())
+            item[DataComponents.LORE] = ItemLore(rune.lore().map(Text::of))
 
-        return@getOrPut item
+            return@getOrPut item
+        }
     }
 
     fun getRuneAsItem(id: String, tier: Int) = getRuneAsItemOrNull(id, tier) ?: ItemStack(Items.BARRIER).apply {

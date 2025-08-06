@@ -1,10 +1,14 @@
 package tech.thatgravyboat.skyblockapi.api.remote.api
 
+import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.repolib.api.RepoAPI
+import tech.thatgravyboat.repolib.api.RepoStatus
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
+import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.api.remote.PetQuery
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 import tech.thatgravyboat.skyblockapi.api.remote.RepoPetsAPI
@@ -24,49 +28,14 @@ import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.time.since
 
+@Module
 object SimpleItemAPI {
 
     private val cache: MutableMap<SkyBlockId, ItemStack?> = mutableMapOf()
     private val nameCache: MutableMap<String, SkyBlockId> = mutableMapOf()
 
     init {
-        val start = currentInstant()
-        RepoAPI.pets().pets().map { (id, data) ->
-            data.name() to pet(id)
-        }.toMap().let(nameCache::putAll)
-
-        RepoAPI.runes().runes().flatMap { (id, data) ->
-            data.map { rune -> rune.name().stripColor() to rune("$id:${rune.tier()}") }
-        }.toMap().let(nameCache::putAll)
-
-        RepoAPI.enchantments().enchantments().flatMap { (id, enchantments) ->
-            enchantments.levels().map { (level, enchantment) ->
-                "${enchantments.name()} ${enchantment.literalLevel()}" to enchantment("$id:${enchantment.level()}")
-            }
-        }.toMap().let(nameCache::putAll)
-
-        RepoAPI.attributes().attributes().flatMap { (id, attribute) ->
-            listOf(
-                attribute.name() to attribute(attribute.id()),
-                attribute.shardName() to attribute(attribute.id()),
-            )
-        }.toMap().let(nameCache::putAll)
-
-        RepoAPI.items().items().mapNotNull { (id, element) ->
-            val components = element.getPath("['components'].['minecraft:custom_name'].['text']") ?: return@mapNotNull null
-            components.asString.stripColor() to item(id)
-        }.toMap().let(nameCache::putAll)
-
-        val newCache = nameCache.flatMap { (key, value) ->
-            val key = key.lowercase().stripColor()
-            listOf(
-                key to value,
-                key.sanitizeForCommandInput() to value,
-            )
-        }.distinct().toMap()
-        nameCache.clear()
-        nameCache.putAll(newCache)
-        SkyBlockAPI.trace("Cached ${nameCache.size} item names in ${start.since().toReadableTime(allowMs = true)}")
+        if (RepoAPI.isInitialized()) setupCache()
     }
 
     fun findIdByName(name: String) = nameCache[name.lowercase().stripColor()]
@@ -141,4 +110,50 @@ object SimpleItemAPI {
         name("Unknown attribute: $id")
     }
 
+    @Subscription
+    fun onRepoStatus(event: RepoStatusEvent) {
+        if (event.status == RepoStatus.SUCCESS) {
+            setupCache()
+        }
+    }
+
+    private fun setupCache() {
+        val start = currentInstant()
+        RepoAPI.pets().pets().map { (id, data) ->
+            data.name() to pet(id)
+        }.toMap().let(nameCache::putAll)
+
+        RepoAPI.runes().runes().flatMap { (id, data) ->
+            data.map { rune -> rune.name().stripColor() to rune("$id:${rune.tier()}") }
+        }.toMap().let(nameCache::putAll)
+
+        RepoAPI.enchantments().enchantments().flatMap { (id, enchantments) ->
+            enchantments.levels().map { (level, enchantment) ->
+                "${enchantments.name()} ${enchantment.literalLevel()}" to enchantment("$id:${enchantment.level()}")
+            }
+        }.toMap().let(nameCache::putAll)
+
+        RepoAPI.attributes().attributes().flatMap { (id, attribute) ->
+            listOf(
+                attribute.name() to attribute(attribute.id()),
+                attribute.shardName() to attribute(attribute.id()),
+            )
+        }.toMap().let(nameCache::putAll)
+
+        RepoAPI.items().items().mapNotNull { (id, element) ->
+            val components = element.getPath("['components'].['minecraft:custom_name'].['text']") ?: return@mapNotNull null
+            components.asString.stripColor() to item(id)
+        }.toMap().let(nameCache::putAll)
+
+        val newCache = nameCache.flatMap { (key, value) ->
+            val key = key.lowercase().stripColor()
+            listOf(
+                key to value,
+                key.sanitizeForCommandInput() to value,
+            )
+        }.distinct().toMap()
+        nameCache.clear()
+        nameCache.putAll(newCache)
+        SkyBlockAPI.trace("Cached ${nameCache.size} item names in ${start.since().toReadableTime(allowMs = true)}")
+    }
 }
