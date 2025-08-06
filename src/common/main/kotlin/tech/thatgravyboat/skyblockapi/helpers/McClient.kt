@@ -56,6 +56,8 @@ expect object McClient {
 
     fun runNextTick(action: () -> Unit)
 
+    fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 0f, stayTime: Float = 0f, fadeOutTime: Float = 0f)
+
     fun setScreenAsync(screen: () -> Screen?)
 
     fun setScreen(screen: Screen?)

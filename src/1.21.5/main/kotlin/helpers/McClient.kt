@@ -102,6 +102,12 @@ actual object McClient {
     @RemoveNextVersion(ReplaceWith("runNextTick(action)"))
     fun tell(action: () -> Unit) = runNextTick(action)
 
+    actual fun setTitle(title: Component, subtitle: Component?, fadeInTime: Float, stayTime: Float, fadeOutTime: Float) {
+        gui.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
+        subtitle?.let { gui.setSubtitle(it) }
+        gui.setTitle(title)
+    }
+
     actual fun setScreenAsync(screen: () -> Screen?) = runNextTick { self.setScreen(screen()) }
 
     /** Bad because with this method the screen gets init too early **/
