@@ -47,7 +47,7 @@ object PlotAPI {
 
     private val deskPestsRegex = inventoryGroup.create(
         "pests",
-        "ൠ This plot has (?<amount>\\d+) Pests?!",
+        "ൠ This plot has (?<amount>\\d+) ൠ Pests?!",
     )
 
     private val scoreboardPestAmountRegex = scoreboardGroup.create(
