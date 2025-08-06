@@ -77,15 +77,15 @@ object PlotAPI {
 
     private val chatSingularSpawnRegex = chatGroup.create(
         "singular_spawn",
-        "[^:]*! A Pest has appeared in Plot - (?<name>.+)!",
+        "[^:]*! A ൠ Pest has appeared in Plot - (?<name>.+)!",
     )
     private val chatPluralSpawnRegex = chatGroup.create(
         "plural_spawn",
-        "[^:]+! (?<amount>\\d+) Pests have spawned in Plot - (?<name>.+)!",
+        "[^:]+! (?<amount>\\d+) ൠ Pests? have spawned in Plot - (?<name>.+)!",
     )
     private val chatOfflineSpawnRegex = chatGroup.create(
         "offline",
-        "[^:]+! While you were offline, Pests spawned in Plots (?<plots>.*)!",
+        "[^:]+! While you were offline, ൠ Pests? spawned in Plots (?<plots>.*)!",
     )
 
     //endregion
