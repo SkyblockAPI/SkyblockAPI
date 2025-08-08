@@ -12,6 +12,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
+import net.minecraft.sounds.SoundEvent
 import net.msrandom.stub.Stub
 import tech.thatgravyboat.skyblockapi.utils.McVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
@@ -55,6 +56,8 @@ expect object McClient {
     fun openUri(uri: URI)
 
     fun runNextTick(action: () -> Unit)
+
+    fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f)
 
     fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 0f, stayTime: Float = 0f, fadeOutTime: Float = 0f)
 

@@ -17,6 +17,7 @@ import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
+import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
@@ -102,6 +103,10 @@ actual object McClient {
 
     @RemoveNextVersion(ReplaceWith("runNextTick(action)"))
     fun tell(action: () -> Unit) = runNextTick(action)
+
+    actual fun playSound(sound: SoundEvent, volume: Float, pitch: Float) {
+        McPlayer.self?.playSound(sound, volume, pitch)
+    }
 
     actual fun setTitle(title: Component, subtitle: Component?, fadeInTime: Float, stayTime: Float, fadeOutTime: Float) {
         gui.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
