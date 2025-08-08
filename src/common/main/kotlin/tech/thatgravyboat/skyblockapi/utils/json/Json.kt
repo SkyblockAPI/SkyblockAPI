@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.JsonOps
 import net.minecraft.data.registries.VanillaRegistries
+import net.minecraft.resources.RegistryOps
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import java.io.InputStream
 import kotlin.jvm.optionals.getOrNull
@@ -18,7 +19,7 @@ object Json {
     val gson: Gson = GsonBuilder().setPrettyPrinting().create()
     internal val ops: DynamicOps<JsonElement> get() {
         val registry = McClient.connection?.registryAccess() ?: VanillaRegistries.createLookup()
-        return registry.createSerializationContext(JsonOps.INSTANCE)
+        return RegistryOps.create(JsonOps.INSTANCE, LenientHolderLookupAdapter(registry))
     }
 
     inline fun <reified T : Any> InputStream.readJson(): T =
