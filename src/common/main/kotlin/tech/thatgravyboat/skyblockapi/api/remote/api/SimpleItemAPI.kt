@@ -137,6 +137,7 @@ object SimpleItemAPI {
             listOf(
                 attribute.name() to attribute(attribute.attributeId()),
                 attribute.shardName() to attribute(attribute.attributeId()),
+                attribute.shardName().removeSuffix("Shard").trim() to attribute(attribute.attributeId()),
             )
         }.toMap().let(nameCache::putAll)
 

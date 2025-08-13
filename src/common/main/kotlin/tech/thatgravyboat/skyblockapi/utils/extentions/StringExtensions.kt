@@ -50,9 +50,9 @@ fun String?.parseFormattedDouble(default: Double = 0.0): Double = runCatching {
     val commaless = this?.lowercase()?.replace(",", "")
     val multiplier = formattedMultiplier.entries.firstOrNull { commaless?.endsWith(it.key) == true }?.value
     return@runCatching if (multiplier != null) {
-        commaless?.dropLast(1)?.toDouble()?.times(multiplier) ?: 0.0
+        commaless?.dropLast(1)?.toDouble()?.times(multiplier) ?: default
     } else {
-        commaless?.toDouble() ?: 0.0
+        commaless?.toDouble() ?: default
     }
 }.getOrDefault(default)
 

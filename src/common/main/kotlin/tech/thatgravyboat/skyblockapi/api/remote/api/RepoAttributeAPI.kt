@@ -31,12 +31,12 @@ object RepoAttributeAPI {
     @Subscription(RepoStatusEvent::class)
     @OnRepoStatus(RepoStatus.SUCCESS)
     fun onRepoReady() {
-        attributeIdMap.putAll(RepoAPI.attributes().attributes().values.associateBy { it.attributeId() })
+        attributeIdMap.putAll(RepoAPI.attributes().attributes().values.associateBy { it.attributeId().lowercase() })
     }
 
     fun getAttributeDataById(id: String): AttributesAPI.Attribute? {
         if (!RepoAPI.isInitialized()) return null
-        return attributeIdMap[id] ?: RepoAPI.attributes().getAttribute(id)
+        return attributeIdMap[id.lowercase()] ?: RepoAPI.attributes().getAttribute(id)
     }
 
     fun getAttributeByIdOrNull(id: String): ItemStack? {

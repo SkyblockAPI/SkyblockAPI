@@ -4,7 +4,9 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.ItemLike
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.mixins.accessors.ContainerScreenAccessor
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSkyblockFiller
@@ -16,7 +18,7 @@ class InventoryChangeEvent(
     val titleComponent: Component,
     val inventory: List<Slot>,
     val screen: AbstractContainerScreen<*>,
-) : SkyBlockEvent() {
+) : SkyBlockEvent(), ItemLike {
     val isInPlayerInventory = slot.container is Inventory
     val title = titleComponent.stripped
     val itemStacks = inventory.map { it.item }
@@ -31,4 +33,5 @@ class InventoryChangeEvent(
     val isOnSides = isOnLeftColumn || isOnRightColumn
     val isInTopRowOrBottomRow = isInTopRow || isInBottomRow
     val isInMainPart = !isOnSides && !isInTopRowOrBottomRow
+    override fun asItem(): Item = item.item
 }

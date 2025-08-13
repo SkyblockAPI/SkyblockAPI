@@ -22,6 +22,7 @@ import java.nio.file.Files
 object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal val mod = FabricLoader.getInstance().getModContainer("skyblock-api").orElseThrow()
+    val MOD_ID: String get() = mod.metadata.id
 
     @JvmStatic
     val eventBus = EventBus()
