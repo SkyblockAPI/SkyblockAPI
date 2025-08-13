@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.remote.api
 
+import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
@@ -8,7 +9,11 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
 import tech.thatgravyboat.repolib.api.AttributesAPI
 import tech.thatgravyboat.repolib.api.RepoAPI
+import tech.thatgravyboat.repolib.api.RepoStatus
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
+import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnRepoStatus
+import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -17,19 +22,27 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
 
+@Module
 object RepoAttributeAPI {
 
+    private val attributeIdMap: MutableMap<String, AttributesAPI.Attribute> = mutableMapOf()
     private val cache: MutableMap<String, ItemStack?> = mutableMapOf()
+
+    @Subscription(RepoStatusEvent::class)
+    @OnRepoStatus(RepoStatus.SUCCESS)
+    fun onRepoReady() {
+        attributeIdMap.putAll(RepoAPI.attributes().attributes().values.associateBy { it.attributeId() })
+    }
 
     fun getAttributeDataById(id: String): AttributesAPI.Attribute? {
         if (!RepoAPI.isInitialized()) return null
-        return RepoAPI.attributes().getAttribute(id)
+        return attributeIdMap[id] ?: RepoAPI.attributes().getAttribute(id)
     }
 
     fun getAttributeByIdOrNull(id: String): ItemStack? {
         if (!RepoAPI.isInitialized()) return null
         return cache.getOrPut(id) {
-            val attribute = RepoAPI.attributes().getAttribute(id)
+            val attribute = attributeIdMap[id] ?: RepoAPI.attributes().getAttribute(id)
             if (attribute == null) return@getOrPut null
 
             val item = ResourceLocation.tryParse(attribute.item().lowercase())?.let { BuiltInRegistries.ITEM.getValue(it) }

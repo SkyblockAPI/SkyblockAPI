@@ -8,6 +8,7 @@ import tech.thatgravyboat.repolib.api.RepoStatus
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnRepoStatus
 import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.api.remote.PetQuery
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
@@ -110,11 +111,10 @@ object SimpleItemAPI {
         name("Unknown attribute: $id")
     }
 
-    @Subscription
-    fun onRepoStatus(event: RepoStatusEvent) {
-        if (event.status == RepoStatus.SUCCESS) {
-            setupCache()
-        }
+    @Subscription(RepoStatusEvent::class)
+    @OnRepoStatus(RepoStatus.SUCCESS)
+    fun onRepoStatus() {
+        setupCache()
     }
 
     private fun setupCache() {
@@ -128,15 +128,15 @@ object SimpleItemAPI {
         }.toMap().let(nameCache::putAll)
 
         RepoAPI.enchantments().enchantments().flatMap { (id, enchantments) ->
-            enchantments.levels().map { (level, enchantment) ->
+            enchantments.levels().map { (_, enchantment) ->
                 "${enchantments.name()} ${enchantment.literalLevel()}" to enchantment("$id:${enchantment.level()}")
             }
         }.toMap().let(nameCache::putAll)
 
-        RepoAPI.attributes().attributes().flatMap { (id, attribute) ->
+        RepoAPI.attributes().attributes().flatMap { (_, attribute) ->
             listOf(
-                attribute.name() to attribute(attribute.id()),
-                attribute.shardName() to attribute(attribute.id()),
+                attribute.name() to attribute(attribute.attributeId()),
+                attribute.shardName() to attribute(attribute.attributeId()),
             )
         }.toMap().let(nameCache::putAll)
 
