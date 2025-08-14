@@ -1,13 +1,15 @@
 package tech.thatgravyboat.skyblockapi.api.profile.hunting
 
-import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
+import tech.thatgravyboat.skyblockapi.api.data.stored.AttributeStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
+import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.item.replaceVisually
 import tech.thatgravyboat.skyblockapi.api.remote.api.RepoAttributeAPI
@@ -20,6 +22,7 @@ import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 @Module
 object AttributeAPI {
@@ -39,12 +42,18 @@ object AttributeAPI {
     val huntingBoxMenuRegex = inventoryGroup.create("hunting_box", "^Hunting Box$")
     val ownedRegex = inventoryGroup.create("owned", "^Owned: (?<amount>[\\d,.]+) Shards?$")
     val attributeMaxedRegex = inventoryGroup.create("attribute_maxed", "^Attribute Maxed!$")
-    val levelRegex = inventoryGroup.create("levle", "[IXV0-9]+")
+    val levelRegex = inventoryGroup.create("level", "[IXV0-9]+")
 
-    private val _attributeMap: MutableMap<SkyBlockId, AttributeData> = mutableMapOf()
+    private val chatGroup = RegexGroup.CHAT.group("attribute")
+
+    val foundShardRegex = chatGroup.create("found_shard", "^You caught (?<amount>a|x\\d+) (?<name>.*?) Shards?!$")
+
+    private val _attributeMap: MutableMap<SkyBlockId, AttributeStorage.InternalAttributeData> get() = AttributeStorage.data ?: mutableMapOf()
+    private val attributeMap: Map<SkyBlockId, AttributeData> get() = _attributeMap
 
     @Subscription
     @MustBeContainer
+    @OnlyOnSkyBlock
     fun attributeMenu(event: InventoryChangeEvent) {
         if (!event.title.matches(attributeMenuRegex)) return
         if (event.isOnSides) return
@@ -53,7 +62,7 @@ object AttributeAPI {
         val data = RepoAttributeAPI.getAttributeDataById(id.cleanId) ?: return
         val isLocked = event in ItemTag.HUNTING_NOT_FOUND
 
-        val attributeData = _attributeMap.getOrPut(id) { id.toAttributeData() }
+        val attributeData = getData(id)
 
 
         event.item.takeIf { isDebugEnabled }?.debugInfo(attributeData)
@@ -66,10 +75,12 @@ object AttributeAPI {
 
             attributeData.calculateSyphoned(level, syphonMore)
         }
+        AttributeStorage.save()
     }
 
     @Subscription
     @MustBeContainer
+    @OnlyOnSkyBlock
     fun huntingBox(event: InventoryChangeEvent) {
         if (!event.title.matches(huntingBoxMenuRegex)) return
         if (event.isOnSides) return
@@ -77,7 +88,7 @@ object AttributeAPI {
         val id = event.item[DataTypes.SKYBLOCK_ID] ?: return
         val data = RepoAttributeAPI.getAttributeDataById(id.cleanId) ?: return
 
-        val attributeData = _attributeMap.getOrPut(id) { id.toAttributeData() }
+        val attributeData = getData(id)
         val rarity = attributeData.rarity ?: return
 
         event.item.takeIf { isDebugEnabled }?.debugInfo(attributeData)
@@ -100,9 +111,25 @@ object AttributeAPI {
             val actualLevel = level.parseRomanOrArabic().takeUnless { level -> level == 0 } ?: return
             attributeData.calculateSyphoned(actualLevel, syphonMore)
         }
+        AttributeStorage.save()
     }
 
-    private fun AttributeData.calculateSyphoned(level: Int, syphonMore: Int) {
+    @Subscription
+    @OnlyOnSkyBlock
+    fun foundShard(event: ChatReceivedEvent.Pre) {
+        if (!event.text.matches(foundShardRegex)) return
+        foundShardRegex.match(event.text, "amount", "name") { (amount, name) ->
+            val actualAmount = if (amount == "a") 1 else amount.filter { it.isDigit() }.toIntValue()
+            val id = SkyBlockId.fromName(name) ?: return@match
+            val data = getData(id)
+            data.owned += actualAmount
+        }
+        AttributeStorage.save()
+    }
+
+    private fun getData(id: SkyBlockId) = _attributeMap.getOrPut(id) { id.toAttributeData() }
+
+    private fun AttributeStorage.InternalAttributeData.calculateSyphoned(level: Int, syphonMore: Int) {
         val syphoned = attributeLevelData[rarity]?.get(level) ?: return
         val nextLevelSyphoned = attributeLevelData[rarity]?.getOrNull(level + 1)
 
@@ -111,9 +138,10 @@ object AttributeAPI {
         } else {
             this.syphoned = nextLevelSyphoned - syphonMore
         }
+        AttributeStorage.save()
     }
 
-    private fun ItemStack.debugInfo(attributeData: AttributeData) {
+    private fun ItemStack.debugInfo(attributeData: AttributeStorage.InternalAttributeData) {
         replaceVisually {
             copyFrom(this@debugInfo)
             tooltip {
@@ -128,18 +156,15 @@ object AttributeAPI {
         }
     }
 
-    private fun SkyBlockId.toAttributeData() = AttributeData(
+    private fun SkyBlockId.toAttributeData() = AttributeStorage.InternalAttributeData(
         rarity = attributeRarities.find { it.name.startsWith(this.cleanId.take(1), true) },
     )
 
-    @GenerateCodec
-    data class AttributeData(
-        var owned: Int = 0,
-        var syphoned: Int = 0,
-        var rarity: SkyBlockRarity?,
-    ) {
-        val level: Int get() = attributeLevelData[rarity]?.indexOfLast { it <= syphoned } ?: -1
-        val unlocked: Boolean get() = syphoned >= 1
-    }
+}
 
+interface AttributeData {
+    val owned: Int
+    val syphoned: Int
+    val level: Int
+    val unlocked: Boolean
 }

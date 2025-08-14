@@ -2,19 +2,14 @@
 @file:OptIn(ExperimentalPathApi::class)
 
 import com.google.devtools.ksp.gradle.KspTask
-import com.sun.tools.javac.tree.TreeInfo.args
 import earth.terrarium.cloche.api.metadata.FabricMetadata
 import earth.terrarium.cloche.api.metadata.ModMetadata
-import jdk.jfr.internal.JVM.include
 import net.msrandom.minecraftcodev.core.utils.toPath
 import net.msrandom.minecraftcodev.fabric.task.JarInJar
 import net.msrandom.minecraftcodev.runs.task.WriteClasspathFile
-import org.jetbrains.kotlin.com.intellij.openapi.util.text.HtmlChunk.icon
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-import org.jetbrains.kotlin.gradle.model.SourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import sun.jvmstat.monitor.MonitoredVmUtil.jvmArgs
 import tech.thatgravyboat.skyblockapi.item.deprecationMessage
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
