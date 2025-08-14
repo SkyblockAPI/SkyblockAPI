@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 internal object AttributeStorage {
     private val ATTRIBUTE_DATA = StoredProfileData(
         { mutableMapOf() },
-        CodecUtils.map(SkyBlockId.CODEC, SkyblockAPICodecs.InternalAttributeDataCodec.codec()),
+        CodecUtils.map(SkyBlockId.CODEC, SkyblockAPICodecs.AttributeDataCodec.codec()),
         "attribute_data.json",
     )
 
