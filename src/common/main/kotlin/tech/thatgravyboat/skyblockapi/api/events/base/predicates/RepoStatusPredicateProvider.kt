@@ -12,12 +12,6 @@ annotation class OnRepoStatus(val repoStatus: RepoStatus)
 class RepoStatusPredicateProvider : EventPredicateProvider {
     override fun getPredicate(method: Method): EventPredicate? {
         val status = method.getAnnotation<OnRepoStatus>() ?: return null
-        return { event, _ ->
-            if (event is RepoStatusEvent) {
-                event.status == status.repoStatus
-            } else {
-                true
-            }
-        }
+        return { event, _ -> event !is RepoStatusEvent || event.status == status.repoStatus }
     }
 }

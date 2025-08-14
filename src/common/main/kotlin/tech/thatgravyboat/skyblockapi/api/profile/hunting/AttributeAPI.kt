@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.hunting
 
+import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
@@ -27,7 +28,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 @Module
 object AttributeAPI {
 
-    val isDebugEnabled by debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
+    private val isDebugEnabled by debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
 
     val attributeLevelData: MutableMap<SkyBlockRarity, List<Int>> =
         SkyBlockAPI.getRepo("attribute_levels", CodecUtils.map(SkyblockAPICodecs.getCodec<SkyBlockRarity>(), IncludedCodecs.CUMULATIVE_INT_LIST))
@@ -36,20 +37,20 @@ object AttributeAPI {
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("attribute")
 
-    val attributeMenuRegex = inventoryGroup.create("attribute_menu", "^Attribute Menu$")
-    val syphonMoreRegex = inventoryGroup.create("syphon_more", "^Syphon (\\d+) more to level up!")
+    private val attributeMenuRegex = inventoryGroup.create("attribute_menu", "^Attribute Menu$")
+    private val syphonMoreRegex = inventoryGroup.create("syphon_more", "^Syphon (\\d+) more to level up!")
 
-    val huntingBoxMenuRegex = inventoryGroup.create("hunting_box", "^Hunting Box$")
-    val ownedRegex = inventoryGroup.create("owned", "^Owned: (?<amount>[\\d,.]+) Shards?$")
-    val attributeMaxedRegex = inventoryGroup.create("attribute_maxed", "^Attribute Maxed!$")
-    val levelRegex = inventoryGroup.create("level", "[IXV0-9]+")
+    private val huntingBoxMenuRegex = inventoryGroup.create("hunting_box", "^Hunting Box$")
+    private val ownedRegex = inventoryGroup.create("owned", "^Owned: (?<amount>[\\d,.]+) Shards?$")
+    private val attributeMaxedRegex = inventoryGroup.create("attribute_maxed", "^Attribute Maxed!$")
+    private val levelRegex = inventoryGroup.create("level", "[IXV0-9]+")
 
     private val chatGroup = RegexGroup.CHAT.group("attribute")
 
-    val foundShardRegex = chatGroup.create("found_shard", "^You caught (?<amount>a|x\\d+) (?<name>.*?) Shards?!$")
+    private val foundShardRegex = chatGroup.create("found_shard", "^You caught (?<amount>a|x\\d+) (?<name>.*?) Shards?!$")
 
-    private val _attributeMap: MutableMap<SkyBlockId, AttributeStorage.InternalAttributeData> get() = AttributeStorage.data ?: mutableMapOf()
-    private val attributeMap: Map<SkyBlockId, AttributeData> get() = _attributeMap
+    private val _attributeMap: MutableMap<SkyBlockId, AttributeData> get() = AttributeStorage.data ?: mutableMapOf()
+    val attributeMap: Map<SkyBlockId, AttributeData> get() = _attributeMap
 
     @Subscription
     @MustBeContainer
@@ -60,12 +61,12 @@ object AttributeAPI {
 
         val id = event.item[DataTypes.SKYBLOCK_ID] ?: return
         val data = RepoAttributeAPI.getAttributeDataById(id.cleanId) ?: return
-        val isLocked = event in ItemTag.HUNTING_NOT_FOUND
+        val isLocked = event.item in ItemTag.HUNTING_NOT_FOUND
 
         val attributeData = getData(id)
 
 
-        event.item.takeIf { isDebugEnabled }?.debugInfo(attributeData)
+        event.item.debugInfo(attributeData)
 
         if (isLocked) {
             attributeData.syphoned = 0
@@ -91,7 +92,7 @@ object AttributeAPI {
         val attributeData = getData(id)
         val rarity = attributeData.rarity ?: return
 
-        event.item.takeIf { isDebugEnabled }?.debugInfo(attributeData)
+        event.item.debugInfo(attributeData)
 
         val rawLore = event.item.getRawLore()
 
@@ -129,7 +130,7 @@ object AttributeAPI {
 
     private fun getData(id: SkyBlockId) = _attributeMap.getOrPut(id) { id.toAttributeData() }
 
-    private fun AttributeStorage.InternalAttributeData.calculateSyphoned(level: Int, syphonMore: Int) {
+    private fun AttributeData.calculateSyphoned(level: Int, syphonMore: Int) {
         val syphoned = attributeLevelData[rarity]?.get(level) ?: return
         val nextLevelSyphoned = attributeLevelData[rarity]?.getOrNull(level + 1)
 
@@ -141,7 +142,8 @@ object AttributeAPI {
         AttributeStorage.save()
     }
 
-    private fun ItemStack.debugInfo(attributeData: AttributeStorage.InternalAttributeData) {
+    private fun ItemStack.debugInfo(attributeData: AttributeData) {
+        if (!isDebugEnabled) return
         replaceVisually {
             copyFrom(this@debugInfo)
             tooltip {
@@ -156,15 +158,18 @@ object AttributeAPI {
         }
     }
 
-    private fun SkyBlockId.toAttributeData() = AttributeStorage.InternalAttributeData(
+    private fun SkyBlockId.toAttributeData() = AttributeData(
         rarity = attributeRarities.find { it.name.startsWith(this.cleanId.take(1), true) },
     )
 
 }
 
-interface AttributeData {
-    val owned: Int
-    val syphoned: Int
-    val level: Int
-    val unlocked: Boolean
+@GenerateCodec
+data class AttributeData(
+    var owned: Int = 0,
+    var syphoned: Int = 0,
+    var rarity: SkyBlockRarity?,
+) {
+    val level: Int get() = AttributeAPI.attributeLevelData[rarity]?.indexOfLast { it <= syphoned } ?: -1
+    val unlocked: Boolean get() = syphoned >= 1
 }

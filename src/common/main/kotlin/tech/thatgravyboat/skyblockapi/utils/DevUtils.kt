@@ -91,7 +91,7 @@ abstract class DevUtils {
     abstract fun send(component: MutableComponent)
 }
 
-data class DevToolSuggestionProvider(val utils: DevUtils) : SuggestionProvider<FabricClientCommandSource> {
+private data class DevToolSuggestionProvider(val utils: DevUtils) : SuggestionProvider<FabricClientCommandSource> {
     override fun getSuggestions(context: CommandContext<FabricClientCommandSource>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
         fun matches(arg: String): Boolean = SharedSuggestionProvider.matchesSubStr(builder.remaining.lowercase(), arg)
 
