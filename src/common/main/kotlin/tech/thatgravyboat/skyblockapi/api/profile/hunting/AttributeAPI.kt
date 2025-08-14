@@ -35,6 +35,12 @@ object AttributeAPI {
 
     private val attributeRarities = SkyBlockRarity.COMMON.rangeTo(SkyBlockRarity.LEGENDARY)
 
+    private const val FIRST_PARENT = 12
+    private const val SECOND_PARENT = 14
+    private const val FUSION_RESULT = 31
+    private const val FUSION_RESULT_AMOUNT = 33
+    private val anyFusionSlot = listOf(FIRST_PARENT, SECOND_PARENT, FUSION_RESULT, FUSION_RESULT_AMOUNT)
+
     private val inventoryGroup = RegexGroup.INVENTORY.group("attribute")
 
     private val attributeMenuGroup = inventoryGroup.group("attribute_menu")
@@ -50,12 +56,6 @@ object AttributeAPI {
     private val fusionInventoryGroup = inventoryGroup.group("fusion")
     private val confirmFusionRegex = fusionInventoryGroup.create("title", "^Confirm Fusion$")
     private val fusionItemRegex = fusionInventoryGroup.create("item_title", "^Parent|Fusion Result$")
-
-    private const val FIRST_PARENT = 12
-    private const val SECOND_PARENT = 14
-    private const val FUSION_RESULT = 31
-    private const val FUSION_RESULT_AMOUNT = 33
-    private val anyFusionSlot = listOf(FIRST_PARENT, SECOND_PARENT, FUSION_RESULT, FUSION_RESULT_AMOUNT)
 
     private val chatGroup = RegexGroup.CHAT.group("attribute")
 
