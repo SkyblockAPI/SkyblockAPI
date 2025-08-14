@@ -24,33 +24,58 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
+import kotlin.math.max
 
 @Module
 object AttributeAPI {
 
     private val isDebugEnabled by debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
 
-    val attributeLevelData: MutableMap<SkyBlockRarity, List<Int>> =
-        SkyBlockAPI.getRepo("attribute_levels", CodecUtils.map(SkyblockAPICodecs.getCodec<SkyBlockRarity>(), IncludedCodecs.CUMULATIVE_INT_LIST))
-
     private val attributeRarities = SkyBlockRarity.COMMON.rangeTo(SkyBlockRarity.LEGENDARY)
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("attribute")
 
-    private val attributeMenuRegex = inventoryGroup.create("attribute_menu", "^Attribute Menu$")
-    private val syphonMoreRegex = inventoryGroup.create("syphon_more", "^Syphon (\\d+) more to level up!")
+    private val attributeMenuGroup = inventoryGroup.group("attribute_menu")
+    private val attributeMenuRegex = attributeMenuGroup.create("title", "^Attribute Menu$")
+    private val syphonMoreRegex = attributeMenuGroup.create("more", "^Syphon (\\d+) more to level up!")
 
-    private val huntingBoxMenuRegex = inventoryGroup.create("hunting_box", "^Hunting Box$")
-    private val ownedRegex = inventoryGroup.create("owned", "^Owned: (?<amount>[\\d,.]+) Shards?$")
-    private val attributeMaxedRegex = inventoryGroup.create("attribute_maxed", "^Attribute Maxed!$")
-    private val levelRegex = inventoryGroup.create("level", "[IXV0-9]+")
+    private val huntingBoxGroup = inventoryGroup.group("hunting_box")
+    private val huntingBoxMenuRegex = huntingBoxGroup.create("title", "^Hunting Box$")
+    private val ownedRegex = huntingBoxGroup.create("owned", "^Owned: (?<amount>[\\d,.]+) Shards?$")
+    private val attributeMaxedRegex = huntingBoxGroup.create("maxed", "^Attribute Maxed!$")
+    private val levelRegex = huntingBoxGroup.create("level", "[IXV0-9]+")
+
+    private val fusionInventoryGroup = inventoryGroup.group("fusion")
+    private val confirmFusionRegex = fusionInventoryGroup.create("title", "^Confirm Fusion$")
+    private val fusionItemRegex = fusionInventoryGroup.create("item_title", "^Parent|Fusion Result$")
+
+    private const val FIRST_PARENT = 12
+    private const val SECOND_PARENT = 14
+    private const val FUSION_RESULT = 31
+    private const val FUSION_RESULT_AMOUNT = 33
+    private val anyFusionSlot = listOf(FIRST_PARENT, SECOND_PARENT, FUSION_RESULT, FUSION_RESULT_AMOUNT)
 
     private val chatGroup = RegexGroup.CHAT.group("attribute")
 
-    private val foundShardRegex = chatGroup.create("found_shard", "^You caught (?<amount>a|x\\d+) (?<name>.*?) Shards?!$")
+    private val trapGroup = chatGroup.group("trap")
+    private val foundShardRegex = trapGroup.create("caught", "^You caught (?<amount>a|x\\d+) (?<name>.*?) Shards?!$")
+
+    private val fusionChatGroup = chatGroup.group("fusion")
+    private val fusionObtainedRegex = fusionChatGroup.create("obtained", "FUSION! You obtained (?:a )?(.*?)(?: (x\\d+))?!.*")
+
+    private val syphonGroup = chatGroup.group("syphon")
+    private val syphonedRegex = syphonGroup.create("syphoned", "\\+(?<amount>\\d{1,2}) (?<name>.*?) Attribute \\(Level (?<level>\\d+)\\).*")
+
+    private val deferredFusion = DeferredFusion()
 
     private val _attributeMap: MutableMap<SkyBlockId, AttributeData> get() = AttributeStorage.data ?: mutableMapOf()
+
     val attributeMap: Map<SkyBlockId, AttributeData> get() = _attributeMap
+
+    val attributeLevelData: MutableMap<SkyBlockRarity, List<Int>> =
+        SkyBlockAPI.getRepo("attribute_levels", CodecUtils.map(SkyblockAPICodecs.getCodec<SkyBlockRarity>(), IncludedCodecs.CUMULATIVE_INT_LIST))
 
     @Subscription
     @MustBeContainer
@@ -122,10 +147,55 @@ object AttributeAPI {
         foundShardRegex.match(event.text, "amount", "name") { (amount, name) ->
             val actualAmount = if (amount == "a") 1 else amount.filter { it.isDigit() }.toIntValue()
             val id = SkyBlockId.fromName(name) ?: return@match
-            val data = getData(id)
-            data.owned += actualAmount
+            addOwnedAttributeAmount(id, actualAmount)
         }
         AttributeStorage.save()
+    }
+
+    @Subscription
+    @MustBeContainer
+    @OnlyOnSkyBlock
+    fun fusionMenu(event: InventoryChangeEvent) {
+        if (!event.title.matches(confirmFusionRegex)) return
+        if (event.isOnSides) return
+        if (event.slot.index !in anyFusionSlot) return
+
+        when (event.slot.index) {
+            FUSION_RESULT_AMOUNT -> {
+                deferredFusion.output = deferredFusion.output?.let { (id, amount) -> id to max(amount, event.item.count) }
+                return
+            }
+        }
+
+        val shard = event.item.getRawLore().dropWhile { it.matches(fusionItemRegex) }.firstOrNull() ?: return
+        val id = SkyBlockId.fromName(shard) ?: return
+
+        when (event.slot.index) {
+            FIRST_PARENT -> deferredFusion.first = id to event.item.count
+            SECOND_PARENT -> deferredFusion.second = id to event.item.count
+            FUSION_RESULT -> deferredFusion.output = id to event.item.count
+        }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    fun fusionComplete(event: ChatReceivedEvent.Pre) {
+        if (!event.text.matches(fusionObtainedRegex)) return
+        if (!deferredFusion.isComplete()) return
+        deferredFusion.submit()
+        deferredFusion.reset()
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    fun syphoned(event: ChatReceivedEvent.Pre) {
+        if (!event.text.matches(syphonedRegex)) return
+        syphonedRegex.match(event.text, "amount", "name") { (amount, name) ->
+            val id = SkyBlockId.fromName(name) ?: return@match
+            val amount = amount.toIntValue()
+            addSyphonedAttributeAmount(id, amount)
+            removeOwnedAttributeAmount(id, amount)
+        }
     }
 
     private fun getData(id: SkyBlockId) = _attributeMap.getOrPut(id) { id.toAttributeData() }
@@ -162,6 +232,49 @@ object AttributeAPI {
         rarity = attributeRarities.find { it.name.startsWith(this.cleanId.take(1), true) },
     )
 
+    internal fun addOwnedAttributeAmount(id: SkyBlockId, amount: Int) {
+        if (isDebugEnabled) {
+            Text.debug("Owned ") {
+                append(id.toItem().hoverName)
+                append(" x$amount")
+            }.send()
+        }
+        getData(id).owned += amount
+        AttributeStorage.save()
+    }
+
+    internal fun removeOwnedAttributeAmount(id: SkyBlockId, amount: Int) = addOwnedAttributeAmount(id, -amount)
+
+    internal fun addSyphonedAttributeAmount(id: SkyBlockId, amount: Int) {
+        if (isDebugEnabled) {
+            Text.debug("Syphoned ") {
+                append(id.toItem().hoverName)
+                append(" x$amount")
+            }.send()
+        }
+        getData(id).syphoned += amount
+        AttributeStorage.save()
+    }
+}
+
+private data class DeferredFusion(
+    var first: Pair<SkyBlockId, Int>? = null,
+    var second: Pair<SkyBlockId, Int>? = null,
+    var output: Pair<SkyBlockId, Int>? = null,
+) {
+    fun isComplete() = first != null && second != null && output != null
+
+    fun reset() {
+        first = null
+        second = null
+        output = null
+    }
+
+    fun submit() {
+        first?.let { (id, amount) -> AttributeAPI.removeOwnedAttributeAmount(id, amount) }
+        second?.let { (id, amount) -> AttributeAPI.removeOwnedAttributeAmount(id, amount) }
+        output?.let { (id, amount) -> AttributeAPI.addOwnedAttributeAmount(id, amount) }
+    }
 }
 
 @GenerateCodec

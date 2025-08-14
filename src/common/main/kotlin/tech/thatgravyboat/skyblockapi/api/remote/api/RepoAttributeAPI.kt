@@ -41,8 +41,8 @@ object RepoAttributeAPI {
 
     fun getAttributeByIdOrNull(id: String): ItemStack? {
         if (!RepoAPI.isInitialized()) return null
-        return cache.getOrPut(id) {
-            val attribute = attributeIdMap[id] ?: RepoAPI.attributes().getAttribute(id)
+        return cache.getOrPut(id.lowercase()) {
+            val attribute = attributeIdMap[id.lowercase()] ?: RepoAPI.attributes().getAttribute(id)
             if (attribute == null) return@getOrPut null
 
             val item = ResourceLocation.tryParse(attribute.item().lowercase())?.let { BuiltInRegistries.ITEM.getValue(it) }
