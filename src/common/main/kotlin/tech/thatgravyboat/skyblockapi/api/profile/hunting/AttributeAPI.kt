@@ -26,6 +26,9 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
+import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import kotlin.math.max
 
 @Module
@@ -41,6 +44,7 @@ object AttributeAPI {
     private const val FUSION_RESULT_AMOUNT = 33
     private val anyFusionSlot = listOf(FIRST_PARENT, SECOND_PARENT, FUSION_RESULT, FUSION_RESULT_AMOUNT)
 
+    //region Regex
     private val inventoryGroup = RegexGroup.INVENTORY.group("attribute")
 
     private val attributeMenuGroup = inventoryGroup.group("attribute_menu")
@@ -64,9 +68,17 @@ object AttributeAPI {
 
     private val fusionChatGroup = chatGroup.group("fusion")
     private val fusionObtainedRegex = fusionChatGroup.create("obtained", "FUSION! You obtained (?:a )?(.*?)(?: (x\\d+))?!.*")
+    private val fusionPureReptileRegex = fusionChatGroup.create("pure_reptile", "^PURE REPTILE You received double shards from the fusion!$")
 
     private val syphonGroup = chatGroup.group("syphon")
     private val syphonedRegex = syphonGroup.create("syphoned", "\\+(?<amount>\\d{1,2}) (?<name>.*?) Attribute \\(Level (?<level>\\d+)\\).*")
+
+    private val saltGroup = chatGroup.group("salt")
+    private val saltSingularRegex = saltGroup.create("singular", "(?:CHARM|SALT) You charmed a (?<name>.*?) and captured its Shard\\.")
+    private val saltMultipleRegex = saltGroup.create("multiple", "(?:CHARM|SALT) You charmed a (?<name>.*?) and captured (?<amount>\\d+) Shards from it\\.")
+
+    private val sentToHuntingBoxRegex = chatGroup.create("sent_to_hunting_box", "You sent (?<amount>a|\\d+) (?<shard>.*? Shard)s? to your Hunting Box.")
+    //endregion
 
     private val deferredFusion = DeferredFusion()
 
@@ -189,12 +201,38 @@ object AttributeAPI {
     @Subscription
     @OnlyOnSkyBlock
     fun syphoned(event: ChatReceivedEvent.Pre) {
-        if (!event.text.matches(syphonedRegex)) return
         syphonedRegex.match(event.text, "amount", "name") { (amount, name) ->
             val id = SkyBlockId.fromName(name) ?: return@match
             val amount = amount.toIntValue()
             addSyphonedAttributeAmount(id, amount)
             removeOwnedAttributeAmount(id, amount)
+        }
+        if (fusionPureReptileRegex.matches(event.text)) {
+            deferredFusion.doubleOutput = true
+        }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    fun salt(event: ChatReceivedEvent.Pre) {
+        saltSingularRegex.match(event.text, "name") { (name) ->
+            val id = SkyBlockId.fromName(name) ?: return@match
+            addOwnedAttributeAmount(id, 1)
+        }
+        saltMultipleRegex.match(event.text, "name", "amount") { (name, amount) ->
+            val id = SkyBlockId.fromName(name) ?: return@match
+            addOwnedAttributeAmount(id, amount.toIntValue())
+        }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    fun huntingBox(event: ChatReceivedEvent.Pre) {
+        sentToHuntingBoxRegex.match(event.text, "amount", "shard") { (amount, shard) ->
+            val actualAmount = if (amount == "a") 1 else amount.filter { it.isDigit() }.toIntValue()
+            val id = SkyBlockId.fromName(shard, true) ?: return@match
+
+            addOwnedAttributeAmount(id, actualAmount)
         }
     }
 
@@ -236,7 +274,11 @@ object AttributeAPI {
         if (isDebugEnabled) {
             Text.debug("Owned ") {
                 append(id.toItem().hoverName)
-                append(" x$amount")
+                if (amount >= 0) {
+                    append(" +$amount") { this.color = TextColor.GREEN }
+                } else {
+                    append(" $amount") { this.color = TextColor.RED }
+                }
             }.send()
         }
         getData(id).owned += amount
@@ -249,7 +291,11 @@ object AttributeAPI {
         if (isDebugEnabled) {
             Text.debug("Syphoned ") {
                 append(id.toItem().hoverName)
-                append(" x$amount")
+                if (amount >= 0) {
+                    append(" +$amount") { this.color = TextColor.GREEN }
+                } else {
+                    append(" $amount") { this.color = TextColor.RED }
+                }
             }.send()
         }
         getData(id).syphoned += amount
@@ -262,18 +308,24 @@ private data class DeferredFusion(
     var second: Pair<SkyBlockId, Int>? = null,
     var output: Pair<SkyBlockId, Int>? = null,
 ) {
+    var doubleOutput = false
+
     fun isComplete() = first != null && second != null && output != null
 
     fun reset() {
         first = null
         second = null
         output = null
+        doubleOutput = false
     }
 
     fun submit() {
         first?.let { (id, amount) -> AttributeAPI.removeOwnedAttributeAmount(id, amount) }
         second?.let { (id, amount) -> AttributeAPI.removeOwnedAttributeAmount(id, amount) }
         output?.let { (id, amount) -> AttributeAPI.addOwnedAttributeAmount(id, amount) }
+        if (doubleOutput) {
+            output?.let { (id, amount) -> AttributeAPI.addOwnedAttributeAmount(id, amount) }
+        }
     }
 }
 
