@@ -120,7 +120,7 @@ private class Widget(timestamp: Instant, val content: Component) : StringWidget(
 
     override fun renderWidget(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
         if (this.isHoveredOrFocused) {
-            graphics.fill(this.x - 1, this.y - 1, this.x + this.width + 2, this.y + this.height + 1, 0x50DDDDDD)
+            graphics.fill(this.x - 1, this.y - 1, this.x + this.width + 2, this.y + this.height + 1, 0x50DDDDDD.toInt())
         }
         super.renderWidget(graphics, mouseX, mouseY, partialTicks)
     }

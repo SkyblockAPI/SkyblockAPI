@@ -40,7 +40,7 @@ java {
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
-        languageVersion = KotlinVersion.KOTLIN_2_0
+        languageVersion = KotlinVersion.KOTLIN_2_2
         freeCompilerArgs.addAll(
             "-Xmulti-platform",
             "-Xno-check-actual",

@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Instant
-import kotlin.time.jdk8.toJavaInstant
+import kotlin.time.toJavaInstant
 
 // TODO move this to extensions in 1.21.6 or 1.22.0
 
