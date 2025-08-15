@@ -77,4 +77,11 @@ internal object IncludedCodecs {
     val INSTANT: Codec<Instant> = Codec.LONG.xmap(Instant::fromEpochMilliseconds, Instant::toEpochMilliseconds)
 
     val INT_KEY: Codec<Int> = Codec.STRING.xmap({ it.toInt() }, { it.toString() })
+
+    @IncludedCodec(named = "cum_int_list")
+    val CUMULATIVE_INT_LIST: Codec<List<Int>> =
+        Codec.INT.listOf().xmap(
+            { it.runningFold(0, Int::plus).distinct() },
+            { it.reversed().runningFold(0, Int::minus).reversed() },
+        )
 }
