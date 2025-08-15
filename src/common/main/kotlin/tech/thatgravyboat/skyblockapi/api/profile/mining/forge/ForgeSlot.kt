@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.mining.forge
 
-import kotlinx.datetime.Instant
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import kotlin.time.Instant
 import tech.thatgravyboat.skyblockapi.api.profile.items.forge.ForgeSlot as NewForgeSlot
 
 @RemoveNextVersion

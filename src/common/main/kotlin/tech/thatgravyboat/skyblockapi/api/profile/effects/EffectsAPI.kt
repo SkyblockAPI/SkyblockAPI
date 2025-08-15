@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.profile.effects
 
-import kotlinx.datetime.Instant
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.EffectsStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -28,6 +27,7 @@ import tech.thatgravyboat.skyblockapi.utils.time.fromNow
 import tech.thatgravyboat.skyblockapi.utils.time.until
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Instant
 
 @Module
 object EffectsAPI {

@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.utils.codecs
 
 import com.mojang.authlib.GameProfile
 import com.mojang.serialization.Codec
-import kotlinx.datetime.Instant
 import me.owdding.ktcodecs.IncludedCodec
 import net.minecraft.advancements.critereon.BlockPredicate
 import net.minecraft.core.BlockPos
@@ -23,6 +22,7 @@ import org.joml.Vector3f
 import org.joml.Vector4f
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
 
 internal object IncludedCodecs {
     @IncludedCodec

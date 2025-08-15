@@ -2,11 +2,6 @@ package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.google.gson.JsonParser
 import com.mojang.blaze3d.platform.InputConstants
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.format
-import kotlinx.datetime.format.DateTimeComponents
-import kotlinx.datetime.format.char
 import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.StringWidget
@@ -31,6 +26,10 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
+import tech.thatgravyboat.skyblockapi.utils.time.format
+import java.time.format.DateTimeFormatter
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 @Module
 object DebugChat {
@@ -106,7 +105,7 @@ private class DebugChatScreen(val messages: List<Pair<Instant, Component>>) : Sc
 
 private class Widget(timestamp: Instant, val content: Component) : StringWidget(
     Text.join(
-        Text.of("[${timestamp.format(this.formatter)}] : ") {
+        Text.of("[${this.formatter.format(timestamp)}] : ") {
             this.color = TextColor.DARK_GRAY
         },
         content,
@@ -121,7 +120,7 @@ private class Widget(timestamp: Instant, val content: Component) : StringWidget(
 
     override fun renderWidget(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
         if (this.isHoveredOrFocused) {
-            graphics.fill(this.x - 1, this.y - 1, this.x + this.width + 2, this.y + this.height + 1, 0x50DDDDDD.toInt())
+            graphics.fill(this.x - 1, this.y - 1, this.x + this.width + 2, this.y + this.height + 1, 0x50DDDDDD)
         }
         super.renderWidget(graphics, mouseX, mouseY, partialTicks)
     }
@@ -155,13 +154,7 @@ private class Widget(timestamp: Instant, val content: Component) : StringWidget(
 
         private val toastId = SystemToastId(1500)
 
-        private val formatter = DateTimeComponents.Format {
-            hour()
-            char(':')
-            minute()
-            char(':')
-            second()
-        }
+        private val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
     }
 
 }

@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.area.slayer
 
-import kotlinx.datetime.Instant
 import me.owdding.ktmodules.Module
 import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
@@ -26,6 +25,7 @@ import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.time.since
 import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
 
 @Module
 object SlayerAPI {
