@@ -20,6 +20,4 @@ inline fun <reified E : Enum<E>> fullEnumSetOf(): EnumSet<E> = EnumSet.allOf(E::
 inline fun <reified E : Enum<E>> Set<E>.toEnumSet(): EnumSet<E> =
     if (isEmpty()) emptyEnumSet<E>() else EnumSet.copyOf(this)
 
-operator fun <E : Enum<E>> E.rangeTo(other: E): EnumSet<E> {
-    return EnumSet.range(this, other)
-}
+operator fun <E : Enum<E>> E.rangeTo(other: E): EnumSet<E> = EnumSet.range(this, other)
