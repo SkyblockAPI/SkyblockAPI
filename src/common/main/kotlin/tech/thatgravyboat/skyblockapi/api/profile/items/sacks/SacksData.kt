@@ -1,9 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.sacks
 
-import kotlinx.datetime.Instant
 import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
+import kotlin.time.Instant
 
 @GenerateCodec(createCodecMethod = true)
 internal data class SacksData(

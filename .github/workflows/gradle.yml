@@ -30,10 +30,12 @@ jobs:
                     distribution: 'temurin'
             -   name: Grant execute permission for gradlew
                 run: chmod +x gradlew
+            -   name: Create run dir
+                run: mkdir run
             -   name: Build with Gradle
                 uses: gradle/gradle-build-action@v2.11.0
                 with:
-                    arguments: build --stacktrace
+                    arguments: setupForWorkflows cleanRelease --stacktrace
             -   name: Upload Artifact
                 uses: actions/upload-artifact@v4.0.0
                 with:

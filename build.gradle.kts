@@ -40,11 +40,12 @@ java {
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
-        languageVersion = KotlinVersion.KOTLIN_2_0
+        languageVersion = KotlinVersion.KOTLIN_2_2
         freeCompilerArgs.addAll(
             "-Xmulti-platform",
             "-Xno-check-actual",
             "-Xexpect-actual-classes",
+            "-Xopt-in=kotlin.time.ExperimentalTime",
         )
     }
 }
@@ -331,6 +332,8 @@ ksp {
 }
 
 // TODO temporary workaround for a cloche issue on certain systems, remove once fixed
+val mcVersions = sourceSets.filterNot { it.name == SourceSet.MAIN_SOURCE_SET_NAME || it.name == SourceSet.TEST_SOURCE_SET_NAME }
+
 tasks.withType<WriteClasspathFile>().configureEach {
     actions.clear()
     actions.add {
@@ -342,7 +345,7 @@ tasks.withType<WriteClasspathFile>().configureEach {
 
 tasks.register("release") {
     group = "skyblock-api"
-    sourceSets.filterNot { it.name == SourceSet.MAIN_SOURCE_SET_NAME || it.name == SourceSet.TEST_SOURCE_SET_NAME }.forEach {
+    mcVersions.forEach {
         tasks.getByName("${it.name}JarInJar").let { task ->
             dependsOn(task)
             mustRunAfter(task)
@@ -362,4 +365,13 @@ tasks.register("cleanRelease") {
 
 tasks.withType<JarInJar>().configureEach {
     include { !it.name.endsWith("-dev.jar") }
+}
+
+tasks.register("setupForWorkflows") {
+    mcVersions.flatMap {
+        listOf("remap${it.name}CommonMinecraftNamed", "remap${it.name}ClientMinecraftNamed")
+    }.mapNotNull { tasks.findByName(it) }.forEach {
+        dependsOn(it)
+        mustRunAfter(it)
+    }
 }

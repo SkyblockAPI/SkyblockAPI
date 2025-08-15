@@ -1,10 +1,10 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.storage
 
-import kotlinx.datetime.Instant
 import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
+import kotlin.time.Instant
 
 @GenerateCodec
 data class StorageData(

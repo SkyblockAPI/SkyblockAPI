@@ -1,10 +1,10 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
-import kotlinx.datetime.Instant
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.effects.EffectsData
 import kotlin.math.abs
 import kotlin.time.Duration
+import kotlin.time.Instant
 
 internal object EffectsStorage {
     private val EFFECTS = StoredProfileData(

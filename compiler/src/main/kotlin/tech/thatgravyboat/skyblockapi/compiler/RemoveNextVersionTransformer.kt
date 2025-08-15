@@ -6,22 +6,16 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.IrGeneratorContext
 import org.jetbrains.kotlin.ir.builders.buildStatement
 import org.jetbrains.kotlin.ir.builders.irCallConstructor
 import org.jetbrains.kotlin.ir.builders.irString
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationBase
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationWithName
-import org.jetbrains.kotlin.ir.declarations.IrMutableAnnotationContainer
-import org.jetbrains.kotlin.ir.declarations.IrTypeAlias
+import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.classOrNull
-import org.jetbrains.kotlin.ir.util.addArguments
 import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.getArguments
 import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
@@ -49,7 +43,6 @@ class RemoveNextVersionTransformer(
         return super.visitDeclaration(declaration)
     }
 
-    @OptIn(ObsoleteDescriptorBasedAPI::class)
     fun apply(declaration: IrMutableAnnotationContainer) {
         val constructor = declaration.annotations.firstOrNull { annotation ->
             if (annotation.type.classOrNull?.owner?.kotlinFqName != REMOVE_NEXT_VERSION) return@firstOrNull false
@@ -63,23 +56,24 @@ class RemoveNextVersionTransformer(
             newConstructor,
             listOf(),
         )
-        newConstructor.owner.valueParameters.forEach { e ->
+        newConstructor.owner.vParameters.forEach { e ->
             if (e.name.asString() == "message") {
-                newConst.addArguments(
-                    mapOf(
-                        e.descriptor to declarationIrBuilder().buildStatement(0, 0) { irString(message) },
-                    ),
-                )
+                messageCollector.report(CompilerMessageSeverity.STRONG_WARNING, e.name.asString())
+                newConst.arguments[0] = declarationIrBuilder().buildStatement(0, 0) { irString(message) }
             }
         }
-        constructor.getArguments().forEach { (descriptor, expression) ->
-            val arg = newConstructor.owner.valueParameters.find { it.name.asString() == descriptor.name.asString() } ?: return@forEach
-            newConst.addArguments(mapOf(arg.descriptor to expression))
-            messageCollector.report(CompilerMessageSeverity.STRONG_WARNING, descriptor.name.asString())
+        constructor.symbol.owner.vParameters.forEachIndexed { i, e ->
+            newConstructor.owner.vParameters.find { it.name.asString() == e.name.asString() } ?: return@forEachIndexed
+            val a = constructor.arguments[i] ?: return@forEachIndexed
+            newConst.arguments[i] = a
+            messageCollector.report(CompilerMessageSeverity.STRONG_WARNING, e.name.asString())
+
         }
         declaration.annotations += newConst
         declaration.annotations -= constructor
     }
+
+    val IrFunction.vParameters get() = parameters.filter { it.kind == IrParameterKind.Regular || it.kind == IrParameterKind.Context }
 
     fun declarationIrBuilder(
         generatorContext: IrGeneratorContext = context,

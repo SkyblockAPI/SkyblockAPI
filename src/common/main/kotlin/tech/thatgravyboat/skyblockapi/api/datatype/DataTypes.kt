@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
-import kotlinx.datetime.Instant
 import net.minecraft.world.item.Item
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
@@ -13,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.defaults.PersonalAccessoryDat
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import java.util.*
 import kotlin.time.Duration
+import kotlin.time.Instant
 
 object DataTypes {
 

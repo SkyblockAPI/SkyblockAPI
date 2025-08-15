@@ -1,10 +1,10 @@
 package tech.thatgravyboat.skyblockapi.api.datetime
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import org.jetbrains.annotations.Range
+import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
 
 private const val EPOCH_DATE = 1559829300000L
 private const val YEAR_IN_MILLIS = 446400000L

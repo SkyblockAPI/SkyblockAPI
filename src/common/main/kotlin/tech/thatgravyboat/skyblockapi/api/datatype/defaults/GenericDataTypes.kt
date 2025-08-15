@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
 import com.google.gson.JsonObject
-import kotlinx.datetime.Instant
 import me.owdding.ktmodules.Module
 import net.minecraft.Util
 import net.minecraft.core.component.DataComponents
@@ -19,6 +18,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
+import kotlin.time.Instant
 
 @Module
 object GenericDataTypes {
