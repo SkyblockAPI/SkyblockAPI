@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ResolvableProfile
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
@@ -63,6 +64,7 @@ operator fun Item.contains(item: ItemStack): Boolean = item.item == this
 operator fun <T> ItemBuilder.set(type: DataComponentType<T>, value: T) = this.set(type, value)
 operator fun <T> ItemStack.get(type: DataComponentType<T>): T? = this.get(type)
 operator fun <T> ItemStack.set(type: DataComponentType<T>, value: T) = this.set(type, value)
+operator fun <T> ItemStack.get(type: DataType<T>) = this.getData(type)
 
 fun ItemStack.getSkyBlockId() = getData(DataTypes.ID)
 fun ItemStack.getApiId() = getData(DataTypes.API_ID)
