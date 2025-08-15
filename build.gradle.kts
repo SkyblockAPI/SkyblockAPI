@@ -7,7 +7,6 @@ import earth.terrarium.cloche.api.metadata.ModMetadata
 import net.msrandom.minecraftcodev.core.utils.toPath
 import net.msrandom.minecraftcodev.fabric.task.JarInJar
 import net.msrandom.minecraftcodev.runs.task.WriteClasspathFile
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -246,6 +245,10 @@ repositories {
 
 compactingResources {
     this.basePath = "repo"
+
+    configureTask(tasks.getByName<ProcessResources>("process1218Resources"))
+    configureTask(tasks.getByName<ProcessResources>("process1215Resources"))
+    configureTask(tasks.getByName<ProcessResources>("processResources"))
 
     substituteFromDifferentFile("slayer", "slayers")
 }

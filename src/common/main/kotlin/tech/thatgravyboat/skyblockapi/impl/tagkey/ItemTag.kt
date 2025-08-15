@@ -8,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 enum class ItemTag(path: String) : ItemTagKey {
     GLASS_PANES("glass_panes"),
     HOTM_PERK_ITEMS("hotm_perk_items"),
+    HUNTING_NOT_FOUND("hunting/not_found")
     ;
 
     override val key: TagKey<Item> = TagKey.create(Registries.ITEM, SkyBlockAPI.id(path))
