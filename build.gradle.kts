@@ -98,9 +98,7 @@ cloche {
             compileOnlyApi.bundle(libs.bundles.meowdding)
 
             implementation(libs.meowdding.item.dfu)
-            runtimeOnly(libs.fabric.language.kotlin) {
-                isTransitive = false
-            }
+            runtimeOnly(libs.fabric.language.kotlin)
             implementation.bundle(libs.bundles.hypixel)
             implementation(libs.skyblockapi.repolib)
 
