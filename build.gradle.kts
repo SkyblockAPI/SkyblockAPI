@@ -373,7 +373,6 @@ tasks.withType<JarInJar>().configureEach {
 
 afterEvaluate {
     tasks.named("createCommonApiStub", GenerateStubApi::class).configure {
-        outputs.upToDateWhen { false }
         excludes.addAll(
             "org.jetbrains.kotlin",
             "me.owdding",
