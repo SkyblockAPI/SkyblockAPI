@@ -32,6 +32,10 @@ object RegexUtils {
 
     fun Regex.contains(input: CharSequence): Boolean = containsMatchIn(input)
 
+    fun <T> Regex.matchOrNull(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> T): T? {
+        return matchEntire(input)?.let { action(Destructured(it, *groups)) }
+    }
+
     fun <T> Regex.findOrNull(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> T): T? {
         return find(input)?.let { action(Destructured(it, *groups)) }
     }

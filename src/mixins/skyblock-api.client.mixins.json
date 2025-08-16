@@ -31,15 +31,16 @@
         "defaultRequire": 1
     },
     "mixins": [
-        "events.SlotMixin",
         "events.ConnectionMixin",
         "events.ItemStackMixin",
+        "events.SlotMixin",
         "features.ItemStackExtensionMixin",
         "features.VisualItemMixin",
         "fixes.FishingHookMixin",
         "fixes.NarratorMixin",
         "fixes.ScoreboardMixin",
         "fixes.YggdrasilMinecraftSessionServiceMixin",
-        "fixes.YggdrasilServicesKeyInfoMixin"
+        "fixes.YggdrasilServicesKeyInfoMixin",
+        "fixes.HolderOwnerMixin"
     ]
 }

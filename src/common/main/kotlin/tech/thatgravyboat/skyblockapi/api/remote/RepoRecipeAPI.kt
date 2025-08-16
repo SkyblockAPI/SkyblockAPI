@@ -15,12 +15,18 @@ object RepoRecipeAPI {
     private val forgeRecipeCache: MutableMap<String, ForgeRecipe?> = mutableMapOf()
     private val craftingRecipeCache: MutableMap<String, CraftingRecipe?> = mutableMapOf()
 
-    fun getCraftingRecipe(id: String): CraftingRecipe? = craftingRecipeCache.getOrPut(id) {
-        RepoAPI.recipes().getRecipes(Recipe.Type.CRAFTING).find { it.result().id() == id }
+    fun getCraftingRecipe(id: String): CraftingRecipe? {
+        if (!RepoAPI.isInitialized()) return null
+        return craftingRecipeCache.getOrPut(id) {
+            RepoAPI.recipes().getRecipes(Recipe.Type.CRAFTING).find { it.result().id() == id }
+        }
     }
 
-    fun getForgeRecipe(id: String): ForgeRecipe? = forgeRecipeCache.getOrPut(id) {
-        RepoAPI.recipes().getRecipes(Recipe.Type.FORGE).find { it.result().id() == id }
+    fun getForgeRecipe(id: String): ForgeRecipe? {
+        if (!RepoAPI.isInitialized()) return null
+        return forgeRecipeCache.getOrPut(id) {
+            RepoAPI.recipes().getRecipes(Recipe.Type.FORGE).find { it.result().id() == id }
+        }
     }
 }
 

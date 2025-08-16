@@ -34,6 +34,7 @@ data class SkyBlockPvOpenedEvent(val profileData: JsonObject) : SkyBlockEvent() 
     /** member data of the McPlayer in the currently selected profile */
     val member: JsonObject = profileData.getPath("members.${McPlayer.uuid.toDashlessString()}")?.asJsonObject!!
 }
+
 @RequiresOptIn(
     message = """
         This event only gets fired when SkyBlockPv is actually installed.

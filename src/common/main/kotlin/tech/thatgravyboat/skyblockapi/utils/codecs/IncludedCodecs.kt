@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.utils.codecs
 
 import com.mojang.authlib.GameProfile
 import com.mojang.serialization.Codec
-import kotlinx.datetime.Instant
 import me.owdding.ktcodecs.IncludedCodec
 import net.minecraft.advancements.critereon.BlockPredicate
 import net.minecraft.core.BlockPos
@@ -23,6 +22,7 @@ import org.joml.Vector3f
 import org.joml.Vector4f
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
 
 internal object IncludedCodecs {
     @IncludedCodec
@@ -77,4 +77,11 @@ internal object IncludedCodecs {
     val INSTANT: Codec<Instant> = Codec.LONG.xmap(Instant::fromEpochMilliseconds, Instant::toEpochMilliseconds)
 
     val INT_KEY: Codec<Int> = Codec.STRING.xmap({ it.toInt() }, { it.toString() })
+
+    @IncludedCodec(named = "cum_int_list")
+    val CUMULATIVE_INT_LIST: Codec<List<Int>> =
+        Codec.INT.listOf().xmap(
+            { it.runningFold(0, Int::plus).distinct() },
+            { it.reversed().runningFold(0, Int::minus).reversed() },
+        )
 }

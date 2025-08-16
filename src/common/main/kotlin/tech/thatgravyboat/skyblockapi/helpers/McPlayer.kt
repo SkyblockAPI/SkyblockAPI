@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.util.*
 
@@ -42,4 +43,6 @@ object McPlayer {
 
     fun distanceSqr(pos: Vec3): Double = position?.distanceToSqr(pos) ?: 0.0
     fun distanceSqr(pos: BlockPos): Double = distanceSqr(Vec3(pos))
+
+    operator fun AABB.contains(player: McPlayer) = this.contains(player.position ?: Vec3.ZERO)
 }

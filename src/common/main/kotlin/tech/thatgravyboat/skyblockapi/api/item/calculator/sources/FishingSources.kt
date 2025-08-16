@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.CalculationEntry
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.IntDataTypeWithLimitCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemEntry
 
 internal object RodPartCalculator : Calculator {
@@ -16,4 +17,6 @@ internal object RodPartCalculator : Calculator {
         return data.map { ItemEntry(it) }
     }
 }
+
+internal object WetBookCalculator : IntDataTypeWithLimitCalculator(DataTypes.WET_BOOK, "WET_BOOK", 5)
 

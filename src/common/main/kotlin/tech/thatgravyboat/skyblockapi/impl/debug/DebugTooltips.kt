@@ -5,6 +5,7 @@ import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.screens.Screen
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getDataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
@@ -23,7 +24,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 object DebugTooltips {
 
     private var lastItem = 0
-    private var keys = emptyList<DataType<*>>()
+    private var keys = mutableListOf<DataType<*>>()
     private var index = 0
 
     private val defaultEnabled = System.getenv("SKYBLOCK_API_DEBUG_TOOLTIPS")?.toBoolean() == true || SkyBlockAPI.isDebug
@@ -58,7 +59,7 @@ object DebugTooltips {
 
         val hash = System.identityHashCode(event.item)
         if (hash == lastItem) {
-            keys = types.keys.toList()
+            keys = types.keys.toMutableList()
             index = 0
             lastItem = hash
         }
@@ -71,7 +72,7 @@ object DebugTooltips {
                     this.color = TextColor.DARK_GRAY
                 },
             )
-            keys = types.keys.toList()
+            keys = types.keys.toMutableList()
             index = 0
         } else {
             event.add(
@@ -85,9 +86,10 @@ object DebugTooltips {
                 ),
             )
 
-            if (keys.isEmpty()) keys = types.keys.toList()
+            if (keys.isEmpty()) keys = types.keys.toMutableList()
 
             if (keys.isNotEmpty()) {
+                keys.remove(DataTypes.SKYBLOCK_ID).takeIf { it }?.apply { keys.addFirst(DataTypes.SKYBLOCK_ID) }
                 val key = keys[index]
                 val value = types[key]
 

@@ -15,7 +15,7 @@ private const val API_URL = "https://api.hypixel.net/v2/resources/skyblock/skill
 object HypixelSkillAPI {
     enum class Skill(private val floatingCap: Boolean = false) : SkillType {
         COMBAT,
-        FORAGING,
+        FORAGING(true),
         MINING,
         FARMING(true),
         FISHING,

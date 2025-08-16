@@ -17,6 +17,10 @@ fun <T> List<T>.chunked(predicate: (T) -> Boolean): MutableList<MutableList<T>> 
     return chunks
 }
 
+fun <T> Iterable<T>.firstOrElseLast(predicate: (T) -> Boolean): T {
+    return this.firstOrNull(predicate) ?: this.last()
+}
+
 inline fun <T> List<T>.peek(crossinline block: (T) -> Unit): List<T> {
     for (element in this) {
         block(element)

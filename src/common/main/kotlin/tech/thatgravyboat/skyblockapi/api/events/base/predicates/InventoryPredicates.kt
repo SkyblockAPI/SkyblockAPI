@@ -19,14 +19,26 @@ annotation class InventoryTitle(
 @Target(AnnotationTarget.FUNCTION)
 annotation class MustBeContainer
 
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION)
+annotation class IgnoreFiller
+
+class InventoryFillerPredicate : EventPredicateProvider {
+    override fun getPredicate(method: Method): EventPredicate? {
+        method.getAnnotation<IgnoreFiller>() ?: return null
+
+        return predicate@{ event, _ ->
+            val isFiller = (event as? InventoryChangeEvent)?.isSkyBlockFiller ?: return@predicate true
+            return@predicate !isFiller
+        }
+    }
+}
+
 class InventoryPredicates : EventPredicateProvider {
     override fun getPredicate(method: Method): EventPredicate? {
         val inventoryTitle = method.getAnnotation<InventoryTitle>()?.title?.map { Regex(it) }
         val disallowPlayerInventory = method.getAnnotation<MustBeContainer>() != null
-
-        if (inventoryTitle == null && !disallowPlayerInventory) {
-            return null
-        }
+        if (inventoryTitle == null && !disallowPlayerInventory) return null
 
         return predicate@{ event, _ ->
             if (event !is ContainerInitializedEvent && event !is InventoryChangeEvent) {
@@ -44,3 +56,4 @@ class InventoryPredicates : EventPredicateProvider {
         }
     }
 }
+

@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api
 
 import com.google.gson.JsonElement
 import com.mojang.serialization.Codec
+import me.owdding.dfu.item.MeowddingItemDfu
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.resources.ResourceLocation
 import org.jetbrains.annotations.ApiStatus
@@ -21,6 +22,8 @@ import java.nio.file.Files
 object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal val mod = FabricLoader.getInstance().getModContainer("skyblock-api").orElseThrow()
+    val MOD_ID: String get() = mod.metadata.id
+    const val NAMESPACE: String = "skyblockapi"
 
     @JvmStatic
     val eventBus = EventBus()
@@ -36,6 +39,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
             RepoStatusEvent(status).post()
         }
+        MeowddingItemDfu.load()
     }
 
     @JvmStatic
@@ -44,7 +48,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         DataTypesRegistry.load()
     }
 
-    internal fun id(path: String) = ResourceLocation.fromNamespaceAndPath("skyblockapi", path)
+    internal fun id(path: String) = ResourceLocation.fromNamespaceAndPath(NAMESPACE, path)
     internal fun <C : Any> getRepo(file: String, codec: Codec<C>) =
         mod.findPath("repo/$file.json").orElseThrow()?.let(Files::readString)?.readJson<JsonElement>().toDataOrThrow(codec)
 }

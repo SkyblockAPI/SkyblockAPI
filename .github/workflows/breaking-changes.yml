@@ -2,7 +2,7 @@ name: Breaking Changes Checker
 
 on:
     pull_request_target:
-        branches: [ "1.x" ]
+        branches: [ "2.0" ]
 
 permissions:
     contents: write

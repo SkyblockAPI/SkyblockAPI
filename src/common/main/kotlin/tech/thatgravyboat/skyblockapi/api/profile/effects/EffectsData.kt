@@ -1,9 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.profile.effects
 
-import kotlinx.datetime.Instant
 import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import kotlin.time.Duration
+import kotlin.time.Instant
 
 @GenerateCodec
 data class EffectsData(

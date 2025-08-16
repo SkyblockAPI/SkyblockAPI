@@ -41,27 +41,20 @@ fun String?.toFloatValue(): Float = runCatching {
     this?.replace(",", "")?.toFloat() ?: 0f
 }.getOrDefault(0f)
 
-fun String?.parseFormattedLong(default: Long = 0L): Long = runCatching {
-    val commaless = this?.lowercase()?.replace(",", "")
-    val multiplier = formattedMultiplier.entries.firstOrNull { commaless?.endsWith(it.key) == true }?.value
-    return@runCatching if (multiplier != null) {
-        commaless?.dropLast(1)?.toLong()?.times(multiplier) ?: 0
-    } else {
-        commaless?.toLong() ?: 0
-    }
-}.getOrDefault(default)
+fun String?.parseFormattedLong(default: Long = 0L): Long = parseFormattedDouble(default.toDouble()).toLong()
 
 fun String?.parseFormattedInt(default: Int = 0): Int = parseFormattedLong(default.toLong()).toInt()
 
-fun String?.parseFormattedDouble(): Double = runCatching {
+@JvmOverloads
+fun String?.parseFormattedDouble(default: Double = 0.0): Double = runCatching {
     val commaless = this?.lowercase()?.replace(",", "")
     val multiplier = formattedMultiplier.entries.firstOrNull { commaless?.endsWith(it.key) == true }?.value
     return@runCatching if (multiplier != null) {
-        commaless?.dropLast(1)?.toDouble()?.times(multiplier) ?: 0.0
+        commaless?.dropLast(1)?.toDouble()?.times(multiplier) ?: default
     } else {
-        commaless?.toDouble() ?: 0.0
+        commaless?.toDouble() ?: default
     }
-}.getOrDefault(0.0)
+}.getOrDefault(default)
 
 fun String?.parseFormattedFloat(): Float = parseFormattedDouble().toFloat()
 
@@ -199,3 +192,6 @@ private val screamingSnakeCaseRegex = "\\W+".toRegex()
 fun String.toScreamingSnakeCase(): String = replace(screamingSnakeCaseRegex, "_").uppercase()
 
 fun String.removeTrailingChar(target: Char): String = dropLastWhile {  it == target }
+
+private val validChars = listOf(' ', '_', '-', ':')
+fun String.sanitizeForCommandInput() = this.filter { it.isDigit() || it.isLetter() || it in validChars }.trim()

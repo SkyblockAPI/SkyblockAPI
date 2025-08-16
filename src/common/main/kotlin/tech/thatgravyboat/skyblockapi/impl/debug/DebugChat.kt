@@ -1,11 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
+import com.google.gson.JsonParser
 import com.mojang.blaze3d.platform.InputConstants
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.format
-import kotlinx.datetime.format.DateTimeComponents
-import kotlinx.datetime.format.char
 import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.StringWidget
@@ -22,12 +18,18 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toData
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
+import tech.thatgravyboat.skyblockapi.utils.time.format
+import java.time.format.DateTimeFormatter
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 @Module
 object DebugChat {
@@ -41,10 +43,18 @@ object DebugChat {
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi chat") {
-            callback {
-                McClient.setScreen(DebugChatScreen(messages))
-            }
+        event.registerWithCallback("sbapi chat") {
+            McClient.setScreen(DebugChatScreen(messages))
+        }
+        event.registerWithCallback("sbapi message") {
+            val clipboard = McClient.clipboard.takeUnless { it.isEmpty() } ?: return@registerWithCallback
+            val component = runCatching {
+                JsonParser.parseString(clipboard).toData(ComponentSerialization.CODEC)
+            }.getOrNull() ?: Text.of(clipboard)
+
+            component.send()
+            ChatReceivedEvent.Pre(component).post()
+            ChatReceivedEvent.Post(component).post()
         }
     }
 }
@@ -95,7 +105,7 @@ private class DebugChatScreen(val messages: List<Pair<Instant, Component>>) : Sc
 
 private class Widget(timestamp: Instant, val content: Component) : StringWidget(
     Text.join(
-        Text.of("[${timestamp.format(this.formatter)}] : ") {
+        Text.of("[${this.formatter.format(timestamp)}] : ") {
             this.color = TextColor.DARK_GRAY
         },
         content,
@@ -144,13 +154,7 @@ private class Widget(timestamp: Instant, val content: Component) : StringWidget(
 
         private val toastId = SystemToastId(1500)
 
-        private val formatter = DateTimeComponents.Format {
-            hour()
-            char(':')
-            minute()
-            char(':')
-            second()
-        }
+        private val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
     }
 
 }

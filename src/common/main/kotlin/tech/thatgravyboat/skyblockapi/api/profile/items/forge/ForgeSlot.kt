@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.forge
 
-import kotlinx.datetime.Instant
 import me.owdding.ktcodecs.GenerateCodec
+import kotlin.time.Instant
 
 @GenerateCodec
 data class ForgeSlot(

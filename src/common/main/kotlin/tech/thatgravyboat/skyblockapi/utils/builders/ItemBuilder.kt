@@ -8,19 +8,29 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemLore
+import net.minecraft.world.level.ItemLike
 import tech.thatgravyboat.skyblockapi.api.item.asVisualItemAccessor
 import tech.thatgravyboat.skyblockapi.utils.extentions.holder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
 import kotlin.jvm.optionals.getOrNull
 
-class ItemBuilder {
+class ItemBuilder() {
     lateinit var item: Item
     var count: Int = 1
     private var components = DataComponentPatch.builder()
     private var clickAction: ((Int) -> Unit)? = null
     var customSlotText: String? = null
     var backgroundItem: ItemStack? = null
+
+    companion object {
+        operator fun invoke(item: ItemLike, init: ItemBuilder.() -> Unit): ItemStack {
+            return ItemBuilder().apply {
+                this.item = item.asItem()
+                init()
+            }.build()
+        }
+    }
 
     /**
      * Copies the state of the stack to this builder. Replacing existing components, item, and count.

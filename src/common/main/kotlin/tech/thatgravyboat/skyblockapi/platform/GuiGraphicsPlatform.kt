@@ -24,8 +24,10 @@ import org.joml.Vector2f
     color: Int = -1
 )
 
-@Stub expect fun GuiGraphics.showTooltip(text: Component, maxWidth: Int = 170, force: Boolean = true)
-@Stub expect fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = 170, force: Boolean = true)
+@Stub
+expect fun GuiGraphics.showTooltip(text: Component, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true)
+@Stub
+expect fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true)
 
 @Stub expect fun GuiGraphics.getTranslation(): Vector2f
 @Stub expect fun GuiGraphics.getScale(): Vector2f

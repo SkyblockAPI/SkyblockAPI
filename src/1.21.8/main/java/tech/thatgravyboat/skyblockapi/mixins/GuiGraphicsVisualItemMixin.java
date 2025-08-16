@@ -40,7 +40,7 @@ public abstract class GuiGraphicsVisualItemMixin {
     }
 
     @Inject(
-        method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;III)V",
+        method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
         at = @At("HEAD")
     )
     public void renderBackgroundItem(

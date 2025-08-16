@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
 import com.google.gson.JsonObject
-import kotlinx.datetime.Instant
 import me.owdding.ktmodules.Module
 import net.minecraft.Util
 import net.minecraft.core.component.DataComponents
@@ -13,14 +12,18 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
+import kotlin.time.Instant
 
 @Module
 object GenericDataTypes {
 
+    val SKYBLOCK_ID: DataType<SkyBlockId> = DataType("skyblock_id") { it.getSkyBlockId() }
     val ID: DataType<String> = DataType("id") { it.tag?.getStringOrNull("id") }
     val API_ID: DataType<String> = DataType("api_id") {
         val id = it.tag?.getStringOrNull("id")
@@ -95,6 +98,7 @@ object GenericDataTypes {
         it.tag?.getList("boosters")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull()?.let { "${it}_BOOSTER" } } ?: emptyList()
     }
 
+    val WET_BOOK: DataType<Int> = DataType("wet_book") { it.tag?.getIntOrNull("wet_book_count") }
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
     val SINKER: DataType<Pair<UUID, String>> = getFishingRodPartDataType("sinker")
@@ -103,7 +107,7 @@ object GenericDataTypes {
     val ENGINE: DataType<String> = DataType("drill_part_engine") { it.tag?.getStringOrNull("drill_part_engine") }
     val UPGRADE_MODULE: DataType<String> = DataType("drill_part_upgrade_module") { it.tag?.getStringOrNull("drill_part_upgrade_module") }
 
-    /** In SkyBlock items that are only avaliable in new versions are showned via `DataComponents.ITEM_MODEL` this returns that item that is displayed. */
+    /** In SkyBlock items that are only available in new versions are shown via `DataComponents.ITEM_MODEL`, this returns the item that is displayed. */
     val VISIBLE_ITEM: DataType<Item> = DataType("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
 
     @Subscription
@@ -144,6 +148,7 @@ object GenericDataTypes {
         event.register(POLARVOID)
         event.register(POWER_ABILITY_SCROLL)
         event.register(JALAPENO_BOOK)
+        event.register(WET_BOOK)
         event.register(HOOK)
         event.register(LINE)
         event.register(SINKER)
@@ -154,6 +159,7 @@ object GenericDataTypes {
         event.register(BOOSTERS)
         event.register(ABSORB_LOGS)
         event.register(LOGS_CUT)
+        event.register(SKYBLOCK_ID)
     }
 
     private fun getFishingRodPartDataType(name: String) = DataType(name) {
@@ -163,9 +169,9 @@ object GenericDataTypes {
     }
 
     private fun getAppliedRune(tag: CompoundTag): Pair<String, Int>? {
-        return tag.getCompoundOrEmpty("runes")?.let { tag ->
+        return tag.getCompoundOrEmpty("runes").let { tag ->
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
-        }?.entries?.firstOrNull()?.toPair()
+        }.entries.firstOrNull()?.toPair()
     }
 
     private fun getPetData(tag: CompoundTag): PetData? {

@@ -17,8 +17,12 @@ import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
+import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
+import tech.thatgravyboat.skyblockapi.utils.McVersion
+import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
+import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import java.net.URI
 import java.nio.file.Path
 
@@ -32,6 +36,9 @@ actual object McClient {
 
     actual val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
     actual val config: Path = FabricLoader.getInstance().configDir
+
+    actual val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
+    actual val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
     actual val version: String = SharedConstants.getCurrentVersion().name()
 
     actual val self: Minecraft get() = Minecraft.getInstance()
@@ -93,6 +100,16 @@ actual object McClient {
 
     actual fun runNextTick(action: () -> Unit) {
         self.schedule(action)
+    }
+
+    actual fun playSound(sound: SoundEvent, volume: Float, pitch: Float) {
+        McPlayer.self?.playSound(sound, volume, pitch)
+    }
+
+    actual fun setTitle(title: Component, subtitle: Component?, fadeInTime: Float, stayTime: Float, fadeOutTime: Float) {
+        gui.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
+        gui.setSubtitle(subtitle ?: CommonText.EMPTY)
+        gui.setTitle(title)
     }
 
     actual fun setScreenAsync(screen: () -> Screen?) = runNextTick { self.setScreen(screen()) }

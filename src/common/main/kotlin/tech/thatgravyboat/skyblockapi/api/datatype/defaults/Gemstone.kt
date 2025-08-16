@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import kotlin.jvm.optionals.getOrNull
 
 enum class Gemstone {
@@ -55,6 +56,7 @@ enum class GemstoneSlot(vararg val gemstones: Gemstone) {
 
 data class GemstoneSlotData(val gemstone: Gemstone, val slot: GemstoneSlot, val quality: GemstoneQuality) {
     val itemId = "${quality.name}_${gemstone.name}_GEM"
+    val skyblockId = SkyBlockId.item(itemId)
 }
 
 fun parseGemstones(tag: CompoundTag?): List<GemstoneSlotData>? {

@@ -1,0 +1,66 @@
+{
+    "revenant_horror": {
+        "name": "Zombie",
+        "id": "zombie",
+        "leveling": {
+            "@from": "slayer_levels"
+        },
+        "boss_xp": {
+            "@from": "slayer_xp",
+            "key": "revenant_slayer_boss_xp"
+        }
+    },
+    "tarantula_broodfather": {
+        "name": "Spider",
+        "id": "spider",
+        "leveling": {
+            "@from": "slayer_levels"
+        },
+        "boss_xp": {
+            "@from": "slayer_xp",
+            "key": "tarantula_slayer_boss_xp"
+        }
+    },
+    "sven_packmaster": {
+        "name": "Wolf",
+        "id": "wolf",
+        "leveling": {
+            "@from": "slayer_levels"
+        },
+        "boss_xp": {
+            "@from": "slayer_xp"
+        }
+    },
+    "voidgloom_seraph": {
+        "name": "Enderman",
+        "id": "enderman",
+        "leveling": {
+            "@from": "slayer_levels"
+        },
+        "boss_xp": {
+            "@from": "slayer_xp"
+        }
+    },
+    "inferno_demonlord": {
+        "name": "Blaze",
+        "id": "blaze",
+        "leveling": {
+            "@from": "slayer_levels"
+        },
+        "boss_xp": {
+            "@from": "slayer_xp"
+        }
+    },
+    "riftstalker_bloodfiend": {
+        "name": "Vampire",
+        "id": "vampire",
+        "leveling": {
+            "@from": "slayer_levels",
+            "key": "vampire_slayer_level"
+        },
+        "boss_xp": {
+            "@from": "slayer_xp",
+            "key": "vampire_slayer_boss_xp"
+        }
+    }
+}

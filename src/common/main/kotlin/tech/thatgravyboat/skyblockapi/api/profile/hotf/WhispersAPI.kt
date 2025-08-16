@@ -35,9 +35,9 @@ object WhispersAPI {
         "forest.spent",
         "\\s*-\\s*(?<amount>[\\d,.]+) Forest Whispers",
     )
-    private val forestWhispersRegex = RegexGroup.TABLIST_WIDGET.group("hotf").create(
-        "whispers",
-        "Forest Whispers: (?<amount>[\\w,.]+)",
+    private val forestWhispersRegex = RegexGroup.TABLIST_WIDGET.group("whispers").create(
+        "forest",
+        "Forest Whispers: (?<amount>[\\dkmb,.]+)",
     )
     //endregion
 
@@ -54,8 +54,12 @@ object WhispersAPI {
         forestWhispersRegex.anyMatch(event.new, "amount") { (amount) ->
             val amount = amount.parseFormattedLong()
             val diff = amount - HotfStorage.forest
-            HotfStorage.forest = amount
-            if (diff > 0) HotfStorage.forestTotal += diff
+
+            // Tablist amount is shortened, meaning the old data will be more precise than tablist
+            if (diff > 0) {
+                HotfStorage.forest = amount
+                HotfStorage.forestTotal += diff
+            }
         }
     }
 

@@ -31,9 +31,11 @@ actual inline fun GuiGraphics.pushPop(block: () -> Unit) {
 actual fun GuiGraphics.translate(x: Number, y: Number) {
     this.pose().translate(x.toFloat(), y.toFloat())
 }
+
 actual fun GuiGraphics.scale(x: Number, y: Number) {
     this.pose().scale(x.toFloat(), y.toFloat())
 }
+
 actual fun GuiGraphics.rotate(angle: Number, x: Number, y: Number) {
     if (x.toFloat() == 0f && y.toFloat() == 0f) {
         this.pose().rotate(angle.toFloat() * Mth.DEG_TO_RAD)

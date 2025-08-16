@@ -1,10 +1,20 @@
 @file:Suppress("UnstableApiUsage")
+@file:OptIn(ExperimentalPathApi::class)
 
 import com.google.devtools.ksp.gradle.KspTask
+import earth.terrarium.cloche.api.metadata.FabricMetadata
+import earth.terrarium.cloche.api.metadata.ModMetadata
+import net.msrandom.minecraftcodev.core.utils.toPath
+import net.msrandom.minecraftcodev.fabric.task.JarInJar
+import net.msrandom.minecraftcodev.runs.task.WriteClasspathFile
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import tech.thatgravyboat.skyblockapi.item.deprecationMessage
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
+import java.util.zip.ZipFile
+import kotlin.io.path.*
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -30,11 +40,12 @@ java {
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
-        languageVersion = KotlinVersion.KOTLIN_2_0
+        languageVersion = KotlinVersion.KOTLIN_2_2
         freeCompilerArgs.addAll(
             "-Xmulti-platform",
             "-Xno-check-actual",
             "-Xexpect-actual-classes",
+            "-Xopt-in=kotlin.time.ExperimentalTime",
         )
     }
 }
@@ -54,6 +65,7 @@ dependencies {
     ksp(libs.bundles.meowdding)
     compileOnly(project(":annotations"))
     compilerAll(rootProject.project(":compiler"))
+    compileOnly(kotlin("stdlib-jdk8"))
 
     compileOnly(libs.bundles.meowdding)
     configurations.forEach {
@@ -84,6 +96,7 @@ cloche {
             modCompileOnly.bundle(libs.bundles.meowdding)
             modCompileOnlyApi.bundle(libs.bundles.meowdding)
 
+            modImplementation(libs.meowdding.item.dfu)
             modImplementation(libs.fabric.language.kotlin)
             modImplementation.bundle(libs.bundles.hypixel)
             modImplementation(libs.skyblockapi.repolib)
@@ -97,6 +110,11 @@ cloche {
         version: String = name,
         loaderVersion: Provider<String> = libs.versions.fabric.loader,
         fabricApiVersion: Provider<String> = libs.versions.fabric.api,
+        minecraftVersionRange: ModMetadata.VersionRange.() -> Unit = {
+            start = version
+            end = version
+            endExclusive = false
+        },
     ) {
         fabric(name) {
             includedClient()
@@ -105,38 +123,101 @@ cloche {
 
             include(libs.skyblockapi.repolib)
             include(libs.hypixel.modapi.fabric)
+            include(libs.meowdding.item.dfu)
 
             metadata {
                 entrypoint("client", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit")
-                entrypoint("main", "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load")
-                entrypoint("main", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init")
+                entrypoint(
+                    "main",
+                    listOf(
+                        "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load",
+                        "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init"
+                    ).map { entrypoint ->
+                        Action<FabricMetadata.Entrypoint> {
+                            this.value.set(entrypoint)
+                        }
+                    }
+                )
 
-                dependency {
-                    modId = "fabric-language-kotlin"
-                    required = true
+
+                fun dependency(modId: String, version: Provider<String>? = null) {
+                    dependency {
+                        this.modId = modId
+                        this.required = true
+                        if (version != null) version {
+                            this.start = version
+                        }
+                    }
                 }
 
+                dependency("fabric-language-kotlin")
+                dependency("fabric")
+                dependency("fabricloader", loaderVersion)
+                dependency("hypixel-mod-api", libs.versions.hypixel.modapi.fabric)
                 dependency {
-                    modId = "fabric"
+                    modId = "minecraft"
                     required = true
+                    version(minecraftVersionRange)
                 }
             }
 
             dependencies {
                 fabricApi(fabricApiVersion.get(), minecraftVersion)
+
+                val mods = project.layout.buildDirectory.get().toPath().resolve("tmp/extracted${sourceSet.name}RuntimeMods")
+                val modsTmp = project.layout.buildDirectory.get().toPath().resolve("tmp/extracted${sourceSet.name}RuntimeMods/tmp")
+
+                mods.deleteRecursively()
+                modsTmp.createDirectories()
+                mods.createDirectories()
+
+                fun extractMods(file: Path) {
+                    println("Adding runtime mod ${file.name}")
+                    val extracted = mods.resolve(file.name)
+                    file.copyTo(extracted, overwrite = true)
+                    modRuntimeOnly(files(extracted))
+                    ZipFile(extracted.toFile()).use {
+                        it.entries().asIterator().forEach { file ->
+                            val name = file.name.replace(File.separator, "/")
+                            if (name.startsWith("META-INF/jars/") && name.endsWith(".jar")) {
+                                val data = it.getInputStream(file).readAllBytes()
+                                val file = modsTmp.resolve(name.substringAfterLast("/"))
+                                file.writeBytes(data, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)
+                                extractMods(file)
+                            }
+                        }
+                    }
+                }
+
+                project.layout.projectDirectory.toPath().resolve("run/${sourceSet.name}Mods").takeIf { it.exists() }
+                    ?.listDirectoryEntries()?.filter { it.isRegularFile() }?.forEach { file ->
+                        extractMods(file)
+                    }
+
+                modsTmp.deleteRecursively()
             }
 
             mixins.from("src/mixins/skyblock-api.client.mixins.json")
             mixins.from("src/mixins/skyblock-api.versioned.mixins.json")
             mixins.from("src/mixins/skyblock-api.versioned.${version.replace(".", "")}.mixins.json")
+
             runs {
-                client()
+                client {
+                    args("--quickPlayMultiplayer=hypixel.net")
+
+                    jvmArgs("-Ddevauth.enabled=true")
+                    jvmArgs("-Dskyblockapi.debug=true")
+
+                    beforeRun
+                }
             }
         }
     }
 
     createVersion("1.21.5")
-    createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" })
+    createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" }) {
+        start = "1.21.6"
+    }
 
     mappings {
         official()
@@ -165,6 +246,10 @@ repositories {
 
 compactingResources {
     this.basePath = "repo"
+
+    configureTask(tasks.getByName<ProcessResources>("process1218Resources"))
+    configureTask(tasks.getByName<ProcessResources>("process1215Resources"))
+    configureTask(tasks.getByName<ProcessResources>("processResources"))
 
     substituteFromDifferentFile("slayer", "slayers")
 }
@@ -244,4 +329,50 @@ ksp {
     arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
     arg("meowdding.codecs.project_name", "SkyblockAPI")
     arg("meowdding.codecs.package", "tech.thatgravyboat.skyblockapi.generated")
+    arg("actualStubDir", project.layout.buildDirectory.dir("generated/ksp/main/stubs").get().asFile.absolutePath)
+}
+
+// TODO temporary workaround for a cloche issue on certain systems, remove once fixed
+val mcVersions = sourceSets.filterNot { it.name == SourceSet.MAIN_SOURCE_SET_NAME || it.name == SourceSet.TEST_SOURCE_SET_NAME }
+
+tasks.withType<WriteClasspathFile>().configureEach {
+    actions.clear()
+    actions.add {
+        generate()
+        val file = output.get().toPath()
+        file.writeText(file.readText().lines().joinToString(File.pathSeparator))
+    }
+}
+
+tasks.register("release") {
+    group = "skyblock-api"
+    mcVersions.forEach {
+        tasks.getByName("${it.name}JarInJar").let { task ->
+            dependsOn(task)
+            mustRunAfter(task)
+        }
+    }
+}
+
+tasks.register("cleanRelease") {
+    group = "skyblock-api"
+    listOf("clean", "release").forEach {
+        tasks.getByName(it).let { task ->
+            dependsOn(task)
+            mustRunAfter(task)
+        }
+    }
+}
+
+tasks.withType<JarInJar>().configureEach {
+    include { !it.name.endsWith("-dev.jar") }
+}
+
+tasks.register("setupForWorkflows") {
+    mcVersions.flatMap {
+        listOf("remap${it.name}CommonMinecraftNamed", "remap${it.name}ClientMinecraftNamed")
+    }.mapNotNull { tasks.findByName(it) }.forEach {
+        dependsOn(it)
+        mustRunAfter(it)
+    }
 }
