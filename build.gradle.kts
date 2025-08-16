@@ -332,7 +332,6 @@ ksp {
     arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
     arg("meowdding.codecs.project_name", "SkyblockAPI")
     arg("meowdding.codecs.package", "tech.thatgravyboat.skyblockapi.generated")
-    // arg("actualStubDir", project.layout.buildDirectory.dir("generated/ksp/main/stubs").get().asFile.absolutePath)
 }
 
 // TODO temporary workaround for a cloche issue on certain systems, remove once fixed
@@ -392,11 +391,6 @@ afterEvaluate {
             "tech.thatgravyboat",
             "net.msrandom"
         )
-        doFirst {
-            classpaths.get().flatten().groupBy { it.id.orNull }.filter { (_, s) -> s.size >= 2 }.forEach { (id) ->
-                println(id.toString())
-            }
-        }
     }
 }
 
