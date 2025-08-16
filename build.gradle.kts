@@ -7,6 +7,7 @@ import earth.terrarium.cloche.api.metadata.ModMetadata
 import net.msrandom.minecraftcodev.core.utils.toPath
 import net.msrandom.minecraftcodev.fabric.task.JarInJar
 import net.msrandom.minecraftcodev.runs.task.WriteClasspathFile
+import net.msrandom.stubs.GenerateStubApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -65,7 +66,7 @@ dependencies {
     ksp(libs.bundles.meowdding)
     compileOnly(project(":annotations"))
     compilerAll(rootProject.project(":compiler"))
-    compileOnly(kotlin("stdlib-jdk8"))
+    implementation(kotlin("stdlib-jdk8"))
 
     compileOnly(libs.bundles.meowdding)
     configurations.forEach {
@@ -93,15 +94,15 @@ cloche {
 
         dependencies {
             compileOnly(project(":annotations"))
-            modCompileOnly.bundle(libs.bundles.meowdding)
-            modCompileOnlyApi.bundle(libs.bundles.meowdding)
+            compileOnly.bundle(libs.bundles.meowdding)
+            compileOnlyApi.bundle(libs.bundles.meowdding)
 
-            modImplementation(libs.meowdding.item.dfu)
-            modImplementation(libs.fabric.language.kotlin)
-            modImplementation.bundle(libs.bundles.hypixel)
-            modImplementation(libs.skyblockapi.repolib)
+            implementation(libs.meowdding.item.dfu)
+            implementation(libs.fabric.language.kotlin)
+            implementation.bundle(libs.bundles.hypixel)
+            implementation(libs.skyblockapi.repolib)
 
-            modRuntimeOnly(libs.devauth)
+            runtimeOnly(libs.devauth)
         }
     }
 
@@ -366,6 +367,30 @@ tasks.register("cleanRelease") {
 
 tasks.withType<JarInJar>().configureEach {
     include { !it.name.endsWith("-dev.jar") }
+}
+
+afterEvaluate {
+    tasks.named("createCommonApiStub", GenerateStubApi::class).configure {
+        excludes.addAll(
+            "org.jetbrains.kotlin",
+            "me.owdding",
+            "net.hypixel",
+            "maven.modrinth",
+            "com.fasterxml.jackson",
+            "com.google",
+            "com.ibm",
+            "io.netty",
+            "net.fabricmc:fabric-language-kotlin",
+            "com.mojang:datafixerupper",
+            "com.mojang:brigardier",
+            "net.fabricmc.fabric-api",
+            "io.github.llamalad7:mixinextras",
+            "net.minidev",
+            "com.nimbusds",
+            "tech.thatgravyboat",
+            "net.msrandom"
+        )
+    }
 }
 
 tasks.register("setupForWorkflows") {
