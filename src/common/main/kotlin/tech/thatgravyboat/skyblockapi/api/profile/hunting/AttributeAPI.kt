@@ -64,7 +64,7 @@ object AttributeAPI {
     private val chatGroup = RegexGroup.CHAT.group("attribute")
 
     private val trapGroup = chatGroup.group("trap")
-    private val foundShardRegex = trapGroup.create("caught", "^You caught (?<amount>a|x\\d+) (?<name>.*?) Shards?!$")
+    private val foundShardRegex = trapGroup.create("caught", "^You caught (?<amount>an?|x\\d+) (?<name>.*?) Shards?!$")
 
     private val fusionChatGroup = chatGroup.group("fusion")
     private val fusionObtainedRegex = fusionChatGroup.create("obtained", "FUSION! You obtained (?:a )?(.*?)(?: (x\\d+))?!.*")
@@ -77,7 +77,7 @@ object AttributeAPI {
     private val saltSingularRegex = saltGroup.create("singular", "(?:CHARM|SALT) You charmed a (?<name>.*?) and captured its Shard\\.")
     private val saltMultipleRegex = saltGroup.create("multiple", "(?:CHARM|SALT) You charmed a (?<name>.*?) and captured (?<amount>\\d+) Shards from it\\.")
 
-    private val sentToHuntingBoxRegex = chatGroup.create("sent_to_hunting_box", "You sent (?<amount>a|\\d+) (?<shard>.*? Shard)s? to your Hunting Box.")
+    private val sentToHuntingBoxRegex = chatGroup.create("sent_to_hunting_box", "You sent (?<amount>an?|\\d+) (?<shard>.*? Shard)s? to your Hunting Box.")
 
     private val fishingRegex = chatGroup.create("fishing", "^⛃ .*? CATCH! You caught a (?<name>.*) Shard!$")
     //endregion
@@ -90,8 +90,6 @@ object AttributeAPI {
 
     val attributeLevelData: MutableMap<SkyBlockRarity, List<Int>> =
         SkyBlockAPI.getRepo("attribute_levels", CodecUtils.map(SkyblockAPICodecs.getCodec<SkyBlockRarity>(), IncludedCodecs.CUMULATIVE_INT_LIST))
-
-    private fun escape(message: String) = message.replace(" an ", "a ")
 
     @Subscription
     @MustBeContainer
@@ -159,10 +157,9 @@ object AttributeAPI {
     @Subscription
     @OnlyOnSkyBlock
     fun foundShard(event: ChatReceivedEvent.Pre) {
-        val text = escape(event.text)
-        if (!text.matches(foundShardRegex)) return
-        foundShardRegex.match(text, "amount", "name") { (amount, name) ->
-            val actualAmount = if (amount == "a") 1 else amount.filter { it.isDigit() }.toIntValue()
+        if (!event.text.matches(foundShardRegex)) return
+        foundShardRegex.match(event.text, "amount", "name") { (amount, name) ->
+            val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
             val id = SkyBlockId.fromName(name) ?: return@match
             addOwnedAttributeAmount(id, actualAmount)
         }
@@ -197,8 +194,7 @@ object AttributeAPI {
     @Subscription
     @OnlyOnSkyBlock
     fun fusionComplete(event: ChatReceivedEvent.Pre) {
-        val text = escape(event.text)
-        if (!text.matches(fusionObtainedRegex)) return
+        if (!event.text.matches(fusionObtainedRegex)) return
         if (!deferredFusion.isComplete()) return
         deferredFusion.submit()
         deferredFusion.reset()
@@ -207,14 +203,13 @@ object AttributeAPI {
     @Subscription
     @OnlyOnSkyBlock
     fun syphoned(event: ChatReceivedEvent.Pre) {
-        val text = escape(event.text)
-        syphonedRegex.match(text, "amount", "name") { (amount, name) ->
+        syphonedRegex.match(event.text, "amount", "name") { (amount, name) ->
             val id = SkyBlockId.fromName(name) ?: return@match
             val amount = amount.toIntValue()
             addSyphonedAttributeAmount(id, amount)
             removeOwnedAttributeAmount(id, amount)
         }
-        if (fusionPureReptileRegex.matches(text)) {
+        if (fusionPureReptileRegex.matches(event.text)) {
             deferredFusion.doubleOutput = true
         }
     }
@@ -222,12 +217,11 @@ object AttributeAPI {
     @Subscription
     @OnlyOnSkyBlock
     fun salt(event: ChatReceivedEvent.Pre) {
-        val text = escape(event.text)
-        saltSingularRegex.match(text, "name") { (name) ->
+        saltSingularRegex.match(event.text, "name") { (name) ->
             val id = SkyBlockId.fromName(name) ?: return@match
             addOwnedAttributeAmount(id, 1)
         }
-        saltMultipleRegex.match(text, "name", "amount") { (name, amount) ->
+        saltMultipleRegex.match(event.text, "name", "amount") { (name, amount) ->
             val id = SkyBlockId.fromName(name) ?: return@match
             addOwnedAttributeAmount(id, amount.toIntValue())
         }
@@ -236,9 +230,8 @@ object AttributeAPI {
     @Subscription
     @OnlyOnSkyBlock
     fun huntingBox(event: ChatReceivedEvent.Pre) {
-        val text = escape(event.text)
-        sentToHuntingBoxRegex.match(text, "amount", "shard") { (amount, shard) ->
-            val actualAmount = if (amount == "a") 1 else amount.filter { it.isDigit() }.toIntValue()
+        sentToHuntingBoxRegex.match(event.text, "amount", "shard") { (amount, shard) ->
+            val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
             val id = SkyBlockId.fromName(shard, true) ?: return@match
 
             addOwnedAttributeAmount(id, actualAmount)
@@ -248,8 +241,7 @@ object AttributeAPI {
     @Subscription
     @OnlyOnSkyBlock
     fun fishing(event: ChatReceivedEvent.Pre) {
-        val text = escape(event.text)
-        fishingRegex.match(text, "name") { (name) ->
+        fishingRegex.match(event.text, "name") { (name) ->
             val id = SkyBlockId.fromName(name, true) ?: return@match
 
             addOwnedAttributeAmount(id, 1)
