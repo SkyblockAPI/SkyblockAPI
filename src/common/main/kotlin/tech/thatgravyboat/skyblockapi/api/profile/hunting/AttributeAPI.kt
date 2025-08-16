@@ -67,7 +67,7 @@ object AttributeAPI {
     private val foundShardRegex = trapGroup.create("caught", "^You caught (?<amount>an?|x\\d+) (?<name>.*?) Shards?!$")
 
     private val fusionChatGroup = chatGroup.group("fusion")
-    private val fusionObtainedRegex = fusionChatGroup.create("obtained", "FUSION! You obtained (?:a )?(.*?)(?: (x\\d+))?!.*")
+    private val fusionObtainedRegex = fusionChatGroup.create("obtained", "FUSION! You obtained (?:an? )?(.*?)(?: (x\\d+))?!.*")
     private val fusionPureReptileRegex = fusionChatGroup.create("pure_reptile", "^PURE REPTILE You received double shards from the fusion!$")
 
     private val syphonGroup = chatGroup.group("syphon")
