@@ -7,6 +7,7 @@ import earth.terrarium.cloche.api.metadata.ModMetadata
 import net.msrandom.minecraftcodev.core.utils.toPath
 import net.msrandom.minecraftcodev.fabric.task.JarInJar
 import net.msrandom.minecraftcodev.runs.task.WriteClasspathFile
+import net.msrandom.stubs.GenerateStubApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -65,7 +66,7 @@ dependencies {
     ksp(libs.bundles.meowdding)
     compileOnly(project(":annotations"))
     compilerAll(rootProject.project(":compiler"))
-    compileOnly(kotlin("stdlib-jdk8"))
+    implementation(kotlin("stdlib-jdk8"))
 
     compileOnly(libs.bundles.meowdding)
     configurations.forEach {
@@ -93,15 +94,17 @@ cloche {
 
         dependencies {
             compileOnly(project(":annotations"))
-            modCompileOnly.bundle(libs.bundles.meowdding)
-            modCompileOnlyApi.bundle(libs.bundles.meowdding)
+            compileOnly.bundle(libs.bundles.meowdding)
+            compileOnlyApi.bundle(libs.bundles.meowdding)
 
-            modImplementation(libs.meowdding.item.dfu)
-            modImplementation(libs.fabric.language.kotlin)
-            modImplementation.bundle(libs.bundles.hypixel)
-            modImplementation(libs.skyblockapi.repolib)
+            implementation(libs.meowdding.item.dfu)
+            runtimeOnly(libs.fabric.language.kotlin) {
+                isTransitive = false
+            }
+            implementation.bundle(libs.bundles.hypixel)
+            implementation(libs.skyblockapi.repolib)
 
-            modRuntimeOnly(libs.devauth)
+            runtimeOnly(libs.devauth)
         }
     }
 
@@ -329,7 +332,7 @@ ksp {
     arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
     arg("meowdding.codecs.project_name", "SkyblockAPI")
     arg("meowdding.codecs.package", "tech.thatgravyboat.skyblockapi.generated")
-    arg("actualStubDir", project.layout.buildDirectory.dir("generated/ksp/main/stubs").get().asFile.absolutePath)
+    // arg("actualStubDir", project.layout.buildDirectory.dir("generated/ksp/main/stubs").get().asFile.absolutePath)
 }
 
 // TODO temporary workaround for a cloche issue on certain systems, remove once fixed
@@ -366,6 +369,35 @@ tasks.register("cleanRelease") {
 
 tasks.withType<JarInJar>().configureEach {
     include { !it.name.endsWith("-dev.jar") }
+}
+
+afterEvaluate {
+    tasks.named("createCommonApiStub", GenerateStubApi::class).configure {
+        outputs.upToDateWhen { false }
+        excludes.addAll(
+            "org.jetbrains.kotlin",
+            "me.owdding",
+            "net.hypixel",
+            "maven.modrinth",
+            "com.fasterxml.jackson",
+            "com.google",
+            "com.ibm",
+            "io.netty",
+            "net.fabricmc:fabric-language-kotlin",
+            "com.mojang",
+            "net.fabricmc.fabric-api",
+            "io.github.llamalad7:mixinextras",
+            "net.minidev",
+            "com.nimbusds",
+            "tech.thatgravyboat",
+            "net.msrandom"
+        )
+        doFirst {
+            classpaths.get().flatten().groupBy { it.id.orNull }.filter { (_, s) -> s.size >= 2 }.forEach { (id) ->
+                println(id.toString())
+            }
+        }
+    }
 }
 
 tasks.register("setupForWorkflows") {
