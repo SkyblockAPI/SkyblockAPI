@@ -383,7 +383,6 @@ afterEvaluate {
             "net.fabricmc:fabric-language-kotlin",
             "com.mojang:datafixerupper",
             "com.mojang:brigardier",
-            "net.fabricmc.fabric-api",
             "io.github.llamalad7:mixinextras",
             "net.minidev",
             "com.nimbusds",

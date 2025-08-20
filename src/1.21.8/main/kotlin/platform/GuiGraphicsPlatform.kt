@@ -1,8 +1,12 @@
 package tech.thatgravyboat.skyblockapi.platform
 
+import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.gui.render.state.BlitRenderState
+import net.minecraft.client.gui.render.state.GuiElementRenderState
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.locale.Language
@@ -20,6 +24,26 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 // in 1.21.5 this was done in Font, in 1.21.7 this is no longer the case
 private inline fun adjustColor(color: Int): Int {
     return if ((color and 0xfc000000.toInt()) == 0) ARGB.opaque(color) else color
+}
+
+private class GradientGuiElement(
+    val pose: Matrix3x2f,
+    val x0: Int, val y0: Int, val x1: Int, val y1: Int, val col1: Int, val col2: Int, val col3: Int, val col4: Int,
+    val scissor: ScreenRectangle? = null,
+    val bounds: ScreenRectangle? = null,
+) : GuiElementRenderState {
+
+    override fun buildVertices(consumer: VertexConsumer, z: Float) {
+        consumer.addVertexWith2DPose(this.pose, this.x0.toFloat(), this.y0.toFloat(), z).setColor(this.col1)
+        consumer.addVertexWith2DPose(this.pose, this.x0.toFloat(), this.y1.toFloat(), z).setColor(this.col2)
+        consumer.addVertexWith2DPose(this.pose, this.x1.toFloat(), this.y1.toFloat(), z).setColor(this.col3)
+        consumer.addVertexWith2DPose(this.pose, this.x1.toFloat(), this.y0.toFloat(), z).setColor(this.col4)
+    }
+
+    override fun pipeline(): RenderPipeline = RenderPipelines.GUI
+    override fun textureSetup(): TextureSetup = TextureSetup.noTexture()
+    override fun scissorArea(): ScreenRectangle? = scissor
+    override fun bounds(): ScreenRectangle? = bounds
 }
 
 actual inline fun GuiGraphics.pushPop(block: () -> Unit) {
@@ -73,6 +97,22 @@ actual fun GuiGraphics.drawTexture(texture: ResourceLocation, x: Int, y: Int, wi
             this.scissorStack.peek(),
         ),
     )
+}
+
+actual fun GuiGraphics.drawGradient(
+    x: Int, y: Int, width: Int, height: Int,
+    col1: Int, col2: Int,
+    col3: Int, col4: Int,
+) {
+    val scissor = this.scissorStack.peek()
+    val pose = Matrix3x2f(this.pose())
+    this.guiRenderState.submitGuiElement(GradientGuiElement(
+        pose,
+        x, y, x + width, y + height,
+        col1, col2, col3, col4,
+        scissor,
+        ScreenRectangle(x, y, width, height).transformMaxBounds(pose).let { bounds -> scissor?.intersection(bounds) ?: bounds },
+    ))
 }
 
 actual fun GuiGraphics.showTooltip(text: Component, maxWidth: Int, force: Boolean) {

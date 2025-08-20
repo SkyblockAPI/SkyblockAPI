@@ -50,11 +50,32 @@ actual fun GuiGraphics.drawTexture(texture: ResourceLocation, x: Int, y: Int, wi
 
 
     this.drawSpecial { source ->
-        var buffer = source.getBuffer(RenderType.guiTextured(texture))
+        val buffer = source.getBuffer(RenderType.guiTextured(texture))
         buffer.addVertex(matrix, minx, miny, 0f).setColor(color).setUv(u0, v0)
         buffer.addVertex(matrix, minx, maxy, 0f).setColor(color).setUv(u0, v1)
         buffer.addVertex(matrix, maxx, maxy, 0f).setColor(color).setUv(u1, v1)
         buffer.addVertex(matrix, maxx, miny, 0f).setColor(color).setUv(u1, v0)
+    }
+}
+
+actual fun GuiGraphics.drawGradient(
+    x: Int, y: Int, width: Int, height: Int,
+    col1: Int, col2: Int,
+    col3: Int, col4: Int,
+) {
+    val matrix = this.pose().last().pose()
+    val minx = x.toFloat()
+    val miny = y.toFloat()
+    val maxx = (x + width).toFloat()
+    val maxy = (y + height).toFloat()
+
+
+    this.drawSpecial { source ->
+        val buffer = source.getBuffer(RenderType.gui())
+        buffer.addVertex(matrix, minx, miny, 0f).setColor(col1)
+        buffer.addVertex(matrix, minx, maxy, 0f).setColor(col2)
+        buffer.addVertex(matrix, maxx, maxy, 0f).setColor(col3)
+        buffer.addVertex(matrix, maxx, miny, 0f).setColor(col4)
     }
 }
 
