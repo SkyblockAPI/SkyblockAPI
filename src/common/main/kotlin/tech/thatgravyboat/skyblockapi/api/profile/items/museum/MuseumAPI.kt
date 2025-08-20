@@ -24,6 +24,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.Text
+import java.util.concurrent.CompletableFuture
 
 @Module
 object MuseumAPI {
@@ -155,7 +156,32 @@ object MuseumAPI {
     @OptIn(SkyBlockPvRequired::class)
     @Subscription
     fun onPvOpen(event: SkyBlockPvMuseumOpenedEvent) {
-        // TODO: implement :3
+        CompletableFuture.runAsync {
+            MuseumStorage.reset()
+            for (entry in event.entries) {
+                val (id, stacks) = entry
+                if (MuseumData.isArmorSet(id)) {
+                    val map = buildMap {
+                        stacks@ for (stack in stacks) {
+                            val item = stack.value
+                            val id = item.getSkyBlockId() ?: continue@stacks
+                            put(id, item)
+                        }
+                    }
+                    if (map.isEmpty()) {
+                        MuseumStorage.addNotStoredArmorSet(id)
+                    } else MuseumStorage.addArmorSet(id, map)
+                } else {
+                    val category = ItemData.getItemData(id)?.museumData?.category ?: continue
+                    if (category == MuseumCategory.ARMOR_SETS || category == MuseumCategory.SPECIAL_ITEMS) continue
+                    if (stacks.isEmpty()) {
+                        MuseumStorage.addNotStoredItem(category, id)
+                    } else {
+                        MuseumStorage.addItem(category, id, stacks.first().value)
+                    }
+                }
+            }
+        }
     }
 
     @Subscription
