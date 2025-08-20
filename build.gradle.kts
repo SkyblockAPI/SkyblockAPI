@@ -46,7 +46,7 @@ tasks.withType<KotlinCompile>().configureEach {
             "-Xmulti-platform",
             "-Xno-check-actual",
             "-Xexpect-actual-classes",
-            "-Xopt-in=kotlin.time.ExperimentalTime",
+            "-opt-in=kotlin.time.ExperimentalTime",
         )
     }
 }
@@ -97,6 +97,7 @@ cloche {
             compileOnly.bundle(libs.bundles.meowdding)
             compileOnlyApi.bundle(libs.bundles.meowdding)
 
+            localRuntime("net.minecrell:terminalconsoleappender:1.3.0")
             implementation(libs.meowdding.item.dfu)
             implementation(libs.fabric.language.kotlin)
             implementation.bundle(libs.bundles.hypixel)
@@ -204,8 +205,10 @@ cloche {
 
             runs {
                 client {
+
                     args("--quickPlayMultiplayer=hypixel.net")
 
+                    jvmArgs("-Dlog4j.configurationFile=\"${project.layout.projectDirectory.file("gradle/log4j.config.xml").toPath().absolutePathString()}\"")
                     jvmArgs("-Ddevauth.enabled=true")
                     jvmArgs("-Dskyblockapi.debug=true")
 
