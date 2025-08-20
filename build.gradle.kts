@@ -46,7 +46,7 @@ tasks.withType<KotlinCompile>().configureEach {
             "-Xmulti-platform",
             "-Xno-check-actual",
             "-Xexpect-actual-classes",
-            "-Xopt-in=kotlin.time.ExperimentalTime",
+            "-opt-in=kotlin.time.ExperimentalTime",
         )
     }
 }
@@ -97,7 +97,7 @@ cloche {
             compileOnly.bundle(libs.bundles.meowdding)
             compileOnlyApi.bundle(libs.bundles.meowdding)
 
-            runtimeOnly("net.minecrell:terminalconsoleappender:1.3.0")
+            localRuntime("net.minecrell:terminalconsoleappender:1.3.0")
             implementation(libs.meowdding.item.dfu)
             implementation(libs.fabric.language.kotlin)
             implementation.bundle(libs.bundles.hypixel)
