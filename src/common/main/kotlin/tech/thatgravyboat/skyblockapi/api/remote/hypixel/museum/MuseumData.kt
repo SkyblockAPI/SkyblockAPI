@@ -48,6 +48,8 @@ object MuseumData {
         return lowercase.toScreamingSnakeCase().takeIf { museumData.armorSets.containsKey(it) }
     }
 
+    fun isArmorSet(id: String): Boolean = museumData.armorSets.containsKey(id)
+
     fun getArmorSetFromId(id: String): List<String>? = museumData.armorSets[id]
 
     fun getArmorSetFromName(name: String): List<String>? {
