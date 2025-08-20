@@ -35,6 +35,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
     @JvmStatic
     @ApiStatus.Internal
     fun init() {
+        debug("Starting sbapi!")
         SkyblockAPIModules.init { eventBus.register(it) }
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
             RepoStatusEvent(status).post()
