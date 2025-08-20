@@ -75,8 +75,7 @@ private class DebugChatScreen(val messages: List<Pair<Instant, Component>>) : Sc
 
         this.layout.arrangeElements()
         this.scroll = this.layout.height - this.height
-        fixScroll()
-        this.layout.setPosition(0, -this.scroll)
+        updateScroll()
     }
 
     override fun render(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
@@ -99,14 +98,14 @@ private class DebugChatScreen(val messages: List<Pair<Instant, Component>>) : Sc
         return super.mouseClicked(mouseX, mouseY, button)
     }
 
-    fun fixScroll() {
+    fun updateScroll() {
         this.scroll = this.scroll.coerceIn(0, (this.layout.height - this.height).coerceAtLeast(0))
+        this.layout.setPosition(0, -this.scroll)
     }
 
     override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
         this.scroll += -scrollY.toInt() * 10
-        fixScroll()
-        this.layout.setPosition(0, -this.scroll)
+        updateScroll()
         return true
     }
 }
