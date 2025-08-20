@@ -26,10 +26,12 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
-import tech.thatgravyboat.skyblockapi.utils.time.format
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import kotlin.time.Clock
 import kotlin.time.Instant
+import kotlin.time.toJavaInstant
 
 @Module
 object DebugChat {
@@ -73,6 +75,8 @@ private class DebugChatScreen(val messages: List<Pair<Instant, Component>>) : Sc
 
         this.layout.arrangeElements()
         this.scroll = this.layout.height - this.height
+        fixScroll()
+        this.layout.setPosition(0, -this.scroll)
     }
 
     override fun render(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
@@ -95,9 +99,13 @@ private class DebugChatScreen(val messages: List<Pair<Instant, Component>>) : Sc
         return super.mouseClicked(mouseX, mouseY, button)
     }
 
+    fun fixScroll() {
+        this.scroll = this.scroll.coerceIn(0, (this.layout.height - this.height).coerceAtLeast(0))
+    }
+
     override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
         this.scroll += -scrollY.toInt() * 10
-        this.scroll = this.scroll.coerceIn(0, (this.layout.height - this.height).coerceAtLeast(0))
+        fixScroll()
         this.layout.setPosition(0, -this.scroll)
         return true
     }
@@ -105,7 +113,7 @@ private class DebugChatScreen(val messages: List<Pair<Instant, Component>>) : Sc
 
 private class Widget(timestamp: Instant, val content: Component) : StringWidget(
     Text.join(
-        Text.of("[${this.formatter.format(timestamp)}] : ") {
+        Text.of("[${this.formatter.format(LocalDateTime.ofInstant(timestamp.toJavaInstant(), ZoneId.systemDefault()))}] : ") {
             this.color = TextColor.DARK_GRAY
         },
         content,
@@ -120,7 +128,7 @@ private class Widget(timestamp: Instant, val content: Component) : StringWidget(
 
     override fun renderWidget(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
         if (this.isHoveredOrFocused) {
-            graphics.fill(this.x - 1, this.y - 1, this.x + this.width + 2, this.y + this.height + 1, 0x50DDDDDD.toInt())
+            graphics.fill(this.x - 1, this.y - 1, this.x + this.width + 2, this.y + this.height + 1, 0x50DDDDDD)
         }
         super.renderWidget(graphics, mouseX, mouseY, partialTicks)
     }
