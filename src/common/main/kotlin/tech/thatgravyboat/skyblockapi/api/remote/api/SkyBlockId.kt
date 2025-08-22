@@ -6,10 +6,12 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
+import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
@@ -74,10 +76,14 @@ value class SkyBlockId private constructor(val id: String) {
         fun unsafe(id: String) = SkyBlockId("$UNSAFE$id")
 
         @IncludedCodec
-        val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap(::SkyBlockId, SkyBlockId::id)
+        val CODEC: Codec<SkyBlockId> = Codec.STRING
+            .xmap({ it.lowercase() }, { it })
+            .xmap(::SkyBlockId, SkyBlockId::id)
 
-        fun ItemStack.getSkyBlockId() = fromItem(this) ?: fromName(this.hoverName.stripped)
+        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it })
+            .xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
 
+        fun ItemStack.getSkyBlockId() = this[DataTypes.SKYBLOCK_ID] ?: fromName(this.hoverName.stripped) ?: fromItem(this)
     }
 
     val isItem: Boolean get() = id.startsWith(ITEM)
@@ -134,7 +140,7 @@ value class SkyBlockId private constructor(val id: String) {
 }
 
 private fun ItemStack.getSbId(): SkyBlockId? {
-    val data = this.getData(DataTypes.ID)
+    val data = this.getData(DataTypes.ID) ?: GenericDataTypes.ID.factory(this)
     return when (data) {
         "RUNE", "UNIQUE_RUNE" -> {
             this.getData(DataTypes.APPLIED_RUNE)?.let { (rune, level) -> "$rune$DELIMITER$level" }.let { it ?: UNKNOWN }
