@@ -4,6 +4,7 @@ import me.owdding.ktmodules.Module
 import net.minecraft.network.chat.MutableComponent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription.Companion.LOWEST
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvMuseumOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.utils.builders.TooltipBuilder
@@ -26,7 +27,13 @@ internal object PvLoadingHelper {
 
     @Subscription(priority = LOWEST)
     @OptIn(SkyBlockPvRequired::class)
-    private fun SkyBlockPvOpenedEvent.postPvLoad() {
+    private fun SkyBlockPvOpenedEvent.postPvLoad() = sendAndReset()
+
+    @Subscription(priority = LOWEST)
+    @OptIn(SkyBlockPvRequired::class)
+    private fun SkyBlockPvMuseumOpenedEvent.postMuseumLoad() = sendAndReset()
+
+    private fun sendAndReset() {
         if (list.isEmpty()) return
         Text.debug("Loaded some data from pv! ") {
             append("(hover)") {
@@ -54,6 +61,7 @@ internal enum class LoadedData(val component: MutableComponent) {
     ENDERCHEST("Storage (Ender Chest)"),
     BACKPACK("Storage (Backpack)"),
     SACKS("Sacks"),
+    MUSEUM("Museum"),
     ;
     
     constructor(string: String) : this(Text.of(string))
