@@ -12,6 +12,8 @@ import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
+import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
+import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.museum.MuseumData
@@ -158,6 +160,7 @@ object MuseumAPI {
     fun onPvOpen(event: SkyBlockPvMuseumOpenedEvent) {
         CompletableFuture.runAsync {
             MuseumStorage.reset()
+            PvLoadingHelper.markLoaded(LoadedData.MUSEUM)
             for (entry in event.entries) {
                 val (id, stacks) = entry
                 if (MuseumData.isArmorSet(id)) {
