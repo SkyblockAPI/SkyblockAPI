@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import java.nio.file.Path
 import kotlin.io.path.*
 
-class FolderStorage<T : Any>(
+internal class FolderStorage<T : Any>(
     val folder: String,
     val default: T,
     val codec: Codec<T>,
