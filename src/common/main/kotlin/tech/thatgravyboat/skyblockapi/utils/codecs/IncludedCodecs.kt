@@ -10,6 +10,8 @@ import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.TagParser
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.ResourceLocationPattern
@@ -84,4 +86,7 @@ internal object IncludedCodecs {
             { it.runningFold(0, Int::plus).distinct() },
             { it.reversed().runningFold(0, Int::minus).reversed() },
         )
+
+    @IncludedCodec
+    val COMPONENT: Codec<Component> = ComponentSerialization.CODEC
 }

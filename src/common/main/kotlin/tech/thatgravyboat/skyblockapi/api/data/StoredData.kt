@@ -5,6 +5,7 @@ import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
 import net.fabricmc.loader.api.FabricLoader
 import org.apache.commons.io.FileUtils
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
@@ -19,6 +20,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ScheduledFuture
+import kotlin.io.path.deleteIfExists
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -30,7 +32,7 @@ internal class StoredData<T : Any>(
     file: String,
     private val codec: (Int) -> Codec<T>,
 ) {
-
+    constructor(version: Int = 0, dataProvider: () -> T, file: String, codec: (Int) -> Codec<T>) : this(version, dataProvider(), file, codec)
     constructor(data: T, codec: Codec<T>, file: String) : this(0, data, file, { codec })
 
     private val file: Path = defaultPath.resolve(file)
@@ -86,6 +88,11 @@ internal class StoredData<T : Any>(
         return this.loadingFuture!!
     }
 
+    fun set(data: T) {
+        this.data = data
+        save()
+    }
+
     private fun scheduleSave() {
         this.loadedData = null
         this.lastScheduler?.cancel(false)
@@ -126,6 +133,14 @@ internal class StoredData<T : Any>(
     fun save() {
         saveTime = System.currentTimeMillis() + SAVE_DELAY
         scheduleSave()
+    }
+
+    fun delete() {
+        try {
+            file.deleteIfExists()
+        } catch (e: Exception) {
+            SkyBlockAPI.error("Failed to delete $file", e)
+        }
     }
 
     companion object {
