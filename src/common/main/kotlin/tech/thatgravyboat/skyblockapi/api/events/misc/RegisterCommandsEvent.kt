@@ -42,7 +42,7 @@ class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClie
     }
 
     companion object {
-        inline fun <reified T> CommandContext<*>.getCommandArgument(name: String): T? = this.getArgument(name, T::class.java)
+        inline fun <reified T> CommandContext<*>.argument(name: String): T? = this.getArgument(name, T::class.java)
     }
 }
 

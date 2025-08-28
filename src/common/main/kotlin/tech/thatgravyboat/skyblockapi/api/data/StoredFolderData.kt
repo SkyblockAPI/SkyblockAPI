@@ -44,13 +44,11 @@ internal class FolderStorage<T : Any>(
         storages.getOrPut(id) {
             StoredData(
                 version = 0,
-                dataProvider = { value },
+                factory = { value },
                 file = "$folder/$id.json",
                 codec = { codec },
             )
-        }.apply {
-            set(value)
-        }
+        }.set(value)
     }
 
     fun get(id: String): T? = storages[id]?.get()

@@ -32,7 +32,7 @@ internal class StoredData<T : Any>(
     file: String,
     private val codec: (Int) -> Codec<T>,
 ) {
-    constructor(version: Int = 0, dataProvider: () -> T, file: String, codec: (Int) -> Codec<T>) : this(version, dataProvider(), file, codec)
+    constructor(version: Int = 0, factory: () -> T, file: String, codec: (Int) -> Codec<T>) : this(version, factory(), file, codec)
     constructor(data: T, codec: Codec<T>, file: String) : this(0, data, file, { codec })
 
     private val file: Path = defaultPath.resolve(file)

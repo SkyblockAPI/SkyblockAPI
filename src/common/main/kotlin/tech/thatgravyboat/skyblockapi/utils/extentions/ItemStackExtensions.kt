@@ -74,8 +74,8 @@ fun ItemStack.getItemModel(): Item = getData(DataTypes.VISIBLE_ITEM) ?: item
 
 val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
 
-fun List<Slot>.container() = this.filterNot { it.container is Inventory }
-fun List<Slot>.containerItems() = this.container().map { it.item }
+fun List<Slot>.filterContainerSlots() = this.filterNot { it.container is Inventory }
+fun List<Slot>.filterContainerItems() = this.filterContainerSlots().map { it.item }
 
 fun createSkull(textureBase64: String): ItemStack {
     val profile = GameProfile(UUID.randomUUID(), "a")

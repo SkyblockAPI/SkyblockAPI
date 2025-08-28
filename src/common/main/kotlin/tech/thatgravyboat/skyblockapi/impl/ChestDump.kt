@@ -19,7 +19,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.FolderStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.getCommandArgument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
@@ -28,7 +28,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
-import tech.thatgravyboat.skyblockapi.utils.extentions.containerItems
+import tech.thatgravyboat.skyblockapi.utils.extentions.filterContainerItems
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
@@ -49,7 +49,7 @@ object ChestDump {
 
         val chest = (event.screen as? AbstractContainerScreen<*>)?.menu as? ChestMenu ?: return
         val title = event.screen.title
-        val items = chest.slots.containerItems().toMutableList().map { itemStack -> itemStack.copy() }
+        val items = chest.slots.filterContainerItems().toMutableList().map { itemStack -> itemStack.copy() }
 
         val hash = Hashing.sha256().newHasher()
         hash.putUnencodedChars(title.string)
@@ -103,7 +103,7 @@ object ChestDump {
             fun getDump(id: String) = storage.getAll().entries.find { "${it.value.title.stripped}-${it.key.take(3)}" == id }
             then("open id", StringArgumentType.greedyString(), suggestions) {
                 callback {
-                    val id = getCommandArgument<String>("id")
+                    val id = argument<String>("id")
 
                     val dump = getDump(id!!)?.value ?: run {
                         Text.of("No dump with id $id found.").sendWithPrefix()
@@ -115,7 +115,7 @@ object ChestDump {
             }
             then("delete id", StringArgumentType.greedyString(), suggestions) {
                 callback {
-                    val id = getCommandArgument<String>("id")
+                    val id = argument<String>("id")
 
                     val dump = getDump(id!!)?.key ?: run {
                         Text.of("No dump with id $id found.").sendWithPrefix()
