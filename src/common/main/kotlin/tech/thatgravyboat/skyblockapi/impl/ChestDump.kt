@@ -11,9 +11,7 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.world.inventory.AbstractContainerMenu
-import net.minecraft.world.inventory.ChestMenu
-import net.minecraft.world.inventory.MenuType
+import net.minecraft.world.inventory.*
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.FolderStorage
@@ -78,12 +76,18 @@ object ChestDump {
                         InventoryChangeEvent(item, menu.slots[index], dump.title, menu.slots, this).post(SkyBlockAPI.eventBus)
                     }
                 }
+
+                override fun slotClicked(slot: Slot, slotId: Int, mouseButton: Int, type: ClickType) {
+                    SkyBlockAPI.info("<ChestDump> Clicked slot $slotId with button $mouseButton and click type $type")
+                }
+
+                override fun handleSlotStateChanged(slotId: Int, containerId: Int, newState: Boolean) {
+                    SkyBlockAPI.info("<ChestDump> Slot state changed $slotId with container $containerId and new state $newState")
+                }
             }
         }
 
-        else -> {
-            throw UnsupportedOperationException("Unsupported menu type: $type")
-        }
+        else -> throw UnsupportedOperationException("Unsupported menu type: $type")
     }
 
     fun openDump(dump: ChestDumpStorage) {
