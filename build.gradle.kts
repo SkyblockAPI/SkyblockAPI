@@ -354,11 +354,6 @@ tasks.register("cleanRelease") {
 
 tasks.withType<JarInJar>().configureEach {
     include { !it.name.endsWith("-dev.jar") }
-    manifest {
-        attributes["Fabric-Loom-Mixin-Remap-Type"] = "static"
-        attributes["Fabric-Jar-Type"] = "classes"
-        attributes["Fabric-Mapping-Namespace"] = "intermediary"
-    }
 }
 
 afterEvaluate {
