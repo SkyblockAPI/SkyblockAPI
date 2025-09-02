@@ -40,6 +40,10 @@ class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClie
             this.callback(callback)
         }
     }
+
+    companion object {
+        inline fun <reified T> CommandContext<*>.argument(name: String): T? = this.getArgument(name, T::class.java)
+    }
 }
 
 class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal constructor(

@@ -8,6 +8,8 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -71,6 +73,9 @@ fun ItemStack.getApiId() = getData(DataTypes.API_ID)
 fun ItemStack.getItemModel(): Item = getData(DataTypes.VISIBLE_ITEM) ?: item
 
 val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
+
+fun List<Slot>.filterContainerSlots() = this.filterNot { it.container is Inventory }
+fun List<Slot>.filterContainerItems() = this.filterContainerSlots().map { it.item }
 
 fun createSkull(textureBase64: String): ItemStack {
     val profile = GameProfile(UUID.randomUUID(), "a")
