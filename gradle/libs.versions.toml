@@ -8,9 +8,7 @@ meowdding-ktcodecs = "1.0.26"
 meowdding-resources = "1.0.12"
 meowdding-item-dfu = "1.0.1"
 
-minecraft = "1.21.5"
-
-terrarium-cloche = "0.11.5"
+terrarium-cloche = "0.13.4"
 
 fabric-loader = "0.16.13"
 fabric-api = "0.128.1"

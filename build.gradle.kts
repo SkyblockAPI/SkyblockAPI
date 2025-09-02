@@ -123,10 +123,6 @@ cloche {
             minecraftVersion = version
             this.loaderVersion = loaderVersion.get()
 
-            include(libs.skyblockapi.repolib)
-            include(libs.hypixel.modapi.fabric)
-            include(libs.meowdding.item.dfu)
-
             metadata {
                 entrypoint("client", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit")
                 entrypoint(
@@ -168,6 +164,11 @@ cloche {
 
                 val mods = project.layout.buildDirectory.get().toPath().resolve("tmp/extracted${sourceSet.name}RuntimeMods")
                 val modsTmp = project.layout.buildDirectory.get().toPath().resolve("tmp/extracted${sourceSet.name}RuntimeMods/tmp")
+
+                include(libs.skyblockapi.repolib)
+                include(libs.hypixel.modapi.fabric)
+                include(libs.meowdding.item.dfu)
+
 
                 mods.deleteRecursively()
                 modsTmp.createDirectories()
@@ -259,19 +260,7 @@ compactingResources {
 }
 
 tasks.processResources {
-    inputs.property("version", project.version)
-    inputs.property("minecraft_version", libs.versions.minecraft.get())
-    inputs.property("loader_version", libs.versions.fabric.loader.get())
     filteringCharset = "UTF-8"
-
-    filesMatching("fabric.mod.json") {
-        expand(
-            "version" to project.version,
-            "minecraft_version" to libs.versions.minecraft.get(),
-            "loader_version" to libs.versions.fabric.loader.get(),
-            "kotlin_loader_version" to libs.versions.fabric.language.kotlin.get()
-        )
-    }
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -292,11 +281,6 @@ tasks.withType<Jar> {
 }
 
 tasks.apiCheck { enabled = false }
-
-artifacts {
-    add("1215RuntimeElements", tasks["1215JarInJar"])
-    add("1218RuntimeElements", tasks["1218JarInJar"])
-}
 
 publishing {
     publications {
@@ -351,7 +335,7 @@ tasks.withType<WriteClasspathFile>().configureEach {
 tasks.register("release") {
     group = "skyblock-api"
     mcVersions.forEach {
-        tasks.getByName("${it.name}JarInJar").let { task ->
+        tasks.getByName("${it.name}IncludeJar").let { task ->
             dependsOn(task)
             mustRunAfter(task)
         }
