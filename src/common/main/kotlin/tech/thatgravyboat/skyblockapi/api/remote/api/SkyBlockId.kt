@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.remote.api
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
-import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -22,7 +21,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 @JvmInline
 value class SkyBlockId private constructor(val id: String) {
-    @Module
     companion object Companion {
         private val amountRegex = Regex(".*?x[\\d,]+")
         private val petRegex = Regex("\\[?lvl \\d+]? (.*)")
