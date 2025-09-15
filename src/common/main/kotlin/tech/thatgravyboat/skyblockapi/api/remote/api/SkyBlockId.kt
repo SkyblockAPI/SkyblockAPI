@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
@@ -94,7 +95,7 @@ value class SkyBlockId private constructor(val id: String) {
     val isUnsafe: Boolean get() = id.startsWith(UNSAFE)
     val cleanId: String get() = id.substringAfter(DELIMITER)
     val skyblockId: String
-        get() = when {
+        get() = fixHypixelId() ?: when {
 
             isPet -> cleanId.substringBeforeLast(DELIMITER)
             isEnchantment -> {
