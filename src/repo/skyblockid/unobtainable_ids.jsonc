@@ -1,5 +1,5 @@
 /*
-* A list of SkyOceanItemIds that are unobtainable and therefore should be removed from the name cache,
+* A list of SkyBlockIds that are unobtainable and therefore should be removed from the name cache,
 * they should ALWAYS have the full type e.g. <category>:<id>[:<suffix>]
 */
 [
