@@ -37,7 +37,7 @@ object SimpleItemAPI {
     private val nameCache: MutableMap<String, SkyBlockId> = mutableMapOf()
     private val allIds: MutableList<SkyBlockId> = mutableListOf()
 
-    fun Iterable<Pair<String, SkyBlockId>>.saveIds() = this.apply {
+    private fun Iterable<Pair<String, SkyBlockId>>.saveIds() = this.apply {
         allIds.addAll(this.map { (_, id) -> id })
     }
 
@@ -45,7 +45,7 @@ object SimpleItemAPI {
         if (RepoAPI.isInitialized()) setupCache()
     }
 
-    fun List<Pair<String, SkyBlockId>>.applyFiltered() = nameCache.putAll(this.saveIds().filter { (_, id) -> id !in unobtainableIds }.toMap())
+    private fun List<Pair<String, SkyBlockId>>.applyFiltered() = nameCache.putAll(this.saveIds().filter { (_, id) -> id !in unobtainableIds }.toMap())
 
     fun findIdByName(name: String) = nameCache[name.lowercase().stripColor()]
 
@@ -72,10 +72,8 @@ object SimpleItemAPI {
 
         if (petId.contains(":")) {
             val (petId, rarity) = petId.split(":")
-            val sbRarity = runCatching { SkyBlockRarity.valueOf(rarity) }.getOrNull()
-            val pet = runCatching {
-                sbRarity?.let { RepoPetsAPI.getPetAsItemOrNull(PetQuery(petId, it, 1)) }
-            }.getOrNull()
+            val sbRarity = SkyBlockRarity.fromNameOrNull(rarity)
+            val pet = sbRarity?.let { RepoPetsAPI.getPetAsItemOrNull(PetQuery(petId, it, 1)) }
             pet?.let { return@getOrPut it }
         }
 
@@ -103,11 +101,7 @@ object SimpleItemAPI {
             RepoRunesAPI.getRuneAsItemOrNull(runeId, level)?.let { return@getOrPut it }
         }
 
-        for (i in 3 downTo 0) {
-            RepoRunesAPI.getRuneAsItemOrNull(runeId.substringBefore(":"), i)?.let { return@getOrPut it }
-        }
-
-        return@getOrPut null
+        return@getOrPut RepoRunesAPI.getRuneAsItemOrNull(runeId.substringBefore(":"), null)
     }
 
     fun getRuneById(id: SkyBlockId) = getRuneByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {
@@ -127,11 +121,7 @@ object SimpleItemAPI {
             RepoEnchantmentAPI.getEnchantmentAsItemOrNull(enchantmentId, level)?.let { return@getOrPut it }
         }
 
-        for (i in 10 downTo 0) {
-            RepoEnchantmentAPI.getEnchantmentAsItemOrNull(enchantmentId.substringBefore(":"), i)?.let { return@getOrPut it }
-        }
-
-        return@getOrPut null
+        return@getOrPut RepoEnchantmentAPI.getEnchantmentAsItemOrNull(enchantmentId.substringBefore(":"), null)
     }
 
     fun getEnchantmentById(id: SkyBlockId): ItemStack = getEnchantmentByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {
