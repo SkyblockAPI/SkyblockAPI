@@ -135,9 +135,7 @@ object SimpleItemAPI {
             return@getOrPut null
         }
 
-        RepoAttributeAPI.getAttributeByIdOrNull(attributeId)?.let { return@getOrPut it }
-
-        return@getOrPut null
+        return RepoAttributeAPI.getAttributeByIdOrNull(attributeId)
     }
 
     fun getAttributeById(id: SkyBlockId): ItemStack = getAttributeByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {
