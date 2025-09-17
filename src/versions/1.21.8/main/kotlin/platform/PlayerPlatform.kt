@@ -11,3 +11,4 @@ actual typealias PlayerSkin = net.minecraft.client.resources.PlayerSkin
 actual fun GameProfile.id(): UUID = this.id
 actual fun GameProfile.name(): String = this.name
 actual fun AbstractClientPlayer.skin(): PlayerSkin = this.skin
+actual val PlayerSkin.textureUrl: String? get() = this.textureUrl()
