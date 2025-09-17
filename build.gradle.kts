@@ -29,7 +29,7 @@ plugins {
     `item-data`
 }
 
-deprecationMessage = "This will be removed with the next minecraft version (1.21.6/1.22). Consider migrating to the new api before it is removed!"
+deprecationMessage = "This will be removed in the next major version. Consider migrating to the new api before it is removed!"
 
 base {
     archivesName.set(project.property("archives_base_name") as String)

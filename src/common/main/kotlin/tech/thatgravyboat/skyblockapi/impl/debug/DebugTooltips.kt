@@ -123,13 +123,13 @@ object DebugTooltips {
             )
             event.add(Text.of("Sources: ([Shift] for all)") { this.color = TextColor.DARK_GRAY })
 
-            val sources = event.item.getItemValue().sources.entries.sortedByDescending { it.value }
-            val sourcesToShow = sources.filter { it.value > 0L }.takeUnless { McScreen.isShiftDown } ?: sources
+            val sources = event.item.getItemValue().entryTree.sortedByDescending { it.price }
+            val sourcesToShow = sources.filter { it.price > 0L }.takeUnless { McScreen.isShiftDown } ?: sources
 
-            sourcesToShow.map { (source, value) ->
+            sourcesToShow.map { entry ->
                 Text.join(
-                    Text.of(" - ${source.name}: ") { this.color = TextColor.DARK_GRAY },
-                    Text.of(value.toFormattedString()) { this.color = TextColor.GRAY },
+                    Text.of(" - ${entry.source.name}: ") { this.color = TextColor.DARK_GRAY },
+                    Text.of(entry.price.toFormattedString()) { this.color = TextColor.GRAY },
                 )
             }.forEach { event.add(it) }
 

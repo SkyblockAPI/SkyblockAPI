@@ -13,7 +13,6 @@ import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
@@ -88,20 +87,4 @@ fun createSkull(profile: GameProfile): ItemStack {
     val stack = ItemStack(Items.PLAYER_HEAD)
     stack.set(DataComponents.PROFILE, profile.toResolvableProfile())
     return stack
-}
-
-@RemoveNextVersion
-object ItemUtils {
-
-    fun createSkull(textureBase64: String): ItemStack {
-        val profile = GameProfile(UUID.randomUUID(), "a")
-        profile.properties.put("textures", Property("textures", textureBase64))
-        return createSkull(profile)
-    }
-
-    fun createSkull(profile: GameProfile): ItemStack {
-        val stack = ItemStack(Items.PLAYER_HEAD)
-        stack.set(DataComponents.PROFILE, profile.toResolvableProfile())
-        return stack
-    }
 }
