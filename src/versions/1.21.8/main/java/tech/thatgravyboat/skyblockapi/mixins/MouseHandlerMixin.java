@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.mixins.events;
+package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -21,7 +21,9 @@ public class MouseHandlerMixin {
         var pre = new ScreenMouseClickEvent.Pre(screen, mouseX, mouseY, button);
         var result = pre.post(SkyBlockAPI.getEventBus()) || original.call(screen, mouseX, mouseY, button);
         var post = new ScreenMouseClickEvent.Post(screen, mouseX, mouseY, button);
-        if (result) post.cancel();
+        if (result) {
+            post.cancel();
+        }
         return post.post(SkyBlockAPI.getEventBus()) || result;
     }
 
@@ -33,7 +35,9 @@ public class MouseHandlerMixin {
         var pre = new ScreenMouseReleasedEvent.Pre(instance, mouseX, mouseY, button);
         var result = pre.post(SkyBlockAPI.getEventBus()) || original.call(instance, mouseX, mouseY, button);
         var post = new ScreenMouseReleasedEvent.Post(instance, mouseX, mouseY, button);
-        if (result) post.cancel();
+        if (result) {
+            post.cancel();
+        }
         return post.post(SkyBlockAPI.getEventBus()) || result;
     }
 

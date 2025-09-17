@@ -15,15 +15,12 @@
         "events.GuiMessageLineMixin",
         "events.GuiMessageMixin",
         "events.HumanoidRendererMixin",
-        "events.KeyboardHandlerMixin",
         "events.LivingEntityRendererMixin",
-        "events.MouseHandlerMixin",
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin",
         "tagattachments.ClientLevelMixin",
         "tagattachments.DebugScreenOverlayMixin",
         "tagattachments.EntityMixin",
-        "tagattachments.EntityRendererMixin",
         "tagattachments.EntityRenderStateMixin"
     ],
     "injectors": {

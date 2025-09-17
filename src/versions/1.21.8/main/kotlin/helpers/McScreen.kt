@@ -17,4 +17,8 @@ actual object McScreen {
     actual inline fun <reified T> isOf(): Boolean {
         return self is T
     }
+
+    actual val isShiftDown get() = Screen.hasShiftDown()
+    actual val isAltDown get() = Screen.hasAltDown()
+    actual val isControlDown get() = Screen.hasControlDown()
 }
