@@ -398,7 +398,7 @@ afterEvaluate {
 
 tasks.register("setupForWorkflows") {
     mcVersions.flatMap {
-        listOf("remap${it.name}CommonMinecraftNamed", "remap${it.name}ClientMinecraftNamed")
+        listOf("remapV${it.name.substring(1)}CommonMinecraftNamed", "remapV${it.name.substring(1)}ClientMinecraftNamed")
     }.mapNotNull { tasks.findByName(it) }.forEach {
         dependsOn(it)
         mustRunAfter(it)

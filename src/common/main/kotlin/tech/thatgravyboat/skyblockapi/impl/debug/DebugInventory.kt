@@ -148,7 +148,7 @@ internal object DebugInventory {
         ;
 
         val title = name.toTitleCase()
-        val keyName: Component = Text.of("") //TODO
+        val keyName: Component = InputConstants.Type.KEYSYM.getOrCreate(key).displayName;
 
         fun initCopy(slot: Slot): Boolean {
             val data = copy(slot) ?: return false
@@ -157,5 +157,4 @@ internal object DebugInventory {
             return true
         }
     }
-
 }

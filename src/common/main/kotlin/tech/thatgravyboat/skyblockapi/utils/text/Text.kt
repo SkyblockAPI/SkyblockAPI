@@ -147,6 +147,9 @@ object TextUtils {
 
 }
 
+internal expect fun MutableComponent.withFont(location: ResourceLocation?): MutableComponent
+internal expect fun MutableComponent.font(): ResourceLocation?
+
 object TextStyle {
 
     fun MutableComponent.style(init: Style.() -> Style): MutableComponent {
@@ -159,9 +162,9 @@ object TextStyle {
     }
 
     var MutableComponent.font: ResourceLocation?
-        get() = TODO()
+        get() = font()
         set(value) {
-            TODO()
+            this.withFont(value)
         }
 
     var MutableComponent.hover: Component?
