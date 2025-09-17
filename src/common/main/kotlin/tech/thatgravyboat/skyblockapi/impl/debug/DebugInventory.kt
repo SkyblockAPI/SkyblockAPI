@@ -139,8 +139,8 @@ internal object DebugInventory {
                     add("Item Value: ${slot.item.getItemValue().price.toFormattedString()}")
                     add("")
                     add("Sources:")
-                    slot.item.getItemValue().sources.entries.sortedByDescending { it.value }.forEach {
-                        add(" ${it.key.name}: ${it.value.toFormattedString()}")
+                    slot.item.getItemValue().entryTree.sortedByDescending { it.price }.forEach {
+                        add(" ${it.source.name}: ${it.price.toFormattedString()}")
                     }
                 }.joinToString("\n")
             },

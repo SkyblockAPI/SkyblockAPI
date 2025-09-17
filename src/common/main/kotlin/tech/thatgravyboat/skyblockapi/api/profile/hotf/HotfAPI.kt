@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.profile.hotf
 
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.Items
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.stored.HotfStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
@@ -52,12 +51,6 @@ object HotfAPI {
         get() = perks.filter { it.value.unlocked }
     val activePerks: Map<String, HotfPerk>
         get() = perks.filter { it.value.unlocked && !it.value.disabled }
-
-    @RemoveNextVersion(ReplaceWith("Use WhispersAPI instead"))
-    val whispers: Long get() = WhispersAPI.forest
-
-    @RemoveNextVersion(ReplaceWith("Use WhispersAPI instead"))
-    val whispersTotal: Long get() = HotfStorage.forestTotal
 
     val tokens: Int
         get() = HotfStorage.tokens

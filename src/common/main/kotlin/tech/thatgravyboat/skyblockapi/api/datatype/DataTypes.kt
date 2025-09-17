@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 import net.minecraft.world.item.Item
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlotData
@@ -28,7 +27,6 @@ object DataTypes {
 
     // Item Modifiers
     val MODIFIER: DataType<String> = GenericDataTypes.MODIFIER
-    @RemoveNextVersion val RARITY_UPGRADES: DataType<Int> = GenericDataTypes.RARITY_UPGRADES
     val RECOMBOBULATOR: DataType<Boolean> = GenericDataTypes.RECOMBOBULATOR
     val ENCHANTMENTS: DataType<Map<String, Int>> = GenericDataTypes.ENCHANTMENTS
     val ATTRIBUTES: DataType<Map<String, Int>> = GenericDataTypes.ATTRIBUTES

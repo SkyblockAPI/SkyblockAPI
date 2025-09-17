@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlotData
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.Cost
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 
 sealed interface CalculationEntry {
     val price: Long

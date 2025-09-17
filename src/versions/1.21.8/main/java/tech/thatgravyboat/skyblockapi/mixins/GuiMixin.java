@@ -35,9 +35,7 @@ public class GuiMixin {
 
     @Inject(method = "renderSleepOverlay", at = @At("HEAD"))
     private void onRenderSleepOverlay(GuiGraphics graphics, DeltaTracker delta, CallbackInfo ci) {
-        if (this.minecraft.options.hideGui) {
-            return;
-        }
+        if (this.minecraft.options.hideGui) return;
         float partialTicks = delta.getGameTimeDeltaPartialTick(false);
         new RenderHudEvent(graphics, partialTicks).post(SkyBlockAPI.getEventBus());
     }
