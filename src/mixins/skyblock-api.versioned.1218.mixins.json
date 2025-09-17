@@ -4,6 +4,7 @@
     "package": "tech.thatgravyboat.skyblockapi.mixins",
     "compatibilityLevel": "JAVA_21",
     "client": [
+        "PlayerRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1

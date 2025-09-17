@@ -159,9 +159,9 @@ object TextStyle {
     }
 
     var MutableComponent.font: ResourceLocation?
-        get() = this.style.font
+        get() = TODO()
         set(value) {
-            this.style { withFont(value) }
+            TODO()
         }
 
     var MutableComponent.hover: Component?

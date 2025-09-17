@@ -19,6 +19,8 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.platform.save
+import tech.thatgravyboat.skyblockapi.platform.skin
+import tech.thatgravyboat.skyblockapi.platform.textureUrl
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonArray
@@ -102,7 +104,7 @@ object DebugEntities {
                 callback {
                     getHoveredEntity()?.let {
                         if (it is AbstractClientPlayer) {
-                            it.skin.textureUrl()?.let { McClient.clipboard = it }
+                            it.skin().textureUrl?.let { McClient.clipboard = it }
                             Text.debug("Copied texture to clipboard.").send()
                         } else {
                             Text.debug("Hovered entity is not a player, cannot copy texture.").send()

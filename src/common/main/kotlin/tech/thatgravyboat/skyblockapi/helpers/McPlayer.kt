@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
 import net.minecraft.client.Minecraft
-import net.minecraft.client.resources.PlayerSkin
 import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
@@ -9,6 +8,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import tech.thatgravyboat.skyblockapi.platform.PlayerSkin
+import tech.thatgravyboat.skyblockapi.platform.id
+import tech.thatgravyboat.skyblockapi.platform.name
+import tech.thatgravyboat.skyblockapi.platform.skin
 import java.util.*
 
 object McPlayer {
@@ -17,11 +20,11 @@ object McPlayer {
 
     val position: Vec3? get() = self?.position()
 
-    val name: String get() = McClient.self.gameProfile.name
-    val uuid: UUID get() = McClient.self.gameProfile.id
-    val skin: PlayerSkin? get() = McClient.self.player?.skin
+    val name: String get() = McClient.self.gameProfile.name()
+    val uuid: UUID get() = McClient.self.gameProfile.id()
+    val skin: PlayerSkin? = McClient.self.player?.skin()
 
-    val menu: AbstractContainerMenu? get() = self?.containerMenu as AbstractContainerMenu
+    val menu: AbstractContainerMenu? get() = self?.containerMenu
 
     val health: Int get() = self?.health?.toInt() ?: 0
     val maxHealth: Int get() = self?.maxHealth?.toInt() ?: 0
