@@ -405,6 +405,5 @@ tasks.register("setupForWorkflows") {
     }.mapNotNull { tasks.findByName(it) }.forEach {
         dependsOn(it)
         mustRunAfter(it)
-        it.mustRunAfter(annotations)
     }
 }
