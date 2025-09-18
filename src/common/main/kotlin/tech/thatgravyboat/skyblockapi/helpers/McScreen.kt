@@ -9,9 +9,9 @@ expect object McScreen {
 
     val asMenu: AbstractContainerScreen<*>?
 
-    inline fun <reified T> isOf(): Boolean
-
     val isShiftDown: Boolean
     val isAltDown: Boolean
     val isControlDown: Boolean
+
+    inline fun <reified T> isOf(): Boolean
 }

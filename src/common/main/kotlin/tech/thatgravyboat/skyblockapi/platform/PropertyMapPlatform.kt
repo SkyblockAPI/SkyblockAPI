@@ -7,7 +7,7 @@ import java.util.*
 
 
 expect fun PropertyMap(): PropertyMap
-expect fun ResolvableProfile(name: String?, uuid: UUID?, properties: PropertyMap): ResolvableProfile
+expect fun ResolvableProfile(name: String?, uuid: UUID?, properties: PropertyMap = PropertyMap(), init: PropertyMap.() -> Unit = {}): ResolvableProfile
 expect val ResolvableProfile.properties: PropertyMap
 
 expect val GameProfile.properties: PropertyMap

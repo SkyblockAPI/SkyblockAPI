@@ -1,12 +1,19 @@
 package tech.thatgravyboat.skyblockapi.platform
 
-import com.mojang.authlib.GameProfile
 import net.minecraft.client.player.AbstractClientPlayer
-import java.util.*
+import net.minecraft.resources.ResourceLocation
 
-expect fun GameProfile.id(): UUID
-expect fun GameProfile.name(): String
-expect fun AbstractClientPlayer.skin(): PlayerSkin
+expect val AbstractClientPlayer.skin: PlayerSkin
 expect val PlayerSkin.textureUrl: String?
+expect val PlayerSkin.texture: ResourceLocation?
+expect val PlayerSkin.capeTexture: ResourceLocation?
+expect val PlayerSkin.elytraTexture: ResourceLocation?
+expect val PlayerSkin.secure: Boolean
+expect val PlayerSkin.model: Model
 
 expect class PlayerSkin
+
+enum class Model {
+    SLIM,
+    WIDE,
+}

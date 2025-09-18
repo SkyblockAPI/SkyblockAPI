@@ -8,17 +8,15 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 
 actual object McScreen {
 
-    actual val self: Screen?
-        get() = Minecraft.getInstance().screen
+    actual val self: Screen? get() = Minecraft.getInstance().screen
 
-    actual val asMenu: AbstractContainerScreen<*>?
-        get() = self as? AbstractContainerScreen<*>
-
-    actual inline fun <reified T> isOf(): Boolean {
-        return self is T
-    }
+    actual val asMenu: AbstractContainerScreen<*>? get() = self as? AbstractContainerScreen<*>
 
     actual val isShiftDown get() = Minecraft.getInstance().hasShiftDown()
     actual val isAltDown get() = Minecraft.getInstance().hasAltDown()
     actual val isControlDown get() = Minecraft.getInstance().hasControlDown()
+
+    actual inline fun <reified T> isOf(): Boolean {
+        return self is T
+    }
 }

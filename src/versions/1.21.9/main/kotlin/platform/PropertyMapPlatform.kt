@@ -9,8 +9,9 @@ import net.minecraft.world.item.component.ResolvableProfile
 import java.util.*
 
 actual fun PropertyMap(): PropertyMap = PropertyMap(LinkedHashMultimap.create())
-actual fun ResolvableProfile(name: String?, uuid: UUID?, properties: PropertyMap): ResolvableProfile =
-    ResolvableProfile.createResolved(GameProfile(uuid, name, properties))
+actual fun ResolvableProfile(name: String?, uuid: UUID?, properties: PropertyMap, init: PropertyMap.() -> Unit): ResolvableProfile {
+    return ResolvableProfile.createResolved(GameProfile(uuid, name, properties.apply(init)))
+}
 
 actual val ResolvableProfile.properties: PropertyMap get() = this.partialProfile().properties
 

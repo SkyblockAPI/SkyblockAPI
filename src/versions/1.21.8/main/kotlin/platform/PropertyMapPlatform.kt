@@ -8,8 +8,9 @@ import net.minecraft.world.item.component.ResolvableProfile
 import java.util.*
 
 actual fun PropertyMap(): PropertyMap = PropertyMap()
-actual fun ResolvableProfile(name: String?, uuid: UUID?, properties: PropertyMap): ResolvableProfile =
-    ResolvableProfile(Optional.ofNullable(name), Optional.ofNullable(uuid), properties)
+actual fun ResolvableProfile(name: String?, uuid: UUID?, properties: PropertyMap, init: PropertyMap.() -> Unit): ResolvableProfile {
+    return ResolvableProfile(Optional.ofNullable(name), Optional.ofNullable(uuid), properties.apply(init))
+}
 
 actual val ResolvableProfile.properties: PropertyMap get() = this.properties()
 
