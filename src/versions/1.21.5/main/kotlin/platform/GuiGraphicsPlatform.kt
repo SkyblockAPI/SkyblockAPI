@@ -79,6 +79,14 @@ actual fun GuiGraphics.drawGradient(
     }
 }
 
+actual fun GuiGraphics.fill(x: Int, y: Int, width: Int, height: Int, color: Int) {
+    this.fill(x, y, x + width, y + height, color)
+}
+
+actual fun GuiGraphics.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int) {
+    this.renderOutline(x, y, x + width, y + height, color)
+}
+
 actual fun GuiGraphics.showTooltip(text: Component, maxWidth: Int, force: Boolean) {
     val screen = McScreen.self ?: return
     screen.setTooltipForNextRenderPass(
@@ -104,12 +112,4 @@ actual fun GuiGraphics.getScale(): Vector2f = Vector2f(this.pose().last().pose()
 
 actual fun GuiGraphics.applyBackgroundBlur() {
     McClient.self.gameRenderer.processBlurEffect()
-}
-
-actual fun GuiGraphics.fill(x: Int, y: Int, width: Int, height: Int, color: Int) {
-    this.fill(x, y, x + width, y + height, color)
-}
-
-actual fun GuiGraphics.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int) {
-    this.renderOutline(x, y, x + width, y + height, color)
 }
