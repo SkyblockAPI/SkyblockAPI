@@ -396,14 +396,17 @@ afterEvaluate {
     }
 }
 
-tasks.register("setupForWorkflows") {
-    val annotations = project(":annotations").tasks.getByName("build")
-    dependsOn(annotations)
-    mustRunAfter(annotations)
-    mcVersions.flatMap {
-        listOf("remapV${it.name.substring(1)}CommonMinecraftNamed", "remapV${it.name.substring(1)}ClientMinecraftNamed")
-    }.mapNotNull { tasks.findByName(it) }.forEach {
-        dependsOn(it)
-        mustRunAfter(it)
+tasks.register("setupForWorkflows").get().apply {
+    project(":annotations").afterEvaluate {
+        val annotations = project(":annotations").tasks.getByName("build")
+        dependsOn(annotations)
+        mustRunAfter(annotations)
+        mcVersions.flatMap {
+            listOf("remapV${it.name.substring(1)}CommonMinecraftNamed", "remapV${it.name.substring(1)}ClientMinecraftNamed")
+        }.mapNotNull { tasks.findByName(it) }.forEach {
+            dependsOn(it)
+            mustRunAfter(it)
+            it.mustRunAfter(annotations)
+        }
     }
 }
