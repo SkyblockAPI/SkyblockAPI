@@ -15,6 +15,7 @@ import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.museum.MuseumData
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
@@ -28,6 +29,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import java.util.concurrent.CompletableFuture
 
+/** Currently doesn't support special items. */
 @Module
 object MuseumAPI {
 
@@ -52,6 +54,25 @@ object MuseumAPI {
     fun getAllItems(): List<ItemStack> = MuseumStorage.getAllItems()
     fun getItemsOnCategory(category: MuseumCategory): List<ItemStack> = MuseumStorage.getItemsOnCategory(category)
     fun getItemsWithCategory(): Map<MuseumCategory, List<ItemStack>> = MuseumStorage.getItemsWithCategory()
+
+    /** Returns `true` if the item can be donated to museum. Ignores special items. */
+    fun isMuseumItem(id: SkyBlockId): Boolean = MuseumData.isMuseumItem(id)
+
+    /** Returns `true` if the item has been donated to museum. Ignores special items. */
+    fun isDonated(id: SkyBlockId): Boolean {
+        val data = ItemData.getItemData(id.id)?.museumData ?: return false
+        return if (data.category == MuseumCategory.ARMOR_SETS) {
+            data.armorSets.any { MuseumStorage.hasDonatedArmorSet(it) }
+        } else MuseumStorage.hasDonatedItem(id.id)
+    }
+
+    /** Returns `true` if the item has been donated to museum and is stored in it. Ignores special items. */
+    fun isStoredInMuseum(id: SkyBlockId): Boolean {
+        val data = ItemData.getItemData(id.id)?.museumData ?: return false
+        return if (data.category == MuseumCategory.ARMOR_SETS) {
+            data.armorSets.any { MuseumStorage.isArmorSetStored(it) }
+        } else MuseumStorage.isItemStored(id.id)
+    }
 
     private var lastCategory: MuseumCategory? = null
     private var lastArmor: Pair<String, Map<String, ItemStack>>? = null

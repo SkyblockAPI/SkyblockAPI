@@ -6,6 +6,7 @@ import me.owdding.ktcodecs.FieldName
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.extentions.toScreamingSnakeCase
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
@@ -38,6 +39,7 @@ object MuseumData {
         "'s special armor", "'s armor", "armor of", "tuxedo",
     )
     //endregion
+    fun isMuseumItem(id: SkyBlockId): Boolean = id.id in museumData.allItems
 
     fun getArmorSetIdFromName(name: String): String? {
         val lowercase = name.lowercase().trim()
@@ -62,6 +64,7 @@ object MuseumData {
 
 @GenerateCodec
 data class RepoMuseumData(
+    @FieldName("all_items") val allItems: Set<String> = emptySet(),
     @FieldName("armor_sets") val armorSets: Map<String, List<String>> = emptyMap(),
 ) {
     companion object {
