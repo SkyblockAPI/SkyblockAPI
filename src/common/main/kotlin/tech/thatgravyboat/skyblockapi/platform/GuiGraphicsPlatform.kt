@@ -35,3 +35,8 @@ import org.joml.Vector2f
 @Stub expect fun GuiGraphics.getScale(): Vector2f
 
 @Stub expect fun GuiGraphics.applyBackgroundBlur()
+
+@Stub
+expect fun GuiGraphics.fill(x: Int, y: Int, width: Int, height: Int, color: Int = -1)
+@Stub
+expect fun GuiGraphics.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int = -1)
