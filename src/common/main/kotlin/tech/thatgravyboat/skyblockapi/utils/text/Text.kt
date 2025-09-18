@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.utils.text
 import net.minecraft.network.chat.*
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.StringUtil
+import net.msrandom.stub.Stub
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
@@ -147,8 +148,17 @@ object TextUtils {
 
 }
 
+@Stub
 internal expect fun MutableComponent.withFont(location: ResourceLocation?): MutableComponent
+
+@Stub
 internal expect fun MutableComponent.font(): ResourceLocation?
+
+@Stub
+internal expect fun MutableComponent.withFontDescriptor(location: FontDescriptor?): MutableComponent
+
+@Stub
+internal expect fun MutableComponent.fontDescriptor(): FontDescriptor?
 
 object TextStyle {
 
@@ -165,6 +175,12 @@ object TextStyle {
         get() = font()
         set(value) {
             this.withFont(value)
+        }
+
+    var MutableComponent.fontDescriptor: FontDescriptor?
+        get() = fontDescriptor()
+        set(value) {
+            this.withFontDescriptor(value)
         }
 
     var MutableComponent.hover: Component?
