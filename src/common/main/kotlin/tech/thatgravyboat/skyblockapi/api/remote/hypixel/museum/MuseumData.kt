@@ -39,7 +39,7 @@ object MuseumData {
         "'s special armor", "'s armor", "armor of", "tuxedo",
     )
     //endregion
-    fun isMuseumItem(id: SkyBlockId): Boolean = id.id in museumData.allItems
+    fun isMuseumItem(id: SkyBlockId): Boolean = id.skyblockId in museumData.allItems
 
     fun getArmorSetIdFromName(name: String): String? {
         val lowercase = name.lowercase().trim()

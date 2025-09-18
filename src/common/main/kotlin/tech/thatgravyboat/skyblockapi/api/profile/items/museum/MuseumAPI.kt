@@ -60,18 +60,20 @@ object MuseumAPI {
 
     /** Returns `true` if the item has been donated to museum. Ignores special items. */
     fun isDonated(id: SkyBlockId): Boolean {
-        val data = ItemData.getItemData(id.id)?.museumData ?: return false
+        val skyblockId = id.skyblockId
+        val data = ItemData.getItemData(skyblockId)?.museumData ?: return false
         return if (data.category == MuseumCategory.ARMOR_SETS) {
             data.armorSets.any { MuseumStorage.hasDonatedArmorSet(it) }
-        } else MuseumStorage.hasDonatedItem(id.id)
+        } else MuseumStorage.hasDonatedItem(skyblockId)
     }
 
     /** Returns `true` if the item has been donated to museum and is stored in it. Ignores special items. */
     fun isStoredInMuseum(id: SkyBlockId): Boolean {
-        val data = ItemData.getItemData(id.id)?.museumData ?: return false
+        val skyblockId = id.skyblockId
+        val data = ItemData.getItemData(skyblockId)?.museumData ?: return false
         return if (data.category == MuseumCategory.ARMOR_SETS) {
             data.armorSets.any { MuseumStorage.isArmorSetStored(it) }
-        } else MuseumStorage.isItemStored(id.id)
+        } else MuseumStorage.isItemStored(skyblockId)
     }
 
     private var lastCategory: MuseumCategory? = null
