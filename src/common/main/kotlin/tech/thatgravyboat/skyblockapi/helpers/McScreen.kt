@@ -2,7 +2,9 @@ package tech.thatgravyboat.skyblockapi.helpers
 
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.msrandom.stub.Stub
 
+@Stub
 expect object McScreen {
 
     val self: Screen?

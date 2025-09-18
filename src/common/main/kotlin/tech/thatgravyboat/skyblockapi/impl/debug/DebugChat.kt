@@ -45,4 +45,4 @@ object DebugChat {
 }
 
 @Stub
-internal expect class DebugChatScreen(messages: List<Pair<Instant, Component>>) : Screen
+internal expect fun DebugChatScreen(messages: List<Pair<Instant, Component>>): Screen

@@ -28,8 +28,8 @@ import java.time.format.DateTimeFormatter
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
 
-
-internal actual class DebugChatScreen actual constructor(val messages: List<Pair<Instant, Component>>) : Screen(CommonComponents.EMPTY) {
+internal actual fun DebugChatScreen(messages: List<Pair<Instant, Component>>): Screen = DebugChatScreenImpl(messages)
+internal class DebugChatScreenImpl(val messages: List<Pair<Instant, Component>>) : Screen(CommonComponents.EMPTY) {
 
     private var layout: LinearLayout = LinearLayout.vertical().spacing(2)
     private var scroll = 0
