@@ -27,7 +27,7 @@ public class ScreenMixin {
         var screen = (Screen) (Object) this;
         if (new RenderScreenBackgroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus())) {
             new RenderScreenForegroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus());
-            //graphics.renderDeferredTooltip();
+            graphics.renderDeferredTooltip();
             ci.cancel();
         }
     }
