@@ -4,10 +4,11 @@ package tech.thatgravyboat.skyblockapi.platform
 
 import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.client.resources.PlayerSkin as MinecraftPlayerSkin
 
-actual typealias PlayerSkin = net.minecraft.client.resources.PlayerSkin
+actual typealias PlayerSkin = MinecraftPlayerSkin
 
-actual val AbstractClientPlayer.skin: PlayerSkin get() = this.skin
+actual fun AbstractClientPlayer.skin(): PlayerSkin = this.skin
 actual val PlayerSkin.textureUrl: String? get() = this.textureUrl()
 actual val PlayerSkin.texture: ResourceLocation? get() = this.texture
 actual val PlayerSkin.capeTexture: ResourceLocation? get() = this.capeTexture
@@ -15,7 +16,7 @@ actual val PlayerSkin.elytraTexture: ResourceLocation? get() = this.elytraTextur
 actual val PlayerSkin.secure: Boolean get() = this.secure
 actual val PlayerSkin.model: Model get() = this.model().toPlatformModel()
 
-fun net.minecraft.client.resources.PlayerSkin.Model.toPlatformModel() = when (this) {
-    net.minecraft.client.resources.PlayerSkin.Model.SLIM -> Model.SLIM
-    net.minecraft.client.resources.PlayerSkin.Model.WIDE -> Model.WIDE
+fun MinecraftPlayerSkin.Model.toPlatformModel() = when (this) {
+    MinecraftPlayerSkin.Model.SLIM -> Model.SLIM
+    MinecraftPlayerSkin.Model.WIDE -> Model.WIDE
 }

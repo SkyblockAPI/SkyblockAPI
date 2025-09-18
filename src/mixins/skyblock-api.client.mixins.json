@@ -19,7 +19,6 @@
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin",
         "tagattachments.ClientLevelMixin",
-        "tagattachments.DebugScreenOverlayMixin",
         "tagattachments.EntityMixin",
         "tagattachments.EntityRenderStateMixin"
     ],

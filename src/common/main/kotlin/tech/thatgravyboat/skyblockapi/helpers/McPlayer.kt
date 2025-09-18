@@ -20,8 +20,8 @@ object McPlayer {
 
     val position: Vec3? get() = self?.position()
 
-    val name: String get() = McClient.self.gameProfile.name()
-    val uuid: UUID get() = McClient.self.gameProfile.id()
+    val name: String get() = McClient.self.gameProfile.name
+    val uuid: UUID get() = McClient.self.gameProfile.id
     val skin: PlayerSkin? get() = McClient.self.player?.skin()
 
     val menu: AbstractContainerMenu? get() = self?.containerMenu

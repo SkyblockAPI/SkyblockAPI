@@ -6,12 +6,13 @@ import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.core.ClientAsset
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.player.PlayerModelType
+import net.minecraft.world.entity.player.PlayerSkin as MinecraftPlayerSkin
 
-actual typealias PlayerSkin = net.minecraft.world.entity.player.PlayerSkin
+actual typealias PlayerSkin = MinecraftPlayerSkin
 
 actual val PlayerSkin.textureUrl: String? get() = (this.body() as? ClientAsset.DownloadedTexture)?.url()
 
-actual val AbstractClientPlayer.skin: PlayerSkin get() = this.skin
+actual fun AbstractClientPlayer.skin(): PlayerSkin = this.skin
 actual val PlayerSkin.texture: ResourceLocation? get() = this.body().id()
 actual val PlayerSkin.capeTexture: ResourceLocation? get() = this.cape()?.id()
 actual val PlayerSkin.elytraTexture: ResourceLocation? get() = this.elytra()?.id()
