@@ -29,6 +29,7 @@ plugins {
 }
 
 deprecationMessage = "This will be removed with the next minecraft version (1.21.6/1.22). Consider migrating to the new api before it is removed!"
+evaluationDependsOn(":annotations")
 
 base {
     archivesName.set(project.property("archives_base_name") as String)
@@ -379,11 +380,25 @@ afterEvaluate {
     }
 }
 
-tasks.register("setupForWorkflows") {
-    mcVersions.flatMap {
-        listOf("remap${it.name}CommonMinecraftNamed", "remap${it.name}ClientMinecraftNamed")
-    }.mapNotNull { tasks.findByName(it) }.forEach {
-        dependsOn(it)
-        mustRunAfter(it)
+val annotations: Task = project(":annotations").tasks.getByName("build")
+val setupForWorkflows: TaskProvider<Task> = tasks.register("setupForWorkflows") {
+    dependsOn(annotations)
+    mustRunAfter(annotations)
+}
+
+mcVersions.flatMap {
+    listOf("remap${it.name}CommonMinecraftNamed", "remap${it.name}ClientMinecraftNamed")
+}.mapNotNull { tasks.findByName(it) }.forEach {
+    setupForWorkflows.configure workflow@{
+        this@workflow.dependsOn(it)
+        this@workflow.mustRunAfter(it)
     }
+    it.mustRunAfter(annotations)
+}
+
+gradle.startParameter.apply {
+    welcomeMessageConfiguration.welcomeMessageDisplayMode = WelcomeMessageDisplayMode.NEVER
+    setTaskNames(mutableListOf(":setupForWorkflows").apply {
+        addAll(taskNames)
+    })
 }
