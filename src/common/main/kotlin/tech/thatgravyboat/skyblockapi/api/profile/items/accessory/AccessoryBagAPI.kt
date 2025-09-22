@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.accessory
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.AccessoryBagStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.IgnoreFiller
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
@@ -19,15 +20,11 @@ object AccessoryBagAPI {
 
     @Subscription
     @MustBeContainer
+    @IgnoreFiller
     fun onInventory(event: InventoryChangeEvent) {
         if (event.isInBottomRow) return
-        if (event.isSkyBlockFiller) return
         titleRegex.match(event.title) { destructured ->
-            val currentPage = (destructured["currentPage"] ?: "1").toIntValue()
-
-            if (event.slot.index == 0) {
-                AccessoryBagStorage.invalidatePage(currentPage)
-            }
+            val currentPage = destructured["currentPage"]?.toIntValue() ?: 1
 
             AccessoryBagStorage.addItem(AccessoryBagItem(event.slot.item, currentPage, event.slot.index))
         }
