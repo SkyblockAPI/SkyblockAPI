@@ -32,6 +32,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.util.concurrent.CompletableFuture
 
@@ -65,19 +66,7 @@ object MuseumAPI {
     fun isMuseumItem(id: SkyBlockId): Boolean = MuseumData.isMuseumItem(id)
 
     /** Returns `true` if the item has been donated to museum. Ignores special items. */
-    fun isDonated(id: SkyBlockId): Boolean {
-        val skyblockId = id.skyblockId
-        val data = ItemData.getItemData(skyblockId)?.museumData ?: return false
-        return if (data.category == MuseumCategory.ARMOR_SETS) {
-            val armorSets = data.armorSets
-            armorSets.any { MuseumStorage.hasDonatedArmorSet(it) } ||
-                data.parents.values.any { parent ->
-                    parent !in armorSets &&
-                        (MuseumStorage.hasDonatedArmorSet(parent) ||
-                            MuseumData.getArmorSetFromId(parent)?.firstOrNull()?.let { isDonated(SkyBlockId.item(it)) } == true)
-                }
-        } else MuseumStorage.hasDonatedItem(skyblockId) || data.parents.values.any { isDonated(SkyBlockId.item(it)) }
-    }
+    fun isDonated(id: SkyBlockId): Boolean = internalIsDonated(id, mutableSetOf())
 
     /** Returns `true` if the item has been donated to museum and is stored in it. Ignores special items. */
     fun isStoredInMuseum(id: SkyBlockId): Boolean {
@@ -86,6 +75,23 @@ object MuseumAPI {
         return if (data.category == MuseumCategory.ARMOR_SETS) {
             data.armorSets.any { MuseumStorage.isArmorSetStored(it) }
         } else MuseumStorage.isItemStored(skyblockId)
+    }
+
+    private fun internalIsDonated(id: SkyBlockId, checkedIds: MutableSet<SkyBlockId>): Boolean {
+        if (!checkedIds.add(id)) return false
+
+        val skyblockId = id.skyblockId
+        val data = ItemData.getItemData(skyblockId)?.museumData ?: return false
+        if (data.category == MuseumCategory.ARMOR_SETS) {
+            val armorSets = data.armorSets
+            if (armorSets.any(MuseumStorage::hasDonatedArmorSet)) return true
+            return data.parents.values.any { parent ->
+                if (MuseumStorage.hasDonatedArmorSet(parent)) return@any true
+                val setId = MuseumData.getArmorSetFromId(parent) ?: return@any false
+                return@any setId.any { internalIsDonated(SkyBlockId.item(it), checkedIds) }
+            }
+        }
+        return MuseumStorage.hasDonatedItem(skyblockId) || data.parents.values.any { internalIsDonated(SkyBlockId.item(it), checkedIds) }
     }
 
     private var lastCategory: MuseumCategory? = null
@@ -229,18 +235,50 @@ object MuseumAPI {
                 MuseumStorage.reset()
                 Text.sendDebug("Museum data has been reset.")
             }
-            thenCallback("check id", StringArgumentType.word()) {
-                val id = argument<String>("id")?.let(SkyBlockId::item) ?: return@thenCallback
-                val item = SimpleItemAPI.getItemByIdOrNull(id) ?: run {
-                    Text.sendDebug("Item not found.")
-                    return@thenCallback
+            then("check") {
+                thenCallback("id", StringArgumentType.word()) {
+                    val id = argument<String>("id")?.let(SkyBlockId::item) ?: return@thenCallback
+                    val item = SimpleItemAPI.getItemByIdOrNull(id) ?: run {
+                        Text.sendDebug("Item not found.")
+                        return@thenCallback
+                    }
+                    Text.sendDebug {
+                        append("Item ")
+                        append(item.hoverName)
+                        append(" donated status: ")
+                        if (isDonated(id)) append("Donated") { color = TextColor.GREEN }
+                        else append("Not Donated") { color = TextColor.RED }
+                    }
                 }
-                Text.sendDebug {
-                    append("Item ")
-                    append(item.hoverName)
-                    append(" donated status: ")
-                    if (isDonated(id)) append("Donated") { color = TextColor.GREEN }
-                    else append("Not Donated") { color = TextColor.RED }
+                then("all") {
+                    thenCallback("donated") {
+                        CompletableFuture.runAsync {
+                            val string = MuseumData.museumData.allItems.joinToString("\n") {
+                                val id = SkyBlockId.item(it)
+                                val name = SimpleItemAPI.getItemByIdOrNull(id)?.hoverName?.stripped ?: run {
+                                    return@joinToString "- $it: ITEM NOT FOUND"
+                                }
+                                if (isDonated(id)) "- $name Donated"
+                                else "- $name Not Donated"
+                            }
+                            McClient.clipboard = string
+                            Text.sendDebug("Copied donation status of all museum items to clipboard.")
+                        }
+                    }
+                    thenCallback("stored") {
+                        CompletableFuture.runAsync {
+                            val string = MuseumData.museumData.allItems.joinToString("\n") {
+                                val id = SkyBlockId.item(it)
+                                val name = SimpleItemAPI.getItemByIdOrNull(id)?.hoverName?.stripped ?: run {
+                                    return@joinToString "- $it: ITEM NOT FOUND"
+                                }
+                                if (isStoredInMuseum(id)) "- $name Stored"
+                                else "- $name Not Stored"
+                            }
+                            McClient.clipboard = string
+                            Text.sendDebug("Copied stored status of all museum items to clipboard.")
+                        }
+                    }
                 }
             }
             then("copy") {
