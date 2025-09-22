@@ -73,7 +73,7 @@ object MuseumAPI {
         val skyblockId = id.skyblockId
         val data = ItemData.getItemData(skyblockId)?.museumData ?: return false
         return if (data.category == MuseumCategory.ARMOR_SETS) {
-            data.armorSets.any { MuseumStorage.isArmorSetStored(it) }
+            data.armorSets.any(MuseumStorage::isArmorSetStored)
         } else MuseumStorage.isItemStored(skyblockId)
     }
 
