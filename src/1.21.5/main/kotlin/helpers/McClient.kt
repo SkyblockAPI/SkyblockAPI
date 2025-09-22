@@ -75,7 +75,14 @@ actual object McClient {
                 .sortedBy { -it.value() }
                 .map {
                     val team = scoreboard.getPlayersTeam(it.owner())
-                    PlayerTeam.formatNameForTeam(team, it.ownerName())
+                    if (team == null) {
+                    	it.ownerName().copy()
+                    } else {
+                    	Component.empty().also { main ->
+	                        team?.playerPrefix?.apply { siblings.forEach { sibling -> main.append(sibling) } }
+	                        team?.playerSuffix?.apply { siblings.forEach { sibling -> main.append(sibling) } }
+	                    }
+                    }
                 }
         }
 
