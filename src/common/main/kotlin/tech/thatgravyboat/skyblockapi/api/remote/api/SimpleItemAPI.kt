@@ -37,12 +37,12 @@ object SimpleItemAPI {
     private val nameCache: MutableMap<String, SkyBlockId> = mutableMapOf()
     private val allIds: MutableList<SkyBlockId> = mutableListOf()
 
-    private fun Iterable<Pair<String, SkyBlockId>>.saveIds() = this.apply {
-        allIds.addAll(this.map { (_, id) -> id })
-    }
-
     init {
         if (RepoAPI.isInitialized()) setupCache()
+    }
+
+    private fun Iterable<Pair<String, SkyBlockId>>.saveIds() = this.apply {
+        allIds.addAll(this.map { (_, id) -> id })
     }
 
     private fun List<Pair<String, SkyBlockId>>.applyFiltered() = nameCache.putAll(this.saveIds().filter { (_, id) -> id !in unobtainableIds }.toMap())
@@ -117,7 +117,7 @@ object SimpleItemAPI {
     fun getAttributeByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::attribute)) {
         val attributeId = id.cleanOrNull() ?: return@getOrPut null
 
-        return@getOrPut RepoAttributeAPI.getAttributeByIdOrNull(attributeId)
+        return RepoAttributeAPI.getAttributeByIdOrNull(attributeId)
     }
 
     fun getAttributeById(id: SkyBlockId): ItemStack = getAttributeByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {

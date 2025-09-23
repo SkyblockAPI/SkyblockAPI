@@ -19,6 +19,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
+typealias SkyBlockItemId = SkyBlockId
+
 @JvmInline
 value class SkyBlockId private constructor(val id: String) {
     companion object Companion {
