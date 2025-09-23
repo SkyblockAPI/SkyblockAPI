@@ -257,6 +257,7 @@ compactingResources {
     configureTask(tasks.getByName<ProcessResources>("process1215Resources"))
     configureTask(tasks.getByName<ProcessResources>("processResources"))
 
+    removeComments("skyblockid/unobtainable_ids")
     substituteFromDifferentFile("slayer", "slayers")
 }
 
