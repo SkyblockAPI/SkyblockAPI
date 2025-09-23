@@ -54,7 +54,7 @@ object SimpleItemAPI {
     fun getItemByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::item)) {
         val itemId = id.cleanOrNull() ?: return@getOrPut null
 
-        return RepoItemsAPI.getItemOrNull(itemId)
+        return@getOrPut RepoItemsAPI.getItemOrNull(itemId)
     }
 
     fun getItemById(id: SkyBlockId): ItemStack = getItemByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {
@@ -117,7 +117,7 @@ object SimpleItemAPI {
     fun getAttributeByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::attribute)) {
         val attributeId = id.cleanOrNull() ?: return@getOrPut null
 
-        return RepoAttributeAPI.getAttributeByIdOrNull(attributeId)
+        return@getOrPut RepoAttributeAPI.getAttributeByIdOrNull(attributeId)
     }
 
     fun getAttributeById(id: SkyBlockId): ItemStack = getAttributeByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {
