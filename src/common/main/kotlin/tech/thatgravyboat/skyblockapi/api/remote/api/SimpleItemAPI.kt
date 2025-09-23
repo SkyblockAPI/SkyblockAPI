@@ -47,14 +47,12 @@ object SimpleItemAPI {
 
     private fun List<Pair<String, SkyBlockId>>.applyFiltered() = nameCache.putAll(this.saveIds().filter { (_, id) -> id !in unobtainableIds }.toMap())
 
+    private fun SkyBlockId.cleanOrNull() = this.cleanId.uppercase().takeUnless { it == UNKNOWN }
+
     fun findIdByName(name: String) = nameCache[name.lowercase().stripColor()]
 
     fun getItemByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::item)) {
-        val itemId = id.cleanId.uppercase()
-
-        if (itemId == UNKNOWN) {
-            return null
-        }
+        val itemId = id.cleanOrNull() ?: return@getOrPut null
 
         return RepoItemsAPI.getItemOrNull(itemId)
     }
@@ -64,11 +62,7 @@ object SimpleItemAPI {
     }
 
     fun getPetByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::pet)) {
-        val petId = id.cleanId.uppercase()
-
-        if (petId == UNKNOWN) {
-            return@getOrPut null
-        }
+        val petId = id.cleanOrNull() ?: return@getOrPut null
 
         if (petId.contains(":")) {
             val (petId, rarity) = petId.split(":")
@@ -89,11 +83,7 @@ object SimpleItemAPI {
     }
 
     fun getRuneByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::rune)) {
-        val runeId = id.cleanId.uppercase()
-
-        if (runeId == UNKNOWN) {
-            return@getOrPut null
-        }
+        val runeId = id.cleanOrNull() ?: return@getOrPut null
 
         if (runeId.contains(":")) {
             val (runeId, literalLevel) = runeId.split(":")
@@ -109,11 +99,7 @@ object SimpleItemAPI {
     }
 
     fun getEnchantmentByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::enchantment)) {
-        val enchantmentId = id.cleanId.uppercase()
-
-        if (enchantmentId == UNKNOWN) {
-            return@getOrPut null
-        }
+        val enchantmentId = id.cleanOrNull() ?: return@getOrPut null
 
         if (enchantmentId.contains(":")) {
             val (enchantmentId, literalLevel) = enchantmentId.split(":")
@@ -129,15 +115,9 @@ object SimpleItemAPI {
     }
 
     fun getAttributeByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::attribute)) {
-        val attributeId = id.cleanId.uppercase()
+        val attributeId = id.cleanOrNull() ?: return@getOrPut null
 
-        if (attributeId == UNKNOWN) {
-            return@getOrPut null
-        }
-
-        RepoAttributeAPI.getAttributeByIdOrNull(attributeId)?.let { return@getOrPut it }
-
-        return@getOrPut null
+        return@getOrPut RepoAttributeAPI.getAttributeByIdOrNull(attributeId)
     }
 
     fun getAttributeById(id: SkyBlockId): ItemStack = getAttributeByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {
@@ -183,13 +163,13 @@ object SimpleItemAPI {
             components.asString.stripColor() to item(id)
         }.applyFiltered()
 
-        val newCache = nameCache.mapKeys { (key) -> key.lowercase().stripColor() }
-            .entries.flatMap { (key, value) ->
-                listOf(
-                    key to value,
-                    key.sanitizeForCommandInput() to value,
-                )
-            }.distinct().toMap()
+        val newCache = nameCache.flatMap { (key, value) ->
+            val key = key.lowercase().stripColor()
+            listOf(
+                key to value,
+                key.sanitizeForCommandInput() to value,
+            )
+        }.distinct().toMap()
         nameCache.clear()
         nameCache.putAll(newCache)
         SkyBlockAPI.trace("[SimpleItemAPI] Cached ${nameCache.size} item names and ${allIds.size} ids in ${start.since().toReadableTime(allowMs = true)}")
