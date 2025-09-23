@@ -18,7 +18,7 @@ object CommonText {
     val SPACE = " ".asComponent()
     val EMPTY = "".asComponent()
 
-    internal val PREFIX = Text.of("[SkyBlockAPI] ") { color = TextColor.YELLOW }
+    internal val PREFIX: Component = Text.of("[SkyBlockAPI] ") { color = TextColor.YELLOW }
 }
 
 object Text {
@@ -64,12 +64,12 @@ object Text {
         this.send()
     }
 
-    internal fun debug(text: String, init: MutableComponent.() -> Unit = {}) =
+    internal fun debug(text: String = "", init: MutableComponent.() -> Unit = {}) =
         of("[SkyBlockAPI] $text") {
             this.color = TextColor.YELLOW
             init.invoke(this)
         }
-    internal fun sendDebug(text: String, init: MutableComponent.() -> Unit = {}) = debug(text, init).send()
+    internal fun sendDebug(text: String = "", init: MutableComponent.() -> Unit = {}) = debug(text, init).send()
     internal fun Component.sendWithPrefix() = join(CommonText.PREFIX, this).send()
 }
 

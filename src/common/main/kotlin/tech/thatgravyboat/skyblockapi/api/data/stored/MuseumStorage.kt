@@ -126,6 +126,26 @@ internal object MuseumStorage {
         return MuseumCategory.entries.associateWithTo(enumMapOf(), ::getItemsOnCategory)
     }
 
+    fun hasDonatedItem(internalName: String): Boolean {
+        val data = data ?: return false
+        return data.categories.values.any { it.containsKey(internalName) }
+    }
+
+    fun hasDonatedArmorSet(armorSetName: String): Boolean {
+        val data = data ?: return false
+        return data.armorSets.containsKey(armorSetName)
+    }
+
+    fun isItemStored(internalName: String): Boolean {
+        val data = data ?: return false
+        return data.categories.values.any { it[internalName]?.inMuseum == true }
+    }
+
+    fun isArmorSetStored(armorSetName: String): Boolean {
+        val data = data ?: return false
+        return data.armorSets[armorSetName]?.inMuseum == true
+    }
+
     fun reset() {
         val data = data ?: return
         data.categories.clear()

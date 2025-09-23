@@ -10,7 +10,7 @@ import org.gradle.api.tasks.Internal
 import org.gradle.kotlin.dsl.getByType
 import java.io.File
 import java.nio.file.StandardOpenOption
-import java.util.Objects
+import java.util.*
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writeBytes
 import kotlin.time.Duration.Companion.hours
@@ -112,10 +112,13 @@ abstract class CreateItemDataTask : DefaultTask() {
             val itemList = JsonParser.parseString(downloadCache.getOrDownload(HYPIXEL_ITEM_LIST).toString(Charsets.UTF_8)).asJsonObject["items"].asJsonArray
             val museumData = JsonObject()
             val museumArmorData = JsonObject()
+            val allMuseumItemsData = JsonArray()
             itemList.forEach { item ->
                 val item = item.asJsonObject
 
                 if (item.has("museum_data")) {
+                    val id = item.get("id")
+                    allMuseumItemsData.add(id)
                     val itemMuseumData = item.getAsJsonObject("museum_data")
                     itemMuseumData.getAsJsonObject("armor_set_donation_xp")?.let { armorSetDonationXp ->
                         val armorsets = armorSetDonationXp.keySet()
@@ -127,13 +130,16 @@ abstract class CreateItemDataTask : DefaultTask() {
                             } else {
                                 setArray = museumArmorData.getAsJsonArray(set)
                             }
-                            setArray.add(item.get("id"))
+                            setArray.add(id)
                         }
                     }
                 }
 
                 if (!museumArmorData.isEmpty) {
                     museumData.add("armor_sets", museumArmorData)
+                }
+                if (!allMuseumItemsData.isEmpty) {
+                    museumData.add("all_items", allMuseumItemsData)
                 }
                 downloadCache.write(museumDataCacheKey, museumData.toString().toByteArray())
 
