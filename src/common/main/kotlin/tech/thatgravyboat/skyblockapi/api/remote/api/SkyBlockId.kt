@@ -19,6 +19,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
+typealias SkyBlockItemId = SkyBlockId
+
 @JvmInline
 value class SkyBlockId private constructor(val id: String) {
     companion object Companion {
@@ -33,7 +35,7 @@ value class SkyBlockId private constructor(val id: String) {
         const val ATTRIBUTE = "attribute$DELIMITER"
         const val ENCHANTMENT = "enchantment$DELIMITER"
         const val UNSAFE = "unsafe$DELIMITER"
-        const val UNKNOWN = "ocean${DELIMITER}unknown"
+        const val UNKNOWN = "sbapi${DELIMITER}unknown"
         val EMPTY: SkyBlockId = item(UNKNOWN)
 
         fun item(id: String) = SkyBlockId("$ITEM$id".lowercase())
@@ -160,7 +162,7 @@ private fun ItemStack.getSbId(): SkyBlockId? {
         }
 
         "ATTRIBUTE_SHARD" -> {
-            this.getData(DataTypes.ATTRIBUTES)?.entries?.firstOrNull()?.let { (key, _) -> key }
+            this.getData(DataTypes.ATTRIBUTES)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
                 .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
         }
 
