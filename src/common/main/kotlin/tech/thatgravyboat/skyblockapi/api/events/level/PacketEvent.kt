@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 
-open class PacketEvent(val packet: Packet<*>) : CancellableSkyBlockEvent() {
+sealed class PacketEvent(val packet: Packet<*>) : CancellableSkyBlockEvent() {
 
     override fun post(bus: EventBus): Boolean {
         return bus.post(this, null) {
