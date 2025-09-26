@@ -4,5 +4,5 @@ import net.hypixel.data.region.Environment
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 data class HypixelJoinEvent(val environment: Environment) : SkyBlockEvent() {
-    val isAlpha get() = environment != Environment.PRODUCTION
+    val isAlpha: Boolean get() = environment != Environment.PRODUCTION
 }
