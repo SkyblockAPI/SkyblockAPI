@@ -251,7 +251,7 @@ cloche {
     createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" }, common = postRenderingChanges) {
         start = "1.21.6"
     }
-    createVersion("1.21.9", "1.21.9-pre1", fabricApiVersion = provider { "0.133.7" }, common = postRenderingChanges) {
+    createVersion("1.21.9", "1.21.9-rc1", fabricApiVersion = provider { "0.133.7" }, common = postRenderingChanges) {
         start = "1.21.9-beta.1"
     }
 
