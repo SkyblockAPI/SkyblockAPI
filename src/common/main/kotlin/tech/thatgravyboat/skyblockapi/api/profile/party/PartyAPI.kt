@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.events.HypixelEventHandler
+import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanPlayerName
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -18,8 +19,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
-import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.time.since
@@ -115,7 +114,7 @@ object PartyAPI {
     private var requestedPartyInfo: Boolean = false
     private var lastPartyInfoRequest: Instant = Instant.DISTANT_PAST
 
-    private var debug = false
+    private val debug by debugToggle("party_api", "Allows you to see what messages get detected by PartyAPI, and what they modify.")
 
     @Subscription
     fun onChat(event: ChatReceivedEvent.Pre) {
@@ -125,7 +124,7 @@ object PartyAPI {
             val leader = PartyMember(leaderName, PartyRole.LEADER)
             this.leader = leader
             members = listOf(leader, ownPlayer())
-            updatedParty { "Joined party (L: $leaderName)" }
+            debugMessage { "Joined party (L: $leaderName)" }
         } ?: return
         otherJoinedRegex.findThenNull(message, "member") { (memberName) ->
             if (!inParty) {
@@ -133,42 +132,42 @@ object PartyAPI {
                 val ownPlayer = ownPlayer(PartyRole.LEADER)
                 this.leader = ownPlayer
                 this.members = listOf(ownPlayer)
-                updatedParty { "Detected party (L: assumed own)" }
+                debugMessage { "Detected party (L: assumed own)" }
             }
             add(PartyMember(memberName))
-            updatedParty { "Member joined: $memberName" }
+            debugMessage { "Member joined: $memberName" }
         } ?: return
         otherInPartyRegex.findThenNull(message, "members") { (membersList) ->
             if (checkParty()) return@findThenNull
             membersList.split(",").map { it.cleanPlayerName() }.onEach { name ->
                 add(PartyMember(name))
             }.let {
-                updatedParty { "Members in party: (${it.joinToString()})" }
+                debugMessage { "Members in party: (${it.joinToString()})" }
             }
         } ?: return
         for (regex in otherLeftRegexList) {
             regex.findThenNull(message, "member") { (member) ->
                 if (checkParty()) return@findThenNull
                 remove(member)
-                updatedParty { "Member left: $member" }
+                debugMessage { "Member left: $member" }
             } ?: return
         }
         transferLeaveRegex.findThenNull(message, "leader", "member") { (leaderName, memberName) ->
             if (checkParty()) return@findThenNull
             setRole(leaderName, PartyRole.LEADER)
             remove(memberName)
-            updatedParty { "Party transferred to $leaderName because $memberName left" }
+            debugMessage { "Party transferred to $leaderName because $memberName left" }
         } ?: return
         transferRegex.findThenNull(message, "leader", "mod") { (leaderName, modName) ->
             if (checkParty()) return@findThenNull
             setRole(leaderName, PartyRole.LEADER)
             setRole(modName, PartyRole.MOD)
-            updatedParty { "Party transferred to $leaderName by $modName" }
+            debugMessage { "Party transferred to $leaderName by $modName" }
         } ?: return
         for (regex in ownLeaveRegex) {
             if (regex.contains(message)) {
                 reset()
-                updatedParty { "Left party" }
+                debugMessage { "Left party" }
                 return
             }
         }
@@ -189,12 +188,12 @@ object PartyAPI {
                 add(member)
                 if (partyRole == PartyRole.LEADER) this.leader = member
             }
-            updatedParty { "Updated party from members list" }
+            debugMessage { "Updated party from members list" }
         } ?: return
         partyFinderRegex.findThenNull(message, "member") { (member) ->
             if (checkParty()) return@findThenNull
             add(PartyMember(member))
-            updatedParty { "Member joined from Party Finder: $member" }
+            debugMessage { "Member joined from Party Finder: $member" }
         } ?: return
         allInviteRegex.findThenNull(message, "member", "state") { (member, state) ->
             if (checkParty()) return@findThenNull
@@ -202,13 +201,13 @@ object PartyAPI {
             findPlayer(member)?.let { player ->
                 if (player.role == PartyRole.MEMBER) {
                     player.role = PartyRole.MOD
-                    updatedParty { "Member $member detected as MOD" }
+                    debugMessage { "Member $member detected as MOD" }
                 } else {
-                    updatedParty { "Member $member is already ${player.role}" }
+                    debugMessage { "Member $member is already ${player.role}" }
                 }
             } ?: run {
                 add(PartyMember(member, PartyRole.MOD))
-                updatedParty { "Adding $member as MOD" }
+                debugMessage { "Adding $member as MOD" }
             }
         } ?: return
         partyMessageRegex.findThenNull(event.component, "member") { (member) ->
@@ -220,17 +219,17 @@ object PartyAPI {
             val player = findPlayer(uuid)
             if (player != null) {
                 player.name = name
-                updatedParty { "Updated player name: $name ($uuid)" }
+                debugMessage { "Updated player name: $name ($uuid)" }
             } else {
                 add(PartyMember(uuid, name))
-                updatedParty { "Added missing player: $name ($uuid)" }
+                debugMessage { "Added missing player: $name ($uuid)" }
             }
         } ?: return
     }
 
     @Subscription
     fun onPartyInfo(event: PartyInfoEvent) {
-        updatedParty { "Updated from packet" }
+        debugMessage { "Updated from packet" }
         this.requestedPartyInfo = false
         if (!event.inParty) return reset()
         this.inParty = true
@@ -251,21 +250,13 @@ object PartyAPI {
         }
     }
 
-    private fun updatedParty(msg: () -> String) {
+    private fun debugMessage(msg: () -> String) {
         if (debug) Text.sendDebug("PartyAPI: ${msg()}")
     }
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
         event.register("sbapi party") {
-            thenCallback("debug") {
-                Text.sendDebug {
-                    debug = !debug
-                    if (debug) append("Enabled", TextColor.GREEN)
-                    else append("Disabled", TextColor.RED)
-                    append(" party debug.")
-                }
-            }
             callback {
                 val string = buildList {
                     add("inParty: $inParty")
@@ -282,7 +273,7 @@ object PartyAPI {
 
     private fun checkParty(): Boolean {
         if (inParty) return false
-        updatedParty { "Party check failed" }
+        debugMessage { "Party check failed" }
         inParty = true
         return requestPartyInfo()
     }
