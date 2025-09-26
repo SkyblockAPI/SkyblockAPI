@@ -65,6 +65,7 @@ object Text {
             this.color = TextColor.YELLOW
             init.invoke(this)
         }
+
     internal fun sendDebug(text: String = "", init: MutableComponent.() -> Unit = {}) = debug(text, init).send()
     internal fun Component.sendWithPrefix() = join(CommonText.PREFIX, this).send()
 }
