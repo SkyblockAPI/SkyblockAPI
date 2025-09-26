@@ -79,7 +79,6 @@ object LocationAPI {
                 SkyBlockIsland.HUB -> 26
                 SkyBlockIsland.JERRYS_WORKSHOP -> 27
                 SkyBlockIsland.DARK_AUCTION -> 30
-                null -> null
                 else -> 24
             }
         }
