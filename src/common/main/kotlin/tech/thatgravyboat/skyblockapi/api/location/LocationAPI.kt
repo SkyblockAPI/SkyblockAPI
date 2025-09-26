@@ -3,6 +3,8 @@ package tech.thatgravyboat.skyblockapi.api.location
 import me.owdding.ktmodules.Module
 import net.hypixel.data.type.GameType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.HypixelJoinEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
@@ -22,7 +24,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 @Module
 object LocationAPI {
 
-    private val unknownIslands = mutableMapOf<String, SkyBlockIsland?>()
+    private val unknownAreas = mutableMapOf<String, SkyBlockIsland?>()
     private var sendUnknownChatMessage = false
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
@@ -55,6 +57,12 @@ object LocationAPI {
     var isGuest: Boolean = false
         private set
 
+    var inHypixel: Boolean = false
+        private set
+
+    var inAlpha: Boolean = false
+        private set
+
     var playerCount: Int = 0
         get() = field.coerceAtLeast(McClient.players.size)
         private set
@@ -71,6 +79,7 @@ object LocationAPI {
                 SkyBlockIsland.HUB -> 26
                 SkyBlockIsland.JERRYS_WORKSHOP -> 27
                 SkyBlockIsland.DARK_AUCTION -> 30
+                null -> null
                 else -> 24
             }
         }
@@ -90,22 +99,27 @@ object LocationAPI {
     }
 
     @Subscription
+    fun onHypixelJoin(event: HypixelJoinEvent) {
+        inHypixel = true
+        inAlpha = event.isAlpha
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
     fun onTabListUpdate(event: TabListChangeEvent) {
-        if (!isOnSkyBlock) return
         val component = event.new.firstOrNull()?.firstOrNull() ?: return
         playerCount = playerCountRegex.findOrNull(component.stripped.lowercase(), "count") { (count) -> count.toIntOrNull() } ?: 0
     }
 
     @Subscription
+    @OnlyOnSkyBlock
     fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
-        if (!isOnSkyBlock) return
-
         isGuest = event.new.contains("guest", ignoreCase = true)
     }
 
     @Subscription
+    @OnlyOnSkyBlock
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
-        if (!isOnSkyBlock) return
         locationRegex.anyMatch(event.added, "location") { (location) ->
             val old = area
             area = SkyBlockArea(location)
@@ -113,7 +127,7 @@ object LocationAPI {
 
             val knownArea = SkyBlockAreas.registeredAreas.entries.find { it.value.name == location } != null
             if (!knownArea) {
-                unknownIslands.putIfAbsent(location, island)
+                unknownAreas.putIfAbsent(location, island)
                 if (sendUnknownChatMessage) {
                     Text.of("Unknown area detected: $location").send()
                 }
@@ -128,16 +142,21 @@ object LocationAPI {
     private fun reset() {
         isOnSkyBlock = false
         island = null
+        serverId = null
+        isGuest = false
+        area = SkyBlockAreas.NONE
+        inHypixel = false
+        inAlpha = false
     }
 
-    @Subscription
-    fun onServerDisconnect(event: ServerDisconnectEvent) = reset()
+    @Subscription(ServerDisconnectEvent::class)
+    fun onServerDisconnect() = reset()
 
     @Subscription
     fun onCommand(event: RegisterCommandsEvent) {
         event.registerWithCallback("sbapi unknownareas") {
-            McClient.clipboard = unknownIslands.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
-            Text.of("Copied ${unknownIslands.size} unknown areas to clipboard!").send()
+            McClient.clipboard = unknownAreas.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
+            Text.of("Copied ${unknownAreas.size} unknown areas to clipboard!").send()
             sendUnknownChatMessage != sendUnknownChatMessage
         }
         event.registerWithCallback("sbapi location") {
@@ -145,8 +164,10 @@ object LocationAPI {
                 "Island: ${island?.displayName ?: "Unknown"}",
                 "Area: ${area.name}",
                 "Server ID: ${serverId ?: "Unknown"}",
-                "Player Count: $playerCount${maxPlayercount?.let { " / $it" } ?: ""}",
+                "Player Count: $playerCount${maxPlayercount?.let { " / $it" }.orEmpty()}",
                 "Is Guest: $isGuest",
+                "In Hypixel: $inHypixel",
+                "In Alpha: $inAlpha",
             ).send()
         }
     }
