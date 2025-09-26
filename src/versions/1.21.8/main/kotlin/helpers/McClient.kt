@@ -22,6 +22,7 @@ import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
+import net.minecraft.world.scores.PlayerTeam
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.McVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
@@ -78,9 +79,13 @@ actual object McClient {
                 .sortedBy { -it.value() }
                 .map {
                     val team = scoreboard.getPlayersTeam(it.owner())
-                    Component.empty().also { main ->
-                        team?.playerPrefix?.apply { siblings.forEach { sibling -> main.append(sibling) } }
-                        team?.playerSuffix?.apply { siblings.forEach { sibling -> main.append(sibling) } }
+                    if (team == null) {
+                    	it.ownerName().copy()
+                    } else {
+                    	Component.empty().also { main ->
+	                        team?.playerPrefix?.apply { siblings.forEach { sibling -> main.append(sibling) } }
+	                        team?.playerSuffix?.apply { siblings.forEach { sibling -> main.append(sibling) } }
+	                    }
                     }
                 }
         }

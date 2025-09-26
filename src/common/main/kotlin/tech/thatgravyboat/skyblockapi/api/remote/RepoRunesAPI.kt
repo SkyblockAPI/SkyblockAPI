@@ -19,6 +19,7 @@ object RepoRunesAPI {
         if (!RepoAPI.isInitialized()) return null
         return RepoAPI.runes().getRunes(id)
     }
+
     fun getRune(id: String, tier: Int) = getRuneById(id)?.find { it.tier() == tier }
 
     fun getRune(string: String): Rune? {

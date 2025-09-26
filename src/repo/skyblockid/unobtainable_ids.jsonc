@@ -1,0 +1,8 @@
+/*
+* A list of SkyBlockIds that are either unobtainable OR share the same name with another item and therefore should be removed from the name cache,
+* they should ALWAYS have the full type e.g. <category>:<id>[:<suffix>]
+*/
+[
+    "item:enchanted_clock",
+    "item:starred_yeti_sword"
+]

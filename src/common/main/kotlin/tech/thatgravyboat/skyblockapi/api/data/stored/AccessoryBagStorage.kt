@@ -15,12 +15,8 @@ internal object AccessoryBagStorage {
         true
     )
 
-    fun invalidatePage(page: Int) {
-        ACCESSORY_BAG.get()?.removeIf { (_, currentPage) -> currentPage == page }
-        ACCESSORY_BAG.save()
-    }
-
     fun addItem(accessoryBagItem: AccessoryBagItem) {
+        ACCESSORY_BAG.get()?.removeIf { (_, page, slot) -> page == accessoryBagItem.page && slot == accessoryBagItem.slot }
         ACCESSORY_BAG.get()?.add(accessoryBagItem)
         ACCESSORY_BAG.save()
     }

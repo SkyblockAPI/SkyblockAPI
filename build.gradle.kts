@@ -288,6 +288,7 @@ compactingResources {
     configureTask(tasks.getByName<ProcessResources>("processVersions1219Resources"))
     configureTask(tasks.getByName<ProcessResources>("processResources"))
 
+    removeComments("skyblockid/unobtainable_ids")
     substituteFromDifferentFile("slayer", "slayers")
 }
 
@@ -427,4 +428,11 @@ mcVersions.flatMap {
         this@workflow.mustRunAfter(it)
     }
     it.mustRunAfter(annotations)
+}
+
+gradle.startParameter.apply {
+    welcomeMessageConfiguration.welcomeMessageDisplayMode = WelcomeMessageDisplayMode.NEVER
+    setTaskNames(mutableListOf(":setupForWorkflows").apply {
+        addAll(taskNames)
+    })
 }

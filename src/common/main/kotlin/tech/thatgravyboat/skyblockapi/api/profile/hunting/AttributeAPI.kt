@@ -74,8 +74,8 @@ object AttributeAPI {
     private val syphonedRegex = syphonGroup.create("syphoned", "\\+(?<amount>\\d{1,2}) (?<name>.*?) Attribute \\(Level (?<level>\\d+)\\).*")
 
     private val saltGroup = chatGroup.group("salt")
-    private val saltSingularRegex = saltGroup.create("singular", "(?:CHARM|SALT) You charmed an? (?<name>.*?) and captured its Shard\\.")
-    private val saltMultipleRegex = saltGroup.create("multiple", "(?:CHARM|SALT) You charmed an? (?<name>.*?) and captured (?<amount>\\d+) Shards from it\\.")
+    private val saltSingularRegex = saltGroup.create("singular", "(?:CHARM|SALT|NAGA) You charmed an? (?<name>.*?) and captured its Shard\\.")
+    private val saltMultipleRegex = saltGroup.create("multiple", "(?:CHARM|SALT|NAGA) You charmed an? (?<name>.*?) and captured (?<amount>\\d+) Shards from it\\.")
 
     private val sentToHuntingBoxRegex = chatGroup.create("sent_to_hunting_box", "You sent (?<amount>an?|\\d+) (?<shard>.*? Shard)s? to your Hunting Box.")
 
