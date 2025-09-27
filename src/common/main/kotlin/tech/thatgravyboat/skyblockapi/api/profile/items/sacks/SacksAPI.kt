@@ -51,8 +51,8 @@ object SacksAPI {
     @OnlyOnSkyBlock
     fun onChat(event: ChatReceivedEvent.Pre) {
         sackMessageRegex.match(event.component) {
-            val gainedHoverComponents = it["gained"]?.copy()?.hover?.splitLines() ?: emptyList()
-            val lostHoverComponents = it["lost"]?.copy()?.hover?.splitLines() ?: emptyList()
+            val gainedHoverComponents = it["gained"]?.hover?.splitLines().orEmpty()
+            val lostHoverComponents = it["lost"]?.hover?.splitLines().orEmpty()
             val hoverComponents = gainedHoverComponents + lostHoverComponents
 
             val changedItems = hoverComponents.mapNotNull {
