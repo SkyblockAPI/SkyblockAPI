@@ -60,7 +60,7 @@ object LocationAPI {
     var inHypixel: Boolean = false
         private set
 
-    var inAlpha: Boolean = false
+    var onProduction: Boolean = true
         private set
 
     var playerCount: Int = 0
@@ -100,7 +100,7 @@ object LocationAPI {
     @Subscription
     fun onHypixelJoin(event: HypixelJoinEvent) {
         inHypixel = true
-        inAlpha = event.isAlpha
+        onProduction = event.onProduction
     }
 
     @Subscription
@@ -145,7 +145,7 @@ object LocationAPI {
         isGuest = false
         area = SkyBlockAreas.NONE
         inHypixel = false
-        inAlpha = false
+        onProduction = true
     }
 
     @Subscription(ServerDisconnectEvent::class)
