@@ -166,7 +166,7 @@ object LocationAPI {
                 "Player Count: $playerCount${maxPlayercount?.let { " / $it" }.orEmpty()}",
                 "Is Guest: $isGuest",
                 "In Hypixel: $inHypixel",
-                "In Alpha: $inAlpha",
+                "On Production: $onProduction",
             ).send()
         }
     }
