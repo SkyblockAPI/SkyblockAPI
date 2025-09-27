@@ -16,7 +16,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -57,10 +57,10 @@ object LocationAPI {
     var isGuest: Boolean = false
         private set
 
-    var inHypixel: Boolean = false
+    var onHypixel: Boolean = false
         private set
 
-    var onProduction: Boolean = true
+    var onAlpha: Boolean = false
         private set
 
     var playerCount: Int = 0
@@ -99,15 +99,15 @@ object LocationAPI {
 
     @Subscription
     fun onHypixelJoin(event: HypixelJoinEvent) {
-        inHypixel = true
-        onProduction = event.onProduction
+        onHypixel = true
+        onAlpha = event.onAlpha
     }
 
     @Subscription
     @OnlyOnSkyBlock
     fun onTabListUpdate(event: TabListChangeEvent) {
         val component = event.new.firstOrNull()?.firstOrNull() ?: return
-        playerCount = playerCountRegex.findOrNull(component.stripped.lowercase(), "count") { (count) -> count.toIntOrNull() } ?: 0
+        playerCount = playerCountRegex.findGroup(component.stripped.lowercase(), "count")?.toIntOrNull() ?: 0
     }
 
     @Subscription
@@ -144,8 +144,8 @@ object LocationAPI {
         serverId = null
         isGuest = false
         area = SkyBlockAreas.NONE
-        inHypixel = false
-        onProduction = true
+        onHypixel = false
+        onAlpha = false
     }
 
     @Subscription(ServerDisconnectEvent::class)
@@ -165,8 +165,8 @@ object LocationAPI {
                 "Server ID: ${serverId ?: "Unknown"}",
                 "Player Count: $playerCount${maxPlayercount?.let { " / $it" }.orEmpty()}",
                 "Is Guest: $isGuest",
-                "In Hypixel: $inHypixel",
-                "On Production: $onProduction",
+                "On Hypixel: $onHypixel",
+                "On Alpha: $onAlpha",
             ).send()
         }
     }
