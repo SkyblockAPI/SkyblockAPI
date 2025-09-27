@@ -17,11 +17,11 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
+import tech.thatgravyboat.skyblockapi.platform.GameProfile
 import tech.thatgravyboat.skyblockapi.platform.properties
 import tech.thatgravyboat.skyblockapi.platform.toResolvableProfile
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
-import java.util.*
 
 @Suppress("DEPRECATION")
 val ItemStack.tag: CompoundTag? get() = this[DataComponents.CUSTOM_DATA]?.copyTag()
@@ -78,9 +78,11 @@ fun List<Slot>.filterContainerSlots() = this.filterNot { it.container is Invento
 fun List<Slot>.filterContainerItems() = this.filterContainerSlots().map { it.item }
 
 fun createSkull(textureBase64: String): ItemStack {
-    val profile = GameProfile(UUID.randomUUID(), "a")
-    profile.properties.put("textures", Property("textures", textureBase64))
-    return createSkull(profile)
+    return createSkull(
+        GameProfile {
+            put("textures", Property("textures", textureBase64))
+        },
+    )
 }
 
 fun createSkull(profile: GameProfile): ItemStack {

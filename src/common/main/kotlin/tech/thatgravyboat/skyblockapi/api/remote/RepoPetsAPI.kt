@@ -10,7 +10,6 @@ import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
-import tech.thatgravyboat.skyblockapi.platform.PropertyMap
 import tech.thatgravyboat.skyblockapi.platform.ResolvableProfile
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -35,7 +34,7 @@ object RepoPetsAPI {
             val skin = query.skin?.let { RepoItemsAPI.getItem("PET_SKIN_$it") }
 
             val base = skin ?: ItemStack(Items.PLAYER_HEAD) {
-                this[DataComponents.PROFILE] = ResolvableProfile(null, null, PropertyMap().apply { put("textures", Property("textures", pet.texture())) })
+                this[DataComponents.PROFILE] = ResolvableProfile { put("textures", Property("textures", pet.texture())) }
             }
 
             base[DataComponents.CUSTOM_NAME] = getFormattedName(

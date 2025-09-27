@@ -7,7 +7,6 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RunesAPI.Rune
-import tech.thatgravyboat.skyblockapi.platform.PropertyMap
 import tech.thatgravyboat.skyblockapi.platform.ResolvableProfile
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
@@ -42,7 +41,7 @@ object RepoRunesAPI {
             } ?: return@getOrPut null
 
             val item = ItemStack(Items.PLAYER_HEAD)
-            item[DataComponents.PROFILE] = ResolvableProfile(null, null, PropertyMap().apply { put("textures", Property("textures", rune.texture())) })
+            item[DataComponents.PROFILE] = ResolvableProfile { put("textures", Property("textures", rune.texture())) }
 
             item[DataComponents.CUSTOM_NAME] = Text.of(rune.name())
             item[DataComponents.LORE] = ItemLore(rune.lore().map(Text::of))

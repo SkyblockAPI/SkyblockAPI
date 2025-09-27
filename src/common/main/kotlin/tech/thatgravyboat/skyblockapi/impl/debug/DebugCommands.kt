@@ -14,6 +14,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -214,6 +215,11 @@ object DebugCommands {
                             this.withHoverEvent(HoverEvent.ShowText(Text.of("Click to open the folder.")))
                         }
                     }.send()
+                }
+            }
+            thenCallback("simple_item_api") {
+                SimpleItemAPI.getAllIds().forEach {
+                    it.toItem().hoverName
                 }
             }
         }
