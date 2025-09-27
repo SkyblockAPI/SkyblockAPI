@@ -2,13 +2,13 @@
 
 package tech.thatgravyboat.skyblockapi.platform
 
-import com.google.common.collect.LinkedHashMultimap
+import com.google.common.collect.Multimaps
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.PropertyMap
 import net.minecraft.world.item.component.ResolvableProfile
 import java.util.*
 
-actual fun PropertyMap(): PropertyMap = PropertyMap(LinkedHashMultimap.create())
+actual fun PropertyMap(): PropertyMap = PropertyMap(Multimaps.newMultimap(mutableMapOf()) { mutableListOf() })
 actual fun ResolvableProfile(name: String?, uuid: UUID?, properties: PropertyMap, init: PropertyMap.() -> Unit): ResolvableProfile {
     return ResolvableProfile.createResolved(GameProfile(uuid, name, properties.apply(init)))
 }
