@@ -141,8 +141,8 @@ object MiscEventHandler {
 
         if (new == Blocks.COBBLESTONE && old == Blocks.STONE) return true
         if (new == Blocks.STONE && old == Blocks.COBBLESTONE) return false
-        if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.getBlocks()) return true
-        if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.getBlocks() || old in MiningBlockFamily.VANILLA_BLOCKS.getBlocks())) return true
+        if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.blocks) return true
+        if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.blocks || old in MiningBlockFamily.VANILLA_BLOCKS.blocks)) return true
         if (new == Blocks.RED_SANDSTONE && old == Blocks.RED_SAND) return true
         if (new == Blocks.GRAY_TERRACOTTA && old == Blocks.MYCELIUM) return true
 

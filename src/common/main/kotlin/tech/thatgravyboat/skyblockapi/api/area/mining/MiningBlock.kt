@@ -32,9 +32,7 @@ enum class MiningBlockFamily {
     EXTRA_NETHER,
     ;
 
-    private val _blocks by lazy { MiningBlock.entries.filter { it.family == this }.flatMap { it.blocks } }
-
-    fun getBlocks() = _blocks
+    val blocks by lazy { MiningBlock.entries.filter { it.family == this }.flatMap { it.blocks } }
 }
 
 enum class MiningFortuneType {
