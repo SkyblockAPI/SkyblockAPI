@@ -34,6 +34,7 @@ expect object McClient {
     val connection: ClientPacketListener?
 
     val window: Window
+    val windowHandle: Long
 
     var clipboard: String
 

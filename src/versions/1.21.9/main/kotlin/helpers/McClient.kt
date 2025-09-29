@@ -49,6 +49,7 @@ actual object McClient {
     actual val connection: ClientPacketListener? get() = self.connection
 
     actual val window: Window by self::window
+    actual val windowHandle: Long get() = window.handle()
 
     actual var clipboard: String
         get() = self.keyboardHandler.clipboard

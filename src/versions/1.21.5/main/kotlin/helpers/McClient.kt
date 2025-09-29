@@ -47,6 +47,8 @@ actual object McClient {
     actual val self: Minecraft get() = Minecraft.getInstance()
     actual val connection: ClientPacketListener? get() = self.connection
     actual val window: Window get() = self.window
+    actual val windowHandle: Long get() = window.window
+
     actual var clipboard: String
         get() = self.keyboardHandler.clipboard
         set(value) {
