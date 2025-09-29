@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
+import com.mojang.authlib.minecraft.MinecraftSessionService
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.client.Minecraft
@@ -24,6 +25,7 @@ expect object McClient {
     val isDev: Boolean
     val config: Path
 
+    val sessionService: MinecraftSessionService
     val mcVersionGroup: McVersionGroup
     val mcVersion: McVersion
     val version: String

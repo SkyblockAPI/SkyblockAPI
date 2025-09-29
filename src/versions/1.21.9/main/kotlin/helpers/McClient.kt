@@ -2,6 +2,7 @@
 
 package tech.thatgravyboat.skyblockapi.helpers
 
+import com.mojang.authlib.minecraft.MinecraftSessionService
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.loader.api.FabricLoader
@@ -22,7 +23,6 @@ import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
-import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.McVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
@@ -44,6 +44,7 @@ actual object McClient {
     actual val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
     actual val version: String = SharedConstants.getCurrentVersion().name()
 
+    actual val sessionService: MinecraftSessionService get() = self.services().sessionService()
     actual val self: Minecraft get() = Minecraft.getInstance()
     actual val connection: ClientPacketListener? get() = self.connection
 
