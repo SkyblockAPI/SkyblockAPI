@@ -16,18 +16,7 @@ import tech.thatgravyboat.skyblockapi.item.deprecationMessage
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.util.zip.ZipFile
-import kotlin.io.path.ExperimentalPathApi
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.copyTo
-import kotlin.io.path.createDirectories
-import kotlin.io.path.deleteRecursively
-import kotlin.io.path.exists
-import kotlin.io.path.isRegularFile
-import kotlin.io.path.listDirectoryEntries
-import kotlin.io.path.name
-import kotlin.io.path.readText
-import kotlin.io.path.writeBytes
-import kotlin.io.path.writeText
+import kotlin.io.path.*
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -250,10 +239,10 @@ cloche {
     createVersion("1.21.5")
     createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" }, common = postRenderingChanges) {
         start = "1.21.6"
+        end = "1.21.8"
+        endExclusive = false
     }
-    createVersion("1.21.9", "1.21.9-rc1", fabricApiVersion = provider { "0.133.7" }, common = postRenderingChanges) {
-        start = "1.21.9-beta.1"
-    }
+    createVersion("1.21.9", fabricApiVersion = provider { "0.133.7" }, common = postRenderingChanges)
 
     mappings {
         official()
