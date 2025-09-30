@@ -79,7 +79,7 @@ actual fun GuiGraphics.drawGradient(
     }
 }
 
-actual fun GuiGraphics.fill(x: Int, y: Int, width: Int, height: Int, color: Int) {
+actual fun GuiGraphics.drawFilledBox(x: Int, y: Int, width: Int, height: Int, color: Int) {
     this.fill(x, y, x + width, y + height, color)
 }
 
