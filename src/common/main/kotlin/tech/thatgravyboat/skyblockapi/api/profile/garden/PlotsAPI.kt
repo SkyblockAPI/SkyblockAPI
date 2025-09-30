@@ -52,7 +52,7 @@ object PlotAPI {
 
     private val scoreboardPestAmountRegex = scoreboardGroup.create(
         "pest_amount",
-        "⏣ The Garden ൠ x(?<amount>\\d+)",
+        " ⏣ The Garden ൠ x(?<amount>\\d+)",
     )
 
     private val scoreboardNoPestsRegex = scoreboardGroup.create(
