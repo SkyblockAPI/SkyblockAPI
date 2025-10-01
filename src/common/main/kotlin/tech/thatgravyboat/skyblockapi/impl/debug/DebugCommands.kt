@@ -165,6 +165,10 @@ object DebugCommands {
                         McClient.openUri(gameDir.resolve(it).toUri())
                     }
                 }
+
+                thenCallback("chest_dumps") {
+                    McClient.openUri(gameDir.resolve("config/skyblockapi/chest_dumps").toUri())
+                }
             }
             then("save") {
                 thenCallback("registries") {

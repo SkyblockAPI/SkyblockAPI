@@ -8,6 +8,8 @@
         "GuiGraphicsTooltipMixin",
         "GuiGraphicsVisualItemMixin",
         "GuiMixin",
+        "KeyboardHandlerMixin",
+        "MouseHandlerMixin",
         "ScreenMixin",
         "SoundManagerMixin"
     ],

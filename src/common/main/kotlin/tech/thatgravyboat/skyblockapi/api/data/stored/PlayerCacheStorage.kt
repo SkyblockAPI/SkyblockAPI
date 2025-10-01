@@ -9,6 +9,8 @@ import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.platform.id
+import tech.thatgravyboat.skyblockapi.platform.name
 import java.util.*
 
 private const val MAX_REMOVE_TIME = 10 * 24 * 60 * 60 * 1000 // 10 days

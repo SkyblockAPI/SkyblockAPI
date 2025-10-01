@@ -4,6 +4,7 @@
 import com.google.devtools.ksp.gradle.KspTask
 import earth.terrarium.cloche.api.metadata.FabricMetadata
 import earth.terrarium.cloche.api.metadata.ModMetadata
+import earth.terrarium.cloche.api.target.CommonTarget
 import net.msrandom.minecraftcodev.core.utils.toPath
 import net.msrandom.minecraftcodev.fabric.task.JarInJar
 import net.msrandom.minecraftcodev.runs.task.WriteClasspathFile
@@ -28,7 +29,8 @@ plugins {
     `item-data`
 }
 
-deprecationMessage = "This will be removed with the next minecraft version (1.21.6/1.22). Consider migrating to the new api before it is removed!"
+deprecationMessage = "This will be removed in the next major version. Consider migrating to the new api before it is removed!"
+
 evaluationDependsOn(":annotations")
 
 base {
@@ -68,6 +70,10 @@ dependencies {
     compileOnly(project(":annotations"))
     compilerAll(rootProject.project(":compiler"))
     implementation(kotlin("stdlib-jdk8"))
+    ksp("net.msrandom:kmp-actual-stubs-processor:1.0.4-pr.13") {
+        version { strictly("1.0.4-pr.13") }
+        isTransitive = false
+    }
 
     compileOnly(libs.bundles.meowdding)
     configurations.forEach {
@@ -90,7 +96,7 @@ cloche {
         custom("modmenu" to mapOf("badges" to listOf("library")))
     }
 
-    common {
+    val root = common {
         withPublication()
 
         dependencies {
@@ -111,6 +117,7 @@ cloche {
     fun createVersion(
         name: String,
         version: String = name,
+        common: CommonTarget? = null,
         loaderVersion: Provider<String> = libs.versions.fabric.loader,
         fabricApiVersion: Provider<String> = libs.versions.fabric.api,
         minecraftVersionRange: ModMetadata.VersionRange.() -> Unit = {
@@ -119,10 +126,13 @@ cloche {
             endExclusive = false
         },
     ) {
-        fabric(name) {
+        fabric("versions:$name") {
             includedClient()
             minecraftVersion = version
             this.loaderVersion = loaderVersion.get()
+            if (common != null) {
+                dependsOn(common)
+            }
 
             metadata {
                 entrypoint("client", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit")
@@ -161,7 +171,7 @@ cloche {
             }
 
             dependencies {
-                fabricApi(fabricApiVersion.get(), minecraftVersion)
+                fabricApi(fabricApiVersion.get(), name)
 
                 val mods = project.layout.buildDirectory.get().toPath().resolve("tmp/extracted${sourceSet.name}RuntimeMods")
                 val modsTmp = project.layout.buildDirectory.get().toPath().resolve("tmp/extracted${sourceSet.name}RuntimeMods/tmp")
@@ -203,7 +213,7 @@ cloche {
 
             mixins.from("src/mixins/skyblock-api.client.mixins.json")
             mixins.from("src/mixins/skyblock-api.versioned.mixins.json")
-            mixins.from("src/mixins/skyblock-api.versioned.${version.replace(".", "")}.mixins.json")
+            mixins.from("src/mixins/skyblock-api.versioned.${name.replace(".", "")}.mixins.json")
 
             runs {
                 client {
@@ -220,10 +230,19 @@ cloche {
         }
     }
 
-    createVersion("1.21.5")
-    createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" }) {
-        start = "1.21.6"
+    val postRenderingChanges = common("prc") {
+        withPublication()
+        dependsOn(root)
+        mixins.from("src/mixins/skyblock-api.prc.mixins.json")
     }
+
+    createVersion("1.21.5")
+    createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" }, common = postRenderingChanges) {
+        start = "1.21.6"
+        end = "1.21.8"
+        endExclusive = false
+    }
+    createVersion("1.21.9", fabricApiVersion = provider { "0.133.7" }, common = postRenderingChanges)
 
     mappings {
         official()
@@ -253,8 +272,9 @@ repositories {
 compactingResources {
     this.basePath = "repo"
 
-    configureTask(tasks.getByName<ProcessResources>("process1218Resources"))
-    configureTask(tasks.getByName<ProcessResources>("process1215Resources"))
+    configureTask(tasks.getByName<ProcessResources>("processVersions1218Resources"))
+    configureTask(tasks.getByName<ProcessResources>("processVersions1215Resources"))
+    configureTask(tasks.getByName<ProcessResources>("processVersions1219Resources"))
     configureTask(tasks.getByName<ProcessResources>("processResources"))
 
     removeComments("skyblockid/unobtainable_ids")
@@ -313,8 +333,10 @@ publishing {
 }
 
 ksp {
-    this@ksp.excludedSources.from(sourceSets.getByName("1215").kotlin.srcDirs)
-    this@ksp.excludedSources.from(sourceSets.getByName("1218").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("versions1215").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("versions1218").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("versions1219").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("prc").kotlin.srcDirs)
     arg("meowdding.modules.project_name", "SkyblockAPI")
     arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
     arg("meowdding.codecs.project_name", "SkyblockAPI")
@@ -323,7 +345,7 @@ ksp {
 }
 
 // TODO temporary workaround for a cloche issue on certain systems, remove once fixed
-val mcVersions = sourceSets.filterNot { it.name == SourceSet.MAIN_SOURCE_SET_NAME || it.name == SourceSet.TEST_SOURCE_SET_NAME }
+val mcVersions = sourceSets.filter { it.name.startsWith("versions") }
 
 tasks.withType<WriteClasspathFile>().configureEach {
     actions.clear()
@@ -388,7 +410,7 @@ val setupForWorkflows: TaskProvider<Task> = tasks.register("setupForWorkflows") 
 }
 
 mcVersions.flatMap {
-    listOf("remap${it.name}CommonMinecraftNamed", "remap${it.name}ClientMinecraftNamed")
+    listOf("remapV${it.name.substring(1)}CommonMinecraftNamed", "remapV${it.name.substring(1)}ClientMinecraftNamed")
 }.mapNotNull { tasks.findByName(it) }.forEach {
     setupForWorkflows.configure workflow@{
         this@workflow.dependsOn(it)

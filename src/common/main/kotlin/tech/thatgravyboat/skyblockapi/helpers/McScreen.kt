@@ -1,18 +1,19 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.msrandom.stub.Stub
 
-object McScreen {
+@Stub
+expect object McScreen {
 
     val self: Screen?
-        get() = Minecraft.getInstance().screen
 
     val asMenu: AbstractContainerScreen<*>?
-        get() = self as? AbstractContainerScreen<*>
 
-    inline fun <reified T> isOf(): Boolean {
-        return self is T
-    }
+    val isShiftDown: Boolean
+    val isAltDown: Boolean
+    val isControlDown: Boolean
+
+    inline fun <reified T> isOf(): Boolean
 }

@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "tech.thatgravyboat.skyblockapi.mixins",
+    "compatibilityLevel": "JAVA_21",
+    "client": [
+        "AvatarRendererMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

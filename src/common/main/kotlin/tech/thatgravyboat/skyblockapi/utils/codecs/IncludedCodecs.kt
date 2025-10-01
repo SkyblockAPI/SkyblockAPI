@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.utils.codecs
 
-import com.mojang.authlib.GameProfile
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
 import net.minecraft.advancements.critereon.BlockPredicate
@@ -50,9 +49,6 @@ internal object IncludedCodecs {
 
     @IncludedCodec
     val VECTOR_4F_CODEC: Codec<Vector4f> = ExtraCodecs.VECTOR4F
-
-    @IncludedCodec
-    val GAME_PROFILE_CODEC: Codec<GameProfile> = ExtraCodecs.GAME_PROFILE
 
     @IncludedCodec
     val RESOURCE_LOCATION_PATTERN_CODEC: Codec<ResourceLocationPattern> = ResourceLocationPattern.CODEC

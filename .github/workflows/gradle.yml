@@ -35,9 +35,17 @@ jobs:
             -   name: Build with Gradle
                 uses: gradle/gradle-build-action@v2.11.0
                 with:
-                    arguments: setupForWorkflows cleanRelease --stacktrace
+                    arguments: setupForWorkflows release --stacktrace
             -   name: Upload Artifact
                 uses: actions/upload-artifact@v4.0.0
                 with:
-                    name: compiled
-                    path: build/libs/*.jar
+                    name: 1.21.5
+                    path: build/libs/*-1.21.5.jar
+            -   uses: actions/upload-artifact@v4.0.0
+                with:
+                    name: 1.21.8
+                    path: build/libs/*-1.21.8.jar
+            -   uses: actions/upload-artifact@v4.0.0
+                with:
+                    name: 1.21.9
+                    path: build/libs/*-1.21.9.jar

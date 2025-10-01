@@ -69,18 +69,6 @@ object PacketEventHandler {
                         }
 
                         PLAYER_INVENTORY_CONTAINER_ID -> PlayerInventoryChangeEvent(packet.slot, packet.item).post()
-                        else -> {
-                            val container = McScreen.asMenu?.takeIf { it.menu?.containerId == containerId } ?: return@runNextTick
-                            val currentItems = container.menu?.slots?.map { it.item } ?: emptyList()
-
-                            val updatedItems = currentItems.toMutableList().apply {
-                                if (packet.slot in indices) {
-                                    this[packet.slot] = packet.item
-                                }
-                            }
-
-                            ContainerChangeEvent(packet.item, packet.slot, container, updatedItems).post()
-                        }
                     }
                 }
             }

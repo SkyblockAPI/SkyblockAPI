@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.screen
 import net.minecraft.client.gui.screens.Screen
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 
-open class ScreenKeyPressedEvent(
+sealed class ScreenKeyPressedEvent(
     val screen: Screen,
     val key: Int,
     val scanCode: Int,
