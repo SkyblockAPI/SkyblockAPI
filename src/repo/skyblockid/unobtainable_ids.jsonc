@@ -4,5 +4,7 @@
 */
 [
     "item:enchanted_clock",
-    "item:starred_yeti_sword"
+    "item:enchanted_hay_block",
+    "item:starred_yeti_sword",
+    "item:tightly_tied_hay_bale"
 ]
