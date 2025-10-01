@@ -320,6 +320,7 @@ object TextBuilder {
     fun MutableComponent.append(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(text.asComponent(init))
     fun MutableComponent.append(number: Number, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(number.toString().asComponent(init))
     fun MutableComponent.append(boolean: Boolean, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(boolean.toString().asComponent(init))
+    fun MutableComponent.append(text: String, color: Int): MutableComponent = this.append(text) { this.color = color }
 }
 
 object TextColor {
