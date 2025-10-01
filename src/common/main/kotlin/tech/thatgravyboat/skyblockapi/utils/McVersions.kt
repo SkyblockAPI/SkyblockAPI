@@ -11,7 +11,7 @@ enum class McVersion {
     ;
 
     val stringVersion = name.substringAfter("_").replace("_", ".")
-    val isActive: Boolean = this.stringVersion.substringBefore(" ") == McClient.version
+    val isActive: Boolean = this.stringVersion == McClient.version.substringBefore(" ")
 }
 
 enum class McVersionGroup(vararg versions: McVersion) {
