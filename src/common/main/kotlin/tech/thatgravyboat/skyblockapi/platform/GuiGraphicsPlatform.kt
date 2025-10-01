@@ -28,8 +28,7 @@ import org.joml.Vector2f
     col1: Int, col2: Int, col3: Int, col4: Int,
 )
 
-@Stub
-expect fun GuiGraphics.drawFilledBox(x: Int, y: Int, width: Int, height: Int, color: Int = -1)
+@Stub expect fun GuiGraphics.drawFilledBox(x: Int, y: Int, width: Int, height: Int, color: Int = -1)
 @Stub expect fun GuiGraphics.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int = -1)
 
 @Stub expect fun GuiGraphics.showTooltip(text: Component, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true)

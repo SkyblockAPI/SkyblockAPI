@@ -9,26 +9,16 @@ import net.msrandom.stub.Stub
 import java.util.*
 
 
-@Stub
-expect fun PropertyMap(init: Multimap<String, Property>.() -> Unit = {}): PropertyMap
+@Stub expect fun PropertyMap(init: Multimap<String, Property>.() -> Unit = {}): PropertyMap
 
-@Stub
-expect fun ResolvableProfile(name: String = "meow", uuid: UUID = UUID.randomUUID(), init: Multimap<String, Property>.() -> Unit = {}): ResolvableProfile
-@Stub
-expect fun ResolvableProfile(name: String = "meow", uuid: UUID = UUID.randomUUID(), map: PropertyMap): ResolvableProfile
-@Stub
-expect val ResolvableProfile.properties: PropertyMap
+@Stub expect fun ResolvableProfile(name: String = "meow", uuid: UUID = UUID.randomUUID(), init: Multimap<String, Property>.() -> Unit = {}): ResolvableProfile
+@Stub expect fun ResolvableProfile(name: String = "meow", uuid: UUID = UUID.randomUUID(), map: PropertyMap): ResolvableProfile
+@Stub expect val ResolvableProfile.properties: PropertyMap
 
-@Stub
-expect fun GameProfile(name: String = "meow", uuid: UUID = UUID.randomUUID(), init: Multimap<String, Property>.() -> Unit = {}): GameProfile
+@Stub expect fun GameProfile(name: String = "meow", uuid: UUID = UUID.randomUUID(), init: Multimap<String, Property>.() -> Unit = {}): GameProfile
 
-@Stub
-expect fun GameProfile(name: String = "meow", uuid: UUID = UUID.randomUUID(), map: PropertyMap): GameProfile
-@Stub
-expect val GameProfile.properties: PropertyMap
-@Stub
-expect val GameProfile.name: String
-@Stub
-expect val GameProfile.id: UUID
-@Stub
-expect fun GameProfile.toResolvableProfile(): ResolvableProfile
+@Stub expect fun GameProfile(name: String = "meow", uuid: UUID = UUID.randomUUID(), map: PropertyMap): GameProfile
+@Stub expect val GameProfile.properties: PropertyMap
+@Stub expect val GameProfile.name: String
+@Stub expect val GameProfile.id: UUID
+@Stub expect fun GameProfile.toResolvableProfile(): ResolvableProfile
