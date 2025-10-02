@@ -120,10 +120,13 @@ cloche {
         common: CommonTarget? = null,
         loaderVersion: Provider<String> = libs.versions.fabric.loader,
         fabricApiVersion: Provider<String> = libs.versions.fabric.api,
+        minecraftSameEndVersion: Boolean = true,
         minecraftVersionRange: ModMetadata.VersionRange.() -> Unit = {
             start = version
-            end = version
-            endExclusive = false
+            if (minecraftSameEndVersion) {
+                end = version
+                endExclusive = false
+            }
         },
     ) {
         fabric("versions:$name") {
@@ -242,7 +245,7 @@ cloche {
         end = "1.21.8"
         endExclusive = false
     }
-    createVersion("1.21.9", fabricApiVersion = provider { "0.133.7" }, common = postRenderingChanges)
+    createVersion("1.21.9", minecraftSameEndVersion = false, fabricApiVersion = provider { "0.133.7" }, common = postRenderingChanges)
 
     mappings {
         official()
