@@ -14,6 +14,7 @@ object VersionedSkyblockAPI {
                 it.matrixStack() ?: return@register,
                 it.consumers() ?: return@register,
                 it.camera().position,
+                it.camera().rotation(),
                 it.tickCounter().getGameTimeDeltaPartialTick(false),
             ).post(SkyBlockAPI.eventBus)
         }
@@ -23,6 +24,7 @@ object VersionedSkyblockAPI {
                 it.matrixStack() ?: return@register,
                 it.consumers() ?: return@register,
                 it.camera().position,
+                it.camera().rotation(),
                 it.tickCounter().getGameTimeDeltaPartialTick(false),
             ).post(SkyBlockAPI.eventBus)
         }

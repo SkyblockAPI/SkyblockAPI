@@ -40,6 +40,7 @@ public class LevelRendererMixin {
             poseStack,
             source,
             levelRenderState.cameraRenderState.pos,
+            levelRenderState.cameraRenderState.orientation,
             deltaTracker.getGameTimeDeltaPartialTick(false)
         ).post(SkyBlockAPI.getEventBus());
     }
@@ -55,10 +56,11 @@ public class LevelRendererMixin {
         if (deltaTracker == null) {
             return;
         }
-        new RenderWorldEvent.AfterEntities(
+        new RenderWorldEvent.AfterTranslucent(
             poseStack,
             source,
             levelRenderState.cameraRenderState.pos,
+            levelRenderState.cameraRenderState.orientation,
             deltaTracker.getGameTimeDeltaPartialTick(false)
         ).post(SkyBlockAPI.getEventBus());
     }
