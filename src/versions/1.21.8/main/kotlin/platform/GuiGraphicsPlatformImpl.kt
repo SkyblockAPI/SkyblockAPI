@@ -54,5 +54,5 @@ actual fun GuiGraphics.drawFilledBox(x: Int, y: Int, width: Int, height: Int, co
 }
 
 actual fun GuiGraphics.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int) {
-    this.renderOutline(x, y, x + width, y + height, color)
+    this.renderOutline(x, y, width, height, color)
 }

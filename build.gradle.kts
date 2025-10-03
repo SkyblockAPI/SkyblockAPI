@@ -143,7 +143,8 @@ cloche {
                     "main",
                     listOf(
                         "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load",
-                        "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init"
+                        "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init",
+                        "tech.thatgravyboat.skyblockapi.VersionedSkyblockAPI::init"
                     ).map { entrypoint ->
                         Action<FabricMetadata.Entrypoint> {
                             this.value.set(entrypoint)

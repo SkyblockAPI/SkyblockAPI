@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.player.*
 import net.minecraft.core.BlockPos
@@ -23,7 +22,6 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.*
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.render.RenderWorldEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -44,8 +42,6 @@ object MiscEventHandler {
     private var lastBlockClicked: BlockPos = BlockPos.ZERO
 
     init {
-        WorldRenderEvents.AFTER_ENTITIES.register { RenderWorldEvent.AfterEntities(it).post() }
-        WorldRenderEvents.AFTER_TRANSLUCENT.register { RenderWorldEvent.AfterTranslucent(it).post() }
         ClientTickEvents.END_CLIENT_TICK.register {
             TickEvent.post(SkyBlockAPI.eventBus)
         }
