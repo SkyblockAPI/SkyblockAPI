@@ -15,6 +15,8 @@ sealed class RenderWorldEvent(
     val partialTicks: Float,
 ) : SkyBlockEvent() {
 
+    object Start : SkyBlockEvent()
+
     class AfterEntities(
         poseStack: PoseStack,
         buffer: MultiBufferSource,
