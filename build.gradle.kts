@@ -427,5 +427,8 @@ gradle.startParameter.apply {
     welcomeMessageConfiguration.welcomeMessageDisplayMode = WelcomeMessageDisplayMode.NEVER
     setTaskNames(mutableListOf(":setupForWorkflows").apply {
         addAll(taskNames)
+        if (taskNames.contains("clean")) {
+            taskNames.filter { it.contains("clean") }.forEach(::addFirst)
+        }
     })
 }
