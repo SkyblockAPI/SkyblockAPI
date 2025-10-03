@@ -4,7 +4,8 @@
     "package": "tech.thatgravyboat.skyblockapi.mixins",
     "compatibilityLevel": "JAVA_21",
     "client": [
-        "AvatarRendererMixin"
+        "AvatarRendererMixin",
+        "LevelRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1

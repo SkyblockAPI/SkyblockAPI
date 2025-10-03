@@ -1,12 +1,12 @@
 @file:Suppress("ACTUAL_WITHOUT_EXPECT")
 package tech.thatgravyboat.skyblockapi.platform
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.minecraft.client.gui.Font
 import net.minecraft.util.FormattedCharSequence
+import tech.thatgravyboat.skyblockapi.api.events.render.RenderWorldEvent
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 
-actual fun WorldRenderContext.drawString(
+actual fun RenderWorldEvent.drawString(
     text: FormattedCharSequence,
     x: Float,
     y: Float,
@@ -16,15 +16,13 @@ actual fun WorldRenderContext.drawString(
     backgroundColor: UInt,
     light: Int,
 ) {
-    val consumers = this.consumers() ?: return
-    val pose = this.matrixStack()?.last()?.pose() ?: return
     McFont.self.drawInBatch(
         text,
         x, y,
         color.toInt(),
         dropShadow,
-        pose,
-        consumers,
+        this.poseStack.last().pose(),
+        this.buffer,
         displayMode,
         backgroundColor.toInt(),
         light,
