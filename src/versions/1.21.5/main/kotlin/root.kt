@@ -9,6 +9,10 @@ object VersionedSkyblockAPI {
     @JvmStatic
     @ApiStatus.Internal
     fun init() {
+        WorldRenderEvents.START.register {
+            RenderWorldEvent.Start.post(SkyBlockAPI.eventBus)
+        }
+
         WorldRenderEvents.AFTER_ENTITIES.register {
             RenderWorldEvent.AfterEntities(
                 it.matrixStack() ?: return@register,

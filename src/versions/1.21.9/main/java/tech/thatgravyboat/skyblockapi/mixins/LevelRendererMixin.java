@@ -25,6 +25,11 @@ public class LevelRendererMixin {
         this.deltaTracker.set(deltaTracker);
     }
 
+    @Inject(method = "renderLevel", at = @At("HEAD"))
+    public void beforeAll(CallbackInfo ci) {
+        RenderWorldEvent.Start.INSTANCE.post(SkyBlockAPI.getEventBus());
+    }
+
     @Inject(method = "lambda$addMainPass$1", at = @At(value = "CONSTANT", args = "stringValue=submitBlockEntities"))
     public void afterEntities(
         CallbackInfo ci,
