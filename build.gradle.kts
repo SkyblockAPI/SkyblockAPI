@@ -165,7 +165,7 @@ cloche {
 
                 dependency("fabric-language-kotlin")
                 dependency("fabric")
-                dependency("fabricloader", loaderVersion)
+                dependency("fabricloader")
                 dependency("hypixel-mod-api", libs.versions.hypixel.modapi.fabric)
                 dependency {
                     modId = "minecraft"
