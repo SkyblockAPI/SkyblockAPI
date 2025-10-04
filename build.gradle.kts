@@ -265,11 +265,11 @@ apiValidation {
 
 repositories {
     maven(url = "https://repo.hypixel.net/repository/Hypixel/")
-    maven(url = "https://maven.msrandom.net/repository/cloche")
+    maven(url = "https://maven.teamresourceful.com/repository/maven-public/")
+    maven(url = "https://maven.teamresourceful.com/repository/msrandom/")
     maven(url = "https://maven.msrandom.net/repository/root")
     maven(url = "https://api.modrinth.com/maven")
     maven(url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
-    maven(url = "https://maven.teamresourceful.com/repository/maven-public/")
     mavenLocal()
 }
 
