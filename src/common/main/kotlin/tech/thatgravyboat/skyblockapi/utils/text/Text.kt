@@ -26,6 +26,7 @@ object Text {
 
     fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
     fun of(init: MutableComponent.() -> Unit = {}) = "".asComponent(init)
+    fun of(text: String, color: Int) = of(text) { this.color = color }
     fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
     fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
 

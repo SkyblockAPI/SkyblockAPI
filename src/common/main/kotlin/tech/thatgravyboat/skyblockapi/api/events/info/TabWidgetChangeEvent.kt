@@ -47,6 +47,7 @@ enum class TabWidget {
     COMPOSTER,
     JACOBS_CONTEST,
     PESTS,
+    PEST_TRAPS,
     VISITORS,
     RNG_METER,
     DOWNED,
@@ -58,6 +59,7 @@ enum class TabWidget {
     FACTION_QUESTS,
     FOREST_WHISPERS,
     MOONGLADE_BEACON,
+    FIRE_SALE,
     ;
 
     private val string = toFormattedName()
