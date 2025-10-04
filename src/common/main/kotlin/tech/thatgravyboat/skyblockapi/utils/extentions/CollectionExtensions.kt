@@ -33,7 +33,6 @@ fun <T> MutableIterable<T>.clearAnd(predicate: (T) -> Unit) {
     while (it.hasNext()) {
         predicate(it.next())
         it.remove()
-        it.remove()
     }
 }
 

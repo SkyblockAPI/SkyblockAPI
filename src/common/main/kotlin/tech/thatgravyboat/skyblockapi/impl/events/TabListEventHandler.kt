@@ -221,7 +221,7 @@ object TabListEventHandler {
         if (event.widget !in loggedWidgets) return
         Text.sendDebug("Tab widget changed: ") {
             append(event.widget.name, TextColor.GOLD)
-            this.hover = Text.join(event.newComponents.toTypedArray(), CommonText.NEWLINE)
+            this.hover = Text.multiline(event.newComponents)
             onClick {
                 McClient.clipboard = event.new.joinToString("\n")
                 Text.sendDebug("Copied tab widget contents to clipboard.")
@@ -261,6 +261,19 @@ object TabListEventHandler {
                 } else {
                     Text.sendDebug("${widget.name} is not being logged.")
                 }
+            }
+            thenCallback("get widget", EnumArgument<TabWidget>()) {
+                val widget = argument<TabWidget>("widget")!!
+                widgets[widget]?.let {
+                    Text.sendDebug("Contents of tab widget") {
+                        append(widget.name, TextColor.GOLD)
+                        this.hover = Text.multiline(it)
+                        onClick {
+                            McClient.clipboard = it.joinToString("\n")
+                            Text.sendDebug("Copied contents to clipboard.")
+                        }
+                    }
+                } ?: Text.sendDebug("Tab widget ${widget.name} not present.")
             }
             thenCallback("clear") {
                 loggedWidgets.clear()

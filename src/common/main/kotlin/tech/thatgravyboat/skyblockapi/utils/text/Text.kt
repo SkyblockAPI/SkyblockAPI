@@ -19,7 +19,7 @@ object CommonText {
     val SPACE: Component = " ".asComponent()
     val EMPTY: Component = "".asComponent()
 
-    internal val PREFIX: Component = Text.of("[SkyBlockAPI] ") { color = TextColor.YELLOW }
+    internal val PREFIX: Component = Text.of("[SkyBlockAPI] ", TextColor.YELLOW)
 }
 
 object Text {
