@@ -13,15 +13,12 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeE
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.utils.command.EnumArgument
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.extentions.clearAnd
 import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
-import tech.thatgravyboat.skyblockapi.utils.extentions.enumSetOf
 import tech.thatgravyboat.skyblockapi.utils.mc.displayName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
@@ -42,7 +39,7 @@ import kotlin.time.Instant
 private const val TAB_LIST_LENGTH = 80
 
 @Module
-object TabListEventHandler {
+internal object TabListEventHandler {
 
     private val infoRegex = RegexGroup.TABLIST.create(
         "info",
@@ -104,12 +101,16 @@ object TabListEventHandler {
     private var header: Component = CommonText.EMPTY
     private var footer: Component = CommonText.EMPTY
 
-    private val widgets = enumMapOf<TabWidget, List<String>>()
+    internal val widgets = enumMapOf<TabWidget, List<String>>()
 
     private val lastUnknownTabWidgetAlert = mutableMapOf<String, Instant>()
 
     @Subscription(ServerChangeEvent::class)
-    fun onServerChange() = widgets.clear()
+    fun onServerChange() {
+        widgets.entries.clearAnd { (widget, old) ->
+            TabWidgetChangeEvent(widget, old, emptyList(), emptyList()).post()
+        }
+    }
 
     @Subscription(TickEvent::class)
     @OnlyOnSkyBlock
@@ -155,18 +156,24 @@ object TabListEventHandler {
                 continue
             }
             flushWidget()
-            currentComponents.clear()
+            currentComponents.add(line)
             currentWidget = widget
         }
         flushWidget()
 
-        widgetLines.forEach { (widget, new) ->
+        widgetLines.forEach { (widget, section) ->
             val old = widgets[widget] ?: emptyList()
-            val newStrings = new.map { it.stripped }
-            if (old != newStrings) {
-                widgets[widget] = newStrings
-                TabWidgetChangeEvent(widget, old, newStrings, new).post()
+            val new = section.map { it.stripped }
+            if (old != new) {
+                widgets[widget] = new
+                TabWidgetChangeEvent(widget, old, new, section).post()
             }
+        }
+
+        // If a tab widget is stored, but it isn't in the newly detected ones, it means it doesn't exist anymore
+        widgets.keys.toSet().subtract(widgetLines.keys).forEach { widget ->
+            val removed = widgets.remove(widget) ?: return@forEach
+            TabWidgetChangeEvent(widget, removed, emptyList(), emptyList()).post()
         }
     }
 
@@ -183,7 +190,7 @@ object TabListEventHandler {
     private fun handleUnknownWidget(string: String) {
         val lastAlert = lastUnknownTabWidgetAlert[string]?.since()
         if (lastAlert != null && lastAlert < 1.minutes) return
-        val recentWorldChange = LocationAPI.lastWorldChange.since() < 2.5.seconds
+        val recentWorldChange = LocationAPI.lastServerChange.since() < 2.5.seconds
         if (SkyBlockAPI.isDebug || (debug && !recentWorldChange)) {
             lastUnknownTabWidgetAlert[string] = currentInstant()
             Text.sendDebug("Unknown tab widget: $string") {
@@ -209,76 +216,6 @@ object TabListEventHandler {
             ).post(SkyBlockAPI.eventBus)
             this.header = event.packet.header()
             this.footer = event.packet.footer()
-        }
-    }
-
-    private var logWidgets: Boolean = false
-    private val loggedWidgets = enumSetOf<TabWidget>()
-
-    @Subscription
-    fun onTabWidgetChange(event: TabWidgetChangeEvent) {
-        if (!logWidgets) return
-        if (event.widget !in loggedWidgets) return
-        Text.sendDebug("Tab widget changed: ") {
-            append(event.widget.name, TextColor.GOLD)
-            this.hover = Text.multiline(event.newComponents)
-            onClick {
-                McClient.clipboard = event.new.joinToString("\n")
-                Text.sendDebug("Copied tab widget contents to clipboard.")
-            }
-        }
-    }
-
-    @Subscription
-    fun onRegisterCommands(event: RegisterCommandsEvent) {
-        event.register("sbapi logtabwidgets") {
-            callback {
-                logWidgets = !logWidgets
-                Text.sendDebug("Tab widget logging is now") {
-                    if (logWidgets) append(" Enabled", TextColor.GREEN)
-                    else append(" Disabled", TextColor.RED)
-                }
-            }
-            thenCallback("list") {
-                if (loggedWidgets.isEmpty()) {
-                    Text.sendDebug("No tab widgets are being logged.")
-                } else {
-                    Text.sendDebug("Logged tab widgets: ${loggedWidgets.joinToString { it.name }}")
-                }
-            }
-            thenCallback("add widget", EnumArgument<TabWidget>()) {
-                val widget = argument<TabWidget>("widget")!!
-                if (loggedWidgets.add(widget)) {
-                    Text.sendDebug("Added ${widget.name} to logged tab widgets.")
-                } else {
-                    Text.sendDebug("${widget.name} is already being logged.")
-                }
-            }
-            thenCallback("remove widget", EnumArgument<TabWidget>()) {
-                val widget = argument<TabWidget>("widget")!!
-                if (loggedWidgets.remove(widget)) {
-                    Text.sendDebug("Removed ${widget.name} from logged tab widgets.")
-                } else {
-                    Text.sendDebug("${widget.name} is not being logged.")
-                }
-            }
-            thenCallback("get widget", EnumArgument<TabWidget>()) {
-                val widget = argument<TabWidget>("widget")!!
-                widgets[widget]?.let {
-                    Text.sendDebug("Contents of tab widget") {
-                        append(widget.name, TextColor.GOLD)
-                        this.hover = Text.multiline(it)
-                        onClick {
-                            McClient.clipboard = it.joinToString("\n")
-                            Text.sendDebug("Copied contents to clipboard.")
-                        }
-                    }
-                } ?: Text.sendDebug("Tab widget ${widget.name} not present.")
-            }
-            thenCallback("clear") {
-                loggedWidgets.clear()
-                Text.sendDebug("Cleared logged tab widgets.")
-            }
         }
     }
 }

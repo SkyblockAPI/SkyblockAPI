@@ -85,12 +85,12 @@ object LocationAPI {
             }
         }
 
-    var lastWorldChange: Instant = Instant.DISTANT_PAST
+    var lastServerChange: Instant = Instant.DISTANT_PAST
         private set
 
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
-        lastWorldChange = currentInstant()
+        lastServerChange = currentInstant()
         isOnSkyBlock = event.type == GameType.SKYBLOCK
         val old = island
         island = if (isOnSkyBlock && event.mode != null) {
