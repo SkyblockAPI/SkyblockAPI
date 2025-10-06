@@ -50,7 +50,7 @@ open class DebugToggle(open val location: ResourceLocation, open val description
 internal object SkyBlockApiDevUtils : DevUtils() {
     override val commandName: String = "sbapi toggle"
     override fun send(component: MutableComponent) = component.sendWithPrefix()
-    val properties: MutableMap<String, String> = mutableMapOf()
+    val properties: Map<String, String> = loadFromProperties()
 
     fun getInt(key: String, default: Int = 0): Int {
         return properties[key].parseFormattedInt(default)
@@ -60,22 +60,23 @@ internal object SkyBlockApiDevUtils : DevUtils() {
         return properties[key] == "true"
     }
 
-    init {
-        loadFromProperties()
-    }
-
-    private fun loadFromProperties() {
+    private fun loadFromProperties(): Map<String, String> {
         val properties = Properties()
         val path = System.getProperty("sbapi.property_path")?.let { Path(it) } ?: McClient.config.resolve("sbapi.properties")
-        if (path.notExists()) return
+        if (path.notExists()) return emptyMap()
         path.reader(Charsets.UTF_8).use {
             properties.load(it)
         }
+        val map = mutableMapOf<String, String>()
         properties.forEach { (key, value) ->
             ResourceLocation.tryBySeparator(key.toString(), '@')?.let {
-                states[it] = value.toString() == "true"
+                if (value.toString() == "true") {
+                    states[it] = true
+                }
             }
+            map[key.toString()] = value.toString()
         }
+        return map
     }
 
     @Subscription
