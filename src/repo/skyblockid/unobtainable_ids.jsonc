@@ -3,7 +3,6 @@
 * they should ALWAYS have the full type e.g. <category>:<id>[:<suffix>]
 */
 [
-    "item:builder_beetroot",
     "item:builder_brown_mushroom",
     "item:builder_cactus",
     "item:builder_melon",
