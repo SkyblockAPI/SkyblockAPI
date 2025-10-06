@@ -19,7 +19,8 @@ import kotlin.time.Instant
 @Module
 object DebugChat {
 
-    private val maxMessages = if (McClient.isDev) 10_000 else 100
+    // TODO: add way to modify with system property or some other way
+    private val maxMessages = if (McClient.isDev) 10_000 else 500
     private val messages = mutableListOf<Pair<Instant, Component>>()
 
     @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
