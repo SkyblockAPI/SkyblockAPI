@@ -72,7 +72,7 @@ internal object SkyBlockApiDevUtils : DevUtils() {
             properties.load(it)
         }
         properties.forEach { (key, value) ->
-            ResourceLocation.tryParse(key.toString().replaceFirst("_", ":"))?.let {
+            ResourceLocation.tryBySeparator(key.toString(), '@')?.let {
                 states[it] = value.toString() == "true"
             }
         }
