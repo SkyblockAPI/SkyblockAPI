@@ -19,11 +19,13 @@ import kotlin.time.Instant
 @Module
 object DebugChat {
 
+    private val maxMessages = if (McClient.isDev) 10_000 else 100
     private val messages = mutableListOf<Pair<Instant, Component>>()
 
     @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
     fun onMessage(event: ChatReceivedEvent.Pre) {
         messages.add(Clock.System.now() to event.component)
+        while(messages.size > maxMessages) messages.removeFirst()
     }
 
     @Subscription
