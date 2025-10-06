@@ -12,13 +12,19 @@ import net.minecraft.resources.ResourceLocation
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.command.VirtualResourceArgument
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import java.util.*
 import java.util.concurrent.CompletableFuture
+import kotlin.io.path.Path
+import kotlin.io.path.notExists
+import kotlin.io.path.reader
 import kotlin.reflect.KProperty
 
 internal fun debugToggle(path: String, description: String = path): DebugToggle {
@@ -44,6 +50,33 @@ open class DebugToggle(open val location: ResourceLocation, open val description
 internal object SkyBlockApiDevUtils : DevUtils() {
     override val commandName: String = "sbapi toggle"
     override fun send(component: MutableComponent) = component.sendWithPrefix()
+    val properties: MutableMap<String, String> = mutableMapOf()
+
+    fun getInt(key: String, default: Int = 0): Int {
+        return properties[key].parseFormattedInt(default)
+    }
+
+    fun getBoolean(key: String): Boolean {
+        return properties[key] == "true"
+    }
+
+    init {
+        loadFromProperties()
+    }
+
+    private fun loadFromProperties() {
+        val properties = Properties()
+        val path = System.getProperty("sbapi.property_path")?.let { Path(it) } ?: McClient.config.resolve("sbapi.properties")
+        if (path.notExists()) return
+        path.reader(Charsets.UTF_8).use {
+            properties.load(it)
+        }
+        properties.forEach { (key, value) ->
+            ResourceLocation.tryParse(key.toString().replaceFirst("_", ":"))?.let {
+                states[it] = value.toString() == "true"
+            }
+        }
+    }
 
     @Subscription
     fun commandRegister(event: RegisterCommandsEvent) = super.onCommandRegister(event)
@@ -54,7 +87,7 @@ abstract class DevUtils {
     val toggles = mutableListOf<DebugToggle>()
 
     fun register(debugToggle: DebugToggle) {
-        states[debugToggle.location] = false
+        states.putIfAbsent(debugToggle.location, false)
         toggles += debugToggle
     }
 
