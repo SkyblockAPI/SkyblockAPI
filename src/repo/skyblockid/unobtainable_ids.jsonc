@@ -8,7 +8,7 @@
     "item:builder_melon",
     "item:carrot", // bugged item called "Carrots", actual Carrot is item:carrot_item
     "item:enchanted_clock", // old admin item, normal one is item:enchanted_time_clock
-    "item:enchanted_hay_block", // old Enchanted Hay Bale, new is item:enchanted_hay_bale
+    "item:enchanted_hay_block", // old Enchanted Hay Bale, new one is item:enchanted_hay_bale
     "item:silex", // bugged item now called "Sharp Rock", actual Silex is item:sil_ex
     "item:starred_yeti_sword",
     "item:tightly_tied_hay_bale"
