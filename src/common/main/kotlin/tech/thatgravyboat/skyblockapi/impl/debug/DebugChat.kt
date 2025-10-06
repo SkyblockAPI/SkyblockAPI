@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toData
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
@@ -19,8 +20,7 @@ import kotlin.time.Instant
 @Module
 object DebugChat {
 
-    // TODO: add way to modify with system property or some other way
-    private val maxMessages = if (McClient.isDev) 10_000 else 500
+    private val maxMessages = SkyBlockApiDevUtils.getInt("debug_chat_max_size", if (McClient.isDev) 10_000 else 500)
     private val messages = mutableListOf<Pair<Instant, Component>>()
 
     @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
