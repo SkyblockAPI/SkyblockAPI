@@ -3,8 +3,13 @@
 * they should ALWAYS have the full type e.g. <category>:<id>[:<suffix>]
 */
 [
-    "item:enchanted_clock",
-    "item:enchanted_hay_block",
+    "item:builder_beetroot",
+    "item:builder_brown_mushroom",
+    "item:builder_cactus",
+    "item:builder_melon",
+    "item:carrot", // bugged item called "Carrots", actual carrot is item:carrot_item
+    "item:enchanted_clock", // old admin item, normal one is item:enchanted_time_clock
+    "item:enchanted_hay_block", // old Enchanted Hay Bale, new is item:enchanted_hay_bale
     "item:starred_yeti_sword",
     "item:tightly_tied_hay_bale"
 ]
