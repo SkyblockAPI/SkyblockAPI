@@ -37,6 +37,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 private const val TAB_LIST_LENGTH = 80
+private const val TAB_LIST_SECTION = 20
 
 @Module
 internal object TabListEventHandler {
@@ -116,7 +117,7 @@ internal object TabListEventHandler {
     @OnlyOnSkyBlock
     @TimePassed("1s")
     fun onTick() {
-        val newTabList = McClient.tablist.take(TAB_LIST_LENGTH).map { it.displayName }.chunked(20)
+        val newTabList = McClient.tablist.take(TAB_LIST_LENGTH).map { it.displayName }.chunked(TAB_LIST_SECTION)
         val newStringTabList = newTabList.map { list -> list.map { it.stripped } }
 
         if (tabList != newStringTabList) {
