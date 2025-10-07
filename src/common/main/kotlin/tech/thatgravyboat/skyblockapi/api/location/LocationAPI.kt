@@ -139,6 +139,9 @@ object LocationAPI {
     }
 
     private fun reset() {
+        if (island != null) {
+            IslandChangeEvent(island, null).post()
+        }
         isOnSkyBlock = false
         island = null
         serverId = null
