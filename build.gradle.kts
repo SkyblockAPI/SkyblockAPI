@@ -207,7 +207,7 @@ cloche {
                     }
                 }
 
-                project.layout.projectDirectory.toPath().resolve("run/${sourceSet.name}Mods").takeIf { it.exists() }
+                project.layout.projectDirectory.toPath().resolve("run/${name.replace(".", "")}Mods").takeIf { it.exists() }
                     ?.listDirectoryEntries()?.filter { it.isRegularFile() }?.forEach { file ->
                         extractMods(file)
                     }
