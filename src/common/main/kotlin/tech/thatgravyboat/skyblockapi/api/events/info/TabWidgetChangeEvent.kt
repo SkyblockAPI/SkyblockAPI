@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+import tech.thatgravyboat.skyblockapi.impl.events.TabListEventHandler
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 data class TabWidgetChangeEvent(
@@ -47,6 +48,7 @@ enum class TabWidget {
     COMPOSTER,
     JACOBS_CONTEST,
     PESTS,
+    PEST_TRAPS,
     VISITORS,
     RNG_METER,
     DOWNED,
@@ -58,7 +60,14 @@ enum class TabWidget {
     FACTION_QUESTS,
     FOREST_WHISPERS,
     MOONGLADE_BEACON,
+    FIRE_SALE,
     ;
+
+    val currentLines: List<String>
+        get() = TabListEventHandler.widgets[this].orEmpty()
+
+    val isActive: Boolean
+        get() = this in TabListEventHandler.widgets
 
     private val string = toFormattedName()
 

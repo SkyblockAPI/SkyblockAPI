@@ -28,6 +28,14 @@ inline fun <T> List<T>.peek(crossinline block: (T) -> Unit): List<T> {
     return this
 }
 
+fun <T> MutableIterable<T>.clearAnd(action: (T) -> Unit) {
+    val it = iterator()
+    while (it.hasNext()) {
+        action(it.next())
+        it.remove()
+    }
+}
+
 fun <T> List<T>.asReversedIterator(): Iterator<T> {
     val list = this
     return object : Iterator<T> {

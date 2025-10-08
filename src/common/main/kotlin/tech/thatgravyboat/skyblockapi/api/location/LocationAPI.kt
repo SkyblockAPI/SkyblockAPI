@@ -20,6 +20,8 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
+import kotlin.time.Instant
 
 @Module
 object LocationAPI {
@@ -83,8 +85,12 @@ object LocationAPI {
             }
         }
 
+    var lastServerChange: Instant = Instant.DISTANT_PAST
+        private set
+
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
+        lastServerChange = currentInstant()
         isOnSkyBlock = event.type == GameType.SKYBLOCK
         val old = island
         island = if (isOnSkyBlock && event.mode != null) {

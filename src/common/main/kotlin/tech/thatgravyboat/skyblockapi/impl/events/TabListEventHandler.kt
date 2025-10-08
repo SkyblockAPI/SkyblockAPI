@@ -16,19 +16,31 @@ import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.utils.Logger
-import tech.thatgravyboat.skyblockapi.utils.extentions.chunked
-import tech.thatgravyboat.skyblockapi.utils.extentions.peek
+import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.extentions.clearAnd
+import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
 import tech.thatgravyboat.skyblockapi.utils.mc.displayName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.onClick
+import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.time.since
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 private const val TAB_LIST_LENGTH = 80
+private const val TAB_LIST_SECTION = 20
 
 @Module
-object TabListEventHandler {
+internal object TabListEventHandler {
 
     private val infoRegex = RegexGroup.TABLIST.create(
         "info",
@@ -40,7 +52,7 @@ object TabListEventHandler {
     private val widgetRegexes = mapOf(
         TabWidget.PET to widgetGroup.create("pet", "Pet:"),
         TabWidget.DAILY_QUESTS to widgetGroup.create("daily_quests", "Daily Quests:"),
-        TabWidget.FORGES to widgetGroup.create("forges", "Forges:"),
+        TabWidget.FORGES to widgetGroup.create("forges", "Forges:(?: \\((?<active>[\\d,.]+)/(?<max>[\\d,.]+)\\))?"),
         TabWidget.COMMISSIONS to widgetGroup.create("commissions", "Commissions:"),
         TabWidget.SKILLS to widgetGroup.create("skills", "Skills:(?: (?<avg>[\\d.]+))?"),
         TabWidget.POWDERS to widgetGroup.create("powders", "Powders:"),
@@ -68,6 +80,7 @@ object TabListEventHandler {
         TabWidget.COMPOSTER to widgetGroup.create("composter", "Composter:"),
         TabWidget.JACOBS_CONTEST to widgetGroup.create("jacobs_contest", "Jacob's Contest:(?: (?<time>.*))?"),
         TabWidget.PESTS to widgetGroup.create("pets", "Pests:"),
+        TabWidget.PEST_TRAPS to widgetGroup.create("pest_traps", "Pest Traps: (?<amount>[\\d,.]+)/(?<max>[\\d,.]+)"),
         TabWidget.VISITORS to widgetGroup.create("visitors", "Visitors: \\((?<amount>\\d+)\\)"),
         TabWidget.RNG_METER to widgetGroup.create("rng_meter", "RNG Meter"),
         TabWidget.DOWNED to widgetGroup.create("downed", "Downed: (?<status>.*)"),
@@ -79,28 +92,33 @@ object TabListEventHandler {
         TabWidget.FACTION_QUESTS to widgetGroup.create("faction_quests", "Faction Quests:"),
         TabWidget.FOREST_WHISPERS to widgetGroup.create("forest_whispers", "Forest Whispers: (?<amount>[\\dkmb,.]+)"),
         TabWidget.MOONGLADE_BEACON to widgetGroup.create("moonglade_beacon", "Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
+        TabWidget.FIRE_SALE to widgetGroup.create("fire_sale", "Fire Sales: \\((?<amount>[\\d,.]+)\\)"),
     )
+
+    private val debug by debugToggle("tab_widget", "Sends a debug message when an unknown tab widget is found.")
 
     private var tabList = emptyList<List<String>>()
 
     private var header: Component = CommonText.EMPTY
     private var footer: Component = CommonText.EMPTY
 
-    private val widgets = mutableMapOf<TabWidget, List<String>>()
+    internal val widgets = enumMapOf<TabWidget, List<String>>()
 
-    private val lastUnknownTabWidgetAlert = mutableMapOf<String, Long>()
+    private val lastUnknownTabWidgetAlert = mutableMapOf<String, Instant>()
 
-    @Subscription
-    fun onServerChange(event: ServerChangeEvent) {
-        this.widgets.clear()
+    @Subscription(ServerChangeEvent::class)
+    fun onServerChange() {
+        widgets.entries.clearAnd { (widget, old) ->
+            TabWidgetChangeEvent(widget, old, emptyList(), emptyList()).post()
+        }
     }
 
-    @Subscription
+    @Subscription(TickEvent::class)
     @OnlyOnSkyBlock
     @TimePassed("1s")
-    fun onTick(event: TickEvent) {
-        val newTabList = McClient.tablist.take(TAB_LIST_LENGTH).map { it.displayName }.chunked(20)
-        val newStringTabList = newTabList.map { it.map { it.stripped } }
+    fun onTick() {
+        val newTabList = McClient.tablist.take(TAB_LIST_LENGTH).map { it.displayName }.chunked(TAB_LIST_SECTION)
+        val newStringTabList = newTabList.map { list -> list.map { it.stripped } }
 
         if (tabList != newStringTabList) {
             TabListChangeEvent(tabList, newTabList).post()
@@ -110,31 +128,80 @@ object TabListEventHandler {
 
     @Subscription
     fun onTabListChange(event: TabListChangeEvent) {
-        if (!LocationAPI.isOnSkyBlock) return
-
-        val sections = event.new
+        val lines = event.new
             .filter { it.isNotEmpty() && infoRegex.contains(it.first().stripped) }
             .map { it.drop(1) }
             .flatten()
-            .chunked { !it.stripped.startsWith(" ") }
-            .peek { it.removeIf { c -> c.stripped.isBlank() } }
-            .filter { it.isNotEmpty() }
 
-        sections.forEach { section ->
-            val title = section.firstOrNull()?.stripped ?: return@forEach
-            val widget = widgetRegexes.entries.firstOrNull { it.value.matches(title) }?.key ?: run {
-                if ((lastUnknownTabWidgetAlert[title] ?: 0) < System.currentTimeMillis() - 60000) {
-                    lastUnknownTabWidgetAlert[title] = System.currentTimeMillis()
-                    Logger.debug("Unknown tab widget: $title")
-                }
-                return@forEach
+        val widgetLines = mutableMapOf<TabWidget, List<Component>>()
+        val currentComponents = mutableListOf<Component>()
+        var currentWidget: TabWidget? = null
+
+        fun flushWidget() {
+            if (currentWidget != null && currentComponents.isNotEmpty()) {
+                widgetLines[currentWidget!!] = currentComponents.toList()
+                currentComponents.clear()
             }
+        }
 
+        for (line in lines) {
+            val stripped = line.stripped
+            if (stripped.isBlank()) continue
+
+            val widget = widgetRegexes.entries.find { it.value.matches(stripped) }?.key
+            if (widget == null) {
+                if (couldBeUnknownWidgetStart(currentWidget, stripped)) {
+                    handleUnknownWidget(stripped)
+                }
+                currentComponents.add(line)
+                continue
+            }
+            flushWidget()
+            currentComponents.add(line)
+            currentWidget = widget
+        }
+        flushWidget()
+
+        widgetLines.forEach { (widget, section) ->
             val old = widgets[widget] ?: emptyList()
             val new = section.map { it.stripped }
             if (old != new) {
                 widgets[widget] = new
                 TabWidgetChangeEvent(widget, old, new, section).post()
+            }
+        }
+
+        // If a tab widget is stored, but it isn't in the newly detected ones, it means it doesn't exist anymore
+        widgets.keys.toSet().subtract(widgetLines.keys).forEach { widget ->
+            val removed = widgets.remove(widget) ?: return@forEach
+            TabWidgetChangeEvent(widget, removed, emptyList(), emptyList()).post()
+        }
+    }
+
+    // Add exceptions to widget lines that don't start with a space here
+    private fun couldBeUnknownWidgetStart(currentWidget: TabWidget? = null, string: String): Boolean {
+        if (string.startsWith(" ")) return false
+        return when (currentWidget) {
+            TabWidget.JACOBS_CONTEST -> string != "ACTIVE"
+            TabWidget.MINING_EVENT -> !string.startsWith("Ends in: ")
+            else -> true
+        }
+    }
+
+    private fun handleUnknownWidget(string: String) {
+        val lastAlert = lastUnknownTabWidgetAlert[string]?.since()
+        if (lastAlert != null && lastAlert < 1.minutes) return
+        val recentWorldChange = LocationAPI.lastServerChange.since() < 2.5.seconds
+        if (SkyBlockAPI.isDebug || (debug && !recentWorldChange)) {
+            lastUnknownTabWidgetAlert[string] = currentInstant()
+            Text.sendDebug("Unknown tab widget: $string") {
+                this.color = TextColor.RED
+                if (recentWorldChange) append(" (Probably due to world change)", TextColor.RED)
+                hover = Text.of("Click to copy all unknown tab widgets to clipboard", TextColor.YELLOW)
+                onClick {
+                    McClient.clipboard = lastUnknownTabWidgetAlert.keys.toString()
+                    Text.sendDebug("Copied all unknown tab widgets to clipboard.")
+                }
             }
         }
     }
