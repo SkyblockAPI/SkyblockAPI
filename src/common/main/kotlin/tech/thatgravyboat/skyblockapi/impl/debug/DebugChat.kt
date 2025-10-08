@@ -45,11 +45,6 @@ object DebugChat {
             ChatReceivedEvent.Post(component).post()
         }
     }
-
-    @Subscription
-    fun onchattest(event: ChatReceivedEvent.Pre) {
-        throw RuntimeException("Test Exception in Chat Event")
-    }
 }
 
 @Stub
