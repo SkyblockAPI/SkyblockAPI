@@ -139,16 +139,17 @@ object LocationAPI {
     }
 
     private fun reset() {
-        if (island != null) {
-            IslandChangeEvent(island, null).post()
-        }
         isOnSkyBlock = false
-        island = null
         serverId = null
         isGuest = false
         area = SkyBlockAreas.NONE
         onHypixel = false
         onAlpha = false
+        val old = island
+        island = null
+        if (old != null) {
+            IslandChangeEvent(old, null).post()
+        }
     }
 
     @Subscription(ServerDisconnectEvent::class)
