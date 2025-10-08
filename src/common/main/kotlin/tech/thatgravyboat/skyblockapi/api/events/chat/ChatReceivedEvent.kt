@@ -14,12 +14,14 @@ abstract class ChatReceivedEvent : SkyBlockEvent() {
     val text: String get() = component.stripped
     val coloredText: String get() = component.string
 
-    private val onError: ((Throwable) -> Unit)? = if (McClient.isDev) null else {
-        { SkyBlockAPI.logger.error("Error posting ChatReceivedEvent", it) }
-    }
-
     class Pre(override val component: Component) : ChatReceivedEvent(), Cancellable
     class Post(override var component: Component, var id: String? = null) : ChatReceivedEvent()
 
     override fun post(bus: EventBus) = bus.post(this, null, onError)
+
+    companion object {
+        private val onError: ((Throwable) -> Unit)? = if (McClient.isDev) null else {
+            { SkyBlockAPI.logger.error("Error posting ChatReceivedEvent", it) }
+        }
+    }
 }
