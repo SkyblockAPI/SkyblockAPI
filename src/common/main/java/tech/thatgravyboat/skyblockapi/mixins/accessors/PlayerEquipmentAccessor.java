@@ -9,6 +9,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface PlayerEquipmentAccessor {
 
     @Accessor("player")
-    Player player();
+    Player skyblockapi$player();
 
 }

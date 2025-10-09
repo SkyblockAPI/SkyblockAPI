@@ -9,4 +9,6 @@ class PlayerInventoryChangeEvent(val slot: Int, val item: ItemStack) : SkyBlockE
 
 class PlayerHotbarChangeEvent(val slot: Int, val item: ItemStack) : SkyBlockEvent()
 
-class PlayerEquipmentChangeEvent(val entity: Player, val equipmentSlot: EquipmentSlot, val previous: ItemStack, val item: ItemStack) : SkyBlockEvent()
+class PlayerEquipmentChangeEvent(val entity: Player, val slot: EquipmentSlot, val previous: ItemStack, val current: ItemStack) : SkyBlockEvent() {
+    val item get() = current
+}
