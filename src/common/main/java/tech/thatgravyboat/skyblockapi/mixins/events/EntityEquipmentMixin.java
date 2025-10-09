@@ -71,14 +71,4 @@ public class EntityEquipmentMixin {
             new PlayerEquipmentChangeEvent(playerEquipment.player(), slot, current, next).post(SkyBlockAPI.getEventBus());
         }
     }
-
-    @Override
-    public Entity skyblockapi$entity() {
-        return this.entity;
-    }
-
-    @Override
-    public void skyblockapi$entity(Entity entity) {
-        this.entity = entity;
-    }
 }
