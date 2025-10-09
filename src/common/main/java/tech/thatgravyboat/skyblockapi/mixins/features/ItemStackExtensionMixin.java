@@ -44,7 +44,7 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
         ItemStack stack = operation.call(item, count, patch);
         ((DataTypeItemStack) (Object) stack).skyblockapi$setTypes(this.skyblockapi$data);
 
-        ItemStack visualItem = VisualItemAccessor.Companion.getVisualItemAccessor((ItemStack) (Object) stack).skyblockapi$getVisualItem();
+        ItemStack visualItem = ((VisualItemAccessor) (Object) stack).skyblockapi$getVisualItem();
         if (visualItem != null) stack = visualItem;
 
         skyblockapi$COPYING.remove();
