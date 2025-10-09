@@ -41,7 +41,7 @@ internal object PlayerCacheStorage {
 
     fun getPlayerName(uuid: UUID) = when {
         uuid == McPlayer.uuid -> McPlayer.name
-        uuid.player == null -> McClient.players.find { it.profile.id == uuid }?.profile?.also { updatePlayer(it.id, it.name) }?.name
+        uuid.player == null -> McClient.players.find { it.profile.id == uuid }?.profile?.name?.also { updatePlayer(uuid, it) }
         else -> uuid.player?.name
     }
 

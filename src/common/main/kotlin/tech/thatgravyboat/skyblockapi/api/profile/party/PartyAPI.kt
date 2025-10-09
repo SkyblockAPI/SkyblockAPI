@@ -216,8 +216,9 @@ object PartyAPI {
             val name = member.stripped
             val hasUpdated = PlayerCacheStorage.updatePlayer(uuid, name)
             if (!hasUpdated) return@findThenNull
-            val player = findPlayer(uuid)
+            val player = findPlayer(uuid) ?: findPlayer(name)
             if (player != null) {
+                player.uuid = uuid
                 player.name = name
                 debugMessage { "Updated player name: $name ($uuid)" }
             } else {
