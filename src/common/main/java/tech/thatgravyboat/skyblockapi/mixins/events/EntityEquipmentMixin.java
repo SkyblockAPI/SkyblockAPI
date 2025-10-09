@@ -38,14 +38,13 @@ public class EntityEquipmentMixin {
 
     @WrapOperation(method = "clear", at = @At(value = "INVOKE", target = "Ljava/util/EnumMap;replaceAll(Ljava/util/function/BiFunction;)V"))
     private void clear(EnumMap<EquipmentSlot, ItemStack> instance, BiFunction<EquipmentSlot, ItemStack, ItemStack> biFunction, Operation<Void> original) {
-        original.call(
-            instance, (BiFunction<EquipmentSlot, ItemStack, ItemStack>) (equipment, stack) -> {
-                var returnValue = biFunction.apply(equipment, stack);
-                if (this instanceof PlayerEquipmentAccessor playerEquipment) {
-                    new PlayerEquipmentChangeEvent(playerEquipment.skyblockapi$player(), equipment, stack, returnValue).post(SkyBlockAPI.getEventBus());
-                }
-                return returnValue;
-            });
+        original.call(instance, (BiFunction<EquipmentSlot, ItemStack, ItemStack>) (equipment, stack) -> {
+            var returnValue = biFunction.apply(equipment, stack);
+            if (this instanceof PlayerEquipmentAccessor playerEquipment) {
+                new PlayerEquipmentChangeEvent(playerEquipment.skyblockapi$player(), equipment, stack, returnValue).post(SkyBlockAPI.getEventBus());
+            }
+            return returnValue;
+        });
     }
 
     @Inject(method = "setAll", at = @At("HEAD"))
