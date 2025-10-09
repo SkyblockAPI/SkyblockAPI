@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType;
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypeItemStack;
+import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueCalculator;
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueItemStack;
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueResult;
@@ -42,6 +43,10 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
         skyblockapi$COPYING.set(Unit.INSTANCE);
         ItemStack stack = operation.call(item, count, patch);
         ((DataTypeItemStack) (Object) stack).skyblockapi$setTypes(this.skyblockapi$data);
+
+        ItemStack visualItem = VisualItemAccessor.Companion.getVisualItemAccessor((ItemStack) (Object) stack).skyblockapi$getVisualItem();
+        if (visualItem != null) stack = visualItem;
+
         skyblockapi$COPYING.remove();
         return stack;
     }
