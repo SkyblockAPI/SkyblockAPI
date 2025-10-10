@@ -81,10 +81,10 @@ actual object McClient {
                     if (team == null) {
                     	it.ownerName().copy()
                     } else {
-                    	Component.empty().also { main ->
-	                        team?.playerPrefix?.apply { siblings.forEach { sibling -> main.append(sibling) } }
-	                        team?.playerSuffix?.apply { siblings.forEach { sibling -> main.append(sibling) } }
-	                    }
+                        Component.empty().also { main ->
+                            main.append(team.playerPrefix)
+                            main.append(team.playerSuffix)
+                        }
                     }
                 }
         }
