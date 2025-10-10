@@ -25,6 +25,7 @@ import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
 
@@ -77,12 +78,14 @@ actual object McClient {
             return scoreboard.listPlayerScores(objective)
                 .sortedBy { -it.value() }
                 .map {
+                    val ownerName = it.ownerName()
                     val team = scoreboard.getPlayersTeam(it.owner())
                     if (team == null) {
-                    	it.ownerName().copy()
+                        ownerName.copy()
                     } else {
                         Component.empty().also { main ->
                             main.append(team.playerPrefix)
+                            if (ownerName.stripped.isNotEmpty()) main.append(ownerName)
                             main.append(team.playerSuffix)
                         }
                     }
