@@ -16,6 +16,7 @@ object CommonText {
 
     val NEWLINE: Component = "\n".asComponent()
     val HYPHEN: Component = "-".asComponent()
+    val COMMA: Component = ",".asComponent()
     val SPACE: Component = " ".asComponent()
     val EMPTY: Component = "".asComponent()
 
