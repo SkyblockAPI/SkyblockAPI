@@ -56,6 +56,8 @@ internal object TabListEventHandler {
         TabWidget.COMMISSIONS to widgetGroup.create("commissions", "Commissions:"),
         TabWidget.SKILLS to widgetGroup.create("skills", "Skills:(?: (?<avg>[\\d.]+))?"),
         TabWidget.POWDERS to widgetGroup.create("powders", "Powders:"),
+        TabWidget.PITY to widgetGroup.create("pity", "Pity:"),
+        TabWidget.PICKAXE_ABILITY to widgetGroup.create("pickaxe_ability", "Pickaxe Ability:"),
         TabWidget.CRYSTALS to widgetGroup.create("crystals", "Crystals:"),
         TabWidget.BESTIARY to widgetGroup.create("bestiary", "Bestiary:"),
         TabWidget.COLLECTION to widgetGroup.create("collection", "Collection:"),

@@ -26,6 +26,8 @@ enum class TabWidget {
     COMMISSIONS,
     SKILLS,
     POWDERS,
+    PITY,
+    PICKAXE_ABILITY,
     ELECTION,
     CRYSTALS,
     BESTIARY,
