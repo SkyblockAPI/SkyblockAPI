@@ -50,7 +50,7 @@ private class GradientGuiElement(
 }
 
 actual fun GuiGraphics.drawFilledBox(x: Int, y: Int, width: Int, height: Int, color: Int) {
-    this.fill(x, y, x + width, y + height, color)
+    this.fill(x, y, width, height, color)
 }
 
 actual fun GuiGraphics.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int) {
