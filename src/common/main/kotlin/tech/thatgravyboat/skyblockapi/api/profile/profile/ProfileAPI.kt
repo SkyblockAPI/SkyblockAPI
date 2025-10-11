@@ -10,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
@@ -36,6 +35,11 @@ object ProfileAPI {
         "Profile: (?<name>.+)",
     )
 
+    private val bingoRankRegex = widgetGroup.create(
+        "bingo_rank",
+        "Profile: .+ (?<type>[Ⓑ♲])",
+    ).toComponentRegex()
+
     private val skyBlockXPRegex = widgetGroup.create(
         "skyblockxp",
         "\\s*SB Level: \\[(?<level>\\d+)] (?<xp>\\d+).*",
@@ -45,11 +49,6 @@ object ProfileAPI {
         "name",
         "You are playing on profile: (?<name>.+)",
     )
-
-    private val bingoRankRegex = RegexGroup.SCOREBOARD.group("profile").create(
-        "bingo",
-        " (?<level>Ⓑ )Bingo",
-    ).toComponentRegex()
 
     private val levelColors = mapOf(
         0..39 to TextColor.GRAY,
@@ -133,6 +132,12 @@ object ProfileAPI {
             this.isLoaded = true
         }
 
+        bingoRankRegex.anyMatch(event.newComponents, "type") { (type) ->
+            val bingoLevel = type.style.color?.let { SkyBlockRarity.fromColorOrNull(it.value) }
+            ProfileStorage.setBingoRank(bingoLevel)
+            println("Detected bingo rank: $bingoLevel")
+        }
+
         skyBlockXPRegex.anyMatch(event.new, "level", "xp") { (level, progress) ->
             ProfileStorage.setSkyBlockLevelProgress(progress.toInt())
             ProfileStorage.setSkyBlockLevel(level.toInt())
@@ -162,14 +167,6 @@ object ProfileAPI {
     @Subscription
     fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
         ProfileStorage.setSkyBlockLevel(event.level)
-    }
-
-    @Subscription
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
-        bingoRankRegex.anyMatch(event.addedComponents, "level") { (level) ->
-            val bingoLevel = level.style.color?.let { SkyBlockRarity.fromColorOrNull(it.value) }
-            ProfileStorage.setBingoRank(bingoLevel)
-        }
     }
 
     @Subscription
