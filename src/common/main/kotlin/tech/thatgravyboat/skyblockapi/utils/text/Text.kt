@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.net.URI
 import java.util.*
+import java.util.regex.Pattern
 
 object CommonText {
 
@@ -73,8 +74,10 @@ object Text {
 
 object TextProperties {
 
+    private val STRIP_COLOR_PATTERN = Pattern.compile("(?i)\\u00A7.")
+
     val Component.width: Int get() = McFont.width(this)
-    val Component.stripped: String get() = StringUtil.stripColor(this.string)
+    val Component.stripped: String get() = STRIP_COLOR_PATTERN.matcher(this.string).replaceAll("")
 }
 
 object TextUtils {
