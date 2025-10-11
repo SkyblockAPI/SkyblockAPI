@@ -9,7 +9,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
@@ -47,7 +46,7 @@ object ProfileAPI {
 
     private val profileChatRegex = RegexGroup.CHAT.group("profile").create(
         "name",
-        "You are playing on profile: (?<name>.+)",
+        "(You are playing on profile|Your profile was changed to): (?<name>\\S+)(?<coop> \\(Co-op\\))?",
     )
 
     private val levelColors = mapOf(
@@ -147,13 +146,14 @@ object ProfileAPI {
 
     @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
     fun onChatMessage(event: ChatReceivedEvent.Pre) {
-        profileChatRegex.match(event.text, "name") { (name) ->
-            val name = name.removeSuffix("(Co-op)").trim()
+        profileChatRegex.match(event.text) { groups ->
+            val name = groups["name"] ?: return@match
             if (name != this.profileName) {
                 this.profileName = name
                 ProfileChangeEvent(this.profileName!!).post()
             }
             this.isLoaded = true
+            ProfileStorage.setCoop(groups["coop"] != null)
         }
     }
 
@@ -168,13 +168,6 @@ object ProfileAPI {
     @Subscription
     fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
         ProfileStorage.setSkyBlockLevel(event.level)
-    }
-
-    @Subscription
-    fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
-        if (event.new.contains("CO-OP")) {
-            ProfileStorage.setCoop(true)
-        }
     }
 }
 
