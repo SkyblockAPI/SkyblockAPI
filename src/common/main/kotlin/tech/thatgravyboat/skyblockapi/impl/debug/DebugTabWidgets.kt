@@ -38,7 +38,7 @@ internal object DebugTabWidgets {
     @Subscription
     fun onRegisterCommands(event: RegisterCommandsEvent) {
         event.register("sbapi") {
-            thenCallback("copy widget", EnumArgument<TabWidget>()) {
+            thenCallback("copy widget widget", EnumArgument<TabWidget>()) {
                 val widget = argument<TabWidget>("widget")!!
                 if (!widget.isActive) Text.sendDebug("Tab widget ${widget.name} not present.")
                 else {
