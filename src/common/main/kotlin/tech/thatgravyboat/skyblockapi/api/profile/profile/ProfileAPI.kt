@@ -132,15 +132,16 @@ object ProfileAPI {
             this.isLoaded = true
         }
 
-        bingoRankRegex.anyMatch(event.newComponents, "type") { (type) ->
-            val bingoLevel = type.style.color?.let { SkyBlockRarity.fromColorOrNull(it.value) }
-            ProfileStorage.setBingoRank(bingoLevel)
-            println("Detected bingo rank: $bingoLevel")
-        }
-
         skyBlockXPRegex.anyMatch(event.new, "level", "xp") { (level, progress) ->
             ProfileStorage.setSkyBlockLevelProgress(progress.toInt())
             ProfileStorage.setSkyBlockLevel(level.toInt())
+        }
+
+        if (profileType == ProfileType.BINGO) {
+            bingoRankRegex.anyMatch(event.newComponents, "type") { (type) ->
+                val bingoLevel = type.style.color?.let { SkyBlockRarity.fromColorOrNull(it.value) }
+                ProfileStorage.setBingoRank(bingoLevel)
+            }
         }
     }
 
