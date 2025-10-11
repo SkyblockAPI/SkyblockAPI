@@ -84,6 +84,19 @@ object DebugCommands {
             }
             then("copy") {
                 then("scoreboard") {
+                    then("title") {
+                        then("raw") {
+                            callback {
+                                copyMessage("raw scoreboard title")
+                                McClient.clipboard = McClient.scoreboardTitle?.toJson(ComponentSerialization.CODEC).toPrettyString()
+                            }
+                        }
+
+                        callback {
+                            copyMessage("scoreboard title")
+                            McClient.clipboard = McClient.scoreboardTitle?.stripped ?: "null"
+                        }
+                    }
                     then("raw") {
                         callback {
                             copyMessage("raw scoreboard")
