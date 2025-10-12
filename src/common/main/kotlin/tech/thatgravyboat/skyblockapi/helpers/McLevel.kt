@@ -14,9 +14,9 @@ object McLevel {
         get() = McClient.self.level != null
 
     val self: Level
-        get() = clientLevel
+        get() = level
 
-    val clientLevel: ClientLevel
+    val level: ClientLevel
         get() = McClient.self.level!!
 
     val registry: RegistryAccess
