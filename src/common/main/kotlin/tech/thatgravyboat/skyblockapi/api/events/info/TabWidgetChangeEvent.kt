@@ -35,7 +35,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     STATS("Stats:"),
     EVENT("Event: (?<event>.*)"),
     PARTY("Party: (?<party>.*)"),
-    MINIONS("Minions: (?<party>.*)"), // Party
+    MINIONS("Minions: (?<amount>.*)"),
     DUNGEONS("Dungeons:"),
     ESSENCE("Essence:"),
     GOOD_TO_KNOW("Good to know:"),
@@ -63,6 +63,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     FOREST_WHISPERS("Forest Whispers: (?<amount>[\\dkmb,.]+)"),
     MOONGLADE_BEACON("Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
     FIRE_SALE("Fire Sales: \\((?<amount>[\\d,.]+)\\)"),
+    STARBORN_TEMPLE("Starborn Temple:"),
     ;
 
     val regex = RegexGroup.TABLIST_WIDGET.create(name.lowercase(), regex)
