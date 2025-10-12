@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
+import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
 import net.minecraft.core.RegistryAccess
 import net.minecraft.world.level.Level
@@ -13,6 +14,9 @@ object McLevel {
         get() = McClient.self.level != null
 
     val self: Level
+        get() = McClient.self.level!!
+
+    val clientLevel: ClientLevel
         get() = McClient.self.level!!
 
     val registry: RegistryAccess
