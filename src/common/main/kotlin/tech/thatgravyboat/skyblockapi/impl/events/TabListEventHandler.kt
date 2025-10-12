@@ -47,53 +47,7 @@ internal object TabListEventHandler {
         "(?:Info|Account Info|Player Stats|Dungeon Stats)$",
     )
 
-    private val widgetGroup = RegexGroup.TABLIST_WIDGET
-
-    private val widgetRegexes = mapOf(
-        TabWidget.PET to widgetGroup.create("pet", "Pet:"),
-        TabWidget.DAILY_QUESTS to widgetGroup.create("daily_quests", "Daily Quests:"),
-        TabWidget.FORGES to widgetGroup.create("forges", "Forges:(?: \\((?<active>[\\d,.]+)/(?<max>[\\d,.]+)\\))?"),
-        TabWidget.COMMISSIONS to widgetGroup.create("commissions", "Commissions:"),
-        TabWidget.SKILLS to widgetGroup.create("skills", "Skills:(?: (?<avg>[\\d.]+))?"),
-        TabWidget.POWDERS to widgetGroup.create("powders", "Powders:"),
-        TabWidget.CRYSTALS to widgetGroup.create("crystals", "Crystals:"),
-        TabWidget.BESTIARY to widgetGroup.create("bestiary", "Bestiary:"),
-        TabWidget.COLLECTION to widgetGroup.create("collection", "Collection:"),
-        TabWidget.STATS to widgetGroup.create("stats", "Stats:"),
-        TabWidget.DUNGEONS to widgetGroup.create("dungeons", "Dungeons:"),
-        TabWidget.ESSENCE to widgetGroup.create("essence", "Essence:"),
-        TabWidget.GOOD_TO_KNOW to widgetGroup.create("good_to_know", "Good to know:"),
-        TabWidget.ADVERTISEMENT to widgetGroup.create("advertisement", "Advertisement:"),
-        TabWidget.TRAPPER to widgetGroup.create("trapper", "Trapper:"),
-        TabWidget.EVENT_TRACKERS to widgetGroup.create("event_Trackers", "Event Trackers:"),
-        TabWidget.FROZEN_CORPSES to widgetGroup.create("frozen_corpses", "Frozen Corpses:"),
-        TabWidget.AREA to widgetGroup.create("area", "(?:Area|Dungeon): (?<area>.*)"),
-        TabWidget.PROFILE to widgetGroup.create("profile", "Profile: (?<profile>.*)"),
-        TabWidget.ELECTION to widgetGroup.create("election", "Election: (?<election>.*)"),
-        TabWidget.EVENT to widgetGroup.create("event", "Event: (?<event>.*)"),
-        TabWidget.PARTY to widgetGroup.create("party", "Party: (?<party>.*)"),
-        TabWidget.MINIONS to widgetGroup.create("minions", "Minions: (?<party>.*)"),
-        TabWidget.SHEN to widgetGroup.create("shen", "Shen: \\((?<duration>[\\ddmsh,]+)\\)"),
-        TabWidget.ACTIVE_EFFECTS to widgetGroup.create("active_effects", "Active Effects:(?: \\((?<amount>\\d+)\\))?"),
-        TabWidget.MINING_EVENT to widgetGroup.create("mining_event", "Mining Event: (?<event>.*)"),
-        TabWidget.TIMERS to widgetGroup.create("timers", "Timers:"),
-        TabWidget.COMPOSTER to widgetGroup.create("composter", "Composter:"),
-        TabWidget.JACOBS_CONTEST to widgetGroup.create("jacobs_contest", "Jacob's Contest:(?: (?<time>.*))?"),
-        TabWidget.PESTS to widgetGroup.create("pets", "Pests:"),
-        TabWidget.PEST_TRAPS to widgetGroup.create("pest_traps", "Pest Traps: (?<amount>[\\d,.]+)/(?<max>[\\d,.]+)"),
-        TabWidget.VISITORS to widgetGroup.create("visitors", "Visitors: \\((?<amount>\\d+)\\)"),
-        TabWidget.RNG_METER to widgetGroup.create("rng_meter", "RNG Meter"),
-        TabWidget.DOWNED to widgetGroup.create("downed", "Downed: (?<status>.*)"),
-        TabWidget.TEAM_DEATHS to widgetGroup.create("team_deaths", "Team Deaths: (?<amount>\\d+)"),
-        TabWidget.DISCOVERIES to widgetGroup.create("discoveries", "Discoveries: (?<amount>\\d+)"),
-        TabWidget.PUZZLES to widgetGroup.create("puzzles", "Puzzles: \\((?<amount>\\d+)\\)"),
-        TabWidget.REPUTATION to widgetGroup.create("reputation", "(?:Mage|Barbarian) Reputation:"),
-        TabWidget.TROPHY_FISH to widgetGroup.create("trophy_fish", "Trophy Fish:"),
-        TabWidget.FACTION_QUESTS to widgetGroup.create("faction_quests", "Faction Quests:"),
-        TabWidget.FOREST_WHISPERS to widgetGroup.create("forest_whispers", "Forest Whispers: (?<amount>[\\dkmb,.]+)"),
-        TabWidget.MOONGLADE_BEACON to widgetGroup.create("moonglade_beacon", "Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
-        TabWidget.FIRE_SALE to widgetGroup.create("fire_sale", "Fire Sales: \\((?<amount>[\\d,.]+)\\)"),
-    )
+    private val widgetRegexes = TabWidget.entries.associateWith { it.regex }
 
     private val debug by debugToggle("tab_widget", "Sends a debug message when an unknown tab widget is found.")
 
