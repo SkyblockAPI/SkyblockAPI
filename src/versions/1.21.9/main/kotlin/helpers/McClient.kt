@@ -81,7 +81,6 @@ actual object McClient {
                 .sortedBy { -it.value() }
                 .map {
                     val ownerName = it.ownerName()
-                    println("Scoreboard line: $ownerName")
                     val team = scoreboard.getPlayersTeam(it.owner())
                     if (team == null) {
                         ownerName.copy()
