@@ -14,7 +14,7 @@ object McLevel {
         get() = McClient.self.level != null
 
     val self: Level
-        get() = McClient.self.level!!
+        get() = clientLevel
 
     val clientLevel: ClientLevel
         get() = McClient.self.level!!
