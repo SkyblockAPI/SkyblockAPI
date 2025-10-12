@@ -14,6 +14,7 @@ import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
@@ -44,7 +45,10 @@ object LocationAPI {
         " *(?:players|party) \\((?<count>\\d+)\\) *",
     )
 
+    val forceOnSkyblock by debugToggle("force_skyblock", "Always returns true for SkyBlock checks")
+
     var isOnSkyBlock: Boolean = false
+        get() = field || forceOnSkyblock
         private set
 
     var island: SkyBlockIsland? = null
