@@ -86,7 +86,7 @@ value class SkyBlockId private constructor(val id: String) {
         val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it })
             .xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
 
-        fun ItemStack.getSkyBlockId() = this[DataTypes.SKYBLOCK_ID] ?: fromName(this.hoverName.stripped) ?: fromItem(this)
+        fun ItemStack.getSkyBlockId() = this[DataTypes.SKYBLOCK_ID] ?: fromItem(this) ?: fromName(this.hoverName.stripped)
     }
 
     val isItem: Boolean get() = id.startsWith(ITEM)
