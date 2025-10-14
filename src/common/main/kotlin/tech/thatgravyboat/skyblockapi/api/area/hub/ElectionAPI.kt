@@ -35,8 +35,8 @@ object ElectionAPI {
         private set
     var currentMinister: Candidate? = null
         private set
-
-    private var lastMayor: Candidate? = null
+    var jerryCandidate: Candidate? = null
+        private set
 
     init {
         updateScheduler(10.minutes)
@@ -54,11 +54,8 @@ object ElectionAPI {
         val result = Http.getResult<ElectionJson>(URL)
         val response = result.getOrNull() ?: return
 
-        handleResponse(response)
-
-        if (lastMayor != currentMayor) {
+        if (handleResponse(response)) {
             currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
-            lastMayor = currentMayor
 
             if (newSchedulerTime != null) {
                 updateScheduler(newSchedulerTime)
@@ -66,16 +63,20 @@ object ElectionAPI {
         }
     }
 
-    private fun handleResponse(response: ElectionJson?) {
+    private fun handleResponse(response: ElectionJson?): Boolean {
         rawData = response
-        val mayor = response?.mayor ?: return
+        val mayor = response?.mayor ?: return false
 
-        currentMayor = Candidate.getCandidate(mayor.name)
+        val newMayor = Candidate.getCandidate(mayor.name) ?: return false
+        if (newMayor == currentMayor) return false
+        currentMayor = newMayor
         currentMinister = mayor.minister?.let { Candidate.getCandidate(it.name) }
 
         Perk.reset()
         mayor.perks.forEach(::handlePerk)
         mayor.minister?.perk?.let(::handlePerk)
+
+        return true
     }
 
     private fun handlePerk(perk: PerkJson) {
@@ -91,6 +92,5 @@ object ElectionAPI {
             updateScheduler(1.minutes, 20.minutes)
         }
     }
-
 
 }
