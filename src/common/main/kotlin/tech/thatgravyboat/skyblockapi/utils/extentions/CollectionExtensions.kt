@@ -81,3 +81,8 @@ fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != n
 inline fun <T, K> Iterable<T>.associateByNotNull(keySelector: (T) -> K?): Map<K, T> = buildMap {
     for (element in this@associateByNotNull) put(keySelector(element) ?: continue, element)
 }
+
+inline fun <T> List<T>.sublistAfter(predicate: (T) -> Boolean): List<T> {
+    val index = this.indexOfFirst(predicate)
+    return if (index == -1) emptyList() else this.subList(index + 1, this.size)
+}

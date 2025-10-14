@@ -1,20 +1,32 @@
 package tech.thatgravyboat.skyblockapi.api.area.hub
 
 import me.owdding.ktmodules.Module
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.Candidate
 import tech.thatgravyboat.skyblockapi.api.data.ElectionJson
 import tech.thatgravyboat.skyblockapi.api.data.Perk
 import tech.thatgravyboat.skyblockapi.api.data.PerkJson
+import tech.thatgravyboat.skyblockapi.api.datetime.SkyBlockInstant
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.MayorUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.sublistAfter
 import tech.thatgravyboat.skyblockapi.utils.http.Http
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.time.since
 import java.util.concurrent.ScheduledFuture
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 private const val URL = "https://api.hypixel.net/v2/resources/skyblock/election"
 
@@ -27,6 +39,7 @@ object ElectionAPI {
         "The election room is now closed\\. Clerk Seraphine is doing a final count of the votes\\.\\.\\.",
     )
 
+    private var lastEvaluatedExtraJerry: Instant = currentInstant()
     private var scheduler: ScheduledFuture<*>? = null
     var rawData: ElectionJson? = null
         private set
@@ -35,7 +48,7 @@ object ElectionAPI {
         private set
     var currentMinister: Candidate? = null
         private set
-    var jerryCandidate: Candidate? = null
+    var jerryCandidate: Pair<Candidate, Instant>? = null
         private set
 
     init {
@@ -83,6 +96,29 @@ object ElectionAPI {
         val perkData = Perk.getPerk(perk.name) ?: return
         perkData.active = true
         perkData.description = perk.description
+    }
+
+    @Subscription
+    @InventoryTitle("Calendar and Events")
+    @MustBeContainer
+    private fun ContainerInitializedEvent.onInventory() {
+        if (lastEvaluatedExtraJerry.since() < 10.seconds) return
+        lastEvaluatedExtraJerry = currentInstant()
+        if (!Candidate.JERRY.isActive) return
+        val electionYear = rawData?.mayor?.election?.year ?: return
+        val stack = itemStacks.getOrNull(37).takeIf { it?.cleanName == "Mayor Jerry" } ?: return
+        val allPerks = Perk.entries.associateBy { it.perkName }
+        val foundPerk = stack.getRawLore().sublistAfter { it == "Perkpocalypse Perks:" }.firstNotNullOfOrNull { perk -> allPerks[perk] }
+        val extraMayor = Candidate.entries.find { foundPerk in it.perks } ?: return
+
+        val nextElection = SkyBlockInstant(electionYear + 2, 3, 27).instant // Late Spring 27th, 2 years after the election opened
+
+        val expireTime = (1..21).map { nextElection - (6.hours * it) }.lastOrNull { it > currentInstant() }?.coerceAtMost(nextElection) ?: return
+
+        jerryCandidate?.first?.clearAllPerks()
+
+        jerryCandidate = extraMayor.addAllPerks() to expireTime
+        SkyBlockAPI.info("Jerry Mayor Detected: $extraMayor, expires at $expireTime")
     }
 
     @Subscription
