@@ -57,6 +57,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     PEST_TRAPS("Pest Traps: (?<amount>[\\d,.]+)/(?<max>[\\d,.]+)"),
     VISITORS("Visitors: \\((?<amount>\\d+)\\)"),
     TRAPPER("Trapper:"),
+    CROP_MILESTONES("Crop Milestones:"),
 
     // Crimson Isle
     REPUTATION("(?:Mage|Barbarian) Reputation:"),
