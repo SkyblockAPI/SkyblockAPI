@@ -14,7 +14,7 @@ data class TabWidgetChangeEvent(
     val new: List<String>,
     val newComponents: List<Component>,
 ) : SkyBlockEvent() {
-
+    val isEmpty: Boolean get() = new.isEmpty()
     override fun post(bus: EventBus): Boolean = bus.post(this, this.widget)
 }
 
@@ -25,7 +25,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     PROFILE("Profile: (?<profile>.*)"),
     PET("Pet:"),
     DAILY_QUESTS("Daily Quests:"),
-    SKILLS("Skills:(?: (?<avg>[\\d.]+))?"),
+    SKILLS("Skills:(?: (?<avg>[\\d.]+)| (?<skill>.+) (?<level>\\S+): (?<progress>[\\d,.kMB%]+))?"),
     ELECTION("Election: (?<election>.*)"),
     BESTIARY("Bestiary:"),
     COLLECTION("Collection:"),
