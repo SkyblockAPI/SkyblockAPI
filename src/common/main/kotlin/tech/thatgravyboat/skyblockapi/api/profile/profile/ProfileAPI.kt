@@ -9,8 +9,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
@@ -36,6 +34,11 @@ object ProfileAPI {
         "Profile: (?<name>.+)",
     )
 
+    private val bingoRankRegex = widgetGroup.create(
+        "bingo_rank",
+        "Profile: .+ (?<type>Ⓑ)",
+    ).toComponentRegex()
+
     private val skyBlockXPRegex = widgetGroup.create(
         "skyblockxp",
         "\\s*SB Level: \\[(?<level>\\d+)] (?<xp>\\d+).*",
@@ -43,13 +46,8 @@ object ProfileAPI {
 
     private val profileChatRegex = RegexGroup.CHAT.group("profile").create(
         "name",
-        "You are playing on profile: (?<name>.+)",
+        "(You are playing on profile|Your profile was changed to): (?<name>\\S+)(?<coop> \\(Co-op\\))?",
     )
-
-    private val bingoRankRegex = RegexGroup.SCOREBOARD.group("profile").create(
-        "bingo",
-        " (?<level>Ⓑ )Bingo",
-    ).toComponentRegex()
 
     private val levelColors = mapOf(
         0..39 to TextColor.GRAY,
@@ -137,17 +135,25 @@ object ProfileAPI {
             ProfileStorage.setSkyBlockLevelProgress(progress.toInt())
             ProfileStorage.setSkyBlockLevel(level.toInt())
         }
+
+        if (profileType == ProfileType.BINGO) {
+            bingoRankRegex.anyMatch(event.newComponents, "type") { (type) ->
+                val bingoLevel = type.style.color?.let { SkyBlockRarity.fromColorOrNull(it.value) }
+                ProfileStorage.setBingoRank(bingoLevel)
+            }
+        }
     }
 
     @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
     fun onChatMessage(event: ChatReceivedEvent.Pre) {
-        profileChatRegex.match(event.text, "name") { (name) ->
-            val name = name.removeSuffix("(Co-op)").trim()
+        profileChatRegex.match(event.text) { groups ->
+            val name = groups["name"] ?: return@match
             if (name != this.profileName) {
                 this.profileName = name
                 ProfileChangeEvent(this.profileName!!).post()
             }
             this.isLoaded = true
+            ProfileStorage.setCoop(groups["coop"] != null)
         }
     }
 
@@ -162,21 +168,6 @@ object ProfileAPI {
     @Subscription
     fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
         ProfileStorage.setSkyBlockLevel(event.level)
-    }
-
-    @Subscription
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
-        bingoRankRegex.anyMatch(event.addedComponents, "level") { (level) ->
-            val bingoLevel = level.style.color?.let { SkyBlockRarity.fromColorOrNull(it.value) }
-            ProfileStorage.setBingoRank(bingoLevel)
-        }
-    }
-
-    @Subscription
-    fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
-        if (event.new.contains("CO-OP")) {
-            ProfileStorage.setCoop(true)
-        }
     }
 }
 

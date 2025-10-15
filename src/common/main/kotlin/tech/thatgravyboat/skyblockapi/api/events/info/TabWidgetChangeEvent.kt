@@ -44,6 +44,8 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     CRYSTALS("Crystals:"),
     MINING_EVENT("Mining Event: (?<event>.*)"),
     FROZEN_CORPSES("Frozen Corpses:"),
+    PITY("Pity:"),
+    PICKAXE_ABILITY("Pickaxe Ability:"),
 
     // Foraging
     STARBORN_TEMPLE("Starborn Temple:"),
