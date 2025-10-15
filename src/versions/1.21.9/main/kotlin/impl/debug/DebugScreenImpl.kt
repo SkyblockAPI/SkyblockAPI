@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.layouts.LinearLayout
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.platform.drawFilledBox
@@ -123,16 +124,16 @@ internal class DebugScreenImpl<T>(
         }
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        if (mouseY > 20 && button == 0) {
-            val index = (mouseY.toInt() - 20) / 10 + scroll
+    override fun mouseClicked(event: MouseButtonEvent, doubleClicked: Boolean): Boolean {
+        if (event.y > 20 && event.button() == 0) {
+            val index = (event.y.toInt() - 20) / 10 + scroll
             if (index in filteredMessages.indices) {
                 val (_, message) = filteredMessages[index]
                 this.onClicked.invoke(message)
                 return true
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClicked)
     }
 
     override fun mouseScrolled(mouseX: Double, mouseY: Double, deltaX: Double, deltaY: Double): Boolean {

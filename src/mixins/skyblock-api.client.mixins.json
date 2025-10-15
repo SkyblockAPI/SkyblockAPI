@@ -26,11 +26,16 @@
         "defaultRequire": 1
     },
     "mixins": [
+        "accessors.SynchedEntityDataAccessor",
+        "accessors.LivingEntityAccessor",
         "events.ConnectionMixin",
         "events.ItemStackMixin",
         "events.SlotMixin",
+        "features.AttributeInstanceMixin",
         "features.ItemStackExtensionMixin",
         "features.VisualItemMixin",
+        "features.SynchedEntityDataMixin",
+        "features.SynchedEntityDataDataItemMixin",
         "fixes.FishingHookMixin",
         "fixes.HolderOwnerMixin",
         "fixes.NarratorMixin",
