@@ -38,17 +38,19 @@ internal object DebugTabWidgets {
     @Subscription
     fun onRegisterCommands(event: RegisterCommandsEvent) {
         event.register("sbapi") {
-            thenCallback("copy widget widget", EnumArgument<TabWidget>()) {
-                val widget = argument<TabWidget>("widget")!!
+            thenCallback("copy widget tabwidget", EnumArgument<TabWidget>()) {
+                val widget = argument<TabWidget>("tabwidget")!!
                 if (!widget.isActive) Text.sendDebug("Tab widget ${widget.name} not present.")
                 else {
                     val lines = widget.currentLines
-                    Text.sendDebug("Contents of tab widget") {
+                    McClient.clipboard = lines.joinToString("\n")
+                    Text.sendDebug("Contents of tab widget ") {
                         append(widget.name, TextColor.GOLD)
-                        this.hover = Text.multiline(lines)
+                        append(" copied to clipboard!", TextColor.YELLOW)
+                        this.hover = Text.of("Click to copy again!", TextColor.GOLD)
                         onClick {
                             McClient.clipboard = lines.joinToString("\n")
-                            Text.sendDebug("Copied contents to clipboard.")
+                            Text.sendDebug("Copied ${widget.name} contents to clipboard.")
                         }
                     }
                 }
