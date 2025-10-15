@@ -62,7 +62,7 @@ expect object McClient {
 
     fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f)
 
-    fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 0f, stayTime: Float = 0f, fadeOutTime: Float = 0f)
+    fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f)
 
     fun setScreenAsync(screen: () -> Screen?)
 
