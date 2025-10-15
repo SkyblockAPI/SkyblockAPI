@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
+import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
+
 enum class Candidate(val candidateName: String, vararg val perks: Perk) {
     AATROX("Aatrox", Perk.SLASHED_PRICING, Perk.SLAYER_XP_BUFF, Perk.PATHFINDER),
     COLE("Cole", Perk.PROSPECTION, Perk.MINING_XP_BUFF, Perk.MINING_FIESTA, Perk.MOLTEN_FORGE),
@@ -16,9 +18,11 @@ enum class Candidate(val candidateName: String, vararg val perks: Perk) {
     ;
 
     val activePerks get() = perks.filter { it.active }
-
+    val isActive get() = this == ElectionAPI.currentMayor || this == ElectionAPI.currentMinister
     val isSpecial by lazy { this in setOf(SCORPIUS, JERRY, DERPY) }
 
+    internal fun addAllPerks(): Candidate = apply { perks.forEach { it.active = true } }
+    internal fun clearAllPerks(): Candidate = apply { perks.forEach { it.active = false } }
     override fun toString() = candidateName
 
     companion object {
@@ -90,6 +94,7 @@ enum class Perk(val perkName: String) {
     ;
 
     var active = false
+        internal set
     var description = "Not available"
 
     companion object {
