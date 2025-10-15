@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.JsonOps
 import net.minecraft.data.registries.VanillaRegistries
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.RegistryOps
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import java.io.InputStream
@@ -47,4 +48,5 @@ object Json {
     }
 
     fun JsonElement?.toPrettyString(): String = gson.toJson(this)
+    fun JsonElement?.toComponent(spaces: Int = 4, newLines: Boolean = true): Component = JsonWriter.write(this, 0, spaces, newLines)
 }
