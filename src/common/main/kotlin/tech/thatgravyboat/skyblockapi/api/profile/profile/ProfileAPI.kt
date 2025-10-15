@@ -36,7 +36,7 @@ object ProfileAPI {
 
     private val bingoRankRegex = widgetGroup.create(
         "bingo_rank",
-        "Profile: .+ (?<type>[Ⓑ♲])",
+        "Profile: .+ (?<type>Ⓑ)",
     ).toComponentRegex()
 
     private val skyBlockXPRegex = widgetGroup.create(
