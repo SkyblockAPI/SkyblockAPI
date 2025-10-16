@@ -30,7 +30,7 @@ dependencies {
             attribute(Attribute.of("earth.terrarium.cloche.minecraftVersion", String::class.java), "<minecraft_version>")
         }
     }
-    modImplementation("me.owdding:item-data-fixer:1.0.1", clocheAction)
+    modImplementation("me.owdding:item-data-fixer:1.0.3", clocheAction)
     modImplementation("tech.thatgravyboat:skyblock-api:<version>") {
         exclude("me.owdding")
         clocheAction.execute(this)
