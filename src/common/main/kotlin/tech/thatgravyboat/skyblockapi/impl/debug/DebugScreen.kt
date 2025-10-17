@@ -7,16 +7,42 @@ import net.msrandom.stub.Stub
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import kotlin.reflect.KClass
 import kotlin.time.Instant
 
 @Stub
-internal expect fun <T> DebugScreen(
+internal expect fun DebugScreen(
+    title: String,
+    messages: List<Pair<Instant, Any>>,
+    buttons: List<AbstractWidget> = emptyList(),
+    asSearch: (Any) -> String,
+    display: (Any) -> Component = { Text.of(it.toString()) },
+    tooltip: (Any) -> Component = { Text.of("Click to copy to clipboard") { this.color = TextColor.GRAY; } },
+    onClicked: (Any) -> Unit,
+    timeFormat: String = "HH:mm:ss",
+    type: KClass<Any>,
+): Screen
+
+internal inline fun <reified T> DebugScreen(
     title: String,
     messages: List<Pair<Instant, T>>,
     buttons: List<AbstractWidget> = emptyList(),
-    asSearch: (T) -> String,
-    display: (T) -> Component = { Text.of(it.toString()) },
-    tooltip: (T) -> Component = { Text.of("Click to copy to clipboard") { this.color = TextColor.GRAY; } },
-    onClicked: (T) -> Unit,
+    noinline asSearch: (T) -> String,
+    noinline display: (T) -> Component = { Text.of(it.toString()) },
+    noinline tooltip: (T) -> Component = { Text.of("Click to copy to clipboard") { this.color = TextColor.GRAY; } },
+    noinline onClicked: (T) -> Unit,
     timeFormat: String = "HH:mm:ss",
-): Screen
+): Screen = DebugScreen(
+    title,
+    messages.unsafeCast(),
+    buttons,
+    asSearch.unsafeCast(),
+    display.unsafeCast(),
+    tooltip.unsafeCast(),
+    onClicked.unsafeCast(),
+    timeFormat,
+    T::class.unsafeCast(),
+)
+
+@Suppress("UNCHECKED_CAST")
+private fun <T, R> T.unsafeCast() = this as R

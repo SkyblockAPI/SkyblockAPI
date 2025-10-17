@@ -70,8 +70,8 @@ dependencies {
     compileOnly(project(":annotations"))
     compilerAll(rootProject.project(":compiler"))
     implementation(kotlin("stdlib-jdk8"))
-    ksp("net.msrandom:kmp-actual-stubs-processor:1.0.4-pr.13") {
-        version { strictly("1.0.4-pr.13") }
+    kspAll("net.msrandom:kmp-actual-stubs-processor:1.0.5-meowwwwwwwwwwwwww") {
+        version { strictly("1.0.5-meowwwwwwwwwwwwww") }
         isTransitive = false
     }
 
