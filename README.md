@@ -1,4 +1,8 @@
-# Skyblock API
+<h1 align="center">Skyblock API</h1>
+
+<div align="center">
+[![Version](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.teamresourceful.com%2Frepository%2Fmaven-public%2Ftech%2Fthatgravyboat%2Fskyblock-api%2Fmaven-metadata.xml&strategy=highestVersion&style=for-the-badge&label=Version)]
+</div>
 
 A collection of APIs for interacting with Hypixel SkyBlock.
 
@@ -38,6 +42,12 @@ dependencies {
     include("tech.thatgravyboat:skyblock-api:<version>", clocheAction)
 }
 ```
+
+<minecraft_version> is:
+
+- `1.21.5` for 1.21.5
+- `1.21.8` for 1.21.6-1.21.8
+- `1.21.9` for 1.21.9-1.21.10
 
 ## Major Change Logs
 
