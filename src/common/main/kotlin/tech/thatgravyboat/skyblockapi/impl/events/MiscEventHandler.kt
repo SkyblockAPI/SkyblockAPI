@@ -46,7 +46,7 @@ object MiscEventHandler {
             TickEvent.post(SkyBlockAPI.eventBus)
         }
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            RegisterCommandsEvent(dispatcher).post(SkyBlockAPI.eventBus)
+            RegisterCommandsEvent(dispatcher).post()
         }
         ItemTooltipCallback.EVENT.register { stack, _, flags, list ->
             if (flags.isAdvanced) {
