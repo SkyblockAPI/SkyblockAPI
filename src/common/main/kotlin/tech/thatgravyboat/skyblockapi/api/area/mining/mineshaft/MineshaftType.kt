@@ -28,3 +28,13 @@ enum class MineshaftType(val id: String) {
         fun fromId(id: String): MineshaftType? = entries.find { it.id.equals(id, true) }
     }
 }
+
+enum class MineshaftVariant(val id: String) {
+    ONE("1"),
+    TWO("2"),
+    CRYSTAL("C");
+
+    companion object {
+        fun fromId(id: String): MineshaftVariant = entries.find { it.id.equals(id, true) } ?: ONE
+    }
+}

@@ -32,9 +32,13 @@ object MineshaftAPI {
         "corpse",
         "^\\s*(?<corpse>\\w+): (?<state>.+)$",
     )
+
+    // RUBY_1
+    // RUBY_2
+    // RUBY_C
     private val mineshaftTypeRegex = scoreboardGroup.create(
         "type",
-        "^\\d+/\\d+/\\d+ \\S+ (?<type>\\w{4})(?<number>\\d)$",
+        "^\\d+/\\d+/\\d+ \\S+ (?<type>\\w{4})_(?<variant>\\w)$",
     )
     private val mineshaftFoundRegex = chatGroup.create(
         "found",
@@ -44,8 +48,11 @@ object MineshaftAPI {
     var mineshaftType: MineshaftType? = null
         private set
 
-    var isCrystal: Boolean = false
+    var mineshaftVariant: MineshaftVariant? = null
         private set
+
+    val isCrystal: Boolean
+        get() = mineshaftVariant == MineshaftVariant.CRYSTAL
 
     var scrap: Int = 0
         private set
@@ -85,10 +92,10 @@ object MineshaftAPI {
     @Subscription
     @OnlyIn(SkyBlockIsland.MINESHAFT)
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
-        mineshaftTypeRegex.anyFound(event.added, "type", "number") { (type, number) ->
+        mineshaftTypeRegex.anyFound(event.added, "type", "variant") { (type, variant) ->
             this.mineshaftType = MineshaftType.fromId(type)
-            this.isCrystal = number == "2"
-            MineshaftEnteredEvent(mineshaftType, isCrystal).post()
+            this.mineshaftVariant = MineshaftVariant.fromId(variant)
+            MineshaftEnteredEvent(mineshaftType, mineshaftVariant).post()
         }
     }
 
@@ -104,7 +111,7 @@ object MineshaftAPI {
         scrap = 0
         corpses = listOf()
         mineshaftType = null
-        isCrystal = false
+        mineshaftVariant = null
     }
 
     @Subscription
