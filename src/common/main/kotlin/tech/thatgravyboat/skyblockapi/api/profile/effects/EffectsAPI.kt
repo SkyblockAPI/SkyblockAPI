@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.SkyBlockApiRegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.profile.community.CommunityCenterAPI.cookieAteRegex
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -110,8 +110,8 @@ object EffectsAPI {
 
 
     @Subscription
-    fun onCommandsRegistration(event: SkyBlockApiRegisterCommandsEvent) {
-        event.register("effects") {
+    fun onCommandsRegistration(event: RegisterCommandsEvent) {
+        event.register("sbapi effects") {
             then("copy") {
                 callback {
                     val effects = listOf(

@@ -5,14 +5,16 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 /** Utility event for creating commands with shared prefixes. */
-abstract class AbstractModRegisterCommandsEvent(private val baseEvent: RegisterCommandsEvent, private vararg val prefixes: String) : SkyBlockEvent() {
+abstract class AbstractModRegisterCommandsEvent(
+    private val baseEvent: RegisterCommandsEvent,
+    prefix: String,
+    vararg extraPrefixes: String = emptyArray(),
+) : SkyBlockEvent() {
 
-    init {
-        require(prefixes.isNotEmpty()) { "prefixes cannot be empty!" }
-    }
+    private val prefixes = listOf(prefix, *extraPrefixes)
 
     /** Default callback for when you execute the command with no args */
-    fun registerBase(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
+    fun registerBaseCallback(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
         prefixes.forEach { baseEvent.registerWithCallback(it, callback = callback) }
     }
 
