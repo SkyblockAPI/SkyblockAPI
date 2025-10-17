@@ -22,6 +22,7 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.*
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.SkyBlockApiRegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -46,7 +47,9 @@ object MiscEventHandler {
             TickEvent.post(SkyBlockAPI.eventBus)
         }
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            RegisterCommandsEvent(dispatcher).post(SkyBlockAPI.eventBus)
+            val event = RegisterCommandsEvent(dispatcher)
+            SkyBlockApiRegisterCommandsEvent(event).post()
+            event.post()
         }
         ItemTooltipCallback.EVENT.register { stack, _, flags, list ->
             if (flags.isAdvanced) {

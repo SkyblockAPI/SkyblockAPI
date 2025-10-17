@@ -23,16 +23,17 @@ class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClie
     }
 
     fun register(command: String, builder: LiteralCommandBuilder.() -> Unit) {
-        if (command.contains(" ")) {
-            ClientCommandManager.literal(command.substringBefore(" "))
-                ?.apply { LiteralCommandBuilder(this).then(command.substringAfter(" "), action = builder) }
-                ?.let(dispatcher::register)
+        if (command.contains(' ')) {
+            val (literal, subcommand) = command.split(' ', limit = 2)
+            register(literal) {
+                then(subcommand, action = builder)
+            }
             return
         }
 
         ClientCommandManager.literal(command)
-            ?.apply { LiteralCommandBuilder(this).apply(builder) }
-            ?.let(dispatcher::register)
+            .apply { LiteralCommandBuilder(this).apply(builder) }
+            .let(::register)
     }
 
     fun registerWithCallback(command: String, callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
@@ -42,7 +43,7 @@ class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClie
     }
 
     companion object {
-        inline fun <reified T> CommandContext<*>.argument(name: String): T? = this.getArgument(name, T::class.java)
+        inline fun <reified T> CommandContext<*>.argument(name: String): T = this.getArgument(name, T::class.java)
     }
 }
 
