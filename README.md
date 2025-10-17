@@ -1,7 +1,9 @@
 <h1 align="center">Skyblock API</h1>
 
 <div align="center">
+    
 ![Version](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.teamresourceful.com%2Frepository%2Fmaven-public%2Ftech%2Fthatgravyboat%2Fskyblock-api%2Fmaven-metadata.xml&strategy=highestVersion&style=for-the-badge&label=Version)
+
 </div>
 
 A collection of APIs for interacting with Hypixel SkyBlock.
