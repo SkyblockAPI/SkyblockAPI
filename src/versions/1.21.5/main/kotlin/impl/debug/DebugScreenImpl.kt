@@ -20,18 +20,20 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import kotlin.math.min
+import kotlin.reflect.KClass
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
 
-internal actual fun <T> DebugScreen(
+internal actual fun DebugScreen(
     title: String,
-    messages: List<Pair<Instant, T>>,
+    messages: List<Pair<Instant, Any>>,
     buttons: List<AbstractWidget>,
-    asSearch: (T) -> String,
-    display: (T) -> Component,
-    tooltip: (T) -> Component,
-    onClicked: (T) -> Unit,
+    asSearch: (Any) -> String,
+    display: (Any) -> Component,
+    tooltip: (Any) -> Component,
+    onClicked: (Any) -> Unit,
     timeFormat: String,
+    type: KClass<Any>,
 ): Screen = DebugScreenImpl(
     title = title,
     messages = messages,
@@ -40,8 +42,9 @@ internal actual fun <T> DebugScreen(
     display = display,
     tooltip = tooltip,
     onClicked = onClicked,
-    timeFormat = timeFormat
+    timeFormat = timeFormat,
 )
+
 internal class DebugScreenImpl<T>(
     title: String,
     messages: List<Pair<Instant, T>>,
