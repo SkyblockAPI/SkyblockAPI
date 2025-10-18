@@ -14,6 +14,8 @@ object RepoRunesAPI {
 
     private val cache: MutableMap<String, ItemStack?> = mutableMapOf()
 
+    internal fun reset() { cache.clear() }
+
     fun getRuneById(id: String): List<Rune>? {
         if (!RepoAPI.isInitialized()) return null
         return RepoAPI.runes().getRunes(id)

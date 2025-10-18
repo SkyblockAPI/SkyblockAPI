@@ -24,6 +24,7 @@ object RepoItemsAPI {
             text.lowercase() to entry.key.uppercase().replace("-", ":")
         }.toMap()
     }
+    internal fun reset() { cache.clear() }
 
     fun getItemOrNull(id: String): ItemStack? {
         if (!RepoAPI.isInitialized()) return null

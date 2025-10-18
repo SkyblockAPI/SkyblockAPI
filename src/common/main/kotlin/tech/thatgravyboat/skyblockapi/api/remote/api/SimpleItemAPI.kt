@@ -135,6 +135,7 @@ object SimpleItemAPI {
 
     private fun setupCache() {
         val start = currentInstant()
+        cache.clear()
         RepoAPI.pets().pets().entries.map { (id, data) -> data.name() to pet(id) }.applyFiltered()
 
         RepoAPI.runes().runes().entries.flatMap { (id, data) ->
