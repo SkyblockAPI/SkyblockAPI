@@ -124,7 +124,10 @@ actual object McClient {
         gui.setTitle(title)
     }
 
-    actual fun setScreenAsync(screen: () -> Screen?) = runNextTick { self.setScreen(screen()) }
+    actual fun setScreenAsync(screen: () -> Screen?) = runNextTick {
+        self.screen?.onClose()
+        self.setScreen(screen())
+    }
 
     actual fun setScreen(screen: Screen?) {
         if (self.screen is ChatScreen) {

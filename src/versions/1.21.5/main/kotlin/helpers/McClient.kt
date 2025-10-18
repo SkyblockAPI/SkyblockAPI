@@ -125,7 +125,10 @@ actual object McClient {
         gui.setTitle(title)
     }
 
-    actual fun setScreenAsync(screen: () -> Screen?) = runNextTick { self.setScreen(screen()) }
+    actual fun setScreenAsync(screen: () -> Screen?) = runNextTick {
+        self.screen?.onClose()
+        self.setScreen(screen())
+    }
 
     /** Bad because with this method the screen gets init too early **/
     @RemoveNextVersion(ReplaceWith("setScreenAsync { screen }"))
