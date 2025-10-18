@@ -27,7 +27,6 @@ object RepoAttributeAPI {
 
     private val attributeIdMap: MutableMap<String, AttributesAPI.Attribute> = mutableMapOf()
     private val cache: MutableMap<String, ItemStack?> = mutableMapOf()
-    internal fun reset() { cache.clear() }
 
     @Subscription(RepoStatusEvent::class)
     @OnRepoStatus(RepoStatus.SUCCESS)
