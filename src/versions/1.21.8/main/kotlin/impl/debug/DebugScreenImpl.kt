@@ -113,7 +113,7 @@ internal class DebugScreenImpl<T>(
             val hovered = mouseY in y until y + 10
 
             if (hovered) {
-                graphics.drawFilledBox(0, y, this.width, y + 10, 0x80FFFFFF.toInt())
+                graphics.drawFilledBox(0, y, this.width, 10, 0x80FFFFFF.toInt())
                 graphics.showTooltip(this.tooltip.invoke(message))
             }
             val instant = LocalDateTime.ofInstant(timestamp.toJavaInstant(), ZoneId.systemDefault())

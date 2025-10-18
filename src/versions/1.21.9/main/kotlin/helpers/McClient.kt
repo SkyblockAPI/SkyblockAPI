@@ -125,8 +125,9 @@ actual object McClient {
     }
 
     actual fun setScreenAsync(screen: () -> Screen?) = runNextTick {
+        val next = screen()
         self.screen?.onClose()
-        self.setScreen(screen())
+        self.setScreen(next)
     }
 
     actual fun setScreen(screen: Screen?) {
