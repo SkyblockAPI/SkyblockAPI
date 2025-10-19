@@ -101,13 +101,14 @@ internal class DebugScreenImpl<T>(
     override fun render(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.render(graphics, mouseX, mouseY, partialTicks)
 
-        val status = Text.join(this.title, ": ${filteredMessages.size}")
+        val messages = filteredMessages
+        val status = Text.join(this.title, ": ${messages.size}")
         graphics.drawString(status, (this.width - McFont.width(status)) / 2, 5)
 
         val maxEntriesForScreen = (this.height / 10) + 10
 
-        for (index in scroll until min(scroll + maxEntriesForScreen, filteredMessages.size)) {
-            val (timestamp, message) = filteredMessages[index]
+        for (index in scroll until min(scroll + maxEntriesForScreen, messages.size)) {
+            val (timestamp, message) = messages[index]
             val y = 20 + (index - scroll) * 10
             val hovered = mouseY in y until y + 10
 
