@@ -21,6 +21,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import java.util.concurrent.CompletableFuture
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -39,7 +40,8 @@ object DebugPackets {
             logPackets = !logPackets
             Text.debug("Packet logging is now ${if (logPackets) "enabled" else "disabled"}").send()
 
-            if (!logPackets && packets.isNotEmpty()) {
+            if (logPackets || packets.isEmpty()) return
+            CompletableFuture.runAsync {
                 entries = packets.map { (time, packet) ->
                     runCatching {
                         time to PacketEntry(packet.type(), Either.left(packet.toJson()))
