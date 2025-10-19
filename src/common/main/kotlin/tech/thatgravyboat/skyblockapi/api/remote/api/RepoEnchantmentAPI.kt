@@ -13,7 +13,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 
 object RepoEnchantmentAPI {
     private val cache: MutableMap<String, ItemStack?> = mutableMapOf()
-    internal fun reset() { cache.clear() }
 
     fun getEnchantmentById(id: String): EnchantsAPI.Enchant? {
         if (!RepoAPI.isInitialized()) return null
