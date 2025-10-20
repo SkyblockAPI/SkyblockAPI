@@ -100,7 +100,7 @@ object StorageAPI {
     @OptIn(SkyBlockPvRequired::class)
     private fun SkyBlockPvOpenedEvent.parseEnderChest() {
         val rawEnderchestData = member.getPath("inventory.ender_chest_contents") as? JsonObject ?: return
-        val enderchestData = rawEnderchestData.parseInvData().takeUnless { it.isEmpty() } ?: return
+        val enderchestData = rawEnderchestData.parseInvData()?.takeUnless { it.isEmpty() } ?: return
         val enderchest = enderchestData.chunked(45)
 
         enderchest.forEachIndexed { index, items ->
@@ -127,7 +127,7 @@ object StorageAPI {
             if (isInvalid) {
                 return@forEach
             }
-            val data = (json as? JsonObject)?.parseInvData() ?: return@forEach
+            val data = (json as? JsonObject)?.parseInvData()?.takeUnless { it.isEmpty() } ?: return@forEach
 
             PvLoadingHelper.markLoaded(LoadedData.BACKPACK)
             PlayerStorageStorage.setBackpack(PlayerStorageInstance(index, data.toMutableList()))
