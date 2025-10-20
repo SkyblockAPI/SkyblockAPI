@@ -26,7 +26,7 @@ private fun parseV0InventoryData(json: JsonObject): List<ItemStack> {
     val data = json.get("data").asString
     val tag = NbtIo.readCompressed(ByteArrayInputStream(Base64.decode(data)), NbtAccounter.unlimitedHeap())
     return tag.getList("i").getOrNull()?.mapNotNull {
-        runCatchingWithPrint { it.legacyStack() }.getOrNull()
+        runCatchingWithPrint { it.legacyStack() }.getOrDefault(ItemStack.EMPTY)
     } ?: emptyList()
 }
 
