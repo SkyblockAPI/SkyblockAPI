@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtIo
 import net.minecraft.nbt.Tag
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
+import tech.thatgravyboat.skyblockapi.utils.runCatchingWithPrint
 import java.io.ByteArrayInputStream
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -24,7 +25,9 @@ internal fun JsonObject.parseInvData(): List<ItemStack> = runCatching {
 private fun parseV0InventoryData(json: JsonObject): List<ItemStack> {
     val data = json.get("data").asString
     val tag = NbtIo.readCompressed(ByteArrayInputStream(Base64.decode(data)), NbtAccounter.unlimitedHeap())
-    return tag.getList("i").getOrNull()?.map { it.legacyStack() } ?: emptyList()
+    return tag.getList("i").getOrNull()?.mapNotNull {
+        runCatchingWithPrint { it.legacyStack() }.getOrNull()
+    } ?: emptyList()
 }
 
 fun Tag.legacyStack(): ItemStack = LegacyDataFixer.fromTag(this) ?: ItemStack.EMPTY
