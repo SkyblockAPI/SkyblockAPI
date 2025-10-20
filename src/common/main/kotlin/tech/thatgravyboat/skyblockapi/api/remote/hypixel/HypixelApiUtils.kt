@@ -15,19 +15,19 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.jvm.optionals.getOrNull
 
-internal fun JsonObject.parseInvData(): List<ItemStack>? = runCatchingWithPrint {
+internal fun JsonObject.parseInvData(): List<ItemStack> = runCatching {
     when (this.get("type").asInt(-1)) {
         0 -> parseV0InventoryData(this)
         else -> emptyList()
     }
-}.getOrNull()
+}.getOrElse { emptyList() }
 
-private fun parseV0InventoryData(json: JsonObject): List<ItemStack>? {
+private fun parseV0InventoryData(json: JsonObject): List<ItemStack> {
     val data = json.get("data").asString
     val tag = NbtIo.readCompressed(ByteArrayInputStream(Base64.decode(data)), NbtAccounter.unlimitedHeap())
-    return tag.getList("i").getOrNull()?.map {
-        it.legacyStack()
-    }
+    return tag.getList("i").getOrNull()?.mapNotNull {
+        runCatchingWithPrint { it.legacyStack() }.getOrNull()
+    } ?: emptyList()
 }
 
 fun Tag.legacyStack(): ItemStack = LegacyDataFixer.fromTag(this) ?: ItemStack.EMPTY
