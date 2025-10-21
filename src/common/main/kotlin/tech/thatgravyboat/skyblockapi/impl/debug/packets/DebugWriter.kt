@@ -24,6 +24,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
+import org.spongepowered.asm.mixin.Unique
 import tech.thatgravyboat.skyblockapi.impl.debug.packets.CodecJsonSerializer.Companion.registerTypeAdapter
 import tech.thatgravyboat.skyblockapi.impl.debug.packets.SimpleJsonSerializer.Companion.registerTypeAdapter
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJsonOrThrow
@@ -37,6 +38,7 @@ object DebugWriter {
         .disableHtmlEscaping()
         .enableComplexMapKeySerialization()
         .serializeNulls()
+        .setExclusionStrategies(SkipMixinUniqueFields)
         .registerTypeAdapter(UUID::class.java, UUIDTypeAdapter())
         .registerTypeAdapter(java.time.Instant::class.java, InstantTypeAdapter())
         .registerTypeAdapter<EntityType<*>>(BuiltInRegistries.ENTITY_TYPE.byNameCodec())
@@ -56,6 +58,14 @@ object DebugWriter {
         .create()
 
     fun Packet<*>.toJson(): JsonElement = gson.toJsonTree(this)
+}
+
+private object SkipMixinUniqueFields : ExclusionStrategy {
+    override fun shouldSkipField(attributes: FieldAttributes): Boolean {
+        return attributes.getAnnotation(Unique::class.java) != null
+    }
+
+    override fun shouldSkipClass(clazz: Class<*>): Boolean = false
 }
 
 private fun EntityDataSerializer<*>.toName(): String? {
