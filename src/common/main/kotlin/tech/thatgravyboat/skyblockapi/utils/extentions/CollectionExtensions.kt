@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
+import net.minecraft.world.item.ItemStack
+
 /**
  * Splits a list into chunks based on a predicate.
  * The predicate will be true when a new chunk should be created, will include the element in the new chunk.
@@ -77,6 +79,8 @@ fun <K, V> Map<K, V?>.filterValuesNotNull(): Map<K, V> = this.filterValues { it 
 
 @Suppress("UNCHECKED_CAST")
 fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null } as Map<K, V>
+
+fun Collection<ItemStack>.filterNotAir() = filterNot { it.isEmpty }
 
 inline fun <T, K> Iterable<T>.associateByNotNull(keySelector: (T) -> K?): Map<K, T> = buildMap {
     for (element in this@associateByNotNull) put(keySelector(element) ?: continue, element)
