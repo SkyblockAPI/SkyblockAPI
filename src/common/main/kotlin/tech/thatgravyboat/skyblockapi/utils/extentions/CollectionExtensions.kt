@@ -60,25 +60,7 @@ fun <T> List<T>.asReversedIterator(): Iterator<T> {
     }
 }
 
-fun <K> MutableMap<K, Int>.addOrPut(key: K, number: Int): Int = merge(key, number, Int::plus)!!
-
-fun <K> MutableMap<K, Double>.addOrPut(key: K, number: Double): Double = merge(key, number, Double::plus)!!
-
-fun <K> MutableMap<K, Float>.addOrPut(key: K, number: Float): Float = merge(key, number, Float::plus)!!
-
-fun <K> MutableMap<K, Long>.addOrPut(key: K, number: Long): Long = merge(key, number, Long::plus)!!
-
 internal fun <T : Any> MutableCollection<T>.addIfNotNull(element: T?): Boolean = element?.let { add(it) } ?: false
-
-fun <K, V> Map<K, V>.mapValuesNotNull(transform: (Map.Entry<K, V>) -> V?): Map<K, V> {
-    return this.mapNotNull { transform(it)?.let { value -> it.key to value } }.toMap()
-}
-
-@Suppress("UNCHECKED_CAST")
-fun <K, V> Map<K, V?>.filterValuesNotNull(): Map<K, V> = this.filterValues { it != null } as Map<K, V>
-
-@Suppress("UNCHECKED_CAST")
-fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null } as Map<K, V>
 
 fun Collection<ItemStack>.filterNotAir() = filterNot { it.isEmpty }
 
@@ -90,3 +72,19 @@ inline fun <T> List<T>.sublistAfter(predicate: (T) -> Boolean): List<T> {
     val index = this.indexOfFirst(predicate)
     return if (index == -1) emptyList() else this.subList(index + 1, this.size)
 }
+
+
+fun <K> MutableMap<K, Int>.addOrPut(key: K, number: Int): Int = merge(key, number, Int::plus)!!
+fun <K> MutableMap<K, Double>.addOrPut(key: K, number: Double): Double = merge(key, number, Double::plus)!!
+fun <K> MutableMap<K, Float>.addOrPut(key: K, number: Float): Float = merge(key, number, Float::plus)!!
+fun <K> MutableMap<K, Long>.addOrPut(key: K, number: Long): Long = merge(key, number, Long::plus)!!
+
+fun <K, V> Map<K, V>.mapValuesNotNull(transform: (Map.Entry<K, V>) -> V?): Map<K, V> {
+    return this.mapNotNull { transform(it)?.let { value -> it.key to value } }.toMap()
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <K, V> Map<K, V?>.filterValuesNotNull(): Map<K, V> = this.filterValues { it != null } as Map<K, V>
+
+@Suppress("UNCHECKED_CAST")
+fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null } as Map<K, V>
