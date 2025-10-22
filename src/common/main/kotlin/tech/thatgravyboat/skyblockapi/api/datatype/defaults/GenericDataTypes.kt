@@ -64,6 +64,10 @@ object GenericDataTypes {
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
+    val MIDAS_WEAPON_PAID: DataType<Long> = DataType("midas_weapon_paid") { stack ->
+        listOfNotNull("winning_bid", "additional_coins").mapNotNull { stack.tag?.getLongOrNull(it) }.sum().takeUnless { it == 0L }
+    }
+    val GILDED_GIFTED_COINS: DataType<Long> = DataType("gilded_gifted_coins") { it.tag?.getLongOrNull("gilded_gifted_coins") }
     val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
     val COMPACT_BLOCKS: DataType<Long> = DataType("compact_blocks") { it.tag?.getLongOrNull("compact_blocks") }
     val ABSORB_LOGS: DataType<Long> = DataType("absorb_logs_chopped") { it.tag?.getLongOrNull("absorb_logs_chopped") }
@@ -130,6 +134,8 @@ object GenericDataTypes {
         event.register(POTION_LEVEL)
         event.register(ATTRIBUTES)
         event.register(CROPS_BROKEN)
+        event.register(MIDAS_WEAPON_PAID)
+        event.register(GILDED_GIFTED_COINS)
         event.register(COMPACT_BLOCKS)
         event.register(STAR_COUNT)
         event.register(NECRON_SCROLLS)
