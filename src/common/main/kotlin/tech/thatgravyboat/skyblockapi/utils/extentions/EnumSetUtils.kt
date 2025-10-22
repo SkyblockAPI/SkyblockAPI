@@ -11,16 +11,16 @@ inline fun <reified E : Enum<E>> enumSetOf(): EnumSet<E> = emptyEnumSet<E>()
 
 inline fun <reified E : Enum<E>> enumSetOf(element: E) = emptyEnumSet<E>().apply { add(element) }
 
-inline fun <reified E : Enum<E>> enumSetOf(vararg elements: E): EnumSet<E> =
-    if (elements.isEmpty()) emptyEnumSet<E>()
-    else elements.toCollection(enumSetOf<E>())
+inline fun <reified E : Enum<E>> enumSetOf(vararg elements: E): EnumSet<E> = elements.toEnumSet<E>()
 
-inline fun <reified E : Enum<E>> Array<E>.toEnumSet() = toCollection(enumSetOf<E>())
-inline fun <reified E : Enum<E>> Iterable<E>.toEnumSet() = toCollection(enumSetOf<E>())
+inline fun <reified E : Enum<E>> Array<out E>.toEnumSet() = toCollection(enumSetOf<E>())
+inline fun <reified E : Enum<E>> Collection<E>.toEnumSet(): EnumSet<E> {
+    return if (isEmpty()) emptyEnumSet<E>() else EnumSet.copyOf(this)
+}
 
 inline fun <reified E : Enum<E>> fullEnumSetOf(): EnumSet<E> = EnumSet.allOf(E::class.java)
 
-@RemoveNextVersion // Removed in favor of Iterable.toEnumSet()
+@RemoveNextVersion // Remove in favor of Collection.toEnumSet()
 inline fun <reified E : Enum<E>> Set<E>.toEnumSet(): EnumSet<E> =
     if (isEmpty()) emptyEnumSet<E>() else EnumSet.copyOf(this)
 
