@@ -65,7 +65,7 @@ object GenericDataTypes {
         }
     }
     val MIDAS_WEAPON_PAID: DataType<Long> = DataType("midas_weapon_paid") { stack ->
-        listOfNotNull("winning_bid", "additional_coins").mapNotNull { stack.tag?.getLongOrNull(it) }.sum().takeUnless { it == 0L }
+        listOf("winning_bid", "additional_coins").mapNotNull { stack.tag?.getLongOrNull(it) }.sum().takeUnless { it == 0L }
     }
     val GILDED_GIFTED_COINS: DataType<Long> = DataType("gilded_gifted_coins") { it.tag?.getLongOrNull("gilded_gifted_coins") }
     val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
