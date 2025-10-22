@@ -4,6 +4,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
+import tech.thatgravyboat.skyblockapi.utils.extentions.enumSetOf
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import java.lang.reflect.Method
 
@@ -17,7 +18,7 @@ class OnlyInEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         val onlyIn = method.getAnnotation<OnlyIn>() ?: return null
-        val islands = onlyIn.islands.toSet()
+        val islands = onlyIn.islands.toCollection(enumSetOf())
         return { _, _ -> islands.contains(LocationAPI.island) }
     }
 }

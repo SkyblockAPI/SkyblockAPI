@@ -60,10 +60,10 @@ fun String?.parseFormattedFloat(): Float = parseFormattedDouble().toFloat()
 
 fun String?.parseRomanOrArabic(): Int = parseRomanNumeral().takeIf { it != 0 } ?: toIntValue()
 
-fun String?.parseDuration(): Duration? = runCatching {
+fun String?.parseDuration(): Duration? = this?.runCatching {
     var total = 0L
     var current = 0L
-    this?.forEach {
+    this.forEach {
         when {
             it.isDigit() -> current = current * 10 + it.toString().toLong()
             it.isLetter() -> {
@@ -80,12 +80,12 @@ fun String?.parseDuration(): Duration? = runCatching {
         }
     }
     return@runCatching total.milliseconds
-}.getOrNull()
+}?.getOrNull()
 
-fun String?.parseWordDuration(): Duration? = runCatching {
+fun String?.parseWordDuration(): Duration? = this?.runCatching {
     var total = 0L
     var current = ""
-    this?.split(" ", ", ", " and ")?.forEach {
+    this.split(" ", ", ", " and ").forEach {
         if (it.toIntOrNull() != null) {
             current = it
         } else {
@@ -104,10 +104,10 @@ fun String?.parseWordDuration(): Duration? = runCatching {
         }
     }
     return@runCatching total.seconds
-}.getOrNull()
+}?.getOrNull()
 
-fun String?.parseColonDuration(): Duration? = runCatching {
-    val splits = this?.split(":") ?: return@runCatching null
+fun String?.parseColonDuration(): Duration? = this?.runCatching {
+    val splits = split(":")
     var currentMultiplier = (60.0.pow(splits.size - 1)).toLong()
     var total = 0L
     splits.forEach {
@@ -115,7 +115,7 @@ fun String?.parseColonDuration(): Duration? = runCatching {
         currentMultiplier /= 60
     }
     return@runCatching total.seconds
-}.getOrNull()
+}?.getOrNull()
 
 fun String?.parseRomanNumeral(): Int = runCatching {
     var total = 0

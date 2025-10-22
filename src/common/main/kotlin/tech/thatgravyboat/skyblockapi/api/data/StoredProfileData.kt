@@ -83,9 +83,39 @@ internal class StoredProfileData<T : Any>(
     }
 
     fun get(): T? {
-        val storedData = storedData.get()
         val profile = ProfileAPI.profileName ?: return null
+        val storedData = storedData.get()
         return storedData.getOrPut(McPlayer.uuid, ::mutableMapOf).getOrPut(profile, data)
+    }
+
+    /**
+     * Helper function for editing data and saving.
+     * If you don't want the data to be saved, you have to edit return `null` to the lambda or just return in the current function altogether.
+     * Returning in the current function alltogether is generally better, since when compiled it makes it avoid dealing with the nullable Unit,
+     * and simply calls [save] after editing
+     * Since Kotlin returns [Unit] in lambdas when not specified, those are usually not needed to be actually written.
+     *
+     * Examples:
+     * ```kt
+     * STORED_DATA.edit {
+     *     if (this.value == newValue) return
+     *     this.value = newValue
+     * }
+     * ```
+     * ```kt
+     * STORED_DATA.edit {
+     *     if (this.value == newValue) return@edit null
+     *     this.value = newValue
+     * }
+     * ```
+     * */
+    inline fun edit(edit: T.() -> Unit?) {
+        val data = get() ?: return
+        if (edit(data) != null) save()
+    }
+
+    fun removeProfile(name: String) {
+        if (storedData.get()[McPlayer.uuid]?.remove(name) == true) save()
     }
 
     fun save() = storedData.save()
