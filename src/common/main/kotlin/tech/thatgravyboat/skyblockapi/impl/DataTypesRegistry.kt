@@ -16,6 +16,10 @@ object DataTypesRegistry {
         RegisterDataTypesEvent(types::add).post(SkyBlockAPI.eventBus)
     }
 
+    internal fun addDataType(dataType: DataType<*>) {
+        if (dataType !in types) types.add(dataType)
+    }
+
     @ApiStatus.Internal
     fun getData(item: ItemStack) = getDataImpl(item)
 

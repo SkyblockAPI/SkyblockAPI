@@ -4,8 +4,6 @@ import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes.ID
-import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getIntOrNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.getStringOrNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.tag
@@ -46,10 +44,4 @@ object PersonalAccessoryDataTypes {
         it.tag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE").let { active -> active == 1 }
     }
 
-    @Subscription
-    fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
-        event.register(PERSONAL_COMPACTOR_ITEMS)
-        event.register(PERSONAL_DELETOR_ITEMS)
-        event.register(PERSONAL_ACCESSORY_ACTIVE)
-    }
 }

@@ -8,8 +8,6 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Item
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
-import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
@@ -104,48 +102,6 @@ object GenericDataTypes {
 
     /** In SkyBlock items that are only available in new versions are shown via `DataComponents.ITEM_MODEL`, this returns the item that is displayed. */
     val VISIBLE_ITEM: DataType<Item> = DataType("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
-
-    @Subscription
-    fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
-        event.register(ID)
-        event.register(API_ID)
-        event.register(UUID)
-        event.register(MODIFIER)
-        event.register(TIMESTAMP)
-        event.register(SECONDS_HELD)
-        event.register(BOTTLE_OF_JYRRE_SECONDS)
-        event.register(RIFT_DISCRITE_SECONDS)
-        event.register(RECOMBOBULATOR)
-        event.register(QUIVER_ARROW)
-        event.register(ENCHANTMENTS)
-        event.register(HOT_POTATO_BOOKS)
-        event.register(ART_OF_WAR)
-        event.register(ART_OF_PEACE)
-        event.register(BOOK_OF_STATS)
-        event.register(POTION)
-        event.register(POTION_LEVEL)
-        event.register(ATTRIBUTES)
-        event.register(CROPS_BROKEN)
-        event.register(STAR_COUNT)
-        event.register(NECRON_SCROLLS)
-        event.register(DUNGEON_ITEM)
-        event.register(DUNGEON_TIER)
-        event.register(DUNGEON_QUALITY)
-        event.register(APPLIED_RUNE)
-        event.register(APPLIED_DYE)
-        event.register(HELMET_SKIN)
-        event.register(PET_DATA)
-        event.register(JALAPENO_BOOK)
-        event.register(WET_BOOK)
-        event.register(HOOK)
-        event.register(LINE)
-        event.register(SINKER)
-        event.register(VISIBLE_ITEM)
-        event.register(BOOSTERS)
-        event.register(ABSORB_LOGS)
-        event.register(LOGS_CUT)
-        event.register(SKYBLOCK_ID)
-    }
 
     private fun getFishingRodPartDataType(name: String) = DataType(name) {
         val tag = it.tag?.getObjectOrNull(name) ?: return@DataType null
