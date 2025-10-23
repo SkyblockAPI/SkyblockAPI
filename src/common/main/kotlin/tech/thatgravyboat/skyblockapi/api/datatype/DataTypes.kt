@@ -3,11 +3,8 @@ package tech.thatgravyboat.skyblockapi.api.datatype
 import net.minecraft.world.item.Item
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlotData
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.*
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes.PetData
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.PersonalAccessoryDataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import java.util.*
 import kotlin.time.Duration
@@ -75,13 +72,13 @@ object DataTypes {
 
     // Mining
     val FUEL: DataType<Pair<Int, Int>> = LoreDataTypes.FUEL
-    val PICKONIMBUS_DURABILITY: DataType<Int> = GenericDataTypes.PICKONIMBUS_DURABILITY
-    val COMPACT_BLOCKS: DataType<Long> = GenericDataTypes.COMPACT_BLOCKS
-    val GEMSTONES: DataType<List<GemstoneSlotData>> = GenericDataTypes.GEMSTONES
-    val DIVAN_POWDER_COATING: DataType<Int> = GenericDataTypes.DIVAN_POWDER_COATING
-    val POLARVOID: DataType<Int> = GenericDataTypes.POLARVOID
-    val POWER_ABILITY_SCROLL: DataType<String> = GenericDataTypes.POWER_ABILITY_SCROLL
-    val FUEL_TANK: DataType<String> = GenericDataTypes.FUEL_TANK
-    val ENGINE: DataType<String> = GenericDataTypes.ENGINE
-    val UPGRADE_MODULE: DataType<String> = GenericDataTypes.UPGRADE_MODULE
+    val PICKONIMBUS_DURABILITY: DataType<Int> = MiningDataTypes.PICKONIMBUS_DURABILITY
+    val COMPACT_BLOCKS: DataType<Long> = MiningDataTypes.COMPACT_BLOCKS
+    val GEMSTONES: DataType<List<GemstoneSlotData>> = MiningDataTypes.GEMSTONES
+    val DIVAN_POWDER_COATING: DataType<Int> = MiningDataTypes.DIVAN_POWDER_COATING
+    val POLARVOID: DataType<Int> = MiningDataTypes.POLARVOID
+    val POWER_ABILITY_SCROLL: DataType<String> = MiningDataTypes.POWER_ABILITY_SCROLL
+    val FUEL_TANK: DataType<String> = MiningDataTypes.FUEL_TANK
+    val ENGINE: DataType<String> = MiningDataTypes.ENGINE
+    val UPGRADE_MODULE: DataType<String> = MiningDataTypes.UPGRADE_MODULE
 }
