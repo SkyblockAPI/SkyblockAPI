@@ -35,6 +35,7 @@ object DataTypes {
     val ART_OF_PEACE: DataType<Boolean> = GenericDataTypes.ART_OF_PEACE
     val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS
     val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
+    val MIDAS_WEAPON_PAID: DataType<Long> = GenericDataTypes.MIDAS_WEAPON_PAID
 
     // Misc (idfk)
     val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = LoreDataTypes.RIGHT_CLICK_MANA_ABILITY
@@ -54,6 +55,7 @@ object DataTypes {
     val SNOWBALLS: DataType<Pair<Int, Int>> = LoreDataTypes.SNOWBALLS
     val ABSORB_LOGS: DataType<Long> = GenericDataTypes.ABSORB_LOGS
     val LOGS_CUT: DataType<Long> = GenericDataTypes.LOGS_CUT
+    val GILDED_GIFTED_COINS: DataType<Long> = GenericDataTypes.GILDED_GIFTED_COINS
 
     // Aging Items
     val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD
