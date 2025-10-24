@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.api.item.calculator.getItemValue
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
@@ -27,7 +28,7 @@ object DebugTooltips {
     private var keys = mutableListOf<DataType<*>>()
     private var index = 0
 
-    private val defaultEnabled = System.getenv("SKYBLOCK_API_DEBUG_TOOLTIPS")?.toBoolean() == true || SkyBlockAPI.isDebug
+    private val defaultEnabled = System.getenv("SKYBLOCK_API_DEBUG_TOOLTIPS")?.toBoolean() == true || SkyBlockAPI.isDebug || McClient.isDev
     private var toggle: Boolean? = null
     private val isEnabled: Boolean get() = toggle ?: defaultEnabled
 
