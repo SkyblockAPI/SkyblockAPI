@@ -66,6 +66,10 @@ fun ComponentRegex.findThenNull(input: Component, vararg groups: String = arrayO
     return null
 }
 
+fun ComponentRegex.indexOfFirstMatch(input: List<Component>): Int = input.indexOfFirst(::matches)
+
+fun ComponentRegex.indexOfFirstFind(input: List<Component>): Int = input.indexOfFirst(::contains)
+
 fun List<ComponentRegex>.find(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean = 
     any { it.find(input = input, groups = groups, action = action) }
 

@@ -46,6 +46,10 @@ object RegexUtils {
         return null
     }
 
+    fun Regex.indexOfFirstMatch(input: List<String>): Int = input.indexOfFirst(::matches)
+
+    fun Regex.indexOfFirstFind(input: List<String>): Int = input.indexOfFirst(::containsMatchIn)
+
     fun List<Regex>.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         return any { it.find(input = input, groups = groups, action = action) }
     }
