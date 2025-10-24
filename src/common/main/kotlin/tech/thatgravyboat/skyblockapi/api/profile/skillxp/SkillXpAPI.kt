@@ -10,10 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpLiteralActionBarWid
 import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpPercentActionBarWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
-import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
-import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
-import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
-import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
@@ -58,7 +55,8 @@ object SkillXpAPI {
         val skill = event.skill ?: return
 
         val old = SkillXpStorage.getXp(skill)
-        val diff = event.current - old
+        val skillxp = skill.data.getTotalExpForLevel(skill.data.maxLevel)
+        val diff = (event.current + skillxp) - old
         if (diff != 0f) {
             SkillXpStorage.addXp(skill, diff)
             SkillXpGainedEvent(skill, diff, event.current.toFloat()).post()
@@ -67,12 +65,24 @@ object SkillXpAPI {
 
     @Subscription
     fun onActionbarPercent(event: SkillXpPercentActionBarWidgetChangeEvent) {
+        val skill = event.skill ?: return
+        val level = SkillXpStorage.getLevel(skill)
 
+        val needed = skill.data.getXpForLevel(level + 1).toFloat()
+        val current = event.percent * needed
+
+        val neededFromBefore = skill.data.getTotalExpForLevel(level).toFloat()
+        val old = SkillXpStorage.getXp(skill)
+        val diff = neededFromBefore + current - old
+        if (diff != 0f) {
+            SkillXpStorage.addXp(skill, diff)
+            SkillXpGainedEvent(skill, diff, current).post()
+        }
     }
 
     @Subscription
     fun onEvent(event: SkillXpGainedEvent) {
-        Text.of("You gained ${event.amount} XP in ${event.skill.name} (${event.currentXp})").send()
+        Text.of("You gained ${event.amount.toFormattedString()} XP in ${event.skill.name} (${event.currentXp.toFormattedString()})").send()
     }
 }
 
