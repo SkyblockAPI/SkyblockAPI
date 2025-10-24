@@ -48,6 +48,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     PICKAXE_ABILITY("Pickaxe Ability:"),
 
     // Foraging
+    AGATHA_CONTEST("Agatha's Contest:"),
     STARBORN_TEMPLE("Starborn Temple:"),
     FOREST_WHISPERS("Forest Whispers: (?<amount>[\\dkmb,.]+)"),
     MOONGLADE_BEACON("Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
