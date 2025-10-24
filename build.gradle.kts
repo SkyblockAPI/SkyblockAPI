@@ -4,9 +4,11 @@
 import com.google.devtools.ksp.gradle.KspTask
 import earth.terrarium.cloche.api.metadata.FabricMetadata
 import earth.terrarium.cloche.api.metadata.ModMetadata
+import earth.terrarium.cloche.api.target.CommonTarget
 import net.msrandom.minecraftcodev.core.utils.toPath
 import net.msrandom.minecraftcodev.fabric.task.JarInJar
 import net.msrandom.minecraftcodev.runs.task.WriteClasspathFile
+import net.msrandom.stubs.GenerateStubApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -27,7 +29,9 @@ plugins {
     `item-data`
 }
 
-deprecationMessage = "This will be removed with the next minecraft version (1.21.6/1.22). Consider migrating to the new api before it is removed!"
+deprecationMessage = "This will be removed in the next major version. Consider migrating to the new api before it is removed!"
+
+evaluationDependsOn(":annotations")
 
 base {
     archivesName.set(project.property("archives_base_name") as String)
@@ -45,7 +49,7 @@ tasks.withType<KotlinCompile>().configureEach {
             "-Xmulti-platform",
             "-Xno-check-actual",
             "-Xexpect-actual-classes",
-            "-Xopt-in=kotlin.time.ExperimentalTime",
+            "-opt-in=kotlin.time.ExperimentalTime",
         )
     }
 }
@@ -65,7 +69,11 @@ dependencies {
     ksp(libs.bundles.meowdding)
     compileOnly(project(":annotations"))
     compilerAll(rootProject.project(":compiler"))
-    compileOnly(kotlin("stdlib-jdk8"))
+    implementation(kotlin("stdlib-jdk8"))
+    kspAll("net.msrandom:kmp-actual-stubs-processor:1.0.4-pr.13") {
+        version { strictly("1.0.4-pr.13") }
+        isTransitive = false
+    }
 
     compileOnly(libs.bundles.meowdding)
     configurations.forEach {
@@ -88,42 +96,46 @@ cloche {
         custom("modmenu" to mapOf("badges" to listOf("library")))
     }
 
-    common {
+    val root = common {
         withPublication()
 
         dependencies {
             compileOnly(project(":annotations"))
-            modCompileOnly.bundle(libs.bundles.meowdding)
-            modCompileOnlyApi.bundle(libs.bundles.meowdding)
+            compileOnly.bundle(libs.bundles.meowdding)
+            compileOnlyApi.bundle(libs.bundles.meowdding)
 
-            modImplementation(libs.meowdding.item.dfu)
-            modImplementation(libs.fabric.language.kotlin)
-            modImplementation.bundle(libs.bundles.hypixel)
-            modImplementation(libs.skyblockapi.repolib)
+            localRuntime("net.minecrell:terminalconsoleappender:1.3.0")
+            implementation(libs.meowdding.item.dfu)
+            implementation(libs.fabric.language.kotlin)
+            implementation.bundle(libs.bundles.hypixel)
+            implementation(libs.skyblockapi.repolib)
 
-            modRuntimeOnly(libs.devauth)
+            runtimeOnly(libs.devauth)
         }
     }
 
     fun createVersion(
         name: String,
         version: String = name,
+        common: CommonTarget? = null,
         loaderVersion: Provider<String> = libs.versions.fabric.loader,
         fabricApiVersion: Provider<String> = libs.versions.fabric.api,
+        minecraftSameEndVersion: Boolean = true,
         minecraftVersionRange: ModMetadata.VersionRange.() -> Unit = {
             start = version
-            end = version
-            endExclusive = false
+            if (minecraftSameEndVersion) {
+                end = version
+                endExclusive = false
+            }
         },
     ) {
-        fabric(name) {
+        fabric("versions:$name") {
             includedClient()
             minecraftVersion = version
             this.loaderVersion = loaderVersion.get()
-
-            include(libs.skyblockapi.repolib)
-            include(libs.hypixel.modapi.fabric)
-            include(libs.meowdding.item.dfu)
+            if (common != null) {
+                dependsOn(common)
+            }
 
             metadata {
                 entrypoint("client", "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit")
@@ -131,7 +143,8 @@ cloche {
                     "main",
                     listOf(
                         "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load",
-                        "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init"
+                        "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init",
+                        "tech.thatgravyboat.skyblockapi.VersionedSkyblockAPI::init"
                     ).map { entrypoint ->
                         Action<FabricMetadata.Entrypoint> {
                             this.value.set(entrypoint)
@@ -152,7 +165,7 @@ cloche {
 
                 dependency("fabric-language-kotlin")
                 dependency("fabric")
-                dependency("fabricloader", loaderVersion)
+                dependency("fabricloader")
                 dependency("hypixel-mod-api", libs.versions.hypixel.modapi.fabric)
                 dependency {
                     modId = "minecraft"
@@ -162,10 +175,15 @@ cloche {
             }
 
             dependencies {
-                fabricApi(fabricApiVersion.get(), minecraftVersion)
+                fabricApi(fabricApiVersion.get(), name)
 
                 val mods = project.layout.buildDirectory.get().toPath().resolve("tmp/extracted${sourceSet.name}RuntimeMods")
                 val modsTmp = project.layout.buildDirectory.get().toPath().resolve("tmp/extracted${sourceSet.name}RuntimeMods/tmp")
+
+                include(libs.skyblockapi.repolib)
+                include(libs.hypixel.modapi.fabric)
+                include(libs.meowdding.item.dfu)
+
 
                 mods.deleteRecursively()
                 modsTmp.createDirectories()
@@ -189,7 +207,7 @@ cloche {
                     }
                 }
 
-                project.layout.projectDirectory.toPath().resolve("run/${sourceSet.name}Mods").takeIf { it.exists() }
+                project.layout.projectDirectory.toPath().resolve("run/${name.replace(".", "")}Mods").takeIf { it.exists() }
                     ?.listDirectoryEntries()?.filter { it.isRegularFile() }?.forEach { file ->
                         extractMods(file)
                     }
@@ -199,12 +217,14 @@ cloche {
 
             mixins.from("src/mixins/skyblock-api.client.mixins.json")
             mixins.from("src/mixins/skyblock-api.versioned.mixins.json")
-            mixins.from("src/mixins/skyblock-api.versioned.${version.replace(".", "")}.mixins.json")
+            mixins.from("src/mixins/skyblock-api.versioned.${name.replace(".", "")}.mixins.json")
 
             runs {
                 client {
+
                     args("--quickPlayMultiplayer=hypixel.net")
 
+                    jvmArgs("-Dlog4j.configurationFile=\"${project.layout.projectDirectory.file("gradle/log4j.config.xml").toPath().absolutePathString()}\"")
                     jvmArgs("-Ddevauth.enabled=true")
                     jvmArgs("-Dskyblockapi.debug=true")
 
@@ -214,10 +234,19 @@ cloche {
         }
     }
 
-    createVersion("1.21.5")
-    createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" }) {
-        start = "1.21.6"
+    val postRenderingChanges = common("prc") {
+        withPublication()
+        dependsOn(root)
+        mixins.from("src/mixins/skyblock-api.prc.mixins.json")
     }
+
+    createVersion("1.21.5")
+    createVersion("1.21.8", fabricApiVersion = provider { "0.129.0" }, common = postRenderingChanges) {
+        start = "1.21.6"
+        end = "1.21.8"
+        endExclusive = false
+    }
+    createVersion("1.21.9", minecraftSameEndVersion = false, fabricApiVersion = provider { "0.133.7" }, common = postRenderingChanges)
 
     mappings {
         official()
@@ -236,38 +265,28 @@ apiValidation {
 
 repositories {
     maven(url = "https://repo.hypixel.net/repository/Hypixel/")
-    maven(url = "https://maven.msrandom.net/repository/cloche")
+    maven(url = "https://maven.teamresourceful.com/repository/maven-public/")
+    maven(url = "https://maven.teamresourceful.com/repository/msrandom/")
     maven(url = "https://maven.msrandom.net/repository/root")
     maven(url = "https://api.modrinth.com/maven")
     maven(url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
-    maven(url = "https://maven.teamresourceful.com/repository/maven-public/")
     mavenLocal()
 }
 
 compactingResources {
     this.basePath = "repo"
 
-    configureTask(tasks.getByName<ProcessResources>("process1218Resources"))
-    configureTask(tasks.getByName<ProcessResources>("process1215Resources"))
+    configureTask(tasks.getByName<ProcessResources>("processVersions1218Resources"))
+    configureTask(tasks.getByName<ProcessResources>("processVersions1215Resources"))
+    configureTask(tasks.getByName<ProcessResources>("processVersions1219Resources"))
     configureTask(tasks.getByName<ProcessResources>("processResources"))
 
+    removeComments("skyblockid/unobtainable_ids")
     substituteFromDifferentFile("slayer", "slayers")
 }
 
 tasks.processResources {
-    inputs.property("version", project.version)
-    inputs.property("minecraft_version", libs.versions.minecraft.get())
-    inputs.property("loader_version", libs.versions.fabric.loader.get())
     filteringCharset = "UTF-8"
-
-    filesMatching("fabric.mod.json") {
-        expand(
-            "version" to project.version,
-            "minecraft_version" to libs.versions.minecraft.get(),
-            "loader_version" to libs.versions.fabric.loader.get(),
-            "kotlin_loader_version" to libs.versions.fabric.language.kotlin.get()
-        )
-    }
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -288,11 +307,6 @@ tasks.withType<Jar> {
 }
 
 tasks.apiCheck { enabled = false }
-
-artifacts {
-    add("1215RuntimeElements", tasks["1215JarInJar"])
-    add("1218RuntimeElements", tasks["1218JarInJar"])
-}
 
 publishing {
     publications {
@@ -323,8 +337,10 @@ publishing {
 }
 
 ksp {
-    this@ksp.excludedSources.from(sourceSets.getByName("1215").kotlin.srcDirs)
-    this@ksp.excludedSources.from(sourceSets.getByName("1218").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("versions1215").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("versions1218").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("versions1219").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("prc").kotlin.srcDirs)
     arg("meowdding.modules.project_name", "SkyblockAPI")
     arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
     arg("meowdding.codecs.project_name", "SkyblockAPI")
@@ -333,7 +349,7 @@ ksp {
 }
 
 // TODO temporary workaround for a cloche issue on certain systems, remove once fixed
-val mcVersions = sourceSets.filterNot { it.name == SourceSet.MAIN_SOURCE_SET_NAME || it.name == SourceSet.TEST_SOURCE_SET_NAME }
+val mcVersions = sourceSets.filter { it.name.startsWith("versions") }
 
 tasks.withType<WriteClasspathFile>().configureEach {
     actions.clear()
@@ -347,7 +363,7 @@ tasks.withType<WriteClasspathFile>().configureEach {
 tasks.register("release") {
     group = "skyblock-api"
     mcVersions.forEach {
-        tasks.getByName("${it.name}JarInJar").let { task ->
+        tasks.getByName("${it.name}IncludeJar").let { task ->
             dependsOn(task)
             mustRunAfter(task)
         }
@@ -368,11 +384,51 @@ tasks.withType<JarInJar>().configureEach {
     include { !it.name.endsWith("-dev.jar") }
 }
 
-tasks.register("setupForWorkflows") {
-    mcVersions.flatMap {
-        listOf("remap${it.name}CommonMinecraftNamed", "remap${it.name}ClientMinecraftNamed")
-    }.mapNotNull { tasks.findByName(it) }.forEach {
-        dependsOn(it)
-        mustRunAfter(it)
+afterEvaluate {
+    tasks.named("createCommonApiStub", GenerateStubApi::class).configure {
+        excludes.addAll(
+            "org.jetbrains.kotlin",
+            "me.owdding",
+            "net.hypixel",
+            "maven.modrinth",
+            "com.fasterxml.jackson",
+            "com.google",
+            "com.ibm",
+            "io.netty",
+            "net.fabricmc:fabric-language-kotlin",
+            "com.mojang:datafixerupper",
+            "com.mojang:brigardier",
+            "io.github.llamalad7:mixinextras",
+            "net.minidev",
+            "com.nimbusds",
+            "tech.thatgravyboat",
+            "net.msrandom"
+        )
     }
+}
+
+val annotations: Task = project(":annotations").tasks.getByName("build")
+val setupForWorkflows: TaskProvider<Task> = tasks.register("setupForWorkflows") {
+    dependsOn(annotations)
+    mustRunAfter(annotations)
+}
+
+mcVersions.flatMap {
+    listOf("remapV${it.name.substring(1)}CommonMinecraftNamed", "remapV${it.name.substring(1)}ClientMinecraftNamed")
+}.mapNotNull { tasks.findByName(it) }.forEach {
+    setupForWorkflows.configure workflow@{
+        this@workflow.dependsOn(it)
+        this@workflow.mustRunAfter(it)
+    }
+    it.mustRunAfter(annotations)
+}
+
+gradle.startParameter.apply {
+    welcomeMessageConfiguration.welcomeMessageDisplayMode = WelcomeMessageDisplayMode.NEVER
+    setTaskNames(mutableListOf(":setupForWorkflows").apply {
+        addAll(taskNames)
+        if (taskNames.contains("clean")) {
+            taskNames.filter { it.contains("clean") }.forEach(::addFirst)
+        }
+    })
 }

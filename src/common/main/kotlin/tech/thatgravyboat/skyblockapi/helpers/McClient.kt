@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
+import com.mojang.authlib.minecraft.MinecraftSessionService
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.client.Minecraft
@@ -24,6 +25,7 @@ expect object McClient {
     val isDev: Boolean
     val config: Path
 
+    val sessionService: MinecraftSessionService
     val mcVersionGroup: McVersionGroup
     val mcVersion: McVersion
     val version: String
@@ -32,6 +34,7 @@ expect object McClient {
     val connection: ClientPacketListener?
 
     val window: Window
+    val windowHandle: Long
 
     var clipboard: String
 
@@ -59,7 +62,7 @@ expect object McClient {
 
     fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f)
 
-    fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 0f, stayTime: Float = 0f, fadeOutTime: Float = 0f)
+    fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f)
 
     fun setScreenAsync(screen: () -> Screen?)
 

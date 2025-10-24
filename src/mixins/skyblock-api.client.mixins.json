@@ -8,39 +8,41 @@
         "SimpleSoundInstanceMixin",
         "accessors.AbstractContainerScreenAccessor",
         "accessors.ContainerScreenAccessor",
+        "accessors.PlayerEquipmentAccessor",
         "events.ChatComponentMixin",
         "events.ChatListenerMixin",
         "events.ClientCommonPacketListenerImplMixin",
+        "events.EntityEquipmentMixin",
         "events.EntityRendererMixin",
         "events.GuiMessageLineMixin",
         "events.GuiMessageMixin",
         "events.HumanoidRendererMixin",
-        "events.KeyboardHandlerMixin",
         "events.LivingEntityRendererMixin",
-        "events.MouseHandlerMixin",
-        "events.PlayerRendererMixin",
         "fixes.ClientPacketListenerMixin",
         "fixes.SkinManagerMixin",
         "tagattachments.ClientLevelMixin",
-        "tagattachments.DebugScreenOverlayMixin",
         "tagattachments.EntityMixin",
-        "tagattachments.EntityRendererMixin",
         "tagattachments.EntityRenderStateMixin"
     ],
     "injectors": {
         "defaultRequire": 1
     },
     "mixins": [
+        "accessors.SynchedEntityDataAccessor",
+        "accessors.LivingEntityAccessor",
         "events.ConnectionMixin",
         "events.ItemStackMixin",
         "events.SlotMixin",
+        "features.AttributeInstanceMixin",
         "features.ItemStackExtensionMixin",
         "features.VisualItemMixin",
+        "features.SynchedEntityDataMixin",
+        "features.SynchedEntityDataDataItemMixin",
         "fixes.FishingHookMixin",
+        "fixes.HolderOwnerMixin",
         "fixes.NarratorMixin",
         "fixes.ScoreboardMixin",
         "fixes.YggdrasilMinecraftSessionServiceMixin",
-        "fixes.YggdrasilServicesKeyInfoMixin",
-        "fixes.HolderOwnerMixin"
+        "fixes.YggdrasilServicesKeyInfoMixin"
     ]
 }

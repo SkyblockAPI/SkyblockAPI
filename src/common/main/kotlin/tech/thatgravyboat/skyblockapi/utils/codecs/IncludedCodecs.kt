@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.utils.codecs
 
-import com.mojang.authlib.GameProfile
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
 import net.minecraft.advancements.critereon.BlockPredicate
@@ -10,6 +9,8 @@ import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.TagParser
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.ResourceLocationPattern
@@ -50,9 +51,6 @@ internal object IncludedCodecs {
     val VECTOR_4F_CODEC: Codec<Vector4f> = ExtraCodecs.VECTOR4F
 
     @IncludedCodec
-    val GAME_PROFILE_CODEC: Codec<GameProfile> = ExtraCodecs.GAME_PROFILE
-
-    @IncludedCodec
     val RESOURCE_LOCATION_PATTERN_CODEC: Codec<ResourceLocationPattern> = ResourceLocationPattern.CODEC
 
     @IncludedCodec
@@ -84,4 +82,7 @@ internal object IncludedCodecs {
             { it.runningFold(0, Int::plus).distinct() },
             { it.reversed().runningFold(0, Int::minus).reversed() },
         )
+
+    @IncludedCodec
+    val COMPONENT: Codec<Component> = ComponentSerialization.CODEC
 }

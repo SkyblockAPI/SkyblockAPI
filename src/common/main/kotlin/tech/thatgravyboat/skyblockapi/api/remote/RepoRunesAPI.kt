@@ -1,16 +1,14 @@
 package tech.thatgravyboat.skyblockapi.api.remote
 
 import com.mojang.authlib.properties.Property
-import com.mojang.authlib.properties.PropertyMap
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
-import net.minecraft.world.item.component.ResolvableProfile
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RunesAPI.Rune
+import tech.thatgravyboat.skyblockapi.platform.ResolvableProfile
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import java.util.*
 
 object RepoRunesAPI {
 
@@ -20,6 +18,7 @@ object RepoRunesAPI {
         if (!RepoAPI.isInitialized()) return null
         return RepoAPI.runes().getRunes(id)
     }
+
     fun getRune(id: String, tier: Int) = getRuneById(id)?.find { it.tier() == tier }
 
     fun getRune(string: String): Rune? {
@@ -42,11 +41,8 @@ object RepoRunesAPI {
             } ?: return@getOrPut null
 
             val item = ItemStack(Items.PLAYER_HEAD)
-            item[DataComponents.PROFILE] = ResolvableProfile(
-                Optional.empty(),
-                Optional.empty(),
-                PropertyMap().apply { put("textures", Property("textures", rune.texture())) },
-            )
+            item[DataComponents.PROFILE] = ResolvableProfile { put("textures", Property("textures", rune.texture())) }
+
             item[DataComponents.CUSTOM_NAME] = Text.of(rune.name())
             item[DataComponents.LORE] = ItemLore(rune.lore().map(Text::of))
 

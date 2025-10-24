@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.player.*
 import net.minecraft.core.BlockPos
@@ -23,7 +22,6 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.*
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.render.RenderWorldEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -44,13 +42,11 @@ object MiscEventHandler {
     private var lastBlockClicked: BlockPos = BlockPos.ZERO
 
     init {
-        WorldRenderEvents.AFTER_ENTITIES.register { RenderWorldEvent.AfterEntities(it).post() }
-        WorldRenderEvents.AFTER_TRANSLUCENT.register { RenderWorldEvent.AfterTranslucent(it).post() }
         ClientTickEvents.END_CLIENT_TICK.register {
             TickEvent.post(SkyBlockAPI.eventBus)
         }
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            RegisterCommandsEvent(dispatcher).post(SkyBlockAPI.eventBus)
+            RegisterCommandsEvent(dispatcher).post()
         }
         ItemTooltipCallback.EVENT.register { stack, _, flags, list ->
             if (flags.isAdvanced) {
@@ -141,8 +137,8 @@ object MiscEventHandler {
 
         if (new == Blocks.COBBLESTONE && old == Blocks.STONE) return true
         if (new == Blocks.STONE && old == Blocks.COBBLESTONE) return false
-        if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.getBlocks()) return true
-        if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.getBlocks() || old in MiningBlockFamily.VANILLA_BLOCKS.getBlocks())) return true
+        if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.blocks) return true
+        if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.blocks || old in MiningBlockFamily.VANILLA_BLOCKS.blocks)) return true
         if (new == Blocks.RED_SANDSTONE && old == Blocks.RED_SAND) return true
         if (new == Blocks.GRAY_TERRACOTTA && old == Blocks.MYCELIUM) return true
 

@@ -3,6 +3,8 @@ package tech.thatgravyboat.skyblockapi.api.location
 import me.owdding.ktmodules.Module
 import net.hypixel.data.type.GameType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.HypixelJoinEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
@@ -12,17 +14,20 @@ import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
+import kotlin.time.Instant
 
 @Module
 object LocationAPI {
 
-    private val unknownIslands = mutableMapOf<String, SkyBlockIsland?>()
+    private val unknownAreas = mutableMapOf<String, SkyBlockIsland?>()
     private var sendUnknownChatMessage = false
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
@@ -40,7 +45,10 @@ object LocationAPI {
         " *(?:players|party) \\((?<count>\\d+)\\) *",
     )
 
+    private val forceOnSkyblock by debugToggle("force_skyblock", "Always returns true for SkyBlock checks")
+
     var isOnSkyBlock: Boolean = false
+        get() = field || forceOnSkyblock
         private set
 
     var island: SkyBlockIsland? = null
@@ -53,6 +61,12 @@ object LocationAPI {
         private set
 
     var isGuest: Boolean = false
+        private set
+
+    var onHypixel: Boolean = false
+        private set
+
+    var onAlpha: Boolean = false
         private set
 
     var playerCount: Int = 0
@@ -75,8 +89,12 @@ object LocationAPI {
             }
         }
 
+    var lastServerChange: Instant = Instant.DISTANT_PAST
+        private set
+
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {
+        lastServerChange = currentInstant()
         isOnSkyBlock = event.type == GameType.SKYBLOCK
         val old = island
         island = if (isOnSkyBlock && event.mode != null) {
@@ -90,22 +108,27 @@ object LocationAPI {
     }
 
     @Subscription
-    fun onTabListUpdate(event: TabListChangeEvent) {
-        if (!isOnSkyBlock) return
-        val component = event.new.firstOrNull()?.firstOrNull() ?: return
-        playerCount = playerCountRegex.findOrNull(component.stripped.lowercase(), "count") { (count) -> count.toIntOrNull() } ?: 0
+    fun onHypixelJoin(event: HypixelJoinEvent) {
+        onHypixel = true
+        onAlpha = event.onAlpha
     }
 
     @Subscription
-    fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
-        if (!isOnSkyBlock) return
+    @OnlyOnSkyBlock
+    fun onTabListUpdate(event: TabListChangeEvent) {
+        val component = event.new.firstOrNull()?.firstOrNull() ?: return
+        playerCount = playerCountRegex.findGroup(component.stripped.lowercase(), "count")?.toIntOrNull() ?: 0
+    }
 
+    @Subscription
+    @OnlyOnSkyBlock
+    fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
         isGuest = event.new.contains("guest", ignoreCase = true)
     }
 
     @Subscription
+    @OnlyOnSkyBlock
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
-        if (!isOnSkyBlock) return
         locationRegex.anyMatch(event.added, "location") { (location) ->
             val old = area
             area = SkyBlockArea(location)
@@ -113,7 +136,7 @@ object LocationAPI {
 
             val knownArea = SkyBlockAreas.registeredAreas.entries.find { it.value.name == location } != null
             if (!knownArea) {
-                unknownIslands.putIfAbsent(location, island)
+                unknownAreas.putIfAbsent(location, island)
                 if (sendUnknownChatMessage) {
                     Text.of("Unknown area detected: $location").send()
                 }
@@ -127,17 +150,26 @@ object LocationAPI {
 
     private fun reset() {
         isOnSkyBlock = false
+        serverId = null
+        isGuest = false
+        area = SkyBlockAreas.NONE
+        onHypixel = false
+        onAlpha = false
+        val old = island
         island = null
+        if (old != null) {
+            IslandChangeEvent(old, null).post()
+        }
     }
 
-    @Subscription
-    fun onServerDisconnect(event: ServerDisconnectEvent) = reset()
+    @Subscription(ServerDisconnectEvent::class)
+    fun onServerDisconnect() = reset()
 
     @Subscription
     fun onCommand(event: RegisterCommandsEvent) {
         event.registerWithCallback("sbapi unknownareas") {
-            McClient.clipboard = unknownIslands.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
-            Text.of("Copied ${unknownIslands.size} unknown areas to clipboard!").send()
+            McClient.clipboard = unknownAreas.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
+            Text.of("Copied ${unknownAreas.size} unknown areas to clipboard!").send()
             sendUnknownChatMessage != sendUnknownChatMessage
         }
         event.registerWithCallback("sbapi location") {
@@ -145,8 +177,10 @@ object LocationAPI {
                 "Island: ${island?.displayName ?: "Unknown"}",
                 "Area: ${area.name}",
                 "Server ID: ${serverId ?: "Unknown"}",
-                "Player Count: $playerCount${maxPlayercount?.let { " / $it" } ?: ""}",
+                "Player Count: $playerCount${maxPlayercount?.let { " / $it" }.orEmpty()}",
                 "Is Guest: $isGuest",
+                "On Hypixel: $onHypixel",
+                "On Alpha: $onAlpha",
             ).send()
         }
     }

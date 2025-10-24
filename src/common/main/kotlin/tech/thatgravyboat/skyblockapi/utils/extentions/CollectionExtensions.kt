@@ -28,6 +28,14 @@ inline fun <T> List<T>.peek(crossinline block: (T) -> Unit): List<T> {
     return this
 }
 
+fun <T> MutableIterable<T>.clearAnd(action: (T) -> Unit) {
+    val it = iterator()
+    while (it.hasNext()) {
+        action(it.next())
+        it.remove()
+    }
+}
+
 fun <T> List<T>.asReversedIterator(): Iterator<T> {
     val list = this
     return object : Iterator<T> {
@@ -72,4 +80,9 @@ fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != n
 
 inline fun <T, K> Iterable<T>.associateByNotNull(keySelector: (T) -> K?): Map<K, T> = buildMap {
     for (element in this@associateByNotNull) put(keySelector(element) ?: continue, element)
+}
+
+inline fun <T> List<T>.sublistAfter(predicate: (T) -> Boolean): List<T> {
+    val index = this.indexOfFirst(predicate)
+    return if (index == -1) emptyList() else this.subList(index + 1, this.size)
 }

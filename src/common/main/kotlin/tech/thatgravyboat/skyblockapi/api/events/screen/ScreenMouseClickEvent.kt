@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.screen
 import net.minecraft.client.gui.screens.Screen
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 
-open class ScreenMouseClickEvent(
+sealed class ScreenMouseClickEvent(
     val screen: Screen,
     val x: Double,
     val y: Double,

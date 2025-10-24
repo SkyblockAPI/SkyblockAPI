@@ -3,15 +3,18 @@ package tech.thatgravyboat.skyblockapi.api.profile.party
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerCacheStorage
 import java.util.*
 
-class PartyMember(val uuid: UUID?, role: PartyRole = PartyRole.MEMBER) {
+class PartyMember internal constructor(uuid: UUID?, role: PartyRole = PartyRole.MEMBER) {
 
-    constructor(name: String, role: PartyRole = PartyRole.MEMBER) : this(null, role) {
+    internal constructor(name: String, role: PartyRole = PartyRole.MEMBER) : this(null, role) {
         this.name = name
     }
 
-    constructor(uuid: UUID, name: String, role: PartyRole = PartyRole.MEMBER) : this (uuid, role) {
+    internal constructor(uuid: UUID, name: String, role: PartyRole = PartyRole.MEMBER) : this (uuid, role) {
         this.name = name
     }
+
+    var uuid: UUID? = uuid
+        internal set
 
     var role: PartyRole = role
         internal set

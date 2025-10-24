@@ -5,13 +5,12 @@ import me.owdding.ktmodules.Module
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.phys.Vec3
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketSentEvent
-import tech.thatgravyboat.skyblockapi.api.events.minecraft.sounds.SoundPlayedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.*
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
@@ -57,32 +56,6 @@ object PacketEventHandler {
             is ClientboundContainerClosePacket -> {
                 if (packet.containerId == lastContainerCloseId) return
                 ContainerCloseEvent.post()
-            }
-
-            is ClientboundContainerSetSlotPacket -> {
-                McClient.runNextTick {
-                    val containerId = packet.containerId
-                    when (containerId) {
-                        PLAYER_HOTBAR_CONTAINER_ID -> {
-                            PlayerHotbarChangeEvent(packet.slot - FIRST_HOTBAR_SLOT, packet.item).post()
-                            PlayerInventoryChangeEvent(packet.slot, packet.item).post()
-                        }
-
-                        PLAYER_INVENTORY_CONTAINER_ID -> PlayerInventoryChangeEvent(packet.slot, packet.item).post()
-                        else -> {
-                            val container = McScreen.asMenu?.takeIf { it.menu?.containerId == containerId } ?: return@runNextTick
-                            val currentItems = container.menu?.slots?.map { it.item } ?: emptyList()
-
-                            val updatedItems = currentItems.toMutableList().apply {
-                                if (packet.slot in indices) {
-                                    this[packet.slot] = packet.item
-                                }
-                            }
-
-                            ContainerChangeEvent(packet.item, packet.slot, container, updatedItems).post()
-                        }
-                    }
-                }
             }
         }
     }

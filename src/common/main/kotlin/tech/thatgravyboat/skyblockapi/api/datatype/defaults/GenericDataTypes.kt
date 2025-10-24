@@ -7,7 +7,6 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.item.Item
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -46,8 +45,6 @@ object GenericDataTypes {
 
     val PICKONIMBUS_DURABILITY: DataType<Int> = DataType("pickonimbus_durability") { it.tag?.getIntOrNull("pickonimbus_durability") }
 
-    @RemoveNextVersion
-    val RARITY_UPGRADES: DataType<Int> = DataType("rarity_upgrades") { it.tag?.getIntOrNull("rarity_upgrades") }
     val RECOMBOBULATOR: DataType<Boolean> = DataType("recombobulator") { item -> item.tag?.getIntOrNull("rarity_upgrades")?.let { it > 0 } }
     val QUIVER_ARROW: DataType<Boolean> = DataType("quiver_arrow") { it.tag?.getStringOrNull("quiver_arrow")?.equals("true") }
     val ENCHANTMENTS: DataType<Map<String, Int>> = DataType("enchantments") {
@@ -67,6 +64,10 @@ object GenericDataTypes {
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
+    val MIDAS_WEAPON_PAID: DataType<Long> = DataType("midas_weapon_paid") { stack ->
+        listOf("winning_bid", "additional_coins").mapNotNull { stack.tag?.getLongOrNull(it) }.sum().takeUnless { it == 0L }
+    }
+    val GILDED_GIFTED_COINS: DataType<Long> = DataType("gilded_gifted_coins") { it.tag?.getLongOrNull("gilded_gifted_coins") }
     val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
     val COMPACT_BLOCKS: DataType<Long> = DataType("compact_blocks") { it.tag?.getLongOrNull("compact_blocks") }
     val ABSORB_LOGS: DataType<Long> = DataType("absorb_logs_chopped") { it.tag?.getLongOrNull("absorb_logs_chopped") }
@@ -121,7 +122,6 @@ object GenericDataTypes {
         event.register(BOTTLE_OF_JYRRE_SECONDS)
         event.register(RIFT_DISCRITE_SECONDS)
         event.register(PICKONIMBUS_DURABILITY)
-        event.register(RARITY_UPGRADES)
         event.register(RECOMBOBULATOR)
         event.register(QUIVER_ARROW)
         event.register(ENCHANTMENTS)
@@ -134,6 +134,8 @@ object GenericDataTypes {
         event.register(POTION_LEVEL)
         event.register(ATTRIBUTES)
         event.register(CROPS_BROKEN)
+        event.register(MIDAS_WEAPON_PAID)
+        event.register(GILDED_GIFTED_COINS)
         event.register(COMPACT_BLOCKS)
         event.register(STAR_COUNT)
         event.register(NECRON_SCROLLS)

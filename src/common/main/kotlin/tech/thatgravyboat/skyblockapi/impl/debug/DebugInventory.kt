@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
-import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
@@ -119,7 +118,7 @@ internal object DebugInventory {
         LORE(
             InputConstants.KEY_L,
             {
-                if (Screen.hasShiftDown()) {
+                if (McScreen.isShiftDown) {
                     it.item.getRawLore().joinToString("\n")
                 } else {
                     it.item.getLore().toJson(ComponentSerialization.CODEC.listOf()).toPrettyString()
@@ -140,8 +139,8 @@ internal object DebugInventory {
                     add("Item Value: ${slot.item.getItemValue().price.toFormattedString()}")
                     add("")
                     add("Sources:")
-                    slot.item.getItemValue().sources.entries.sortedByDescending { it.value }.forEach {
-                        add(" ${it.key.name}: ${it.value.toFormattedString()}")
+                    slot.item.getItemValue().entryTree.sortedByDescending { it.price }.forEach {
+                        add(" ${it.source.name}: ${it.price.toFormattedString()}")
                     }
                 }.joinToString("\n")
             },
@@ -149,7 +148,7 @@ internal object DebugInventory {
         ;
 
         val title = name.toTitleCase()
-        val keyName: Component = InputConstants.getKey(key, -1).displayName
+        val keyName: Component = InputConstants.Type.KEYSYM.getOrCreate(key).displayName
 
         fun initCopy(slot: Slot): Boolean {
             val data = copy(slot) ?: return false
@@ -158,5 +157,4 @@ internal object DebugInventory {
             return true
         }
     }
-
 }

@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.area.slayer
 
 import me.owdding.ktmodules.Module
 import net.minecraft.world.entity.Entity
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -53,12 +52,6 @@ object SlayerAPI {
 
     var text: String? = null
         private set
-
-    @RemoveNextVersion
-    val current: Int get() = progress?.current ?: 0
-
-    @RemoveNextVersion
-    val max: Int get() = progress?.max ?: 0
 
     var progress: SlayerProgress? = null
         private set
@@ -166,9 +159,6 @@ object SlayerAPI {
 
 interface SlayerMob {
     val displayName: String
-
-    @RemoveNextVersion
-    val inGameName: String get() = displayName
     val inGameNames: List<String> get() = listOf(displayName)
 }
 

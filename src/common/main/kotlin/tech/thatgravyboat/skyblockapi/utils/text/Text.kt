@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.utils.text
 import net.minecraft.network.chat.*
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.StringUtil
+import net.msrandom.stub.Stub
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
@@ -10,21 +11,24 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.net.URI
 import java.util.*
+import java.util.regex.Pattern
 
 object CommonText {
 
-    val NEWLINE = "\n".asComponent()
-    val HYPHEN = "-".asComponent()
-    val SPACE = " ".asComponent()
-    val EMPTY = "".asComponent()
+    val NEWLINE: Component = "\n".asComponent()
+    val HYPHEN: Component = "-".asComponent()
+    val COMMA: Component = ",".asComponent()
+    val SPACE: Component = " ".asComponent()
+    val EMPTY: Component = "".asComponent()
 
-    internal val PREFIX = Text.of("[SkyBlockAPI] ") { color = TextColor.YELLOW }
+    internal val PREFIX: Component = Text.of("[SkyBlockAPI] ", TextColor.YELLOW)
 }
 
 object Text {
 
     fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
     fun of(init: MutableComponent.() -> Unit = {}) = "".asComponent(init)
+    fun of(text: String, color: Int) = of(text) { this.color = color }
     fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
     fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
 
@@ -32,7 +36,7 @@ object Text {
     fun multiline(vararg lines: Any?, init: MutableComponent.() -> Unit = {}) = join(*lines, separator = CommonText.NEWLINE, init = init)
 
     @JvmOverloads
-    fun join(vararg components: Any?, separator: MutableComponent? = null, init: MutableComponent.() -> Unit = {}): MutableComponent {
+    fun join(vararg components: Any?, separator: Component? = null, init: MutableComponent.() -> Unit = {}): MutableComponent {
         val result = Component.literal("")
         components.forEachIndexed { index, it ->
             when (it) {
@@ -50,33 +54,31 @@ object Text {
         return result.also(init)
     }
 
-    fun MutableComponent.prefix(prefix: String): MutableComponent = join(prefix, this)
-    fun MutableComponent.suffix(suffix: String): MutableComponent = join(this, suffix)
-    fun MutableComponent.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
+    fun Component.prefix(prefix: String): MutableComponent = join(prefix, this)
+    fun Component.suffix(suffix: String): MutableComponent = join(this, suffix)
+    fun Component.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
 
     fun Component.send() = McClient.chat.addMessage(this)
     fun Component.send(id: String) = McClient.chat.setMessageId(id) {
         this.send()
     }
 
-    fun MutableComponent.send() = McClient.chat.addMessage(this)
-    fun MutableComponent.send(id: String) = McClient.chat.setMessageId(id) {
-        this.send()
-    }
-
-    internal fun debug(text: String, init: MutableComponent.() -> Unit = {}) =
+    internal fun debug(text: String = "", init: MutableComponent.() -> Unit = {}) =
         of("[SkyBlockAPI] $text") {
             this.color = TextColor.YELLOW
             init.invoke(this)
         }
-    internal fun sendDebug(text: String, init: MutableComponent.() -> Unit = {}) = debug(text, init).send()
+
+    internal fun sendDebug(text: String = "", init: MutableComponent.() -> Unit = {}) = debug(text, init).send()
     internal fun Component.sendWithPrefix() = join(CommonText.PREFIX, this).send()
 }
 
 object TextProperties {
 
+    private val STRIP_COLOR_PATTERN = Pattern.compile("(?i)\\u00A7.")
+
     val Component.width: Int get() = McFont.width(this)
-    val Component.stripped: String get() = StringUtil.stripColor(this.string)
+    val Component.stripped: String get() = STRIP_COLOR_PATTERN.matcher(this.string).replaceAll("")
 }
 
 object TextUtils {
@@ -147,6 +149,36 @@ object TextUtils {
 
 }
 
+@Stub
+internal expect fun MutableComponent.withFont(location: ResourceLocation?): MutableComponent
+
+@Stub
+internal expect fun Component.font(): ResourceLocation?
+
+internal fun Component.hover(): Component? = (this.style.hoverEvent as? HoverEvent.ShowText)?.value()
+
+internal fun Component.command(): String? = (this.style.clickEvent as? ClickEvent.RunCommand)?.command()
+
+internal fun Component.suggest(): String? = (this.style.clickEvent as? ClickEvent.SuggestCommand)?.command()
+
+internal fun Component.uri(): URI? = (this.style.clickEvent as? ClickEvent.OpenUrl)?.uri()
+
+internal fun Component.url(): String? = this.uri()?.toString()
+
+internal fun Component.color(): Int = this.style.color?.value ?: 0
+
+internal fun Component.shadowColor(): Int? = this.style.shadowColor
+
+internal fun Component.bold(): Boolean = this.style.isBold
+
+internal fun Component.italic(): Boolean = this.style.isItalic
+
+internal fun Component.underlined(): Boolean = this.style.isUnderlined
+
+internal fun Component.strikethrough(): Boolean = this.style.isStrikethrough
+
+internal fun Component.obfuscated(): Boolean = this.style.isObfuscated
+
 object TextStyle {
 
     fun MutableComponent.style(init: Style.() -> Style): MutableComponent {
@@ -158,91 +190,142 @@ object TextStyle {
         withClickEvent(RunnableClickEvent(runnable))
     }
 
+    val Component.font: ResourceLocation?
+        get() = font()
+
     var MutableComponent.font: ResourceLocation?
-        get() = this.style.font
+        get() = font()
         set(value) {
-            this.style { withFont(value) }
+            this.withFont(value)
         }
 
+
+    val Component.hover: Component?
+        get() = hover()
+
     var MutableComponent.hover: Component?
-        get() = (this.style.hoverEvent as? HoverEvent.ShowText)?.value()
+        get() = hover()
         set(value) {
             this.style { withHoverEvent(value?.let { HoverEvent.ShowText(it) }) }
         }
 
+
+    val Component.command: String?
+        get() = command()
+
     var MutableComponent.command: String?
-        get() = (this.style.clickEvent as? ClickEvent.RunCommand)?.command()
+        get() = command()
         set(value) {
             this.style { withClickEvent(value?.let { ClickEvent.RunCommand(it) }) }
         }
 
+
+    val Component.suggest: String?
+        get() = suggest()
+
     var MutableComponent.suggest: String?
-        get() = (this.style.clickEvent as? ClickEvent.SuggestCommand)?.command()
+        get() = suggest()
         set(value) {
             this.style { withClickEvent(value?.let { ClickEvent.SuggestCommand(it) }) }
         }
 
+
+    val Component.uri: URI?
+        get() = uri()
+
     var MutableComponent.uri: URI?
-        get() = (this.style.clickEvent as? ClickEvent.OpenUrl)?.uri()
+        get() = uri()
         set(value) {
             this.style { withClickEvent(value?.let { ClickEvent.OpenUrl(it) }) }
         }
 
+
+    val Component.url: String?
+        get() = url()
+
     var MutableComponent.url: String?
-        get() = this.uri?.toString()
+        get() = url()
         set(value) {
             this.uri = value?.let(URI::create)
         }
 
+
+    val Component.color: Int
+        get() = color()
+
     var MutableComponent.color: Int
-        get() = this.style.color?.value ?: 0
+        get() = color()
         set(value) {
             this.style { withColor(value) }
         }
 
+
+    val Component.shadowColor: Int?
+        get() = shadowColor()
+
     var MutableComponent.shadowColor: Int?
-        get() = this.style.shadowColor
+        get() = shadowColor()
         set(value) {
             this.style { this.withShadowColor(value ?: 0) }
         }
 
+
+    val Component.bold: Boolean
+        get() = bold()
+
     var MutableComponent.bold: Boolean
-        get() = this.style.isBold
+        get() = bold()
         set(value) {
             this.style { withBold(value) }
         }
 
+
+    val Component.italic: Boolean
+        get() = italic()
+
     var MutableComponent.italic: Boolean
-        get() = this.style.isItalic
+        get() = italic()
         set(value) {
             this.style { withItalic(value) }
         }
 
+
+    val Component.underlined: Boolean
+        get() = underlined()
+
     var MutableComponent.underlined: Boolean
-        get() = this.style.isUnderlined
+        get() = underlined()
         set(value) {
             this.style { withUnderlined(value) }
         }
 
+
+    val Component.strikethrough: Boolean
+        get() = strikethrough()
+
     var MutableComponent.strikethrough: Boolean
-        get() = this.style.isStrikethrough
+        get() = strikethrough()
         set(value) {
             this.style { withStrikethrough(value) }
         }
 
+    val Component.obfuscated: Boolean
+        get() = obfuscated()
+
     var MutableComponent.obfuscated: Boolean
-        get() = this.style.isObfuscated
+        get() = obfuscated()
         set(value) {
             this.style { withObfuscated(value) }
         }
 }
 
 object TextBuilder {
-    fun MutableComponent.append(like: ComponentLike) = this.append(like.toComponent())
-    fun MutableComponent.append(component: Component, init: MutableComponent.() -> Unit) = this.append(component.copy().apply(init))
-    fun MutableComponent.append(text: String, init: MutableComponent.() -> Unit = {}) = this.append(text.asComponent(init))
-    fun MutableComponent.append(number: Number, init: MutableComponent.() -> Unit = {}) = this.append(number.toString().asComponent(init))
-    fun MutableComponent.append(boolean: Boolean, init: MutableComponent.() -> Unit = {}) = this.append(boolean.toString().asComponent(init))
+    fun MutableComponent.append(like: ComponentLike): MutableComponent = this.append(like.toComponent())
+    fun MutableComponent.append(component: Component, init: MutableComponent.() -> Unit): MutableComponent = this.append(component.copy().apply(init))
+    fun MutableComponent.append(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(text.asComponent(init))
+    fun MutableComponent.append(number: Number, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(number.toString().asComponent(init))
+    fun MutableComponent.append(boolean: Boolean, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(boolean.toString().asComponent(init))
+    fun MutableComponent.append(text: String, color: Int): MutableComponent = this.append(text) { this.color = color }
 }
 
 object TextColor {

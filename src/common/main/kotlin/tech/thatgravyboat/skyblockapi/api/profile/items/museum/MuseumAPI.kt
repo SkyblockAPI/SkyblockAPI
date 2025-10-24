@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.museum
 
+import com.mojang.brigadier.arguments.StringArgumentType
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -7,12 +8,17 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.MuseumStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvMuseumOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
+import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
+import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.museum.MuseumData
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
@@ -24,7 +30,13 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import java.util.concurrent.CompletableFuture
 
+/** Currently doesn't support special items. */
 @Module
 object MuseumAPI {
 
@@ -50,6 +62,38 @@ object MuseumAPI {
     fun getItemsOnCategory(category: MuseumCategory): List<ItemStack> = MuseumStorage.getItemsOnCategory(category)
     fun getItemsWithCategory(): Map<MuseumCategory, List<ItemStack>> = MuseumStorage.getItemsWithCategory()
 
+    /** Returns `true` if the item can be donated to museum. Ignores special items. */
+    fun isMuseumItem(id: SkyBlockId): Boolean = MuseumData.isMuseumItem(id)
+
+    /** Returns `true` if the item has been donated to museum. Ignores special items. */
+    fun isDonated(id: SkyBlockId): Boolean = internalIsDonated(id, mutableSetOf())
+
+    /** Returns `true` if the item has been donated to museum and is stored in it. Ignores special items. */
+    fun isStoredInMuseum(id: SkyBlockId): Boolean {
+        val skyblockId = id.skyblockId
+        val data = ItemData.getItemData(skyblockId)?.museumData ?: return false
+        return if (data.category == MuseumCategory.ARMOR_SETS) {
+            data.armorSets.any(MuseumStorage::isArmorSetStored)
+        } else MuseumStorage.isItemStored(skyblockId)
+    }
+
+    private fun internalIsDonated(id: SkyBlockId, checkedIds: MutableSet<SkyBlockId>): Boolean {
+        if (!checkedIds.add(id)) return false
+
+        val skyblockId = id.skyblockId
+        val data = ItemData.getItemData(skyblockId)?.museumData ?: return false
+        if (data.category == MuseumCategory.ARMOR_SETS) {
+            val armorSets = data.armorSets
+            if (armorSets.any(MuseumStorage::hasDonatedArmorSet)) return true
+            return data.parents.values.any { parent ->
+                if (MuseumStorage.hasDonatedArmorSet(parent)) return@any true
+                val setId = MuseumData.getArmorSetFromId(parent) ?: return@any false
+                return@any setId.any { internalIsDonated(SkyBlockId.item(it), checkedIds) }
+            }
+        }
+        return MuseumStorage.hasDonatedItem(skyblockId) || data.parents.values.any { internalIsDonated(SkyBlockId.item(it), checkedIds) }
+    }
+
     private var lastCategory: MuseumCategory? = null
     private var lastArmor: Pair<String, Map<String, ItemStack>>? = null
 
@@ -63,7 +107,7 @@ object MuseumAPI {
         val setId = armorSets.reduce { acc, set ->
             acc.intersect(set)
         }.singleOrNull() ?: return null
-        MuseumData.getArmorSetFromId(setId) ?: return null
+        if (!MuseumData.isArmorSet(setId)) return null
         return setId
     }
 
@@ -103,7 +147,7 @@ object MuseumAPI {
             val category = MuseumCategory.fromName(categoryName) ?: return@findThenNull
             lastCategory = category
             val filtered = items.filterNot { it.isSkyblockFiller() }
-            when(category) {
+            when (category) {
                 MuseumCategory.ARMOR_SETS -> {
                     for (item in filtered) {
                         if (item.isNotDonated()) {
@@ -155,7 +199,33 @@ object MuseumAPI {
     @OptIn(SkyBlockPvRequired::class)
     @Subscription
     fun onPvOpen(event: SkyBlockPvMuseumOpenedEvent) {
-        // TODO: implement :3
+        CompletableFuture.runAsync {
+            MuseumStorage.reset()
+            PvLoadingHelper.markLoaded(LoadedData.MUSEUM)
+            for (entry in event.entries) {
+                val (id, stacks) = entry
+                if (MuseumData.isArmorSet(id)) {
+                    val map = buildMap {
+                        stacks@ for (stack in stacks) {
+                            val item = stack.value
+                            val id = item.getSkyBlockId() ?: continue@stacks
+                            put(id, item)
+                        }
+                    }
+                    if (map.isEmpty()) {
+                        MuseumStorage.addNotStoredArmorSet(id)
+                    } else MuseumStorage.addArmorSet(id, map)
+                } else {
+                    val category = ItemData.getItemData(id)?.museumData?.category ?: continue
+                    if (category == MuseumCategory.ARMOR_SETS || category == MuseumCategory.SPECIAL_ITEMS) continue
+                    if (stacks.isEmpty()) {
+                        MuseumStorage.addNotStoredItem(category, id)
+                    } else {
+                        MuseumStorage.addItem(category, id, stacks.first().value)
+                    }
+                }
+            }
+        }
     }
 
     @Subscription
@@ -164,6 +234,52 @@ object MuseumAPI {
             thenCallback("reset") {
                 MuseumStorage.reset()
                 Text.sendDebug("Museum data has been reset.")
+            }
+            then("check") {
+                thenCallback("id", StringArgumentType.word()) {
+                    val id = argument<String>("id")?.let(SkyBlockId::item) ?: return@thenCallback
+                    val item = SimpleItemAPI.getItemByIdOrNull(id) ?: run {
+                        Text.sendDebug("Item not found.")
+                        return@thenCallback
+                    }
+                    Text.sendDebug {
+                        append("Item ")
+                        append(item.hoverName)
+                        append(" donated status: ")
+                        if (isDonated(id)) append("Donated") { color = TextColor.GREEN }
+                        else append("Not Donated") { color = TextColor.RED }
+                    }
+                }
+                then("all") {
+                    thenCallback("donated") {
+                        CompletableFuture.runAsync {
+                            val string = MuseumData.museumData.allItems.joinToString("\n") {
+                                val id = SkyBlockId.item(it)
+                                val name = SimpleItemAPI.getItemByIdOrNull(id)?.hoverName?.stripped ?: run {
+                                    return@joinToString "- $it: ITEM NOT FOUND"
+                                }
+                                if (isDonated(id)) "- $name Donated"
+                                else "- $name Not Donated"
+                            }
+                            McClient.clipboard = string
+                            Text.sendDebug("Copied donation status of all museum items to clipboard.")
+                        }
+                    }
+                    thenCallback("stored") {
+                        CompletableFuture.runAsync {
+                            val string = MuseumData.museumData.allItems.joinToString("\n") {
+                                val id = SkyBlockId.item(it)
+                                val name = SimpleItemAPI.getItemByIdOrNull(id)?.hoverName?.stripped ?: run {
+                                    return@joinToString "- $it: ITEM NOT FOUND"
+                                }
+                                if (isStoredInMuseum(id)) "- $name Stored"
+                                else "- $name Not Stored"
+                            }
+                            McClient.clipboard = string
+                            Text.sendDebug("Copied stored status of all museum items to clipboard.")
+                        }
+                    }
+                }
             }
             then("copy") {
                 thenCallback("raw") {

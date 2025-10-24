@@ -1,23 +1,21 @@
 package tech.thatgravyboat.skyblockapi.api.remote
 
 import com.mojang.authlib.properties.Property
-import com.mojang.authlib.properties.PropertyMap
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
-import net.minecraft.world.item.component.ResolvableProfile
 import tech.thatgravyboat.repolib.api.PetsAPI
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
+import tech.thatgravyboat.skyblockapi.platform.ResolvableProfile
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
-import java.util.*
 
 object RepoPetsAPI {
 
@@ -36,11 +34,7 @@ object RepoPetsAPI {
             val skin = query.skin?.let { RepoItemsAPI.getItem("PET_SKIN_$it") }
 
             val base = skin ?: ItemStack(Items.PLAYER_HEAD) {
-                this[DataComponents.PROFILE] = ResolvableProfile(
-                    Optional.empty(),
-                    Optional.empty(),
-                    PropertyMap().apply { put("textures", Property("textures", pet.texture())) },
-                )
+                this[DataComponents.PROFILE] = ResolvableProfile { put("textures", Property("textures", pet.texture())) }
             }
 
             base[DataComponents.CUSTOM_NAME] = getFormattedName(

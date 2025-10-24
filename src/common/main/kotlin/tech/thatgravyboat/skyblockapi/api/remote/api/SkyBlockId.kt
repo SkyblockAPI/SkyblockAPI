@@ -6,15 +6,19 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
+import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+
+typealias SkyBlockItemId = SkyBlockId
 
 @JvmInline
 value class SkyBlockId private constructor(val id: String) {
@@ -30,7 +34,7 @@ value class SkyBlockId private constructor(val id: String) {
         const val ATTRIBUTE = "attribute$DELIMITER"
         const val ENCHANTMENT = "enchantment$DELIMITER"
         const val UNSAFE = "unsafe$DELIMITER"
-        const val UNKNOWN = "ocean${DELIMITER}unknown"
+        const val UNKNOWN = "sbapi${DELIMITER}unknown"
         val EMPTY: SkyBlockId = item(UNKNOWN)
 
         fun item(id: String) = SkyBlockId("$ITEM$id".lowercase())
@@ -74,10 +78,14 @@ value class SkyBlockId private constructor(val id: String) {
         fun unsafe(id: String) = SkyBlockId("$UNSAFE$id")
 
         @IncludedCodec
-        val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap(::SkyBlockId, SkyBlockId::id)
+        val CODEC: Codec<SkyBlockId> = Codec.STRING
+            .xmap({ it.lowercase() }, { it })
+            .xmap(::SkyBlockId, SkyBlockId::id)
 
-        fun ItemStack.getSkyBlockId() = fromItem(this) ?: fromName(this.hoverName.stripped)
+        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it })
+            .xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
 
+        fun ItemStack.getSkyBlockId() = this[DataTypes.SKYBLOCK_ID] ?: fromItem(this) ?: fromName(this.hoverName.stripped)
     }
 
     val isItem: Boolean get() = id.startsWith(ITEM)
@@ -88,7 +96,7 @@ value class SkyBlockId private constructor(val id: String) {
     val isUnsafe: Boolean get() = id.startsWith(UNSAFE)
     val cleanId: String get() = id.substringAfter(DELIMITER)
     val skyblockId: String
-        get() = when {
+        get() = fixHypixelId() ?: when {
 
             isPet -> cleanId.substringBeforeLast(DELIMITER)
             isEnchantment -> {
@@ -131,29 +139,30 @@ value class SkyBlockId private constructor(val id: String) {
     private fun getEnchantment(): ItemStack = SimpleItemAPI.getEnchantmentById(this)
     private fun getAttribute(): ItemStack = SimpleItemAPI.getAttributeById(this)
 
+    override fun toString() = "SkyBlockId($id)"
 }
 
 private fun ItemStack.getSbId(): SkyBlockId? {
-    val data = this.getData(DataTypes.ID)
+    val data = DataTypes.ID.factory(this) ?: GenericDataTypes.ID.factory(this)
     return when (data) {
         "RUNE", "UNIQUE_RUNE" -> {
-            this.getData(DataTypes.APPLIED_RUNE)?.let { (rune, level) -> "$rune$DELIMITER$level" }.let { it ?: UNKNOWN }
+            DataTypes.APPLIED_RUNE.factory(this)?.let { (rune, level) -> "$rune$DELIMITER$level" }.let { it ?: UNKNOWN }
                 .let(SkyBlockId::rune)
         }
 
         "PET" -> {
-            this.getData(DataTypes.PET_DATA)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }
+            DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }
                 .let(SkyBlockId::pet)
         }
 
         "ENCHANTED_BOOK" -> {
-            this.getData(DataTypes.ENCHANTMENTS)?.entries?.firstOrNull()?.let { (key, value) -> "$key$DELIMITER$value" }
+            DataTypes.ENCHANTMENTS.factory(this)?.entries?.firstOrNull()?.let { (key, value) -> "$key$DELIMITER$value" }
                 .let { it ?: UNKNOWN }
                 .let(SkyBlockId::enchantment)
         }
 
         "ATTRIBUTE_SHARD" -> {
-            this.getData(DataTypes.ATTRIBUTES)?.entries?.firstOrNull()?.let { (key, _) -> key }
+            DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
                 .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
         }
 

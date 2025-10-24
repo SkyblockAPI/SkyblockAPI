@@ -23,11 +23,16 @@ import org.joml.Vector2f
     u0: Float = 0f, v0: Float = 0f, u1: Float = 1f, v1: Float = 1f,
     color: Int = -1
 )
+@Stub expect fun GuiGraphics.drawGradient(
+    x: Int, y: Int, width: Int, height: Int,
+    col1: Int, col2: Int, col3: Int, col4: Int,
+)
 
-@Stub
-expect fun GuiGraphics.showTooltip(text: Component, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true)
-@Stub
-expect fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true)
+@Stub expect fun GuiGraphics.drawFilledBox(x: Int, y: Int, width: Int, height: Int, color: Int = -1)
+@Stub expect fun GuiGraphics.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int = -1)
+
+@Stub expect fun GuiGraphics.showTooltip(text: Component, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true)
+@Stub expect fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true)
 
 @Stub expect fun GuiGraphics.getTranslation(): Vector2f
 @Stub expect fun GuiGraphics.getScale(): Vector2f

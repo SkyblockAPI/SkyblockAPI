@@ -84,6 +84,19 @@ object DebugCommands {
             }
             then("copy") {
                 then("scoreboard") {
+                    then("title") {
+                        then("raw") {
+                            callback {
+                                copyMessage("raw scoreboard title")
+                                McClient.clipboard = McClient.scoreboardTitle?.toJson(ComponentSerialization.CODEC).toPrettyString()
+                            }
+                        }
+
+                        callback {
+                            copyMessage("scoreboard title")
+                            McClient.clipboard = McClient.scoreboardTitle?.stripped ?: "null"
+                        }
+                    }
                     then("raw") {
                         callback {
                             copyMessage("raw scoreboard")
@@ -164,6 +177,10 @@ object DebugCommands {
                     thenCallback(it) {
                         McClient.openUri(gameDir.resolve(it).toUri())
                     }
+                }
+
+                thenCallback("chest_dumps") {
+                    McClient.openUri(gameDir.resolve("config/skyblockapi/chest_dumps").toUri())
                 }
             }
             then("save") {

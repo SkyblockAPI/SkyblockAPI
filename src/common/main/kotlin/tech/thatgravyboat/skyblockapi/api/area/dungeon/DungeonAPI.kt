@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.dungeon.DungeonEnterEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
@@ -118,6 +119,8 @@ object DungeonAPI {
     fun onAreaChange(event: AreaChangeEvent) {
         dungeonFloorRegex.find(event.new.name, "floor") { (floor) ->
             dungeonFloor = DungeonFloor.getByName(floor)
+            val floor = dungeonFloor ?: return@find
+            DungeonEnterEvent(floor).post()
         }
     }
 

@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
-import net.minecraft.client.gui.screens.Screen
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
@@ -12,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.api.item.calculator.getItemValue
+import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -35,7 +35,7 @@ object DebugTooltips {
     fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
         if (!isEnabled) return
         if (keys.isEmpty()) return
-        if (!Screen.hasAltDown()) return
+        if (!McScreen.isAltDown) return
 
         when (event.key) {
             InputConstants.KEY_RIGHT -> index = (index + 1) % keys.size
@@ -66,7 +66,7 @@ object DebugTooltips {
 
         event.add(CommonText.EMPTY)
 
-        if (!Screen.hasAltDown()) {
+        if (!McScreen.isAltDown) {
             event.add(
                 Text.of("${types.size} Data Type(s) [Alt]") {
                     this.color = TextColor.DARK_GRAY
@@ -123,13 +123,13 @@ object DebugTooltips {
             )
             event.add(Text.of("Sources: ([Shift] for all)") { this.color = TextColor.DARK_GRAY })
 
-            val sources = event.item.getItemValue().sources.entries.sortedByDescending { it.value }
-            val sourcesToShow = sources.filter { it.value > 0L }.takeUnless { Screen.hasShiftDown() } ?: sources
+            val sources = event.item.getItemValue().entryTree.sortedByDescending { it.price }
+            val sourcesToShow = sources.filter { it.price > 0L }.takeUnless { McScreen.isShiftDown } ?: sources
 
-            sourcesToShow.map { (source, value) ->
+            sourcesToShow.map { entry ->
                 Text.join(
-                    Text.of(" - ${source.name}: ") { this.color = TextColor.DARK_GRAY },
-                    Text.of(value.toFormattedString()) { this.color = TextColor.GRAY },
+                    Text.of(" - ${entry.source.name}: ") { this.color = TextColor.DARK_GRAY },
+                    Text.of(entry.price.toFormattedString()) { this.color = TextColor.GRAY },
                 )
             }.forEach { event.add(it) }
 
