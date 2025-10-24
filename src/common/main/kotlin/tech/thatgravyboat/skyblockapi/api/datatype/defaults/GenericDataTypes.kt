@@ -53,6 +53,10 @@ object GenericDataTypes {
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
+    val MIDAS_WEAPON_PAID: DataType<Long> = DataType("midas_weapon_paid") { stack ->
+        listOf("winning_bid", "additional_coins").mapNotNull { stack.tag?.getLongOrNull(it) }.sum().takeUnless { it == 0L }
+    }
+    val GILDED_GIFTED_COINS: DataType<Long> = DataType("gilded_gifted_coins") { it.tag?.getLongOrNull("gilded_gifted_coins") }
     val CROPS_BROKEN: DataType<Long> = DataType("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
     val ABSORB_LOGS: DataType<Long> = DataType("absorb_logs_chopped") { it.tag?.getLongOrNull("absorb_logs_chopped") }
     val LOGS_CUT: DataType<Long> = DataType("logs_cut") { it.tag?.getLongOrNull("logs_cut") }
@@ -102,6 +106,7 @@ object GenericDataTypes {
 
     /** In SkyBlock items that are only available in new versions are shown via `DataComponents.ITEM_MODEL`, this returns the item that is displayed. */
     val VISIBLE_ITEM: DataType<Item> = DataType("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
+
 
     private fun getFishingRodPartDataType(name: String) = DataType(name) {
         val tag = it.tag?.getObjectOrNull(name) ?: return@DataType null
