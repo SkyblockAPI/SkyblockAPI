@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenBackgroundEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent;
-import tech.thatgravyboat.skyblockapi.utils.text.RunnableClickEvent;
+import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
@@ -40,10 +40,13 @@ public class ScreenMixin {
 
     @WrapOperation(method = "handleComponentClicked", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false))
     private void handleComponentClickedError(Logger instance, String string, Object o, Operation<Void> original, @Local(ordinal = 0) ClickEvent event) {
-        if (event instanceof RunnableClickEvent runnable) {
-            runnable.getRunnable().invoke();
-        } else {
-            original.call(instance, string, o);
+        if (event instanceof RunnableClickEventHook runnableEvent) {
+            var runnable = runnableEvent.skyblockapi$getRunnable();
+            if (runnable != null) {
+                runnable.run();
+                return;
+            }
         }
+        original.call(instance, string, o);
     }
 }

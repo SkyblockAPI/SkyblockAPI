@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenBackgroundEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent;
-import tech.thatgravyboat.skyblockapi.utils.text.RunnableClickEvent;
+import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
@@ -45,10 +45,13 @@ public class ScreenMixin {
 
     @WrapOperation(method = "handleComponentClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;handleClickEvent(Lnet/minecraft/client/Minecraft;Lnet/minecraft/network/chat/ClickEvent;)V"))
     private void handleComponentClickedError(Screen instance, Minecraft minecraft, ClickEvent event, Operation<Void> original) {
-        if (event instanceof RunnableClickEvent runnable) {
-            runnable.getRunnable().invoke();
-        } else {
-            original.call(instance, minecraft, event);
+        if (event instanceof RunnableClickEventHook runnableEvent) {
+            var runnable = runnableEvent.skyblockapi$getRunnable();
+            if (runnable != null) {
+                runnable.run();
+                return;
+            }
         }
+        original.call(instance, minecraft, event);
     }
 }
