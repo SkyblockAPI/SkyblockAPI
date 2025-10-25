@@ -2,10 +2,10 @@ package tech.thatgravyboat.skyblockapi.utils.text
 
 import net.minecraft.network.chat.*
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.StringUtil
 import net.msrandom.stub.Stub
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
+import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
@@ -187,7 +187,10 @@ object TextStyle {
     }
 
     fun MutableComponent.onClick(runnable: () -> Unit): MutableComponent = this.style {
-        withClickEvent(RunnableClickEvent(runnable))
+        val event = ClickEvent.SuggestCommand("SkyBlockAPI OnClick Action")
+        @Suppress("KotlinConstantConditions")
+        ((event as Any) as? RunnableClickEventHook)?.`skyblockapi$setRunnable` { runnable() }
+        withClickEvent(event)
     }
 
     val Component.font: ResourceLocation?
