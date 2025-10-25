@@ -6,8 +6,6 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.asReversedIterator
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
@@ -89,15 +87,5 @@ object LoreDataTypes {
         getRarityLine(it)?.let { line ->
             line.first.removePrefix(line.second.displayName.uppercase()).trim()
         }?.let(SkyBlockCategory::create)
-    }
-
-    @Subscription
-    fun onDataTypeRegistration(event: RegisterDataTypesEvent) {
-        event.register(FUEL)
-        event.register(SNOWBALLS)
-        event.register(RIGHT_CLICK_MANA_ABILITY)
-        event.register(COOLDOWN_ABILITY)
-        event.register(RARITY)
-        event.register(CATEGORY)
     }
 }

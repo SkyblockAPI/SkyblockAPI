@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes.ID
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes.ID
 import tech.thatgravyboat.skyblockapi.utils.extentions.getIntOrNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.getStringOrNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.tag
@@ -22,7 +22,7 @@ object PersonalAccessoryDataTypes {
         else -> null
     }
 
-    var PERSONAL_COMPACTOR_ITEMS: DataType<List<String?>> = DataType("personal_compactor") {
+    val PERSONAL_COMPACTOR_ITEMS: DataType<List<String?>> = DataType("personal_compactor") {
         val maxItems = it.getMaxItems("COMPACTOR") ?: return@DataType null
         buildList {
             for (i in 0 until maxItems) {
@@ -31,7 +31,7 @@ object PersonalAccessoryDataTypes {
         }
     }
 
-    var PERSONAL_DELETOR_ITEMS: DataType<List<String?>> = DataType("personal_deletor") {
+    val PERSONAL_DELETOR_ITEMS: DataType<List<String?>> = DataType("personal_deletor") {
         val maxItems = it.getMaxItems("DELETOR") ?: return@DataType null
         buildList {
             for (i in 0 until maxItems) {
@@ -40,7 +40,8 @@ object PersonalAccessoryDataTypes {
         }
     }
 
-    var PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType("personal_accessory_active") {
+    val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType("personal_accessory_active") {
         it.tag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE").let { active -> active == 1 }
     }
+
 }
