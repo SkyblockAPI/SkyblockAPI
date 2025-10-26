@@ -19,11 +19,11 @@ abstract class HotxAPI<Data : HotxData<Perk>, Perk : HotxPerk> internal construc
 ) {
     private val inventoryGroup = RegexGroup.INVENTORY.group(regexGroup)
 
-    private val titleRegex = inventoryGroup.create("title", "Heart of the $identifier")
-    private val levelRegex = inventoryGroup.create("level", "Level (?<level>\\d+)(?:/\\d+)?")
-    private val disabledRegex = inventoryGroup.create("disabled", "DISABLED|Click to select!")
-    private val mainItemRegex = inventoryGroup.create("mainitem", "Heart of the $identifier")
-    private val tokensRegex = inventoryGroup.create("tokens", "Tokens of the $identifier: (?<tokens>\\d+)")
+    protected open val titleRegex = inventoryGroup.create("title", "Heart of the $identifier")
+    protected open val levelRegex = inventoryGroup.create("level", "Level (?<level>\\d+)(?:/\\d+)?")
+    protected open val disabledRegex = inventoryGroup.create("disabled", "DISABLED|Click to select!")
+    protected open val mainItemRegex = inventoryGroup.create("mainitem", "Heart of the $identifier")
+    protected open val tokensRegex = inventoryGroup.create("tokens", "Tokens of the $identifier: (?<tokens>\\d+)")
 
     open val perks: Map<String, HotxPerk>
         get() = storage.perks
