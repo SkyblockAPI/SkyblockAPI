@@ -1,3 +1,5 @@
+@file:Suppress("ACTUAL_WITHOUT_EXPECT")
+
 package tech.thatgravyboat.skyblockapi.helpers
 
 import com.mojang.authlib.minecraft.MinecraftSessionService
@@ -13,6 +15,7 @@ import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
@@ -40,13 +43,14 @@ actual object McClient {
     actual val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
     actual val config: Path = FabricLoader.getInstance().configDir
 
-    actual val sessionService: MinecraftSessionService get() = self.minecraftSessionService
     actual val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
     actual val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
     actual val version: String = SharedConstants.getCurrentVersion().name
 
+    actual val sessionService: MinecraftSessionService get() = self.minecraftSessionService
     actual val self: Minecraft get() = Minecraft.getInstance()
     actual val connection: ClientPacketListener? get() = self.connection
+
     actual val window: Window get() = self.window
     actual val windowHandle: Long get() = window.window
 
@@ -127,7 +131,7 @@ actual object McClient {
 
     actual fun setScreenAsync(screen: () -> Screen?) = runNextTick {
         val next = screen()
-        self.screen?.onClose()
+        (self.screen as? AbstractContainerScreen<*>)?.onClose()
         self.setScreen(next)
     }
 
