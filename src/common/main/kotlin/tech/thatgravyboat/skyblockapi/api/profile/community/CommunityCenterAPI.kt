@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.CommunityCenterStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
@@ -34,8 +35,11 @@ object CommunityCenterAPI {
             CommunityCenterStorage.rank = value
         }
 
-    // TODO: Add museum progress
-    val bitsPerCookie: Int get() = (BASE_COOKIE_BITS * (fameRank?.multiplier ?: 1.0)).toInt()
+    val bitsPerCookie: Int
+        get() {
+            val museumBonus = 1 + MuseumAPI.museumMilestone * 0.01 // 1% per level
+            return (BASE_COOKIE_BITS * museumBonus * (fameRank?.multiplier ?: 1.0)).toInt()
+        }
 
     @Subscription
     fun onChat(event: ChatReceivedEvent.Pre) {
