@@ -20,6 +20,16 @@ internal object MuseumStorage {
 
     private val data: MuseumStorageData? get() = MUSEUM.get()
 
+    val milestone: Int get() = data?.milestone ?: 0
+
+    fun setMilestone(level: Int) {
+        val data = data ?: return
+        if (data.milestone != level) {
+            data.milestone = level
+            save()
+        }
+    }
+
     private fun ItemStack.removeMuseumLines(): ItemStack {
         val index = getRarityLineIndex()
         if (index == -1) return this
