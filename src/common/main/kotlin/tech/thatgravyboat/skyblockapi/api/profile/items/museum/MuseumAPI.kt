@@ -72,7 +72,7 @@ object MuseumAPI {
     //endregion
 
 
-    val museumMilestone: Int get() = MuseumStorage.museumMilestone
+    val milestone: Int get() = MuseumStorage.milestone
 
     fun getAllItems(): List<ItemStack> = MuseumStorage.getAllItems()
     fun getItemsOnCategory(category: MuseumCategory): List<ItemStack> = MuseumStorage.getItemsOnCategory(category)
@@ -219,7 +219,7 @@ object MuseumAPI {
         if (!museumRewardsItem.match(event.item.cleanName)) return
 
         museumMilestoneRegex.anyMatch(event.item.getRawLore(), "milestone") { (milestoneStr) ->
-            MuseumStorage.setMuseumMilestone(milestoneStr.toIntOrNull() ?: return@anyMatch)
+            MuseumStorage.setMilestone(milestoneStr.toIntOrNull() ?: return@anyMatch)
         }
     }
 

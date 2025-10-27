@@ -37,7 +37,7 @@ object CommunityCenterAPI {
 
     val bitsPerCookie: Int
         get() {
-            val museumBonus = 1 + MuseumAPI.museumMilestone * 0.01 // 1% per level
+            val museumBonus = 1 + MuseumAPI.milestone * 0.01 // 1% per level
             return (BASE_COOKIE_BITS * museumBonus * (fameRank?.multiplier ?: 1.0)).toInt()
         }
 

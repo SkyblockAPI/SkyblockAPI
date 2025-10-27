@@ -20,14 +20,13 @@ internal object MuseumStorage {
 
     private val data: MuseumStorageData? get() = MUSEUM.get()
 
-    val museumMilestone: Int get() = data?.museumMilestone ?: 0
+    val milestone: Int get() = data?.milestone ?: 0
 
-    fun setMuseumMilestone(level: Int) {
+    fun setMilestone(level: Int) {
         val data = data ?: return
-        if (data.museumMilestone != level) {
-            data.museumMilestone = level
+        if (data.milestone != level) {
+            data.milestone = level
             save()
-            println("Museum Milestone updated to $level")
         }
     }
 
