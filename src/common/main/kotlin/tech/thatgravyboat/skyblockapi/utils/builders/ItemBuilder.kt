@@ -19,7 +19,7 @@ class ItemBuilder() {
     lateinit var item: Item
     var count: Int = 1
     private var components = DataComponentPatch.builder()
-    private var clickAction: ((Int) -> Unit)? = null
+    private var clickAction: ((Int) -> Unit?)? = null
     var customSlotText: String? = null
     var backgroundItem: ItemStack? = null
 
@@ -79,7 +79,8 @@ class ItemBuilder() {
         components.set(DataComponents.LORE, ItemLore(builder.lines(), builder.lines()))
     }
 
-    fun onClick(clickAction: ((Int) -> Unit)?) {
+    /** If [clickAction] returns null, it won't cancel the original click. */
+    fun onClick(clickAction: ((Int) -> Unit?)?) {
         this.clickAction = clickAction
     }
 
