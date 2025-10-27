@@ -6,7 +6,7 @@ internal object Logger {
 
     fun debug(message: String, vararg args: Any) {
         if (!SkyBlockAPI.isDebug) return
-        SkyBlockAPI.logger.debug(message, *args)
+        warn("[DEBUG] $message", *args)
     }
 
     fun info(message: String, vararg args: Any) {
