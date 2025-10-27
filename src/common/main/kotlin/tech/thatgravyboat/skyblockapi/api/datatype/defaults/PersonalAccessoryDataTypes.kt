@@ -41,7 +41,7 @@ object PersonalAccessoryDataTypes {
     }
 
     val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType("personal_accessory_active") {
-        it.tag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE").let { active -> active == 1 }
+        it.tag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE")?.let { active -> active == 1 }
     }
 
 }
