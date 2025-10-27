@@ -22,6 +22,14 @@ internal object CommunityCenterStorage {
             COMMUNITY_CENTER.save()
         }
 
+    var gems: Long
+        get() = data.gems
+        set(value) {
+            if (gems == value) return
+            data.gems = value
+            COMMUNITY_CENTER.save()
+        }
+
     var bitsAvailable: Long
         get() {
             val profile = ProfileAPI.profileName ?: return 0L
