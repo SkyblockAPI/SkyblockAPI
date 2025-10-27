@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.item
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 
-fun interface MouseConsumer {
+fun interface ClickConsumer {
     fun accept(button: Int): Unit?
 }
 
@@ -12,8 +12,8 @@ internal interface VisualItemAccessor {
     fun `skyblockapi$getVisualItem`(): ItemStack?
     fun `skyblockapi$setSlotText`(slotText: String?)
     fun `skyblockapi$getSlotText`(): String?
-    fun `skyblockapi$setOnClickAction`(clickAction: MouseConsumer?)
-    fun `skyblockapi$getOnClickAction`(): MouseConsumer?
+    fun `skyblockapi$setOnClickAction`(clickAction: ClickConsumer?)
+    fun `skyblockapi$getOnClickAction`(): ClickConsumer?
     fun `skyblockapi$setBackgroundItem`(item: ItemStack?)
     fun `skyblockapi$getBackgroundItem`(): ItemStack?
 

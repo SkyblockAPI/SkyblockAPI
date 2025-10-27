@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import tech.thatgravyboat.skyblockapi.api.item.MouseConsumer;
+import tech.thatgravyboat.skyblockapi.api.item.ClickConsumer;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     @Unique
     private String slotText;
     @Unique
-    private MouseConsumer clickAction;
+    private ClickConsumer clickAction;
     @Unique
     private ItemStack backgroundItem;
 
@@ -68,12 +68,12 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     }
 
     @Override
-    public void skyblockapi$setOnClickAction(@Nullable MouseConsumer clickAction) {
+    public void skyblockapi$setOnClickAction(@Nullable ClickConsumer clickAction) {
         this.clickAction = clickAction;
     }
 
     @Override
-    public @Nullable MouseConsumer skyblockapi$getOnClickAction() {
+    public @Nullable ClickConsumer skyblockapi$getOnClickAction() {
         return clickAction;
     }
 
