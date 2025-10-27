@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.hotx.HotxPerk
 
 @GenerateCodec(createCodecMethod = true)
 data class HotfData(
-    override val perks: MutableMap<String, HotfPerk> = mutableMapOf(),
+    override var perks: MutableMap<String, HotfPerk> = mutableMapOf(),
     override var tokens: Int = 0,
     var forest: Long = 0,
     var forestTotal: Long = 0,

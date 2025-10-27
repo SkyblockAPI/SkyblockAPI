@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 data class HotmData(
-    override val perks: MutableMap<String, HotmPerk> = mutableMapOf(),
+    override var perks: MutableMap<String, HotmPerk> = mutableMapOf(),
     override var tokens: Int = 0,
 ) : HotxData<HotmPerk> {
     companion object {

@@ -11,10 +11,7 @@ internal abstract class HotxStorage<Data : HotxData<Perk>, Perk : HotxPerk> {
     var perks: MutableMap<String, Perk>
         get() = STORAGE.get()?.perks ?: mutableMapOf()
         private set(value) {
-            STORAGE.get()?.perks?.apply {
-                clear()
-                putAll(value)
-            }
+            STORAGE.get()?.perks = value
             save()
         }
 
