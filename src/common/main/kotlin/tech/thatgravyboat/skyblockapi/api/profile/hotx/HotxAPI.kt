@@ -35,7 +35,7 @@ abstract class HotxAPI<Data : HotxData<Perk>, Perk : HotxPerk> internal construc
     open val tokens: Int
         get() = storage.tokens
 
-    @Subscription(allowInherited = true)
+    @Subscription(inherited = true)
     open fun onInventoryChange(event: InventoryChangeEvent) {
         if (!titleRegex.matches(event.title)) return
 

@@ -54,7 +54,7 @@ class EventBus {
 
     private fun unregisterMethod(method: Method, instance: Any) {
         val (options, event) = getEventData(method) ?: return
-        if (!options.allowInherited && method.declaringClass != instance.javaClass) return
+        if (!options.inherited && method.declaringClass != instance.javaClass) return
         event.forEach {
             unregisterMethodInternal(method, it)
         }
@@ -68,7 +68,7 @@ class EventBus {
 
     private fun registerMethod(method: Method, instance: Any) {
         val (options, events) = getEventData(method) ?: return
-        if (!options.allowInherited && method.declaringClass != instance.javaClass) return
+        if (!options.inherited && method.declaringClass != instance.javaClass) return
 
         val kotlin = method.kotlinFunction
         if (kotlin?.extensionReceiverParameter != null && McClient.isDev && Modifier.isPublic(method.modifiers)) {
