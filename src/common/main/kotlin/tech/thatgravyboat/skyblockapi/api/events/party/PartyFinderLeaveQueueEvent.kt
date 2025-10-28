@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.api.events.location.dungeon
+package tech.thatgravyboat.skyblockapi.api.events.party
 
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 

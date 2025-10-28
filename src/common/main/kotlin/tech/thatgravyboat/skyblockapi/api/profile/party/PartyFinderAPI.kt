@@ -1,20 +1,24 @@
-package tech.thatgravyboat.skyblockapi.api.area.dungeon
+package tech.thatgravyboat.skyblockapi.api.profile.party
 
 import me.owdding.ktmodules.Module
+import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
+import tech.thatgravyboat.skyblockapi.api.area.isle.kuudra.KuudraTier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.location.dungeon.PartyFinderLeaveQueueEvent
-import tech.thatgravyboat.skyblockapi.api.events.location.dungeon.PartyFinderQueueEvent
+import tech.thatgravyboat.skyblockapi.api.events.party.DungeonPartyFinderQueueEvent
+import tech.thatgravyboat.skyblockapi.api.events.party.KuudraPartyFinderQueueEvent
+import tech.thatgravyboat.skyblockapi.api.events.party.PartyFinderLeaveQueueEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
+import kotlin.text.get
 
 @Module
 object PartyFinderAPI {
-    private val itemGroup = RegexGroup.INVENTORY.group("partyfinder")
-    private val chatGroup = RegexGroup.CHAT.group("partyfinder")
+    private val itemGroup = RegexGroup.Companion.INVENTORY.group("partyfinder")
+    private val chatGroup = RegexGroup.Companion.CHAT.group("partyfinder")
 
     private val dungeonTypeItemRegex = itemGroup.create(
         "dungeon_type_item",
@@ -23,6 +27,15 @@ object PartyFinderAPI {
     private val dungeonTypeRegex = itemGroup.create(
         "dungeon_type",
         "Currently Selected: (?<type>[\\w ]+)"
+    )
+
+    private val kuudraTierItemRegex = itemGroup.create(
+        "kuudra_tier_item",
+        "Select Tier"
+    )
+    private val kuudraTierRegex = itemGroup.create(
+        "kuudra_tier",
+        "Currently Selected: (?<tier>[\\w ]+)"
     )
 
     private val dungeonFloorItemRegex = itemGroup.create(
@@ -61,9 +74,22 @@ object PartyFinderAPI {
         "Current Level Required:"
     )
 
+    private val combatRequiredItemRegex = itemGroup.create(
+        "combat_required_item",
+        "Set Combat Level Required"
+    )
+    private val combatRequiredPrefixRegex = itemGroup.create(
+        "combat_required_prefix",
+        "Current Level Required:"
+    )
+
     private val partyFinderQueueRegex = chatGroup.create(
-        "start_queue",
+        "start_dungeon_queue",
         "Party Finder > Your party has been queued in the dungeon finder!"
+    )
+    private val kuudraPartyFinderQueueRegex = chatGroup.create(
+        "start_kuudra_queue",
+        "Party Finder > Your party has been queued in the party finder!"
     )
     private val partyFinderDelistRegex = chatGroup.create(
         "stop_queue",
@@ -74,12 +100,16 @@ object PartyFinderAPI {
         "Party Finder > Your group has been removed from the party finder because the leader went offline!"
     )
 
+    var queuedKuudraTier: KuudraTier? = null
+        private set
     var queuedDungeonFloor: DungeonFloor? = null
         private set
     var groupNote: String = ""
     var classLevelRequirement: Int = 0
         private set
     var dungeonLevelRequirement: Int = 0
+        private set
+    var combatLevelRequirement: Int = 0
         private set
 
 
@@ -93,6 +123,14 @@ object PartyFinderAPI {
         if (event.isSkyBlockFiller) return
 
         matchWhen(event.item.cleanName) {
+            case(kuudraTierItemRegex) {
+                event.item.getLore().forEach { component ->
+                    val match = kuudraTierRegex.matchEntire(component.string) ?: return@forEach
+                    val tier = match.groups["tier"]!!.value
+
+                    queuedKuudraTier = KuudraTier.getByLongName(tier)
+                }
+            }
             case(dungeonTypeItemRegex) {
                 event.item.getLore().forEach { component ->
                     val match = dungeonTypeRegex.matchEntire(component.string) ?: return@forEach
@@ -100,16 +138,16 @@ object PartyFinderAPI {
                     dungeonType = match.groups["type"]!!.value
                 }
             }
-            case (dungeonFloorItemRegex) {
+            case(dungeonFloorItemRegex) {
                 event.item.getLore().forEach { component ->
                     val match = dungeonFloorRegex.matchEntire(component.string) ?: return@forEach
 
                     val floor = match.groups["floor"]!!.value
 
-                    queuedDungeonFloor = DungeonFloor.getByLongName("$dungeonType $floor")
+                    queuedDungeonFloor = DungeonFloor.Companion.getByLongName("$dungeonType $floor")
                 }
             }
-            case (groupNoteItemRegex) {
+            case(groupNoteItemRegex) {
                 event.item.getLore().forEachIndexed { index, component ->
                     if (!groupNotePrefixRegex.matches(component.string)) return@forEachIndexed
                     val note = event.item.getLore().getOrNull(index + 1)?.string ?: return@forEachIndexed
@@ -117,7 +155,7 @@ object PartyFinderAPI {
                     return@case
                 }
             }
-            case (classRequiredItemRegex) {
+            case(classRequiredItemRegex) {
                 event.item.getLore().forEachIndexed { index, component ->
                     if (!classRequiredPrefixRegex.matches(component.string)) return@forEachIndexed
                     val note = event.item.getLore().getOrNull(index + 1)?.string ?: return@forEachIndexed
@@ -125,11 +163,19 @@ object PartyFinderAPI {
                     return@case
                 }
             }
-            case (dungeonRequiredItemRegex) {
+            case(dungeonRequiredItemRegex) {
                 event.item.getLore().forEachIndexed { index, component ->
                     if (!dungeonRequiredPrefixRegex.matches(component.string)) return@forEachIndexed
                     val note = event.item.getLore().getOrNull(index + 1)?.string ?: return@forEachIndexed
                     dungeonLevelRequirement = note.removeSuffix(".").toIntOrNull() ?: 0
+                    return@case
+                }
+            }
+            case(combatRequiredItemRegex) {
+                event.item.getLore().forEachIndexed { index, component ->
+                    if (!combatRequiredPrefixRegex.matches(component.string)) return@forEachIndexed
+                    val note = event.item.getLore().getOrNull(index + 1)?.string ?: return@forEachIndexed
+                    combatLevelRequirement = note.removeSuffix(".").toIntOrNull() ?: 0
                     return@case
                 }
             }
@@ -139,12 +185,20 @@ object PartyFinderAPI {
     @Subscription
     fun onChatMessage(event: ChatReceivedEvent.Pre) {
         matchWhen(event.text) {
-            case (partyFinderQueueRegex) {
-                PartyFinderQueueEvent(
+            case(partyFinderQueueRegex) {
+                DungeonPartyFinderQueueEvent(
                     queuedDungeonFloor ?: return@case,
                     groupNote,
                     dungeonLevelRequirement,
                     classLevelRequirement
+                ).post()
+            }
+
+            case (kuudraPartyFinderQueueRegex) {
+                KuudraPartyFinderQueueEvent(
+                    queuedKuudraTier ?: return@case,
+                    groupNote,
+                    combatLevelRequirement
                 ).post()
             }
 
