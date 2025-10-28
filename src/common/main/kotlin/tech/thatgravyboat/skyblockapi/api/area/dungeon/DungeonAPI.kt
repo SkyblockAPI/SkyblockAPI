@@ -45,7 +45,7 @@ object DungeonAPI {
     )
     private val roomIdRegex = scoreboardGroup.create(
         "room.id",
-        "\\d+/\\d+/\\d+ .+? (?<id>.+)"
+        "\\d+/\\d+/\\d+ .+? (?<id>.+)",
     )
 
     private val partyAmountRegex = tablistGroup.create(
@@ -62,7 +62,7 @@ object DungeonAPI {
     )
     private val milestoneRegex = tablistGroup.create(
         "milestone",
-        "\\s*Your Milestone: ☠(?<milestone>.)"
+        "\\s*Your Milestone: ☠(?<milestone>.)",
     )
 
     private val startRegex = chatGroup.create(
@@ -198,18 +198,26 @@ object DungeonAPI {
     }
 
     fun handleGetKey(type: String) {
-        when {
+        val post = when {
             type.equals("wither", true) -> {
                 ++witherKeys
-                DungeonKeyPickedUpEvent("wither", witherKeys).post()
+                true
             }
 
             type.equals("blood", true) -> {
                 ++bloodKeys
-                DungeonKeyPickedUpEvent("blood", bloodKeys).post()
+                true
             }
 
-            else -> Logger.warn("Unknown dungeon key: $type")
+            else -> {
+                Logger.warn("Unknown dungeon key: $type")
+                false
+            }
+        }
+
+        if (post) {
+            val key = DungeonKey.getById(type) ?: return
+            DungeonKeyPickedUpEvent(key).post()
         }
     }
 
