@@ -28,5 +28,23 @@ enum class DungeonFloor(
 
     companion object {
         fun getByName(name: String) = runCatching { DungeonFloor.valueOf(name) }.getOrNull()
+        fun getByLongName(name: String) = when (name) {
+            "The Catacombs Entrance" -> E
+            "The Catacombs Floor I" -> F1
+            "The Catacombs Floor II" -> F2
+            "The Catacombs Floor III" -> F3
+            "The Catacombs Floor IV" -> F4
+            "The Catacombs Floor V" -> F5
+            "The Catacombs Floor VI" -> F6
+            "The Catacombs Floor VII" -> F7
+            "Master Mode The Catacombs Floor I" -> M1
+            "Master Mode The Catacombs Floor II" -> M2
+            "Master Mode The Catacombs Floor III" -> M3
+            "Master Mode The Catacombs Floor IV" -> M4
+            "Master Mode The Catacombs Floor V" -> M5
+            "Master Mode The Catacombs Floor VI" -> M6
+            "Master Mode The Catacombs Floor VII" -> M7
+            else -> null
+        }
     }
 }
