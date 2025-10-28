@@ -1,10 +1,10 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
-import tech.thatgravyboat.skyblockapi.api.profile.hotx.HotxData
-import tech.thatgravyboat.skyblockapi.api.profile.hotx.HotxPerk
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeData
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreePerk
 
-internal abstract class HotxStorage<Data : HotxData<Perk>, Perk : HotxPerk> {
+internal abstract class SkillTreeStorage<Data : SkillTreeData<Perk>, Perk : SkillTreePerk> {
 
     abstract val STORAGE: StoredProfileData<Data>
 
@@ -16,10 +16,10 @@ internal abstract class HotxStorage<Data : HotxData<Perk>, Perk : HotxPerk> {
         }
 
     var tokens: Int
-        get() = HotfStorage.STORAGE.get()?.tokens ?: 1
+        get() = STORAGE.get()?.tokens ?: 1
         internal set(value) {
             if (this.tokens == value) return
-            HotfStorage.STORAGE.get()?.tokens = value
+            STORAGE.get()?.tokens = value
             save()
         }
 

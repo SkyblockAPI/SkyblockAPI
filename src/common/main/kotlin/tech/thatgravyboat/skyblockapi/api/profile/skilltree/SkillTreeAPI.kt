@@ -1,7 +1,7 @@
-package tech.thatgravyboat.skyblockapi.api.profile.hotx
+package tech.thatgravyboat.skyblockapi.api.profile.skilltree
 
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.api.data.stored.HotxStorage
+import tech.thatgravyboat.skyblockapi.api.data.stored.SkillTreeStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTagKey
@@ -11,13 +11,14 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
-abstract class HotxAPI<Data : HotxData<Perk>, Perk : HotxPerk> internal constructor(
-    regexGroup: String,
+abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Self : SkillTreeAPI<Data, Perk, Self>> internal constructor(
+    val name: String,
     private val perkItems: ItemTagKey,
-    private val storage: HotxStorage<Data, Perk>,
+    private val storage: SkillTreeStorage<Data, Perk>,
     private val identifier: String,
+    val type: SkillTreeType<Self>,
 ) {
-    private val inventoryGroup = RegexGroup.INVENTORY.group(regexGroup)
+    private val inventoryGroup = RegexGroup.INVENTORY.group(name)
 
     protected open val titleRegex = inventoryGroup.create("title", "Heart of the $identifier")
     protected open val levelRegex = inventoryGroup.create("level", "Level (?<level>\\d+)(?:/\\d+)?")
@@ -25,11 +26,11 @@ abstract class HotxAPI<Data : HotxData<Perk>, Perk : HotxPerk> internal construc
     protected open val mainItemRegex = inventoryGroup.create("mainitem", "Heart of the $identifier")
     protected open val tokensRegex = inventoryGroup.create("tokens", "Tokens of the $identifier: (?<tokens>\\d+)")
 
-    open val perks: Map<String, HotxPerk>
+    open val perks: Map<String, Perk>
         get() = storage.perks
-    val unlockedPerks: Map<String, HotxPerk>
+    val unlockedPerks: Map<String, Perk>
         get() = perks.filter { it.value.unlocked }
-    val activePerks: Map<String, HotxPerk>
+    val activePerks: Map<String, Perk>
         get() = perks.filter { it.value.unlocked && !it.value.disabled }
 
     open val tokens: Int

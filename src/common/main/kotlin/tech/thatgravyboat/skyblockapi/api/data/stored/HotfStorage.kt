@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs.getCodec
 import java.util.*
 
-internal object HotfStorage : HotxStorage<HotfData, HotfPerk>() {
+internal object HotfStorage : SkillTreeStorage<HotfData, HotfPerk>() {
 
     override val STORAGE = StoredProfileData(
         1,

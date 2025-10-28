@@ -8,16 +8,18 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
-import tech.thatgravyboat.skyblockapi.api.profile.hotx.HotxAPI
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeAPI
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 
 @Module
-object HotmAPI : HotxAPI<HotmData, HotmPerk>(
-    regexGroup = "hotm",
+object HotmAPI : SkillTreeAPI<HotmData, HotmPerk, HotmAPI>(
+    name = "hotm",
     perkItems = ItemTag.HOTM_PERK_ITEMS,
     storage = HotmStorage,
     identifier = "Mountain",
+    type = SkillTreeType.Hotm
 ) {
     private var holdingBlueOmelette = false
 
