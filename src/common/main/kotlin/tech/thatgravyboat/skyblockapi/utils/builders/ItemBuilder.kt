@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemLore
 import net.minecraft.world.level.ItemLike
+import tech.thatgravyboat.skyblockapi.api.item.ClickConsumer
 import tech.thatgravyboat.skyblockapi.api.item.asVisualItemAccessor
 import tech.thatgravyboat.skyblockapi.utils.extentions.holder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -19,7 +20,7 @@ class ItemBuilder() {
     lateinit var item: Item
     var count: Int = 1
     private var components = DataComponentPatch.builder()
-    private var clickAction: ((Int) -> Unit)? = null
+    private var clickAction: ClickConsumer? = null
     var customSlotText: String? = null
     var backgroundItem: ItemStack? = null
 
@@ -79,8 +80,9 @@ class ItemBuilder() {
         components.set(DataComponents.LORE, ItemLore(builder.lines(), builder.lines()))
     }
 
-    fun onClick(clickAction: ((Int) -> Unit)?) {
-        this.clickAction = clickAction
+    /** If [clickAction] returns null, it won't cancel the original click. */
+    fun onClick(clickAction: ((Int) -> Unit?)?) {
+        this.clickAction = clickAction?.let(::ClickConsumer)
     }
 
     fun <T> set(type: DataComponentType<T>, value: T?) {

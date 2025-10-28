@@ -2,15 +2,18 @@ package tech.thatgravyboat.skyblockapi.api.item
 
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
-import java.util.function.IntConsumer
+
+internal fun interface ClickConsumer {
+    fun accept(button: Int): Unit?
+}
 
 internal interface VisualItemAccessor {
     fun `skyblockapi$setVisualItem`(item: ItemStack?)
     fun `skyblockapi$getVisualItem`(): ItemStack?
     fun `skyblockapi$setSlotText`(slotText: String?)
     fun `skyblockapi$getSlotText`(): String?
-    fun `skyblockapi$setOnClickAction`(clickAction: IntConsumer?)
-    fun `skyblockapi$getOnClickAction`(): IntConsumer?
+    fun `skyblockapi$setOnClickAction`(clickAction: ClickConsumer?)
+    fun `skyblockapi$getOnClickAction`(): ClickConsumer?
     fun `skyblockapi$setBackgroundItem`(item: ItemStack?)
     fun `skyblockapi$getBackgroundItem`(): ItemStack?
 
