@@ -128,7 +128,7 @@ object PartyFinderAPI {
                     val match = kuudraTierRegex.matchEntire(component.string) ?: return@forEach
                     val tier = match.groups["tier"]!!.value
 
-                    queuedKuudraTier = KuudraTier.getByLongName(tier)
+                    queuedKuudraTier = KuudraTier.getByName(tier.removeSuffix(" Tier"))
                 }
             }
             case(dungeonTypeItemRegex) {
