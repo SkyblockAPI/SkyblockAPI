@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.item
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 
-fun interface ClickConsumer {
+internal fun interface ClickConsumer {
     fun accept(button: Int): Unit?
 }
 
