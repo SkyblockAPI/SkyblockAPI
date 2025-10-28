@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.hotx
 
 interface HotxData<Perk : HotxPerk> {
     var perks: MutableMap<String, Perk>
-    val tokens: Int
+    var tokens: Int
 }
 
 interface HotxPerk {

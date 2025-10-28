@@ -16,10 +16,10 @@ internal abstract class HotxStorage<Data : HotxData<Perk>, Perk : HotxPerk> {
         }
 
     var tokens: Int
-        get() = HotfStorage.STORAGE.get()?.tokens ?: 1
+        get() = STORAGE.get()?.tokens ?: 1
         internal set(value) {
             if (this.tokens == value) return
-            HotfStorage.STORAGE.get()?.tokens = value
+            STORAGE.get()?.tokens = value
             save()
         }
 
