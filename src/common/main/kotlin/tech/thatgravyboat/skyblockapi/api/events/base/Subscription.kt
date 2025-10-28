@@ -11,6 +11,11 @@ annotation class Subscription(
     vararg val event: KClass<out SkyBlockEvent> = [],
 
     /**
+     * If the method is in a super class of a registered instance the method will still invoke.
+     */
+    val inherited: Boolean = false,
+
+    /**
      * The priority of when the event will be called, lower priority will be called first, see the companion object.
      */
     val priority: Int = 0,

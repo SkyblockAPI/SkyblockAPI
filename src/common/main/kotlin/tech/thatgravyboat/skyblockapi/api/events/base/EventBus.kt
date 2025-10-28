@@ -13,7 +13,7 @@ class EventBus {
     private val handlers: MutableMap<Class<*>, EventHandler<*>> = mutableMapOf()
 
     fun register(instance: Any) {
-        instance.javaClass.declaredMethods.forEach { registerMethod(it, instance) }
+        instance.javaClass.methods.forEach { registerMethod(it, instance) }
     }
 
     inline fun <reified T : SkyBlockEvent> register(priority: Int = 0, receiveCancelled: Boolean = false, noinline callback: (T) -> Unit) {
@@ -26,7 +26,7 @@ class EventBus {
     }
 
     fun unregister(instance: Any) {
-        instance.javaClass.declaredMethods.forEach(::unregisterMethod)
+        instance.javaClass.methods.forEach { unregisterMethod(it, instance) }
     }
 
     inline fun <reified T : SkyBlockEvent> unregister(noinline callback: (T) -> Unit) {
@@ -52,8 +52,9 @@ class EventBus {
         )
     } as EventHandler<T>
 
-    private fun unregisterMethod(method: Method) {
-        val (_, event) = getEventData(method) ?: return
+    private fun unregisterMethod(method: Method, instance: Any) {
+        val (options, event) = getEventData(method) ?: return
+        if (!options.inherited && method.declaringClass != instance.javaClass) return
         event.forEach {
             unregisterMethodInternal(method, it)
         }
@@ -67,6 +68,7 @@ class EventBus {
 
     private fun registerMethod(method: Method, instance: Any) {
         val (options, events) = getEventData(method) ?: return
+        if (!options.inherited && method.declaringClass != instance.javaClass) return
 
         val kotlin = method.kotlinFunction
         if (kotlin?.extensionReceiverParameter != null && McClient.isDev && Modifier.isPublic(method.modifiers)) {
