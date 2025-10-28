@@ -1,8 +1,8 @@
-package tech.thatgravyboat.skyblockapi.api.profile.hotx
+package tech.thatgravyboat.skyblockapi.api.profile.skilltree
 
 interface SkillTreeData<Perk : SkillTreePerk> {
     var perks: MutableMap<String, Perk>
-    val tokens: Int
+    var tokens: Int
 }
 
 interface SkillTreePerk {

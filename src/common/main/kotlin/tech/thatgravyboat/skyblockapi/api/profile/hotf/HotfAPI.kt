@@ -4,8 +4,8 @@ import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.HotfStorage
-import tech.thatgravyboat.skyblockapi.api.profile.hotx.SkillTreeAPI
-import tech.thatgravyboat.skyblockapi.api.profile.hotx.SkillTreeType
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeAPI
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemModelTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 

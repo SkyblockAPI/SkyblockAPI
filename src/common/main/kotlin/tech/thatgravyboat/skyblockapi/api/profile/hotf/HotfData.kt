@@ -1,8 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.hotf
 
 import me.owdding.ktcodecs.GenerateCodec
-import tech.thatgravyboat.skyblockapi.api.profile.hotx.SkillTreeData
-import tech.thatgravyboat.skyblockapi.api.profile.hotx.SkillTreePerk
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeData
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreePerk
 
 @GenerateCodec(createCodecMethod = true)
 data class HotfData(

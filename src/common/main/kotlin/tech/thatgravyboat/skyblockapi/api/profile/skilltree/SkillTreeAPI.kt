@@ -1,7 +1,7 @@
-package tech.thatgravyboat.skyblockapi.api.profile.hotx
+package tech.thatgravyboat.skyblockapi.api.profile.skilltree
 
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.api.data.stored.HotxStorage
+import tech.thatgravyboat.skyblockapi.api.data.stored.SkillTreeStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTagKey
@@ -14,7 +14,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Self : SkillTreeAPI<Data, Perk, Self>> internal constructor(
     val name: String,
     private val perkItems: ItemTagKey,
-    private val storage: HotxStorage<Data, Perk>,
+    private val storage: SkillTreeStorage<Data, Perk>,
     private val identifier: String,
     val type: SkillTreeType<Self>,
 ) {

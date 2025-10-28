@@ -8,8 +8,8 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
-import tech.thatgravyboat.skyblockapi.api.profile.hotx.SkillTreeAPI
-import tech.thatgravyboat.skyblockapi.api.profile.hotx.SkillTreeType
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeAPI
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 

@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.api.profile.hotx
+package tech.thatgravyboat.skyblockapi.api.profile.skilltree
 
 import tech.thatgravyboat.skyblockapi.api.profile.hotf.HotfAPI
 import tech.thatgravyboat.skyblockapi.api.profile.hotm.HotmAPI
