@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.hotx
 
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.stored.HotxStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
@@ -11,6 +12,8 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
+// TODO: Rename all Hotx___ to SkillTree___
+@RemoveNextVersion
 abstract class HotxAPI<Data : HotxData<Perk>, Perk : HotxPerk> internal constructor(
     regexGroup: String,
     private val perkItems: ItemTagKey,
