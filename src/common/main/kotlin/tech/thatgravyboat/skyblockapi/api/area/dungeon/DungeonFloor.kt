@@ -29,6 +29,6 @@ enum class DungeonFloor(
 
     companion object {
         fun getByName(name: String) = runCatching { DungeonFloor.valueOf(name) }.getOrNull()
-        fun getByLongName(name: String) = DungeonFloor.entries.first { it.longName == name }
+        fun getByLongName(name: String) = DungeonFloor.entries.firstOrNull { it.longName == name }
     }
 }
