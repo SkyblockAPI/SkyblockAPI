@@ -25,11 +25,11 @@ abstract class HotxAPI<Data : HotxData<Perk>, Perk : HotxPerk> internal construc
     protected open val mainItemRegex = inventoryGroup.create("mainitem", "Heart of the $identifier")
     protected open val tokensRegex = inventoryGroup.create("tokens", "Tokens of the $identifier: (?<tokens>\\d+)")
 
-    open val perks: Map<String, HotxPerk>
+    open val perks: Map<String, Perk>
         get() = storage.perks
-    val unlockedPerks: Map<String, HotxPerk>
+    val unlockedPerks: Map<String, Perk>
         get() = perks.filter { it.value.unlocked }
-    val activePerks: Map<String, HotxPerk>
+    val activePerks: Map<String, Perk>
         get() = perks.filter { it.value.unlocked && !it.value.disabled }
 
     open val tokens: Int
