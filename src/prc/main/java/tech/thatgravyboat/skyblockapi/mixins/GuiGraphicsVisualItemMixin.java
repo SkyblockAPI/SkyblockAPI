@@ -31,7 +31,7 @@ public abstract class GuiGraphicsVisualItemMixin {
         method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
         at = @At("HEAD")
     )
-    private void renderVisualItem(CallbackInfo ci, @Local(argsOnly = true) LocalRef<ItemStack> itemStack) {
+    private void skyblockapi$renderVisualItem(CallbackInfo ci, @Local(argsOnly = true) LocalRef<ItemStack> itemStack) {
         var visualItem = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack.get()).skyblockapi$getVisualItem();
         if (visualItem == null) {
             return;
@@ -43,7 +43,7 @@ public abstract class GuiGraphicsVisualItemMixin {
     private final ThreadLocal<ItemStack> skyblockapi$currentItem = new ThreadLocal<>();
 
     @Inject(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At("HEAD"))
-    private void renderVisualItemDecoration(CallbackInfo ci, @Local(argsOnly = true) LocalRef<ItemStack> itemStack) {
+    private void skyblockapi$renderVisualItemDecoration(CallbackInfo ci, @Local(argsOnly = true) LocalRef<ItemStack> itemStack) {
         var item = itemStack.get();
         skyblockapi$currentItem.set(item);
         var visualItem = VisualItemAccessor.Companion.getVisualItemAccessor(item).skyblockapi$getVisualItem();
@@ -55,9 +55,31 @@ public abstract class GuiGraphicsVisualItemMixin {
 
     @Inject(
         method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
+        at = @At("RETURN")
+    )
+    private void skyblockapi$renderBackgroundItem(CallbackInfo ci) {
+        skyblockapi$currentItem.remove();
+    }
+
+    @Inject(method = "renderItemCount", at = @At("HEAD"))
+    private void skyblockapi$renderItemCount(
+        CallbackInfo ci,
+        @Local(argsOnly = true) LocalRef<String> count,
+        @Local(argsOnly = true) LocalRef<ItemStack> itemStack
+    ) {
+        var slotText = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack.get()).skyblockapi$getSlotText();
+        if (slotText != null) count.set(slotText);
+        else {
+            var item = skyblockapi$currentItem.get();
+            if (item != null) itemStack.set(item);
+        }
+    }
+
+    @Inject(
+        method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
         at = @At("HEAD")
     )
-    public void renderBackgroundItem(
+    private void skyblockapi$renderBackgroundItem(
         CallbackInfo ci,
         @Local(argsOnly = true) ItemStack itemStack,
         @Local(argsOnly = true, ordinal = 0) int x,
@@ -72,28 +94,6 @@ public abstract class GuiGraphicsVisualItemMixin {
             this.pose.popMatrix();
 
             this.nextStratum();
-        }
-    }
-
-    @Inject(
-        method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
-        at = @At("RETURN")
-    )
-    public void renderBackgroundItem(CallbackInfo ci) {
-        skyblockapi$currentItem.remove();
-    }
-
-    @Inject(method = "renderItemCount", at = @At("HEAD"))
-    public void renderItemCount(
-        CallbackInfo ci,
-        @Local(argsOnly = true) LocalRef<String> count,
-        @Local(argsOnly = true) LocalRef<ItemStack> itemStack
-    ) {
-        var slotText = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack.get()).skyblockapi$getSlotText();
-        if (slotText != null) count.set(slotText);
-        else {
-            var item = skyblockapi$currentItem.get();
-            if (item != null) itemStack.set(item);
         }
     }
 
