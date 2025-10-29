@@ -13,7 +13,13 @@ class EventBus {
     private val handlers: MutableMap<Class<*>, EventHandler<*>> = mutableMapOf()
 
     fun register(instance: Any) {
-        instance.javaClass.methods.forEach { registerMethod(it, instance) }
+        var clazz: Class<*>? = instance.javaClass
+        while (clazz != null) {
+            if (clazz == Any::class.java) break
+
+            clazz.declaredMethods.forEach { registerMethod(it, instance) }
+            clazz = clazz.superclass
+        }
     }
 
     inline fun <reified T : SkyBlockEvent> register(priority: Int = 0, receiveCancelled: Boolean = false, noinline callback: (T) -> Unit) {
@@ -26,7 +32,12 @@ class EventBus {
     }
 
     fun unregister(instance: Any) {
-        instance.javaClass.methods.forEach { unregisterMethod(it, instance) }
+        var clazz: Class<*>? = instance.javaClass
+        while (clazz != null) {
+            if (clazz == Any::class.java) break
+            clazz.declaredMethods.forEach { unregisterMethod(it, instance) }
+            clazz = clazz.superclass
+        }
     }
 
     inline fun <reified T : SkyBlockEvent> unregister(noinline callback: (T) -> Unit) {
