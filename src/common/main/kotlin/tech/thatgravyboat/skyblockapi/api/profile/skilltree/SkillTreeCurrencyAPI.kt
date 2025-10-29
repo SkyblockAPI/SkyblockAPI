@@ -30,6 +30,7 @@ abstract class SkillTreeCurrencyAPI<Currency, Self> internal constructor(
     val currencies: Map<Currency, SkillTreeCurrencyData>
         get() = storage.currencies
 
+    fun getData(currency: Currency): SkillTreeCurrencyData = storage.getOrEmpty(currency)
     fun getCurrent(currency: Currency): Long = storage.getCurrent(currency)
     fun getTotal(currency: Currency): Long = storage.getTotal(currency)
 

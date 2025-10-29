@@ -6,8 +6,9 @@ interface SkillTreeCurrency {
     val widgetName: String
     val inventoryName: String get() = widgetName
 
-    val current: Long
-    val total: Long
+    val data: SkillTreeCurrencyData
+    val current: Long get() = data.current
+    val total: Long get() = data.total
 }
 
 @GenerateCodec

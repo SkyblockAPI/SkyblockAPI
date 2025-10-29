@@ -26,8 +26,12 @@ internal abstract class SkillTreeCurrencyStorage<Currency>(
     val currencies: Map<Currency, SkillTreeCurrencyData>
         get() = data.orEmpty()
 
-    fun getCurrent(currency: Currency): Long = data?.get(currency)?.current ?: 0L
-    fun getTotal(currency: Currency): Long = data?.get(currency)?.total ?: 0L
+    @Suppress("PrivatePropertyName")
+    private val EMPTY = SkillTreeCurrencyData()
+
+    fun getOrEmpty(currency: Currency): SkillTreeCurrencyData = data?.get(currency) ?: EMPTY
+    fun getCurrent(currency: Currency): Long = getOrEmpty(currency).current
+    fun getTotal(currency: Currency): Long = getOrEmpty(currency).total
 
     fun setCurrent(currency: Currency, amount: Long) = STORAGE.edit {
         val data = get(currency)
