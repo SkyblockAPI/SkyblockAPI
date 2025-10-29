@@ -105,6 +105,7 @@ object PartyFinderAPI {
     var queuedDungeonFloor: DungeonFloor? = null
         private set
     var groupNote: String = ""
+        private set
     var classLevelRequirement: Int = 0
         private set
     var dungeonLevelRequirement: Int = 0
