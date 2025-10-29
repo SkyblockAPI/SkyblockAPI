@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.area.isle.kuudra
 
+import tech.thatgravyboat.skyblockapi.utils.extentions.valueOfOrNull
+
 enum class KuudraTier(val tier: Int) {
     BASIC(1),
     HOT(2),
@@ -8,6 +10,6 @@ enum class KuudraTier(val tier: Int) {
     INFERNAL(5);
 
     companion object {
-        fun getByName(name: String) = runCatching { KuudraTier.valueOf(name.uppercase()) }.getOrNull()
+        fun getByName(name: String) = valueOfOrNull<KuudraTier>(name.lowercase())
     }
 }
