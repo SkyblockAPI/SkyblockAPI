@@ -7,7 +7,9 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
+import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.net.URI
 import java.util.*
@@ -146,6 +148,10 @@ object TextUtils {
         maxWidth,
         McFont::width,
     ) { it.joinToString(separator) }
+
+    fun Component.substring(startIndex: Int): Component = this.substring(startIndex, this.stripped.length)
+    fun Component.substring(startIndex: Int, endIndex: Int): Component = ComponentUtils.substring(this, startIndex, endIndex)
+    fun Component.substring(range: IntRange): Component = this.substring(range.first, range.last)
 
 }
 
