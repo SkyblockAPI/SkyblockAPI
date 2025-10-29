@@ -10,13 +10,35 @@ class ComponentRegex(private val regex: Regex) {
     constructor(@Language("RegExp") regex: String) : this(Regex(regex))
 
     fun find(input: Component): ComponentMatchResult? = regex.find(input.stripped)?.let { ComponentMatchResult(input, it) }
-
     fun match(input: Component): ComponentMatchResult? = regex.matchEntire(input.stripped)?.let { ComponentMatchResult(input, it) }
 
     fun matches(input: Component) = matches(input.stripped)
     fun contains(input: Component) = contains(input.stripped)
     fun matches(input: String) = regex.matches(input)
     fun contains(input: String) = regex.contains(input)
+
+    fun replace(component: Component, replacement: Component): Component = replace(component) { _ -> replacement }
+    fun replace(component: Component, transform: (ComponentMatchResult) -> Component): Component {
+        var match = find(component) ?: return component
+
+        var lastStart = 0
+        val length = component.stripped.length
+        val builder = Component.empty()
+
+        do {
+            builder.append(ComponentUtils.substring(component, lastStart, match.range().first))
+            builder.append(transform(match))
+
+            lastStart = match.range().last + 1
+            match = match.next() ?: break
+        } while (lastStart < length)
+
+        if (lastStart < length) {
+            builder.append(ComponentUtils.substring(component, lastStart, length))
+        }
+
+        return builder
+    }
 
     fun regex() = this.regex
 }
