@@ -1,8 +1,11 @@
 package tech.thatgravyboat.skyblockapi.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
@@ -36,22 +39,12 @@ public abstract class GuiGraphicsVisualItemMixin {
     @Unique
     private final ThreadLocal<ItemStack> skyblockapi$currentItem = new ThreadLocal<>();
 
-    @Inject(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At("HEAD"))
-    private void skyblockapi$renderVisualItemDecoration(CallbackInfo ci, @Local(argsOnly = true) LocalRef<ItemStack> itemStack) {
-        var item = itemStack.get();
-        skyblockapi$currentItem.set(item);
-        var visualItem = VisualItemAccessor.Companion.getVisualItemAccessor(item).skyblockapi$getVisualItem();
-        if (visualItem == null) {
-            return;
-        }
-        itemStack.set(visualItem);
-    }
-
-    @Inject(
-        method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
-        at = @At("RETURN")
-    )
-    private void skyblockapi$renderBackgroundItem(CallbackInfo ci) {
+    @WrapMethod(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V")
+    private void skyblockapi$renderItemDecorations(Font font, ItemStack itemStack, int i, int j, Operation<Void> original) {
+        skyblockapi$currentItem.set(itemStack);
+        var visualItem = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack).skyblockapi$getVisualItem();
+        var item = visualItem != null ? visualItem : itemStack;
+        original.call(font, item, i, j);
         skyblockapi$currentItem.remove();
     }
 
