@@ -22,8 +22,6 @@ internal object HotfStorage : SkillTreeStorage<HotfData, HotfPerk>() {
                 it.group(
                     CodecUtils.map(getCodec<String>(), getCodec<HotfPerk>()).optionalFieldOf("perks").forGetter { getter -> Optional.of(getter.perks) },
                     getCodec<Int>().optionalFieldOf("tokens").forGetter { getter -> Optional.of(getter.tokens) },
-                    getCodec<Long>().optionalFieldOf("whispers").forGetter { getter -> Optional.of(getter.forest) },
-                    getCodec<Long>().optionalFieldOf("whispersTotal").forGetter { getter -> Optional.of(getter.forestTotal) },
                 ).apply(it, SkyblockAPICodecs::createHotfDataCodec)
             }
 
@@ -31,21 +29,5 @@ internal object HotfStorage : SkillTreeStorage<HotfData, HotfPerk>() {
             else -> Codec.unit { HotfData() }
         }
     }
-
-    var forest: Long
-        get() = STORAGE.get()?.forest ?: 0
-        internal set(value) {
-            if (this.forest == value) return
-            STORAGE.get()?.forest = value
-            save()
-        }
-
-    var forestTotal: Long
-        get() = STORAGE.get()?.forestTotal ?: 0
-        internal set(value) {
-            if (this.forestTotal == value) return
-            STORAGE.get()?.forestTotal = value
-            save()
-        }
 }
 

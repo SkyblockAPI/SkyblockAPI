@@ -15,12 +15,12 @@ abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Se
     val name: String,
     private val perkItems: ItemTagKey,
     private val storage: SkillTreeStorage<Data, Perk>,
-    private val identifier: String,
+    identifier: String,
     val type: SkillTreeType<Self>,
 ) {
     private val inventoryGroup = RegexGroup.INVENTORY.group(name)
 
-    protected open val titleRegex = inventoryGroup.create("title", "Heart of the $identifier")
+    internal open val titleRegex = inventoryGroup.create("title", "Heart of the $identifier")
     protected open val levelRegex = inventoryGroup.create("level", "Level (?<level>\\d+)(?:/\\d+)?")
     protected open val disabledRegex = inventoryGroup.create("disabled", "DISABLED|Click to select!")
     protected open val mainItemRegex = inventoryGroup.create("mainitem", "Heart of the $identifier")

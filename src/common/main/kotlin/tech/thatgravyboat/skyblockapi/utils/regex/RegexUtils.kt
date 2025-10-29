@@ -66,6 +66,15 @@ object RegexUtils {
         }
         return globalFound
     }
+
+    fun Regex.matchAll(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
+        var globalMatch = false
+        input.forEach {
+            val matched = match(it, groups = groups, action = action)
+            if (matched) globalMatch = true
+        }
+        return globalMatch
+    }
 }
 
 class Destructured internal constructor(private val match: MatchResult, private vararg val keys: String) {
