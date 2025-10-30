@@ -20,6 +20,9 @@ import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 @Mixin(GuiGraphics.class)
 public abstract class GuiGraphicsVisualItemMixin {
 
+    @Unique
+    private final ThreadLocal<ItemStack> skyblockapi$originalItem = new ThreadLocal<>();
+
     @Shadow
     @Final
     private PoseStack pose;
@@ -36,16 +39,13 @@ public abstract class GuiGraphicsVisualItemMixin {
         itemStack.set(visualItem);
     }
 
-    @Unique
-    private final ThreadLocal<ItemStack> skyblockapi$currentItem = new ThreadLocal<>();
-
     @WrapMethod(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V")
     private void skyblockapi$renderItemDecorations(Font font, ItemStack itemStack, int i, int j, Operation<Void> original) {
-        skyblockapi$currentItem.set(itemStack);
+        skyblockapi$originalItem.set(itemStack);
         var visualItem = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack).skyblockapi$getVisualItem();
         var item = visualItem != null ? visualItem : itemStack;
         original.call(font, item, i, j);
-        skyblockapi$currentItem.remove();
+        skyblockapi$originalItem.remove();
     }
 
     @Inject(method = "renderItemCount", at = @At("HEAD"))
@@ -57,7 +57,7 @@ public abstract class GuiGraphicsVisualItemMixin {
         var slotText = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack.get()).skyblockapi$getSlotText();
         if (slotText != null) count.set(slotText);
         else {
-            var item = skyblockapi$currentItem.get();
+            var item = skyblockapi$originalItem.get();
             if (item != null) itemStack.set(item);
         }
     }
