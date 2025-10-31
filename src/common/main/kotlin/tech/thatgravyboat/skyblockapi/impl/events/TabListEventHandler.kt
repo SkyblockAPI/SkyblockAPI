@@ -65,6 +65,8 @@ internal object TabListEventHandler {
         widgets.entries.clearAnd { (widget, old) ->
             TabWidgetChangeEvent(widget, old, emptyList(), emptyList()).post()
         }
+        TabListChangeEvent(tabList, emptyList()).post()
+        tabList = emptyList()
     }
 
     @Subscription(TickEvent::class)
