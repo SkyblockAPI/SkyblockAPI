@@ -84,7 +84,7 @@ class EventBus {
 
         val kotlin = method.kotlinFunction
         if (kotlin?.extensionReceiverParameter != null && McClient.isDev && Modifier.isPublic(method.modifiers)) {
-            if (DebugEvents.hasWarned) DebugEvents.methodsToWarn.add(method)
+            if (!DebugEvents.hasWarned) DebugEvents.methodsToWarn.add(method)
             SkyBlockAPI.logger.warn("""
             
             Public extension functions for events are unrecommended as they will populate the auto complete for the subscribed events.
