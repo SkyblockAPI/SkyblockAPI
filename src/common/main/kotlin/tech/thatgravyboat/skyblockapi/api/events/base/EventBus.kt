@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.events.base
 
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.impl.debug.DebugEvents
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import kotlin.reflect.full.extensionReceiverParameter
@@ -83,6 +84,7 @@ class EventBus {
 
         val kotlin = method.kotlinFunction
         if (kotlin?.extensionReceiverParameter != null && McClient.isDev && Modifier.isPublic(method.modifiers)) {
+            DebugEvents.methodsToWarn.add(method)
             SkyBlockAPI.logger.warn("""
             
             Public extension functions for events are unrecommended as they will populate the auto complete for the subscribed events.

@@ -9,12 +9,13 @@ import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
+import tech.thatgravyboat.skyblockapi.utils.extentions.hasAnnotation
 import java.lang.reflect.Method
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class OnlySlayerType(
-    val value: Array<SlayerType>,
+    vararg val value: SlayerType,
     val acceptMiniBosses: Boolean = false,
     val acceptDemons: Boolean = false,
 )
@@ -22,13 +23,13 @@ annotation class OnlySlayerType(
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class OnlySlayerMiniBoss(
-    val value: Array<SlayerMiniBoss>,
+    vararg val value: SlayerMiniBoss,
 )
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class OnlySlayerDemon(
-    val value: Array<SlayerDemon>,
+    vararg val value: SlayerDemon,
 )
 
 @Retention(AnnotationRetention.RUNTIME)
@@ -53,44 +54,43 @@ class SlayerEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         val validTypes = mutableListOf<SlayerMob>()
-        val mustBeOwnedByPlayer = method.isAnnotationPresent(MustBeOwnedByPlayer::class.java)
 
         when {
-            method.isAnnotationPresent(OnlySlayerType::class.java) -> {
-                val slayerTypeAnnotation = method.getAnnotation<OnlySlayerType>()
-                if (slayerTypeAnnotation?.acceptDemons == true) {
+            method.hasAnnotation<OnlySlayerType>() -> {
+                val slayerTypeAnnotation = method.getAnnotation<OnlySlayerType>()!!
+                if (slayerTypeAnnotation.acceptDemons) {
                     validTypes.addAll(SlayerDemon.entries.filter { slayerTypeAnnotation.value.contains(it.slayerType) })
                 }
 
-                if (slayerTypeAnnotation?.acceptMiniBosses == true) {
+                if (slayerTypeAnnotation.acceptMiniBosses) {
                     validTypes.addAll(SlayerMiniBoss.entries.filter { slayerTypeAnnotation.value.contains(it.slayerType) })
                 }
-                slayerTypeAnnotation?.value?.let { validTypes.addAll(it) }
+                validTypes.addAll(slayerTypeAnnotation.value)
             }
 
-            method.isAnnotationPresent(OnlySlayerMiniBoss::class.java) -> {
-                method.getAnnotation<OnlySlayerMiniBoss>()?.value?.let { validTypes.addAll(it) }
+            method.hasAnnotation<OnlySlayerMiniBoss>() -> {
+                validTypes.addAll(method.getAnnotation<OnlySlayerMiniBoss>()!!.value)
             }
 
-            method.isAnnotationPresent(OnlySlayerDemon::class.java) -> {
-                method.getAnnotation<OnlySlayerDemon>()?.value?.let { validTypes.addAll(it) }
+            method.hasAnnotation<OnlySlayerDemon>() -> {
+                validTypes.addAll(method.getAnnotation<OnlySlayerDemon>()!!.value)
             }
 
-            method.isAnnotationPresent(OnlySlayerBosses::class.java) -> validTypes.addAll(SlayerType.entries)
-            method.isAnnotationPresent(OnlySlayerMiniBosses::class.java) -> {
-                val annotation = method.getAnnotation<OnlySlayerMiniBosses>()
-                when (annotation?.bigBoys) {
+            method.hasAnnotation<OnlySlayerBosses>() -> validTypes.addAll(SlayerType.entries)
+            method.hasAnnotation<OnlySlayerMiniBosses>() -> {
+                val annotation = method.getAnnotation<OnlySlayerMiniBosses>()!!
+                when (annotation.bigBoys) {
                     TriState.FALSE -> validTypes.addAll(SlayerMiniBoss.entries.filterNot { it.isBigBoy })
                     TriState.TRUE -> validTypes.addAll(SlayerMiniBoss.entries.filter { it.isBigBoy })
                     else -> validTypes.addAll(SlayerMiniBoss.entries)
                 }
             }
 
-            method.isAnnotationPresent(OnlySlayerDemons::class.java) -> validTypes.addAll(SlayerDemon.entries)
+            method.hasAnnotation<OnlySlayerDemons>() -> validTypes.addAll(SlayerDemon.entries)
+        }
 
-            else -> null
-        } ?: return null
-
+        val mustBeOwnedByPlayer = method.hasAnnotation<MustBeOwnedByPlayer>()
+        if (!mustBeOwnedByPlayer && validTypes.isEmpty()) return null
         return predicate@{ event, _ ->
             if (event is SlayerEvent) {
                 if (mustBeOwnedByPlayer && !event.slayerInfo.isOwnedByPlayer) {
