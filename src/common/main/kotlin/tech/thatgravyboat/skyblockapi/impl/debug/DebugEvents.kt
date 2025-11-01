@@ -13,13 +13,16 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.onClick
 import java.lang.reflect.Method
 
 @DevModule
-object DebugEvents {
+internal object DebugEvents {
 
     val methodsToWarn = mutableListOf<Method>()
+    var hasWarned: Boolean = false
+        private set
 
     @Subscription(HypixelJoinEvent::class)
     fun onHypixelJoin() {
         if (methodsToWarn.isEmpty()) return
+        hasWarned = true
         SkyBlockAPI.eventBus.unregister(this)
         val text = methodsToWarn.groupBy { it.declaringClass.name }.entries.joinToString { (clazz, methods) ->
             buildString {
