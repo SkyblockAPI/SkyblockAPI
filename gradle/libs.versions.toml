@@ -5,7 +5,7 @@ google-gson = "2.12.1"
 
 meowdding-modules = "1.0.5"
 meowdding-ktcodecs = "1.0.26"
-meowdding-resources = "1.0.15"
+meowdding-resources = "1.0.16"
 meowdding-item-dfu = "1.0.5"
 
 terrarium-cloche = "0.13.5"
