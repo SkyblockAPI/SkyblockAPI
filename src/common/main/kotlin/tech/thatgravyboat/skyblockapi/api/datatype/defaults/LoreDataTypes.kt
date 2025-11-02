@@ -26,6 +26,7 @@ object LoreDataTypes {
     private val manaCostRegex = dataTypeGroup.create("mana_cost", "Mana Cost: (?<mana>[\\d,kmb]+)")
     private val cooldownRegex = dataTypeGroup.create("cooldown", "Cooldown: (?<cooldown>\\d+)s")
     private val snowballsRegex = dataTypeGroup.create("snowballs", "Snowballs: (?<snowballs>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
+    private val dungeonBreakerRegex = dataTypeGroup.create("dungeonbreaker", "Charges: (?<current>\\d+)/(?<max>\\d+)⸕")
 
     val FUEL: DataType<Pair<Int, Int>> = DataType("fuel") {
         var output: Pair<Int, Int>? = null
@@ -87,5 +88,15 @@ object LoreDataTypes {
         getRarityLine(it)?.let { line ->
             line.first.removePrefix(line.second.displayName.uppercase()).trim()
         }?.let(SkyBlockCategory::create)
+    }
+
+    val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = DataType("dungeon_breaker_charges") {
+        if (DataTypes.ID.factory(it) != "DUNGEONBREAKER") return@DataType null
+
+        var output: Pair<Int, Int>? = null
+        dungeonBreakerRegex.anyMatch(it.getRawLore(), "current", "max") { (current, max) ->
+            output = current.parseFormattedInt() to max.parseFormattedInt()
+        }
+        output
     }
 }

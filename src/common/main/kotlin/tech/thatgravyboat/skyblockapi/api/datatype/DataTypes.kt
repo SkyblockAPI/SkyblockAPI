@@ -65,6 +65,7 @@ object DataTypes {
     val NECRON_SCROLLS: DataType<List<String>> = GenericDataTypes.NECRON_SCROLLS
     val DUNGEON_TIER: DataType<Int> = GenericDataTypes.DUNGEON_TIER
     val DUNGEON_QUALITY: DataType<Int> = GenericDataTypes.DUNGEON_QUALITY
+    val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = LoreDataTypes.DUNGEONBREAKER_CHARGES
 
     // Fishing Rod
     val WET_BOOK: DataType<Int> = GenericDataTypes.WET_BOOK
