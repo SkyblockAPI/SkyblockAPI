@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 object DataTypesRegistry {
 
-    private val types: MutableList<DataType<*>> = mutableListOf()
+    val types: MutableList<DataType<*>> = mutableListOf()
 
     internal fun load() {
         RegisterDataTypesEvent(types::add).post(SkyBlockAPI.eventBus)
