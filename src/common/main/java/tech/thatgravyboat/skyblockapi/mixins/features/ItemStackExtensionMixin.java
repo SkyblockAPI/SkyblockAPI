@@ -42,7 +42,7 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
     private ItemStack skyblockapi$copy(ItemLike item, int count, PatchedDataComponentMap patch, Operation<ItemStack> operation) {
         skyblockapi$COPYING.set(Unit.INSTANCE);
         ItemStack stack = operation.call(item, count, patch);
-        ((DataTypeItemStack) (Object) stack).skyblockapi$setTypes(this.skyblockapi$data);
+        ((ItemStackExtensionMixin) (Object) stack).skyblockapi$data = this.skyblockapi$data;
 
         ((VisualItemAccessor) (Object) stack).skyblockapi$setVisualItem(((VisualItemAccessor) this).skyblockapi$getVisualItem());
 
@@ -58,11 +58,6 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
     @Override
     public @NotNull Map<DataType<?>, ?> skyblockapi$getTypes() {
         return this.skyblockapi$data;
-    }
-
-    @Override
-    public void skyblockapi$setTypes(@NotNull Map<@NotNull DataType<?>, ?> types) {
-        this.skyblockapi$data = types;
     }
 
     @Override
