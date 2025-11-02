@@ -53,6 +53,7 @@ object DataTypes {
     val ABSORB_LOGS: DataType<Long> = GenericDataTypes.ABSORB_LOGS
     val LOGS_CUT: DataType<Long> = GenericDataTypes.LOGS_CUT
     val GILDED_GIFTED_COINS: DataType<Long> = GenericDataTypes.GILDED_GIFTED_COINS
+    val ABICASE_MODEL: DataType<String> = GenericDataTypes.ABICASE_MODEL
 
     // Aging Items
     val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD
