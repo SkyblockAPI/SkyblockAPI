@@ -61,7 +61,7 @@ object DebugTooltips {
             lastItem = hash
             val lastDataType = lastDataType
             if (lastDataType != null) {
-                index = keys.indexOf(lastDataType).takeIf { it >= 0 } ?: 0
+                index = max(keys.indexOf(lastDataType), 0)
             }
         }
 
