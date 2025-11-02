@@ -7,10 +7,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.phys.AABB
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlotsStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.*
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
@@ -147,6 +144,7 @@ object PlotAPI {
     }
 
     @Subscription
+    @OnlyNonGuest
     @OnlyIn(SkyBlockIsland.GARDEN)
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (scoreboardNoPestsRegex.anyMatch(event.new)) {
@@ -172,6 +170,7 @@ object PlotAPI {
     }
 
     @Subscription
+    @OnlyNonGuest
     @OnlyIn(SkyBlockIsland.GARDEN)
     @MustBeContainer
     @InventoryTitle("Configure Plots")
@@ -199,6 +198,7 @@ object PlotAPI {
     }
 
     @Subscription
+    @OnlyNonGuest
     @OnlyIn(SkyBlockIsland.GARDEN)
     fun onChat(event: ChatReceivedEvent.Pre) {
         val shouldSynch = matchWhen(event.text) {
@@ -236,6 +236,7 @@ object PlotAPI {
     }
 
     @Subscription
+    @OnlyNonGuest
     @OnlyWidget(TabWidget.PESTS)
     fun onTabWidget(event: TabWidgetChangeEvent) {
         val plots = mutableListOf<Int>()
