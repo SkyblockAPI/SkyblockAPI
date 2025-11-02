@@ -4,6 +4,9 @@ import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 import tech.thatgravyboat.skyblockapi.api.area.isle.kuudra.KuudraTier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.IgnoreFiller
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.party.DungeonPartyFinderQueueEvent
 import tech.thatgravyboat.skyblockapi.api.events.party.KuudraPartyFinderQueueEvent
@@ -12,8 +15,8 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
-import kotlin.text.get
 
 @Module
 object PartyFinderAPI {
@@ -117,35 +120,28 @@ object PartyFinderAPI {
     private var dungeonType: String? = null
 
     @Subscription
+    @InventoryTitle("Group Builder")
+    @MustBeContainer
+    @IgnoreFiller
     fun onInventoryChange(event: InventoryChangeEvent) {
-        if (event.title != "Group Builder") return
-        if (event.isInPlayerInventory) return
         if (!event.isInMainPart) return
-        if (event.isSkyBlockFiller) return
+
+        val cleanedLore = event.item.getLore().map { component -> component.string }
 
         matchWhen(event.item.cleanName) {
             case(kuudraTierItemRegex) {
-                event.item.getLore().forEach { component ->
-                    val match = kuudraTierRegex.matchEntire(component.string) ?: return@forEach
-                    val tier = match.groups["tier"]!!.value
-
+                kuudraTierRegex.anyMatch(cleanedLore, "tier") { (tier) ->
                     queuedKuudraTier = KuudraTier.getByName(tier.removeSuffix(" Tier"))
                 }
             }
             case(dungeonTypeItemRegex) {
-                event.item.getLore().forEach { component ->
-                    val match = dungeonTypeRegex.matchEntire(component.string) ?: return@forEach
-
-                    dungeonType = match.groups["type"]!!.value
+                dungeonTypeRegex.anyMatch(cleanedLore, "type") { (type) ->
+                    dungeonType = type
                 }
             }
             case(dungeonFloorItemRegex) {
-                event.item.getLore().forEach { component ->
-                    val match = dungeonFloorRegex.matchEntire(component.string) ?: return@forEach
-
-                    val floor = match.groups["floor"]!!.value
-
-                    queuedDungeonFloor = DungeonFloor.Companion.getByLongName("$dungeonType $floor")
+                dungeonFloorRegex.anyMatch(cleanedLore, "floor") { (type) ->
+                    queuedDungeonFloor = DungeonFloor.getByLongName("$dungeonType $type")
                 }
             }
             case(groupNoteItemRegex) {
