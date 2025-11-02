@@ -166,6 +166,8 @@ private fun ItemStack.getSbId(): SkyBlockId? {
                 .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
         }
 
+        "ABICASE" -> DataTypes.ABICASE_MODEL.factory(this)?.let { SkyBlockId.item("abicase_$it") }
+
         else -> (data)?.let(SkyBlockId::item)
     }
 }

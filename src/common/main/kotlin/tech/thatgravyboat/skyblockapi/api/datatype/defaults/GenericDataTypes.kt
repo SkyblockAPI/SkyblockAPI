@@ -74,6 +74,7 @@ object GenericDataTypes {
     val DUNGEON_TIER: DataType<Int> = DataType("dungeon_tier") { it.tag?.getIntOrNull("item_tier") }
     val DUNGEON_QUALITY: DataType<Int> = DataType("dungeon_quality") { it.tag?.getIntOrNull("baseStatBoostPercentage") }
 
+    val ABICASE_MODEL: DataType<String> = DataType("abicase_model") { it.tag?.getStringOrNull("model") }
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType("applied_rune") {
         it.tag?.getCompoundOrEmpty("runes")?.let { tag ->
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
