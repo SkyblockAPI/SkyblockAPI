@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.area.dungeon
 
-import tech.thatgravyboat.skyblockapi.api.area.isle.kuudra.KuudraTier
 import tech.thatgravyboat.skyblockapi.utils.extentions.valueOfOrNull
 
 enum class DungeonFloor(
@@ -31,7 +30,9 @@ enum class DungeonFloor(
     constructor(bossName: String, floorNumber: Int, longName: String) : this(bossName, bossName, floorNumber, longName)
 
     companion object {
-        fun getByName(name: String) = valueOfOrNull<KuudraTier>(name.lowercase())
+        fun getByName(name: String) = valueOfOrNull<DungeonFloor>(name.uppercase())
         fun getByLongName(name: String) = DungeonFloor.entries.firstOrNull { it.longName == name }
+
+        external fun nativeFunction()
     }
 }
