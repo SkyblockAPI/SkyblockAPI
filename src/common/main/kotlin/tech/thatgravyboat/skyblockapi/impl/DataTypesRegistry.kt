@@ -11,21 +11,22 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 object DataTypesRegistry {
 
-    private val types: MutableList<DataType<*>> = mutableListOf()
+    private val _types: MutableList<DataType<*>> = mutableListOf()
+    val types: List<DataType<*>> get() = _types
 
     internal fun load() {
-        RegisterDataTypesEvent(types::add).post(SkyBlockAPI.eventBus)
+        RegisterDataTypesEvent(_types::add).post(SkyBlockAPI.eventBus)
     }
 
     internal fun addDataType(dataType: DataType<*>) {
-        if (dataType !in types) types.add(dataType)
+        if (dataType !in _types) _types.add(dataType)
     }
 
     @ApiStatus.Internal
     fun getData(item: ItemStack) = getDataImpl(item)
 
     internal fun getDataImpl(item: ItemStack): Map<DataType<*>, *> = runCatching {
-        types
+        _types
             .associateWith { it.factory(item) }
             .filterValuesNotNull()
             .filterValues { if (it is Map<*, *>) it.isNotEmpty() else true }
