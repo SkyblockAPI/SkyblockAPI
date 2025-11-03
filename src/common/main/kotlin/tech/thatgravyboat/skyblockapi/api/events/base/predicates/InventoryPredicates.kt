@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
+import tech.thatgravyboat.skyblockapi.utils.extentions.hasAnnotation
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import java.lang.reflect.Method
 
@@ -25,7 +26,7 @@ annotation class IgnoreFiller
 
 class InventoryFillerPredicate : EventPredicateProvider {
     override fun getPredicate(method: Method): EventPredicate? {
-        method.getAnnotation<IgnoreFiller>() ?: return null
+        if (!method.hasAnnotation<IgnoreFiller>()) return null
 
         return predicate@{ event, _ ->
             val isFiller = (event as? InventoryChangeEvent)?.isSkyBlockFiller ?: return@predicate true
@@ -37,7 +38,7 @@ class InventoryFillerPredicate : EventPredicateProvider {
 class InventoryPredicates : EventPredicateProvider {
     override fun getPredicate(method: Method): EventPredicate? {
         val inventoryTitle = method.getAnnotation<InventoryTitle>()?.title?.map { Regex(it) }
-        val disallowPlayerInventory = method.getAnnotation<MustBeContainer>() != null
+        val disallowPlayerInventory = method.hasAnnotation<MustBeContainer>()
         if (inventoryTitle == null && !disallowPlayerInventory) return null
 
         return predicate@{ event, _ ->
