@@ -28,7 +28,7 @@ object LoreDataTypes {
     private val snowballsRegex = dataTypeGroup.create("snowballs", "Snowballs: (?<snowballs>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
     private val dungeonBreakerRegex = dataTypeGroup.create("dungeonbreaker", "Charges: (?<current>\\d+)/(?<max>\\d+)⸕")
 
-    val FUEL: DataType<Pair<Int, Int>> = DataType("fuel") {
+    val FUEL: DataType<Pair<Int, Int>> = DataType.of("fuel") {
         var output: Pair<Int, Int>? = null
         fuelRegex.anyMatch(it.getRawLore(), "fuel", "max") { (fuel, max) ->
             output = fuel.parseFormattedInt() to max.parseFormattedInt()
@@ -36,7 +36,7 @@ object LoreDataTypes {
         output
     }
 
-    val SNOWBALLS: DataType<Pair<Int, Int>> = DataType("snowballs") {
+    val SNOWBALLS: DataType<Pair<Int, Int>> = DataType.of("snowballs") {
         var output: Pair<Int, Int>? = null
         snowballsRegex.anyMatch(it.getRawLore(), "snowballs", "max") { (snowballs, max) ->
             output = snowballs.parseFormattedInt() to max.parseFormattedInt()
@@ -44,7 +44,7 @@ object LoreDataTypes {
         output
     }
 
-    val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = DataType("right_click_mana_ability") {
+    val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = DataType.of("right_click_mana_ability") {
         var outputAbility: String? = null
         var outputMana: Int? = null
 
@@ -56,7 +56,7 @@ object LoreDataTypes {
         if (outputAbility != null && outputMana != null) outputAbility to outputMana else null
     }
 
-    val COOLDOWN_ABILITY: DataType<Pair<String, Duration>> = DataType("cooldown_ability") {
+    val COOLDOWN_ABILITY: DataType<Pair<String, Duration>> = DataType.of("cooldown_ability") {
         var outputAbility: String? = null
         var outputDuration: Duration? = null
 
@@ -80,18 +80,18 @@ object LoreDataTypes {
         return null
     }
 
-    val RARITY: DataType<SkyBlockRarity> = DataType("rarity") {
+    val RARITY: DataType<SkyBlockRarity> = DataType.of("rarity") {
         getRarityLine(it)?.second
     }
 
-    val CATEGORY: DataType<SkyBlockCategory> = DataType("category") {
+    val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") {
         getRarityLine(it)?.let { line ->
             line.first.removePrefix(line.second.displayName.uppercase()).trim()
         }?.let(SkyBlockCategory::create)
     }
 
-    val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = DataType("dungeon_breaker_charges") {
-        if (DataTypes.ID.factory(it) != "DUNGEONBREAKER") return@DataType null
+    val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = DataType.of("dungeon_breaker_charges") {
+        if (DataTypes.ID.factory(it) != "DUNGEONBREAKER") return@of null
 
         var output: Pair<Int, Int>? = null
         dungeonBreakerRegex.anyMatch(it.getRawLore(), "current", "max") { (current, max) ->

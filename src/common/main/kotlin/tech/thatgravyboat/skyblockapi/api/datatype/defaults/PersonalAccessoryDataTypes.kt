@@ -22,8 +22,8 @@ object PersonalAccessoryDataTypes {
         else -> null
     }
 
-    val PERSONAL_COMPACTOR_ITEMS: DataType<List<String?>> = DataType("personal_compactor") {
-        val maxItems = it.getMaxItems("COMPACTOR") ?: return@DataType null
+    val PERSONAL_COMPACTOR_ITEMS: DataType<List<String?>> = DataType.of("personal_compactor") {
+        val maxItems = it.getMaxItems("COMPACTOR") ?: return@of null
         buildList {
             for (i in 0 until maxItems) {
                 add(it.tag?.getStringOrNull("personal_compact_$i"))
@@ -31,8 +31,8 @@ object PersonalAccessoryDataTypes {
         }
     }
 
-    val PERSONAL_DELETOR_ITEMS: DataType<List<String?>> = DataType("personal_deletor") {
-        val maxItems = it.getMaxItems("DELETOR") ?: return@DataType null
+    val PERSONAL_DELETOR_ITEMS: DataType<List<String?>> = DataType.of("personal_deletor") {
+        val maxItems = it.getMaxItems("DELETOR") ?: return@of null
         buildList {
             for (i in 0 until maxItems) {
                 add(it.tag?.getStringOrNull("personal_deletor_$i"))
@@ -40,7 +40,7 @@ object PersonalAccessoryDataTypes {
         }
     }
 
-    val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType("personal_accessory_active") {
+    val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType.of("personal_accessory_active") {
         it.tag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE")?.let { active -> active == 1 }
     }
 
