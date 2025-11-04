@@ -36,6 +36,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     TIMERS("Timers:"),
     FIRE_SALE("Fire Sales: \\((?<amount>[\\d,.]+)\\)"),
     MINIONS("Minions: (?<amount>.*)"),
+    PITY("Pity:"),
 
     // Mining
     FORGES("Forges:(?: \\((?<active>[\\d,.]+)/(?<max>[\\d,.]+)\\))?"),
@@ -44,14 +45,14 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     CRYSTALS("Crystals:"),
     MINING_EVENT("Mining Event: (?<event>.*)"),
     FROZEN_CORPSES("Frozen Corpses:"),
-    PITY("Pity:"),
     PICKAXE_ABILITY("Pickaxe Ability:"),
 
     // Foraging
     AGATHA_CONTEST("Agatha's Contest:"),
     STARBORN_TEMPLE("Starborn Temple:"),
-    FOREST_WHISPERS("Forest Whispers: (?<amount>[\\dkmb,.]+)"),
+    FOREST_WHISPERS("Forest Whispers: (?<amount>[\\dkmbKMB,.]+)"),
     MOONGLADE_BEACON("Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
+    SHARD_TRAPS("Shard Traps"),
 
     // Garden + Farming
     COMPOSTER("Composter:"),
@@ -66,6 +67,9 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     REPUTATION("(?:Mage|Barbarian) Reputation:"),
     TROPHY_FISH("Trophy Fish:"),
     FACTION_QUESTS("Faction Quests:"),
+
+    // End
+    DRAGON("Dragon: \\((?<type>.+)\\)"),
 
     // Dungeons + Dungeon Hub
     DOWNED("Downed: (?<status>.*)"),
