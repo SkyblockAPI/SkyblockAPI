@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 import net.minecraft.world.item.Item
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.*
@@ -45,7 +46,9 @@ object DataTypes {
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
     val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
     val BOOK_OF_STATS: DataType<Int> = GenericDataTypes.BOOK_OF_STATS
+    @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = GenericDataTypes.APPLIED_RUNE
+    val USED_RUNE: DataType<SkyBlockId> = GenericDataTypes.USED_RUNE
     val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN
     val APPLIED_DYE: DataType<String> = GenericDataTypes.APPLIED_DYE
     val PET_DATA: DataType<PetData> = GenericDataTypes.PET_DATA

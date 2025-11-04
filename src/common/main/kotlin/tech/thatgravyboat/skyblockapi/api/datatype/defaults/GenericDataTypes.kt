@@ -6,6 +6,7 @@ import net.minecraft.Util
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Item
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
@@ -75,10 +76,17 @@ object GenericDataTypes {
     val DUNGEON_QUALITY: DataType<Int> = DataType("dungeon_quality") { it.tag?.getIntOrNull("baseStatBoostPercentage") }
 
     val ABICASE_MODEL: DataType<String> = DataType("abicase_model") { it.tag?.getStringOrNull("model") }
+
+    @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType("applied_rune") {
         it.tag?.getCompoundOrEmpty("runes")?.let { tag ->
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }?.entries?.firstOrNull()?.toPair()
+    }
+    val USED_RUNE: DataType<SkyBlockId> = DataType("used_rune") {
+        it.tag?.getCompoundOrEmpty("runes")?.let { tag ->
+            buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
+        }?.entries?.firstOrNull()?.let { (id, lvl) -> SkyBlockId.rune(id, lvl) }
     }
     val APPLIED_DYE: DataType<String> = DataType("applied_dye") { it.tag?.getStringOrNull("dye_item") }
     val HELMET_SKIN: DataType<String> = DataType("helmet_skin") { it.tag?.getStringOrNull("skin") }
