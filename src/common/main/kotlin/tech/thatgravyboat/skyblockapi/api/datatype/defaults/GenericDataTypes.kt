@@ -85,8 +85,8 @@ object GenericDataTypes {
     }
     val USED_RUNE: DataType<SkyBlockId> = DataType("used_rune") {
         it.tag?.getCompoundOrEmpty("runes")?.let { tag ->
-            buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
-        }?.entries?.firstOrNull()?.let { (id, lvl) -> SkyBlockId.rune(id, lvl) }
+            tag.keySet().firstNotNullOfOrNull { key -> SkyBlockId.rune(key, tag.getIntOr(key, 0)) }
+        }
     }
     val APPLIED_DYE: DataType<String> = DataType("applied_dye") { it.tag?.getStringOrNull("dye_item") }
     val HELMET_SKIN: DataType<String> = DataType("helmet_skin") { it.tag?.getStringOrNull("skin") }
