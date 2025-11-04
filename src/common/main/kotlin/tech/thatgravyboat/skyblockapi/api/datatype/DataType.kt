@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-class DataType<T : Any> @RemoveNextVersion constructor(
+class DataType<T> @RemoveNextVersion constructor(
     val id: String,
     autoRegister: Boolean,
     val factory: (ItemStack) -> T?,
@@ -24,10 +24,10 @@ class DataType<T : Any> @RemoveNextVersion constructor(
     fun cast(value: Any?): T? = value as? T
 
     companion object {
-        fun <T : Any> of(id: String, type: KType, autoRegister: Boolean = true, factory: (ItemStack) -> T?): DataType<T> {
+        fun <T> of(id: String, type: KType, autoRegister: Boolean = true, factory: (ItemStack) -> T?): DataType<T> {
             return DataType(id, autoRegister, factory, type)
         }
-        inline fun <reified T : Any> of(id: String, autoRegister: Boolean = true, noinline factory: (ItemStack) -> T?): DataType<T> {
+        inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline factory: (ItemStack) -> T?): DataType<T> {
             return DataType(id, autoRegister, factory, typeOf<T>())
         }
     }
