@@ -18,6 +18,7 @@ import tech.thatgravyboat.skyblockapi.api.data.FolderStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
@@ -70,10 +71,11 @@ object ChestDump {
             object : ContainerScreen(menu as ChestMenu, McPlayer.self!!.inventory, dump.title) {
                 override fun init() {
                     super.init()
-                    ScreenInitializedEvent(this).post(SkyBlockAPI.eventBus)
+                    ContainerInitializedEvent(menu.slots.map { it.item }, this).post()
+                    ScreenInitializedEvent(this).post()
                     dump.items.forEachIndexed { index, item ->
                         menu.slots[index].set(item)
-                        InventoryChangeEvent(item, menu.slots[index], dump.title, menu.slots, this).post(SkyBlockAPI.eventBus)
+                        InventoryChangeEvent(item, menu.slots[index], dump.title, menu.slots, this).post()
                     }
                 }
 
