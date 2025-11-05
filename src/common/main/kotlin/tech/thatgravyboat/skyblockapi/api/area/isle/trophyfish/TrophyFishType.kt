@@ -17,7 +17,7 @@ enum class TrophyFishType(
         },
     ),
     OBFUSCATED_ONE(
-        displayName = Text.of("Obfuscated 1") {
+        displayName = Text.of("Obfuscated-1") {
             withStyle(ChatFormatting.WHITE, ChatFormatting.OBFUSCATED)
         },
         internalName = "OBFUSCATED_FISH_1",
@@ -38,7 +38,7 @@ enum class TrophyFishType(
         },
     ),
     OBFUSCATED_TWO(
-        displayName = Text.of("Obfuscated 2") {
+        displayName = Text.of("Obfuscated-2") {
             withStyle(ChatFormatting.GREEN, ChatFormatting.OBFUSCATED)
         },
         internalName = "OBFUSCATED_FISH_2",
@@ -54,7 +54,7 @@ enum class TrophyFishType(
         },
     ),
     OBFUSCATED_THREE(
-        displayName = Text.of("Obfuscated 3") {
+        displayName = Text.of("Obfuscated-3") {
             withStyle(ChatFormatting.BLUE, ChatFormatting.OBFUSCATED)
         },
         internalName = "OBFUSCATED_FISH_3",
