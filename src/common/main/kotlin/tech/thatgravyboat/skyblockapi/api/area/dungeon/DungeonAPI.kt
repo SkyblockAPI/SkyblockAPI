@@ -171,7 +171,7 @@ object DungeonAPI {
         }
         if (!inBoss && dungeonFloor != DungeonFloor.E) {
             bossStartRegex.findThenNull(message, "boss") { (boss) ->
-                if (boss != "The Watcher") return@findThenNull
+                if (boss == "The Watcher") return@findThenNull
                 inBoss = dungeonFloor?.chatBossName == boss
             } ?: return
         }
