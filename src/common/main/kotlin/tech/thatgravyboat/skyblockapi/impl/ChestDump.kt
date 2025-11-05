@@ -18,10 +18,7 @@ import tech.thatgravyboat.skyblockapi.api.data.FolderStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
-import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenInitializedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.*
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
@@ -79,6 +76,10 @@ object ChestDump {
                     }
                 }
 
+                override fun onClose() {
+                    ContainerCloseEvent.post()
+                    super.onClose()
+                }
 
                 @Suppress("WRONG_NULLABILITY_FOR_JAVA_OVERRIDE") // it literally crashes if you don't do this so yeah
                 override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ClickType?) {
