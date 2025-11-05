@@ -6,7 +6,6 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
@@ -142,32 +141,26 @@ value class SkyBlockId private constructor(val id: String) {
     override fun toString() = "SkyBlockId($id)"
 }
 
-private fun ItemStack.getSbId(): SkyBlockId? {
-    val data = DataTypes.ID.factory(this) ?: GenericDataTypes.ID.factory(this)
-    return when (data) {
-        "RUNE", "UNIQUE_RUNE" -> {
-            DataTypes.APPLIED_RUNE.factory(this)?.let { (rune, level) -> "$rune$DELIMITER$level" }.let { it ?: UNKNOWN }
-                .let(SkyBlockId::rune)
-        }
+private fun ItemStack.getSbId(): SkyBlockId? = when (val data = DataTypes.ID.factory(this)) {
+    "RUNE", "UNIQUE_RUNE" -> DataTypes.USED_RUNE.factory(this)
 
-        "PET" -> {
-            DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }
-                .let(SkyBlockId::pet)
-        }
-
-        "ENCHANTED_BOOK" -> {
-            DataTypes.ENCHANTMENTS.factory(this)?.entries?.firstOrNull()?.let { (key, value) -> "$key$DELIMITER$value" }
-                .let { it ?: UNKNOWN }
-                .let(SkyBlockId::enchantment)
-        }
-
-        "ATTRIBUTE_SHARD" -> {
-            DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
-                .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
-        }
-
-        "ABICASE" -> DataTypes.ABICASE_MODEL.factory(this)?.let { SkyBlockId.item("abicase_$it") }
-
-        else -> (data)?.let(SkyBlockId::item)
+    "PET" -> {
+        DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }
+            .let(SkyBlockId::pet)
     }
+
+    "ENCHANTED_BOOK" -> {
+        DataTypes.ENCHANTMENTS.factory(this)?.entries?.firstOrNull()?.let { (key, value) -> "$key$DELIMITER$value" }
+            .let { it ?: UNKNOWN }
+            .let(SkyBlockId::enchantment)
+    }
+
+    "ATTRIBUTE_SHARD" -> {
+        DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
+            .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
+    }
+
+    "ABICASE" -> DataTypes.ABICASE_MODEL.factory(this)?.let { SkyBlockId.item("abicase_$it") }
+
+    else -> (data)?.let(SkyBlockId::item)
 }
