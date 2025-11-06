@@ -5,6 +5,8 @@ package tech.thatgravyboat.skyblockapi.helpers
 import com.mojang.authlib.minecraft.MinecraftSessionService
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.SharedConstants
 import net.minecraft.Util
@@ -21,6 +23,10 @@ import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.packs.resources.PreparableReloadListener
+import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
@@ -31,6 +37,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 actual object McClient {
 
@@ -154,6 +162,24 @@ actual object McClient {
     /** Sends a command that first goes through client side commands, and then server commands */
     actual fun sendClientCommand(command: String) {
         connection?.sendCommand(command.removePrefix("/"))
+    }
+
+    actual fun registerClientReloadListener(id: ResourceLocation, listener: PreparableReloadListener) {
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(ReloadListenerWrapper(id, listener))
+    }
+
+    private data class ReloadListenerWrapper(
+        val id: ResourceLocation,
+        val original: PreparableReloadListener,
+    ) : IdentifiableResourceReloadListener {
+        override fun getFabricId(): ResourceLocation = id
+
+        override fun reload(
+            barrier: PreparableReloadListener.PreparationBarrier,
+            manager: ResourceManager,
+            backgroundExecutor: Executor,
+            gameExecutor: Executor,
+        ): CompletableFuture<Void> = original.reload(barrier, manager, backgroundExecutor, gameExecutor)
     }
 
 }
