@@ -126,6 +126,7 @@ object SimpleItemAPI {
 
     fun getAllIds(): List<SkyBlockId> = allIds
 
+    fun getAllNames(): Set<String> = nameCache.keys
 
     @Subscription(RepoStatusEvent::class)
     @OnRepoStatus(RepoStatus.SUCCESS)
