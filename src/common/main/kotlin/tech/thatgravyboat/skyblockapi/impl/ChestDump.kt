@@ -68,10 +68,11 @@ object ChestDump {
             object : ContainerScreen(menu as ChestMenu, McPlayer.self!!.inventory, dump.title) {
                 override fun init() {
                     super.init()
+                    dump.items.forEachIndexed { index, item -> menu.slots[index].set(item) }
+
                     ContainerInitializedEvent(menu.slots.map { it.item }, this).post()
                     ScreenInitializedEvent(this).post()
                     dump.items.forEachIndexed { index, item ->
-                        menu.slots[index].set(item)
                         InventoryChangeEvent(item, menu.slots[index], dump.title, menu.slots, this).post()
                     }
                 }
