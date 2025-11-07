@@ -9,6 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
+import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
@@ -53,6 +54,8 @@ value class SkyBlockId private constructor(val id: String) {
                 name = name.replace(petRegex, "$1")
             } else if (name.matches(amountRegex)) {
                 name = name.substringBeforeLast(" x")
+            } else if (name.endsWith(" minion")) {
+                name = "$name i"
             }
 
             return SimpleItemAPI.findIdByName(name.trim()) ?: if (dropLast) SimpleItemAPI.findIdByName(name.substringBeforeLast(" ").trim()) else null
@@ -84,7 +87,20 @@ value class SkyBlockId private constructor(val id: String) {
         val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it })
             .xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
 
-        fun ItemStack.getSkyBlockId() = this[DataTypes.SKYBLOCK_ID] ?: fromItem(this) ?: fromName(this.hoverName.stripped)
+        fun ItemStack.getSkyBlockId(): SkyBlockId? {
+            val id = this[DataTypes.SKYBLOCK_ID] ?: fromItem(this)
+            if (id != null) return id
+
+            // Used for ignoring same names on things like dyes and barriers where it is usually important to keep it as no id.
+            // ie. anvil with no items has an barrier named 'Anvil'
+            if (this.item in ItemTag.IGNORE_NAME_LOOKUP) return null
+
+            // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
+            // ie. ender chest icon in storage
+            if (this.item.name.stripped.equals(this.hoverName.stripped, true)) return null
+
+            return fromName(this.hoverName.stripped, false)
+        }
     }
 
     val isItem: Boolean get() = id.startsWith(ITEM)
