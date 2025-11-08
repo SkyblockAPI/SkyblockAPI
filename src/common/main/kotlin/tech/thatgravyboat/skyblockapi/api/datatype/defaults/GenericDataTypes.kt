@@ -80,6 +80,7 @@ object GenericDataTypes {
     val DUNGEON_QUALITY: DataType<Int> = DataType.of("dungeon_quality") { it.tag?.getIntOrNull("baseStatBoostPercentage") }
 
     val ABICASE_MODEL: DataType<String> = DataType.of("abicase_model") { it.tag?.getStringOrNull("model") }
+    val FUNGI_CUTTER_MODE: DataType<String> = DataType.of("fungi_cutter_mode") { it.tag?.getStringOrNull("fungi_cutter_mode") }
 
     @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType.of("applied_rune") {
