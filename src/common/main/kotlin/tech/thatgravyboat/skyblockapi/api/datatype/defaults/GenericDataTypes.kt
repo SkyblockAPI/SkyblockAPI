@@ -57,6 +57,10 @@ object GenericDataTypes {
     val MIDAS_WEAPON_PAID: DataType<Long> = DataType.of("midas_weapon_paid") { stack ->
         listOf("winning_bid", "additional_coins").mapNotNull { stack.tag?.getLongOrNull(it) }.sum().takeUnless { it == 0L }
     }
+    val ENRICHMENT: DataType<SkyBlockId> = DataType.of("enrichment") {
+        val id = it.tag?.getStringOrNull("talisman_enrichment") ?: return@of null
+        SkyBlockId.item("talisman_enrichment_$id")
+    }
     val GILDED_GIFTED_COINS: DataType<Long> = DataType.of("gilded_gifted_coins") { it.tag?.getLongOrNull("gilded_gifted_coins") }
     val CROPS_BROKEN: DataType<Long> = DataType.of("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
     val ABSORB_LOGS: DataType<Long> = DataType.of("absorb_logs_chopped") { it.tag?.getLongOrNull("absorb_logs_chopped") }

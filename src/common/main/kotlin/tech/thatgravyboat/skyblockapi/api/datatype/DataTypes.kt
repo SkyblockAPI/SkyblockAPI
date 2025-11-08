@@ -34,6 +34,7 @@ object DataTypes {
     val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS
     val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
     val MIDAS_WEAPON_PAID: DataType<Long> = GenericDataTypes.MIDAS_WEAPON_PAID
+    val ENRICHMENT: DataType<SkyBlockId> = GenericDataTypes.ENRICHMENT
 
     // Misc (idfk)
     val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = LoreDataTypes.RIGHT_CLICK_MANA_ABILITY

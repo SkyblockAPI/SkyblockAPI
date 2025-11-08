@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.item.calculator
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 
 interface Calculator {
@@ -71,5 +72,13 @@ open class BoolDataTypeCalculator(private val dataType: DataType<Boolean>, priva
         val value = stack.getData(dataType) ?: return null
 
         return if (value) ItemEntry(itemId) else null
+    }
+}
+
+open class SkyBlockIdDataTypeCalculator(private val dataType: DataType<SkyBlockId>) : SingleEntryCalculator {
+    override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
+        val value = stack.getData(dataType) ?: return null
+
+        return ItemEntry(value.skyblockId)
     }
 }
