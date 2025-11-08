@@ -13,13 +13,21 @@ class ComponentMatchResult(private val component: Component, private val result:
         val groups = result.groups
         if (group < 0 || group >= groups.size) return null
         return groups[group]?.range?.let {
-            ComponentUtils.substring(match, it.first, it.last + 1)
+            ComponentUtils.substring(component, it.first, it.last + 1)
         }
     }
 
-    operator fun get(group: String): Component? = result.groups[group]?.range?.let {
-        ComponentUtils.substring(match, it.first, it.last + 1)
+    fun getPlain(group: Int): String? {
+        val groups = result.groups
+        if (group < 0 || group >= groups.size) return null
+        return groups[group]?.value
     }
+
+    operator fun get(group: String): Component? = result.groups[group]?.range?.let {
+        ComponentUtils.substring(component, it.first, it.last + 1)
+    }
+
+    fun getPlain(group: String): String? = result.groups[group]?.value
 
     fun next(): ComponentMatchResult? {
         val next = result.next() ?: return null
