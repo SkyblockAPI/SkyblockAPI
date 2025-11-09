@@ -165,14 +165,14 @@ internal object TabListEventHandler {
     @Subscription
     fun onPacketReceived(event: PacketReceivedEvent) {
         if (event.packet is ClientboundTabListPacket) {
-            TabListHeaderFooterChangeEvent(
-                footer,
-                header,
-                event.packet.footer(),
-                event.packet.header(),
-            ).post(SkyBlockAPI.eventBus)
+            val oldHeader = this.header
+            val oldFooter = this.footer
             this.header = event.packet.header()
             this.footer = event.packet.footer()
+
+            McClient.runNextTick {
+                TabListHeaderFooterChangeEvent(oldFooter, oldHeader, this.footer, this.header).post(SkyBlockAPI.eventBus)
+            }
         }
     }
 }
