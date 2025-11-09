@@ -19,7 +19,7 @@ import kotlin.time.Duration.Companion.seconds
 @Module
 object LoreDataTypes {
 
-    private val dataTypeGroup = Regexes.group("datatype")
+    internal val dataTypeGroup = Regexes.group("datatype")
 
     private val fuelRegex = dataTypeGroup.create("fuel", "Fuel: (?<fuel>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
     private val rightClickAbilityRegex = dataTypeGroup.create("right_click_ability", "Ability: (?<ability>[\\w ]+) {2}RIGHT CLICK")
