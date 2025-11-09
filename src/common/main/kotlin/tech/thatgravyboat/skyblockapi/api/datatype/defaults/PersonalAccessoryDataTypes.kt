@@ -26,7 +26,7 @@ object PersonalAccessoryDataTypes {
 
     private val personalAccessoryActiveRegex = LoreDataTypes.dataTypeGroup.create(
         "personal_accessory_active",
-        "Enabled: (?<state>On|Off)\nRight-Click to toggle!",
+        "Enabled: (?<state>On|Off)\nRight-click to toggle!",
     )
 
     val PERSONAL_COMPACTOR_ITEMS: DataType<List<String?>> = DataType.of("personal_compactor") {
