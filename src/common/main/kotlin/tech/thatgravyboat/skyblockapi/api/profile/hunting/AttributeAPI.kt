@@ -64,7 +64,7 @@ object AttributeAPI {
     private val chatGroup = RegexGroup.CHAT.group("attribute")
 
     private val trapGroup = chatGroup.group("trap")
-    private val foundShardRegex = trapGroup.create("caught", "^You caught (?<amount>an?|x\\d+) (?<name>.*?) Shards?!$")
+    private val foundShardRegex = trapGroup.create("caught", "^(?:You caught|LOOT SHARE You received) (?<amount>an?|x?\\d+) (?<name>.*?) Shards?(?: for assisting \\w+)?!$")
 
     private val fusionChatGroup = chatGroup.group("fusion")
     private val fusionObtainedRegex = fusionChatGroup.create("obtained", "FUSION! You obtained (?:an? )?(.*?)(?: (x\\d+))?!.*")
