@@ -87,19 +87,21 @@ value class SkyBlockId private constructor(val id: String) {
         val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it })
             .xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
 
-        fun ItemStack.getSkyBlockId(): SkyBlockId? {
-            val id = this[DataTypes.SKYBLOCK_ID] ?: fromItem(this)
+        fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
+
+        internal fun createIdForItem(stack: ItemStack): SkyBlockId? {
+            val id = fromItem(stack)
             if (id != null) return id
 
             // Used for ignoring same names on things like dyes and barriers where it is usually important to keep it as no id.
             // ie. anvil with no items has an barrier named 'Anvil'
-            if (this.item in ItemTag.IGNORE_NAME_LOOKUP) return null
+            if (stack.item in ItemTag.IGNORE_NAME_LOOKUP) return null
 
             // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
             // ie. ender chest icon in storage
-            if (this.item.name.stripped.equals(this.hoverName.stripped, true)) return null
+            if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
 
-            return fromName(this.hoverName.stripped, false)
+            return fromName(stack.hoverName.stripped, false)
         }
     }
 

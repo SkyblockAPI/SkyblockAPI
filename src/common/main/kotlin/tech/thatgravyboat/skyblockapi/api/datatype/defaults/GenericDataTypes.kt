@@ -10,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
-import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import java.util.*
@@ -20,7 +19,7 @@ import kotlin.time.Instant
 @Module
 object GenericDataTypes {
 
-    val SKYBLOCK_ID: DataType<SkyBlockId> = DataType.of("skyblock_id") { it.getSkyBlockId() }
+    val SKYBLOCK_ID: DataType<SkyBlockId> = DataType.of("skyblock_id") { SkyBlockId.createIdForItem(it) }
     val ID: DataType<String> = DataType.of("id") { it.tag?.getStringOrNull("id") }
     val API_ID: DataType<String> = DataType.of("api_id") {
         when (val id = it.tag?.getStringOrNull("id")) {
