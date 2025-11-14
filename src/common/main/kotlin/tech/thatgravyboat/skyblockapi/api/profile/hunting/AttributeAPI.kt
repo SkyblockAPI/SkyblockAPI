@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.item.replaceVisually
 import tech.thatgravyboat.skyblockapi.api.remote.api.RepoAttributeAPI
@@ -313,6 +314,28 @@ object AttributeAPI {
         getData(id).syphoned += amount
         AttributeStorage.save()
     }
+
+    private fun resetOwnedAttributeAmounts() {
+        for (key in _attributeMap.keys) {
+            _attributeMap[key]?.owned = 0
+        }
+        AttributeStorage.save()
+    }
+
+    @Subscription
+    fun onCommandRegister(event: RegisterCommandsEvent) {
+        event.register("sbapi attributes") {
+            then("reset") {
+                then("owned") {
+                    callback {
+                        resetOwnedAttributeAmounts()
+                        Text.debug("Reset Owned Shards!").send()
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 private data class DeferredFusion(
