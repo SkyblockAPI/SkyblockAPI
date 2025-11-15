@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.ProfileStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
@@ -14,6 +15,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileLevelChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
+import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -159,8 +161,9 @@ object ProfileAPI {
 
     @Subscription
     @OnlyOnSkyBlock
+    @TimePassed("5s")
     fun onTick(event: TickEvent) {
-        if (lastWorldSwap + 2500 < System.currentTimeMillis() && !this.isLoaded) {
+        if (lastWorldSwap + 2500 < System.currentTimeMillis() && !this.isLoaded && !LocationAPI.forceOnSkyblock) {
             SkyBlockAPI.logger.error("Could not find way to determine profile name.")
         }
     }
