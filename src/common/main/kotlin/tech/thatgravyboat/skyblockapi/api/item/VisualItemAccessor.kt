@@ -16,8 +16,11 @@ internal interface VisualItemAccessor {
     fun `skyblockapi$getOnClickAction`(): ClickConsumer?
     fun `skyblockapi$setBackgroundItem`(item: ItemStack?)
     fun `skyblockapi$getBackgroundItem`(): ItemStack?
+    fun `skyblockapi$setBackgroundColor`(color: Int?)
+    fun `skyblockapi$getBackgroundColor`(): Int?
 
     companion object {
+        @JvmStatic
         fun getVisualItemAccessor(item: ItemStack?): VisualItemAccessor {
             @Suppress("CAST_NEVER_SUCCEEDS")
             return item as VisualItemAccessor
