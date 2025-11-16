@@ -16,8 +16,6 @@ import tech.thatgravyboat.skyblockapi.api.item.ClickConsumer;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 @Mixin(ItemStack.class)
 public abstract class VisualItemMixin implements VisualItemAccessor {
