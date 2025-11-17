@@ -38,6 +38,7 @@ data class ActionBarWidgetType(
 @Module
 object ActionBarEventHandler {
 
+    @Deprecated("Remove when removing old actionbar events")
     private val types = listOf(
         // §c1,303/1,303❤
         ActionBarWidgetType(ActionBarWidget.HEALTH, "§.(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)❤(?:\\+§.[\\d,]+.)?") { old, it ->
