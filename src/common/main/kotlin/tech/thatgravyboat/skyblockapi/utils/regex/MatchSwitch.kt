@@ -14,16 +14,7 @@ class RegexSwitch {
         cases.add(RegexSwitchCase(regex, groups.toList(), action))
     }
 
-    internal fun check(input: String, checker: (Regex, String, Array<String>, (Destructured) -> Unit) -> Boolean): Boolean {
-        for ((regex, groups, action) in cases) {
-            if (checker(regex, input, groups.toTypedArray(), action)) {
-                return true
-            }
-        }
-        return false
-    }
-
-    internal fun anyCheck(input: List<String>, checker: (Regex, List<String>, Array<String>, (Destructured) -> Unit) -> Boolean): Boolean {
+    internal fun <T> check(input: T, checker: (Regex, T, Array<String>, (Destructured) -> Unit) -> Boolean): Boolean {
         for ((regex, groups, action) in cases) {
             if (checker(regex, input, groups.toTypedArray(), action)) {
                 return true
@@ -37,7 +28,7 @@ fun matchWhen(input: String, init: RegexSwitch.() -> Unit): Boolean = RegexSwitc
     regex.match(input = input, groups = groups, action = action)
 }
 
-fun anyMatchWhen(input: List<String>, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).anyCheck(input) { regex, input, groups, action ->
+fun anyMatchWhen(input: List<String>, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).check(input) { regex, input, groups, action ->
     regex.anyMatch(input = input, groups = groups, action = action)
 }
 
