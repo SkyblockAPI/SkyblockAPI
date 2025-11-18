@@ -16,8 +16,8 @@ internal interface VisualItemAccessor {
     fun `skyblockapi$getOnClickAction`(): ClickConsumer?
     fun `skyblockapi$setBackgroundItem`(item: ItemStack?)
     fun `skyblockapi$getBackgroundItem`(): ItemStack?
-    fun `skyblockapi$setBackgroundColor`(color: Int?)
-    fun `skyblockapi$getBackgroundColor`(): Int?
+    fun `skyblockapi$setBackgroundColor`(color: Int)
+    fun `skyblockapi$getBackgroundColor`(): Int
 
     companion object {
         @JvmStatic

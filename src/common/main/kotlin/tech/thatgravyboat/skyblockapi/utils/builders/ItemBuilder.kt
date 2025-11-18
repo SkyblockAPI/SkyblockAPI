@@ -23,7 +23,7 @@ class ItemBuilder {
     private var clickAction: ClickConsumer? = null
     var customSlotText: String? = null
     var backgroundItem: ItemStack? = null
-    var backgroundColor: Int? = null
+    var backgroundColor: Int = 0
 
     companion object {
         operator fun invoke(item: ItemLike, init: ItemBuilder.() -> Unit): ItemStack {

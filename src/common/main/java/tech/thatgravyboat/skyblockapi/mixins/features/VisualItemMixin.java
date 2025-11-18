@@ -90,12 +90,12 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     }
 
     @Override
-    public void skyblockapi$setBackgroundColor(@Nullable Integer color) {
-        this.backgroundColor = color == null ? 0 : color;
+    public void skyblockapi$setBackgroundColor(int color) {
+        this.backgroundColor = color;
     }
 
     @Override
-    public @Nullable Integer skyblockapi$getBackgroundColor() {
-        return this.backgroundColor == 0 ? null : this.backgroundColor;
+    public int skyblockapi$getBackgroundColor() {
+        return this.backgroundColor;
     }
 }

@@ -77,16 +77,16 @@ public abstract class GuiGraphicsVisualItemMixin {
         @Local(argsOnly = true, ordinal = 3) int z
     ) {
         var accessor = VisualItemAccessor.getVisualItemAccessor(itemStack);
+        var color = accessor.skyblockapi$getBackgroundColor();
+        if (color != 0) {
+            this.fill(x, y, x + 16, y + 16, color);
+        }
         var backgroundItem = accessor.skyblockapi$getBackgroundItem();
         if (backgroundItem != null) {
             this.pose.pushPose();
             this.pose.translate(x, y, z - 200);
             this.renderItem(backgroundItem, 0, 0);
             this.pose.popPose();
-        }
-        var color = accessor.skyblockapi$getBackgroundColor();
-        if (color != null) {
-            this.fill(x, y, x + 16, y + 16, color);
         }
     }
 
