@@ -16,13 +16,14 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
 import kotlin.jvm.optionals.getOrNull
 
-class ItemBuilder() {
+class ItemBuilder {
     lateinit var item: Item
     var count: Int = 1
     private var components = DataComponentPatch.builder()
     private var clickAction: ClickConsumer? = null
     var customSlotText: String? = null
     var backgroundItem: ItemStack? = null
+    var backgroundColor: Int = 0
 
     companion object {
         operator fun invoke(item: ItemLike, init: ItemBuilder.() -> Unit): ItemStack {
@@ -99,6 +100,7 @@ class ItemBuilder() {
                 it.`skyblockapi$setSlotText`(customSlotText)
                 it.`skyblockapi$setOnClickAction`(clickAction)
                 it.`skyblockapi$setBackgroundItem`(backgroundItem)
+                it.`skyblockapi$setBackgroundColor`(backgroundColor)
             }
         }
     }

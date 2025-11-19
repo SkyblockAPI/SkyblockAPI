@@ -33,12 +33,15 @@ public abstract class GuiGraphicsVisualItemMixin {
     @Shadow
     public abstract void nextStratum();
 
+    @Shadow
+    public abstract void fill(int i, int j, int k, int l, int color);
+
     @Inject(
         method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
         at = @At("HEAD")
     )
     private void skyblockapi$renderVisualItem(CallbackInfo ci, @Local(argsOnly = true) LocalRef<ItemStack> itemStack) {
-        var visualItem = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack.get()).skyblockapi$getVisualItem();
+        var visualItem = VisualItemAccessor.getVisualItemAccessor(itemStack.get()).skyblockapi$getVisualItem();
         if (visualItem == null) {
             return;
         }
@@ -48,7 +51,7 @@ public abstract class GuiGraphicsVisualItemMixin {
     @WrapMethod(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V")
     private void skyblockapi$renderItemDecorations(Font font, ItemStack itemStack, int i, int j, Operation<Void> original) {
         skyblockapi$originalItem.set(itemStack);
-        var visualItem = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack).skyblockapi$getVisualItem();
+        var visualItem = VisualItemAccessor.getVisualItemAccessor(itemStack).skyblockapi$getVisualItem();
         var item = visualItem != null ? visualItem : itemStack;
         original.call(font, item, i, j);
         skyblockapi$originalItem.remove();
@@ -60,7 +63,7 @@ public abstract class GuiGraphicsVisualItemMixin {
         @Local(argsOnly = true) LocalRef<String> count,
         @Local(argsOnly = true) LocalRef<ItemStack> itemStack
     ) {
-        var slotText = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack.get()).skyblockapi$getSlotText();
+        var slotText = VisualItemAccessor.getVisualItemAccessor(itemStack.get()).skyblockapi$getSlotText();
         if (slotText != null) count.set(slotText);
         else {
             var item = skyblockapi$originalItem.get();
@@ -79,7 +82,12 @@ public abstract class GuiGraphicsVisualItemMixin {
         @Local(argsOnly = true, ordinal = 1) int y,
         @Local(argsOnly = true, ordinal = 2) int z
     ) {
-        var backgroundItem = VisualItemAccessor.Companion.getVisualItemAccessor(itemStack).skyblockapi$getBackgroundItem();
+        var accessor = VisualItemAccessor.getVisualItemAccessor(itemStack);
+        var color = accessor.skyblockapi$getBackgroundColor();
+        if (color != 0) {
+            this.fill(x, y, x + 16, y + 16, color);
+        }
+        var backgroundItem = accessor.skyblockapi$getBackgroundItem();
         if (backgroundItem != null) {
             this.pose.pushMatrix();
             this.pose.translate(x, y);

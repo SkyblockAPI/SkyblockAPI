@@ -23,13 +23,15 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     public abstract boolean isEmpty();
 
     @Unique
-    private ItemStack visualItem;
+    private @Nullable ItemStack visualItem;
     @Unique
-    private String slotText;
+    private @Nullable String slotText;
     @Unique
-    private ClickConsumer clickAction;
+    private @Nullable ClickConsumer clickAction;
     @Unique
-    private ItemStack backgroundItem;
+    private @Nullable ItemStack backgroundItem;
+    @Unique
+    private int backgroundColor;
 
     @Override
     public void skyblockapi$setVisualItem(@Nullable ItemStack item) {
@@ -83,7 +85,17 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     }
 
     @Override
-    public ItemStack skyblockapi$getBackgroundItem() {
+    public @Nullable ItemStack skyblockapi$getBackgroundItem() {
         return this.backgroundItem;
+    }
+
+    @Override
+    public void skyblockapi$setBackgroundColor(int color) {
+        this.backgroundColor = color;
+    }
+
+    @Override
+    public int skyblockapi$getBackgroundColor() {
+        return this.backgroundColor;
     }
 }
