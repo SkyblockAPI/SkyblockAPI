@@ -8,6 +8,8 @@ import tech.thatgravyboat.skyblockapi.impl.events.TabListEventHandler
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 
+typealias TabWidgetUpdateEvent = TabWidgetChangeEvent
+
 data class TabWidgetChangeEvent(
     val widget: TabWidget,
     val old: List<String>,

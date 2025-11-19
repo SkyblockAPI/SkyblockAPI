@@ -94,7 +94,7 @@ value class SkyBlockId private constructor(val id: String) {
             if (id != null) return id
 
             // Used for ignoring same names on things like dyes and barriers where it is usually important to keep it as no id.
-            // ie. anvil with no items has an barrier named 'Anvil'
+            // ie. anvil with no items has a barrier named 'Anvil'
             if (stack.item in ItemTag.IGNORE_NAME_LOOKUP) return null
 
             // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
@@ -128,10 +128,8 @@ value class SkyBlockId private constructor(val id: String) {
         }.uppercase()
     val bazaarId: String
         get() = when {
-
-            isAttribute -> "SHARD_${RepoAttributeAPI.getAttributeDataById(cleanId)?.shardName()}"
+            isAttribute -> RepoAttributeAPI.getAttributeDataById(cleanId)?.shardId ?: "UNKNOWN"
             isEnchantment -> "ENCHANTMENT_${cleanId.substringBeforeLast(DELIMITER)}_${cleanId.substringAfterLast(DELIMITER)}"
-
             else -> skyblockId
         }
 
@@ -161,16 +159,15 @@ value class SkyBlockId private constructor(val id: String) {
 
 private fun ItemStack.getSbId(): SkyBlockId? = when (val data = DataTypes.ID.factory(this)) {
     "RUNE", "UNIQUE_RUNE" -> DataTypes.USED_RUNE.factory(this)
-
-    "PET" -> {
-        DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }
-            .let(SkyBlockId::pet)
-    }
-
+    "PET" -> DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
     "ENCHANTED_BOOK" -> {
-        DataTypes.ENCHANTMENTS.factory(this)?.entries?.firstOrNull()?.let { (key, value) -> "$key$DELIMITER$value" }
-            .let { it ?: UNKNOWN }
-            .let(SkyBlockId::enchantment)
+        val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
+
+        when (enchants?.size) {
+            null, 0 -> SkyBlockId.enchantment(UNKNOWN)
+            1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key, value) }
+            else -> SkyBlockId.item("enchanted_book")
+        }
     }
 
     "ATTRIBUTE_SHARD" -> {
@@ -179,6 +176,5 @@ private fun ItemStack.getSbId(): SkyBlockId? = when (val data = DataTypes.ID.fac
     }
 
     "ABICASE" -> DataTypes.ABICASE_MODEL.factory(this)?.let { SkyBlockId.item("abicase_$it") }
-
     else -> (data)?.let(SkyBlockId::item)
 }
