@@ -21,6 +21,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 private const val SELECT_START_INDEX = 36
+private const val WARDROBE_PAGES = 3
+private const val WARDROBE_SLOTS_PER_PAGE = 9
 
 @Module
 object WardrobeAPI {
@@ -56,9 +58,9 @@ object WardrobeAPI {
 
         var foundCurrentSlot = false
 
-        for (index in 0..8) {
+        for (index in 0..<WARDROBE_SLOTS_PER_PAGE) {
             val selectStack = items[index + SELECT_START_INDEX]
-            val id = 9 * currentPage + index - 8
+            val id = WARDROBE_SLOTS_PER_PAGE * (currentPage - 1) + index + 1
             var locked = false
 
             if (selectStack.item == Items.RED_DYE) {
@@ -83,7 +85,12 @@ object WardrobeAPI {
         }
     }
 
-    fun isCurrentSlotInCurrentPage() = WardrobeStorage.currentSlot?.let { it in 9 * currentPage - 8..9 * currentPage } == true
+    fun isCurrentSlotInCurrentPage(): Boolean {
+        val slot = WardrobeStorage.currentSlot ?: return false
+        val first = (currentPage - 1) * WARDROBE_SLOTS_PER_PAGE + 1
+        val last = first + WARDROBE_SLOTS_PER_PAGE - 1
+        return slot in first..last
+    }
 
     @Subscription
     fun onInventoryUpdate(event: InventoryChangeEvent) {
@@ -107,7 +114,7 @@ object WardrobeAPI {
 
     @Subscription
     fun onProfileSwitch(event: ProfileChangeEvent) {
-        repeat(18) { index ->
+        repeat(WARDROBE_SLOTS_PER_PAGE * WARDROBE_PAGES) { index ->
             val incr = index + 1
             val foundSlot = slots.any { it.id == incr }
             if (!foundSlot) {
