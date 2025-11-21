@@ -105,7 +105,6 @@ cloche {
             compileOnlyApi.bundle(libs.bundles.meowdding)
 
             localRuntime("net.minecrell:terminalconsoleappender:1.3.0")
-            implementation(libs.meowdding.item.dfu)
             implementation(libs.fabric.language.kotlin)
             implementation.bundle(libs.bundles.hypixel)
             implementation(libs.skyblockapi.repolib)
@@ -184,6 +183,13 @@ cloche {
                 include(libs.hypixel.modapi.fabric)
                 include(libs.meowdding.item.dfu)
 
+                implementation(dependencies.variantOf(libs.meowdding.item.dfu) {
+                    classifier(name)
+                })
+                include(dependencies.variantOf(libs.meowdding.item.dfu) {
+                    classifier(name)
+                })
+
 
                 mods.deleteRecursively()
                 modsTmp.createDirectories()
@@ -246,7 +252,14 @@ cloche {
         end = "1.21.8"
         endExclusive = false
     }
-    createVersion("1.21.9", minecraftSameEndVersion = false, fabricApiVersion = provider { "0.133.7" }, common = postRenderingChanges)
+    createVersion("1.21.9", fabricApiVersion = provider { "0.133.7" }, common = postRenderingChanges) {
+        start = "1.21.9"
+        end = "1.21.10"
+        endExclusive = false
+    }
+    createVersion("1.21.11", "1.21.11-pre1", fabricApiVersion = provider { "0.139.0" }, common = postRenderingChanges) {
+        start = "1.21.11-pre1"
+    }
 
     mappings {
         official()
@@ -264,13 +277,13 @@ apiValidation {
 }
 
 repositories {
+    mavenLocal()
     maven(url = "https://repo.hypixel.net/repository/Hypixel/")
     maven(url = "https://maven.teamresourceful.com/repository/maven-public/")
     maven(url = "https://maven.teamresourceful.com/repository/msrandom/")
     maven(url = "https://maven.msrandom.net/repository/root")
     maven(url = "https://api.modrinth.com/maven")
     maven(url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
-    mavenLocal()
 }
 
 compactingResources {
@@ -279,6 +292,7 @@ compactingResources {
     configureTask(tasks.getByName<ProcessResources>("processVersions1218Resources"))
     configureTask(tasks.getByName<ProcessResources>("processVersions1215Resources"))
     configureTask(tasks.getByName<ProcessResources>("processVersions1219Resources"))
+    configureTask(tasks.getByName<ProcessResources>("processVersions12111Resources"))
     configureTask(tasks.getByName<ProcessResources>("processResources"))
 
     removeComments("skyblockid/unobtainable_ids")
@@ -340,6 +354,7 @@ ksp {
     this@ksp.excludedSources.from(sourceSets.getByName("versions1215").kotlin.srcDirs)
     this@ksp.excludedSources.from(sourceSets.getByName("versions1218").kotlin.srcDirs)
     this@ksp.excludedSources.from(sourceSets.getByName("versions1219").kotlin.srcDirs)
+    this@ksp.excludedSources.from(sourceSets.getByName("versions12111").kotlin.srcDirs)
     this@ksp.excludedSources.from(sourceSets.getByName("prc").kotlin.srcDirs)
     arg("meowdding.modules.project_name", "SkyblockAPI")
     arg("meowdding.modules.package", "tech.thatgravyboat.skyblockapi.generated")
@@ -348,7 +363,6 @@ ksp {
     arg("actualStubDir", project.layout.buildDirectory.dir("generated/ksp/main/stubs").get().asFile.absolutePath)
 }
 
-// TODO temporary workaround for a cloche issue on certain systems, remove once fixed
 val mcVersions = sourceSets.filter { it.name.startsWith("versions") }
 
 tasks.withType<WriteClasspathFile>().configureEach {
