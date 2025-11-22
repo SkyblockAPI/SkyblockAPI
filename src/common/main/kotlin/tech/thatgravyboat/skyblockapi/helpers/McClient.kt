@@ -13,7 +13,6 @@ import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
 import net.msrandom.stub.Stub
@@ -75,6 +74,6 @@ expect object McClient {
     /** Sends a command that first goes through client side commands, and then server commands */
     fun sendClientCommand(command: String)
 
-    fun registerClientReloadListener(id: ResourceLocation, listener: PreparableReloadListener)
+    fun registerClientReloadListener(id: McIdentifier.Identifier, listener: PreparableReloadListener)
 }
 
