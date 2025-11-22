@@ -25,7 +25,7 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     @Unique
     private @Nullable ItemStack visualItem;
     @Unique
-    private @Nullable String slotText;
+    private @Nullable Component slotText;
     @Unique
     private @Nullable ClickConsumer clickAction;
     @Unique
@@ -60,12 +60,12 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     }
 
     @Override
-    public void skyblockapi$setSlotText(@Nullable String item) {
+    public void skyblockapi$setSlotText(@Nullable Component item) {
         this.slotText = item;
     }
 
     @Override
-    public @Nullable String skyblockapi$getSlotText() {
+    public @Nullable Component skyblockapi$getSlotText() {
         return this.slotText;
     }
 

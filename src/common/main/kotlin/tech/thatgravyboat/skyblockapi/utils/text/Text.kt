@@ -155,7 +155,7 @@ object TextUtils {
     fun Component.substring(range: IntRange): Component = this.substring(range.first, range.last)
 
     // TODO: optimize color codes to only add the necessary ones
-    fun Component.toStringWithFormattingCodes(): String {
+    internal fun Component.toStringWithFormattingCodes(): String {
         val sb = StringBuilder()
         var last = Style.EMPTY
 

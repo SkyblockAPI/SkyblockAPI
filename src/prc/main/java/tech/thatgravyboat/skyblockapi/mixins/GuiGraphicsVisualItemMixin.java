@@ -1,11 +1,16 @@
 package tech.thatgravyboat.skyblockapi.mixins;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3x2fStack;
 import org.spongepowered.asm.mixin.Final;
@@ -36,6 +41,9 @@ public abstract class GuiGraphicsVisualItemMixin {
     @Shadow
     public abstract void fill(int i, int j, int k, int l, int color);
 
+    @Shadow
+    public abstract void drawString(Font par1, Component par2, int par3, int par4, int par5, boolean par6);
+
     @Inject(
         method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
         at = @At("HEAD")
@@ -48,27 +56,53 @@ public abstract class GuiGraphicsVisualItemMixin {
         itemStack.set(visualItem);
     }
 
-    @WrapMethod(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V")
-    private void skyblockapi$renderItemDecorations(Font font, ItemStack itemStack, int i, int j, Operation<Void> original) {
+    @WrapMethod(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V")
+    private void wrapRenderItemDecorations(Font font, ItemStack itemStack, int i, int j, String string, Operation<Void> original) {
         skyblockapi$originalItem.set(itemStack);
         var visualItem = VisualItemAccessor.getVisualItemAccessor(itemStack).skyblockapi$getVisualItem();
         var item = visualItem != null ? visualItem : itemStack;
-        original.call(font, item, i, j);
+        original.call(font, item, i, j, string);
         skyblockapi$originalItem.remove();
     }
 
     @Inject(method = "renderItemCount", at = @At("HEAD"))
-    private void skyblockapi$renderItemCount(
+    private void setComponentAndChangeItem(
         CallbackInfo ci,
-        @Local(argsOnly = true) LocalRef<String> count,
+        @Share("component") LocalRef<Component> componentRef,
         @Local(argsOnly = true) LocalRef<ItemStack> itemStack
     ) {
         var slotText = VisualItemAccessor.getVisualItemAccessor(itemStack.get()).skyblockapi$getSlotText();
-        if (slotText != null) count.set(slotText);
+        if (slotText != null) componentRef.set(slotText);
         else {
             var item = skyblockapi$originalItem.get();
             if (item != null) itemStack.set(item);
         }
+    }
+
+    @Definition(id = "string", local = @Local(type = String.class, argsOnly = true))
+    @Expression("string != null")
+    @WrapOperation(method = "renderItemCount", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0))
+    private boolean wrapIsNullCheck(Object left, Object right, Operation<Boolean> original, @Share("component") LocalRef<Component> componentRef) {
+        return original.call(left, right) || componentRef.get() != null;
+    }
+
+    // Ignore the warning about no possible signatures for this injector
+    @WrapOperation(method = "renderItemCount", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"))
+    private void wrapIsNullCheck(
+        GuiGraphics instance,
+        Font font,
+        String string,
+        int i,
+        int j,
+        int k,
+        boolean flag,
+        Operation<Void> original,
+        @Share("component") LocalRef<Component> componentRef,
+        @Local(argsOnly = true, ordinal = 0) int original_i
+    ) {
+        var component = componentRef.get();
+        if (component == null) original.call(instance, font, string, i, j, k, flag);
+        else this.drawString(font, component, original_i + 19 - 2 - font.width(component), j, k, flag);
     }
 
     @Inject(
