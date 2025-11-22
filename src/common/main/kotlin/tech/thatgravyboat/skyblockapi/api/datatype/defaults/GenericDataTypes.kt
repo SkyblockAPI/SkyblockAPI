@@ -81,6 +81,10 @@ object GenericDataTypes {
     val ABICASE_MODEL: DataType<String> = DataType.of("abicase_model") { it.tag?.getStringOrNull("model") }
     val FUNGI_CUTTER_MODE: DataType<String> = DataType.of("fungi_cutter_mode") { it.tag?.getStringOrNull("fungi_cutter_mode") }
 
+
+    val PARTY_HAT_COLOR: DataType<String> = DataType.of("party_hat_color") { it.tag?.getStringOrNull("party_hat_color") }
+    val PARTY_HAT_YEAR: DataType<Int> = DataType.of("party_hat_year") { it.tag?.getIntOrNull("party_hat_year") }
+
     @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType.of("applied_rune") {
         it.tag?.getCompoundOrEmpty("runes")?.let { tag ->

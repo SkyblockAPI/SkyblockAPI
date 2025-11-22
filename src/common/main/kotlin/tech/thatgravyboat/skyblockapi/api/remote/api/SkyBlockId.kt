@@ -94,11 +94,11 @@ value class SkyBlockId private constructor(val id: String) {
             if (id != null) return id
 
             // Used for ignoring same names on things like dyes and barriers where it is usually important to keep it as no id.
-            // ie. anvil with no items has a barrier named 'Anvil'
+            // i.e. anvil with no items has a barrier named 'Anvil'
             if (stack.item in ItemTag.IGNORE_NAME_LOOKUP) return null
 
             // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
-            // ie. ender chest icon in storage
+            // i.e. ender chest icon in storage
             if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
 
             return fromName(stack.hoverName.stripped, false)
@@ -176,5 +176,9 @@ private fun ItemStack.getSbId(): SkyBlockId? = when (val data = DataTypes.ID.fac
     }
 
     "ABICASE" -> DataTypes.ABICASE_MODEL.factory(this)?.let { SkyBlockId.item("abicase_$it") }
-    else -> (data)?.let(SkyBlockId::item)
+
+    "PARTY_HAT_CRAB_ANIMATED" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
+    "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_$it") }
+
+    else -> data?.let(SkyBlockId::item)
 }
