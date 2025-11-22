@@ -114,7 +114,7 @@ object WardrobeAPI {
 
     @Subscription
     fun onProfileSwitch(event: ProfileChangeEvent) {
-        val slotCount = WardrobeStorage.slots.size. roundToNextMultipleOf(WARDROBE_SLOTS_PER_PAGE)
+        val slotCount = WardrobeStorage.slots.size.roundToNextMultipleOf(WARDROBE_SLOTS_PER_PAGE)
         repeat(slotCount) { index ->
             val incr = index + 1
             val foundSlot = slots.any { it.id == incr }
