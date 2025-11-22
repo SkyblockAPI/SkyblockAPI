@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEven
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
+import tech.thatgravyboat.skyblockapi.utils.extentions.roundToNextMultipleOf
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -21,7 +22,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 private const val SELECT_START_INDEX = 36
-private const val WARDROBE_PAGES = 3
 private const val WARDROBE_SLOTS_PER_PAGE = 9
 
 @Module
@@ -114,7 +114,8 @@ object WardrobeAPI {
 
     @Subscription
     fun onProfileSwitch(event: ProfileChangeEvent) {
-        repeat(WARDROBE_SLOTS_PER_PAGE * WARDROBE_PAGES) { index ->
+        val slotCount = WardrobeStorage.slots.size. roundToNextMultipleOf(WARDROBE_SLOTS_PER_PAGE)
+        repeat(slotCount) { index ->
             val incr = index + 1
             val foundSlot = slots.any { it.id == incr }
             if (!foundSlot) {
