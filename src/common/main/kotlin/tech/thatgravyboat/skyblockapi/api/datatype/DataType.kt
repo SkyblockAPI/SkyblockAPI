@@ -3,6 +3,8 @@ package tech.thatgravyboat.skyblockapi.api.datatype
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
+import tech.thatgravyboat.skyblockapi.utils.extentions.getCompoundTagFunctionByType
+import tech.thatgravyboat.skyblockapi.utils.extentions.tag
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -29,6 +31,16 @@ class DataType<T> @RemoveNextVersion constructor(
         }
         inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline factory: (ItemStack) -> T?): DataType<T> {
             return DataType(id, autoRegister, factory, typeOf<T>())
+        }
+
+        /**
+         * Creates a [DataType] that gets the tag named [tagName] from the item's Custom Data.
+         *
+         * See [getCompoundTagFunctionByType] for the allowed classes.
+         */
+        inline fun <reified T : Any> simple(id: String, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
+            val function = getCompoundTagFunctionByType(T::class)
+            return of(id, autoRegister) { item -> item.tag?.let { function(it, tagName) } }
         }
     }
 }
