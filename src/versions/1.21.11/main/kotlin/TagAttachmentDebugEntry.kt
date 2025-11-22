@@ -3,14 +3,14 @@ package tech.thatgravyboat.skyblockapi
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer
 import net.minecraft.client.gui.components.debug.DebugScreenEntry
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.chunk.LevelChunk
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.helpers.SkyBlockEntity.getAttachedLines
 
 object TagAttachmentDebugEntry : DebugScreenEntry {
-    val GROUP: ResourceLocation = ResourceLocation.fromNamespaceAndPath(SkyBlockAPI.MOD_ID, "tag_attachments")
+    val GROUP: Identifier = Identifier.fromNamespaceAndPath(SkyBlockAPI.MOD_ID, "tag_attachments")
     override fun display(
         displayer: DebugScreenDisplayer,
         arg2: Level?,

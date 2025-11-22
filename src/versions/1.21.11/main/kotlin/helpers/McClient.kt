@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.SharedConstants
-import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.client.Options
 import net.minecraft.client.gui.Gui
@@ -23,10 +22,11 @@ import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.util.Util
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 import tech.thatgravyboat.skyblockapi.utils.McVersion
@@ -155,15 +155,15 @@ actual object McClient {
         connection?.sendCommand(command.removePrefix("/"))
     }
 
-    actual fun registerClientReloadListener(id: ResourceLocation, listener: PreparableReloadListener) {
+    actual fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(ReloadListenerWrapper(id, listener))
     }
 
     private data class ReloadListenerWrapper(
-        val id: ResourceLocation,
+        val id: Identifier,
         val original: PreparableReloadListener,
     ) : IdentifiableResourceReloadListener {
-        override fun getFabricId(): ResourceLocation = id
+        override fun getFabricId(): Identifier = id
 
         override fun reload(
             arg: PreparableReloadListener.SharedState,

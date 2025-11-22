@@ -43,6 +43,7 @@ public class ScreenMixin {
         new RenderScreenForegroundEvent((Screen) (Object) this, graphics).post(SkyBlockAPI.getEventBus());
     }
 
+    // TODO: unsure what happened to this, cant find what it got replaced with
     @WrapOperation(method = "handleComponentClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;handleClickEvent(Lnet/minecraft/client/Minecraft;Lnet/minecraft/network/chat/ClickEvent;)V"))
     private void handleComponentClickedError(Screen instance, Minecraft minecraft, ClickEvent event, Operation<Void> original) {
         if (event instanceof RunnableClickEventHook runnableEvent) {
