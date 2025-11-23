@@ -32,6 +32,8 @@ data class HypixelApiItem(
     @param:FieldName("npc_sell_price") val npcSellPrice: Int?,
     @param:FieldName("npc_sell_price") val npcSellPriceFloat: Float?,
     @param:FieldName("museum_data") val museumData: ItemMuseumData?,
+    @param:FieldName("rift_transferrable") val riftTransferable: Boolean = false,
+    @param:FieldName("origin") val itemOrigin: ItemOrigin?,
 ) {
     companion object {
         val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()

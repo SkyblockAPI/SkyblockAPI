@@ -69,6 +69,12 @@ abstract class CreateItemDataTask : DefaultTask() {
                     val obj = item.get(objectToKeep) ?: continue
                     output.add(objectToKeep, obj)
                 }
+                val valuesToKeep = listOf("origin", "rift_transferrable")
+                for (valueToKeep in valuesToKeep) {
+                    val value = item.getAsJsonPrimitive(valueToKeep) ?: continue
+                    output.add(valueToKeep, value)
+                }
+
                 if (item.has("museum_data")) {
                     val museumData = item.getAsJsonObject("museum_data")
                     val newData = JsonObject()
