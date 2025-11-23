@@ -13,10 +13,14 @@ import java.nio.file.Files
 
 @Module
 object ItemData {
-    val itemData: List<HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
-        ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
+    @Deprecated("Use ItemData.data instead", ReplaceWith("data.values"), DeprecationLevel.ERROR)
+    val itemData: List<HypixelApiItem> get() = data.values.toList()
 
-    fun getItemData(id: String) = itemData.firstOrNull { it.id == id }
+    val data: Map<String, HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
+        ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
+        .associateBy(HypixelApiItem::id)
+
+    fun getItemData(id: String) = data[id]
 
     @Deprecated("Use getNpcSellPrice instead", ReplaceWith("getNpcSellPrice(id)"), DeprecationLevel.ERROR)
     fun getNpcPrice(id: String): Int? = getItemData(id)?.npcSellPrice
