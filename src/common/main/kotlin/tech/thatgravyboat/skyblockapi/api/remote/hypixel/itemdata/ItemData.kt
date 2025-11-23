@@ -20,7 +20,7 @@ object ItemData {
         ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
         .associateBy(HypixelApiItem::id)
 
-    fun getItemData(id: String) = data[id]
+    fun getItemData(id: String): HypixelApiItem? = data[id]
 
     @Deprecated("Use getNpcSellPrice instead", ReplaceWith("getNpcSellPrice(id)"), DeprecationLevel.ERROR)
     fun getNpcPrice(id: String): Int? = getItemData(id)?.npcSellPrice
