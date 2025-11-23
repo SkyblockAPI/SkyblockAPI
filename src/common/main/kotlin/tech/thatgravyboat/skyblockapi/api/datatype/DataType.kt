@@ -12,12 +12,14 @@ class DataType<T> @RemoveNextVersion constructor(
     val id: String,
     autoRegister: Boolean,
     val factory: (ItemStack) -> T?,
-    val type: KType?
+    val type: KType?,
 ) {
     @RemoveNextVersion
     constructor(id: String, autoRegister: Boolean, factory: (ItemStack) -> T?) : this(id, autoRegister, factory, null)
+
     @RemoveNextVersion
     constructor(id: String, factory: (ItemStack) -> T?) : this(id, true, factory)
+
     init {
         if (autoRegister) DataTypesRegistry.addDataType(this)
     }
@@ -29,8 +31,13 @@ class DataType<T> @RemoveNextVersion constructor(
         fun <T> of(id: String, type: KType, autoRegister: Boolean = true, factory: (ItemStack) -> T?): DataType<T> {
             return DataType(id, autoRegister, factory, type)
         }
-        inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline factory: (ItemStack) -> T?): DataType<T> {
-            return DataType(id, autoRegister, factory, typeOf<T>())
+
+        inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline factory: (ItemStack) -> T?): DataType<T> =
+            of(id, typeOf<T>(), autoRegister, factory)
+
+        fun <T : Any> simple(id: String, type: KType, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
+            val function = getCompoundTagFunctionByType<T>(type)
+            return of(id, type, autoRegister) { item -> item.tag?.let { function(it, tagName) } }
         }
 
         /**
@@ -39,8 +46,7 @@ class DataType<T> @RemoveNextVersion constructor(
          * See [getCompoundTagFunctionByType] for the allowed classes.
          */
         inline fun <reified T : Any> simple(id: String, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
-            val function = getCompoundTagFunctionByType(T::class)
-            return of(id, autoRegister) { item -> item.tag?.let { function(it, tagName) } }
+            return simple(id, typeOf<T>(), tagName, autoRegister)
         }
     }
 }
