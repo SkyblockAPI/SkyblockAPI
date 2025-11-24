@@ -20,7 +20,7 @@ import kotlin.time.Instant
 object GenericDataTypes {
 
     val SKYBLOCK_ID: DataType<SkyBlockId> = DataType.of("skyblock_id") { SkyBlockId.createIdForItem(it) }
-    val ID: DataType<String> = DataType.of("id") { it.tag?.getStringOrNull("id") }
+    val ID: DataType<String> = DataType.simple("id")
     val API_ID: DataType<String> = DataType.of("api_id") {
         when (val id = it.tag?.getStringOrNull("id")) {
             "RUNE", "UNIQUE_RUNE" -> APPLIED_RUNE.factory(it)?.let { rune -> "rune:${rune.first}:${rune.second}" }
@@ -28,12 +28,12 @@ object GenericDataTypes {
             else -> id
         }
     }
-    val UUID: DataType<UUID> = DataType.of("uuid") { it.tag?.getUuidOrNull("uuid") }
-    val MODIFIER: DataType<String> = DataType.of("modifier") { it.tag?.getStringOrNull("modifier") }
+    val UUID: DataType<UUID> = DataType.simple("uuid")
+    val MODIFIER: DataType<String> = DataType.simple("modifier")
     val TIMESTAMP: DataType<Instant> = DataType.of("timestamp") { it.tag?.getLongOrNull("timestamp")?.let(Instant::fromEpochMilliseconds) }
-    val SECONDS_HELD: DataType<Int> = DataType.of("seconds_held") { it.tag?.getIntOrNull("seconds_held") }
-    val BOTTLE_OF_JYRRE_SECONDS: DataType<Int> = DataType.of("bottle_of_jyrre_seconds") { it.tag?.getIntOrNull("bottle_of_jyrre_seconds") }
-    val RIFT_DISCRITE_SECONDS: DataType<Int> = DataType.of("rift_discrite_seconds") { it.tag?.getIntOrNull("rift_discrite_seconds") }
+    val SECONDS_HELD: DataType<Int> = DataType.simple("seconds_held")
+    val BOTTLE_OF_JYRRE_SECONDS: DataType<Int> = DataType.simple("bottle_of_jyrre_seconds")
+    val RIFT_DISCRITE_SECONDS: DataType<Int> = DataType.simple("rift_discrite_seconds")
 
     val RECOMBOBULATOR: DataType<Boolean> = DataType.of("recombobulator") { item -> item.tag?.getIntOrNull("rarity_upgrades")?.let { it > 0 } }
     val QUIVER_ARROW: DataType<Boolean> = DataType.of("quiver_arrow") { it.tag?.getStringOrNull("quiver_arrow")?.equals("true") }
@@ -42,12 +42,12 @@ object GenericDataTypes {
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
-    val HOT_POTATO_BOOKS: DataType<Int> = DataType.of("hot_potato_count") { it.tag?.getIntOrNull("hot_potato_count") }
-    val ART_OF_WAR: DataType<Boolean> = DataType.of("art_of_war") { item -> item.tag?.getBooleanOrNull("art_of_war_count") }
-    val ART_OF_PEACE: DataType<Boolean> = DataType.of("art_of_peace") { it.tag?.getBooleanOrNull("artOfPeaceApplied") }
-    val BOOK_OF_STATS: DataType<Int> = DataType.of("book_of_stats") { it.tag?.getIntOrNull("stats_book") }
-    val POTION: DataType<String> = DataType.of("potion") { it.tag?.getStringOrNull("potion") }
-    val POTION_LEVEL: DataType<Int> = DataType.of("potion_level") { it.tag?.getIntOrNull("potion_level") }
+    val HOT_POTATO_BOOKS: DataType<Int> = DataType.simple("hot_potato_count", "hot_potato_count")
+    val ART_OF_WAR: DataType<Boolean> = DataType.simple("art_of_war", "art_of_war_count")
+    val ART_OF_PEACE: DataType<Boolean> = DataType.simple("art_of_peace", "artOfPeaceApplied")
+    val BOOK_OF_STATS: DataType<Int> = DataType.simple("book_of_stats", "stats_book")
+    val POTION: DataType<String> = DataType.simple("potion")
+    val POTION_LEVEL: DataType<Int> = DataType.simple("potion_level")
     val ATTRIBUTES: DataType<Map<String, Int>> = DataType.of("attributes") {
         it.tag?.getCompoundOrEmpty("attributes")?.let { tag ->
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
@@ -60,10 +60,10 @@ object GenericDataTypes {
         val id = it.tag?.getStringOrNull("talisman_enrichment") ?: return@of null
         SkyBlockId.item("talisman_enrichment_$id")
     }
-    val GILDED_GIFTED_COINS: DataType<Long> = DataType.of("gilded_gifted_coins") { it.tag?.getLongOrNull("gilded_gifted_coins") }
-    val CROPS_BROKEN: DataType<Long> = DataType.of("mined_crops") { it.tag?.getLongOrNull("mined_crops") }
-    val ABSORB_LOGS: DataType<Long> = DataType.of("absorb_logs_chopped") { it.tag?.getLongOrNull("absorb_logs_chopped") }
-    val LOGS_CUT: DataType<Long> = DataType.of("logs_cut") { it.tag?.getLongOrNull("logs_cut") }
+    val GILDED_GIFTED_COINS: DataType<Long> = DataType.simple("gilded_gifted_coins")
+    val CROPS_BROKEN: DataType<Long> = DataType.simple("mined_crops")
+    val ABSORB_LOGS: DataType<Long> = DataType.simple("absorb_logs_chopped")
+    val LOGS_CUT: DataType<Long> = DataType.simple("logs_cut")
     val STAR_COUNT: DataType<Int> = DataType.of("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
     val NECRON_SCROLLS: DataType<List<String>> = DataType.of("necron_scrolls") {
         val list = it.tag?.getList("ability_scroll")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull() }
@@ -74,12 +74,12 @@ object GenericDataTypes {
             list
         }
     }
-    val DUNGEON_ITEM: DataType<Boolean> = DataType.of("dungeon_item") { it.tag?.getBooleanOrNull("dungeon_item") }
-    val DUNGEON_TIER: DataType<Int> = DataType.of("dungeon_tier") { it.tag?.getIntOrNull("item_tier") }
-    val DUNGEON_QUALITY: DataType<Int> = DataType.of("dungeon_quality") { it.tag?.getIntOrNull("baseStatBoostPercentage") }
+    val DUNGEON_ITEM: DataType<Boolean> = DataType.simple("dungeon_item")
+    val DUNGEON_TIER: DataType<Int> = DataType.simple("dungeon_tier", "item_tier")
+    val DUNGEON_QUALITY: DataType<Int> = DataType.simple("dungeon_quality", "baseStatBoostPercentage")
 
-    val ABICASE_MODEL: DataType<String> = DataType.of("abicase_model") { it.tag?.getStringOrNull("model") }
-    val FUNGI_CUTTER_MODE: DataType<String> = DataType.of("fungi_cutter_mode") { it.tag?.getStringOrNull("fungi_cutter_mode") }
+    val ABICASE_MODEL: DataType<String> = DataType.simple("abicase_model", "model")
+    val FUNGI_CUTTER_MODE: DataType<String> = DataType.simple("fungi_cutter_mode")
 
 
     val PARTY_HAT_COLOR: DataType<String> = DataType.of("party_hat_color") { it.tag?.getStringOrNull("party_hat_color") }
@@ -96,8 +96,8 @@ object GenericDataTypes {
             tag.keySet().firstNotNullOfOrNull { key -> SkyBlockId.rune(key, tag.getIntOr(key, 0)) }
         }
     }
-    val APPLIED_DYE: DataType<String> = DataType.of("applied_dye") { it.tag?.getStringOrNull("dye_item") }
-    val HELMET_SKIN: DataType<String> = DataType.of("helmet_skin") { it.tag?.getStringOrNull("skin") }
+    val APPLIED_DYE: DataType<String> = DataType.simple("applied_dye", "dye_item")
+    val HELMET_SKIN: DataType<String> = DataType.simple("helmet_skin", "skin")
     val PET_DATA: DataType<PetData> = DataType.of("pet_data") {
         val json = it.tag?.getStringOrNull("petInfo")?.readJson<JsonObject>() ?: return@of null
         PetData(
@@ -110,18 +110,18 @@ object GenericDataTypes {
             json.get("candyUsed").asInt(0),
         )
     }
-    val JALAPENO_BOOK: DataType<Boolean> = DataType.of("jalapeno_book") { it.tag?.getBooleanOrNull("jalapeno_count") }
+    val JALAPENO_BOOK: DataType<Boolean> = DataType.simple("jalapeno_book", "jalapeno_count")
 
     val BOOSTERS: DataType<List<String>> = DataType.of("boosters") {
         it.tag?.getList("boosters")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull()?.let { "${it}_BOOSTER" } } ?: emptyList()
     }
 
-    val WET_BOOK: DataType<Int> = DataType.of("wet_book") { it.tag?.getIntOrNull("wet_book_count") }
+    val WET_BOOK: DataType<Int> = DataType.simple("wet_book", "wet_book_count")
     val HOOK: DataType<Pair<UUID, String>> = getFishingRodPartDataType("hook")
     val LINE: DataType<Pair<UUID, String>> = getFishingRodPartDataType("line")
     val SINKER: DataType<Pair<UUID, String>> = getFishingRodPartDataType("sinker")
 
-    /** In SkyBlock items that are only available in new versions are shown via `DataComponents.ITEM_MODEL`, this returns the item that is displayed. */
+    /** In SkyBlock items that are only available in new versions are shown via [DataComponents.ITEM_MODEL], this returns the item that is displayed. */
     val VISIBLE_ITEM: DataType<Item> = DataType.of("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
 
 
