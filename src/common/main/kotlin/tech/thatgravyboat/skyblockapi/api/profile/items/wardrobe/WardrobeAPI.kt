@@ -20,6 +20,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import kotlin.math.max
 
 private const val SELECT_START_INDEX = 36
 private const val WARDROBE_SLOTS_PER_PAGE = 9
@@ -114,7 +115,10 @@ object WardrobeAPI {
 
     @Subscription
     fun onProfileSwitch(event: ProfileChangeEvent) {
-        val slotCount = WardrobeStorage.slots.size.roundToNextMultipleOf(WARDROBE_SLOTS_PER_PAGE)
+        val slotCount = max(
+        	WardrobeStorage.slots.size.roundToNextMultipleOf(WARDROBE_SLOTS_PER_PAGE),
+        	WARDROBE_SLOTS_PER_PAGE * 3
+        )
         repeat(slotCount) { index ->
             val incr = index + 1
             val foundSlot = slots.any { it.id == incr }
