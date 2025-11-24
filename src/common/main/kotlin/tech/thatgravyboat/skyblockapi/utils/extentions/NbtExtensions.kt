@@ -4,6 +4,24 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.item.component.CustomData
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
+
+fun <T : Any> getCompoundTagFunctionByType(type: KType): (CompoundTag, String) -> T? {
+    @Suppress("UNCHECKED_CAST")
+    return when(type) {
+        typeOf<String>() -> CompoundTag::getStringOrNull
+        typeOf<Byte>() -> CompoundTag::getByteOrNull
+        typeOf<Short>() -> CompoundTag::getShortOrNull
+        typeOf<Int>() -> CompoundTag::getIntOrNull
+        typeOf<Long>() -> CompoundTag::getLongOrNull
+        typeOf<Float>() -> CompoundTag::getFloatOrNull
+        typeOf<Double>() -> CompoundTag::getDoubleOrNull
+        typeOf<Boolean>() -> CompoundTag::getBooleanOrNull
+        typeOf<UUID>() -> CompoundTag::getUuidOrNull
+        else -> throw IllegalArgumentException("$type is not supported!")
+    } as (CompoundTag, String) -> T?
+}
 
 fun CompoundTag.getStringOrNull(key: String): String? = this.getString(key).getOrNull()
 fun CompoundTag.getByteOrNull(key: String): Byte? = this.getByte(key).getOrNull()
