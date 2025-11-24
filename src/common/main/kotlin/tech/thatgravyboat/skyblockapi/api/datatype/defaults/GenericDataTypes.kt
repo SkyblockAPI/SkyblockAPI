@@ -82,8 +82,8 @@ object GenericDataTypes {
     val FUNGI_CUTTER_MODE: DataType<String> = DataType.simple("fungi_cutter_mode")
 
 
-    val PARTY_HAT_COLOR: DataType<String> = DataType.of("party_hat_color") { it.tag?.getStringOrNull("party_hat_color") }
-    val PARTY_HAT_YEAR: DataType<Int> = DataType.of("party_hat_year") { it.tag?.getIntOrNull("party_hat_year") }
+    val PARTY_HAT_COLOR: DataType<String> = DataType.simple("party_hat_color")
+    val PARTY_HAT_YEAR: DataType<Int> = DataType.simple("party_hat_year")
 
     @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType.of("applied_rune") {
