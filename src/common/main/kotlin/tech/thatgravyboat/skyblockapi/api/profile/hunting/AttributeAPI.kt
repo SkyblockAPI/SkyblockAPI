@@ -182,7 +182,9 @@ object AttributeAPI {
             }
         }
 
-        val shard = event.item.getRawLore().dropWhile { it.matches(fusionItemRegex) }.firstOrNull() ?: return
+        val shard = event.item.getRawLore().dropWhile {
+            it.matches(fusionItemRegex)
+        }.firstOrNull()?.removeSuffix(" NEW SHARD") ?: return
         val id = SkyBlockId.fromName(shard) ?: return
 
         when (event.slot.index) {
