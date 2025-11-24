@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
-@Debug(export = true)
 @Mixin(GuiGraphics.class)
 public abstract class GuiGraphicsVisualItemMixin {
 
