@@ -13,7 +13,7 @@ import java.nio.file.Files
 
 @Module
 object ItemData {
-    @Deprecated("Use ItemData.data instead", ReplaceWith("data.values"), DeprecationLevel.ERROR)
+    @Deprecated("Use ItemData.data instead", ReplaceWith("data.values"))
     val itemData: List<HypixelApiItem> get() = data.values.toList()
 
     val data: Map<String, HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
@@ -37,7 +37,7 @@ data class HypixelApiItem(
     @param:FieldName("npc_sell_price") val npcSellPriceFloat: Float?,
     @param:FieldName("museum_data") val museumData: ItemMuseumData?,
     @param:FieldName("rift_transferrable") val riftTransferable: Boolean = false,
-    @param:FieldName("origin") val itemOrigin: ItemOrigin?,
+    val origin: ItemOrigin?,
 ) {
     companion object {
         val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()
