@@ -13,10 +13,14 @@ import java.nio.file.Files
 
 @Module
 object ItemData {
-    val itemData: List<HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
-        ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
+    @Deprecated("Use ItemData.data instead", ReplaceWith("data.values"))
+    val itemData: List<HypixelApiItem> get() = data.values.toList()
 
-    fun getItemData(id: String) = itemData.firstOrNull { it.id == id }
+    val data: Map<String, HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
+        ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
+        .associateBy(HypixelApiItem::id)
+
+    fun getItemData(id: String): HypixelApiItem? = data[id]
 
     @Deprecated("Use getNpcSellPrice instead", ReplaceWith("getNpcSellPrice(id)"), DeprecationLevel.ERROR)
     fun getNpcPrice(id: String): Int? = getItemData(id)?.npcSellPrice
@@ -32,6 +36,8 @@ data class HypixelApiItem(
     @param:FieldName("npc_sell_price") val npcSellPrice: Int?,
     @param:FieldName("npc_sell_price") val npcSellPriceFloat: Float?,
     @param:FieldName("museum_data") val museumData: ItemMuseumData?,
+    @param:FieldName("rift_transferrable") val riftTransferable: Boolean = false,
+    val origin: ItemOrigin?,
 ) {
     companion object {
         val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()
