@@ -2,10 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.area.hub
 
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.api.data.Candidate
-import tech.thatgravyboat.skyblockapi.api.data.ElectionJson
-import tech.thatgravyboat.skyblockapi.api.data.Perk
-import tech.thatgravyboat.skyblockapi.api.data.PerkJson
+import tech.thatgravyboat.skyblockapi.api.data.*
 import tech.thatgravyboat.skyblockapi.api.datetime.SkyBlockInstant
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
@@ -42,6 +39,14 @@ object ElectionAPI {
     private var lastEvaluatedExtraJerry: Instant = currentInstant()
     private var scheduler: ScheduledFuture<*>? = null
     var rawData: ElectionJson? = null
+        private set
+
+    var mayor: MayorCandidate? = null
+        private set
+    var minister: MayorCandidate? = null
+        private set
+
+    var currentJerryCandidate: Pair<MayorCandidate, Instant>? = null
         private set
 
     var currentMayor: Candidate? = null
