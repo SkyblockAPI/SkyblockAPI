@@ -16,4 +16,7 @@ fun Instant.since(): Duration = currentInstant() - this
 
 fun Instant.until(): Duration = this - currentInstant()
 
+fun Instant.isInPast(): Boolean = this < currentInstant()
+fun Instant.isInFuture(): Boolean = this > currentInstant()
+
 fun DateTimeFormatter.format(instant: Instant): String = this.format(instant.toJavaInstant())

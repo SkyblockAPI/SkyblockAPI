@@ -1,27 +1,40 @@
-@file:Suppress("unused")
-
 package tech.thatgravyboat.skyblockapi.api.data
 
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
+import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
 import tech.thatgravyboat.skyblockapi.utils.extentions.toScreamingSnakeCase
 
 @ConsistentCopyVisibility
 data class MayorCandidate internal constructor(
     val id: String,
     val candidateName: String,
-    val perks: MutableList<MayorPerk>
+    val perks: MutableSet<MayorPerk>,
+    val isSpecial: Boolean,
 ) {
-    internal constructor(id: String, candidateName: String, vararg perks: MayorPerk) : this(id, candidateName, perks.toMutableList())
+    val activePerks: Collection<MayorPerk> get() = perks.filter { it.active }
+    val isActive: Boolean get() {
+        if (ElectionAPI.mayor == this || ElectionAPI.minister == this) return true
+        val (jerryCandidate, time) = ElectionAPI.currentJerryCandidate ?: return false
+        return jerryCandidate == this && time.isInFuture()
+    }
+
+    internal fun addAllPerks(): MayorCandidate = apply { perks.forEach { it.active = true } }
+    internal fun clearAllPerks(): MayorCandidate = apply { perks.forEach { it.active = false } }
+    override fun toString(): String = candidateName
 }
 
 object MayorCandidates {
     private val _mayors = mutableMapOf<String, MayorCandidate>()
-    val mayors: Map<String, MayorCandidate> by _mayors
-    fun register(candidateName: String, vararg perks: MayorPerk, id: String = candidateName.toScreamingSnakeCase()): MayorCandidate {
-        return _mayors.getOrPut(id) { MayorCandidate(id, candidateName, *perks) }
+    val mayors: Collection<MayorCandidate> by _mayors::values
+    fun register(candidateName: String, vararg perks: MayorPerk, id: String = candidateName.toScreamingSnakeCase(), isSpecial: Boolean = false): MayorCandidate {
+        return _mayors.getOrPut(id) { MayorCandidate(id, candidateName, perks.toMutableSet(), isSpecial) }
     }
 
+    fun getCandidateById(id: String): MayorCandidate? = _mayors[id]
+    fun getCandidate(candidateName: String): MayorCandidate? = _mayors.values.find { it.candidateName == candidateName }
+
+    //region Candidates
     val AATROX = register("Aatrox", MayorPerks.SLASHED_PRICING, MayorPerks.SLAYER_XP_BUFF, MayorPerks.PATHFINDER)
     val COLE = register("Cole", MayorPerks.PROSPECTION, MayorPerks.MINING_XP_BUFF, MayorPerks.MINING_FIESTA, MayorPerks.MOLTEN_FORGE)
     val DIANA = register("Diana", MayorPerks.LUCKY, MayorPerks.MYTHOLOGICAL_RITUAL, MayorPerks.PET_XP_BUFF, MayorPerks.SHARING_IS_CARING)
@@ -30,39 +43,14 @@ object MayorCandidates {
     val FOXY = register("Foxy", MayorPerks.SWEET_BENEVOLENCE, MayorPerks.A_TIME_FOR_GIVING, MayorPerks.CHIVALROUS_CARNIVAL, MayorPerks.EXTRA_EVENT)
     val MARINA = register("Marina", MayorPerks.FISHING_XP_BUFF, MayorPerks.LUCK_OF_THE_SEA, MayorPerks.FISHING_FESTIVAL, MayorPerks.DOUBLE_TROUBLE)
     val PAUL = register("Paul", MayorPerks.MARAUDER, MayorPerks.EZPZ, MayorPerks.BENEDICTION)
-    val SCORPIUS = register("Scorpius", MayorPerks.BRIBE, MayorPerks.DARKER_AUCTIONS)
-    val JERRY = register("Jerry", MayorPerks.PERKPOCALYPSE, MayorPerks.STATSPOCALYPSE, MayorPerks.JERRYPOCALYPSE)
-    val DERPY = register("Derpy", MayorPerks.TURBO_MINIONS, MayorPerks.QUAD_TAXES, MayorPerks.DOUBLE_MOBS_HP, MayorPerks.MOAR_SKILLZ)
 
-}
+    // Special Mayors
+    val SCORPIUS = register("Scorpius", MayorPerks.BRIBE, MayorPerks.DARKER_AUCTIONS, isSpecial = true)
+    val JERRY = register("Jerry", MayorPerks.PERKPOCALYPSE, MayorPerks.STATSPOCALYPSE, MayorPerks.JERRYPOCALYPSE, isSpecial = true)
+    val DERPY = register("Derpy", MayorPerks.TURBO_MINIONS, MayorPerks.QUAD_TAXES, MayorPerks.DOUBLE_MOBS_HP, MayorPerks.MOAR_SKILLZ, isSpecial = true)
+    val AURA = register("Aura", MayorPerks.FUNDRAISING, MayorPerks.MINION_UNION, MayorPerks.UNIVERSAL_INCOME, MayorPerks.WORK_BETTER, MayorPerks.WORK_HARDER, MayorPerks.WORK_SMARTER, isSpecial = true)
+    //endregion
 
-@RemoveNextVersion(ReplaceWith("MayorCandidate"), DeprecationLevel.ERROR)
-enum class Candidate(val candidateName: String, vararg val perks: Perk) {
-    AATROX("Aatrox", Perk.SLASHED_PRICING, Perk.SLAYER_XP_BUFF, Perk.PATHFINDER),
-    COLE("Cole", Perk.PROSPECTION, Perk.MINING_XP_BUFF, Perk.MINING_FIESTA, Perk.MOLTEN_FORGE),
-    DIANA("Diana", Perk.LUCKY, Perk.MYTHOLOGICAL_RITUAL, Perk.PET_XP_BUFF, Perk.SHARING_IS_CARING),
-    DIAZ("Diaz", Perk.SHOPPING_SPREE, Perk.VOLUME_TRADING, Perk.STOCK_EXCHANGE, Perk.LONG_TERM_INVESTMENT),
-    FINNEGAN("Finnegan", Perk.PELT_POCALYPSE, Perk.GOATED, Perk.BLOOMING_BUSINESS, Perk.PEST_ERADICATOR),
-    FOXY("Foxy", Perk.SWEET_BENEVOLENCE, Perk.A_TIME_FOR_GIVING, Perk.CHIVALROUS_CARNIVAL, Perk.EXTRA_EVENT),
-    MARINA("Marina", Perk.FISHING_XP_BUFF, Perk.LUCK_OF_THE_SEA, Perk.FISHING_FESTIVAL, Perk.DOUBLE_TROUBLE),
-    PAUL("Paul", Perk.MARAUDER, Perk.EZPZ, Perk.BENEDICTION),
-    SCORPIUS("Scorpius", Perk.BRIBE, Perk.DARKER_AUCTIONS),
-    JERRY("Jerry", Perk.PERKPOCALYPSE, Perk.STATSPOCALYPSE, Perk.JERRYPOCALYPSE),
-    DERPY("Derpy", Perk.TURBO_MINIONS, Perk.QUAD_TAXES, Perk.DOUBLE_MOBS_HP, Perk.MOAR_SKILLZ),
-    UNKNOWN("Unknown", Perk.SLASHED_PRICING, Perk.SLAYER_XP_BUFF, Perk.PATHFINDER),
-    ;
-
-    val activePerks get() = perks.filter { it.active }
-    val isActive get() = this == ElectionAPI.currentMayor || this == ElectionAPI.currentMinister
-    val isSpecial by lazy { this in setOf(SCORPIUS, JERRY, DERPY) }
-
-    internal fun addAllPerks(): Candidate = apply { perks.forEach { it.active = true } }
-    internal fun clearAllPerks(): Candidate = apply { perks.forEach { it.active = false } }
-    override fun toString() = candidateName
-
-    companion object {
-        fun getCandidate(candidateName: String): Candidate? = entries.find { it.candidateName == candidateName }
-    }
 }
 
 @ConsistentCopyVisibility
@@ -70,148 +58,196 @@ data class MayorPerk internal constructor(
     val id: String,
     val perkName: String,
 ) {
+    //region Functions
     var active: Boolean = false
         internal set
     var description: String = "Not available"
+    //endregion
 }
+
 
 @Suppress("unused")
 object MayorPerks {
     private val _perks = mutableMapOf<String, MayorPerk>()
-    val perks: Map<String, MayorPerk> by _perks
+    val perks: Collection<MayorPerk> by _perks::values
 
     fun register(perkName: String, id: String = perkName.toScreamingSnakeCase()): MayorPerk {
         return _perks.getOrPut(id) { MayorPerk(id, perkName) }
     }
 
-    fun reset() = perks.values.forEach { it.active = false }
-    fun getPerk(perkName: String) = perks.values.find { it.perkName == perkName }
+    fun reset() = _perks.values.forEach { it.active = false }
 
+    fun getPerkById(id: String): MayorPerk? = _perks[id]
+    fun getPerk(perkName: String) = _perks.values.find { it.perkName == perkName }
 
+    //region Perks
+    // Aatrox
     val SLASHED_PRICING = register("SLASHED Pricing")
     val SLAYER_XP_BUFF = register("Slayer XP Buff")
     val PATHFINDER = register("Pathfinder")
 
+    // Cole
     val PROSPECTION = register("Prospection")
     val MINING_XP_BUFF = register("Mining XP Buff")
     val MINING_FIESTA = register("Mining Fiesta")
     val MOLTEN_FORGE = register("Molten Forge")
 
+    // Diana
     val LUCKY = register("Lucky!")
     val MYTHOLOGICAL_RITUAL = register("Mythological Ritual")
     val PET_XP_BUFF = register("Pet XP Buff")
     val SHARING_IS_CARING = register("Sharing is Caring")
 
+    // Diaz
     val SHOPPING_SPREE = register("Shopping Spree")
     val VOLUME_TRADING = register("Volume Trading")
     val STOCK_EXCHANGE = register("Stock Exchange")
     val LONG_TERM_INVESTMENT = register("Long Term Investment")
 
-    val PELT_POCALYPSE = register("PELT_POCALYPSE","Pelt-pocalypse")
-    val GOATED = register("GOATED","GOATed")
-    val BLOOMING_BUSINESS = register("BLOOMING_BUSINESS","Blooming Business")
-    val PEST_ERADICATOR = register("PEST_ERADICATOR","Pest Eradicator")
-
-    val SWEET_BENEVOLENCE = register("SWEET_BENEVOLENCE","Sweet Benevolence")
-    val A_TIME_FOR_GIVING = register("A_TIME_FOR_GIVING","A Time for Giving")
-    val CHIVALROUS_CARNIVAL = register("CHIVALROUS_CARNIVAL","Chivalrous Carnival")
-    val EXTRA_EVENT = register("EXTRA_EVENT","Extra Event")
-
-    val FISHING_XP_BUFF = register("FISHING_XP_BUFF","Fishing XP Buff")
-    val LUCK_OF_THE_SEA = register("LUCK_OF_THE_SEA","Luck of the Sea 2.0")
-    val FISHING_FESTIVAL = register("FISHING_FESTIVAL","Fishing Festival")
-    val DOUBLE_TROUBLE = register("DOUBLE_TROUBLE","Double Trouble")
-
-    val MARAUDER = register("MARAUDER","Marauder")
-    val EZPZ = register("EZPZ","EZPZ")
-    val BENEDICTION = register("BENEDICTION","Benediction")
-
-    val BRIBE = register("BRIBE","Bribe")
-    val DARKER_AUCTIONS = register("DARKER_AUCTIONS","Darker Auctions")
-
-    val PERKPOCALYPSE = register("PERKPOCALYPSE","Perkpocalypse")
-    val STATSPOCALYPSE = register("STATSPOCALYPSE","Statspocalypse")
-    val JERRYPOCALYPSE = register("JERRYPOCALYPSE","Jerrypocalypse")
-
-    val TURBO_MINIONS = register("TURBO_MINIONS","TURBO MINIONS!!!")
-    val QUAD_TAXES = register("QUAD_TAXES","QUAD TAXES!!!")
-    val DOUBLE_MOBS_HP = register("DOUBLE_MOBS_HP","DOUBLE MOBS HP!!!")
-    val MOAR_SKILLZ = register("MOAR_SKILLZ","MOAR SKILLZ!!!")
-}
-
-@RemoveNextVersion
-enum class Perk(val perkName: String) {
-    // Aatrox
-    SLASHED_PRICING("SLASHED Pricing"),
-    SLAYER_XP_BUFF("Slayer XP Buff"),
-    PATHFINDER("Pathfinder"),
-
-    // Cole
-    PROSPECTION("Prospection"),
-    MINING_XP_BUFF("Mining XP Buff"),
-    MINING_FIESTA("Mining Fiesta"),
-    MOLTEN_FORGE("Molten Forge"),
-
-    // Diana
-    LUCKY("Lucky!"),
-    MYTHOLOGICAL_RITUAL("Mythological Ritual"),
-    PET_XP_BUFF("Pet XP Buff"),
-    SHARING_IS_CARING("Sharing is Caring"),
-
-    // Diaz
-    SHOPPING_SPREE("Shopping Spree"),
-    VOLUME_TRADING("Volume Trading"),
-    STOCK_EXCHANGE("Stock Exchange"),
-    LONG_TERM_INVESTMENT("Long Term Investment"),
-
     // Finnegan
-    PELT_POCALYPSE("Pelt-pocalypse"),
-    GOATED("GOATed"),
-    BLOOMING_BUSINESS("Blooming Business"),
-    PEST_ERADICATOR("Pest Eradicator"),
+    val PELT_POCALYPSE = register("Pelt-pocalypse")
+    val GOATED = register("GOATed", id = "GOATED")
+    val BLOOMING_BUSINESS = register("Blooming Business")
+    val PEST_ERADICATOR = register("Pest Eradicator")
 
     // Foxy
-    SWEET_BENEVOLENCE("Sweet Benevolence"),
-    A_TIME_FOR_GIVING("A Time for Giving"),
-    CHIVALROUS_CARNIVAL("Chivalrous Carnival"),
-    EXTRA_EVENT("Extra Event"),
+    val SWEET_BENEVOLENCE = register("Sweet Benevolence")
+    val A_TIME_FOR_GIVING = register("A Time for Giving")
+    val CHIVALROUS_CARNIVAL = register("Chivalrous Carnival")
+    val EXTRA_EVENT = register("Extra Event")
 
     // Marina
-    FISHING_XP_BUFF("Fishing XP Buff"),
-    LUCK_OF_THE_SEA("Luck of the Sea 2.0"),
-    FISHING_FESTIVAL("Fishing Festival"),
-    DOUBLE_TROUBLE("Double Trouble"),
+    val FISHING_XP_BUFF = register("Fishing XP Buff")
+    val LUCK_OF_THE_SEA = register("Luck of the Sea 2.0", id = "LUCK_OF_THE_SEA")
+    val FISHING_FESTIVAL = register("Fishing Festival")
+    val DOUBLE_TROUBLE = register("Double Trouble")
 
     // Paul
-    MARAUDER("Marauder"),
-    EZPZ("EZPZ"),
-    BENEDICTION("Benediction"),
+    val MARAUDER = register("Marauder")
+    val EZPZ = register("EZPZ")
+    val BENEDICTION = register("Benediction")
 
     // Scorpius
-    BRIBE("Bribe"),
-    DARKER_AUCTIONS("Darker Auctions"),
+    val BRIBE = register("Bribe")
+    val DARKER_AUCTIONS = register("Darker Auctions")
 
     // Jerry
-    PERKPOCALYPSE("Perkpocalypse"),
-    STATSPOCALYPSE("Statspocalypse"),
-    JERRYPOCALYPSE("Jerrypocalypse"),
+    val PERKPOCALYPSE = register("Perkpocalypse")
+    val STATSPOCALYPSE = register("Statspocalypse")
+    val JERRYPOCALYPSE = register("Jerrypocalypse")
 
     // Derpy
-    TURBO_MINIONS("TURBO MINIONS!!!"),
-    QUAD_TAXES("QUAD TAXES!!!"),
-    DOUBLE_MOBS_HP("DOUBLE MOBS HP!!!"),
-    MOAR_SKILLZ("MOAR SKILLZ!!!"),
+    val TURBO_MINIONS = register("TURBO MINIONS!!!", id = "TURBO_MINIONS",)
+    val QUAD_TAXES = register("QUAD TAXES!!!", id = "QUAD_TAXES")
+    val DOUBLE_MOBS_HP = register("DOUBLE MOBS HP!!!", id = "DOUBLE_MOBS_HP")
+    val MOAR_SKILLZ = register("MOAR SKILLZ!!!", id = "MOAR_SKILLZ")
+
+    // Aura
+    val FUNDRAISING = register("Fundraising")
+    val MINION_UNION = register("Minion Union")
+    val UNIVERSAL_INCOME = register("Universal Income")
+    val WORK_BETTER = register("Work Better")
+    val WORK_HARDER = register("Work Harder")
+    val WORK_SMARTER = register("Work Smarter")
+    //endregion
+}
+
+
+//region Old
+@RemoveNextVersion(ReplaceWith("MayorCandidate"))
+enum class Candidate(val mayorCandidate: MayorCandidate) {
+    AATROX(MayorCandidates.AATROX),
+    COLE(MayorCandidates.COLE),
+    DIANA(MayorCandidates.DIANA),
+    DIAZ(MayorCandidates.DIAZ),
+    FINNEGAN(MayorCandidates.FINNEGAN),
+    FOXY(MayorCandidates.FOXY),
+    MARINA(MayorCandidates.MARINA),
+    PAUL(MayorCandidates.PAUL),
+    SCORPIUS(MayorCandidates.SCORPIUS),
+    JERRY(MayorCandidates.JERRY),
+    DERPY(MayorCandidates.DERPY),
+    AURA(MayorCandidates.AURA),
+    UNKNOWN(MayorCandidates.AATROX),
     ;
 
-    var active = false
-        internal set
-    var description = "Not available"
+    val candidateName: String by mayorCandidate::candidateName
+    val perks: Array<out Perk> = mayorCandidate.perks.mapNotNull(Perk::fromMayorPerk).toTypedArray()
+
+    val activePerks get() = perks.filter { it.active }
+    val isActive: Boolean by mayorCandidate::isActive
+    val isSpecial: Boolean by mayorCandidate::isSpecial
+    override fun toString(): String = candidateName
 
     companion object {
-        fun reset() {
-            entries.forEach { it.active = false }
+        fun fromMayorCandidate(mayorCandidate: MayorCandidate): Candidate {
+            return entries.find { it.mayorCandidate == mayorCandidate } ?: UNKNOWN
         }
+        fun getCandidate(candidateName: String): Candidate? = entries.find { it.candidateName == candidateName }
+    }
+}
 
+@RemoveNextVersion(ReplaceWith("MayorPerk"))
+enum class Perk(val mayorPerk: MayorPerk) {
+    SLASHED_PRICING(MayorPerks.SLASHED_PRICING),
+    SLAYER_XP_BUFF(MayorPerks.SLAYER_XP_BUFF),
+    PATHFINDER(MayorPerks.PATHFINDER),
+    PROSPECTION(MayorPerks.PROSPECTION),
+    MINING_XP_BUFF(MayorPerks.MINING_XP_BUFF),
+    MINING_FIESTA(MayorPerks.MINING_FIESTA),
+    MOLTEN_FORGE(MayorPerks.MOLTEN_FORGE),
+    LUCKY(MayorPerks.LUCKY),
+    MYTHOLOGICAL_RITUAL(MayorPerks.MYTHOLOGICAL_RITUAL),
+    PET_XP_BUFF(MayorPerks.PET_XP_BUFF),
+    SHARING_IS_CARING(MayorPerks.SHARING_IS_CARING),
+    SHOPPING_SPREE(MayorPerks.SHOPPING_SPREE),
+    VOLUME_TRADING(MayorPerks.VOLUME_TRADING),
+    STOCK_EXCHANGE(MayorPerks.STOCK_EXCHANGE),
+    LONG_TERM_INVESTMENT(MayorPerks.LONG_TERM_INVESTMENT),
+    PELT_POCALYPSE(MayorPerks.PELT_POCALYPSE),
+    GOATED(MayorPerks.GOATED),
+    BLOOMING_BUSINESS(MayorPerks.BLOOMING_BUSINESS),
+    PEST_ERADICATOR(MayorPerks.PEST_ERADICATOR),
+    SWEET_BENEVOLENCE(MayorPerks.SWEET_BENEVOLENCE),
+    A_TIME_FOR_GIVING(MayorPerks.A_TIME_FOR_GIVING),
+    CHIVALROUS_CARNIVAL(MayorPerks.CHIVALROUS_CARNIVAL),
+    EXTRA_EVENT(MayorPerks.EXTRA_EVENT),
+    FISHING_XP_BUFF(MayorPerks.FISHING_XP_BUFF),
+    LUCK_OF_THE_SEA(MayorPerks.LUCK_OF_THE_SEA),
+    FISHING_FESTIVAL(MayorPerks.FISHING_FESTIVAL),
+    DOUBLE_TROUBLE(MayorPerks.DOUBLE_TROUBLE),
+    MARAUDER(MayorPerks.MARAUDER),
+    EZPZ(MayorPerks.EZPZ),
+    BENEDICTION(MayorPerks.BENEDICTION),
+    BRIBE(MayorPerks.BRIBE),
+    DARKER_AUCTIONS(MayorPerks.DARKER_AUCTIONS),
+    PERKPOCALYPSE(MayorPerks.PERKPOCALYPSE),
+    STATSPOCALYPSE(MayorPerks.STATSPOCALYPSE),
+    JERRYPOCALYPSE(MayorPerks.JERRYPOCALYPSE),
+    TURBO_MINIONS(MayorPerks.TURBO_MINIONS),
+    QUAD_TAXES(MayorPerks.QUAD_TAXES),
+    DOUBLE_MOBS_HP(MayorPerks.DOUBLE_MOBS_HP),
+    MOAR_SKILLZ(MayorPerks.MOAR_SKILLZ),
+    FUNDRAISING(MayorPerks.FUNDRAISING),
+    MINION_UNION(MayorPerks.MINION_UNION),
+    UNIVERSAL_INCOME(MayorPerks.UNIVERSAL_INCOME),
+    WORK_BETTER(MayorPerks.WORK_BETTER),
+    WORK_HARDER(MayorPerks.WORK_HARDER),
+    WORK_SMARTER(MayorPerks.WORK_SMARTER),
+    ;
+
+    val perkName: String by mayorPerk::perkName
+
+    val active: Boolean by mayorPerk::active
+    var description: String by mayorPerk::description
+
+    companion object {
+        fun reset() = MayorPerks.reset()
+
+        fun fromMayorPerk(mayorPerk: MayorPerk): Perk? {
+            return entries.find { it.mayorPerk == mayorPerk }
+        }
         fun getPerk(perkName: String): Perk? = entries.find { it.perkName == perkName }
     }
 }
+//endregion

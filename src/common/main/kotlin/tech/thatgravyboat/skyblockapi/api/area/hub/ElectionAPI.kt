@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.area.hub
 
 import me.owdding.ktmodules.Module
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.*
 import tech.thatgravyboat.skyblockapi.api.datetime.SkyBlockInstant
@@ -8,6 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.MayorChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.MayorUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
@@ -26,13 +28,14 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 private const val URL = "https://api.hypixel.net/v2/resources/skyblock/election"
+private const val MAYOR_SLOT = 37
 
 @Module
 object ElectionAPI {
 
     private val chatGroup = RegexGroup.CHAT.group("election")
     private val electionOverRegex = chatGroup.create(
-        "electionOver", 
+        "electionOver",
         "The election room is now closed\\. Clerk Seraphine is doing a final count of the votes\\.\\.\\.",
     )
 
@@ -45,16 +48,21 @@ object ElectionAPI {
         private set
     var minister: MayorCandidate? = null
         private set
-
     var currentJerryCandidate: Pair<MayorCandidate, Instant>? = null
         private set
 
-    var currentMayor: Candidate? = null
-        private set
-    var currentMinister: Candidate? = null
-        private set
-    var jerryCandidate: Pair<Candidate, Instant>? = null
-        private set
+    @RemoveNextVersion(ReplaceWith("mayor"))
+    val currentMayor: Candidate?
+        get() = mayor?.let(Candidate::fromMayorCandidate)
+    @RemoveNextVersion(ReplaceWith("minister"))
+    val currentMinister: Candidate?
+        get() = minister?.let(Candidate::fromMayorCandidate)
+    @RemoveNextVersion(ReplaceWith("currentJerryCandidate"))
+    val jerryCandidate: Pair<Candidate, Instant>?
+        get() = currentJerryCandidate?.let {
+            Candidate.fromMayorCandidate(it.first) to it.second
+        }
+
 
     init {
         updateScheduler(10.minutes)
@@ -73,6 +81,7 @@ object ElectionAPI {
         val response = result.getOrNull() ?: return
 
         if (handleResponse(response)) {
+            mayor?.let { MayorChangeEvent(it, minister).post() }
             currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
 
             if (newSchedulerTime != null) {
@@ -85,22 +94,26 @@ object ElectionAPI {
         rawData = response
         val mayor = response?.mayor ?: return false
 
-        val newMayor = Candidate.getCandidate(mayor.name) ?: return false
-        if (newMayor == currentMayor) return false
-        currentMayor = newMayor
-        currentMinister = mayor.minister?.let { Candidate.getCandidate(it.name) }
+        val newMayor = MayorCandidates.register(mayor.name)
+        if (newMayor == this.mayor) return false
+        this.mayor = newMayor
+        val newMinister = mayor.minister?.name?.let(MayorCandidates::register)
+        this.minister = newMinister
 
-        Perk.reset()
-        mayor.perks.forEach(::handlePerk)
-        mayor.minister?.perk?.let(::handlePerk)
+        MayorPerks.reset()
+        mayor.perks.forEach { handlePerk(newMayor, it) }
+        if (newMinister != null) {
+            handlePerk(newMinister, mayor.minister.perk)
+        }
 
         return true
     }
 
-    private fun handlePerk(perk: PerkJson) {
-        val perkData = Perk.getPerk(perk.name) ?: return
+    private fun handlePerk(candidate: MayorCandidate, perk: PerkJson) {
+        val perkData = MayorPerks.register(perk.name)
         perkData.active = true
         perkData.description = perk.description
+        candidate.perks.add(perkData)
     }
 
     @Subscription
@@ -109,20 +122,19 @@ object ElectionAPI {
     private fun ContainerInitializedEvent.onInventory() {
         if (lastEvaluatedExtraJerry.since() < 10.seconds) return
         lastEvaluatedExtraJerry = currentInstant()
-        if (!Candidate.JERRY.isActive) return
+        if (!MayorCandidates.JERRY.isActive) return
         val electionYear = rawData?.mayor?.election?.year ?: return
-        val stack = itemStacks.getOrNull(37).takeIf { it?.cleanName == "Mayor Jerry" } ?: return
-        val allPerks = Perk.entries.associateBy { it.perkName }
-        val foundPerk = stack.getRawLore().sublistAfter { it == "Perkpocalypse Perks:" }.firstNotNullOfOrNull { perk -> allPerks[perk] }
-        val extraMayor = Candidate.entries.find { foundPerk in it.perks } ?: return
+        val stack = itemStacks.getOrNull(MAYOR_SLOT).takeIf { it?.cleanName == "Mayor Jerry" } ?: return
+        val foundPerk = stack.getRawLore().sublistAfter { it == "Perkpocalypse Perks:" }.firstNotNullOfOrNull { perk -> MayorPerks.getPerk(perk) }
+        val extraMayor = MayorCandidates.mayors.find { foundPerk in it.perks } ?: return
 
         val nextElection = SkyBlockInstant(electionYear + 2, 3, 27).instant // Late Spring 27th, 2 years after the election opened
 
         val expireTime = (1..21).map { nextElection - (6.hours * it) }.lastOrNull { it > currentInstant() }?.coerceAtMost(nextElection) ?: return
 
-        jerryCandidate?.first?.clearAllPerks()
+        currentJerryCandidate?.first?.clearAllPerks()
 
-        jerryCandidate = extraMayor.addAllPerks() to expireTime
+        currentJerryCandidate = extraMayor.addAllPerks() to expireTime
         SkyBlockAPI.info("Jerry Mayor Detected: $extraMayor, expires at $expireTime")
     }
 
