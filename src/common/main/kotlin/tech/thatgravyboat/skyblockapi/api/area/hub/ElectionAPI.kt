@@ -128,9 +128,10 @@ object ElectionAPI {
     private fun ContainerInitializedEvent.onInventory() {
         if (lastEvaluatedExtraJerry.since() < 10.seconds) return
         lastEvaluatedExtraJerry = currentInstant()
-        if (!MayorCandidates.JERRY.isActive) return
+        if (!MayorPerks.PERKPOCALYPSE.active) return
         val electionYear = rawData?.mayor?.election?.year ?: return
         val stack = itemStacks.getOrNull(MAYOR_SLOT).takeIf { it?.cleanName == "Mayor Jerry" } ?: return
+        // TODO: add perk description for the perkpocalypse perk
         val foundPerk = stack.getRawLore().sublistAfter { it == "Perkpocalypse Perks:" }.firstNotNullOfOrNull { perk -> MayorPerks.getPerk(perk) }
         val extraMayor = MayorCandidates.mayors.find { foundPerk in it.perks } ?: return
 
