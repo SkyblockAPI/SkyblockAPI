@@ -13,7 +13,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -63,14 +62,9 @@ public abstract class GuiGraphicsVisualItemMixin {
         @Share("component") LocalRef<Component> componentRef,
         @Local(argsOnly = true) LocalRef<ItemStack> itemStack
     ) {
-        var log = itemStack.get().getItem() == Items.DIAMOND_AXE;
         var slotText = VisualItemAccessor.getVisualItemAccessor(itemStack.get()).skyblockapi$getSlotText();
-        if (slotText != null) {
-            if (log) System.out.println("Diamond axe has slot text!");
-            componentRef.set(slotText);
-        }
+        if (slotText != null) componentRef.set(slotText);
         else {
-            if (log) System.out.println("Diamond axe doesnt have slot text!");
             var item = skyblockapi$originalItem.get();
             if (item != null) itemStack.set(item);
         }
