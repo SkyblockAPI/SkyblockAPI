@@ -163,6 +163,7 @@ object ElectionAPI {
                     appendLine("Current Jerry Candidate: $candidate [${time.until()}]")
                 }
                 appendLine("Active perks: ${MayorPerks.perks.filter { it.active }}")
+                appendLine("RawData: $rawData")
             }
             Text.sendDebug("Copied Election Data to clipboard!")
         }
