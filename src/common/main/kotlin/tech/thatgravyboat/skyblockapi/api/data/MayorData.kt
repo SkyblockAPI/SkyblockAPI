@@ -32,7 +32,7 @@ object MayorCandidates {
     }
 
     fun getCandidateById(id: String): MayorCandidate? = _mayors[id]
-    fun getCandidate(candidateName: String): MayorCandidate? = _mayors.values.find { it.candidateName == candidateName }
+    fun getCandidate(candidateName: String): MayorCandidate? = mayors.find { it.candidateName == candidateName }
 
     //region Candidates
     val AATROX = register("Aatrox", MayorPerks.SLASHED_PRICING, MayorPerks.SLAYER_XP_BUFF, MayorPerks.PATHFINDER)
@@ -57,12 +57,10 @@ object MayorCandidates {
 data class MayorPerk internal constructor(
     val id: String,
     val perkName: String,
+    var description: String = "Not available",
 ) {
-    //region Functions
     var active: Boolean = false
         internal set
-    var description: String = "Not available"
-    //endregion
 }
 
 
@@ -75,10 +73,10 @@ object MayorPerks {
         return _perks.getOrPut(id) { MayorPerk(id, perkName) }
     }
 
-    fun reset() = _perks.values.forEach { it.active = false }
+    fun reset() = perks.forEach { it.active = false }
 
     fun getPerkById(id: String): MayorPerk? = _perks[id]
-    fun getPerk(perkName: String) = _perks.values.find { it.perkName == perkName }
+    fun getPerk(perkName: String) = perks.find { it.perkName == perkName }
 
     //region Perks
     // Aatrox
