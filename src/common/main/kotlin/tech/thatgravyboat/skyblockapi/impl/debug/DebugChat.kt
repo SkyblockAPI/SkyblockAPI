@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.google.gson.JsonParser
+import me.owdding.dfu.item.LegacyTextFixer
 import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.components.toasts.SystemToast
 import net.minecraft.network.chat.Component
@@ -20,6 +21,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
+import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.toStringWithFormattingCodes
 import kotlin.time.Clock
 import kotlin.time.Instant
 
@@ -33,7 +35,7 @@ object DebugChat {
     @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
     fun onMessage(event: ChatReceivedEvent.Pre) {
         messages.add(Clock.System.now() to event.component)
-        while(messages.size > maxMessages) messages.removeFirst()
+        while (messages.size > maxMessages) messages.removeFirst()
     }
 
     @Subscription
@@ -47,7 +49,10 @@ object DebugChat {
                 onClicked = { message ->
                     val (content, title) = when {
                         McScreen.isAltDown -> message.toJson(ComponentSerialization.CODEC).toPrettyString() to "Component"
-                        McScreen.isShiftDown -> message.splitLines().joinToString { it.toJson(ComponentSerialization.CODEC).toPrettyString() } to "Component Lines"
+                        McScreen.isShiftDown -> message.splitLines()
+                            .joinToString { it.toJson(ComponentSerialization.CODEC).toPrettyString() } to "Component Lines"
+
+                        McScreen.isControlDown -> message.toStringWithFormattingCodes() to "Legacy Codes"
                         else -> message.string to "String"
                     }
                     McClient.clipboard = content
@@ -57,7 +62,7 @@ object DebugChat {
                         Text.of("[SkyBlock API]") { this.color = TextColor.YELLOW },
                         Text.of("Message copied to clipboard! ($title)") { this.color = TextColor.YELLOW },
                     )
-                }
+                },
             )
             McClient.setScreen(screen)
         }
@@ -65,7 +70,7 @@ object DebugChat {
             val clipboard = McClient.clipboard.takeUnless { it.isEmpty() } ?: return@registerWithCallback
             val component = runCatching {
                 JsonParser.parseString(clipboard).toData(ComponentSerialization.CODEC)
-            }.getOrNull() ?: Text.of(clipboard)
+            }.getOrNull() ?: LegacyTextFixer.parse(clipboard)
 
             component.send()
             ChatReceivedEvent.Pre(component).post()

@@ -13,6 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.item.ClickConsumer
 import tech.thatgravyboat.skyblockapi.api.item.asVisualItemAccessor
 import tech.thatgravyboat.skyblockapi.utils.extentions.holder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
 import kotlin.jvm.optionals.getOrNull
 
@@ -22,6 +23,7 @@ class ItemBuilder {
     private var components = DataComponentPatch.builder()
     private var clickAction: ClickConsumer? = null
     var customSlotText: String? = null
+    var customSlotComponent: Component? = null
     var backgroundItem: ItemStack? = null
     var backgroundColor: Int = 0
 
@@ -97,7 +99,7 @@ class ItemBuilder {
     fun build(): ItemStack {
         return ItemStack(item.holder, count, components.build()).apply {
             this.asVisualItemAccessor().let {
-                it.`skyblockapi$setSlotText`(customSlotText)
+                it.`skyblockapi$setSlotText`(customSlotText?.asComponent() ?: customSlotComponent)
                 it.`skyblockapi$setOnClickAction`(clickAction)
                 it.`skyblockapi$setBackgroundItem`(backgroundItem)
                 it.`skyblockapi$setBackgroundColor`(backgroundColor)

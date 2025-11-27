@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.item
 
+import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 
@@ -10,8 +11,8 @@ internal fun interface ClickConsumer {
 internal interface VisualItemAccessor {
     fun `skyblockapi$setVisualItem`(item: ItemStack?)
     fun `skyblockapi$getVisualItem`(): ItemStack?
-    fun `skyblockapi$setSlotText`(slotText: String?)
-    fun `skyblockapi$getSlotText`(): String?
+    fun `skyblockapi$setSlotText`(slotText: Component?)
+    fun `skyblockapi$getSlotText`(): Component?
     fun `skyblockapi$setOnClickAction`(clickAction: ClickConsumer?)
     fun `skyblockapi$getOnClickAction`(): ClickConsumer?
     fun `skyblockapi$setBackgroundItem`(item: ItemStack?)
