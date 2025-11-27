@@ -62,7 +62,7 @@ expect object McClient {
 
     fun runNextTick(action: () -> Unit)
 
-    fun runOrSchedule(action: () -> Unit)
+    fun runOrNextTick(action: () -> Unit)
 
     fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f)
 

@@ -124,7 +124,7 @@ actual object McClient {
         self.schedule(action)
     }
 
-    actual fun runOrSchedule(action: () -> Unit) {
+    actual fun runOrNextTick(action: () -> Unit) {
         self.executeIfPossible(action)
     }
 
