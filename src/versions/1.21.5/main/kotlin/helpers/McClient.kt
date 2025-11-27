@@ -124,6 +124,10 @@ actual object McClient {
         self.schedule(action)
     }
 
+    actual fun runOrSchedule(action: () -> Unit) {
+        self.executeIfPossible(action)
+    }
+
     @RemoveNextVersion(ReplaceWith("runNextTick(action)"))
     fun tell(action: () -> Unit) = runNextTick(action)
 

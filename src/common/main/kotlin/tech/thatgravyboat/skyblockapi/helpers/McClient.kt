@@ -62,6 +62,8 @@ expect object McClient {
 
     fun runNextTick(action: () -> Unit)
 
+    fun runOrSchedule(action: () -> Unit)
+
     fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f)
 
     fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f)

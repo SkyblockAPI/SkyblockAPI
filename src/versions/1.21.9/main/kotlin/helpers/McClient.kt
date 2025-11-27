@@ -122,6 +122,10 @@ actual object McClient {
         self.schedule(action)
     }
 
+    actual fun runOrSchedule(action: () -> Unit) {
+        self.executeIfPossible(action)
+    }
+
     actual fun playSound(sound: SoundEvent, volume: Float, pitch: Float) {
         McPlayer.self?.playSound(sound, volume, pitch)
     }
