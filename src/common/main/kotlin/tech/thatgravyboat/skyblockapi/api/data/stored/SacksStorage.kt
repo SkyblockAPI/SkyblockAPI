@@ -35,12 +35,15 @@ internal object SacksStorage {
     val items: MutableList<SackEntry>
         get() = SACKS.get()?.items ?: mutableListOf()
 
-    fun updateItem(item: String, amount: Int) {
+    // Returns the old value
+    fun updateItem(item: String, amount: Int): Int {
         val entry = items.find { it.id == item }
-        if (entry?.amount == amount) return
+        val oldValue = entry?.amount
+        if (oldValue == amount) return oldValue
         entry?.let { items.remove(it) }
         items.add(SackEntry(item, amount))
         SACKS.save()
+        return oldValue ?: 0
     }
 
     fun updateItemValue(item: String, diff: Int) {
