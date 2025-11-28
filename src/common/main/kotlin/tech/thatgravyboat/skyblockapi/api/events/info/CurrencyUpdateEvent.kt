@@ -16,11 +16,9 @@ sealed class CurrencyUpdateEvent<N : Number>(val new: N, val old: N) : SkyBlockE
     companion object {
         @get:JvmName("diffLong")
         val CurrencyUpdateEvent<Long>.diff get() = new - old
+
         @get:JvmName("diffDouble")
         val CurrencyUpdateEvent<Double>.diff get() = new - old
 
     }
-
-
-
 }

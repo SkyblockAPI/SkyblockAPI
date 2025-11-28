@@ -17,18 +17,20 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
-enum class PurseType {
-    UNKNOWN,
-    NORMAL,
+enum class PurseType(scoreboardName: String? = null) {
+    NORMAL("PURSE"),
     PIGGY,
+    UNKNOWN,
     ;
 
+    private val scoreboardName: String = scoreboardName ?: name
+
     companion object {
-        fun fromName(name: String): PurseType = entries.find { it.name.equals(name, true) } ?: UNKNOWN
+        fun fromName(name: String): PurseType = entries.find { it.scoreboardName.equals(name, true) } ?: UNKNOWN
     }
 }
 
-private typealias Event = CurrencyUpdateEvent<*>
+private typealias CurrencyEvent = CurrencyUpdateEvent<*>
 
 @Module
 @Suppress("MemberVisibilityCanBePrivate")
@@ -89,12 +91,12 @@ object CurrencyAPI {
         when (event.widget) {
             TabWidget.PROFILE -> {
                 bankSingleRegex.anyMatch(event.new, "bank") { (bank) ->
-                    this.coopBank = post(bank, this.coopBank, Event::CoopBank)
-                    this.personalBank = post(0, this.personalBank, Event::Bank)
+                    this.coopBank = post(bank, this.coopBank, CurrencyUpdateEvent<*>::CoopBank)
+                    this.personalBank = post(0, this.personalBank, CurrencyUpdateEvent<*>::Bank)
                 }
                 bankCoopRegex.anyMatch(event.new, "coop", "personal") { (coop, personal) ->
-                    this.coopBank = post(coop, this.coopBank, Event::CoopBank)
-                    this.personalBank = post(personal, this.personalBank, Event::Bank)
+                    this.coopBank = post(coop, this.coopBank, CurrencyEvent::CoopBank)
+                    this.personalBank = post(personal, this.personalBank, CurrencyUpdateEvent<*>::Bank)
                 }
                 soulflowRegex.anyMatch(event.new, "soulflow") { (soulflow) ->
                     this.soulflow = soulflow.parseFormattedLong()
@@ -102,7 +104,7 @@ object CurrencyAPI {
             }
             TabWidget.AREA -> {
                 gemsRegex.anyMatch(event.new, "gems") { (gems) ->
-                    this.gems = post(gems, this.gems, Event::Gems)
+                    this.gems = post(gems, this.gems, CurrencyUpdateEvent<*>::Gems)
                 }
             }
             else -> return
@@ -115,24 +117,24 @@ object CurrencyAPI {
         if (SkyBlockIsland.THE_RIFT.inIsland()) {
             motesRegex.anyFound(event.added, "motes") { (motes) ->
                 // Has a decimal place if obtained via mcgrubber burgers
-                this.motes = post(motes, this.motes, Event::Motes)
+                this.motes = post(motes, this.motes, CurrencyEvent::Motes)
             }
         } else {
             if (SkyBlockIsland.JERRYS_WORKSHOP.inIsland()) {
                 northStarsRegex.anyFound(event.added, "northstars") { (northstars) ->
-                    this.northStars = post(northstars, this.northStars, Event::NorthStars)
+                    this.northStars = post(northstars, this.northStars, CurrencyEvent::NorthStars)
                 }
             } else if (SkyBlockIsland.GARDEN.inIsland()) {
                 copperRegex.anyFound(event.added, "copper") { (copper) ->
-                    this.copper = post(copper, this.copper, Event::Copper)
+                    this.copper = post(copper, this.copper, CurrencyEvent::Copper)
                 }
             }
             purseRegex.anyFound(event.added, "type", "purse") { (type, purse) ->
                 this.purseType = PurseType.fromName(type)
-                this.purse = post(purse.parseFormattedDouble(), this.purse, Event::Purse)
+                this.purse = post(purse.parseFormattedDouble(), this.purse, CurrencyEvent::Purse)
             }
             bitsRegex.anyFound(event.added, "bits") { (bits) ->
-                this.bits = post(bits, this.bits, Event::Bits)
+                this.bits = post(bits, this.bits, CurrencyEvent::Bits)
             }
         }
     }
