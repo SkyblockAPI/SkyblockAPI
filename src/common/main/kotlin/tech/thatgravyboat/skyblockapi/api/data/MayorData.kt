@@ -48,7 +48,7 @@ object MayorCandidates {
     fun getCandidateById(id: String): MayorCandidate? = _mayors[id]
     fun getCandidate(candidateName: String): MayorCandidate? = mayors.find { it.candidateName == candidateName }
 
-    private fun register(candidateName: String, vararg perks: MayorPerk, id: String = candidateName.toScreamingSnakeCase(), isSpecial: Boolean = false): MayorCandidate {
+    internal fun register(candidateName: String, vararg perks: MayorPerk, id: String = candidateName.toScreamingSnakeCase(), isSpecial: Boolean = false): MayorCandidate {
         return _mayors.getOrPut(id) { MayorCandidate(id, candidateName, perks.toMutableSet(), isSpecial) }
     }
 }
@@ -145,7 +145,7 @@ object MayorPerks {
     fun getPerkById(id: String): MayorPerk? = _perks[id]
     fun getPerk(perkName: String) = perks.find { it.perkName == perkName }
 
-    private fun register(perkName: String, id: String = perkName.toScreamingSnakeCase()): MayorPerk {
+    internal fun register(perkName: String, id: String = perkName.toScreamingSnakeCase()): MayorPerk {
         return _perks.getOrPut(id) { MayorPerk(id, perkName) }
     }
 }
