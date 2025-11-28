@@ -86,12 +86,14 @@ object ElectionAPI {
         val result = Http.getResult<ElectionJson>(URL)
         val response = result.getOrNull() ?: return
 
-        if (handleResponse(response)) {
-            mayor?.let { MayorChangeEvent(it, minister).post() }
-            currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
+        McClient.runNextTick {
+            if (handleResponse(response)) {
+                mayor?.let { MayorChangeEvent(it, minister).post() }
+                currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
 
-            if (newSchedulerTime != null) {
-                updateScheduler(newSchedulerTime)
+                if (newSchedulerTime != null) {
+                    updateScheduler(newSchedulerTime)
+                }
             }
         }
     }
