@@ -27,12 +27,6 @@ data class MayorCandidate internal constructor(
 object MayorCandidates {
     private val _mayors = mutableMapOf<String, MayorCandidate>()
     val mayors: Collection<MayorCandidate> by _mayors::values
-    fun register(candidateName: String, vararg perks: MayorPerk, id: String = candidateName.toScreamingSnakeCase(), isSpecial: Boolean = false): MayorCandidate {
-        return _mayors.getOrPut(id) { MayorCandidate(id, candidateName, perks.toMutableSet(), isSpecial) }
-    }
-
-    fun getCandidateById(id: String): MayorCandidate? = _mayors[id]
-    fun getCandidate(candidateName: String): MayorCandidate? = mayors.find { it.candidateName == candidateName }
 
     //region Candidates
     val AATROX = register("Aatrox", MayorPerks.SLASHED_PRICING, MayorPerks.SLAYER_XP_BUFF, MayorPerks.PATHFINDER)
@@ -51,6 +45,12 @@ object MayorCandidates {
     val AURA = register("Aura", MayorPerks.FUNDRAISING, MayorPerks.MINION_UNION, MayorPerks.UNIVERSAL_INCOME, MayorPerks.WORK_BETTER, MayorPerks.WORK_HARDER, MayorPerks.WORK_SMARTER, isSpecial = true)
     //endregion
 
+    fun getCandidateById(id: String): MayorCandidate? = _mayors[id]
+    fun getCandidate(candidateName: String): MayorCandidate? = mayors.find { it.candidateName == candidateName }
+
+    private fun register(candidateName: String, vararg perks: MayorPerk, id: String = candidateName.toScreamingSnakeCase(), isSpecial: Boolean = false): MayorCandidate {
+        return _mayors.getOrPut(id) { MayorCandidate(id, candidateName, perks.toMutableSet(), isSpecial) }
+    }
 }
 
 @ConsistentCopyVisibility
@@ -68,15 +68,6 @@ data class MayorPerk internal constructor(
 object MayorPerks {
     private val _perks = mutableMapOf<String, MayorPerk>()
     val perks: Collection<MayorPerk> by _perks::values
-
-    fun register(perkName: String, id: String = perkName.toScreamingSnakeCase()): MayorPerk {
-        return _perks.getOrPut(id) { MayorPerk(id, perkName) }
-    }
-
-    fun reset() = perks.forEach { it.active = false }
-
-    fun getPerkById(id: String): MayorPerk? = _perks[id]
-    fun getPerk(perkName: String) = perks.find { it.perkName == perkName }
 
     //region Perks
     // Aatrox
@@ -148,6 +139,15 @@ object MayorPerks {
     val WORK_HARDER = register("Work Harder")
     val WORK_SMARTER = register("Work Smarter")
     //endregion
+
+    fun reset() = perks.forEach { it.active = false }
+
+    fun getPerkById(id: String): MayorPerk? = _perks[id]
+    fun getPerk(perkName: String) = perks.find { it.perkName == perkName }
+
+    private fun register(perkName: String, id: String = perkName.toScreamingSnakeCase()): MayorPerk {
+        return _perks.getOrPut(id) { MayorPerk(id, perkName) }
+    }
 }
 
 
@@ -178,7 +178,7 @@ enum class Candidate(val mayorCandidate: MayorCandidate) {
     override fun toString(): String = candidateName
 
     companion object {
-        fun fromMayorCandidate(mayorCandidate: MayorCandidate): Candidate {
+        internal fun fromMayorCandidate(mayorCandidate: MayorCandidate): Candidate {
             return entries.find { it.mayorCandidate == mayorCandidate } ?: UNKNOWN
         }
         fun getCandidate(candidateName: String): Candidate? = entries.find { it.candidateName == candidateName }
@@ -242,7 +242,7 @@ enum class Perk(val mayorPerk: MayorPerk) {
     companion object {
         fun reset() = MayorPerks.reset()
 
-        fun fromMayorPerk(mayorPerk: MayorPerk): Perk? {
+        internal fun fromMayorPerk(mayorPerk: MayorPerk): Perk? {
             return entries.find { it.mayorPerk == mayorPerk }
         }
         fun getPerk(perkName: String): Perk? = entries.find { it.perkName == perkName }
