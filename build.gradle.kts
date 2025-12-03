@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.google.devtools.ksp.gradle.KspAATask
+import net.fabricmc.loom.task.RemapJarTask
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -45,8 +46,8 @@ dependencies {
     })
 
     compileOnly(project(":annotations"))
-    modCompileOnly(libs.bundles.meowdding)
-    modCompileOnlyApi(libs.bundles.meowdding)
+    compileOnly(libs.bundles.meowdding)
+    ksp(libs.bundles.meowdding)
 
     modImplementation(libs.fabric.language.kotlin)
 
@@ -65,19 +66,9 @@ dependencies {
 
     modRuntimeOnly(libs.devauth)
 
-    ksp(libs.meowdding.modules)
-    ksp(libs.meowdding.ktcodecs)
-    compileOnly(libs.meowdding.ktcodecs)
-    compileOnly(libs.meowdding.ktcodecs)
-
     modImplementation(versionedCatalog["fabric.api"])
     modImplementation(libs.fabric.language.kotlin)
     modImplementation(libs.fabric.loader)
-}
-
-fun DependencyHandler.includeImplementation(dep: Any) {
-    include(dep)
-    modImplementation(dep)
 }
 
 val mcVersion = stonecutter.current.version.replace(".", "")
@@ -153,14 +144,8 @@ tasks.processResources {
         "version" to version,
         "minecraft_start" to versionedCatalog.versions.getOrFallback("minecraft.start", "minecraft"),
         "minecraft_end" to versionedCatalog.versions.getOrFallback("minecraft.end", "minecraft"),
-        //"fabric_lang_kotlin" to libs.versions.fabric.language.kotlin.get(),
-        //"sbapi" to libs.versions.skyblockapi.asProvider().get(),
-        //"rlib" to versionedCatalog.versions["resourceful.lib"],
-        //"olympus" to versionedCatalog.versions["olympus"],
-        //"mlib" to libs.versions.meowdding.lib.get(),
-        //"rconfigkt" to libs.versions.rconfigkt.get(),
-        //"rconfig" to versionedCatalog.versions["resourceful.config"],
-        //"placeholder_api" to versionedCatalog.versions["placeholders"]
+        "fabric_lang_kotlin" to libs.versions.fabric.language.kotlin.get(),
+        "hypixel_mod_api" to libs.versions.hypixel.modapi.fabric.get(),
     )
     inputs.properties(replacements)
 
@@ -214,4 +199,8 @@ autoMixins {
     mixinPackage = "tech.thatgravyboat.skyblockapi.mixins"
     projectName = "skyblock-api"
     mixinExtrasVersion = "0.5.0"
+}
+
+tasks.named("remapJar", RemapJarTask::class) {
+    archiveClassifier = stonecutter.current.version
 }

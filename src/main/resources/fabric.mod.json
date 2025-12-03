@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "skyblock-api",
-    "version": "3.0.24",
+    "version": "${version}",
     "name": "skyblock-api",
     "license": "MIT",
     "icon": "assets/skyblockapi/icon.png",
@@ -25,9 +25,10 @@
     },
     "depends": {
         "fabricloader": "*",
-        "fabric-language-kotlin": "*",
         "fabric": "*",
-        "hypixel-mod-api": "\u003e\u003d1.0.1+build.1+mc1.21"
+        "fabric-language-kotlin": ">=${fabric_lang_kotlin}",
+        "minecraft": ">=${minecraft_start} <=${minecraft_end}",
+        "hypixel-mod-api": ">=${hypixel_mod_api}"
     },
     "custom": {
         "modmenu": {

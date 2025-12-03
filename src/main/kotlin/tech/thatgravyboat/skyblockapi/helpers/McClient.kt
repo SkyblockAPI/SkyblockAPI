@@ -143,11 +143,11 @@ object McClient {
         self.executeIfPossible(action)
     }
 
-    fun playSound(sound: SoundEvent, volume: Float, pitch: Float) {
+    fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f) {
         McPlayer.self?.playSound(sound, volume, pitch)
     }
 
-    fun setTitle(title: Component, subtitle: Component?, fadeInTime: Float, stayTime: Float, fadeOutTime: Float) {
+    fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f) {
         gui.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
         gui.setSubtitle(subtitle ?: CommonText.EMPTY)
         gui.setTitle(title)
