@@ -13,8 +13,14 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
 import java.net.URI
-import java.util.Optional
+import java.util.*
 import java.util.regex.Pattern
+
+//? > 1.21.8 {
+import net.minecraft.network.chat.contents.objects.AtlasSprite
+import net.minecraft.network.chat.contents.objects.PlayerSprite
+import net.minecraft.world.item.component.ResolvableProfile
+//?}
 
 object CommonText {
 
@@ -33,6 +39,19 @@ object Text {
     fun of(init: MutableComponent.() -> Unit = {}) = "".asComponent(init)
     fun of(text: String, color: Int) = of(text) { this.color = color }
     fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
+
+    //? > 1.21.8 {
+    fun player(profile: ResolvableProfile, hat: Boolean = true, init: MutableComponent.() -> Unit = {}): MutableComponent {
+        val spriteObj = PlayerSprite(profile, hat)
+        return Component.`object`(spriteObj).also(init)
+    }
+
+    fun atlas(atlas: ResourceLocation, sprite: ResourceLocation, init: MutableComponent.() -> Unit = {}): MutableComponent {
+        val spriteObj = AtlasSprite(atlas, sprite)
+        return Component.`object`(spriteObj).also(init)
+    }
+    //?}
+
     fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
 
     @JvmOverloads
@@ -193,15 +212,15 @@ object TextUtils {
 internal fun MutableComponent.withFont(location: ResourceLocation?): MutableComponent =
     //? if > 1.21.8 {
     this.style { if (location == null) withFont(null) else withFont(FontDescription.Resource(location)) }
-    //?} else
-    /*this.style { withFont(location) }*/
+//?} else
+/*this.style { withFont(location) }*/
 
 
 internal fun Component.font(): ResourceLocation? =
     //? if > 1.21.8 {
     (this.style.font as? FontDescription.Resource)?.id
-    //?} else
-    /*this.style.font*/
+//?} else
+/*this.style.font*/
 
 internal fun Component.hover(): Component? = (this.style.hoverEvent as? HoverEvent.ShowText)?.value()
 
