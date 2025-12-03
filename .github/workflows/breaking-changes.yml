@@ -47,7 +47,5 @@ jobs:
                         cat api.removed >> comment
                         echo "\`\`\`" >> comment
                         gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
-                        exit 1
-                    else
-                        exit -1
+                        exit 1´
                     fi
