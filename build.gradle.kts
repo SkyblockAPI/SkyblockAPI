@@ -2,6 +2,7 @@
 
 import com.google.devtools.ksp.gradle.KspAATask
 import net.fabricmc.loom.task.RemapJarTask
+import net.fabricmc.loom.task.RemapSourcesJarTask
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -203,4 +204,8 @@ autoMixins {
 
 tasks.named("remapJar", RemapJarTask::class) {
     archiveClassifier = stonecutter.current.version
+}
+
+tasks.named("remapSourcesJar", RemapSourcesJarTask::class) {
+    archiveClassifier = stonecutter.current.version + "-sources"
 }

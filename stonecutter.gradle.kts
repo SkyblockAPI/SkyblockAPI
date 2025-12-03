@@ -80,10 +80,33 @@ stonecutter.versions.forEach { (project, version) ->
         outgoing.capability("tech.thatgravyboat:skyblock-api:${rootProject.version}")
     }
 
+    val sourcesElements = configurations.create(gradleFriendlyVersion + "sources") {
+        isCanBeResolved = false
+        isCanBeConsumed = true
+
+        attributes {
+            attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
+            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
+            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType.SOURCES))
+            attribute(Attribute.of("net.minecraft.version", String::class.java), version)
+        }
+
+        project.afterEvaluate {
+            outgoing.artifact(tasks.named("remapSourcesJar"))
+        }
+
+        outgoing.capability("tech.thatgravyboat:skyblock-api-$version:${rootProject.version}")
+        outgoing.capability("tech.thatgravyboat:skyblock-api:${rootProject.version}")
+    }
+
     sbapiComponent.addVariantsFromConfiguration(apiElements) {
         mapToOptional()
     }
     sbapiComponent.addVariantsFromConfiguration(runtimeElements) {
+        mapToOptional()
+    }
+    sbapiComponent.addVariantsFromConfiguration(sourcesElements) {
         mapToOptional()
     }
 }
