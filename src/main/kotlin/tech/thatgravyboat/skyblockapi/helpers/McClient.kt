@@ -3,15 +3,6 @@ package tech.thatgravyboat.skyblockapi.helpers
 import com.mojang.authlib.minecraft.MinecraftSessionService
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
-//? if > 1.21.8 {
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader
-//?} else {
-/*import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper
-import net.minecraft.server.packs.resources.ResourceManager
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
-*///?}
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.SharedConstants
 import net.minecraft.Util
@@ -40,6 +31,16 @@ import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
+
+//? if > 1.21.8 {
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader
+//?} else {
+/*import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
+import net.minecraft.server.packs.resources.ResourceManager
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
+*///?}
 
 object McClient {
 

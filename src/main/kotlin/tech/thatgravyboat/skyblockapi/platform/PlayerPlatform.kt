@@ -1,12 +1,12 @@
 package tech.thatgravyboat.skyblockapi.platform
 
-//? if > 1.21.8 {
 import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.core.ClientAsset
 import net.minecraft.resources.ResourceLocation
+
+//? if > 1.21.8 {
 import net.minecraft.world.entity.player.PlayerModelType as MinecraftPlayerModelType
 import net.minecraft.world.entity.player.PlayerSkin as MinecraftPlayerSkin
-
 //?} else {
 /*import net.minecraft.client.resources.PlayerSkin as MinecraftPlayerSkin
 import net.minecraft.client.resources.PlayerSkin.Model as MinecraftPlayerModelType

@@ -1,3 +1,4 @@
+//? if > 1.21.5 {
 package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.expression.Definition;
@@ -8,12 +9,15 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.*;
+import org.joml.Matrix3x2fStack;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -26,19 +30,25 @@ public abstract class GuiGraphicsVisualItemMixin {
     private final ThreadLocal<ItemStack> skyblockapi$originalItem = new ThreadLocal<>();
 
     @Shadow
-    @Final
-    private PoseStack pose;
+    public abstract void renderItem(ItemStack itemStack, int i, int j);
 
     @Shadow
-    public abstract void renderItem(ItemStack itemStack, int i, int j);
+    @Final
+    private Matrix3x2fStack pose;
+
+    @Shadow
+    public abstract void nextStratum();
 
     @Shadow
     public abstract void fill(int i, int j, int k, int l, int color);
 
     @Shadow
-    public abstract int drawString(Font $$0, Component $$1, int $$2, int $$3, int $$4, boolean $$5);
+    public abstract void drawString(Font par1, Component par2, int par3, int par4, int par5, boolean par6);
 
-    @Inject(method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;IIII)V", at = @At("HEAD"))
+    @Inject(
+        method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
+        at = @At("HEAD")
+    )
     private void skyblockapi$renderVisualItem(CallbackInfo ci, @Local(argsOnly = true) LocalRef<ItemStack> itemStack) {
         var visualItem = VisualItemAccessor.getVisualItemAccessor(itemStack.get()).skyblockapi$getVisualItem();
         if (visualItem == null) {
@@ -77,8 +87,9 @@ public abstract class GuiGraphicsVisualItemMixin {
         return original.call(left, right) || componentRef.get() != null;
     }
 
-    @WrapOperation(method = "renderItemCount", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I"))
-    private int wrapDrawString(
+    // Ignore the warning about no possible signatures for this injector
+    @WrapOperation(method = "renderItemCount", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"))
+    private void wrapIsNullCheck(
         GuiGraphics instance,
         Font font,
         String string,
@@ -86,25 +97,25 @@ public abstract class GuiGraphicsVisualItemMixin {
         int j,
         int k,
         boolean flag,
-        Operation<Integer> original,
+        Operation<Void> original,
         @Share("component") LocalRef<Component> componentRef,
         @Local(argsOnly = true, ordinal = 0) int original_i
     ) {
         var component = componentRef.get();
-        if (component == null) return original.call(instance, font, string, i, j, k, flag);
-        else return this.drawString(font, component, original_i + 19 - 2 - font.width(component), j, k, flag);
+        if (component == null) original.call(instance, font, string, i, j, k, flag);
+        else this.drawString(font, component, original_i + 19 - 2 - font.width(component), j, k, flag);
     }
 
     @Inject(
-        method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;IIII)V",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getItemModelResolver()Lnet/minecraft/client/renderer/item/ItemModelResolver;")
+        method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
+        at = @At("HEAD")
     )
     private void skyblockapi$renderBackgroundItem(
         CallbackInfo ci,
         @Local(argsOnly = true) ItemStack itemStack,
         @Local(argsOnly = true, ordinal = 0) int x,
         @Local(argsOnly = true, ordinal = 1) int y,
-        @Local(argsOnly = true, ordinal = 3) int z
+        @Local(argsOnly = true, ordinal = 2) int z
     ) {
         var accessor = VisualItemAccessor.getVisualItemAccessor(itemStack);
         var color = accessor.skyblockapi$getBackgroundColor();
@@ -113,12 +124,13 @@ public abstract class GuiGraphicsVisualItemMixin {
         }
         var backgroundItem = accessor.skyblockapi$getBackgroundItem();
         if (backgroundItem != null) {
-            this.pose.pushPose();
-            this.pose.translate(x, y, z - 200);
+            this.pose.pushMatrix();
+            this.pose.translate(x, y);
             this.renderItem(backgroundItem, 0, 0);
-            this.pose.popPose();
+            this.pose.popMatrix();
+
+            this.nextStratum();
         }
     }
-
 
 }

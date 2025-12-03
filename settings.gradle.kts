@@ -1,4 +1,4 @@
-rootProject.name = "SkyBlockAPI"
+rootProject.name = "skyblock-api"
 
 pluginManagement {
     repositories {

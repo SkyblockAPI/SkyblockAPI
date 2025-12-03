@@ -1,16 +1,16 @@
 package tech.thatgravyboat.skyblockapi.api.events.render
 
-//? if > 1.21.8 {
-import net.minecraft.client.renderer.entity.state.AvatarRenderState
 import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
-import net.minecraft.world.entity.Avatar
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
+//? if > 1.21.8 {
+import net.minecraft.client.renderer.entity.state.AvatarRenderState
+import net.minecraft.world.entity.Avatar
 //?} else {
 /*import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.client.renderer.entity.state.PlayerRenderState
