@@ -2,8 +2,6 @@ package tech.thatgravyboat.skyblockapi.platform
 
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
-import net.minecraft.client.gui.render.TextureSetup
-import net.minecraft.client.gui.render.state.BlitRenderState
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.locale.Language
@@ -18,7 +16,10 @@ import org.joml.Vector2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 
-//? if 1.21.5 {
+//? if > 1.21.5 {
+import net.minecraft.client.gui.render.TextureSetup
+import net.minecraft.client.gui.render.state.BlitRenderState
+//?} else {
 /*import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import net.minecraft.client.renderer.RenderType
 *///?}
@@ -61,7 +62,7 @@ fun GuiGraphics.rotate(angle: Number, x: Number = 0f, y: Number = 0f) {
         this.pose().rotateAbout(angle.toFloat() * Mth.DEG_TO_RAD, x.toFloat(), y.toFloat())
     }
     //?} else
-    /*pose().rotate(com.mojang.math.Axis.ZP.rotationDegrees(angle.toFloat()), x.toFloat(), y.toFloat(), 0f)*/
+    /*pose().rotateAround(com.mojang.math.Axis.ZP.rotationDegrees(angle.toFloat()), x.toFloat(), y.toFloat(), 0f)*/
 }
 
 fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {

@@ -48,22 +48,22 @@ dependencies {
     modCompileOnly(libs.bundles.meowdding)
     modCompileOnlyApi(libs.bundles.meowdding)
 
+    modImplementation(libs.fabric.language.kotlin)
+
     modApi(variantOf(libs.meowdding.item.dfu) {
         classifier(stonecutter.current.version)
     })
-    modImplementation(libs.fabric.language.kotlin)
-    modApi(libs.bundles.hypixel)
-    modApi(libs.skyblockapi.repolib)
+    include(variantOf(libs.meowdding.item.dfu) {
+        classifier(stonecutter.current.version)
+    })
 
-    //includeImplementation(versionedCatalog["resourceful.config"])
-    //includeImplementation(versionedCatalog["resourceful.lib"])
-    //includeImplementation(versionedCatalog["placeholders"])
-    //includeImplementation(versionedCatalog["placeholders"])
-    //includeImplementation(libs.resourceful.config.kotlin)
-    //includeImplementation(versionedCatalog["olympus"])
-    //includeImplementation(libs.meowdding.remote.repo)
-    //includeImplementation(libs.meowdding.lib)
-    //includeImplementation(libs.skyblockapi)
+    modApi(libs.bundles.hypixel)
+    include(libs.bundles.hypixel)
+
+    modApi(libs.skyblockapi.repolib)
+    include(libs.skyblockapi.repolib)
+
+    modRuntimeOnly(libs.devauth)
 
     ksp(libs.meowdding.modules)
     ksp(libs.meowdding.ktcodecs)
@@ -213,4 +213,5 @@ ksp {
 autoMixins {
     mixinPackage = "tech.thatgravyboat.skyblockapi.mixins"
     projectName = "skyblock-api"
+    mixinExtrasVersion = "0.5.0"
 }

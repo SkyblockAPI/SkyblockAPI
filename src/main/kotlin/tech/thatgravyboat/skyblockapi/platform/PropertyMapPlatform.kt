@@ -8,6 +8,8 @@ import com.mojang.authlib.properties.PropertyMap
 import net.minecraft.world.item.component.ResolvableProfile
 import java.util.UUID
 
+//? if < 1.21.9
+/*import java.util.Optional*/
 
 fun PropertyMap(init: Multimap<String, Property>.() -> Unit = {}): PropertyMap {
     //? if > 1.21.8 {
@@ -61,6 +63,6 @@ val GameProfile.id: UUID get() = this.id
 fun GameProfile.toResolvableProfile(): ResolvableProfile =
     //? if > 1.21.8 {
     ResolvableProfile.createResolved(this)
-    //? } else
-    //ResolvableProfile(this)
+    //?} else
+    /*ResolvableProfile(this)*/
 
