@@ -126,15 +126,8 @@ object SacksAPI {
     @Subscription
     fun onRegisterCommands(event: RegisterCommandsEvent) {
         event.register("sbapi sacks") {
-            thenCallback("id", StringArgumentType.string()) {
-                val id = argument<String>("id")
-                val amount = sackItems[id] ?: run {
-                    Text.sendDebug("This item isnt in sacks!")
-                    return@thenCallback
-                }
-                Text.sendDebug("You have $amount of item $id")
-            }
-            thenCallback("clear") {
+
+        thenCallback("clear") {
                 SacksStorage.clear()
                 Text.sendDebug("Cleared sacks storage!")
             }
