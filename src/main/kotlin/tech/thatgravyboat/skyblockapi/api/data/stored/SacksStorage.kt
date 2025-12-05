@@ -49,5 +49,10 @@ internal object SacksStorage {
         updateItem(item, newAmount)
     }
 
+    fun clear() {
+        items.clear()
+        SACKS.save()
+    }
+
 }
 

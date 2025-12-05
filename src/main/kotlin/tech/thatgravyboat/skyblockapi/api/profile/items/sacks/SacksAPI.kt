@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.sacks
 
 import com.google.gson.JsonObject
+import com.mojang.brigadier.arguments.StringArgumentType
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.SacksStorage
@@ -11,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ChangedSackItem
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.SacksChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
@@ -26,6 +28,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.match
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
+import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
@@ -116,6 +119,24 @@ object SacksAPI {
             Regex(" $name: (?<amount>[\\d,.]+) .*").anyMatch(item.getRawLore(), "amount") { (amount) ->
                 val actualId = id.replace("ROUGH", name.uppercase())
                 SacksStorage.updateItem(actualId, amount.toIntValue())
+            }
+        }
+    }
+
+    @Subscription
+    fun onRegisterCommands(event: RegisterCommandsEvent) {
+        event.register("sbapi sacks") {
+            thenCallback("id", StringArgumentType.string()) {
+                val id = argument<String>("id")
+                val amount = sackItems[id] ?: run {
+                    Text.sendDebug("This item isnt in sacks!")
+                    return@thenCallback
+                }
+                Text.sendDebug("You have $amount of item $id")
+            }
+            thenCallback("clear") {
+                SacksStorage.clear()
+                Text.sendDebug("Cleared sacks storage!")
             }
         }
     }
