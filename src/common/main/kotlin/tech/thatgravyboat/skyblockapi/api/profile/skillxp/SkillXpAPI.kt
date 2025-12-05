@@ -8,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpLiteralActionBarWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpPercentActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
@@ -24,7 +25,7 @@ object SkillXpAPI {
 
     private val group = RegexGroup.INVENTORY.group("skillxp")
     private val itemNameRegex = group.create("itemName", "(?<name>.*) (?<level>\\d+)")
-    private val itemLoreXpRegex = group.create("itemLoreXp", "\\s+(?<current>[\\d,.]+)(?:/(?<needed>[\\d,.]+[kmbKMB]?))?")
+    private val itemLoreXpRegex = group.create("itemLoreXp", "^\\s+(?<current>[\\d,.]+)(?:/(?<needed>[\\d,.]+[kmbKMB]?))?")
 
     @Subscription
     @OnlyOnSkyBlock
@@ -54,9 +55,13 @@ object SkillXpAPI {
     fun onActionbarLiteral(event: SkillXpLiteralActionBarWidgetChangeEvent) {
         val skill = event.skill ?: return
 
-        val old = SkillXpStorage.getXp(skill)
-        val skillxp = skill.data.getTotalExpForLevel(skill.data.maxLevel)
-        val diff = (event.current + skillxp) - old
+        // if needed is 0, they are at max level
+        val skillxp = if (event.needed == 0L) skill.data.getTotalExpForLevel(skill.data.maxLevel)
+        else {
+            val neededFromBefore = skill.data.getTotalExpForLevel(SkillXpStorage.getLevel(skill))
+            neededFromBefore + event.current
+        }
+        val diff = (event.current + skillxp) - SkillXpStorage.getXp(skill)
         if (diff != 0f) {
             SkillXpStorage.addXp(skill, diff)
             SkillXpGainedEvent(skill, diff, event.current.toFloat()).post()
@@ -83,6 +88,24 @@ object SkillXpAPI {
     @Subscription
     fun onEvent(event: SkillXpGainedEvent) {
         Text.of("You gained ${event.amount.toFormattedString()} XP in ${event.skill.name} (${event.currentXp.toFormattedString()})").send()
+    }
+
+    @Subscription
+    fun onCommand(event: RegisterCommandsEvent) {
+        event.register("sbapi skill") {
+            thenCallback("list") {
+                val skills = SkillXpStorage.data?.xp ?: return@thenCallback Text.of("No skill data found.").send()
+                skills.entries.sortedByDescending { it.value }.forEach { (skill, xp) ->
+                    val level = skill.data.getLevelForExp(xp.toLong())
+                    Text.of("${skill.name}: Level $level (${xp.toFormattedString()} XP)").send()
+                }
+            }
+            thenCallback("clear") {
+                SkillXpStorage.data?.xp?.clear()
+                SkillXpStorage.save()
+                Text.of("Cleared skill xp data.").send()
+            }
+        }
     }
 }
 

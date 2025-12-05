@@ -25,4 +25,8 @@ internal object SkillXpStorage {
         SKILL_XP.get()?.xp?.merge(skill, xp, Float::plus)
         SKILL_XP.save()
     }
+
+    fun save() {
+        SKILL_XP.save()
+    }
 }
