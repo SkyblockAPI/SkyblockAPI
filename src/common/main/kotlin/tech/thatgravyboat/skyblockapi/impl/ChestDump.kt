@@ -108,14 +108,14 @@ object ChestDump {
             val suggestions = IterableSuggestionProvider(storage.getStorages().entries) {
                 val dump = it.value.get()
                 "${dump.title.stripped}-${it.key.take(3)}"
-            }
+            }.withoutSanitization()
 
             fun getDump(id: String) = storage.getAll().entries.find { "${it.value.title.stripped}-${it.key.take(3)}" == id }
             then("open id", StringArgumentType.greedyString(), suggestions) {
                 callback {
                     val id = argument<String>("id")
 
-                    val dump = getDump(id!!)?.value ?: run {
+                    val dump = getDump(id)?.value ?: run {
                         Text.of("No dump with id $id found.").sendWithPrefix()
                         return@callback
                     }
@@ -127,7 +127,7 @@ object ChestDump {
                 callback {
                     val id = argument<String>("id")
 
-                    val dump = getDump(id!!)?.key ?: run {
+                    val dump = getDump(id)?.key ?: run {
                         Text.of("No dump with id $id found.").sendWithPrefix()
                         return@callback
                     }

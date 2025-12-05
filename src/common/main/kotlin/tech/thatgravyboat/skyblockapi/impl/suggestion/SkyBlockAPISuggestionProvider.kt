@@ -16,3 +16,21 @@ interface SkyBlockAPISuggestionProvider : SuggestionProvider<FabricClientCommand
     }
 
 }
+
+abstract class SkyBlockAPICommandSuggestionProvider : SuggestionProvider<FabricClientCommandSource> {
+
+    private var sanitizeInput = true
+
+    protected fun suggest(builder: SuggestionsBuilder, name: String) {
+        val filtered = if (sanitizeInput) name.sanitizeForCommandInput() else name
+        if (SharedSuggestionProvider.matchesSubStr(builder.remaining.lowercase(), filtered.lowercase())) {
+            builder.suggest(filtered)
+        }
+    }
+
+    fun withoutSanitization() : SkyBlockAPICommandSuggestionProvider {
+        this.sanitizeInput = false
+        return this
+    }
+
+}
