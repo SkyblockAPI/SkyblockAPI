@@ -84,8 +84,8 @@ object SkillXpAPI {
 
     @Subscription
     fun onEvent(event: SkillXpGainedEvent) {
-        val level = event.skill.data.getLevelForExp(event.currentXp.toLong())
         val totalXp = SkillXpStorage.getXp(event.skill).toLong()
+        val level = event.skill.data.getLevelForExp(totalXp)
         Text.of("You gained ${event.amount.toFormattedString()} XP in ${event.skill.name} (${level} ${event.currentXp.toFormattedString()}) - ${totalXp.toFormattedString()}")
             .send()
     }
