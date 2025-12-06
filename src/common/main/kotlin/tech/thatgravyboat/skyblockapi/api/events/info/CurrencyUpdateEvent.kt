@@ -10,6 +10,7 @@ sealed class CurrencyUpdateEvent<N : Number>(val new: N, val old: N) : SkyBlockE
     class Bits(new: Long, old: Long) : CurrencyUpdateEvent<Long>(new, old)
     class Motes(new: Long, old: Long) : CurrencyUpdateEvent<Long>(new, old)
     class Copper(new: Long, old: Long) : CurrencyUpdateEvent<Long>(new, old)
+    class SowDust(new: Long, old: Long) : CurrencyUpdateEvent<Long>(new, old)
     class NorthStars(new: Long, old: Long) : CurrencyUpdateEvent<Long>(new, old)
     class Gems(new: Long, old: Long) : CurrencyUpdateEvent<Long>(new, old)
 
