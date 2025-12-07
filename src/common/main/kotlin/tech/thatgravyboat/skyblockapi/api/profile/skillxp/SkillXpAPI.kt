@@ -47,6 +47,7 @@ object SkillXpAPI {
                 }
 
                 SkillXpStorage.setXp(skill, xp)
+                Text.of("Set ${skill.name} XP to ${xp.toFormattedString()} (Level $level)").send()
             }
         }
     }
@@ -86,8 +87,9 @@ object SkillXpAPI {
     fun onEvent(event: SkillXpGainedEvent) {
         val totalXp = SkillXpStorage.getXp(event.skill).toLong()
         val level = event.skill.data.getLevelForExp(totalXp)
-        Text.of("You gained ${event.amount.toFormattedString()} XP in ${event.skill.name} (${level} ${event.currentXp.toFormattedString()}) - ${totalXp.toFormattedString()}")
-            .send()
+        Text.of("Gained ${event.amount.toFormattedString()} XP in ${event.skill.name}") {
+            append(" (${level} ${event.currentXp.toFormattedString()}) - ${totalXp.toFormattedString()}")
+        }.send()
     }
 
     @Subscription
