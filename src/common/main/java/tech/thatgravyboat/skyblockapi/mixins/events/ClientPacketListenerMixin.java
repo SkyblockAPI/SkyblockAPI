@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,9 +21,9 @@ import tech.thatgravyboat.skyblockapi.api.events.entity.EntityAttributesUpdateEv
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityEquipmentUpdateEvent;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
+@SuppressWarnings({"MixinAnnotationTarget", "InvalidInjectorMethodSignature"})
 @Mixin(ClientPacketListener.class)
 public class ClientPacketListenerMixin {
 
@@ -32,23 +33,36 @@ public class ClientPacketListenerMixin {
     }
 
     @Inject(method = "handleUpdateAttributes", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getAttributes()Lnet/minecraft/world/entity/ai/attributes/AttributeMap;"))
-    private void startHandlingAttributes(ClientboundUpdateAttributesPacket packet, CallbackInfo ci, @Share("modifiedAttributes") LocalRef<Map<Attribute, Double>> modifiedAttributesRef) {
+    private void startHandlingAttributes(
+        ClientboundUpdateAttributesPacket packet,
+        CallbackInfo ci,
+        @Share("modifiedAttributes") LocalRef<Map<Holder<Attribute>, EntityAttributesUpdateEvent.ChangedAttribute>> modifiedAttributesRef
+    ) {
         modifiedAttributesRef.set(new HashMap<>());
     }
 
     @WrapOperation(method = "handleUpdateAttributes", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;setBaseValue(D)V"))
-    private void addModifiedAttribute(AttributeInstance instance, double baseValue, Operation<Void> original, @Share("modifiedAttributes") LocalRef<Map<Attribute, Double>> modifiedAttributesRef) {
+    private void addModifiedAttribute(
+        AttributeInstance instance,
+        double baseValue,
+        Operation<Void> original,
+        @Share("modifiedAttributes") LocalRef<Map<Holder<Attribute>, EntityAttributesUpdateEvent.ChangedAttribute>> modifiedAttributesRef
+    ) {
         var prevValue = instance.getBaseValue();
-        if (prevValue != baseValue) modifiedAttributesRef.get().put(instance.getAttribute().value(), prevValue);
+        if (prevValue != baseValue) {
+            modifiedAttributesRef.get().put(instance.getAttribute(), new EntityAttributesUpdateEvent.ChangedAttribute(prevValue, baseValue));
+        }
         original.call(instance, baseValue);
     }
 
-    @WrapOperation(method = "handleUpdateAttributes", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;hasNext()Z"))
-    private boolean postAttributesUpdate(Iterator<ClientboundUpdateAttributesPacket.AttributeSnapshot> instance, Operation<Boolean> original, @Local Entity entity, @Share("modifiedAttributes") LocalRef<Map<Attribute, Double>> modifiedAttributesRef) {
-        if (original.call(instance)) return true;
+    @Inject(method = "handleUpdateAttributes", at = @At("TAIL"))
+    private void postAttributesUpdate(
+        CallbackInfo ci,
+        @Local Entity entity,
+        @Share("modifiedAttributes") LocalRef<Map<Holder<Attribute>, EntityAttributesUpdateEvent.ChangedAttribute>> modifiedAttributesRef
+    ) {
         var modified = modifiedAttributesRef.get();
-        if (!modified.isEmpty()) new EntityAttributesUpdateEvent((LivingEntity) entity, modified).post(SkyBlockAPI.getEventBus());
-        return false;
+        if (modified != null && !modified.isEmpty()) new EntityAttributesUpdateEvent((LivingEntity) entity, modified).post(SkyBlockAPI.getEventBus());
     }
 
 }

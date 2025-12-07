@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.entity
 
+import net.minecraft.core.Holder
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attribute
@@ -13,7 +14,7 @@ class EntityEquipmentUpdateEvent(val entity: LivingEntity) : SkyBlockEvent()
 
 class EntityAttributesUpdateEvent(
     val entity: LivingEntity,
-    val oldValues: Map<Attribute, Double>,
+    val changed: Map<Holder<Attribute>, ChangedAttribute>,
 ) : SkyBlockEvent() {
-    val changed: Set<Attribute> get() = oldValues.keys
+    data class ChangedAttribute(val old: Double, val new: Double)
 }
