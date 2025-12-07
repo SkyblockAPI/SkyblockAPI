@@ -45,7 +45,7 @@ object LocationAPI {
         " *(?:players|party) \\((?<count>\\d+)\\) *",
     )
 
-    private val forceOnSkyblock by debugToggle("force_skyblock", "Always returns true for SkyBlock checks")
+    val forceOnSkyblock by debugToggle("force_skyblock", "Always returns true for SkyBlock checks")
 
     var isOnSkyBlock: Boolean = false
         get() = field || forceOnSkyblock

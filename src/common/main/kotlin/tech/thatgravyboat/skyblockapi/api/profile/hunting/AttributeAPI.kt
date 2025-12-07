@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.item.replaceVisually
 import tech.thatgravyboat.skyblockapi.api.remote.api.RepoAttributeAPI
@@ -64,7 +65,7 @@ object AttributeAPI {
     private val chatGroup = RegexGroup.CHAT.group("attribute")
 
     private val trapGroup = chatGroup.group("trap")
-    private val foundShardRegex = trapGroup.create("caught", "^You caught (?<amount>an?|x\\d+) (?<name>.*?) Shards?!$")
+    private val foundShardRegex = trapGroup.create("caught", "^(?:You caught|LOOT SHARE You received) (?<amount>an?|x?\\d+) (?<name>.*?) Shards?(?: for assisting \\w+)?!$")
 
     private val fusionChatGroup = chatGroup.group("fusion")
     private val fusionObtainedRegex = fusionChatGroup.create("obtained", "FUSION! You obtained (?:an? )?(.*?)(?: (x\\d+))?!.*")
@@ -181,7 +182,9 @@ object AttributeAPI {
             }
         }
 
-        val shard = event.item.getRawLore().dropWhile { it.matches(fusionItemRegex) }.firstOrNull() ?: return
+        val shard = event.item.getRawLore().dropWhile {
+            it.matches(fusionItemRegex)
+        }.firstOrNull()?.removeSuffix(" NEW SHARD") ?: return
         val id = SkyBlockId.fromName(shard) ?: return
 
         when (event.slot.index) {
@@ -313,6 +316,28 @@ object AttributeAPI {
         getData(id).syphoned += amount
         AttributeStorage.save()
     }
+
+    private fun resetOwnedAttributeAmounts() {
+        for (key in _attributeMap.keys) {
+            _attributeMap[key]?.owned = 0
+        }
+        AttributeStorage.save()
+    }
+
+    @Subscription
+    fun onCommandRegister(event: RegisterCommandsEvent) {
+        event.register("sbapi attributes") {
+            then("reset") {
+                then("owned") {
+                    callback {
+                        resetOwnedAttributeAmounts()
+                        Text.debug("Reset Owned Shards!").send()
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 private data class DeferredFusion(

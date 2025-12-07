@@ -38,6 +38,7 @@
         "features.VisualItemMixin",
         "features.SynchedEntityDataMixin",
         "features.SynchedEntityDataDataItemMixin",
+        "features.ClickEventMixin",
         "fixes.FishingHookMixin",
         "fixes.HolderOwnerMixin",
         "fixes.NarratorMixin",

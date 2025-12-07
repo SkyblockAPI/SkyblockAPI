@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import tech.thatgravyboat.skyblockapi.api.item.ClickConsumer;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
 import java.util.List;
-import java.util.function.IntConsumer;
 
 @Mixin(ItemStack.class)
 public abstract class VisualItemMixin implements VisualItemAccessor {
@@ -23,13 +23,15 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     public abstract boolean isEmpty();
 
     @Unique
-    private ItemStack visualItem;
+    private @Nullable ItemStack visualItem;
     @Unique
-    private String slotText;
+    private @Nullable Component slotText;
     @Unique
-    private IntConsumer clickAction;
+    private @Nullable ClickConsumer clickAction;
     @Unique
-    private ItemStack backgroundItem;
+    private @Nullable ItemStack backgroundItem;
+    @Unique
+    private int backgroundColor;
 
     @Override
     public void skyblockapi$setVisualItem(@Nullable ItemStack item) {
@@ -58,22 +60,22 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     }
 
     @Override
-    public void skyblockapi$setSlotText(@Nullable String item) {
+    public void skyblockapi$setSlotText(@Nullable Component item) {
         this.slotText = item;
     }
 
     @Override
-    public @Nullable String skyblockapi$getSlotText() {
+    public @Nullable Component skyblockapi$getSlotText() {
         return this.slotText;
     }
 
     @Override
-    public void skyblockapi$setOnClickAction(IntConsumer clickAction) {
+    public void skyblockapi$setOnClickAction(@Nullable ClickConsumer clickAction) {
         this.clickAction = clickAction;
     }
 
     @Override
-    public @Nullable IntConsumer skyblockapi$getOnClickAction() {
+    public @Nullable ClickConsumer skyblockapi$getOnClickAction() {
         return clickAction;
     }
 
@@ -83,7 +85,17 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     }
 
     @Override
-    public ItemStack skyblockapi$getBackgroundItem() {
+    public @Nullable ItemStack skyblockapi$getBackgroundItem() {
         return this.backgroundItem;
+    }
+
+    @Override
+    public void skyblockapi$setBackgroundColor(int color) {
+        this.backgroundColor = color;
+    }
+
+    @Override
+    public int skyblockapi$getBackgroundColor() {
+        return this.backgroundColor;
     }
 }

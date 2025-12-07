@@ -55,7 +55,7 @@ object PacketEventHandler {
 
             is ClientboundContainerClosePacket -> {
                 if (packet.containerId == lastContainerCloseId) return
-                ContainerCloseEvent.post()
+                McClient.runNextTick(ContainerCloseEvent::post)
             }
         }
     }

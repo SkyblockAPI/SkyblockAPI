@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 @GenerateCodec
 data class CommunityCenterData(
     var rank: FameRank = FameRanks.NEW_PLAYER,
+    var gems: Long = 0,
     val bitsAvailable: MutableMap<String, Long> = mutableMapOf(),
 ) {
     companion object {

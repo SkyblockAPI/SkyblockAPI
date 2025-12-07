@@ -18,9 +18,7 @@ import tech.thatgravyboat.skyblockapi.api.data.FolderStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
-import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenInitializedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.*
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
@@ -70,13 +68,19 @@ object ChestDump {
             object : ContainerScreen(menu as ChestMenu, McPlayer.self!!.inventory, dump.title) {
                 override fun init() {
                     super.init()
-                    ScreenInitializedEvent(this).post(SkyBlockAPI.eventBus)
+                    dump.items.forEachIndexed { index, item -> menu.slots[index].set(item) }
+
+                    ContainerInitializedEvent(menu.slots.map { it.item }, this).post()
+                    ScreenInitializedEvent(this).post()
                     dump.items.forEachIndexed { index, item ->
-                        menu.slots[index].set(item)
-                        InventoryChangeEvent(item, menu.slots[index], dump.title, menu.slots, this).post(SkyBlockAPI.eventBus)
+                        InventoryChangeEvent(item, menu.slots[index], dump.title, menu.slots, this).post()
                     }
                 }
 
+                override fun onClose() {
+                    ContainerCloseEvent.post()
+                    super.onClose()
+                }
 
                 @Suppress("WRONG_NULLABILITY_FOR_JAVA_OVERRIDE") // it literally crashes if you don't do this so yeah
                 override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ClickType?) {
@@ -104,14 +108,14 @@ object ChestDump {
             val suggestions = IterableSuggestionProvider(storage.getStorages().entries) {
                 val dump = it.value.get()
                 "${dump.title.stripped}-${it.key.take(3)}"
-            }
+            }.withoutSanitization()
 
             fun getDump(id: String) = storage.getAll().entries.find { "${it.value.title.stripped}-${it.key.take(3)}" == id }
             then("open id", StringArgumentType.greedyString(), suggestions) {
                 callback {
                     val id = argument<String>("id")
 
-                    val dump = getDump(id!!)?.value ?: run {
+                    val dump = getDump(id)?.value ?: run {
                         Text.of("No dump with id $id found.").sendWithPrefix()
                         return@callback
                     }
@@ -123,7 +127,7 @@ object ChestDump {
                 callback {
                     val id = argument<String>("id")
 
-                    val dump = getDump(id!!)?.key ?: run {
+                    val dump = getDump(id)?.key ?: run {
                         Text.of("No dump with id $id found.").sendWithPrefix()
                         return@callback
                     }

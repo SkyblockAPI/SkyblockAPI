@@ -31,7 +31,6 @@ object ScreenEventHandler {
     @Subscription(priority = Subscription.HIGHEST)
     fun onSlotClick(event: SlotClickEvent) {
         val consumer = event.item.getVisualItem()?.getClickAction() ?: return
-        consumer.accept(event.button)
-        event.cancel()
+        if (consumer.accept(event.button) != null) event.cancel()
     }
 }

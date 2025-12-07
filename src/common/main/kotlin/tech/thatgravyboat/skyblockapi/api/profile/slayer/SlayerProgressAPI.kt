@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.slayer
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerAPI
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
-import tech.thatgravyboat.skyblockapi.api.data.Perk
+import tech.thatgravyboat.skyblockapi.api.data.MayorPerks
 import tech.thatgravyboat.skyblockapi.api.data.stored.SlayerStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
@@ -59,7 +59,7 @@ object SlayerProgressAPI {
                     val slayerData = RepoSlayerData.getData(it)
                     val lastXp = SlayerStorage.getXp(it).coerceAtLeast(slayerData.leveling.max())
                     val gain = (slayerData.bossXp.getOrNull(SlayerAPI.lastLevel - 1) ?: 0).let { xp ->
-                        if (Perk.SLAYER_XP_BUFF.active) (xp * 1.25).toInt() else xp
+                        if (MayorPerks.SLAYER_XP_BUFF.active) (xp * 1.25).toInt() else xp
                     }
                     SlayerStorage.setXp(it, lastXp + gain)
                 }

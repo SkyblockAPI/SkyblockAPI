@@ -5,6 +5,8 @@ package tech.thatgravyboat.skyblockapi.helpers
 import com.mojang.authlib.minecraft.MinecraftSessionService
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.SharedConstants
 import net.minecraft.Util
@@ -15,11 +17,15 @@ import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
@@ -29,6 +35,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 actual object McClient {
 
@@ -114,6 +122,10 @@ actual object McClient {
         self.schedule(action)
     }
 
+    actual fun runOrNextTick(action: () -> Unit) {
+        self.executeIfPossible(action)
+    }
+
     actual fun playSound(sound: SoundEvent, volume: Float, pitch: Float) {
         McPlayer.self?.playSound(sound, volume, pitch)
     }
@@ -126,7 +138,7 @@ actual object McClient {
 
     actual fun setScreenAsync(screen: () -> Screen?) = runNextTick {
         val next = screen()
-        self.screen?.onClose()
+        (self.screen as? AbstractContainerScreen<*>)?.onClose()
         self.setScreen(next)
     }
 
@@ -147,5 +159,22 @@ actual object McClient {
         connection?.sendCommand(command.removePrefix("/"))
     }
 
+    actual fun registerClientReloadListener(id: ResourceLocation, listener: PreparableReloadListener) {
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(ReloadListenerWrapper(id, listener))
+    }
+
+    private data class ReloadListenerWrapper(
+        val id: ResourceLocation,
+        val original: PreparableReloadListener,
+    ) : IdentifiableResourceReloadListener {
+        override fun getFabricId(): ResourceLocation = id
+
+        override fun reload(
+            arg: PreparableReloadListener.SharedState,
+            executor: Executor,
+            arg2: PreparableReloadListener.PreparationBarrier,
+            executor2: Executor,
+        ): CompletableFuture<Void> = original.reload(arg, executor, arg2, executor2)
+    }
 }
 

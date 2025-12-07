@@ -1,13 +1,11 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 import net.minecraft.world.item.Item
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlotData
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.*
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes.PetData
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.PersonalAccessoryDataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import java.util.*
 import kotlin.time.Duration
@@ -36,6 +34,7 @@ object DataTypes {
     val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS
     val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
     val MIDAS_WEAPON_PAID: DataType<Long> = GenericDataTypes.MIDAS_WEAPON_PAID
+    val ENRICHMENT: DataType<SkyBlockId> = GenericDataTypes.ENRICHMENT
 
     // Misc (idfk)
     val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = LoreDataTypes.RIGHT_CLICK_MANA_ABILITY
@@ -48,7 +47,9 @@ object DataTypes {
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
     val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
     val BOOK_OF_STATS: DataType<Int> = GenericDataTypes.BOOK_OF_STATS
+    @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = GenericDataTypes.APPLIED_RUNE
+    val USED_RUNE: DataType<SkyBlockId> = GenericDataTypes.USED_RUNE
     val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN
     val APPLIED_DYE: DataType<String> = GenericDataTypes.APPLIED_DYE
     val PET_DATA: DataType<PetData> = GenericDataTypes.PET_DATA
@@ -56,6 +57,11 @@ object DataTypes {
     val ABSORB_LOGS: DataType<Long> = GenericDataTypes.ABSORB_LOGS
     val LOGS_CUT: DataType<Long> = GenericDataTypes.LOGS_CUT
     val GILDED_GIFTED_COINS: DataType<Long> = GenericDataTypes.GILDED_GIFTED_COINS
+    val ABICASE_MODEL: DataType<String> = GenericDataTypes.ABICASE_MODEL
+    val FUNGI_CUTTER_MODE: DataType<String> = GenericDataTypes.FUNGI_CUTTER_MODE
+
+    val PARTY_HAT_COLOR: DataType<String> = GenericDataTypes.PARTY_HAT_COLOR
+    val PARTY_HAT_YEAR: DataType<Int> = GenericDataTypes.PARTY_HAT_YEAR
 
     // Aging Items
     val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD
@@ -68,6 +74,7 @@ object DataTypes {
     val NECRON_SCROLLS: DataType<List<String>> = GenericDataTypes.NECRON_SCROLLS
     val DUNGEON_TIER: DataType<Int> = GenericDataTypes.DUNGEON_TIER
     val DUNGEON_QUALITY: DataType<Int> = GenericDataTypes.DUNGEON_QUALITY
+    val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = LoreDataTypes.DUNGEONBREAKER_CHARGES
 
     // Fishing Rod
     val WET_BOOK: DataType<Int> = GenericDataTypes.WET_BOOK
@@ -77,13 +84,13 @@ object DataTypes {
 
     // Mining
     val FUEL: DataType<Pair<Int, Int>> = LoreDataTypes.FUEL
-    val PICKONIMBUS_DURABILITY: DataType<Int> = GenericDataTypes.PICKONIMBUS_DURABILITY
-    val COMPACT_BLOCKS: DataType<Long> = GenericDataTypes.COMPACT_BLOCKS
-    val GEMSTONES: DataType<List<GemstoneSlotData>> = GenericDataTypes.GEMSTONES
-    val DIVAN_POWDER_COATING: DataType<Int> = GenericDataTypes.DIVAN_POWDER_COATING
-    val POLARVOID: DataType<Int> = GenericDataTypes.POLARVOID
-    val POWER_ABILITY_SCROLL: DataType<String> = GenericDataTypes.POWER_ABILITY_SCROLL
-    val FUEL_TANK: DataType<String> = GenericDataTypes.FUEL_TANK
-    val ENGINE: DataType<String> = GenericDataTypes.ENGINE
-    val UPGRADE_MODULE: DataType<String> = GenericDataTypes.UPGRADE_MODULE
+    val PICKONIMBUS_DURABILITY: DataType<Int> = MiningDataTypes.PICKONIMBUS_DURABILITY
+    val COMPACT_BLOCKS: DataType<Long> = MiningDataTypes.COMPACT_BLOCKS
+    val GEMSTONES: DataType<List<GemstoneSlotData>> = MiningDataTypes.GEMSTONES
+    val DIVAN_POWDER_COATING: DataType<Int> = MiningDataTypes.DIVAN_POWDER_COATING
+    val POLARVOID: DataType<Int> = MiningDataTypes.POLARVOID
+    val POWER_ABILITY_SCROLL: DataType<String> = MiningDataTypes.POWER_ABILITY_SCROLL
+    val FUEL_TANK: DataType<String> = MiningDataTypes.FUEL_TANK
+    val ENGINE: DataType<String> = MiningDataTypes.ENGINE
+    val UPGRADE_MODULE: DataType<String> = MiningDataTypes.UPGRADE_MODULE
 }

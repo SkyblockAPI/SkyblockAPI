@@ -13,6 +13,8 @@ import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
 import net.msrandom.stub.Stub
 import tech.thatgravyboat.skyblockapi.utils.McVersion
@@ -60,6 +62,8 @@ expect object McClient {
 
     fun runNextTick(action: () -> Unit)
 
+    fun runOrNextTick(action: () -> Unit)
+
     fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f)
 
     fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f)
@@ -72,5 +76,7 @@ expect object McClient {
 
     /** Sends a command that first goes through client side commands, and then server commands */
     fun sendClientCommand(command: String)
+
+    fun registerClientReloadListener(id: ResourceLocation, listener: PreparableReloadListener)
 }
 

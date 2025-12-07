@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Comp
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvMuseumOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
@@ -27,6 +28,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -43,11 +45,14 @@ object MuseumAPI {
     //region Regex
     private val inventoryGroup = RegexGroup.INVENTORY.group("museum")
 
+    private val mainMuseumTitleRegex = inventoryGroup.create(
+        "main.title",
+        "Your Museum",
+    )
     private val inventoryTitleRegex = inventoryGroup.create(
         "title",
         "Museum ➜ (?<category>.+)$",
     )
-
     private val donateTitleRegex = inventoryGroup.create(
         "donate.title",
         "Confirm Donation",
@@ -56,7 +61,18 @@ object MuseumAPI {
         "donate.item",
         "Confirm Donation",
     )
+    private val museumRewardsItem = inventoryGroup.create(
+        "rewards.item",
+        "Museum Rewards",
+    )
+    private val museumMilestoneRegex = inventoryGroup.create(
+        "milestone",
+        "Milestone: (?<milestone>\\d+)/\\d+",
+    )
     //endregion
+
+
+    val milestone: Int get() = MuseumStorage.milestone
 
     fun getAllItems(): List<ItemStack> = MuseumStorage.getAllItems()
     fun getItemsOnCategory(category: MuseumCategory): List<ItemStack> = MuseumStorage.getItemsOnCategory(category)
@@ -193,6 +209,17 @@ object MuseumAPI {
                 if (map.isEmpty()) return@findThenNull
                 MuseumStorage.addArmorSet(setId, map)
             } ?: break
+        }
+    }
+
+    @Subscription
+    @OnlyIn(SkyBlockIsland.HUB)
+    fun onInventoryUpdate(event: InventoryChangeEvent) {
+        if (!mainMuseumTitleRegex.match(event.title)) return
+        if (!museumRewardsItem.match(event.item.cleanName)) return
+
+        museumMilestoneRegex.anyMatch(event.item.getRawLore(), "milestone") { (milestoneStr) ->
+            MuseumStorage.setMilestone(milestoneStr.toIntOrNull() ?: return@anyMatch)
         }
     }
 

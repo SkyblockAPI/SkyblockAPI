@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
@@ -26,6 +27,14 @@ object ScoreboardEventHandler {
 
         handleScoreboard()
         handleTitle()
+    }
+
+    @Subscription
+    fun onServerSwitch(event: ServerChangeEvent) {
+        if (!ProfileAPI.isLoaded) return
+
+        ScoreboardUpdateEvent(scoreboard, emptyList(), emptyList()).post()
+        scoreboard = emptyList()
     }
 
     private fun handleScoreboard() {

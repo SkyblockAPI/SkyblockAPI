@@ -12,6 +12,7 @@ import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RepoVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIDevModules
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIModules
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
@@ -37,6 +38,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
     fun init() {
         debug("Starting sbapi!")
         SkyblockAPIModules.init { eventBus.register(it) }
+        if (McClient.isDev) SkyblockAPIDevModules.init(eventBus::register)
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
             RepoStatusEvent(status).post()
         }

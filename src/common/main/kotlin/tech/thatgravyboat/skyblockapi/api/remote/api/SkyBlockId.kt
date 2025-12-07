@@ -6,10 +6,10 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
+import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
@@ -54,6 +54,8 @@ value class SkyBlockId private constructor(val id: String) {
                 name = name.replace(petRegex, "$1")
             } else if (name.matches(amountRegex)) {
                 name = name.substringBeforeLast(" x")
+            } else if (name.endsWith(" minion")) {
+                name = "$name i"
             }
 
             return SimpleItemAPI.findIdByName(name.trim()) ?: if (dropLast) SimpleItemAPI.findIdByName(name.substringBeforeLast(" ").trim()) else null
@@ -85,7 +87,22 @@ value class SkyBlockId private constructor(val id: String) {
         val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it })
             .xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
 
-        fun ItemStack.getSkyBlockId() = this[DataTypes.SKYBLOCK_ID] ?: fromItem(this) ?: fromName(this.hoverName.stripped)
+        fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
+
+        internal fun createIdForItem(stack: ItemStack): SkyBlockId? {
+            val id = fromItem(stack)
+            if (id != null) return id
+
+            // Used for ignoring same names on things like dyes and barriers where it is usually important to keep it as no id.
+            // i.e. anvil with no items has a barrier named 'Anvil'
+            if (stack.item in ItemTag.IGNORE_NAME_LOOKUP) return null
+
+            // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
+            // i.e. ender chest icon in storage
+            if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
+
+            return fromName(stack.hoverName.stripped, false)
+        }
     }
 
     val isItem: Boolean get() = id.startsWith(ITEM)
@@ -111,10 +128,8 @@ value class SkyBlockId private constructor(val id: String) {
         }.uppercase()
     val bazaarId: String
         get() = when {
-
-            isAttribute -> "SHARD_${RepoAttributeAPI.getAttributeDataById(cleanId)?.shardName()}"
+            isAttribute -> RepoAttributeAPI.getAttributeDataById(cleanId)?.shardId ?: "UNKNOWN"
             isEnchantment -> "ENCHANTMENT_${cleanId.substringBeforeLast(DELIMITER)}_${cleanId.substringAfterLast(DELIMITER)}"
-
             else -> skyblockId
         }
 
@@ -142,30 +157,28 @@ value class SkyBlockId private constructor(val id: String) {
     override fun toString() = "SkyBlockId($id)"
 }
 
-private fun ItemStack.getSbId(): SkyBlockId? {
-    val data = DataTypes.ID.factory(this) ?: GenericDataTypes.ID.factory(this)
-    return when (data) {
-        "RUNE", "UNIQUE_RUNE" -> {
-            DataTypes.APPLIED_RUNE.factory(this)?.let { (rune, level) -> "$rune$DELIMITER$level" }.let { it ?: UNKNOWN }
-                .let(SkyBlockId::rune)
-        }
+private fun ItemStack.getSbId(): SkyBlockId? = when (val data = DataTypes.ID.factory(this)) {
+    "RUNE", "UNIQUE_RUNE" -> DataTypes.USED_RUNE.factory(this)
+    "PET" -> DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
+    "ENCHANTED_BOOK" -> {
+        val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
 
-        "PET" -> {
-            DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }
-                .let(SkyBlockId::pet)
+        when (enchants?.size) {
+            null, 0 -> SkyBlockId.enchantment(UNKNOWN)
+            1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key, value) }
+            else -> SkyBlockId.item("enchanted_book")
         }
-
-        "ENCHANTED_BOOK" -> {
-            DataTypes.ENCHANTMENTS.factory(this)?.entries?.firstOrNull()?.let { (key, value) -> "$key$DELIMITER$value" }
-                .let { it ?: UNKNOWN }
-                .let(SkyBlockId::enchantment)
-        }
-
-        "ATTRIBUTE_SHARD" -> {
-            DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
-                .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
-        }
-
-        else -> (data)?.let(SkyBlockId::item)
     }
+
+    "ATTRIBUTE_SHARD" -> {
+        DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
+            .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
+    }
+
+    "ABICASE" -> DataTypes.ABICASE_MODEL.factory(this)?.let { SkyBlockId.item("abicase_$it") }
+
+    "PARTY_HAT_CRAB_ANIMATED" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
+    "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_$it") }
+
+    else -> data?.let(SkyBlockId::item)
 }

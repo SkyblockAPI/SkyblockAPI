@@ -13,8 +13,8 @@ internal object HelmetSkinCalculator : DataTypeCalculator(DataTypes.HELMET_SKIN)
 
 internal object AppliedRuneCalculator : SingleEntryCalculator {
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
-        val rune = stack.getData(DataTypes.APPLIED_RUNE) ?: return null
-        return ItemEntry("rune:${rune.first}:${rune.second}")
+        val rune = stack.getData(DataTypes.USED_RUNE) ?: return null
+        return ItemEntry(rune.id)
     }
 }
 

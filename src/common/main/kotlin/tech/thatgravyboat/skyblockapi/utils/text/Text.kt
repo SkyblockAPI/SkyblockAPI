@@ -1,13 +1,16 @@
 package tech.thatgravyboat.skyblockapi.utils.text
 
+import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.*
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.StringUtil
 import net.msrandom.stub.Stub
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
+import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
+import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.net.URI
 import java.util.*
@@ -147,6 +150,43 @@ object TextUtils {
         McFont::width,
     ) { it.joinToString(separator) }
 
+    fun Component.substring(startIndex: Int): Component = this.substring(startIndex, this.stripped.length)
+    fun Component.substring(startIndex: Int, endIndex: Int): Component = ComponentUtils.substring(this, startIndex, endIndex)
+    fun Component.substring(range: IntRange): Component = this.substring(range.first, range.last)
+
+    // TODO: optimize color codes to only add the necessary ones
+    internal fun Component.toStringWithFormattingCodes(): String {
+        val sb = StringBuilder()
+        var last = Style.EMPTY
+
+        this.visit({ style, text ->
+            if (style != last) {
+                sb.append(ChatFormatting.RESET)
+                sb.appendStyle(style)
+                last = style
+            }
+            sb.append(text)
+            Optional.empty<Unit>()
+        }, Style.EMPTY,
+        )
+
+        return sb.toString()
+    }
+
+    private fun StringBuilder.appendStyle(style: Style) {
+        style.color?.let { color ->
+            val value = color.value
+            val formatting = ChatFormatting.entries.find { it.isColor && it.color == value } ?: ChatFormatting.RESET
+            append(formatting)
+        }
+
+        if (style.isBold) append(ChatFormatting.BOLD)
+        if (style.isItalic) append(ChatFormatting.ITALIC)
+        if (style.isUnderlined) append(ChatFormatting.UNDERLINE)
+        if (style.isStrikethrough) append(ChatFormatting.OBFUSCATED)
+        if (style.isObfuscated) append(ChatFormatting.OBFUSCATED)
+    }
+
 }
 
 @Stub
@@ -187,7 +227,10 @@ object TextStyle {
     }
 
     fun MutableComponent.onClick(runnable: () -> Unit): MutableComponent = this.style {
-        withClickEvent(RunnableClickEvent(runnable))
+        val event = ClickEvent.SuggestCommand("SkyBlockAPI OnClick Action")
+        @Suppress("KotlinConstantConditions")
+        ((event as Any) as? RunnableClickEventHook)?.`skyblockapi$setRunnable` { runnable() }
+        withClickEvent(event)
     }
 
     val Component.font: ResourceLocation?

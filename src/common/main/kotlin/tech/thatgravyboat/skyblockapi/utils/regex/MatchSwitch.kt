@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.regex
 
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
@@ -13,7 +14,7 @@ class RegexSwitch {
         cases.add(RegexSwitchCase(regex, groups.toList(), action))
     }
 
-    internal fun check(input: String, checker: (Regex, String, Array<String>, (Destructured) -> Unit) -> Boolean): Boolean {
+    internal fun <T> check(input: T, checker: (Regex, T, Array<String>, (Destructured) -> Unit) -> Boolean): Boolean {
         for ((regex, groups, action) in cases) {
             if (checker(regex, input, groups.toTypedArray(), action)) {
                 return true
@@ -25,6 +26,10 @@ class RegexSwitch {
 
 fun matchWhen(input: String, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).check(input) { regex, input, groups, action ->
     regex.match(input = input, groups = groups, action = action)
+}
+
+fun anyMatchWhen(input: List<String>, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).check(input) { regex, input, groups, action ->
+    regex.anyMatch(input = input, groups = groups, action = action)
 }
 
 fun findWhen(input: String, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).check(input) { regex, input, groups, action ->

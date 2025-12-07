@@ -4,6 +4,8 @@ import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
+typealias ScoreboardChangeEvent = ScoreboardUpdateEvent
+
 /**
  * Fired when the scoreboard changes in SkyBlock.
  */

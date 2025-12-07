@@ -3,10 +3,12 @@ package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes.ID
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes.ID
 import tech.thatgravyboat.skyblockapi.utils.extentions.getIntOrNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.getStringOrNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.tag
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
 /**
  * Data types for things like personal compactor and deletor
@@ -22,8 +24,13 @@ object PersonalAccessoryDataTypes {
         else -> null
     }
 
-    var PERSONAL_COMPACTOR_ITEMS: DataType<List<String?>> = DataType("personal_compactor") {
-        val maxItems = it.getMaxItems("COMPACTOR") ?: return@DataType null
+    private val personalAccessoryActiveRegex = LoreDataTypes.dataTypeGroup.create(
+        "personal_accessory_active",
+        "Enabled: (?<state>On|Off)\nRight-click to toggle!",
+    )
+
+    val PERSONAL_COMPACTOR_ITEMS: DataType<List<String?>> = DataType.of("personal_compactor") {
+        val maxItems = it.getMaxItems("COMPACTOR") ?: return@of null
         buildList {
             for (i in 0 until maxItems) {
                 add(it.tag?.getStringOrNull("personal_compact_$i"))
@@ -31,8 +38,8 @@ object PersonalAccessoryDataTypes {
         }
     }
 
-    var PERSONAL_DELETOR_ITEMS: DataType<List<String?>> = DataType("personal_deletor") {
-        val maxItems = it.getMaxItems("DELETOR") ?: return@DataType null
+    val PERSONAL_DELETOR_ITEMS: DataType<List<String?>> = DataType.of("personal_deletor") {
+        val maxItems = it.getMaxItems("DELETOR") ?: return@of null
         buildList {
             for (i in 0 until maxItems) {
                 add(it.tag?.getStringOrNull("personal_deletor_$i"))
@@ -40,7 +47,16 @@ object PersonalAccessoryDataTypes {
         }
     }
 
-    var PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType("personal_accessory_active") {
-        it.tag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE").let { active -> active == 1 }
+    val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType.of("personal_accessory_active") {
+        it.tag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE")?.let { active -> active == 1 } ?: run {
+            personalAccessoryActiveRegex.findOrNull(it.getRawLore().joinToString("\n"), "state") { (state) ->
+                when (state) {
+                    "On" -> true
+                    "Off" -> false
+                    else -> null
+                }
+            }
+        }
     }
+
 }
