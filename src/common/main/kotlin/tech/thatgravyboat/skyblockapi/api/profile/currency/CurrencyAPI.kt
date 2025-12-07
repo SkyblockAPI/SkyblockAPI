@@ -16,6 +16,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import kotlin.reflect.KMutableProperty0
 
 enum class PurseType(scoreboardName: String? = null) {
     NORMAL("PURSE"),
@@ -95,21 +96,19 @@ object CurrencyAPI {
         when (event.widget) {
             TabWidget.PROFILE -> {
                 bankSingleRegex.anyMatch(event.new, "bank") { (bank) ->
-                    this.coopBank = post(bank, this.coopBank, CurrencyUpdateEvent<*>::CoopBank)
-                    this.personalBank = post(0, this.personalBank, CurrencyUpdateEvent<*>::Bank)
+                    this.coopBank = post(bank, this.coopBank, CurrencyEvent::CoopBank)
+                    this.personalBank = post(0, this.personalBank, CurrencyEvent::Bank)
                 }
                 bankCoopRegex.anyMatch(event.new, "coop", "personal") { (coop, personal) ->
                     this.coopBank = post(coop, this.coopBank, CurrencyEvent::CoopBank)
-                    this.personalBank = post(personal, this.personalBank, CurrencyUpdateEvent<*>::Bank)
+                    this.personalBank = post(personal, this.personalBank, CurrencyEvent::Bank)
                 }
                 soulflowRegex.anyMatch(event.new, "soulflow") { (soulflow) ->
                     this.soulflow = soulflow.parseFormattedLong()
                 }
             }
             TabWidget.AREA -> {
-                gemsRegex.anyMatch(event.new, "gems") { (gems) ->
-                    this.gems = post(gems, this.gems, CurrencyUpdateEvent<*>::Gems)
-                }
+                gemsRegex.findCurrency(event.new, "gems", ::gems, CurrencyEvent::Gems)
             }
             else -> return
         }
@@ -119,32 +118,29 @@ object CurrencyAPI {
     @OnlyOnSkyBlock
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         if (SkyBlockIsland.THE_RIFT.inIsland()) {
-            motesRegex.anyFound(event.added, "motes") { (motes) ->
-                // Has a decimal place if obtained via mcgrubber burgers
-                this.motes = post(motes, this.motes, CurrencyEvent::Motes)
-            }
+            // Has a decimal place if obtained via mcgrubber burgers
+            motesRegex.findCurrency(event.added, "motes", ::motes, CurrencyEvent::Motes)
         } else {
             if (SkyBlockIsland.JERRYS_WORKSHOP.inIsland()) {
-                northStarsRegex.anyFound(event.added, "northstars") { (northstars) ->
-                    this.northStars = post(northstars, this.northStars, CurrencyEvent::NorthStars)
-                }
+                northStarsRegex.findCurrency(event.added, "northstars", ::northStars, CurrencyEvent::NorthStars)
             } else if (SkyBlockIsland.GARDEN.inIsland()) {
-                copperRegex.anyFound(event.added, "copper") { (copper) ->
-                    this.copper = post(copper, this.copper, CurrencyEvent::Copper)
-                }
-                sowdustRegex.anyFound(event.added, "sowdust") { (sowdust) ->
-                    this.sowdust = post(sowdust, this.sowdust, CurrencyEvent::SowDust)
-                }
+                copperRegex.findCurrency(event.added, "copper", ::copper, CurrencyEvent::Copper)
+                sowdustRegex.findCurrency(event.added, "sowdust", ::sowdust, CurrencyEvent::SowDust)
             }
             purseRegex.anyFound(event.added, "type", "purse") { (type, purse) ->
                 this.purseType = PurseType.fromName(type)
                 this.purse = post(purse.parseFormattedDouble(), this.purse, CurrencyEvent::Purse)
             }
-            bitsRegex.anyFound(event.added, "bits") { (bits) ->
-                this.bits = post(bits, this.bits, CurrencyEvent::Bits)
-            }
+            bitsRegex.findCurrency(event.added, "bits", ::bits, CurrencyEvent::Bits)
         }
     }
+
+    private inline fun Regex.findCurrency(
+        added: List<String>,
+        group: String,
+        property: KMutableProperty0<Long>,
+        crossinline event: (Long, Long) -> CurrencyUpdateEvent<Long>,
+    ) = anyFound(added, group) { (newValue) -> property.set(post(newValue, property(), event)) }
 
     // Helper method for specifically parsing longs from a string, since most of them are like this
     private inline fun post(new: String, old: Long, event: (Long, Long) -> CurrencyUpdateEvent<Long>): Long {
