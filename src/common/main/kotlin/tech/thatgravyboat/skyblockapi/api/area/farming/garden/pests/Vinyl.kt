@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.area.farming.garden.pests
 
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 
 enum class Vinyl {
     PRETTY_FLY,
@@ -14,9 +15,13 @@ enum class Vinyl {
     BEETLE,
     SLOW_AND_GROOVY,
     WINGS_OF_HARMONY,
+    PRAY_FOR_ME,
+    IMAGINE_DRAGONFLIES,
+    FIREFLY
     ;
 
     val displayName: Component by lazy { RepoItemsAPI.getItemName(name) }
     val apiId: String = "VINYL_$name"
+    val skyblockId = SkyBlockId.item(apiId)
     val itemStack by RepoItemsAPI.getItemLazy(apiId)
 }
