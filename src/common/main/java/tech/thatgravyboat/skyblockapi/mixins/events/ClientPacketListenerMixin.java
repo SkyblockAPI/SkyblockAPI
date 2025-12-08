@@ -62,7 +62,9 @@ public class ClientPacketListenerMixin {
         @Share("modifiedAttributes") LocalRef<Map<Holder<Attribute>, EntityAttributesUpdateEvent.ChangedAttribute>> modifiedAttributesRef
     ) {
         var modified = modifiedAttributesRef.get();
-        if (modified != null && !modified.isEmpty()) new EntityAttributesUpdateEvent((LivingEntity) entity, modified).post(SkyBlockAPI.getEventBus());
+        if (modified != null && !modified.isEmpty()) {
+        	new EntityAttributesUpdateEvent((LivingEntity) entity, modified).post(SkyBlockAPI.getEventBus());
+      	}
     }
 
 }
