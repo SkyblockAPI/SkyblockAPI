@@ -3,11 +3,11 @@ package tech.thatgravyboat.skyblockapi.api.profile.community
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.CommunityCenterStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
-import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.CurrencyUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.CurrencyUpdateEvent.Companion.diff
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
@@ -25,7 +25,6 @@ object CommunityCenterAPI {
     internal val cookieAteRegex = RegexGroup.CHAT.create("communitycenter.cookie.ate", "^You consumed a Booster Cookie!")
     private val bitsAvailableRegex = RegexGroup.INVENTORY.create("communitycenter.bits.available", "Bits Available: (?<bits>[\\d,kmb]+).*")
     private val fameRankRegex = RegexGroup.INVENTORY.create("communitycenter.fame.rank", "Your rank: (?<rank>.*)")
-    private val gemsRegex = RegexGroup.TABLIST.create("currency.area.gems", "(?i) Gems: (?<gems>[\\d,.kmb]+)")
     var bitsAvailable: Long
         get() = CommunityCenterStorage.bitsAvailable
         private set(value) {
@@ -38,11 +37,7 @@ object CommunityCenterAPI {
             CommunityCenterStorage.rank = value
         }
 
-    var gems: Long
-        get() = CommunityCenterStorage.gems
-        private set(value) {
-            CommunityCenterStorage.gems = value
-        }
+    val gems: Long by CurrencyAPI::gems
 
     val bitsPerCookie: Int
         get() {
@@ -59,19 +54,18 @@ object CommunityCenterAPI {
     }
 
     @Subscription
+    fun onBitsUpdate(event: CurrencyUpdateEvent.Bits) {
+        val diff = event.diff
+        if (diff < 0) return // You have spent bits, not gained
+        bitsAvailable -= diff
+    }
+
+    @Subscription
     fun onInventoryFullyLoaded(event: ContainerInitializedEvent) {
         when (event.title) {
             "SkyBlock Menu" -> handleSkyBlockMenu(event)
             "Booster Cookie" -> handleBoosterCookieMenu(event)
             else -> return
-        }
-    }
-
-    @Subscription
-    @OnlyWidget(TabWidget.AREA)
-    fun onTabWidget(event: TabWidgetChangeEvent) {
-        gemsRegex.anyMatch(event.new, "gems") { (gems) ->
-            this.gems = gems.parseFormattedLong()
         }
     }
 
