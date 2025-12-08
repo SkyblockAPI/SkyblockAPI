@@ -42,7 +42,7 @@ object Http {
 
         return client.send(
             HttpRequest.newBuilder(createUrl(url, queries)).apply {
-                header("User-Agent", "SkyBlock API")
+                if (!headers.containsKey("User-Agent")) header("User-Agent", "SkyBlock API")
                 headers.forEach(::header)
                 timeout(Duration.ofMillis(timeout.toLong()))
                 factory()
