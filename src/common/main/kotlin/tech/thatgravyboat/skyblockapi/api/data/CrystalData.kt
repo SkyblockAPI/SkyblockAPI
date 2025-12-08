@@ -29,7 +29,7 @@ enum class CrystalType(val textColor: Int, skyblockId: String? = null) {
 }
 
 enum class CrystalStatus {
-    UNOBTAINED,
-    OBTAINED,
+    NOT_FOUND,
+    FOUND,
     PLACED,
 }
