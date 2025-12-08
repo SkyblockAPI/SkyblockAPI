@@ -8,7 +8,7 @@ enum class SkyBlockIsland(val id: String, displayName: String? = null) {
     DUNGEON_HUB("dungeon_hub"),
     THE_BARN("farming_1", "The Farming Islands"),
     THE_PARK("foraging_1"),
-    GOLD_MINES("mining_1"),
+    GOLD_MINES("mining_1", "Gold Mine"),
     DEEP_CAVERNS("mining_2"),
     DWARVEN_MINES("mining_3"),
     CRYSTAL_HOLLOWS("crystal_hollows"),
