@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.inventory.*
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
@@ -147,7 +147,7 @@ object ChestDump {
     data class ChestDumpStorage(
         val title: Component,
         val items: List<ItemStack>,
-        val type: ResourceLocation,
+        val type: Identifier,
     ) {
         companion object {
             val DEFAULT = ChestDumpStorage(CommonText.EMPTY, emptyList(), BuiltInRegistries.MENU.getKey(MenuType.GENERIC_9x6)!!)

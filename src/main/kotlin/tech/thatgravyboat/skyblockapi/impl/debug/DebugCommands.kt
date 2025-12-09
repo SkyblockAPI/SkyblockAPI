@@ -18,6 +18,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.platform.identifier
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
@@ -192,7 +193,7 @@ object DebugCommands {
                     val registries = connection.registryAccess().registries()
 
                     registries.forEach { registry ->
-                        val location = registry.key().location()
+                        val location = registry.key().identifier
                         val path = outputs.resolve("${location.namespace}-${location.path.replace("/", "-")}.json")
                         val data = JsonArray()
 
@@ -210,7 +211,7 @@ object DebugCommands {
                     val biomes = connection.registryAccess().lookupOrThrow(Registries.BIOME).entrySet()
 
                     biomes.forEach { (key, biome) ->
-                        val location = key.location()
+                        val location = key.identifier
                         val path = outputs.resolve(location.namespace)
                             .resolve("worldgen")
                             .resolve("biome")

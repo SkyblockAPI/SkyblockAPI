@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 plugins {
     id("dev.kikugie.stonecutter")
-    id("fabric-loom") version "1.11-SNAPSHOT" apply false
+    id("fabric-loom") version "1.14-SNAPSHOT" apply false
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
     `maven-publish`
 }
@@ -13,7 +13,7 @@ apiValidation {
     ignoredPackages.add("tech.thatgrabyboat.skyblockapi.impl")
 }
 
-stonecutter active "1.21.10"
+stonecutter active "1.21.11"
 
 stonecutter parameters {
     swaps["mod_version"] = "\"" + property("version") + "\";"
@@ -24,6 +24,25 @@ stonecutter parameters {
     }
 
     filters.include("**/*.fsh", "**/*.vsh")
+
+
+    replacements.regex {
+        direction = eval(current.version, "< 1.21.10")
+        replace("import net.minecraft.resources.Identifier(?!;)", "import net.minecraft.resources.ResourceLocation as Identifier")
+        reverse("import net.minecraft.resources.ResourceLocation as Identifier", "import net.minecraft.resources.Identifier")
+    }
+
+    replacements.regex {
+        direction = eval(current.version, "< 1.21.10")
+        replace("import net.minecraft.util.IdentifierPattern(?!;)", "import net.minecraft.util.ResourceLocationPattern as IdentifierPattern")
+        reverse("import net.minecraft.util.ResourceLocationPattern as IdentifierPattern", "import net.minecraft.util.IdentifierPattern")
+    }
+
+    replacements.regex {
+        direction = eval(current.version, "< 1.21.10")
+        replace("import net.minecraft.advancements.criterion", "import net.minecraft.advancements.critereon")
+        reverse("import net.minecraft.advancements.critereon", "import net.minecraft.advancements.criterion")
+    }
 }
 
 

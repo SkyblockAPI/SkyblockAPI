@@ -17,7 +17,7 @@ import net.minecraft.network.chat.numbers.NumberFormatTypes
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.EntityDataSerializers
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.attributes.Attribute
 import net.minecraft.world.item.Item
@@ -27,11 +27,11 @@ import net.minecraft.world.level.block.state.BlockState
 import org.spongepowered.asm.mixin.Unique
 import tech.thatgravyboat.skyblockapi.impl.debug.packets.CodecJsonSerializer.Companion.registerTypeAdapter
 import tech.thatgravyboat.skyblockapi.impl.debug.packets.SimpleJsonSerializer.Companion.registerTypeAdapter
+import tech.thatgravyboat.skyblockapi.platform.identifier
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJsonOrThrow
 import java.lang.reflect.Modifier
 import java.lang.reflect.Type
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 
 object DebugWriter {
 
@@ -47,7 +47,7 @@ object DebugWriter {
         .registerTypeAdapter<Item>(BuiltInRegistries.ITEM.byNameCodec())
         .registerTypeAdapter<Attribute>(BuiltInRegistries.ATTRIBUTE.byNameCodec())
         .registerTypeAdapter<Component>(ComponentSerialization.CODEC)
-        .registerTypeAdapter<ResourceLocation>(ResourceLocation.CODEC)
+        .registerTypeAdapter<Identifier>(Identifier.CODEC)
         .registerTypeAdapter<ItemStack>(ItemStack.OPTIONAL_CODEC)
         .registerTypeAdapter<BlockState>(BlockState.CODEC)
         .registerTypeAdapter<ParticleOptions>(ParticleTypes.CODEC)
@@ -55,7 +55,7 @@ object DebugWriter {
         .registerTypeAdapter<Tag> { tag, _ -> JsonPrimitive(SnbtPrinterTagVisitor().visit(tag)) }
         .registerTypeAdapter<Optional<*>> { optional, context -> optional.map(context::serialize).orElse(JsonNull.INSTANCE) }
         .registerTypeAdapter<EntityDataSerializer<*>> { serializer, _ -> serializer.toName()?.let(::JsonPrimitive) ?: JsonNull.INSTANCE }
-        .registerTypeAdapter<Holder<*>> { holder, context -> holder.unwrap().map({ context.serialize(it.location()) }, { context.serialize(it) }) }
+        .registerTypeAdapter<Holder<*>> { holder, context -> holder.unwrap().map({ context.serialize(it.identifier) }, { context.serialize(it) }) }
         .create()
 
     fun Packet<*>.toJson(): JsonElement = gson.toJsonTree(this)

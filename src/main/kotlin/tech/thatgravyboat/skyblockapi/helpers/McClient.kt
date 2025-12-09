@@ -5,7 +5,6 @@ import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.SharedConstants
-import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.client.Options
 import net.minecraft.client.gui.Gui
@@ -19,7 +18,7 @@ import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
@@ -132,7 +131,8 @@ object McClient {
     }.isSuccess
 
     fun openUri(uri: URI) {
-        Util.getPlatform().openUri(uri)
+        /*? if > 1.21.10 {*/net.minecraft.util.Util/*?} else {*//*net.minecraft.Util*//*?}*/
+            .getPlatform().openUri(uri)
     }
 
     fun runNextTick(action: () -> Unit) {
@@ -187,7 +187,7 @@ object McClient {
         connection?.sendCommand(command.removePrefix("/"))
     }
 
-    fun registerClientReloadListener(id: ResourceLocation, listener: PreparableReloadListener) {
+    fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
         //? if > 1.21.8 {
         ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(id, listener)
         //?} else

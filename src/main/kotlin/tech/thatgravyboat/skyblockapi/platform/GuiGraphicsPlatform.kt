@@ -4,10 +4,10 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.resources.Identifier
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.FormattedText
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.ARGB
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.Mth
@@ -78,14 +78,14 @@ fun GuiGraphics.drawString(text: FormattedCharSequence, x: Int, y: Int, color: I
 }
 
 
-fun GuiGraphics.drawSprite(texture: ResourceLocation, x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
+fun GuiGraphics.drawSprite(texture: Identifier, x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
     //? if > 1.21.5 {
     this.blitSprite(RenderPipelines.GUI_TEXTURED, texture, x, y, width, height, color)
     //?} else
     /*this.blitSprite(RenderType::guiTextured, texture, x, y, width, height, color)*/
 }
 fun GuiGraphics.drawTexture(
-    texture: ResourceLocation, x: Int, y: Int, width: Int, height: Int,
+    texture: Identifier, x: Int, y: Int, width: Int, height: Int,
     u0: Float = 0f, v0: Float = 0f, u1: Float = 1f, v1: Float = 1f,
     color: Int = -1,
 ) {
@@ -95,9 +95,16 @@ fun GuiGraphics.drawTexture(
     val maxx = (x + width)
     val maxy = (y + height)
 
+    val setup: TextureSetup
+    //? if >= 1.21.11 {
+        = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView, it.sampler) }
+    //?} else {
+    /*  = TextureSetup.singleTexture(McClient.self.textureManager.getTexture(texture).textureView)*/
+    //?}
+
     this.guiRenderState.submitGuiElement(
         BlitRenderState(
-            RenderPipelines.GUI_TEXTURED, TextureSetup.singleTexture(McClient.self.textureManager.getTexture(texture).textureView), Matrix3x2f(this.pose()),
+            RenderPipelines.GUI_TEXTURED, setup, Matrix3x2f(this.pose()),
             minx, miny, maxx, maxy, u0, u1, v0, v1, color,
             this.scissorStack.peek(),
         ),

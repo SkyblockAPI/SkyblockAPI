@@ -8,11 +8,12 @@ import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.utils.command.VirtualResourceArgument
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -20,7 +21,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
-import java.util.Properties
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import kotlin.io.path.Path
 import kotlin.io.path.notExists
@@ -31,7 +32,7 @@ internal fun debugToggle(path: String, description: String = path): DebugToggle 
     return DebugToggle(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils)
 }
 
-open class DebugToggle(open val location: ResourceLocation, open val description: String, val devUtils: DevUtils) {
+open class DebugToggle(open val location: Identifier, open val description: String, val devUtils: DevUtils) {
     init {
         devUtils.register(this)
     }
@@ -69,7 +70,7 @@ internal object SkyBlockApiDevUtils : DevUtils() {
         }
         val map = mutableMapOf<String, String>()
         properties.forEach { (key, value) ->
-            ResourceLocation.tryBySeparator(key.toString(), '@')?.let {
+            Identifiers.parseWithSeparator(key.toString(), '@')?.let {
                 if (value.toString() == "true") {
                     states[it] = true
                 }
@@ -84,7 +85,7 @@ internal object SkyBlockApiDevUtils : DevUtils() {
 }
 
 abstract class DevUtils {
-    val states = mutableMapOf<ResourceLocation, Boolean>()
+    val states = mutableMapOf<Identifier, Boolean>()
     val toggles = mutableListOf<DebugToggle>()
 
     fun register(debugToggle: DebugToggle) {
@@ -92,17 +93,17 @@ abstract class DevUtils {
         toggles += debugToggle
     }
 
-    fun toggle(location: ResourceLocation) {
+    fun toggle(location: Identifier) {
         states[location] = states[location]?.not() == true
     }
 
-    fun isOn(location: ResourceLocation) = states.getOrDefault(location, false)
+    fun isOn(location: Identifier) = states.getOrDefault(location, false)
 
     fun onCommandRegister(event: RegisterCommandsEvent) {
         event.register(commandName) {
             then("location", VirtualResourceArgument(states.keys, SkyBlockAPI.NAMESPACE), DevToolSuggestionProvider(this@DevUtils)) {
                 callback {
-                    val argument = this.getArgument("location", ResourceLocation::class.java)
+                    val argument = this.getArgument("location", Identifier::class.java)
                     toggle(argument)
                     send(
                         Text.of("Toggled ") {

@@ -1,4 +1,3 @@
-//? if >= 1.21.11 {
 package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -9,7 +8,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -63,10 +62,10 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
     }
 
     @WrapOperation(
-        method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V",
+        method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V"
+            target = "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/ResourceLocation;Z)V"
         )
     )
     private void onRenderTooltipInternal(
@@ -75,7 +74,7 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         List<ClientTooltipComponent> list,
         int x, int y,
         ClientTooltipPositioner positioner,
-        Identifier texture,
+        ResourceLocation texture,
         boolean force,
         Operation<Void> operation
     ) {

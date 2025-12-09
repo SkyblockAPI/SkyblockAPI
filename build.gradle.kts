@@ -63,7 +63,8 @@ dependencies {
     modApi(libs.skyblockapi.repolib)
     include(libs.skyblockapi.repolib)
 
-    modRuntimeOnly(libs.devauth)
+// https://github.com/DJtheRedstoner/DevAuth/issues/24
+//     modRuntimeOnly(libs.devauth)
 
     modImplementation(versionedCatalog["fabric.api"])
     modImplementation(libs.fabric.language.kotlin)

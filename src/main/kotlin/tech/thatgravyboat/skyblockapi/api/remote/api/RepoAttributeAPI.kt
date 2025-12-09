@@ -3,7 +3,6 @@ package tech.thatgravyboat.skyblockapi.api.remote.api
 import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
@@ -14,6 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnRepoStatus
 import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
+import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -45,7 +45,7 @@ object RepoAttributeAPI {
             val attribute = attributeIdMap[id.lowercase()] ?: RepoAPI.attributes().getAttribute(id)
             if (attribute == null) return@getOrPut null
 
-            val item = ResourceLocation.tryParse(attribute.item().lowercase())?.let { BuiltInRegistries.ITEM.getValue(it) }
+            val item = Identifiers.parse(attribute.item().lowercase())?.let { BuiltInRegistries.ITEM.getValue(it) }
                 ?.takeUnless { it == Items.AIR }
                 ?: Items.BARRIER
 

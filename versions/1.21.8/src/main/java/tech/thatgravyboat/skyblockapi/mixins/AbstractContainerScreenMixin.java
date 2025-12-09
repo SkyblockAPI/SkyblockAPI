@@ -1,4 +1,3 @@
-//? if >= 1.21.11 {
 package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -8,7 +7,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,14 +24,14 @@ public class AbstractContainerScreenMixin {
         method = "renderTooltip",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"
+            target = "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V"
         )
     )
     private void onRenderTooltip(
         GuiGraphics instance,
         Font font,
         List<Component> list,
-        Optional<TooltipComponent> optional, int i, int j, Identifier resourceLocation, Operation<Void> original,
+        Optional<TooltipComponent> optional, int i, int j, ResourceLocation resourceLocation, Operation<Void> original,
         @Local(ordinal = 0) ItemStack stack
     ) {
         if (instance instanceof GuiGraphicsHook hook) {

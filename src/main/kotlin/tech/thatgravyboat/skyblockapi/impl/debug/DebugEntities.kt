@@ -10,7 +10,6 @@ import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -18,6 +17,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.platform.save
 import tech.thatgravyboat.skyblockapi.platform.skin
 import tech.thatgravyboat.skyblockapi.platform.textureUrl
@@ -40,7 +40,7 @@ object DebugEntities {
         if (input == "*") {
             return { true } // Match all entity types
         }
-        val id = ResourceLocation.tryParse(input) ?: return { false }
+        val id = Identifiers.parse(input) ?: return { false }
         val type = BuiltInRegistries.ENTITY_TYPE.getOptional(id).getOrNull() ?: return { false }
         return { it == type }
     }

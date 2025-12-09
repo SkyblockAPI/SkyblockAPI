@@ -9,6 +9,7 @@ enum class McVersion {
     MC_1_21_8,
     MC_1_21_9,
     MC_1_21_10,
+    MC_1_21_11,
     ;
 
     val stringVersion = name.substringAfter("_").replace("_", ".")
@@ -25,7 +26,8 @@ enum class McVersionGroup(vararg versions: McVersion) {
     MC_1_21_9(
         McVersion.MC_1_21_9,
         McVersion.MC_1_21_10,
-    )
+    ),
+    MC_1_21_11(McVersion.MC_1_21_11)
     ;
 
     val isActive = versions.any { it.isActive }

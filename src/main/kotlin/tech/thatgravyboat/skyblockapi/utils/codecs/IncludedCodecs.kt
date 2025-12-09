@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils.codecs
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
-import net.minecraft.advancements.critereon.BlockPredicate
+import net.minecraft.advancements.criterion.BlockPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.core.GlobalPos
 import net.minecraft.core.Vec3i
@@ -11,9 +11,9 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.TagParser
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.ExtraCodecs
-import net.minecraft.util.ResourceLocationPattern
+import net.minecraft.util.IdentifierPattern
 import net.minecraft.util.Unit
 import net.minecraft.util.valueproviders.FloatProvider
 import net.minecraft.util.valueproviders.IntProvider
@@ -27,7 +27,7 @@ import kotlin.time.Instant
 
 internal object IncludedCodecs {
     @IncludedCodec
-    val RESOURCE_LOCATION_CODEC: Codec<ResourceLocation> = ResourceLocation.CODEC
+    val RESOURCE_LOCATION_CODEC: Codec<Identifier> = Identifier.CODEC
 
     @IncludedCodec
     val BLOCK_PREDICATE_CODEC: Codec<BlockPredicate> = BlockPredicate.CODEC
@@ -45,13 +45,13 @@ internal object IncludedCodecs {
     val COMPOUND_TAG_CODEC: Codec<CompoundTag> = TagParser.LENIENT_CODEC
 
     @IncludedCodec
-    val VECTOR_3F_CODEC: Codec<Vector3f> = ExtraCodecs.VECTOR3F
+    val VECTOR_3F_CODEC: Codec<Vector3f> = ExtraCodecs.VECTOR3F.xmap(::Vector3f) { it }
 
     @IncludedCodec
-    val VECTOR_4F_CODEC: Codec<Vector4f> = ExtraCodecs.VECTOR4F
+    val VECTOR_4F_CODEC: Codec<Vector4f> = ExtraCodecs.VECTOR4F.xmap(::Vector4f) { it }
 
     @IncludedCodec
-    val RESOURCE_LOCATION_PATTERN_CODEC: Codec<ResourceLocationPattern> = ResourceLocationPattern.CODEC
+    val RESOURCE_LOCATION_PATTERN_CODEC: Codec<IdentifierPattern> = IdentifierPattern.CODEC
 
     @IncludedCodec
     val UNIT_CODEC: Codec<Unit> = Unit.CODEC

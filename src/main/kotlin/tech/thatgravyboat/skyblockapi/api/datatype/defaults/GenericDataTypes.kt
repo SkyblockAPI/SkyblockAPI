@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
 import com.google.gson.JsonObject
 import me.owdding.ktmodules.Module
-import net.minecraft.Util
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Item
@@ -127,7 +126,7 @@ object GenericDataTypes {
 
     private fun getFishingRodPartDataType(name: String) = DataType.of(name) {
         val tag = it.tag?.getObjectOrNull(name) ?: return@of null
-        val uuid = tag.getUuidOrNull("uuid") ?: Util.NIL_UUID
+        val uuid = tag.getUuidOrNull("uuid") ?: UUID(0L, 0L)
         uuid to tag.getStringOr("part", "")
     }
 

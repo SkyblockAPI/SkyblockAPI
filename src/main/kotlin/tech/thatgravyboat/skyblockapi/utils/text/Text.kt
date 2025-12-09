@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils.text
 
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.*
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook
@@ -46,7 +46,7 @@ object Text {
         return Component.`object`(spriteObj).also(init)
     }
 
-    fun atlas(atlas: ResourceLocation, sprite: ResourceLocation, init: MutableComponent.() -> Unit = {}): MutableComponent {
+    fun atlas(atlas: Identifier, sprite: Identifier, init: MutableComponent.() -> Unit = {}): MutableComponent {
         val spriteObj = AtlasSprite(atlas, sprite)
         return Component.`object`(spriteObj).also(init)
     }
@@ -209,14 +209,14 @@ object TextUtils {
 }
 
 
-internal fun MutableComponent.withFont(location: ResourceLocation?): MutableComponent =
+internal fun MutableComponent.withFont(location: Identifier?): MutableComponent =
     //? if > 1.21.8 {
     this.style { if (location == null) withFont(null) else withFont(FontDescription.Resource(location)) }
 //?} else
 /*this.style { withFont(location) }*/
 
 
-internal fun Component.font(): ResourceLocation? =
+internal fun Component.font(): Identifier? =
     //? if > 1.21.8 {
     (this.style.font as? FontDescription.Resource)?.id
 //?} else
@@ -260,10 +260,10 @@ object TextStyle {
         withClickEvent(event)
     }
 
-    val Component.font: ResourceLocation?
+    val Component.font: Identifier?
         get() = font()
 
-    var MutableComponent.font: ResourceLocation?
+    var MutableComponent.font: Identifier?
         get() = font()
         set(value) {
             this.withFont(value)

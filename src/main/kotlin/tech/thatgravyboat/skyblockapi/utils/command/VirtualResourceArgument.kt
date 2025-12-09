@@ -4,17 +4,17 @@ import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
-import net.minecraft.ResourceLocationException
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
+import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 internal class VirtualResourceArgument(
-    private val locations: Collection<ResourceLocation>,
-    private val namespace: String = ResourceLocation.DEFAULT_NAMESPACE,
-) : ArgumentType<ResourceLocation> {
+    private val locations: Collection<Identifier>,
+    private val namespace: String = Identifier.DEFAULT_NAMESPACE,
+) : ArgumentType<Identifier> {
 
     private val identifierNotFound: DynamicCommandExceptionType = DynamicCommandExceptionType { id: Any? ->
         Text.of("Identifier ") {
@@ -23,8 +23,8 @@ internal class VirtualResourceArgument(
         }
     }
 
-    override fun parse(reader: StringReader): ResourceLocation {
-        val resourceLocation: ResourceLocation = this.fromCommandInput(reader)
+    override fun parse(reader: StringReader): Identifier {
+        val resourceLocation: Identifier = this.fromCommandInput(reader)
         if (!locations.contains(resourceLocation)) {
             throw identifierNotFound.create(resourceLocation)
         }
@@ -33,18 +33,17 @@ internal class VirtualResourceArgument(
     }
 
     @Throws(CommandSyntaxException::class)
-    private fun fromCommandInput(reader: StringReader): ResourceLocation {
+    private fun fromCommandInput(reader: StringReader): Identifier {
         val i = reader.cursor
-        while (reader.canRead() && ResourceLocation.isAllowedInResourceLocation(reader.peek())) {
+        while (reader.canRead() && Identifiers.isAllowedInIdentifier(reader.peek())) {
             reader.skip()
         }
         val string = reader.string.substring(i, reader.cursor)
-        try {
-            val split: Array<String> = split(string)
-            return ResourceLocation.fromNamespaceAndPath(split[0], split[1])
-        } catch (_: ResourceLocationException) {
+        val split: Array<String> = split(string)
+
+        return Identifiers.parse(split[0], split[1]) ?: run {
             reader.cursor = i
-            throw ResourceLocation.ERROR_INVALID.createWithContext(reader)
+            throw Identifier.ERROR_INVALID.createWithContext(reader)
         }
     }
 

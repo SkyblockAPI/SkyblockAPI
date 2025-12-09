@@ -26,7 +26,7 @@ internal object HotfStorage : SkillTreeStorage<HotfData, HotfPerk>() {
             }
 
             1 -> SkyblockAPICodecs.HotfDataCodec.codec()
-            else -> Codec.unit { HotfData() }
+            else -> tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils.unit { HotfData() }
         }
     }
 }

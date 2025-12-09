@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
+import tech.thatgravyboat.skyblockapi.platform.identifier
 import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 import kotlin.jvm.optionals.getOrNull
 
@@ -16,7 +17,7 @@ interface BaseTagKey<T> {
 
     @Suppress("UNCHECKED_CAST")
     private val registry: Registry<T>? get() = BuiltInRegistries.REGISTRY
-        .getOptional(key.registry().location())
+        .getOptional(key.registry().identifier)
         .getOrNull() as Registry<T>?
 
     operator fun contains(element: T): Boolean = element

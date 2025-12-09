@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.items.sacks.SackEntry
 import tech.thatgravyboat.skyblockapi.api.profile.items.sacks.SacksData
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import java.util.Optional
 
 @Module
@@ -28,7 +29,7 @@ internal object SacksStorage {
             }
 
             2 -> SacksData.CODEC
-            else -> Codec.unit { SacksData() }
+            else -> CodecUtils.unit { SacksData() }
         }
     }
 

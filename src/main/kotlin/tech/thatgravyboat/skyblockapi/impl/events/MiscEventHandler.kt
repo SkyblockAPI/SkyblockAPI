@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.player.*
 import net.minecraft.core.BlockPos
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
@@ -27,13 +26,14 @@ import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatComponentExtension
+import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
 @Module
 object MiscEventHandler {
 
-    private val phase = ResourceLocation.fromNamespaceAndPath("skyblockapi", "phase")
+    private val phase = Identifiers.of("skyblockapi", "phase")
 
     private val blocksClicked = CacheBuilder.newBuilder()
         .maximumSize(50)

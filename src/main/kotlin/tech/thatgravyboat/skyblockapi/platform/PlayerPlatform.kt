@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.platform
 
 import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.core.ClientAsset
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 //? if > 1.21.8 {
 import net.minecraft.world.entity.player.PlayerModelType as MinecraftPlayerModelType
@@ -20,19 +20,19 @@ val PlayerSkin.textureUrl: String?
     //?} else
     /*get() = this.textureUrl()*/
 
-val PlayerSkin.texture: ResourceLocation?
+val PlayerSkin.texture: Identifier?
     //? if > 1.21.8 {
     get() = this.body().id()
     //?} else
     /*get() = this.texture*/
 
-val PlayerSkin.capeTexture: ResourceLocation?
+val PlayerSkin.capeTexture: Identifier?
     //? if > 1.21.8 {
     get() = this.cape()?.id()
     //?} else
     /*get() = this.capeTexture*/
 
-val PlayerSkin.elytraTexture: ResourceLocation?
+val PlayerSkin.elytraTexture: Identifier?
     //? if > 1.21.8 {
     get() = this.elytra()?.id()
     //?} else
