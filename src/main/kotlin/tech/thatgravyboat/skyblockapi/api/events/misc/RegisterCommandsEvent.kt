@@ -73,7 +73,7 @@ class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal
         return this
     }
 
-    fun <T : Any> then(
+    fun <T> then(
         name: String,
         argument: ArgumentType<T>,
         suggestions: Collection<String>,
@@ -85,7 +85,7 @@ class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal
         action,
     )
 
-    fun <T : Any> then(
+    fun <T> then(
         name: String,
         argument: ArgumentType<T>,
         suggestions: SuggestionProvider<FabricClientCommandSource>? = null,

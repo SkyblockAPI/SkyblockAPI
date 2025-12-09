@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.google.devtools.ksp.gradle.KspAATask
+import net.fabricmc.loom.task.RemapJarTask
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -102,13 +103,9 @@ java {
 
 val archiveName = "skyblock-api"
 
-base {
-    archivesName.set("$archiveName-${archivesName.get()}")
-}
-
 tasks.named("build") {
     doLast {
-        val sourceFile = rootProject.projectDir.resolve("versions/${project.name}/build/libs/${archiveName}-${stonecutter.current.version}-$version.jar")
+        val sourceFile = rootProject.projectDir.resolve("versions/${project.name}/build/libs/${archiveName}-$version-${stonecutter.current.version}.jar")
         val targetFile = rootProject.projectDir.resolve("build/libs/${archiveName}-$version-${stonecutter.current.version}.jar")
         targetFile.parentFile.mkdirs()
         targetFile.writeBytes(sourceFile.readBytes())
@@ -135,7 +132,8 @@ tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.optIn.add("kotlin.time.ExperimentalTime")
     compilerOptions.freeCompilerArgs.addAll(
         "-Xcontext-parameters",
-        "-Xcontext-sensitive-resolution"
+        "-Xcontext-sensitive-resolution",
+        "-Xnullability-annotations=@org.jspecify.annotations:ignore"
     )
 }
 
@@ -203,4 +201,20 @@ autoMixins {
     mixinPackage = "tech.thatgravyboat.skyblockapi.mixins"
     projectName = "skyblock-api"
     mixinExtrasVersion = "0.5.0"
+}
+
+base {
+    archivesName = archiveName
+}
+
+tasks.named<Jar>("jar") {
+    archiveClassifier = "${stonecutter.current.version}-dev"
+}
+
+tasks.named<Jar>("sourcesJar") {
+    archiveClassifier = "${stonecutter.current.version}-sources"
+}
+
+tasks.named<RemapJarTask>("remapJar") {
+    archiveClassifier = stonecutter.current.version
 }
