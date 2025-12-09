@@ -2,11 +2,18 @@ package tech.thatgravyboat.skyblockapi.platform
 
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.vertex.VertexConsumer
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.gui.render.state.GuiElementRenderState
 import net.minecraft.client.renderer.RenderPipelines
 import org.joml.Matrix3x2f
+
+@Deprecated("", replaceWith = ReplaceWith("drawGradientBox"))
+fun GuiGraphics.drawGradient(
+    x: Int, y: Int, width: Int, height: Int,
+    col1: Int, col2: Int, col3: Int, col4: Int,
+) = drawGradientBox(x, y, width, height, col1, col2, col3, col4)
 
 internal class GradientGuiElement(
     val pose: Matrix3x2f,

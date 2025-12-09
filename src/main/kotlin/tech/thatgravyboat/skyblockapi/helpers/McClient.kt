@@ -196,10 +196,10 @@ object McClient {
 
     //? if <= 1.21.8 {
     /*private data class ReloadListenerWrapper(
-        val id: ResourceLocation,
+        val id: Identifier,
         val original: PreparableReloadListener,
     ) : IdentifiableResourceReloadListener {
-        override fun getFabricId(): ResourceLocation = id
+        override fun getFabricId(): Identifier = id
 
         override fun reload(
             barrier: PreparableReloadListener.PreparationBarrier,

@@ -46,7 +46,7 @@ inline fun GuiGraphics.pushPop(block: () -> Unit) {
     /*this.pose().popPose()*/
 }
 
-fun GuiGraphics.translate(x: Number, y: Number): Unit {
+fun GuiGraphics.translate(x: Number, y: Number) {
     pose().translate(x.toFloat(), y.toFloat()/*? if <= 1.21.5 {*//*, 0f *//*?}*/)
 }
 
@@ -99,8 +99,8 @@ fun GuiGraphics.drawTexture(
     //? if >= 1.21.11 {
         = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView, it.sampler) }
     //?} else {
-    /*  = TextureSetup.singleTexture(McClient.self.textureManager.getTexture(texture).textureView)*/
-    //?}
+      /*= TextureSetup.singleTexture(McClient.self.textureManager.getTexture(texture).textureView)
+    *///?}
 
     this.guiRenderState.submitGuiElement(
         BlitRenderState(
@@ -127,8 +127,15 @@ fun GuiGraphics.drawTexture(
     *///?}
 }
 
-
+//? if = 1.21.5 {
+/*@Deprecated("", replaceWith = ReplaceWith("drawGradientBox"))
 fun GuiGraphics.drawGradient(
+    x: Int, y: Int, width: Int, height: Int,
+    col1: Int, col2: Int, col3: Int, col4: Int,
+) = drawGradientBox(x, y, width, height, col1, col2, col3, col4)
+*///?}
+
+fun GuiGraphics.drawGradientBox(
     x: Int, y: Int, width: Int, height: Int,
     col1: Int, col2: Int, col3: Int, col4: Int,
 ) {

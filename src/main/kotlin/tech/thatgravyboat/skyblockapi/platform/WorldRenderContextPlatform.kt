@@ -34,11 +34,24 @@ fun RenderWorldEvent.drawString(
     light: Int = LightTexture.FULL_BRIGHT,
 ) {
     val text = Language.getInstance().getVisualOrder(text)
-    drawString(text, x, y, color, dropShadow, displayMode, backgroundColor, light)
+    drawText(text, x, y, color, dropShadow, displayMode, backgroundColor, light)
 }
 
-
+//? if = 1.21.5 {
+/*@Deprecated("", replaceWith = ReplaceWith("drawText"))
 fun RenderWorldEvent.drawString(
+    text: FormattedCharSequence,
+    x: Float,
+    y: Float,
+    color: UInt,
+    dropShadow: Boolean = true,
+    displayMode: Font.DisplayMode = Font.DisplayMode.SEE_THROUGH,
+    backgroundColor: UInt = 0u,
+    light: Int = LightTexture.FULL_BRIGHT,
+) = drawText(text, x, y, color, dropShadow, displayMode, backgroundColor, light)
+*///?}
+
+fun RenderWorldEvent.drawText(
     text: FormattedCharSequence,
     x: Float,
     y: Float,
