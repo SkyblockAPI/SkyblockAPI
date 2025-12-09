@@ -106,7 +106,7 @@ object FriendsAPI {
     }
 
     // TODO: also call this on guild join/leave message if the person is in your friends list
-    internal fun resetListSearch() {
+    private fun resetListSearch() {
         currentPage = 0
         maxPage = 0
         isInFriendsList = false

@@ -143,6 +143,11 @@ object McClient {
         self.executeIfPossible(action)
     }
 
+    //? if = 1.21.5 {
+    /*@Deprecated("Use runNextTick instead")
+    fun tell(action: () -> Unit) = runNextTick(action)
+    *///?}
+
     fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f) {
         McPlayer.self?.playSound(sound, volume, pitch)
     }
@@ -157,6 +162,12 @@ object McClient {
         val next = screen()
         (self.screen as? AbstractContainerScreen<*>)?.onClose()
         self.setScreen(next)
+    }
+
+    @Deprecated("Use setScreenAsync to avoid creating screens off the main thread")
+    fun setScreenAsync(screen: Screen?) = runNextTick {
+        (self.screen as? AbstractContainerScreen<*>)?.onClose()
+        self.setScreen(screen)
     }
 
     fun setScreen(screen: Screen?) {

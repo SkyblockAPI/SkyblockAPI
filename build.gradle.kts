@@ -58,9 +58,7 @@ dependencies {
     })
 
     modApi(libs.bundles.hypixel)
-    include(libs.bundles.hypixel) {
-        isTransitive = false
-    }
+    include(libs.hypixel.modapi.fabric)
 
     modApi(libs.skyblockapi.repolib)
     include(libs.skyblockapi.repolib)
