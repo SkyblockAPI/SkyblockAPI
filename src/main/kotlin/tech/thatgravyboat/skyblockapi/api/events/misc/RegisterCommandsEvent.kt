@@ -113,7 +113,7 @@ class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal
         }
     }
 
-    fun <T : Any> thenCallback(
+    fun <T> thenCallback(
         name: String,
         argument: ArgumentType<T>,
         suggestions: Collection<String>,
@@ -123,7 +123,7 @@ class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal
     }
 
 
-    fun <T : Any> thenCallback(
+    fun <T> thenCallback(
         name: String,
         argument: ArgumentType<T>,
         suggestions: SuggestionProvider<FabricClientCommandSource>? = null,

@@ -82,7 +82,7 @@ object ChestDump {
                     super.onClose()
                 }
 
-                override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ClickType) {
+                override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ClickType?) {
                     SkyBlockAPI.info("<ChestDump> Clicked slot $slotId with button $mouseButton and click type $type")
                 }
 
