@@ -18,10 +18,10 @@ maven("https://maven.teamresourceful.com/repository/maven-public/")
 
 ```kts
 dependencies {
-    api(libs.meowdding.item.dfu) {
+    api("tech.thatgravyboat:skyblock-api:<version>") {
         capabilities { requireCapability("tech.thatgravyboat:skyblock-api-<minecraft_version>") }
     }
-    include(libs.meowdding.item.dfu) {
+    include("tech.thatgravyboat:skyblock-api:<version>") {
         capabilities { requireCapability("tech.thatgravyboat:skyblock-api-<minecraft_version>-remapped") }
     }
 }
