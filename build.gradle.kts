@@ -1,8 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.google.devtools.ksp.gradle.KspAATask
-import net.fabricmc.loom.task.RemapJarTask
-import net.fabricmc.loom.task.RemapSourcesJarTask
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -60,7 +58,9 @@ dependencies {
     })
 
     modApi(libs.bundles.hypixel)
-    include(libs.bundles.hypixel)
+    include(libs.bundles.hypixel) {
+        isTransitive = false
+    }
 
     modApi(libs.skyblockapi.repolib)
     include(libs.skyblockapi.repolib)
@@ -176,6 +176,10 @@ tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
+tasks.apiCheck {
+    enabled = false
+}
+
 tasks.processResources {
     filteringCharset = "UTF-8"
 }
@@ -200,12 +204,4 @@ autoMixins {
     mixinPackage = "tech.thatgravyboat.skyblockapi.mixins"
     projectName = "skyblock-api"
     mixinExtrasVersion = "0.5.0"
-}
-
-tasks.named("remapJar", RemapJarTask::class) {
-    archiveClassifier = stonecutter.current.version
-}
-
-tasks.named("remapSourcesJar", RemapSourcesJarTask::class) {
-    archiveClassifier = stonecutter.current.version + "-sources"
 }
