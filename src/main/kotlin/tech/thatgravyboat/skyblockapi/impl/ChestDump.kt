@@ -108,7 +108,7 @@ object ChestDump {
             val suggestions = IterableSuggestionProvider(storage.getStorages().entries) {
                 val dump = it.value.get()
                 "${dump.title.stripped}-${it.key.take(3)}"
-            }
+            }.withoutSanitization()
 
             fun getDump(id: String) = storage.getAll().entries.find { "${it.value.title.stripped}-${it.key.take(3)}" == id }
             then("open id", StringArgumentType.greedyString(), suggestions) {

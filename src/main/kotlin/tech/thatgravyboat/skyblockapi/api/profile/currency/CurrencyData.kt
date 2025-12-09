@@ -12,6 +12,7 @@ data class CurrencyData(
     var bits: Long = 0,
     var gems: Long = 0,
     var copper: Long = 0,
+    var sowdust: Long = 0,
     var northStars: Long = 0,
     var soulflow: Long = 0,
 )

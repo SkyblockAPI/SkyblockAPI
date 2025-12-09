@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.sacks
 
+import com.google.common.cache.Cache
+import com.google.common.cache.CacheBuilder
 import com.google.gson.JsonObject
 import com.mojang.brigadier.arguments.StringArgumentType
 import me.owdding.ktmodules.Module
@@ -12,7 +14,10 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ChangedSackItem
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.SacksChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
@@ -33,6 +38,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 import tech.thatgravyboat.skyblockapi.utils.time.since
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 @Module
 object SacksAPI {
@@ -50,6 +57,11 @@ object SacksAPI {
     val sackItems: Map<String, Int>
         get() = SacksStorage.items.associate { (key, value) -> key to value }
 
+    // Diff of updates gotten from recent sacks inventory
+    private val recentUpdates: Cache<String, Int> = CacheBuilder.newBuilder()
+        .expireAfterWrite(30.seconds.toJavaDuration())
+        .build()
+
     @Subscription
     @OnlyOnSkyBlock
     fun onChat(event: ChatReceivedEvent.Pre) {
@@ -58,17 +70,30 @@ object SacksAPI {
             val lostHoverComponents = it["lost"]?.hover?.splitLines().orEmpty()
             val hoverComponents = gainedHoverComponents + lostHoverComponents
 
-            val changedItems = hoverComponents.mapNotNull {
-                addedItemsRegex.findOrNull(it.stripped, "amount", "item") { (amount, item) ->
+            val changedItems = hoverComponents.mapNotNull { component ->
+                addedItemsRegex.findOrNull(component.stripped, "amount", "item") { (amount, item) ->
                     val id = RepoItemsAPI.getItemIdByName(item) ?: return@findOrNull null
                     return@findOrNull id to amount.replace("+", "").toIntValue()
                 }
             }
 
-            changedItems.forEach { (item, amount) -> SacksStorage.updateItemValue(item, amount) }
+            for ((item, amount) in changedItems) {
+                var realDiff = amount
+                val recentUpdate = recentUpdates.getIfPresent(item)
+                if (recentUpdate != null) {
+                    realDiff -= recentUpdate
+                }
+                if (realDiff == 0) continue
+                SacksStorage.updateItemValue(item, realDiff)
+            }
+
+            recentUpdates.invalidateAll()
             SacksChangeEvent(changedItems.map { (item, amount) -> ChangedSackItem(item, amount) }).post()
         }
     }
+
+    @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
+    fun onServerChange() = recentUpdates.invalidateAll()
 
     @Subscription
     @OnlyOnSkyBlock
@@ -88,7 +113,7 @@ object SacksAPI {
         }
 
         sackAmountRegex.anyMatch(item.getRawLore(), "amount") { (amount) ->
-            SacksStorage.updateItem(id, amount.toIntValue())
+            updateItem(id, amount.toIntValue())
         }
     }
 
@@ -114,11 +139,19 @@ object SacksAPI {
         }
     }
 
+    private fun updateItem(id: String, amount: Int) {
+        val old = SacksStorage.updateItem(id, amount)
+        val diff = amount - old
+        if (diff == 0) return
+        val current = recentUpdates.getIfPresent(id) ?: 0
+        recentUpdates.put(id, current + diff)
+    }
+
     private fun handleGemstones(item: ItemStack, id: String) {
         listOf("Rough", "Flawed", "Fine").forEach { name ->
             Regex(" $name: (?<amount>[\\d,.]+) .*").anyMatch(item.getRawLore(), "amount") { (amount) ->
                 val actualId = id.replace("ROUGH", name.uppercase())
-                SacksStorage.updateItem(actualId, amount.toIntValue())
+                updateItem(actualId, amount.toIntValue())
             }
         }
     }
@@ -126,10 +159,13 @@ object SacksAPI {
     @Subscription
     fun onRegisterCommands(event: RegisterCommandsEvent) {
         event.register("sbapi sacks") {
-
-        thenCallback("clear") {
-                SacksStorage.clear()
-                Text.sendDebug("Cleared sacks storage!")
+            thenCallback("id", StringArgumentType.string()) {
+                val id = argument<String>("id")
+                val amount = sackItems[id] ?: run {
+                    Text.sendDebug("This item isnt in sacks!")
+                    return@thenCallback
+                }
+                Text.sendDebug("You have $amount of item $id")
             }
         }
     }

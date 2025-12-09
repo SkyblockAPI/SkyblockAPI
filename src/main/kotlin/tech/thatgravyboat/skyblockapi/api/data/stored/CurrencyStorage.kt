@@ -72,6 +72,15 @@ internal object CurrencyStorage {
             }
         }
 
+    var sowdust: Long
+        get() = data?.sowdust ?: 0L
+        set(value) {
+            CURRENCY.edit {
+                if (sowdust == value) return
+                sowdust = value
+            }
+        }
+
     var northStars: Long
         get() = data?.northStars ?: 0L
         set(value) {

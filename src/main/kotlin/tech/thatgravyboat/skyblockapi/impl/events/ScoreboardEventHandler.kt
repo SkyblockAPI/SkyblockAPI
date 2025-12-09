@@ -31,8 +31,6 @@ object ScoreboardEventHandler {
 
     @Subscription
     fun onServerSwitch(event: ServerChangeEvent) {
-        if (!ProfileAPI.isLoaded) return
-
         ScoreboardUpdateEvent(scoreboard, emptyList(), emptyList()).post()
         scoreboard = emptyList()
     }
