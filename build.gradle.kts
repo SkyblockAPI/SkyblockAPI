@@ -36,6 +36,7 @@ repositories {
     scopedMaven("https://maven.nucleoid.xyz/", "eu.pb4")
     mavenCentral()
 }
+
 dependencies {
     minecraft(versionedCatalog["minecraft"])
     mappings(loom.layered {
@@ -51,12 +52,12 @@ dependencies {
 
     modImplementation(libs.fabric.language.kotlin)
 
-    modApi(variantOf(libs.meowdding.item.dfu) {
-        classifier(stonecutter.current.version)
-    })
-    include(variantOf(libs.meowdding.item.dfu) {
-        classifier(stonecutter.current.version)
-    })
+    api(libs.meowdding.item.dfu) {
+        capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}") }
+    }
+    include(libs.meowdding.item.dfu) {
+        capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}-remapped") }
+    }
 
     modApi(libs.bundles.hypixel)
     include(libs.hypixel.modapi.fabric)
@@ -64,8 +65,12 @@ dependencies {
     modApi(libs.skyblockapi.repolib)
     include(libs.skyblockapi.repolib)
 
-// https://github.com/DJtheRedstoner/DevAuth/issues/24
-//     modRuntimeOnly(libs.devauth)
+    if(stonecutter.eval(stonecutter.current.version, ">=1.21.11")) {
+        // TODO https://github.com/DJtheRedstoner/DevAuth/issues/24
+        runtimeOnly("org.apache.httpcomponents:httpclient:4.5.14")
+        runtimeOnly("org.apache.httpcomponents:httpcore:4.4.16")
+    }
+    modRuntimeOnly(libs.devauth)
 
     modImplementation(versionedCatalog["fabric.api"])
     modImplementation(libs.fabric.language.kotlin)

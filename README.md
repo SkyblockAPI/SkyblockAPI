@@ -17,24 +17,13 @@ maven("https://maven.teamresourceful.com/repository/maven-public/")
 ```
 
 ```kts
-configurations {
-    val minecraftAttribute = Attribute.of("net.minecraft.version", String::class.java)
-    val remappedAttribute = Attribute.of("net.fabricmc.remapped", String::class.java)
-
-    implementation {
-        attributes.attribute(minecraftAttribute, "<minecraft_version>")
-        attributes.attribute(remappedAttribute, "false")
-    }
-    
-    include {
-        attributes.attribute(minecraftAttribute, "<minecraft_version>")
-        attributes.attribute(remappedAttribute, "true")
-    }
-}
-
 dependencies {
-    modImplementation("tech.thatgravyboat:skyblock-api:<version>")
-    include("tech.thatgravyboat:skyblock-api:<version>")
+    api(libs.meowdding.item.dfu) {
+        capabilities { requireCapability("tech.thatgravyboat:skyblock-api-<minecraft_version>") }
+    }
+    include(libs.meowdding.item.dfu) {
+        capabilities { requireCapability("tech.thatgravyboat:skyblock-api-<minecraft_version>-remapped") }
+    }
 }
 ```
 
