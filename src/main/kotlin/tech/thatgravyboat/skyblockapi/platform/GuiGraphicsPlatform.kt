@@ -127,15 +127,7 @@ fun GuiGraphics.drawTexture(
     *///?}
 }
 
-//? if = 1.21.5 {
-/*@Deprecated("", replaceWith = ReplaceWith("drawGradientBox"))
 fun GuiGraphics.drawGradient(
-    x: Int, y: Int, width: Int, height: Int,
-    col1: Int, col2: Int, col3: Int, col4: Int,
-) = drawGradientBox(x, y, width, height, col1, col2, col3, col4)
-*///?}
-
-fun GuiGraphics.drawGradientBox(
     x: Int, y: Int, width: Int, height: Int,
     col1: Int, col2: Int, col3: Int, col4: Int,
 ) {

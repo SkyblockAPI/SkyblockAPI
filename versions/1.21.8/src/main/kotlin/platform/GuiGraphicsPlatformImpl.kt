@@ -1,3 +1,4 @@
+@file:JvmName("GuiGraphicsPlatformImplKt")
 package tech.thatgravyboat.skyblockapi.platform
 
 import com.mojang.blaze3d.pipeline.RenderPipeline
@@ -9,11 +10,24 @@ import net.minecraft.client.gui.render.state.GuiElementRenderState
 import net.minecraft.client.renderer.RenderPipelines
 import org.joml.Matrix3x2f
 
-@Deprecated("", replaceWith = ReplaceWith("drawGradientBox"))
-fun GuiGraphics.drawGradient(
+@JvmName("drawGradient")
+@Deprecated("", replaceWith = ReplaceWith("drawGradient"), level = DeprecationLevel.ERROR)
+fun GuiGraphics.deprecatedDrawGradient(
     x: Int, y: Int, width: Int, height: Int,
     col1: Int, col2: Int, col3: Int, col4: Int,
-) = drawGradientBox(x, y, width, height, col1, col2, col3, col4)
+) = this.drawGradient(x, y, width, height, col1, col2, col3, col4)
+
+@JvmName("drawFilledBox")
+@Deprecated("Use GuiGraphics.drawFilledBox", level = DeprecationLevel.ERROR)
+fun GuiGraphics.deprecatedDrawFilledBox(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
+    this.drawFilledBox(x, y, width, height, color)
+}
+
+@JvmName("drawOutline")
+@Deprecated("Use GuiGraphics.drawOutline", level = DeprecationLevel.ERROR)
+fun GuiGraphics.deprecatedDrawOutline(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
+    this.drawOutline(x, y, width, height, color)
+}
 
 internal class GradientGuiElement(
     val pose: Matrix3x2f,
