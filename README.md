@@ -18,7 +18,7 @@ maven("https://maven.teamresourceful.com/repository/maven-public/")
 
 ```kts
 configurations {
-    val minecraftAttribute = Attribute.of("net.minecrafat.version", String::class.java)
+    val minecraftAttribute = Attribute.of("net.minecraft.version", String::class.java)
     val remappedAttribute = Attribute.of("net.fabricmc.remapped", String::class.java)
 
     implementation {
