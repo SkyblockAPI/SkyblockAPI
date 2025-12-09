@@ -1,7 +1,7 @@
 [versions]
-minecraft-start = "1.21.11-beta.1"
+minecraft-start = "1.21.11"
 minecraft-end = "1.21.11"
-minecraft = "1.21.11-rc3"
+minecraft = "1.21.11"
 parchment = "2025.10.05"
 
 sbapi-mc-version = "1.21.11"
