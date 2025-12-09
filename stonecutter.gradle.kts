@@ -203,6 +203,25 @@ publishing {
     publications {
         create("skyblock-api", MavenPublication::class.java) {
             from(sbapiComponent)
+            pom {
+                name.set("SkyblockAPI")
+                url.set("https://github.com/SkyblockAPI/SkyblockAPI")
+
+                scm {
+                    connection.set("git:https://github.com/SkyblockAPI/SkyblockAPI.git")
+                    developerConnection.set("git:https://github.com/SkyblockAPI/SkyblockAPI.git")
+                    url.set("https://github.com/SkyblockAPI/SkyblockAPI")
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            setUrl("https://maven.teamresourceful.com/repository/thatgravyboat/")
+            credentials {
+                username = System.getenv("MAVEN_USER") ?: providers.gradleProperty("maven_username").orNull
+                password = System.getenv("MAVEN_PASS") ?: providers.gradleProperty("maven_password").orNull
+            }
         }
     }
 }
