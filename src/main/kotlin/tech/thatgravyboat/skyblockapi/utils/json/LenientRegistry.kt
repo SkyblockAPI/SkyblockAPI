@@ -8,14 +8,14 @@ import net.minecraft.resources.ResourceKey
 import java.util.Optional
 import java.util.concurrent.ConcurrentHashMap
 
-internal class LenientHolderOwner<T> : HolderOwner<T>
+internal class LenientHolderOwner<T : Any> : HolderOwner<T>
 
 internal class LenientHolderLookupAdapter(private val provider: HolderLookup.Provider) : RegistryOps.RegistryInfoLookup {
 
     private val cache = ConcurrentHashMap<ResourceKey<out Registry<*>>, Optional<out RegistryOps.RegistryInfo<*>>>()
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : Any?> lookup(key: ResourceKey<out Registry<out T?>?>): Optional<RegistryOps.RegistryInfo<T>> {
+    override fun <T : Any> lookup(key: ResourceKey<out Registry<out T>>): Optional<RegistryOps.RegistryInfo<T>> {
         return this.cache.computeIfAbsent(key) { key ->
             this.provider.lookup(key).map { lookup ->
                 RegistryOps.RegistryInfo<Any>(LenientHolderOwner<Any>(), lookup, lookup.registryLifecycle())

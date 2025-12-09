@@ -88,7 +88,7 @@ class ItemBuilder {
         this.clickAction = clickAction?.let(::ClickConsumer)
     }
 
-    fun <T> set(type: DataComponentType<T>, value: T?) {
+    fun <T : Any> set(type: DataComponentType<T>, value: T?) {
         if (value != null) {
             components.set(type, value)
         } else {

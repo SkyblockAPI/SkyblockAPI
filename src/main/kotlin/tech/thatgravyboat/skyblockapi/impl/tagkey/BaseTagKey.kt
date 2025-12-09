@@ -12,7 +12,7 @@ import tech.thatgravyboat.skyblockapi.platform.identifier
 import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 import kotlin.jvm.optionals.getOrNull
 
-interface BaseTagKey<T> {
+interface BaseTagKey<T : Any> {
     val key: TagKey<T>
 
     @Suppress("UNCHECKED_CAST")

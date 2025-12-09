@@ -63,9 +63,9 @@ fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
 
 operator fun Item.contains(item: ItemStack): Boolean = item.item == this
 
-operator fun <T> ItemBuilder.set(type: DataComponentType<T>, value: T) = this.set(type, value)
-operator fun <T> ItemStack.get(type: DataComponentType<T>): T? = this.get(type)
-operator fun <T> ItemStack.set(type: DataComponentType<T>, value: T) = this.set(type, value)
+operator fun <T : Any> ItemBuilder.set(type: DataComponentType<T>, value: T) = this.set(type, value)
+operator fun <T : Any> ItemStack.get(type: DataComponentType<T>): T? = this.get(type)
+operator fun <T : Any> ItemStack.set(type: DataComponentType<T>, value: T) = this.set(type, value)
 operator fun <T> ItemStack.get(type: DataType<T>) = this.getData(type)
 
 fun ItemStack.getSkyBlockId() = getData(DataTypes.ID)

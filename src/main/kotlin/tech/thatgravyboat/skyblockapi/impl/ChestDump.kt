@@ -83,7 +83,7 @@ object ChestDump {
                 }
 
                 @Suppress("WRONG_NULLABILITY_FOR_JAVA_OVERRIDE") // it literally crashes if you don't do this so yeah
-                override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ClickType?) {
+                override fun slotClicked(slot: Slot, slotId: Int, mouseButton: Int, type: ClickType) {
                     SkyBlockAPI.info("<ChestDump> Clicked slot $slotId with button $mouseButton and click type $type")
                 }
 
