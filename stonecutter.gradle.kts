@@ -50,6 +50,7 @@ stonecutter parameters {
 val componentFactory = project.serviceOf<SoftwareComponentFactory>()
 val sbapiComponent = componentFactory.adhoc("sbapi")
 val minecraftVersionAttribute = Attribute.of("net.minecraft.version", String::class.java)
+val remappedAttribute = Attribute.of("net.fabricmc.remapped", String::class.java)
 
 stonecutter.versions.forEach { (project, version) ->
     val gradleFriendlyVersion = version.replace(".", "")
@@ -67,6 +68,7 @@ stonecutter.versions.forEach { (project, version) ->
             attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
             attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
             attribute(minecraftVersionAttribute, version)
+            attribute(remappedAttribute, "true")
         }
 
         project.afterEvaluate {
@@ -91,6 +93,7 @@ stonecutter.versions.forEach { (project, version) ->
             attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
             attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
             attribute(minecraftVersionAttribute, version)
+            attribute(remappedAttribute, "false")
         }
 
         project.afterEvaluate {
@@ -116,6 +119,7 @@ stonecutter.versions.forEach { (project, version) ->
             attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
             attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
             attribute(minecraftVersionAttribute, version)
+            attribute(remappedAttribute, "true")
         }
 
         project.afterEvaluate {
@@ -142,6 +146,7 @@ stonecutter.versions.forEach { (project, version) ->
             attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
             attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
             attribute(minecraftVersionAttribute, version)
+            attribute(remappedAttribute, "false")
         }
 
         project.afterEvaluate {
@@ -166,6 +171,7 @@ stonecutter.versions.forEach { (project, version) ->
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
             attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType.SOURCES))
             attribute(minecraftVersionAttribute, version)
+            attribute(remappedAttribute, "false")
         }
 
         project.afterEvaluate {
