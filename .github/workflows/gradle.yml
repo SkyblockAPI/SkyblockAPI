@@ -2,9 +2,9 @@ name: Build
 
 on:
     push:
-        branches: [ "2.0" ]
+        branches: [ "4.0" ]
     pull_request:
-        branches: [ "2.0" ]
+        branches: [ "4.0" ]
 
 permissions:
     contents: read
@@ -36,3 +36,7 @@ jobs:
               with:
                   name: 1.21.10
                   path: build/libs/*-1.21.10.jar
+            - uses: actions/upload-artifact@v4.0.0
+              with:
+                  name: 1.21.11
+                  path: build/libs/*-1.21.11.jar

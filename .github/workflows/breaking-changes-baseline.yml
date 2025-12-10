@@ -2,7 +2,7 @@ name: API Baseline Updater
 
 on:
     push:
-        branches: [ "2.0" ]
+        branches: [ "4.0" ]
 
 permissions:
     contents: write
@@ -15,6 +15,8 @@ jobs:
 
         steps:
             - uses: actions/checkout@v5
+              with:
+                token: ${{ secrets.BOT_TOKEN }}
 
             - name: Setup JDK 21
               uses: actions/setup-java@v5
@@ -37,13 +39,13 @@ jobs:
 
             -   name: Check for breaking changes
                 env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    GH_TOKEN: ${{ secrets.BOT_TOKEN }}
                 run: |
                     if grep -q '[^[:space:]]' < api.added
                     then
                         rm api.added
-                        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                        git config --global user.name "github-actions[bot]"
+                        git config --global user.email "meowtomation@users.noreply.github.com"
+                        git config --global user.name "meowtomation"
                         git add .
                         git commit -m "update api dump"
                         git push
