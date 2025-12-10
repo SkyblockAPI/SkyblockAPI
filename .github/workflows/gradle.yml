@@ -1,11 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+name: Build
 
 on:
     push:
@@ -15,37 +8,31 @@ on:
 
 permissions:
     contents: read
-
 jobs:
     build:
-
         runs-on: ubuntu-latest
-
         steps:
-            -   uses: actions/checkout@v3.5.2
-            -   name: Set up JDK 21
-                uses: actions/setup-java@v4.0.0
-                with:
-                    java-version: '21'
-                    distribution: 'temurin'
-            -   name: Grant execute permission for gradlew
-                run: chmod +x gradlew
-            -   name: Create run dir
-                run: mkdir run
-            -   name: Build with Gradle
-                uses: gradle/gradle-build-action@v2.11.0
-                with:
-                    arguments: setupForWorkflows release --stacktrace
-            -   name: Upload Artifact
-                uses: actions/upload-artifact@v4.0.0
-                with:
-                    name: 1.21.5
-                    path: build/libs/*-1.21.5.jar
-            -   uses: actions/upload-artifact@v4.0.0
-                with:
-                    name: 1.21.8
-                    path: build/libs/*-1.21.8.jar
-            -   uses: actions/upload-artifact@v4.0.0
-                with:
-                    name: 1.21.9
-                    path: build/libs/*-1.21.9.jar
+            - uses: actions/checkout@v5
+            - name: Setup JDK 21
+              uses: actions/setup-java@v5
+              with:
+                  distribution: temurin
+                  java-version: '21'
+            - name: Setup gradle
+              uses: gradle/actions/setup-gradle@v5
+            - run: chmod +x gradlew
+            - name: Build
+              run: ./gradlew build
+            - name: Upload Artifact
+              uses: actions/upload-artifact@v4.0.0
+              with:
+                  name: 1.21.5
+                  path: build/libs/*-1.21.5.jar
+            - uses: actions/upload-artifact@v4.0.0
+              with:
+                  name: 1.21.8
+                  path: build/libs/*-1.21.8.jar
+            - uses: actions/upload-artifact@v4.0.0
+              with:
+                  name: 1.21.10
+                  path: build/libs/*-1.21.10.jar

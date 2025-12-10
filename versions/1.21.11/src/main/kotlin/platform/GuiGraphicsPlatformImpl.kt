@@ -1,0 +1,29 @@
+package tech.thatgravyboat.skyblockapi.platform
+
+import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.blaze3d.vertex.VertexConsumer
+import net.minecraft.client.gui.navigation.ScreenRectangle
+import net.minecraft.client.gui.render.TextureSetup
+import net.minecraft.client.gui.render.state.GuiElementRenderState
+import net.minecraft.client.renderer.RenderPipelines
+import org.joml.Matrix3x2f
+
+internal class GradientGuiElement(
+    val pose: Matrix3x2f,
+    val x0: Int, val y0: Int, val x1: Int, val y1: Int, val col1: Int, val col2: Int, val col3: Int, val col4: Int,
+    val scissor: ScreenRectangle? = null,
+    val bounds: ScreenRectangle? = null,
+) : GuiElementRenderState {
+
+    override fun buildVertices(consumer: VertexConsumer) {
+        consumer.addVertexWith2DPose(this.pose, this.x0.toFloat(), this.y0.toFloat()).setColor(this.col1)
+        consumer.addVertexWith2DPose(this.pose, this.x0.toFloat(), this.y1.toFloat()).setColor(this.col2)
+        consumer.addVertexWith2DPose(this.pose, this.x1.toFloat(), this.y1.toFloat()).setColor(this.col3)
+        consumer.addVertexWith2DPose(this.pose, this.x1.toFloat(), this.y0.toFloat()).setColor(this.col4)
+    }
+
+    override fun pipeline(): RenderPipeline = RenderPipelines.GUI
+    override fun textureSetup(): TextureSetup = TextureSetup.noTexture()
+    override fun scissorArea(): ScreenRectangle? = scissor
+    override fun bounds(): ScreenRectangle? = bounds
+}
