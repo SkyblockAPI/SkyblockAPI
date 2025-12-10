@@ -1,0 +1,5 @@
+public abstract interface annotation class tech/thatgravyboat/skyblockapi/RemoveNextVersion : java/lang/annotation/Annotation {
+	public abstract fun level ()Lkotlin/DeprecationLevel;
+	public abstract fun replaceWith ()Lkotlin/ReplaceWith;
+}
+
