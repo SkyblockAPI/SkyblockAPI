@@ -2,7 +2,7 @@
 
 <div align="center">
     
-![Version](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.teamresourceful.com%2Frepository%2Fmaven-public%2Ftech%2Fthatgravyboat%2Fskyblock-api%2Fmaven-metadata.xml&strategy=highestVersion&filter=3.*&style=for-the-badge&label=Version)
+![Version](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.teamresourceful.com%2Frepository%2Fmaven-public%2Ftech%2Fthatgravyboat%2Fskyblock-api%2Fmaven-metadata.xml&strategy=highestVersion&filter=4.*&style=for-the-badge&label=Version)
 
 </div>
 
@@ -37,6 +37,7 @@ dependencies {
 
 ## Major Change Logs
 
+- **v4.0.0**: Update to 1.21.11 and switch to stonecutter
 - **v3.0.0**: Update to 1.21.9/1.21.10
 - **v2.3.0**: Switch to kotlin.time vs kotlinx.datetime, required because of fabric kotlin version update.
 - **v2.0.0**: Move to multi-version
