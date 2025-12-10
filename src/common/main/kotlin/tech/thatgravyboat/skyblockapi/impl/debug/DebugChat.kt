@@ -77,14 +77,14 @@ object DebugChat {
                     color = TextColor.RED
                 }
                 component.send()
-                return@registerWithCallback
+            } else {
+                val event = ChatReceivedEvent.Post(component)
+	            event.post()
+	            if (event.component != component) {
+	                Text.sendDebug("Chat event modified!")
+	            }
+	            event.component.send()
             }
-            val event = ChatReceivedEvent.Post(component)
-            event.post()
-            if (event.component != component) {
-                Text.sendDebug("Chat event modified!")
-            }
-            event.component.send()
         }
     }
 }
