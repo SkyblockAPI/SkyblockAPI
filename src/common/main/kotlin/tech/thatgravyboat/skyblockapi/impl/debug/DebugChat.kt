@@ -72,9 +72,19 @@ object DebugChat {
                 JsonParser.parseString(clipboard).toData(ComponentSerialization.CODEC)
             }.getOrNull() ?: LegacyTextFixer.parse(clipboard)
 
-            component.send()
-            ChatReceivedEvent.Pre(component).post()
-            ChatReceivedEvent.Post(component).post()
+            if (ChatReceivedEvent.Pre(component).post()) {
+                Text.sendDebug("Chat event cancelled!") {
+                    color = TextColor.RED
+                }
+                component.send()
+                return@registerWithCallback
+            }
+            val event = ChatReceivedEvent.Post(component)
+            event.post()
+            if (event.component != component) {
+                Text.sendDebug("Chat event modified!")
+            }
+            event.component.send()
         }
     }
 }
