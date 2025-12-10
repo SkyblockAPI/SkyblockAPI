@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl.events
 
 import me.owdding.ktmodules.Module
+import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
@@ -16,7 +17,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 @Module
 object ScoreboardEventHandler {
 
-    private var scoreboard = listOf<String>()
+    private var strippedScoreboard = listOf<String>()
+    private var scoreboard = listOf<Component>()
     private var currentTitle: String? = null
 
     @Subscription
@@ -31,16 +33,18 @@ object ScoreboardEventHandler {
 
     @Subscription
     fun onServerSwitch(event: ServerChangeEvent) {
-        ScoreboardUpdateEvent(scoreboard, emptyList(), emptyList()).post()
+        ScoreboardUpdateEvent(strippedScoreboard, emptyList(), emptyList()).post()
+        strippedScoreboard = emptyList()
         scoreboard = emptyList()
     }
 
     private fun handleScoreboard() {
         val new = McClient.scoreboard
-        val newAsText = new.map { it.stripped }
-        if (newAsText == scoreboard) return
-        ScoreboardUpdateEvent(scoreboard, newAsText, new.toList()).post(SkyBlockAPI.eventBus)
-        scoreboard = newAsText.toMutableList()
+        val newAsString = new.map { it.stripped }
+        if (newAsString == strippedScoreboard && new == scoreboard) return // If nothing changed, not even the colors
+        ScoreboardUpdateEvent(strippedScoreboard, newAsString, new.toList()).post(SkyBlockAPI.eventBus)
+        strippedScoreboard = newAsString
+        scoreboard = new.toList()
     }
 
     private fun handleTitle() {
