@@ -1,0 +1,22 @@
+[versions]
+minecraft_start = "1.21.6"
+minecraft = "1.21.8"
+
+parchment = "2025.09.14"
+fabric-api = "0.136.0+1.21.8"
+
+resourceful-lib = "3.6.0"
+resourceful-config = "3.7.2"
+olympus = "1.5.2"
+placeholders = "2.7.2+1.21.8"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+
+parchment = { module = "org.parchmentmc.data:parchment-1.21.8", version.ref = "parchment" }
+fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
+
+resourceful-lib = { module = "com.teamresourceful.resourcefullib:resourcefullib-fabric-1.21.6", version.ref = "resourceful-lib" }
+resourceful-config = { module = "com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-1.21.7", version.ref = "resourceful-config" }
+olympus = { module = "earth.terrarium.olympus:olympus-fabric-1.21.7", version.ref = "olympus" }
+placeholders = { module = "eu.pb4:placeholder-api", version.ref = "placeholders" }

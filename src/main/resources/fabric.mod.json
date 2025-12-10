@@ -1,0 +1,40 @@
+{
+    "schemaVersion": 1,
+    "id": "skyblock-api",
+    "version": "${version}",
+    "name": "skyblock-api",
+    "license": "MIT",
+    "icon": "assets/skyblockapi/icon.png",
+    "mixins": [
+        "skyblock-api.mixins.json"
+    ],
+    "entrypoints": {
+        "client": [
+            {
+                "value": "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit"
+            }
+        ],
+        "main": [
+            {
+                "value": "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load"
+            },
+            {
+                "value": "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init"
+            }
+        ]
+    },
+    "depends": {
+        "fabricloader": "*",
+        "fabric": "*",
+        "fabric-language-kotlin": ">=${fabric_lang_kotlin}",
+        "minecraft": ">=${minecraft_start} <=${minecraft_end}",
+        "hypixel-mod-api": ">=${hypixel_mod_api}"
+    },
+    "custom": {
+        "modmenu": {
+            "badges": [
+                "library"
+            ]
+        }
+    }
+}
