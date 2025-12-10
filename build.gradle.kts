@@ -59,7 +59,8 @@ dependencies {
         capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}-remapped") }
     }
 
-    modApi(libs.bundles.hypixel)
+    api(libs.hypixel.modapi)
+    modImplementation(libs.bundles.hypixel)
     include(libs.hypixel.modapi.fabric)
 
     modApi(libs.skyblockapi.repolib)
