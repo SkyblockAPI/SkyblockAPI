@@ -34,10 +34,10 @@ fun RenderWorldEvent.drawString(
     light: Int = LightTexture.FULL_BRIGHT,
 ) {
     val text = Language.getInstance().getVisualOrder(text)
-    drawText(text, x, y, color, dropShadow, displayMode, backgroundColor, light)
+    drawString(text, x, y, color, dropShadow, displayMode, backgroundColor, light)
 }
 
-fun RenderWorldEvent.drawText(
+fun RenderWorldEvent.drawString(
     text: FormattedCharSequence,
     x: Float,
     y: Float,
