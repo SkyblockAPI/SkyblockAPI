@@ -6077,10 +6077,10 @@ public final class tech/thatgravyboat/skyblockapi/platform/PropertyMapPlatformKt
 public final class tech/thatgravyboat/skyblockapi/platform/WorldRenderContextPlatformKt {
 	public static final fun drawString-JuOCnSk (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent;Ljava/lang/String;FFIZLnet/minecraft/client/gui/Font$DisplayMode;II)V
 	public static final fun drawString-JuOCnSk (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent;Lnet/minecraft/network/chat/Component;FFIZLnet/minecraft/client/gui/Font$DisplayMode;II)V
+	public static final fun drawString-JuOCnSk (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent;Lnet/minecraft/util/FormattedCharSequence;FFIZLnet/minecraft/client/gui/Font$DisplayMode;II)V
 	public static synthetic fun drawString-JuOCnSk$default (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent;Ljava/lang/String;FFIZLnet/minecraft/client/gui/Font$DisplayMode;IIILjava/lang/Object;)V
 	public static synthetic fun drawString-JuOCnSk$default (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent;Lnet/minecraft/network/chat/Component;FFIZLnet/minecraft/client/gui/Font$DisplayMode;IIILjava/lang/Object;)V
-	public static final fun drawText-JuOCnSk (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent;Lnet/minecraft/util/FormattedCharSequence;FFIZLnet/minecraft/client/gui/Font$DisplayMode;II)V
-	public static synthetic fun drawText-JuOCnSk$default (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent;Lnet/minecraft/util/FormattedCharSequence;FFIZLnet/minecraft/client/gui/Font$DisplayMode;IIILjava/lang/Object;)V
+	public static synthetic fun drawString-JuOCnSk$default (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent;Lnet/minecraft/util/FormattedCharSequence;FFIZLnet/minecraft/client/gui/Font$DisplayMode;IIILjava/lang/Object;)V
 }
 
 public class tech/thatgravyboat/skyblockapi/utils/DebugToggle {
