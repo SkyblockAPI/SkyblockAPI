@@ -5778,6 +5778,11 @@ public class tech/thatgravyboat/skyblockapi/mixins/AbstractSoundInstanceMixin : 
 	public fun skyblockapi$volume ()F
 }
 
+public class tech/thatgravyboat/skyblockapi/mixins/AvatarRendererMixin {
+	public fun <init> ()V
+	public fun extractRenderState (Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;FLorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;)V
+}
+
 public class tech/thatgravyboat/skyblockapi/mixins/GuiGraphicsTooltipMixin : tech/thatgravyboat/skyblockapi/hooks/GuiGraphicsHook {
 	public fun <init> ()V
 	public fun skyblockapi$setHoveredItem (Lnet/minecraft/world/item/ItemStack;)V
@@ -5789,6 +5794,31 @@ public abstract class tech/thatgravyboat/skyblockapi/mixins/GuiGraphicsVisualIte
 	public abstract fun fill (IIIII)V
 	public abstract fun nextStratum ()V
 	public abstract fun renderItem (Lnet/minecraft/world/item/ItemStack;II)V
+}
+
+public class tech/thatgravyboat/skyblockapi/mixins/GuiMixin {
+	public fun <init> ()V
+}
+
+public class tech/thatgravyboat/skyblockapi/mixins/KeyboardHandlerMixin {
+	public fun <init> ()V
+}
+
+public class tech/thatgravyboat/skyblockapi/mixins/LevelRendererMixin {
+	public fun <init> ()V
+	public fun afterEntities (Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/renderer/state/LevelRenderState;)V
+	public fun afterTranslucent (Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/renderer/state/LevelRenderState;)V
+	public fun beforeAll (Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;)V
+	public fun saveDeltaTracker (Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;Lnet/minecraft/client/DeltaTracker;)V
+}
+
+public class tech/thatgravyboat/skyblockapi/mixins/MouseHandlerMixin {
+	public fun <init> ()V
+}
+
+public class tech/thatgravyboat/skyblockapi/mixins/ScreenMixin {
+	protected field minecraft Lnet/minecraft/client/Minecraft;
+	public fun <init> ()V
 }
 
 public class tech/thatgravyboat/skyblockapi/mixins/SimpleSoundInstanceMixin {
