@@ -45,6 +45,8 @@ object CurrencyAPI {
     )
     private val soulflowRegex = widgetGroup.create("profile.soulflow", "(?i) Soulflow: (?<soulflow>[\\d,.kmb]+)")
     private val gemsRegex = widgetGroup.create("gems", "(?i) Gems: (?<gems>[\\d,.kmb]+)")
+    private val copperWidgetRegex = widgetGroup.create("copper", "(?i) Copper: (?<copper>[\\d,.kmb]+)")
+    private val sowdustWidgetRegex = widgetGroup.create("sowdust", "(?i) Sowdust: (?<sowdust>[\\d,.kmb]+)")
 
     private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
     private val purseRegex = currencyGroup.create("purse", "^(?<type>Purse|Piggy): (?<purse>[\\d,.kmb]+)")
@@ -109,6 +111,8 @@ object CurrencyAPI {
             }
             TabWidget.AREA -> {
                 gemsRegex.findCurrency(event.new, "gems", ::gems, CurrencyEvent::Gems)
+                copperWidgetRegex.findCurrency(event.new, "copper", ::copper, CurrencyEvent::Copper)
+                sowdustWidgetRegex.findCurrency(event.new, "sowdust", ::sowdust, CurrencyEvent::SowDust)
             }
             else -> return
         }
