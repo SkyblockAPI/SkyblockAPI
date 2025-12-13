@@ -17,7 +17,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 @Module
 object ScoreboardEventHandler {
 
-    private var strippedScoreboard = listOf<String>()
+    private var scoreboardStripped = listOf<String>()
     private var scoreboard = listOf<Component>()
     private var currentTitle: String? = null
 
@@ -33,17 +33,17 @@ object ScoreboardEventHandler {
 
     @Subscription
     fun onServerSwitch(event: ServerChangeEvent) {
-        ScoreboardUpdateEvent(strippedScoreboard, emptyList(), emptyList()).post()
-        strippedScoreboard = emptyList()
+        ScoreboardUpdateEvent(scoreboardStripped, emptyList(), emptyList()).post()
+        scoreboardStripped = emptyList()
         scoreboard = emptyList()
     }
 
     private fun handleScoreboard() {
         val new = McClient.scoreboard
-        val newAsString = new.map { it.stripped }
-        if (newAsString == strippedScoreboard && new == scoreboard) return // If nothing changed, not even the colors
-        ScoreboardUpdateEvent(strippedScoreboard, newAsString, new.toList()).post(SkyBlockAPI.eventBus)
-        strippedScoreboard = newAsString
+        val newStripped = new.map { it.stripped }
+        if (newStripped == scoreboardStripped && new == scoreboard) return // If nothing changed, not even the colors
+        ScoreboardUpdateEvent(scoreboardStripped, newStripped, new.toList()).post(SkyBlockAPI.eventBus)
+        scoreboardStripped = newStripped
         scoreboard = new.toList()
     }
 
