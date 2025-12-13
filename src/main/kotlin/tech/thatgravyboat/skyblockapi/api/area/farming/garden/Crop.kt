@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.Blocks
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 
-enum class Crop(val tool: FarmingTool, vararg val block: Block, skyBlockId: String? = null) {
+enum class Crop(val tool: FarmingTool, vararg block: Block, skyBlockId: String? = null) {
     WHEAT(FarmingTool.THEORETICAL_HOE_WHEAT, Blocks.WHEAT),
     CARROT(FarmingTool.THEORETICAL_HOE_CARROT, Blocks.CARROTS),
     POTATO(FarmingTool.THEORETICAL_HOE_POTATO, Blocks.POTATOES),
@@ -22,6 +22,7 @@ enum class Crop(val tool: FarmingTool, vararg val block: Block, skyBlockId: Stri
     WILD_ROSE(FarmingTool.THEORETICAL_HOE_WILD_ROSE, Blocks.ROSE_BUSH),
     ;
 
+    val blocks: Set<Block> = block.toSet()
     val skyBlockId: SkyBlockId = SkyBlockId.item(skyBlockId ?: name)
 
     @RemoveNextVersion(ReplaceWith("item"))
