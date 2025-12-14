@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.hotm.HotmPerk
 
 internal object HotmStorage : SkillTreeStorage<HotmData, HotmPerk>() {
 
-    override var STORAGE = StoredProfileData(
+    override var storage = StoredProfileData(
         ::HotmData,
         HotmData.CODEC,
         "hotm.json",

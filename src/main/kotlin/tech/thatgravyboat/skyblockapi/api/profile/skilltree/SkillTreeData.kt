@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.skilltree
 interface SkillTreeData<Perk : SkillTreePerk> {
     var perks: MutableMap<String, Perk>
     var tokens: Int
+    var tier: Int
 }
 
 interface SkillTreePerk {

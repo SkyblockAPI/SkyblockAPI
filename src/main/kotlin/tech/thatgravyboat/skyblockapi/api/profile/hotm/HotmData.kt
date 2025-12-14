@@ -9,6 +9,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 data class HotmData(
     override var perks: MutableMap<String, HotmPerk> = mutableMapOf(),
     override var tokens: Int = 0,
+    override var tier: Int = 0,
 ) : SkillTreeData<HotmPerk> {
     companion object {
         val CODEC = SkyblockAPICodecs.getCodec<HotmData>()
