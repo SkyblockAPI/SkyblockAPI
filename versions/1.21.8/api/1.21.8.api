@@ -2693,6 +2693,17 @@ public final class tech/thatgravyboat/skyblockapi/api/events/location/ServerDisc
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/location/ServerDisconnectEvent;
 }
 
+public abstract class tech/thatgravyboat/skyblockapi/api/events/location/SkyBlockLocationEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/location/SkyBlockLocationEvent$Join : tech/thatgravyboat/skyblockapi/api/events/location/SkyBlockLocationEvent {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/location/SkyBlockLocationEvent$Join;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/location/SkyBlockLocationEvent$Leave : tech/thatgravyboat/skyblockapi/api/events/location/SkyBlockLocationEvent {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/location/SkyBlockLocationEvent$Leave;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/location/isle/TrophyFishCaughtEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)V
 	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
