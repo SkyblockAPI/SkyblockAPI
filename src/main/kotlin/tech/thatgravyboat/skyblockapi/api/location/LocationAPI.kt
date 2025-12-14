@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.SkyBlockLocationEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
@@ -49,7 +50,12 @@ object LocationAPI {
 
     var isOnSkyBlock: Boolean = false
         get() = field || forceOnSkyblock
-        private set
+        private set(value) {
+            if (field != value) {
+                field = value
+                if (value) SkyBlockLocationEvent.Join.post() else SkyBlockLocationEvent.Leave.post()
+            }
+        }
 
     var island: SkyBlockIsland? = null
         private set
