@@ -210,14 +210,20 @@ public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop :
 	public static final field CARROT Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field COCOA_BEANS Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field MELON Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
+	public static final field MOONFLOWER Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field MUSHROOM Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field NETHER_WART Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field POTATO Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field PUMPKIN Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field SUGAR_CANE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
+	public static final field SUNFLOWER Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field WHEAT Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
+	public static final field WILD_ROSE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
+	public final fun getBlocks ()Ljava/util/Set;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getIcon ()Lkotlin/jvm/functions/Function0;
+	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getSkyBlockId-EnzYQXU ()Ljava/lang/String;
 	public final fun getTool ()Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
@@ -232,25 +238,50 @@ public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/Farmin
 	public static final field THEORETICAL_HOE_CANE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
 	public static final field THEORETICAL_HOE_CARROT Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
 	public static final field THEORETICAL_HOE_POTATO Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
+	public static final field THEORETICAL_HOE_SUNFLOWER Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
 	public static final field THEORETICAL_HOE_WARTS Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
 	public static final field THEORETICAL_HOE_WHEAT Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
+	public static final field THEORETICAL_HOE_WILD_ROSE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getMultipleTiers ()Z
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip : java/lang/Enum {
+	public static final field CROPSHOT Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public static final field EVERGREEN Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public static final field HYPERCHARGE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public static final field MECHAMIND Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public static final field OVERDRIVE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public static final field QUICKDRAW Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public static final field RAREFINDER Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public static final field SOWLEDGE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public static final field SYNTHESIS Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public static final field VERMIN_VAPORIZER Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public final fun getApiId ()Ljava/lang/String;
+	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getItemStack ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getSkyblockId-EnzYQXU ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/GardenChip;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest : java/lang/Enum {
 	public static final field BEETLE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field CRICKET Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest$Companion;
+	public static final field DRAGONFLY Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field EARTHWORM Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field FIELD_MOUSE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
+	public static final field FIREFLY Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field FLY Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field LOCUST Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field MITE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field MOSQUITO Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field MOTH Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
+	public static final field PRAYING_MANTIS Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field RAT Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public static final field SLUG Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Pest;
 	public final fun getCrop ()Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
@@ -271,6 +302,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/
 	public static final field COMPOST Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Spray;
 	public static final field DUNG Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Spray;
 	public static final field HONEY_JAR Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Spray;
+	public static final field JELLY Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Spray;
 	public static final field PLANT_MATTER Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Spray;
 	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
@@ -286,6 +318,9 @@ public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/
 	public static final field CRICKET_CHOIR Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
 	public static final field DYNAMITES Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
 	public static final field EARTHWORM_ENSEMBLE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
+	public static final field FIREFLY Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
+	public static final field IMAGINE_DRAGONFLIES Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
+	public static final field PRAY_FOR_ME Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
 	public static final field PRETTY_FLY Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
 	public static final field RODENT_REVOLUTION Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
 	public static final field SLOW_AND_GROOVY Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
@@ -294,6 +329,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/
 	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getItemStack ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getSkyblockId-EnzYQXU ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/pests/Vinyl;
 }
