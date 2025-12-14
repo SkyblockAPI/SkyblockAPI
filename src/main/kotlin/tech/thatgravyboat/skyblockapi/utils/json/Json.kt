@@ -17,7 +17,7 @@ import kotlin.reflect.typeOf
 
 object Json {
 
-    val gson: Gson = GsonBuilder().setPrettyPrinting().create()
+    val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
     internal val ops: DynamicOps<JsonElement> get() {
         val registry = McClient.connection?.registryAccess() ?: VanillaRegistries.createLookup()
         return RegistryOps.create(JsonOps.INSTANCE, LenientHolderLookupAdapter(registry))
