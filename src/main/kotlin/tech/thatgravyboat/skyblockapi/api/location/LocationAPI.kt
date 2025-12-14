@@ -53,7 +53,7 @@ object LocationAPI {
         private set(value) {
             if (field != value) {
                 field = value
-                if (value) SkyblockLocationEvent.Join().post() else SkyblockLocationEvent.Leave().post()
+                if (value) SkyblockLocationEvent.Join.post() else SkyblockLocationEvent.Leave.post()
             }
         }
 
