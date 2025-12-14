@@ -14,6 +14,9 @@ enum class Pest(val spray: Spray? = null, val vinyl: Vinyl? = null, val crop: Cr
     RAT(Spray.CHEESE_FUEL, Vinyl.RODENT_REVOLUTION, Crop.PUMPKIN),
     SLUG(Spray.PLANT_MATTER, Vinyl.SLOW_AND_GROOVY, Crop.MUSHROOM),
     EARTHWORM(Spray.COMPOST, Vinyl.EARTHWORM_ENSEMBLE, Crop.MELON),
+    FIREFLY(Spray.JELLY, Vinyl.FIREFLY, Crop.MOONFLOWER),
+    DRAGONFLY(Spray.JELLY, Vinyl.IMAGINE_DRAGONFLIES, Crop.SUNFLOWER),
+    PRAYING_MANTIS(Spray.JELLY, Vinyl.PRAY_FOR_ME, Crop.WILD_ROSE),
     FIELD_MOUSE,
     ;
 
