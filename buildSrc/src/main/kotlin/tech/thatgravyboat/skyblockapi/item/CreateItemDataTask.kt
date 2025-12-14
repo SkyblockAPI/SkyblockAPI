@@ -48,7 +48,7 @@ abstract class CreateItemDataTask : DefaultTask() {
             filePath.writeBytes(byteArray, options = arrayOf(StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE))
         }
 
-        fun write(element: JsonElement, file: File) = write(GsonBuilder().setPrettyPrinting().create().toJson(element).toByteArray(), file)
+        fun write(element: JsonElement, file: File) = write(GsonBuilder().disableHtmlEscaping().create().toJson(element).toByteArray(), file)
 
         doFirst {
             if (downloadCache.isCached(itemDataCacheKey)) {

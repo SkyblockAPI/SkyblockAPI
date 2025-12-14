@@ -9,6 +9,7 @@ enum class Spray {
     PLANT_MATTER,
     COMPOST,
     CHEESE_FUEL,
+    JELLY,
     ;
 
     val displayName: Component by lazy { RepoItemsAPI.getItemName(name) }

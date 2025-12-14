@@ -11,5 +11,7 @@ enum class FarmingTool(val multipleTiers: Boolean = true) {
     COCO_CHOPPER(false),
     FUNGI_CUTTER(false),
     THEORETICAL_HOE_WARTS,
+    THEORETICAL_HOE_SUNFLOWER,
+    THEORETICAL_HOE_WILD_ROSE,
     ;
 }
