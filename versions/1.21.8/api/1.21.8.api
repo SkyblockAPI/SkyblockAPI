@@ -2111,6 +2111,30 @@ public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityAddedE
 	public final fun getEntity ()Lnet/minecraft/world/entity/Entity;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityAttributesUpdateEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Lnet/minecraft/world/entity/LivingEntity;Ljava/util/Map;)V
+	public final fun getChanged ()Ljava/util/Map;
+	public final fun getEntity ()Lnet/minecraft/world/entity/LivingEntity;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityAttributesUpdateEvent$ChangedAttribute {
+	public fun <init> (DD)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun copy (DD)Ltech/thatgravyboat/skyblockapi/api/events/entity/EntityAttributesUpdateEvent$ChangedAttribute;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/entity/EntityAttributesUpdateEvent$ChangedAttribute;DDILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/entity/EntityAttributesUpdateEvent$ChangedAttribute;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getNew ()D
+	public final fun getOld ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityEquipmentUpdateEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Lnet/minecraft/world/entity/LivingEntity;)V
+	public final fun getEntity ()Lnet/minecraft/world/entity/LivingEntity;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityEvents {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/entity/EntityEvents;
 	public final fun getDebug ()Z
@@ -5897,6 +5921,10 @@ public class tech/thatgravyboat/skyblockapi/mixins/events/ChatListenerMixin {
 }
 
 public class tech/thatgravyboat/skyblockapi/mixins/events/ClientCommonPacketListenerImplMixin {
+	public fun <init> ()V
+}
+
+public class tech/thatgravyboat/skyblockapi/mixins/events/ClientPacketListenerMixin {
 	public fun <init> ()V
 }
 
