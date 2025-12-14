@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.SkillXpGainedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpLiteralActionBarWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpPercentActionBarWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
@@ -21,7 +22,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 @Module
 object SkillXpAPI {
 
-    val skills: Map<HypixelSkillAPI.Skill, Float>? get() = SkillXpStorage.data?.xp
+    val skills: Map<HypixelSkillAPI.Skill, Float> get() = SkillXpStorage.data?.xp ?: emptyMap()
 
     private val group = RegexGroup.INVENTORY.group("skillxp")
     private val itemNameRegex = group.create("itemName", "(?<name>.*) (?<level>\\d+)")
@@ -47,7 +48,6 @@ object SkillXpAPI {
                 }
 
                 SkillXpStorage.setXp(skill, xp)
-                Text.of("Set ${skill.name} XP to ${xp.toFormattedString()} (Level $level)").send()
             }
         }
     }
@@ -84,15 +84,6 @@ object SkillXpAPI {
     }
 
     @Subscription
-    fun onEvent(event: SkillXpGainedEvent) {
-        val totalXp = SkillXpStorage.getXp(event.skill).toLong()
-        val level = event.skill.data.getLevelForExp(totalXp)
-        Text.of("Gained ${event.amount.toFormattedString()} XP in ${event.skill.name}") {
-            append(" (${level} ${event.currentXp.toFormattedString()}) - ${totalXp.toFormattedString()}")
-        }.send()
-    }
-
-    @Subscription
     fun onCommand(event: RegisterCommandsEvent) {
         event.register("sbapi skill") {
             thenCallback("list") {
@@ -110,10 +101,3 @@ object SkillXpAPI {
         }
     }
 }
-
-// Todo move into correct package
-data class SkillXpGainedEvent(
-    val skill: HypixelSkillAPI.Skill,
-    val amount: Float,
-    val currentXp: Float,
-) : SkyBlockEvent()
