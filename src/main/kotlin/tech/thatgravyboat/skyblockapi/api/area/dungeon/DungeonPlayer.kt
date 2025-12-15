@@ -2,8 +2,8 @@ package tech.thatgravyboat.skyblockapi.api.area.dungeon
 
 import net.minecraft.world.entity.player.Player
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.isRealPlayer
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 class DungeonPlayer(
     val name: String,
@@ -18,8 +18,18 @@ class DungeonPlayer(
     var classLevel: Int? = classLevel
         internal set
 
+    /**
+     * The index of the order at which they appear in tablist.
+     * Will be -1 if the player is dead, and dead players will not be counted for the index.
+     */
+    var index: Int = -1
+        internal set
+
     val realPlayer: Player?
-        get() = McLevel.self.players().find { it.isRealPlayer() && it.name.stripped == name }
+        get() = McLevel.players.find { it.isRealPlayer() && it.cleanName == name }
 
     internal fun missingData(): Boolean = dungeonClass == null || classLevel == null
+
+    override fun toString(): String = "DungeonPlayer(name='$name', dead=$dead, dungeonClass=$dungeonClass, classLevel=$classLevel, index=$index)"
+
 }
