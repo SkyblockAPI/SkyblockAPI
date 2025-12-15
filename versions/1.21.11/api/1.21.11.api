@@ -96,6 +96,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/dungeon/DungeonAPI {
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onIslandChange (Ltech/thatgravyboat/skyblockapi/api/events/location/IslandChangeEvent;)V
 	public final fun onPlayerHotbarUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerHotbarChangeEvent;)V
+	public final fun onRegisterCommands (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onTablistUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/TabListChangeEvent;)V
 }
@@ -168,8 +169,10 @@ public final class tech/thatgravyboat/skyblockapi/api/area/dungeon/DungeonPlayer
 	public final fun getClassLevel ()Ljava/lang/Integer;
 	public final fun getDead ()Z
 	public final fun getDungeonClass ()Ltech/thatgravyboat/skyblockapi/api/area/dungeon/DungeonClass;
+	public final fun getIndex ()I
 	public final fun getName ()Ljava/lang/String;
 	public final fun getRealPlayer ()Lnet/minecraft/world/entity/player/Player;
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/farming/TrapperAPI {
@@ -5489,10 +5492,14 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McLevel {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/helpers/McLevel;
 	public final fun get (III)Lnet/minecraft/world/level/block/state/BlockState;
 	public final fun get (Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;
+	public final fun getEntities (Lnet/minecraft/world/level/entity/EntityTypeTest;Lnet/minecraft/world/phys/AABB;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
+	public static synthetic fun getEntities$default (Ltech/thatgravyboat/skyblockapi/helpers/McLevel;Lnet/minecraft/world/level/entity/EntityTypeTest;Lnet/minecraft/world/phys/AABB;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/util/List;
 	public final fun getHasLevel ()Z
 	public final fun getLevel ()Lnet/minecraft/client/multiplayer/ClientLevel;
+	public final fun getPlayers ()Ljava/util/List;
 	public final fun getRegistry ()Lnet/minecraft/core/RegistryAccess;
 	public final fun getSelf ()Lnet/minecraft/world/level/Level;
+	public final fun getSelfOrNull ()Lnet/minecraft/client/multiplayer/ClientLevel;
 }
 
 public final class tech/thatgravyboat/skyblockapi/helpers/McPlayer {
@@ -6395,6 +6402,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/EntityExtensi
 	public static final fun getArmor (Lnet/minecraft/world/entity/LivingEntity;)Ljava/util/List;
 	public static final fun getBoots (Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;
 	public static final fun getChestplate (Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;
+	public static final fun getCleanName (Lnet/minecraft/world/entity/Entity;)Ljava/lang/String;
 	public static final fun getHelmet (Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;
 	public static final fun getLeggings (Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;
 	public static final fun getServerHealth (Lnet/minecraft/world/entity/LivingEntity;)F
