@@ -38,21 +38,21 @@ private typealias CurrencyEvent = CurrencyUpdateEvent<*>
 object CurrencyAPI {
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("currency")
-    private val bankSingleRegex = widgetGroup.create("profile.bank.single", "(?i) Bank: (?<bank>[\\d,.kmb]+)")
+    private val bankSingleRegex = widgetGroup.create("profile.bank.single", "(?i) Bank: (?<bank>(?i)[\\d,.kmb]+)")
     private val bankCoopRegex = widgetGroup.create(
         "profile.bank.coop",
-        "(?i) Bank: (?<coop>\\.\\.\\.|[\\d,.kmb]+) / (?<personal>[\\d,.kmb]+)",
+        " Bank: (?<coop>\\.\\.\\.|(?i)[\\d,.kmb]+) / (?<personal>(?i)[\\d,.kmb]+)",
     )
-    private val soulflowRegex = widgetGroup.create("profile.soulflow", "(?i) Soulflow: (?<soulflow>[\\d,.kmb]+)")
-    private val gemsRegex = widgetGroup.create("gems", "(?i) Gems: (?<gems>[\\d,.kmb]+)")
+    private val soulflowRegex = widgetGroup.create("profile.soulflow", " Soulflow: (?<soulflow>[\\d,.kmb]+)")
+    private val gemsRegex = widgetGroup.create("gems", " Gems: (?<gems>(?i)[\\d,.kmb]+)")
 
     private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
-    private val purseRegex = currencyGroup.create("purse", "^(?<type>Purse|Piggy): (?<purse>[\\d,.kmb]+)")
-    private val bitsRegex = currencyGroup.create("bits", "^Bits: (?<bits>[\\d,.kmb]+)")
-    private val motesRegex = currencyGroup.create("motes", "^Motes: (?<motes>[\\d,.kmb]+)")
-    private val copperRegex = currencyGroup.create("copper", "^Copper: (?<copper>[\\d,.kmb]+)")
-    private val sowdustRegex = currencyGroup.create("sowdust", "^Sowdust: (?<sowdust>[\\d,.kmb]+)")
-    private val northStarsRegex = currencyGroup.create("northstars", "^North Stars: (?<northstars>[\\d,.kmb]+)")
+    private val purseRegex = currencyGroup.create("purse", "^(?<type>Purse|Piggy): (?<purse>(?i)[\\d,.kmb]+)")
+    private val bitsRegex = currencyGroup.create("bits", "^Bits: (?<bits>(?i)[\\d,.kmb]+)")
+    private val motesRegex = currencyGroup.create("motes", "^Motes: (?<motes>(?i)[\\d,.kmb]+)")
+    private val copperRegex = currencyGroup.create("copper", "^Copper: (?<copper>(?i)[\\d,.kmb]+)")
+    private val sowdustRegex = currencyGroup.create("sowdust", "^Sowdust: (?<sowdust>(?i)[\\d,.kmb]+)")
+    private val northStarsRegex = currencyGroup.create("northstars", "^North Stars: (?<northstars>(?i)[\\d,.kmb]+)")
 
     var purse: Double by CurrencyStorage::purse
         private set

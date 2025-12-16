@@ -48,7 +48,7 @@ fun String?.parseFormattedInt(default: Int = 0): Int = parseFormattedLong(defaul
 @JvmOverloads
 fun String?.parseFormattedDouble(default: Double = 0.0): Double = runCatching {
     val commaless = this?.lowercase()?.replace(",", "")
-    val multiplier = formattedMultiplier.entries.firstOrNull { commaless?.endsWith(it.key) == true }?.value
+    val multiplier = formattedMultiplier.entries.firstOrNull { commaless?.endsWith(it.key, true) == true }?.value
     return@runCatching if (multiplier != null) {
         commaless?.dropLast(1)?.toDouble()?.times(multiplier) ?: default
     } else {
