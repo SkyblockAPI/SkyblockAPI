@@ -4110,17 +4110,20 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/HotfAPI : tec
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData : tech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTreeData {
 	public fun <init> ()V
-	public fun <init> (Ljava/util/Map;I)V
-	public synthetic fun <init> (Ljava/util/Map;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/Map;II)V
+	public synthetic fun <init> (Ljava/util/Map;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/Map;
 	public final fun component2 ()I
-	public final fun copy (Ljava/util/Map;I)Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData;
-	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData;Ljava/util/Map;IILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData;
+	public final fun component3 ()I
+	public final fun copy (Ljava/util/Map;II)Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData;Ljava/util/Map;IIILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/hotf/HotfData;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getPerks ()Ljava/util/Map;
+	public fun getTier ()I
 	public fun getTokens ()I
 	public fun hashCode ()I
 	public fun setPerks (Ljava/util/Map;)V
+	public fun setTier (I)V
 	public fun setTokens (I)V
 	public fun toString ()Ljava/lang/String;
 }
@@ -4167,17 +4170,20 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/HotmAPI : tec
 public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/HotmData : tech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTreeData {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/profile/hotm/HotmData$Companion;
 	public fun <init> ()V
-	public fun <init> (Ljava/util/Map;I)V
-	public synthetic fun <init> (Ljava/util/Map;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/Map;II)V
+	public synthetic fun <init> (Ljava/util/Map;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/Map;
 	public final fun component2 ()I
-	public final fun copy (Ljava/util/Map;I)Ltech/thatgravyboat/skyblockapi/api/profile/hotm/HotmData;
-	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/hotm/HotmData;Ljava/util/Map;IILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/hotm/HotmData;
+	public final fun component3 ()I
+	public final fun copy (Ljava/util/Map;II)Ltech/thatgravyboat/skyblockapi/api/profile/hotm/HotmData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/hotm/HotmData;Ljava/util/Map;IIILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/hotm/HotmData;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getPerks ()Ljava/util/Map;
+	public fun getTier ()I
 	public fun getTokens ()I
 	public fun hashCode ()I
 	public fun setPerks (Ljava/util/Map;)V
+	public fun setTier (I)V
 	public fun setTokens (I)V
 	public fun toString ()Ljava/lang/String;
 }
@@ -4802,15 +4808,19 @@ public abstract class tech/thatgravyboat/skyblockapi/api/profile/skilltree/Skill
 	protected abstract fun createPerk (IZZ)Ltech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTreePerk;
 	public final fun getActivePerks ()Ljava/util/Map;
 	protected fun getDisabledRegex ()Lkotlin/text/Regex;
+	protected final fun getInventoryGroup ()Ltech/thatgravyboat/skyblockapi/utils/regex/RegexGroup;
 	protected fun getLevelRegex ()Lkotlin/text/Regex;
 	protected fun getMainItemRegex ()Lkotlin/text/Regex;
 	public final fun getName ()Ljava/lang/String;
 	public fun getPerks ()Ljava/util/Map;
+	public fun getTier ()I
+	protected fun getTierRegex ()Lkotlin/text/Regex;
+	protected fun getTierUnlockedRegex ()Lkotlin/text/Regex;
 	public fun getTokens ()I
 	protected fun getTokensRegex ()Lkotlin/text/Regex;
 	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTreeType;
 	public final fun getUnlockedPerks ()Ljava/util/Map;
-	protected fun isUnlocked (Lnet/minecraft/world/item/ItemStack;)Z
+	protected abstract fun isUnlocked (Lnet/minecraft/world/item/ItemStack;)Z
 	public fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 }
 
@@ -4859,8 +4869,10 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTre
 
 public abstract interface class tech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTreeData {
 	public abstract fun getPerks ()Ljava/util/Map;
+	public abstract fun getTier ()I
 	public abstract fun getTokens ()I
 	public abstract fun setPerks (Ljava/util/Map;)V
+	public abstract fun setTier (I)V
 	public abstract fun setTokens (I)V
 }
 
