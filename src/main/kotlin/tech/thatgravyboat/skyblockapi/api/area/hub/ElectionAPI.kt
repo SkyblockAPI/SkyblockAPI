@@ -192,10 +192,10 @@ object ElectionAPI {
                         appendLine("Current Jerry Candidate: $candidate [${time.until()}]")
                     }
                     appendLine("Active perks: ${MayorPerks.perks.filter { it.active }}")
-                    val overriden = MayorPerks.perks.filter { it.overrideState != DEFAULT }
-                    if (overriden.isNotEmpty()) {
+                    val overridden = MayorPerks.perks.filter { it.overrideState != DEFAULT }
+                    if (overridden.isNotEmpty()) {
                         appendLine("Perks with override: ")
-                        overriden.forEach { perk ->
+                        overridden.forEach { perk ->
                             appendLine("  - ${perk.id}: ${perk.overrideState}")
                         }
                     }
