@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
+import net.minecraft.util.TriState
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
@@ -25,8 +26,8 @@ data class MayorCandidate internal constructor(
 }
 
 object MayorCandidates {
-    private val _mayors = mutableMapOf<String, MayorCandidate>()
-    val mayors: Collection<MayorCandidate> by _mayors::values
+    internal val mayorsMap = mutableMapOf<String, MayorCandidate>()
+    val mayors: Collection<MayorCandidate> by mayorsMap::values
 
     //region Candidates
     val AATROX = register("Aatrox", MayorPerks.SLASHED_PRICING, MayorPerks.SLAYER_XP_BUFF, MayorPerks.PATHFINDER)
@@ -45,11 +46,11 @@ object MayorCandidates {
     val AURA = register("Aura", MayorPerks.FUNDRAISING, MayorPerks.MINION_UNION, MayorPerks.UNIVERSAL_INCOME, MayorPerks.WORK_BETTER, MayorPerks.WORK_HARDER, MayorPerks.WORK_SMARTER, isSpecial = true)
     //endregion
 
-    fun getCandidateById(id: String): MayorCandidate? = _mayors[id]
+    fun getCandidateById(id: String): MayorCandidate? = mayorsMap[id]
     fun getCandidate(candidateName: String): MayorCandidate? = mayors.find { it.candidateName == candidateName }
 
     internal fun register(candidateName: String, vararg perks: MayorPerk, id: String = candidateName.toScreamingSnakeCase(), isSpecial: Boolean = false): MayorCandidate {
-        return _mayors.getOrPut(id) { MayorCandidate(id, candidateName, perks.toMutableSet(), isSpecial) }
+        return mayorsMap.getOrPut(id) { MayorCandidate(id, candidateName, perks.toMutableSet(), isSpecial) }
     }
 }
 
@@ -59,15 +60,17 @@ data class MayorPerk internal constructor(
     val perkName: String,
     var description: String = "Not available",
 ) {
+    internal var overrideState: TriState = DEFAULT
     var active: Boolean = false
+        get() = overrideState.toBoolean(field)
         internal set
 }
 
 
 @Suppress("unused")
 object MayorPerks {
-    private val _perks = mutableMapOf<String, MayorPerk>()
-    val perks: Collection<MayorPerk> by _perks::values
+    internal val perksMap = mutableMapOf<String, MayorPerk>()
+    val perks: Collection<MayorPerk> by perksMap::values
 
     //region Perks
     // Aatrox
@@ -142,11 +145,11 @@ object MayorPerks {
 
     fun reset() = perks.forEach { it.active = false }
 
-    fun getPerkById(id: String): MayorPerk? = _perks[id]
+    fun getPerkById(id: String): MayorPerk? = perksMap[id]
     fun getPerk(perkName: String) = perks.find { it.perkName == perkName }
 
     internal fun register(perkName: String, id: String = perkName.toScreamingSnakeCase()): MayorPerk {
-        return _perks.getOrPut(id) { MayorPerk(id, perkName) }
+        return perksMap.getOrPut(id) { MayorPerk(id, perkName) }
     }
 }
 
