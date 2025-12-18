@@ -8,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreePerk
 data class HotfData(
     override var perks: MutableMap<String, HotfPerk> = mutableMapOf(),
     override var tokens: Int = 0,
+    override var tier: Int = 0,
 ) : SkillTreeData<HotfPerk>
 
 @GenerateCodec
