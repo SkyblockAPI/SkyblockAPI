@@ -178,7 +178,7 @@ object ElectionAPI {
                                 hover = Text.of(perk.perkName, TextColor.GOLD)
                             }
                             append(" to ")
-                            append(perk.description, TextColor.GOLD)
+                            append(state.name, TextColor.GOLD)
                             append(".")
                         }
                     }
