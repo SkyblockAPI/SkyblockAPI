@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
@@ -28,23 +29,31 @@ import kotlin.io.path.notExists
 import kotlin.io.path.reader
 import kotlin.reflect.KProperty
 
-internal fun debugToggle(path: String, description: String = path): DebugToggle {
-    return DebugToggle(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils)
+internal fun debugToggle(path: String, description: String = path): DebugToggle = DebugToggle(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils)
+internal fun <E : Enum<*>> debugSelect(path: String, description: String = path): DebugSelect<E> =
+    DebugSelect(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils)
+
+abstract class DebugProperty<Type>(open val location: Identifier, open val description: String, val devUtils: DevUtils) {
+    abstract operator fun getValue(any: Nothing?, property: KProperty<*>): Type?
+    abstract operator fun getValue(any: Any?, property: KProperty<*>): Type?
 }
 
-open class DebugToggle(open val location: Identifier, open val description: String, val devUtils: DevUtils) {
+open class DebugToggle(location: Identifier, description: String, devUtils: DevUtils) : DebugProperty<Boolean>(location, description, devUtils) {
     init {
         devUtils.register(this)
     }
 
-    operator fun getValue(any: Nothing?, property: KProperty<*>): Boolean {
-        return devUtils.isOn(location)
+    override operator fun getValue(any: Nothing?, property: KProperty<*>): Boolean = devUtils.isOn(location)
+    override operator fun getValue(any: Any?, property: KProperty<*>): Boolean = devUtils.isOn(location)
+}
+
+open class DebugSelect<E : Enum<*>>(location: Identifier, description: String, devUtils: DevUtils) : DebugProperty<E>(location, description, devUtils) {
+    init {
+        devUtils.register(this)
     }
 
-    operator fun getValue(any: Any?, property: KProperty<*>): Boolean {
-        return devUtils.isOn(location)
-    }
-
+    override operator fun getValue(any: Nothing?, property: KProperty<*>): E? = devUtils.getState(location)
+    override operator fun getValue(any: Any?, property: KProperty<*>): E? = devUtils.getState(location)
 }
 
 @Module
@@ -79,14 +88,21 @@ internal object SkyBlockApiDevUtils : DevUtils() {
         }
         return map
     }
-
-    @Subscription
-    fun commandRegister(event: RegisterCommandsEvent) = super.onCommandRegister(event)
 }
 
 abstract class DevUtils {
-    val states = mutableMapOf<Identifier, Boolean>()
+
+    @RemoveNextVersion
     val toggles = mutableListOf<DebugToggle>()
+
+    val states = mutableMapOf<Identifier, Boolean>()
+    val selects = mutableMapOf<Identifier, Enum<*>?>()
+    val debugs = mutableListOf<DebugProperty<*>>()
+
+    fun register(debugProperty: DebugSelect<*>) {
+        selects.putIfAbsent(debugProperty.location, null)
+        debugs += debugProperty
+    }
 
     fun register(debugToggle: DebugToggle) {
         states.putIfAbsent(debugToggle.location, false)
@@ -96,9 +112,15 @@ abstract class DevUtils {
     fun toggle(location: Identifier) {
         states[location] = states[location]?.not() == true
     }
-
     fun isOn(location: Identifier) = states.getOrDefault(location, false)
 
+    fun setState(location: Identifier, state: Enum<*>) {
+        selects[location] = state
+    }
+
+    fun <E : Enum<*>> getState(location: Identifier): E? = selects[location] as E?
+
+    @Subscription(inherited = true)
     fun onCommandRegister(event: RegisterCommandsEvent) {
         event.register(commandName) {
             then("location", VirtualResourceArgument(states.keys, SkyBlockAPI.NAMESPACE), DevToolSuggestionProvider(this@DevUtils)) {
