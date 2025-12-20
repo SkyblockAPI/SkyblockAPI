@@ -106,7 +106,7 @@ abstract class DevUtils {
 
     fun register(debugToggle: DebugToggle) {
         states.putIfAbsent(debugToggle.location, false)
-        toggles += debugToggle
+        debugs += debugToggle
     }
 
     fun toggle(location: Identifier) {
