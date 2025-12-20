@@ -15,6 +15,7 @@ import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.SkyBlockLocationEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.debugSelect
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
@@ -97,6 +98,13 @@ object LocationAPI {
 
     var lastServerChange: Instant = Instant.DISTANT_PAST
         private set
+
+    internal val skyblockIslandOverride by debugSelect(
+        "island_override",
+        "Forces an island to be active",
+        null,
+        SkyBlockIsland.entries
+    )
 
     @Subscription
     fun onServerChange(event: ServerChangeEvent) {

@@ -27,18 +27,17 @@ enum class SkyBlockIsland(val id: String, displayName: String? = null) {
     JERRYS_WORKSHOP("winter", "Jerry's Workshop"),
     ;
 
-    fun inIsland() = LocationAPI.island == this
+    fun inIsland() = if (LocationAPI.skyblockIslandOverride == null) LocationAPI.island == this else LocationAPI.skyblockIslandOverride == this
 
     val displayName = displayName ?: toFormattedName()
 
     override fun toString() = displayName
 
     companion object {
-
         fun getById(input: String) = entries.firstOrNull { it.id == input }
 
-        fun inAnyIsland(vararg islands: SkyBlockIsland) = LocationAPI.island in islands
+        fun inAnyIsland(vararg islands: SkyBlockIsland) = islands.any { it.inIsland() }
 
-        fun inAnyIsland(islands: Collection<SkyBlockIsland>) = LocationAPI.island in islands
+        fun inAnyIsland(islands: Collection<SkyBlockIsland>) = islands.any { it.inIsland() }
     }
 }
