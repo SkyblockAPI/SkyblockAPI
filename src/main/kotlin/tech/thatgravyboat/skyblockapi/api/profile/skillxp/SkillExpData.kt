@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class SkillExpData(
+internal data class SkillExpData(
     val exp: MutableMap<HypixelSkillAPI.Skill, Float> = mutableMapOf(),
 ) {
     companion object {
