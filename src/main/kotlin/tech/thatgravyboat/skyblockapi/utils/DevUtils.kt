@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils
 
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.suggestion.SuggestionProvider
 import com.mojang.brigadier.suggestion.Suggestions
@@ -12,6 +13,7 @@ import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.utils.command.VirtualResourceArgument
@@ -43,6 +45,51 @@ open class DebugToggle(open val location: Identifier, open val description: Stri
 
     operator fun getValue(any: Any?, property: KProperty<*>): Boolean {
         return devUtils.isOn(location)
+    }
+
+}
+
+internal fun <T : Any> debugSelect(
+    path: String,
+    description: String = path,
+    initialState: T?,
+    states: List<T>,
+    toString: (T) -> String = { it.toString() },
+): DebugSelect<T> {
+    return DebugSelect(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils, initialState, toString, states)
+}
+
+internal inline fun <reified T : Enum<T>> debugSelect(
+    path: String,
+    description: String = path,
+    initialState: T? = null,
+): DebugSelect<T> = debugSelect(path, description, initialState, T::class.java.enumConstants.toList())
+
+open class DebugSelect<T : Any>(
+    open val location: Identifier,
+    open val description: String,
+    val devUtils: DevUtils,
+    private var state: T? = null,
+    private val toString: (T) -> String,
+    private val states: List<T>,
+) {
+    init {
+        devUtils.register(this)
+    }
+
+    operator fun getValue(any: Nothing?, property: KProperty<*>): T? {
+        return state
+    }
+
+    operator fun getValue(any: Any?, property: KProperty<*>): T? {
+        return state
+    }
+
+    fun stateName() = this.state?.let { toString(it) }
+
+    fun states(): List<String> = states.map(toString)
+    fun setByName(name: String) {
+        this.state = states.find { toString(it) == name }
     }
 
 }
@@ -84,9 +131,17 @@ internal object SkyBlockApiDevUtils : DevUtils() {
     fun commandRegister(event: RegisterCommandsEvent) = super.onCommandRegister(event)
 }
 
+@Suppress("UNCHECKED_CAST")
+private fun <V> Any.unsafe(): V = this as V
+
 abstract class DevUtils {
     val states = mutableMapOf<Identifier, Boolean>()
     val toggles = mutableListOf<DebugToggle>()
+    val select = mutableMapOf<Identifier, DebugSelect<Any>>()
+
+    fun <T : Any> register(debugSelect: DebugSelect<T>) {
+        select[debugSelect.location] = debugSelect.unsafe()
+    }
 
     fun register(debugToggle: DebugToggle) {
         states.putIfAbsent(debugToggle.location, false)
@@ -101,9 +156,13 @@ abstract class DevUtils {
 
     fun onCommandRegister(event: RegisterCommandsEvent) {
         event.register(commandName) {
-            then("location", VirtualResourceArgument(states.keys, SkyBlockAPI.NAMESPACE), DevToolSuggestionProvider(this@DevUtils)) {
+            then(
+                "toggle",
+                VirtualResourceArgument(states.keys, SkyBlockAPI.NAMESPACE),
+                DevToolSuggestionProvider(toggles, DebugToggle::location, DebugToggle::description),
+            ) {
                 callback {
-                    val argument = this.getArgument("location", Identifier::class.java)
+                    val argument = this.getArgument("toggle", Identifier::class.java)
                     toggle(argument)
                     send(
                         Text.of("Toggled ") {
@@ -119,6 +178,48 @@ abstract class DevUtils {
                     )
                 }
             }
+            then(
+                "select",
+                VirtualResourceArgument(select.keys, SkyBlockAPI.NAMESPACE),
+                DevToolSuggestionProvider(select.values, DebugSelect<*>::location, DebugSelect<*>::description),
+            ) {
+                thenCallback(
+                    "value",
+                    StringArgumentType.greedyString(),
+                    { context, builder ->
+                        val toggle = select[context.argument<Identifier>("select")] ?: return@thenCallback builder.buildFuture()
+
+                        toggle.states().forEach {
+                            if (SharedSuggestionProvider.matchesSubStr(builder.remaining, it)) {
+                                builder.suggest(it)
+                            }
+                        }
+
+                        builder.buildFuture()
+                    },
+                ) {
+                    val location = argument<Identifier>("select")
+                    val toggle = select[location] ?: return@thenCallback
+                    val value = argument<String>("value")
+
+                    val currentValue = toggle.stateName()
+                    toggle.setByName(value)
+                    val nextValue = toggle.stateName()
+
+                    send(
+                        Text.of("Changed value for ") {
+                            append(location.toString()) {
+                                this.color = TextColor.GOLD
+                            }
+                            append(": ")
+
+                            append(currentValue.toString()) { this.color = TextColor.RED }
+                            append(" -> ")
+                            append(nextValue.toString()) { this.color = TextColor.GREEN }
+                        },
+                    )
+                }
+            }
         }
     }
 
@@ -126,14 +227,15 @@ abstract class DevUtils {
     abstract fun send(component: MutableComponent)
 }
 
-private data class DevToolSuggestionProvider(val utils: DevUtils) : SuggestionProvider<FabricClientCommandSource> {
+private data class DevToolSuggestionProvider<T>(val utils: Iterable<T>, val location: T.() -> Identifier, val description: T.() -> String) :
+    SuggestionProvider<FabricClientCommandSource> {
     override fun getSuggestions(context: CommandContext<FabricClientCommandSource>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
         fun matches(arg: String): Boolean = SharedSuggestionProvider.matchesSubStr(builder.remaining.lowercase(), arg)
 
 
-        utils.toggles.forEach {
-            if (matches(it.location.toString().lowercase()) || matches(it.location.path.lowercase())) {
-                builder.suggest(it.location.toString()) { it.description }
+        utils.forEach {
+            if (matches(it.location().toString().lowercase()) || matches(it.location().path.lowercase())) {
+                builder.suggest(it.location().toString()) { it.description() }
             }
         }
 
