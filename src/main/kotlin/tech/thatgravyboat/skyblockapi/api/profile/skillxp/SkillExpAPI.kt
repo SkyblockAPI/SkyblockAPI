@@ -56,8 +56,8 @@ object SkillExpAPI {
         val skill = event.skill ?: return
 
         // if needed is 0, they are at max level
-        val skillxp = if (event.needed == 0L) skill.data.getTotalExpForLevel(skill.data.maxLevel)
-        else skill.data.getTotalExpForLevel(SkillExpStorage.getLevel(skill))
+        val level = if (event.needed == 0L) skill.data.maxLevel else SkillExpStorage.getLevel(skill)
+        val skillxp = skill.data.getTotalExpForLevel(level)
         val diff = (event.current + skillxp) - SkillExpStorage.getXp(skill)
         if (diff != 0f) {
             SkillExpStorage.addXp(skill, diff)
