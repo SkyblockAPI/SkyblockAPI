@@ -57,7 +57,7 @@ object CommunityCenterAPI {
     fun onBitsUpdate(event: CurrencyUpdateEvent.Bits) {
         val diff = event.diff
         if (diff < 0) return // You have spent bits, not gained
-        bitsAvailable -= diff
+        bitsAvailable = (bitsAvailable - diff).coerceAtLeast(0)
     }
 
     @Subscription
