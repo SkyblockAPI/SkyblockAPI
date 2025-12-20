@@ -54,7 +54,7 @@ internal fun <T : Any> debugSelect(
     description: String = path,
     initialState: T?,
     states: List<T>,
-    toString: (T) -> String = { it.toString() }
+    toString: (T) -> String = { it.toString() },
 ): DebugSelect<T> {
     return DebugSelect(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils, initialState, toString, states)
 }
@@ -96,7 +96,7 @@ open class DebugSelect<T : Any>(
 
 @Module
 internal object SkyBlockApiDevUtils : DevUtils() {
-    override val commandName: String = "sbapi"
+    override val commandName: String = "sbapi toggle"
     override fun send(component: MutableComponent) = component.sendWithPrefix()
     val properties: Map<String, String> = loadFromProperties()
 
@@ -156,72 +156,68 @@ abstract class DevUtils {
 
     fun onCommandRegister(event: RegisterCommandsEvent) {
         event.register(commandName) {
-            then("toggle") {
-                then(
-                    "location",
-                    VirtualResourceArgument(states.keys, SkyBlockAPI.NAMESPACE),
-                    DevToolSuggestionProvider(toggles, DebugToggle::location, DebugToggle::description),
-                ) {
-                    callback {
-                        val argument = this.getArgument("location", Identifier::class.java)
-                        toggle(argument)
-                        send(
-                            Text.of("Toggled ") {
-                                append(argument.toString()) {
-                                    this.color = TextColor.GOLD
-                                }
-                                if (isOn(argument)) {
-                                    append(" on") { this.color = TextColor.GREEN }
-                                } else {
-                                    append(" off") { this.color = TextColor.RED }
-                                }
-                            },
-                        )
-                    }
+            then(
+                "toggle",
+                VirtualResourceArgument(states.keys, SkyBlockAPI.NAMESPACE),
+                DevToolSuggestionProvider(toggles, DebugToggle::location, DebugToggle::description),
+            ) {
+                callback {
+                    val argument = this.getArgument("toggle", Identifier::class.java)
+                    toggle(argument)
+                    send(
+                        Text.of("Toggled ") {
+                            append(argument.toString()) {
+                                this.color = TextColor.GOLD
+                            }
+                            if (isOn(argument)) {
+                                append(" on") { this.color = TextColor.GREEN }
+                            } else {
+                                append(" off") { this.color = TextColor.RED }
+                            }
+                        },
+                    )
                 }
             }
-            then("select") {
-                then(
-                    "location",
-                    VirtualResourceArgument(select.keys, SkyBlockAPI.NAMESPACE),
-                    DevToolSuggestionProvider(select.values, DebugSelect<*>::location, DebugSelect<*>::description),
-                ) {
-                    thenCallback(
-                        "value",
-                        StringArgumentType.greedyString(),
-                        { context, builder ->
-                            val toggle = select[context.argument<Identifier>("location")] ?: return@thenCallback builder.buildFuture()
+            then(
+                "select",
+                VirtualResourceArgument(select.keys, SkyBlockAPI.NAMESPACE),
+                DevToolSuggestionProvider(select.values, DebugSelect<*>::location, DebugSelect<*>::description),
+            ) {
+                thenCallback(
+                    "value",
+                    StringArgumentType.greedyString(),
+                    { context, builder ->
+                        val toggle = select[context.argument<Identifier>("select")] ?: return@thenCallback builder.buildFuture()
 
-                            toggle.states().forEach {
-                                if (SharedSuggestionProvider.matchesSubStr(builder.remaining, it)) {
-                                    builder.suggest(it)
-                                }
+                        toggle.states().forEach {
+                            if (SharedSuggestionProvider.matchesSubStr(builder.remaining, it)) {
+                                builder.suggest(it)
                             }
+                        }
 
-                            builder.buildFuture()
+                        builder.buildFuture()
+                    },
+                ) {
+                    val location = argument<Identifier>("select")
+                    val toggle = select[location] ?: return@thenCallback
+                    val value = argument<String>("value")
+
+                    val currentValue = toggle.stateName()
+                    toggle.setByName(value)
+                    val nextValue = toggle.stateName()
+
+                    send(
+                        Text.of("Changed value for ") {
+                            append(location.toString()) {
+                                this.color = TextColor.GOLD
+                            }
+                            append(": ")
+
+                            append(currentValue.toString()) { this.color = TextColor.RED }
+                            append(" -> ")
+                            append(nextValue.toString()) { this.color = TextColor.GREEN }
                         },
-                    ) {
-                        val location = argument<Identifier>("location")
-                        val toggle = select[location] ?: return@thenCallback
-                        val value = argument<String>("value")
-
-                        val currentValue = toggle.stateName()
-                        toggle.setByName(value)
-                        val nextValue = toggle.stateName()
-
-                        send(
-                            Text.of("Changed value for ") {
-                                append(location.toString()) {
-                                    this.color = TextColor.GOLD
-                                }
-                                append(": ")
-
-                                append(currentValue.toString()) { this.color = TextColor.RED }
-                                append(" -> ")
-                                append(nextValue.toString()) { this.color = TextColor.GREEN }
-                            },
-                        )
-                    }
+                    )
                 }
             }
         }
