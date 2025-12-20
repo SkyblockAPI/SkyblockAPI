@@ -3450,6 +3450,7 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/sources/Ba
 public final class tech/thatgravyboat/skyblockapi/api/location/LocationAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/location/LocationAPI;
 	public final fun getArea ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getForceIsland ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public final fun getForceOnSkyblock ()Z
 	public final fun getIsland ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public final fun getLastServerChange ()Lkotlin/time/Instant;
@@ -6207,6 +6208,19 @@ public final class tech/thatgravyboat/skyblockapi/platform/WorldRenderContextPla
 	public static synthetic fun drawString-JuOCnSk$default (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent;Lnet/minecraft/util/FormattedCharSequence;FFIZLnet/minecraft/client/gui/Font$DisplayMode;IIILjava/lang/Object;)V
 }
 
+public class tech/thatgravyboat/skyblockapi/utils/DebugSelect {
+	public fun <init> (Lnet/minecraft/resources/ResourceLocation;Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/DevUtils;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Ljava/util/List;)V
+	public synthetic fun <init> (Lnet/minecraft/resources/ResourceLocation;Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/DevUtils;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getDescription ()Ljava/lang/String;
+	public final fun getDevUtils ()Ltech/thatgravyboat/skyblockapi/utils/DevUtils;
+	public fun getLocation ()Lnet/minecraft/resources/ResourceLocation;
+	public final fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Ljava/lang/Object;
+	public final fun getValue (Ljava/lang/Void;Lkotlin/reflect/KProperty;)Ljava/lang/Object;
+	public final fun setByName (Ljava/lang/String;)V
+	public final fun stateName ()Ljava/lang/String;
+	public final fun states ()Ljava/util/List;
+}
+
 public class tech/thatgravyboat/skyblockapi/utils/DebugToggle {
 	public fun <init> (Lnet/minecraft/resources/ResourceLocation;Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/DevUtils;)V
 	public fun getDescription ()Ljava/lang/String;
@@ -6219,10 +6233,12 @@ public class tech/thatgravyboat/skyblockapi/utils/DebugToggle {
 public abstract class tech/thatgravyboat/skyblockapi/utils/DevUtils {
 	public fun <init> ()V
 	public abstract fun getCommandName ()Ljava/lang/String;
+	public final fun getSelect ()Ljava/util/Map;
 	public final fun getStates ()Ljava/util/Map;
 	public final fun getToggles ()Ljava/util/List;
 	public final fun isOn (Lnet/minecraft/resources/ResourceLocation;)Z
 	public final fun onCommandRegister (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	public final fun register (Ltech/thatgravyboat/skyblockapi/utils/DebugSelect;)V
 	public final fun register (Ltech/thatgravyboat/skyblockapi/utils/DebugToggle;)V
 	public abstract fun send (Lnet/minecraft/network/chat/MutableComponent;)V
 	public final fun toggle (Lnet/minecraft/resources/ResourceLocation;)V
