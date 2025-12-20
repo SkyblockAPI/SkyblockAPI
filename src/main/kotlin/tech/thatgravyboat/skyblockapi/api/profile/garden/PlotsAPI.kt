@@ -186,13 +186,15 @@ object PlotAPI {
             pests = amount.toIntValue()
         }
         val locked = item.getRawLore().any { it == "Cost:" }
+        val isGreenhouse = item.getRawLore().any { it == "Greenhouse Plot" }
 
         val plot = PlotData(
-            plotId,
-            name,
-            Pest(pests, inaccurate = false),
-            itemId,
-            locked,
+            id = plotId,
+            name = name,
+            pest = Pest(pests, inaccurate = false),
+            deskIcon = itemId,
+            isGreenhouse = isGreenhouse,
+            locked = locked,
         )
         plot.save()
     }
@@ -289,9 +291,14 @@ object PlotAPI {
                 val string = buildList {
                     add("Plots:")
                     PlotsStorage.plots.forEach { plot ->
-                        val pest = plot.pest
-                        val pestText = if (pest.inaccurate) " (Inacc)" else ""
-                        add("  - Plot ${plot.id}: ${plot.name}, Pests: ${pest.pest}$pestText, Locked: ${plot.locked}, Icon: ${plot.deskIcon ?: "None"}")
+                        val string = buildString {
+                            append("  - Plot ${plot.id}: ${plot.name}, ")
+                            append("Pests: ${plot.pest}${if (plot.pest.inaccurate) " (Inacc)" else ""}, ")
+                            append("Locked: ${plot.locked}, ")
+                            append("Icon: ${plot.deskIcon ?: "None"}, ")
+                            append("Greenhouse: ${plot.isGreenhouse}")
+                        }
+                        add(string)
                     }
                 }
 
@@ -319,6 +326,7 @@ data class PlotData(
     var name: String,
     var pest: Pest,
     var deskIcon: String?,
+    var isGreenhouse: Boolean = false,
     var locked: Boolean = false,
 ) {
     constructor(id: Int, pest: Pest, deskIcon: String? = null, locked: Boolean = false) : this(id, "$id", pest, deskIcon, locked)

@@ -12,8 +12,10 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.SkyBlockLocationEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.debugSelect
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
@@ -46,12 +48,19 @@ object LocationAPI {
     )
 
     val forceOnSkyblock by debugToggle("force_skyblock", "Always returns true for SkyBlock checks")
+    val forceIsland by debugSelect<SkyBlockIsland>("force_island", "Force a specific island to be returned")
 
     var isOnSkyBlock: Boolean = false
         get() = field || forceOnSkyblock
-        private set
+        private set(value) {
+            if (field != value) {
+                field = value
+                if (value) SkyBlockLocationEvent.Join.post() else SkyBlockLocationEvent.Leave.post()
+            }
+        }
 
     var island: SkyBlockIsland? = null
+        get() = forceIsland ?: field
         private set
 
     var area: SkyBlockArea = SkyBlockAreas.NONE

@@ -4,12 +4,14 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.SkillTreeStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTagKey
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 
 abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Self : SkillTreeAPI<Data, Perk, Self>> internal constructor(
     val name: String,
@@ -18,13 +20,15 @@ abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Se
     identifier: String,
     val type: SkillTreeType<Self>,
 ) {
-    private val inventoryGroup = RegexGroup.INVENTORY.group(name)
+    protected val inventoryGroup = RegexGroup.INVENTORY.group(name)
 
     internal open val titleRegex = inventoryGroup.create("title", "Heart of the $identifier")
     protected open val levelRegex = inventoryGroup.create("level", "Level (?<level>\\d+)(?:/\\d+)?")
     protected open val disabledRegex = inventoryGroup.create("disabled", "DISABLED|Click to select!")
     protected open val mainItemRegex = inventoryGroup.create("mainitem", "Heart of the $identifier")
     protected open val tokensRegex = inventoryGroup.create("tokens", "Tokens of the $identifier: (?<tokens>\\d+)")
+    protected open val tierRegex = inventoryGroup.create("tier", "Tier (?<tier>\\d+)")
+    protected open val tierUnlockedRegex = inventoryGroup.create("tier.unlocked", "UNLOCKED")
 
     open val perks: Map<String, Perk>
         get() = storage.perks
@@ -36,12 +40,25 @@ abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Se
     open val tokens: Int
         get() = storage.tokens
 
+    open val tier: Int
+        get() = storage.tier
+
     @Subscription(inherited = true)
     open fun onInventoryChange(event: InventoryChangeEvent) {
         if (!titleRegex.matches(event.title)) return
 
         val lore = event.item.getRawLore()
         val cleanName = event.item.cleanName
+
+        if (lore.isEmpty()) return
+
+        if (event.isOnLeftColumn) {
+            if (event.item !in ItemTag.GLASS_PANES) return
+            val tier = tierRegex.findGroup(cleanName, "tier")?.toIntValue() ?: return
+            val unlocked = tierUnlockedRegex.matches(lore.last())
+            if (unlocked) storage.setMinTier(tier)
+            return
+        }
 
         if (mainItemRegex.matches(cleanName)) {
             tokensRegex.anyMatch(lore, "tokens") { (tokens) ->
@@ -64,6 +81,6 @@ abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Se
     }
 
     protected open fun adjustLevel(level: Int): Int = level
-    protected open fun isUnlocked(item: ItemStack): Boolean = true
+    protected abstract fun isUnlocked(item: ItemStack): Boolean
     protected abstract fun createPerk(level: Int, unlocked: Boolean, disabled: Boolean): Perk
 }
