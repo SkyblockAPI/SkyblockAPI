@@ -292,7 +292,7 @@ object PartyAPI {
     }
 
     private fun remove(name: String) {
-        this.members = members.filter { it.name.equals(name, ignoreCase = true) }
+        this.members = members.filterNot { it.name.equals(name, ignoreCase = true) }
     }
 
     private fun ownPlayer(role: PartyRole = PartyRole.MEMBER) = PartyMember(McPlayer.name, role)
