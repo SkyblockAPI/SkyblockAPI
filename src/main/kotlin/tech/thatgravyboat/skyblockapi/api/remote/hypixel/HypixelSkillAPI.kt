@@ -58,7 +58,9 @@ object HypixelSkillAPI {
         val maxLevel: Int,
         val skillLevels: Map<Int, Long>,
     ) {
-        fun getTotalExpForLevel(level: Int) = skillLevels[level] ?: skillLevels.entries.lastOrNull()?.value ?: 0L
+        fun getTotalExpForLevel(level: Int): Long = skillLevels[level] ?: skillLevels.entries.lastOrNull()?.value ?: 0L
+        fun getXpForLevel(level: Int): Long = skillLevels[level]?.let { xpAtLevel -> xpAtLevel - (skillLevels[level - 1] ?: 0L) } ?: 0L
+        fun getLevelForExp(exp: Long): Int = skillLevels.entries.lastOrNull { exp >= it.value }?.key ?: 0
 
         companion object {
             internal val EMPTY = SkillData("", 0, emptyMap())
