@@ -2279,6 +2279,21 @@ public final class tech/thatgravyboat/skyblockapi/api/events/hypixel/ServerChang
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/hypixel/SkillExpGainedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;FF)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public final fun component2 ()F
+	public final fun component3 ()F
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;FF)Ltech/thatgravyboat/skyblockapi/api/events/hypixel/SkillExpGainedEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/SkillExpGainedEvent;Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;FFILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/hypixel/SkillExpGainedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAmount ()F
+	public final fun getCurrentXp ()F
+	public final fun getSkill ()Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$Skill;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget : java/lang/Enum {
 	public static final field ABILITY Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field ARMADILLO Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
@@ -4900,6 +4915,15 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTre
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTreeType$Hotm;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/profile/skillxp/SkillExpAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/skillxp/SkillExpAPI;
+	public final fun getSkills ()Ljava/util/Map;
+	public final fun onActionbarLiteral (Ltech/thatgravyboat/skyblockapi/api/events/info/SkillXpLiteralActionBarWidgetChangeEvent;)V
+	public final fun onActionbarPercent (Ltech/thatgravyboat/skyblockapi/api/events/info/SkillXpPercentActionBarWidgetChangeEvent;)V
+	public final fun onCommand (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	public final fun onInventory (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerData {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/profile/slayer/SlayerData$Companion;
 	public fun <init> ()V
@@ -5151,10 +5175,12 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkil
 	public final fun copy (Ljava/lang/String;ILjava/util/Map;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData;Ljava/lang/String;ILjava/util/Map;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI$SkillData;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLevelForExp (J)I
 	public final fun getMaxLevel ()I
 	public final fun getName ()Ljava/lang/String;
 	public final fun getSkillLevels ()Ljava/util/Map;
 	public final fun getTotalExpForLevel (I)J
+	public final fun getXpForLevel (I)J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
