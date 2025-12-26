@@ -6464,6 +6464,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/EntityExtensi
 	public static final fun getLeggings (Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;
 	public static final fun getServerHealth (Lnet/minecraft/world/entity/LivingEntity;)F
 	public static final fun getServerMaxHealth (Lnet/minecraft/world/entity/LivingEntity;)F
+	public static final fun getServerValue (Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;)F
 	public static final fun isRealPlayer (Lnet/minecraft/world/entity/player/Player;)Z
 }
 
