@@ -24,14 +24,14 @@ fun Player.isRealPlayer(): Boolean = uuid.version() == 4
 
 fun LivingEntity.getArmor(): List<ItemStack> = listOf(getHelmet(), getChestplate(), getLeggings(), getBoots())
 
+val AttributeInstance.serverValue: Float
+    get() = (this as? AttributeInstanceHook)?.`skyblockapi$getServerValue`()?.toFloat() ?: 0.0f
+
 val LivingEntity.serverMaxHealth: Float
     get() {
         val attribute = this.getAttribute(Attributes.MAX_HEALTH) ?: return this.maxHealth
         return (attribute as? AttributeInstanceHook)?.`skyblockapi$getServerValue`()?.toFloat() ?: this.maxHealth
     }
-
-val AttributeInstance.serverValue: Float
-    get() = (this as? AttributeInstanceHook)?.`skyblockapi$getServerValue`()?.toFloat() ?: 0.0f
 
 val LivingEntity.serverHealth: Float
     get() {
