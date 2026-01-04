@@ -95,7 +95,7 @@ public abstract class EntityMixin implements ListenForNameChange, EntityAttachme
         autoAttach = true;
         final List<Entity> entities = this.level.getEntities(self(), getBoundingBox().inflate(0, 1, 0));
         entities.sort(Comparator.comparing(e -> e.distanceToSqr(self())));
-        entities.removeIf(it -> it == null || it instanceof ArmorStand);
+        entities.removeIf(it -> it == null || it instanceof ArmorStand || !it.isAlive());
 
         int index = entities.indexOf(attachedTo);
         if ((index != -1 && index < 2) || entities.isEmpty()) {
