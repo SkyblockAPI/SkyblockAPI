@@ -8,6 +8,8 @@ import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuEnchantedBookRegex
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuPetRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
@@ -20,11 +22,14 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 typealias SkyBlockItemId = SkyBlockId
 
+
 @JvmInline
 value class SkyBlockId private constructor(val id: String) {
     companion object Companion {
         private val amountRegex = Regex(".*?x[\\d,]+")
         private val petRegex = Regex("\\[?lvl \\d+]? (.*)")
+        internal val neuEnchantedBookRegex = Regex("\\w+;\\d+")
+        internal val neuPetRegex = Regex("\\w+;\\w+")
 
         const val DELIMITER = ":"
         const val ITEM = "item$DELIMITER"
@@ -157,18 +162,8 @@ value class SkyBlockId private constructor(val id: String) {
     override fun toString() = "SkyBlockId($id)"
 }
 
-private fun ItemStack.getSbId(): SkyBlockId? = when (val data = DataTypes.ID.factory(this)) {
+private fun ItemStack.getSbId(): SkyBlockId? = when (val id = DataTypes.ID.factory(this)) {
     "RUNE", "UNIQUE_RUNE" -> DataTypes.USED_RUNE.factory(this)
-    "PET" -> DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
-    "ENCHANTED_BOOK" -> {
-        val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
-
-        when (enchants?.size) {
-            null, 0 -> SkyBlockId.enchantment(UNKNOWN)
-            1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key, value) }
-            else -> SkyBlockId.item("enchanted_book")
-        }
-    }
 
     "ATTRIBUTE_SHARD" -> {
         DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
@@ -180,5 +175,17 @@ private fun ItemStack.getSbId(): SkyBlockId? = when (val data = DataTypes.ID.fac
     "PARTY_HAT_CRAB_ANIMATED" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
     "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_$it") }
 
-    else -> data?.let(SkyBlockId::item)
+    else -> {
+        if (id == "ENCHANTED_BOOK" || (id != null && this.`is`(Items.ENCHANTED_BOOK) && neuEnchantedBookRegex.matches(id))) {
+            val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
+
+            when (enchants?.size) {
+                null, 0 -> SkyBlockId.enchantment(UNKNOWN)
+                1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key.lowercase(), value) }
+                else -> SkyBlockId.item("enchanted_book")
+            }
+        } else if (id == "PET" || (id != null && this.`is`(Items.PLAYER_HEAD) && neuPetRegex.matches(id))) {
+            DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
+        } else id?.let(SkyBlockId::item)
+    }
 }
