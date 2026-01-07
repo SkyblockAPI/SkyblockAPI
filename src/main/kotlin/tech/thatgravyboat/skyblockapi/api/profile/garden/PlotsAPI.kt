@@ -2,9 +2,11 @@ package tech.thatgravyboat.skyblockapi.api.profile.garden
 
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
+import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlotsStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.*
@@ -114,7 +116,9 @@ object PlotAPI {
     fun getPlot(id: Int): Plot? = plots.find { it.id == id }
     fun getPlotByName(name: String): Plot? = plots.find { it.data?.name == name }
 
-    fun getCurrentPlot(): Plot? = plots.find { McPlayer in it.aabb }
+    fun getPlot(pos: Vec3): Plot? = plots.find { pos in it.aabb }
+    fun getPlot(pos: BlockPos): Plot? = getPlot(Vec3(pos))
+    fun getCurrentPlot(): Plot? = McPlayer.position?.let(::getPlot)
 
 
     private fun clearPests() {
