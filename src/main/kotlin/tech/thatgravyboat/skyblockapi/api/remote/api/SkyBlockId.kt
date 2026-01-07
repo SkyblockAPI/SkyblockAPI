@@ -172,21 +172,20 @@ private fun ItemStack.getSbId(): SkyBlockId? = when (val id = DataTypes.ID.facto
     "PARTY_HAT_CRAB_ANIMATED" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
     "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_$it") }
 
-    else -> when {
-        id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id)) -> {
-            val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
+    else if id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id)) -> {
+          val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
 
-            when (enchants?.size) {
-                null, 0 -> SkyBlockId.enchantment(UNKNOWN)
-                1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key.lowercase(), value) }
-                else -> SkyBlockId.item("enchanted_book")
-            }
-        }
+          when (enchants?.size) {
+              null, 0 -> SkyBlockId.enchantment(UNKNOWN)
+              1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key.lowercase(), value) }
+              else -> SkyBlockId.item("enchanted_book")
+          }
+      }
 
-        id == "PET" || (this.`is`(Items.PLAYER_HEAD) && neuIdRegex.matches(id)) -> {
-            DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
-        }
+      else if id == "PET" || (this.`is`(Items.PLAYER_HEAD) && neuIdRegex.matches(id)) -> {
+          DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
+      }
 
-        else -> SkyBlockId.item(id)
+      else -> SkyBlockId.item(id)
     }
 }
