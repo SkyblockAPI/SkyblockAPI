@@ -208,10 +208,11 @@ public final class tech/thatgravyboat/skyblockapi/api/area/farming/TrapperAnimal
 	public final fun fromString (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/farming/TrapperAnimalType;
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop : java/lang/Enum {
+public class tech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop : java/lang/Enum {
 	public static final field CACTUS Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field CARROT Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field COCOA_BEANS Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop$Companion;
 	public static final field MELON Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field MOONFLOWER Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field MUSHROOM Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
@@ -222,14 +223,19 @@ public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop :
 	public static final field SUNFLOWER Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field WHEAT Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static final field WILD_ROSE Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
+	public synthetic fun <init> (Ljava/lang/String;ILtech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;[Lnet/minecraft/world/level/block/Block;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getBlocks ()Ljava/util/Set;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getIcon ()Lkotlin/jvm/functions/Function0;
 	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
 	public final fun getSkyBlockId-EnzYQXU ()Ljava/lang/String;
 	public final fun getTool ()Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool;
+	public fun isCrop (Lnet/minecraft/world/level/block/state/BlockState;)Z
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/Crop$Companion {
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/farming/garden/FarmingTool : java/lang/Enum {
@@ -4085,6 +4091,8 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/garden/PlotAPI {
 	public final fun getCurrentPestAmount ()I
 	public final fun getCurrentPlot ()Ltech/thatgravyboat/skyblockapi/api/profile/garden/Plot;
 	public final fun getPlot (I)Ltech/thatgravyboat/skyblockapi/api/profile/garden/Plot;
+	public final fun getPlot (Lnet/minecraft/core/BlockPos;)Ltech/thatgravyboat/skyblockapi/api/profile/garden/Plot;
+	public final fun getPlot (Lnet/minecraft/world/phys/Vec3;)Ltech/thatgravyboat/skyblockapi/api/profile/garden/Plot;
 	public final fun getPlotByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/garden/Plot;
 	public final fun getPlots ()Ljava/util/List;
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
