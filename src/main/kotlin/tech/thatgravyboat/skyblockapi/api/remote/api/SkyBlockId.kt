@@ -8,8 +8,7 @@ import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
-import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuEnchantedBookRegex
-import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuPetRegex
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuIdRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
@@ -22,14 +21,12 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 typealias SkyBlockItemId = SkyBlockId
 
-
 @JvmInline
 value class SkyBlockId private constructor(val id: String) {
     companion object Companion {
         private val amountRegex = Regex(".*?x[\\d,]+")
         private val petRegex = Regex("\\[?lvl \\d+]? (.*)")
-        internal val neuEnchantedBookRegex = Regex("\\w+;\\d+")
-        internal val neuPetRegex = Regex("\\w+;\\w+")
+        internal val neuIdRegex = Regex("\\w+;\\d+")
 
         const val DELIMITER = ":"
         const val ITEM = "item$DELIMITER"
@@ -176,7 +173,7 @@ private fun ItemStack.getSbId(): SkyBlockId? = when (val id = DataTypes.ID.facto
     "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_$it") }
 
     else -> when {
-        id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuEnchantedBookRegex.matches(id)) -> {
+        id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id)) -> {
             val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
 
             when (enchants?.size) {
@@ -186,7 +183,7 @@ private fun ItemStack.getSbId(): SkyBlockId? = when (val id = DataTypes.ID.facto
             }
         }
 
-        id == "PET" || (this.`is`(Items.PLAYER_HEAD) && neuPetRegex.matches(id)) -> {
+        id == "PET" || (this.`is`(Items.PLAYER_HEAD) && neuIdRegex.matches(id)) -> {
             DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
         }
 
