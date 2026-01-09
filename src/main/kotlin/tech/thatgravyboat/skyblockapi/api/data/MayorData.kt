@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
+import net.minecraft.util.TriState
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
@@ -27,6 +28,7 @@ data class MayorCandidate internal constructor(
 object MayorCandidates {
     private val _mayors = mutableMapOf<String, MayorCandidate>()
     val mayors: Collection<MayorCandidate> by _mayors::values
+    internal val mayorsMap: Map<String, MayorCandidate> by _mayors
 
     //region Candidates
     val AATROX = register("Aatrox", MayorPerks.SLASHED_PRICING, MayorPerks.SLAYER_XP_BUFF, MayorPerks.PATHFINDER)
@@ -59,7 +61,9 @@ data class MayorPerk internal constructor(
     val perkName: String,
     var description: String = "Not available",
 ) {
+    internal var overrideState: TriState = DEFAULT
     var active: Boolean = false
+        get() = overrideState.toBoolean(field)
         internal set
 }
 
@@ -68,6 +72,7 @@ data class MayorPerk internal constructor(
 object MayorPerks {
     private val _perks = mutableMapOf<String, MayorPerk>()
     val perks: Collection<MayorPerk> by _perks::values
+    internal val perksMap: Map<String, MayorPerk> by _perks
 
     //region Perks
     // Aatrox
