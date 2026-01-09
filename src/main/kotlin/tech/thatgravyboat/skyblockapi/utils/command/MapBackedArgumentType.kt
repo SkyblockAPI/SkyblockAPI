@@ -18,9 +18,9 @@ class MapBackedArgumentType<T>(
 ) : ArgumentType<T> {
 
     private val elementNotFound: DynamicCommandExceptionType = DynamicCommandExceptionType { id: Any? ->
-        Text.of("Element ") {
+        Text.of("Element '") {
             append("$id") { this.color = TextColor.GOLD }
-            append(" not found")
+            append("' not found")
         }
     }
 
