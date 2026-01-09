@@ -6417,6 +6417,13 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/EnumArgument$Com
 	public final fun create (Ljava/lang/Class;)Ltech/thatgravyboat/skyblockapi/utils/command/EnumArgument;
 }
 
+public final class tech/thatgravyboat/skyblockapi/utils/command/MapBackedArgumentType : com/mojang/brigadier/arguments/ArgumentType {
+	public fun <init> (Ljava/util/Map;ZLkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Ljava/util/Map;ZLkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun listSuggestions (Lcom/mojang/brigadier/context/CommandContext;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
+	public fun parse (Lcom/mojang/brigadier/StringReader;)Ljava/lang/Object;
+}
+
 public final class tech/thatgravyboat/skyblockapi/utils/extensions/GraphicsExtensionsKt {
 	public static final fun pushPop (Lcom/mojang/blaze3d/vertex/PoseStack;Lkotlin/jvm/functions/Function1;)V
 	public static final fun pushPop (Lnet/minecraft/client/gui/GuiGraphics;Lkotlin/jvm/functions/Function1;)V
