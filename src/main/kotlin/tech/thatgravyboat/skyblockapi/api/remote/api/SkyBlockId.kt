@@ -82,12 +82,9 @@ value class SkyBlockId private constructor(val id: String) {
         fun unsafe(id: String) = SkyBlockId("$UNSAFE$id")
 
         @IncludedCodec
-        val CODEC: Codec<SkyBlockId> = Codec.STRING
-            .xmap({ it.lowercase() }, { it })
-            .xmap(::SkyBlockId, SkyBlockId::id)
+        val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap(::SkyBlockId, SkyBlockId::id)
 
-        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it })
-            .xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
+        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
 
         fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
 
@@ -160,8 +157,6 @@ value class SkyBlockId private constructor(val id: String) {
 }
 
 private fun ItemStack.getSbId(): SkyBlockId? = when (val id = DataTypes.ID.factory(this) ?: return null) {
-    "RUNE", "UNIQUE_RUNE" -> DataTypes.USED_RUNE.factory(this)
-
     "ATTRIBUTE_SHARD" -> {
         DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
             .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
@@ -172,7 +167,7 @@ private fun ItemStack.getSbId(): SkyBlockId? = when (val id = DataTypes.ID.facto
     "PARTY_HAT_CRAB_ANIMATED" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
     "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_$it") }
 
-    else if id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id)) -> {
+    else if (id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id))) -> {
         val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
 
         when (enchants?.size) {
@@ -182,8 +177,10 @@ private fun ItemStack.getSbId(): SkyBlockId? = when (val id = DataTypes.ID.facto
         }
     }
 
-    else if id == "PET" || (this.`is`(Items.PLAYER_HEAD) && neuIdRegex.matches(id)) -> {
-        DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
+    else if (id == "PET" || id == "RUNE" || id == "UNIQUE_RUNE" || (this.`is`(Items.PLAYER_HEAD) && neuIdRegex.matches(id))) -> {
+        DataTypes.USED_RUNE.factory(this) ?: DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) ->
+            "$id$DELIMITER${rarity.name}"
+        }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
     }
 
     else -> SkyBlockId.item(id)
