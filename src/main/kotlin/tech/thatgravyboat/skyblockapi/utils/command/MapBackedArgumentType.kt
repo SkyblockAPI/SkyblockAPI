@@ -12,10 +12,11 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.util.concurrent.CompletableFuture
 
-class MapBackedArgumentType<T>(
-    private val map: Map<String, T>,
+class MapBackedArgumentType<KeyType, ValueType>(
+    private val map: Map<KeyType, ValueType>,
     private val ignoreCase: Boolean = true,
-) : ArgumentType<T> {
+    private val keyTransformer: (KeyType) -> String = { it.toString() },
+) : ArgumentType<ValueType> {
 
     private val elementNotFound: DynamicCommandExceptionType = DynamicCommandExceptionType { id: Any? ->
         Text.of("Element '") {
@@ -24,11 +25,11 @@ class MapBackedArgumentType<T>(
         }
     }
 
-    override fun parse(reader: StringReader): T {
+    override fun parse(reader: StringReader): ValueType {
         val input = reader.readUnquotedString()
 
-        val value = if (!ignoreCase) map[input]
-        else map.entries.find { it.key.equals(input, true) }?.value
+        val value = if (!ignoreCase) map.entries.find { (key) -> keyTransformer(key) == input }?.value
+        else map.entries.find { keyTransformer(it.key).equals(input, true) }?.value
 
         return value ?: throw elementNotFound.create(input)
     }
@@ -36,7 +37,8 @@ class MapBackedArgumentType<T>(
     override fun <S : Any> listSuggestions(context: CommandContext<S>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
         val input = builder.remaining
         map.keys.forEach { id ->
-            if (id.startsWith(input, ignoreCase)) builder.suggest(id)
+            val key = keyTransformer(id)
+            if (key.startsWith(input, ignoreCase)) builder.suggest(key)
         }
         return builder.buildFuture()
     }
