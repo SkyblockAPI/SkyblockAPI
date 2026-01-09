@@ -12,11 +12,11 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.util.concurrent.CompletableFuture
 
-class MapBackedArgumentType<KeyType, ValueType>(
-    private val map: Map<KeyType, ValueType>,
+class MapBackedArgumentType<Key, Value>(
+    private val map: Map<Key, Value>,
     private val ignoreCase: Boolean = true,
-    private val keyTransformer: (KeyType) -> String = { it.toString() },
-) : ArgumentType<ValueType> {
+    private val keyTransformer: (Key) -> String = { it.toString() },
+) : ArgumentType<Value> {
 
     private val elementNotFound: DynamicCommandExceptionType = DynamicCommandExceptionType { id: Any? ->
         Text.of("Element '") {
@@ -25,11 +25,10 @@ class MapBackedArgumentType<KeyType, ValueType>(
         }
     }
 
-    override fun parse(reader: StringReader): ValueType {
+    override fun parse(reader: StringReader): Value {
         val input = reader.readUnquotedString()
 
-        val value = if (!ignoreCase) map.entries.find { (key) -> keyTransformer(key) == input }?.value
-        else map.entries.find { keyTransformer(it.key).equals(input, true) }?.value
+        val value = map.entries.find { keyTransformer(it.key).equals(input, ignoreCase) }?.value
 
         return value ?: throw elementNotFound.create(input)
     }
