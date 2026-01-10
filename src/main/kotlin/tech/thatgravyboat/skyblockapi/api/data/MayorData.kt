@@ -28,7 +28,7 @@ data class MayorCandidate internal constructor(
 object MayorCandidates {
     private val _mayors = mutableMapOf<String, MayorCandidate>()
     val mayors: Collection<MayorCandidate> by _mayors::values
-    internal val mayorsMap: Map<String, MayorCandidate> by _mayors
+    internal val mayorsMap: Map<String, MayorCandidate> get() = _mayors
 
     //region Candidates
     val AATROX = register("Aatrox", MayorPerks.SLASHED_PRICING, MayorPerks.SLAYER_XP_BUFF, MayorPerks.PATHFINDER)
@@ -72,7 +72,7 @@ data class MayorPerk internal constructor(
 object MayorPerks {
     private val _perks = mutableMapOf<String, MayorPerk>()
     val perks: Collection<MayorPerk> by _perks::values
-    internal val perksMap: Map<String, MayorPerk> by _perks
+    internal val perksMap: Map<String, MayorPerk> get() = _perks
 
     //region Perks
     // Aatrox
