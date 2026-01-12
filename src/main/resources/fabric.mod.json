@@ -24,7 +24,7 @@
         ]
     },
     "depends": {
-        "fabricloader": ">=${fabricloader}",
+        "fabricloader": ">=${fabric_loader}",
         "fabric": "*",
         "fabric-language-kotlin": ">=${fabric_lang_kotlin}",
         "minecraft": ">=${minecraft_start} <=${minecraft_end}",
