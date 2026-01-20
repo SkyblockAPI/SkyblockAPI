@@ -93,7 +93,7 @@ object LocationAPI {
                 SkyBlockIsland.BACKWATER_BAYOU -> 16
                 SkyBlockIsland.HUB -> 26
                 SkyBlockIsland.JERRYS_WORKSHOP -> 27
-                SkyBlockIsland.DARK_AUCTION -> 30
+                SkyBlockIsland.DARK_AUCTION -> 12
                 else -> 24
             }
         }
