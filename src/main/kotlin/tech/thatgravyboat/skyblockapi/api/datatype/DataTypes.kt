@@ -97,6 +97,7 @@ object DataTypes {
     val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
     @RemoveNextVersion
     val FUNGI_CUTTER_MODE: DataType<String> = GenericDataTypes.FUNGI_CUTTER_MODE
+    val CULTIVATING_CROPS: DataType<Long> = GenericDataTypes.CULTIVATING_CROPS
     val TOOL_LEVEL: DataType<Int> = GenericDataTypes.TOOL_LEVEL
     val TOOL_EXP: DataType<Double> = GenericDataTypes.TOOL_EXP
     val TOOL_OVERCLOCKS: DataType<Int> = GenericDataTypes.TOOL_OVERCLOCKS
