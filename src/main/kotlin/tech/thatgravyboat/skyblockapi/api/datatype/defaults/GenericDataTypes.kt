@@ -84,6 +84,11 @@ object GenericDataTypes {
     val PARTY_HAT_COLOR: DataType<String> = DataType.simple("party_hat_color")
     val PARTY_HAT_YEAR: DataType<Int> = DataType.simple("party_hat_year")
 
+    val TOOL_LEVEL: DataType<Int> = DataType.simple("tool_level", "levelable_level")
+    val TOOL_EXP: DataType<Double> = DataType.simple("tool_exp", "levelable_exp")
+    val TOOL_OVERCLOCKS: DataType<Int> = DataType.simple("tool_overclocks", "levelable_overclocks")
+    val WATER_LEVEL: DataType<Int> = DataType.simple("water_level")
+
     @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType.of("applied_rune") {
         it.tag?.getCompoundOrEmpty("runes")?.let { tag ->
