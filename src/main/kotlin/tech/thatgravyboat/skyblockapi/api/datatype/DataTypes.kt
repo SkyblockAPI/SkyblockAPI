@@ -93,7 +93,9 @@ object DataTypes {
     val UPGRADE_MODULE: DataType<String> = MiningDataTypes.UPGRADE_MODULE
 
     // Farming
+    @RemoveNextVersion
     val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
+    @RemoveNextVersion
     val FUNGI_CUTTER_MODE: DataType<String> = GenericDataTypes.FUNGI_CUTTER_MODE
     val TOOL_LEVEL: DataType<Int> = GenericDataTypes.TOOL_LEVEL
     val TOOL_EXP: DataType<Double> = GenericDataTypes.TOOL_EXP
