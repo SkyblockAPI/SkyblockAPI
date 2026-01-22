@@ -27,7 +27,7 @@ object LoreDataTypes {
     private val cooldownRegex = dataTypeGroup.create("cooldown", "Cooldown: (?<cooldown>\\d+)s")
     private val snowballsRegex = dataTypeGroup.create("snowballs", "Snowballs: (?<snowballs>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
     private val dungeonBreakerRegex = dataTypeGroup.create("dungeonbreaker", "Charges: (?<current>\\d+)/(?<max>\\d+)⸕")
-    private val maxWaterRegex = dataTypeGroup.create("max_water_level", "Water: [\\d,kmb]+/(?<max>[\\d,kmb]+)")
+    private val waterRegex = dataTypeGroup.create("water_level", "Water: (?<current>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
 
     val FUEL: DataType<Pair<Int, Int>> = DataType.of("fuel") {
         var output: Pair<Int, Int>? = null
@@ -101,12 +101,10 @@ object LoreDataTypes {
         output
     }
 
-    val MAX_WATER_LEVEL: DataType<Int> = DataType.of("max_water_level") {
-        if (DataTypes.WATER_LEVEL.factory(it) == null) return@of null
-
-        var output: Int? = null
-        maxWaterRegex.anyMatch(it.getRawLore(), "max") { (max) ->
-            output = max.parseFormattedInt()
+    val WATER_LEVEL: DataType<Pair<Int, Int>> = DataType.of("water_level") {
+        var output: Pair<Int, Int>? = null
+        waterRegex.anyMatch(it.getRawLore(), "current", "max") { (current, max) ->
+            output = current.parseFormattedInt() to max.parseFormattedInt()
         }
         output
     }

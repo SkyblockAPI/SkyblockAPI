@@ -101,6 +101,5 @@ object DataTypes {
     val TOOL_LEVEL: DataType<Int> = GenericDataTypes.TOOL_LEVEL
     val TOOL_EXP: DataType<Double> = GenericDataTypes.TOOL_EXP
     val TOOL_OVERCLOCKS: DataType<Int> = GenericDataTypes.TOOL_OVERCLOCKS
-    val WATER_LEVEL: DataType<Int> = GenericDataTypes.WATER_LEVEL
-    val MAX_WATER_LEVEL: DataType<Int> = LoreDataTypes.MAX_WATER_LEVEL
+    val WATER_LEVEL: DataType<Pair<Int, Int>> = LoreDataTypes.WATER_LEVEL
 }

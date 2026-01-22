@@ -88,7 +88,6 @@ object GenericDataTypes {
     val TOOL_LEVEL: DataType<Int> = DataType.simple("tool_level", "levelable_level")
     val TOOL_EXP: DataType<Double> = DataType.simple("tool_exp", "levelable_exp")
     val TOOL_OVERCLOCKS: DataType<Int> = DataType.simple("tool_overclocks", "levelable_overclocks")
-    val WATER_LEVEL: DataType<Int> = DataType.simple("water_level")
 
     @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType.of("applied_rune") {
