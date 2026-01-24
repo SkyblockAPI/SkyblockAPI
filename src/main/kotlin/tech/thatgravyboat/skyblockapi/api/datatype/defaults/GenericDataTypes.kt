@@ -55,7 +55,7 @@ object GenericDataTypes {
     val MIDAS_WEAPON_BID: DataType<Int> = DataType.simple("midas_weapon_bid", "winning_bid")
     val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = DataType.simple("midas_weapon_added_coins", "additional_coins")
     val MIDAS_WEAPON_PAID: DataType<Long> = DataType.of("midas_weapon_paid") { stack ->
-        listOfNotNull(MIDAS_WEAPON_BID.factory(stack)?.toLong(), MIDAS_WEAPON_ADDED_COINS.factory(stack)?.toLong()).sum().takeUnless { it == 0L }
+        listOfNotNull(MIDAS_WEAPON_BID.factory(stack), MIDAS_WEAPON_ADDED_COINS.factory(stack)).sum().toLong().takeUnless { it == 0L }
     }
     val ENRICHMENT: DataType<SkyBlockId> = DataType.of("enrichment") {
         val id = it.tag?.getStringOrNull("talisman_enrichment") ?: return@of null
