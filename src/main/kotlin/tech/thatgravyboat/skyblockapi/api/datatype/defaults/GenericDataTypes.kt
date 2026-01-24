@@ -52,6 +52,9 @@ object GenericDataTypes {
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
+
+    val MIDAS_WEAPON_BID: DataType<Int> = DataType.simple("midas_weapon_bid", "winning_bid")
+    val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = DataType.simple("midas_weapon_added_coins", "additional_coins")
     val MIDAS_WEAPON_PAID: DataType<Long> = DataType.of("midas_weapon_paid") { stack ->
         listOf("winning_bid", "additional_coins").mapNotNull { stack.tag?.getLongOrNull(it) }.sum().takeUnless { it == 0L }
     }
