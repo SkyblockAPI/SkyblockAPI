@@ -33,6 +33,8 @@ object DataTypes {
     val ART_OF_PEACE: DataType<Boolean> = GenericDataTypes.ART_OF_PEACE
     val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS
     val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
+    val MIDAS_WEAPON_BID: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_BID
+    val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_ADDED_COINS
     val MIDAS_WEAPON_PAID: DataType<Long> = GenericDataTypes.MIDAS_WEAPON_PAID
     val ENRICHMENT: DataType<SkyBlockId> = GenericDataTypes.ENRICHMENT
 
