@@ -54,8 +54,9 @@ object SacksAPI {
     val sackTitleRegex = RegexGroup.INVENTORY.create("sackapi.title", ".* Sack")
     val sackAmountRegex = RegexGroup.INVENTORY.create("sackapi.amount", "Stored: (?<amount>[\\d,.]+)/.*")
 
+    @Suppress("SimplifiableCallChain")
     val sackItems: Map<String, Int>
-        get() = SacksStorage.items.associate { (key, value) -> key to value }
+        get() = SacksStorage.items.map { (key, value) -> key to value }.toMap()
 
     // Diff of updates gotten from recent sacks inventory
     private val recentUpdates: Cache<String, Int> = CacheBuilder.newBuilder()
