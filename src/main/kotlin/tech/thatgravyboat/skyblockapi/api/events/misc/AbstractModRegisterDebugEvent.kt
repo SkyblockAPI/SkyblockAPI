@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.events.misc
 
 import net.minecraft.network.chat.Component
+import net.minecraft.util.StringRepresentable
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
@@ -57,7 +58,7 @@ open class DebugBuilder(private val prefix: Component, private val name: Compone
     }
 
     fun <T> format(value: T?): Component = when (value) {
-        null -> Text.of("<null>", TextColor.ORANGE)
+        null -> Text.of("<null>", TextColor.DARK_GRAY)
         is Iterable<*> -> Text.join(value.map {
             format(it)
         }).wrap("[", "]") {
@@ -86,8 +87,10 @@ open class DebugBuilder(private val prefix: Component, private val name: Compone
                 },
             )
         }
+        is Enum<*> -> Text.of(value.name, TextColor.ORANGE)
         is Instant -> Text.of(value.toReadableString(ZoneOffset.UTC))
         is Component -> value
+        is StringRepresentable -> Text.of(value.serializedName)
         else -> Text.of(value.toString(), TextColor.YELLOW)
     }
 
