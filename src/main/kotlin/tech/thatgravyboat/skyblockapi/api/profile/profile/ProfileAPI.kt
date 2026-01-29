@@ -12,12 +12,13 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiDebugEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileLevelChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
+import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
@@ -196,15 +197,13 @@ object ProfileAPI {
         ProfileStorage.setSkyBlockLevel(event.level)
     }
 
-    @Subscription
-    private fun RegisterSkyblockApiDebugEvent.registerDebug() {
-        register("Profile") {
-            field("Name", profileName)
-            field("Id", profileUuid)
-            field("Type", profileType)
-            field("Level", sbLevel)
-            field("Is Coop", coop)
-        }
+    @ApiDebug("Profile")
+    internal fun debug(builder: DebugBuilder) = with(builder) {
+        field("Name", profileName)
+        field("Id", profileUuid)
+        field("Type", profileType)
+        field("Level", sbLevel)
+        field("Is Coop", coop)
     }
 }
 
