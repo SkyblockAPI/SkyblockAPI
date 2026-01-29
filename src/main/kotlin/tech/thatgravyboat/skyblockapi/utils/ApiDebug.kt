@@ -7,5 +7,5 @@ import me.owdding.ktmodules.AutoCollect
 @Target(AnnotationTarget.FUNCTION)
 internal annotation class ApiDebug(
     val name: String,
-    val commandName: String = "<default>"
+    val commandName: String = ""
 )
