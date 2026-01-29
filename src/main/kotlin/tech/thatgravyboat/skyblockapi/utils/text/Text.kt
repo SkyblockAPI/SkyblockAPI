@@ -64,6 +64,7 @@ object Text {
             when (it) {
                 is Component -> result.append(it)
                 is String -> result.append(it)
+                is Char -> result.append(it.toString())
                 is List<*> -> result.append(join(*it.toTypedArray(), separator = separator))
                 null -> return@forEachIndexed
                 else -> error("Unsupported type: ${it::class.simpleName}")
@@ -79,6 +80,7 @@ object Text {
     fun Component.prefix(prefix: String): MutableComponent = join(prefix, this)
     fun Component.suffix(suffix: String): MutableComponent = join(this, suffix)
     fun Component.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
+    fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
 
     fun Component.send() = McClient.chat.addMessage(this)
     fun Component.send(id: String) = McClient.chat.setMessageId(id) {

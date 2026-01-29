@@ -4,11 +4,17 @@ import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
-import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
+import tech.thatgravyboat.skyblockapi.utils.text.Text.wrap
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.clipboard
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import kotlin.time.Instant
+import kotlin.time.toJavaInstant
 
 abstract class AbstractModRegisterDebugEvent(val prefix: Component, val withDebug: Boolean = false, val base: AbstractModRegisterCommandsEvent) :
     SkyBlockEvent() {
@@ -34,25 +40,55 @@ open class DebugBuilder(private val prefix: Component, private val name: Compone
             Text.of {
                 append(field)
                 append(": ")
-                if (value == null) {
-                    append("<null>", TextColor.ORANGE)
-                } else {
-                    append(value.toString()) {
-                        color = when (value) {
-                            is Boolean if value -> TextColor.GREEN
-                            is Boolean -> TextColor.RED
-                            else -> TextColor.YELLOW
-                        }
-                    }
-                }
+                append(format(value))
 
                 if (description != null) {
                     hover = description
                 }
 
-                clipboard = copyValue ?: copyValue.toString()
+                clipboard = copyValue ?: value.toString()
             },
         )
+    }
+
+    private val dateTimeFormatter = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss")
+    private fun Instant.toReadableString(zoneId: ZoneId = ZoneOffset.systemDefault()): String {
+        return dateTimeFormatter.format(LocalDateTime.ofInstant(this.toJavaInstant(), zoneId))
+    }
+
+    fun <T> format(value: T?): Component = when (value) {
+        null -> Text.of("<null>", TextColor.ORANGE)
+        is Iterable<*> -> Text.join(value.map {
+            format(it)
+        }).wrap("[", "]") {
+            this.color = TextColor.GRAY
+        }
+        is Array<*> -> Text.join(value.map {
+            format(it)
+        }).wrap("[", "]") {
+            this.color = TextColor.GRAY
+        }
+        is Boolean -> Text.of(value.toString(), if (value) TextColor.GREEN else TextColor.RED)
+        is String -> Text.join('"', value, '"') {
+            color = TextColor.DARK_GREEN
+        }
+        is Number -> Text.of(value.toString()) {
+            color = TextColor.AQUA
+            append(
+                when (value) {
+                    is Double -> "d"
+                    is Long -> "L"
+                    is Float -> "f"
+                    is Short -> "s"
+                    is Byte -> "b"
+                    is Int -> ""
+                    else -> " - ${value.javaClass.simpleName}"
+                },
+            )
+        }
+        is Instant -> Text.of(value.toReadableString(ZoneOffset.UTC))
+        is Component -> value
+        else -> Text.of(value.toString(), TextColor.YELLOW)
     }
 
     fun build(): Component = Text.of {
@@ -66,5 +102,6 @@ open class DebugBuilder(private val prefix: Component, private val name: Compone
                 color = TextColor.GRAY
             },
         )
+        append("\n")
     }
 }
