@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiDebugEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileLevelChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
@@ -24,6 +25,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import java.util.*
 
 @Module
 object ProfileAPI {
@@ -46,9 +48,15 @@ object ProfileAPI {
         "\\s*SB Level: \\[(?<level>\\d+)] (?<xp>\\d+).*",
     )
 
-    private val profileChatRegex = RegexGroup.CHAT.group("profile").create(
+    private val chatGroup = RegexGroup.CHAT.group("profile")
+    private val profileChatRegex = chatGroup.create(
         "name",
         "(You are playing on profile|Your profile was changed to): (?<name>\\S+)(?<coop> \\(Co-op\\))?",
+    )
+
+    private val profileIdRegex = chatGroup.create(
+        "uuid",
+        "^Profile ID: (?<id>\\S+)"
     )
 
     private val levelColors = mapOf(
@@ -71,6 +79,14 @@ object ProfileAPI {
 
     var profileName: String? = null
         private set
+
+    var profileUuid: UUID?
+        private set(value) {
+            ProfileStorage.profileId = value
+        }
+        get() = ProfileStorage.profileId
+
+    val profileId: UUID? get() = profileUuid
 
     var isLoaded: Boolean = false
         private set
@@ -157,6 +173,13 @@ object ProfileAPI {
             this.isLoaded = true
             ProfileStorage.setCoop(groups["coop"] != null)
         }
+        profileIdRegex.match(event.text, "id") { (id) ->
+            try {
+                ProfileStorage.profileId = UUID.fromString(id)
+            } catch (exception: IllegalStateException) {
+                SkyBlockAPI.warn("(ProfileApi) Failed to parse profile id $id", exception)
+            }
+        }
     }
 
     @Subscription
@@ -171,6 +194,17 @@ object ProfileAPI {
     @Subscription
     fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
         ProfileStorage.setSkyBlockLevel(event.level)
+    }
+
+    @Subscription
+    private fun RegisterSkyblockApiDebugEvent.registerDebug() {
+        register("Profile") {
+            field("Name", profileName)
+            field("Id", profileUuid)
+            field("Type", profileType)
+            field("Level", sbLevel)
+            field("Is Coop", coop)
+        }
     }
 }
 

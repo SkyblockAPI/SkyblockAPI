@@ -64,6 +64,7 @@ object Text {
             when (it) {
                 is Component -> result.append(it)
                 is String -> result.append(it)
+                is Char -> result.append(it.toString())
                 is List<*> -> result.append(join(*it.toTypedArray(), separator = separator))
                 null -> return@forEachIndexed
                 else -> error("Unsupported type: ${it::class.simpleName}")
@@ -79,6 +80,7 @@ object Text {
     fun Component.prefix(prefix: String): MutableComponent = join(prefix, this)
     fun Component.suffix(suffix: String): MutableComponent = join(this, suffix)
     fun Component.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
+    fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
 
     fun Component.send() = McClient.chat.addMessage(this)
     fun Component.send(id: String) = McClient.chat.setMessageId(id) {
@@ -226,6 +228,8 @@ internal fun Component.hover(): Component? = (this.style.hoverEvent as? HoverEve
 
 internal fun Component.command(): String? = (this.style.clickEvent as? ClickEvent.RunCommand)?.command()
 
+internal fun Component.clipboard(): String? = (this.style.clickEvent as? ClickEvent.CopyToClipboard)?.value()
+
 internal fun Component.suggest(): String? = (this.style.clickEvent as? ClickEvent.SuggestCommand)?.command()
 
 internal fun Component.uri(): URI? = (this.style.clickEvent as? ClickEvent.OpenUrl)?.uri()
@@ -277,6 +281,16 @@ object TextStyle {
         get() = hover()
         set(value) {
             this.style { withHoverEvent(value?.let { HoverEvent.ShowText(it) }) }
+        }
+
+
+    val Component.clipboard: String?
+        get() = clipboard()
+
+    var MutableComponent.clipboard: String?
+        get() = clipboard()
+        set(value) {
+            this.style { withClickEvent(value?.let { ClickEvent.CopyToClipboard(it) }) }
         }
 
 
@@ -391,6 +405,7 @@ object TextStyle {
 
 object TextBuilder {
     fun MutableComponent.append(like: ComponentLike): MutableComponent = this.append(like.toComponent())
+    fun MutableComponent.append(init: MutableComponent.() -> Unit): MutableComponent = this.append(Text.of(init))
     fun MutableComponent.append(component: Component, init: MutableComponent.() -> Unit): MutableComponent = this.append(component.copy().apply(init))
     fun MutableComponent.append(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(text.asComponent(init))
     fun MutableComponent.append(number: Number, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(number.toString().asComponent(init))

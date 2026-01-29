@@ -26,3 +26,7 @@ abstract class AbstractModRegisterCommandsEvent(
         prefixes.forEach { baseEvent.registerWithCallback("$it $command", callback = callback) }
     }
 }
+
+internal class RegisterSkyblockApiCommandsEvent(
+    baseEvent: RegisterCommandsEvent
+) : AbstractModRegisterCommandsEvent(baseEvent, "sbapi", "skyblockapi")
