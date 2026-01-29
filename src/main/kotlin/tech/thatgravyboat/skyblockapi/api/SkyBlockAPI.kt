@@ -16,11 +16,13 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiDebugEvent
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIApiDebug
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIDevModules
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIModules
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
+import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import java.nio.file.Files
@@ -66,5 +68,18 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         val event = RegisterSkyblockApiCommandsEvent(this)
         event.post()
         RegisterSkyblockApiDebugEvent(event).post()
+    }
+
+    @Subscription
+    private fun registerDebugs(event: RegisterSkyblockApiDebugEvent) {
+        SkyblockAPIApiDebug.collected.forEach {
+            val debug = it.annotations.filterIsInstance<ApiDebug>().first()
+            val name = debug.name
+            val commandName = debug.commandName.takeUnless { commandName -> commandName == "<default>" } ?: name.lowercase().replace(" ", "_")
+
+            event.register(name, commandName) {
+                it.invoke(this)
+            }
+        }
     }
 }
