@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api
 import com.google.gson.JsonElement
 import com.mojang.serialization.Codec
 import me.owdding.dfu.item.MeowddingItemDfu
+import me.owdding.ktmodules.Module
 import net.fabricmc.loader.api.FabricLoader
 import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
@@ -10,7 +11,11 @@ import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RepoVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
+import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiDebugEvent
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIDevModules
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIModules
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -20,6 +25,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import java.nio.file.Files
 
+@Module
 object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal val mod = FabricLoader.getInstance().getModContainer("skyblock-api").orElseThrow()
@@ -54,4 +60,11 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
     internal fun id(path: String) = Identifiers.of(NAMESPACE, path)
     internal fun <C : Any> getRepo(file: String, codec: Codec<C>) =
         mod.findPath("repo/$file.json").orElseThrow()?.let(Files::readString)?.readJson<JsonElement>().toDataOrThrow(codec)
+
+    @Subscription
+    private fun RegisterCommandsEvent.registerSkyblockApiCommands() {
+        val event = RegisterSkyblockApiCommandsEvent(this)
+        event.post()
+        RegisterSkyblockApiDebugEvent(event).post()
+    }
 }
