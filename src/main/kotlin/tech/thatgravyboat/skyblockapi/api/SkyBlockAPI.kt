@@ -75,7 +75,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         SkyblockAPIApiDebug.collected.forEach {
             val debug = it.annotations.filterIsInstance<ApiDebug>().first()
             val name = debug.name
-            val commandName = debug.commandName.takeUnless { commandName -> commandName.isEmpty() } ?: name.lowercase().replace(" ", "_")
+            val commandName = debug.commandName.takeUnless(String::isEmpty) ?: name.lowercase().replace(" ", "_")
 
             event.register(name, commandName) {
                 it.invoke(this)
