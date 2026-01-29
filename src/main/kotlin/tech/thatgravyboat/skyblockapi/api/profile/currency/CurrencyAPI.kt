@@ -45,6 +45,7 @@ object CurrencyAPI {
     )
     private val soulflowRegex = widgetGroup.create("profile.soulflow", " Soulflow: (?<soulflow>[\\d,.kmb]+)")
     private val gemsRegex = widgetGroup.create("gems", " Gems: (?<gems>(?i)[\\d,.kmb]+)")
+    private val sowdustWidgetRegex = widgetGroup.create("sowdust", "(?i) Sowdust: (?<sowdust>[\\d,.]+)")
 
     private val currencyGroup = RegexGroup.SCOREBOARD.group("currency")
     private val purseRegex = currencyGroup.create("purse", "^(?<type>Purse|Piggy): (?<purse>(?i)[\\d,.kmb]+)")
@@ -109,6 +110,9 @@ object CurrencyAPI {
             }
             TabWidget.AREA -> {
                 gemsRegex.findCurrency(event.new, "gems", ::gems, CurrencyEvent::Gems)
+
+                // sowdust doesnt seem to be shortened and actually more accurate than the scoreboard i think
+                sowdustWidgetRegex.findCurrency(event.new, "sowdust", ::sowdust, CurrencyEvent::SowDust)
             }
             else -> return
         }
