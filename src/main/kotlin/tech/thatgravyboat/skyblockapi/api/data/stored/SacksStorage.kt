@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.items.sacks.SackEntry
 import tech.thatgravyboat.skyblockapi.api.profile.items.sacks.SacksData
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
-import java.util.Optional
+import kotlin.time.Instant
 
 @Module
 internal object SacksStorage {
@@ -22,39 +22,38 @@ internal object SacksStorage {
             1 -> RecordCodecBuilder.create {
                 it.group(
                     Codec.unboundedMap(Codec.STRING, Codec.INT).xmap(
-                        { it.map { (key, value) -> SackEntry(key, value) }.toMutableList() },
+                        { it.map { (key, value) -> SackEntry(key, value) } },
                         { mutableMapOf() },
-                    ).optionalFieldOf("items").forGetter { getter -> Optional.of(getter.items) },
-                ).apply(it, SkyblockAPICodecs::createSacksDataCodec)
+                    ).optionalFieldOf("items", listOf()).forGetter(SacksData::asSackEntries),
+                ).apply(it, ::SacksData)
             }
-
-            2 -> SacksData.CODEC
+            2 -> RecordCodecBuilder.create { it.group(
+                SkyblockAPICodecs.SackEntryCodec.codec().listOf().optionalFieldOf("items", listOf()).forGetter(SacksData::asSackEntries),
+            ).apply(it, ::SacksData) }
             else -> CodecUtils.unit { SacksData() }
         }
     }
 
-    val items: MutableList<SackEntry>
-        get() = SACKS.get()?.items ?: mutableListOf()
+    val counts: Map<String, Int> get() = SACKS.get()?.counts ?: emptyMap()
+    val timestamps: Map<String, Instant> get() = SACKS.get()?.timestamps ?: emptyMap()
 
     // Returns the old value
     fun updateItem(item: String, amount: Int): Int {
-        val entry = items.find { it.id == item }
-        val oldValue = entry?.amount
+        val oldValue = this.counts[item]
         if (oldValue == amount) return oldValue
-        entry?.let { items.remove(it) }
-        items.add(SackEntry(item, amount))
+        SACKS.get()?.add(item, amount)
         SACKS.save()
         return oldValue ?: 0
     }
 
     fun updateItemValue(item: String, diff: Int) {
-        val prevAmount = items.find { it.id == item }?.amount ?: 0
+        val prevAmount = this.counts[item] ?: 0
         val newAmount = (prevAmount + diff).coerceAtLeast(0)
         updateItem(item, newAmount)
     }
 
     fun clear() {
-        items.clear()
+        SACKS.get()?.clear()
         SACKS.save()
     }
 
