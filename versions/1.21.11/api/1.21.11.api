@@ -1571,6 +1571,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOOLDOWN_ABILITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCROPS_BROKEN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getCULTIVATING_CROPS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDIVAN_POWDER_COATING ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEONBREAKER_CHARGES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEON_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1591,6 +1592,8 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getJALAPENO_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLOGS_CUT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getMIDAS_WEAPON_ADDED_COINS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getMIDAS_WEAPON_BID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMIDAS_WEAPON_PAID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMODIFIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1616,10 +1619,14 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getSNOWBALLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSTAR_COUNT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getTIMESTAMP ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getTOOL_EXP ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getTOOL_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getTOOL_OVERCLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUPGRADE_MODULE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUSED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUUID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getVISIBLE_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getWATER_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getWET_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 }
 
@@ -1712,6 +1719,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getBOOSTERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCROPS_BROKEN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getCULTIVATING_CROPS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEON_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEON_QUALITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEON_TIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1726,6 +1734,8 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getJALAPENO_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLOGS_CUT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getMIDAS_WEAPON_ADDED_COINS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getMIDAS_WEAPON_BID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMIDAS_WEAPON_PAID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMODIFIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1742,6 +1752,9 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getSKYBLOCK_ID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSTAR_COUNT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getTIMESTAMP ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getTOOL_EXP ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getTOOL_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getTOOL_OVERCLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUSED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUUID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getVISIBLE_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1781,6 +1794,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/LoreData
 	public final fun getRARITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRIGHT_CLICK_MANA_ABILITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSNOWBALLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getWATER_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/PersonalAccessoryDataTypes {
@@ -2578,6 +2592,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/TabWidget : ja
 	public static final field SHARD_TRAPS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field SHEN Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field SKILLS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
+	public static final field SLAYER Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field STARBORN_TEMPLE Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field STATS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field TEAM_DEATHS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
@@ -2793,6 +2808,18 @@ public abstract class tech/thatgravyboat/skyblockapi/api/events/misc/AbstractMod
 	public final fun registerWithCallback (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 }
 
+public abstract class tech/thatgravyboat/skyblockapi/api/events/misc/AbstractModRegisterDebugEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Lnet/minecraft/network/chat/Component;ZLtech/thatgravyboat/skyblockapi/api/events/misc/AbstractModRegisterCommandsEvent;)V
+	public synthetic fun <init> (Lnet/minecraft/network/chat/Component;ZLtech/thatgravyboat/skyblockapi/api/events/misc/AbstractModRegisterCommandsEvent;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getBase ()Ltech/thatgravyboat/skyblockapi/api/events/misc/AbstractModRegisterCommandsEvent;
+	public final fun getPrefix ()Lnet/minecraft/network/chat/Component;
+	public final fun getWithDebug ()Z
+	public final fun name (Ljava/lang/String;)Ljava/lang/String;
+	public final fun register (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun register (Lnet/minecraft/network/chat/Component;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun register$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/AbstractModRegisterDebugEvent;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder {
 	public final fun callback (Lkotlin/jvm/functions/Function1;)V
 	public final fun then (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
@@ -2803,6 +2830,14 @@ public final class tech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder
 	public final fun thenCallback (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
 	public final fun thenCallback ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
 	public static synthetic fun thenCallback$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+}
+
+public class tech/thatgravyboat/skyblockapi/api/events/misc/DebugBuilder {
+	public fun <init> (Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;)V
+	public final fun build ()Lnet/minecraft/network/chat/Component;
+	public final fun field (Ljava/lang/String;Ljava/lang/Object;Lnet/minecraft/network/chat/Component;Ljava/lang/String;)V
+	public static synthetic fun field$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/DebugBuilder;Ljava/lang/String;Ljava/lang/Object;Lnet/minecraft/network/chat/Component;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun format (Ljava/lang/Object;)Lnet/minecraft/network/chat/Component;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -3383,6 +3418,7 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueS
 	public static final field ITEM_STARS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field JALAPENO_BOOK Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field NECRON_SCROLLS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field OVERCLOCKER Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field POLARVOID Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field POWER_ABILITY_SCROLL Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field RECOMBOBULATOR Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
@@ -4745,8 +4781,10 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/profile/ProfileAPI
 	public final fun getCoop ()Z
 	public final fun getLevelColor ()I
 	public final fun getLevelColor (I)I
+	public final fun getProfileId ()Ljava/util/UUID;
 	public final fun getProfileName ()Ljava/lang/String;
 	public final fun getProfileType ()Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType;
+	public final fun getProfileUuid ()Ljava/util/UUID;
 	public final fun getSbLevel ()I
 	public final fun getSbLevelProgress ()I
 	public final fun isLoaded ()Z
@@ -4759,23 +4797,26 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/profile/ProfileAPI
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/profile/ProfileData {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileData$Companion;
-	public fun <init> (Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;)V
-	public synthetic fun <init> (Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;)V
+	public synthetic fun <init> (Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/Map;
 	public final fun component2 ()Ljava/util/Map;
 	public final fun component3 ()Ljava/util/Map;
 	public final fun component4 ()Ljava/util/Map;
-	public final fun component5 ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;
-	public final fun copy (Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;)Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileData;
-	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileData;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileData;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun component6 ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;
+	public final fun copy (Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;)Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileData;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileData;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBingoRank ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;
 	public final fun getCoop ()Ljava/util/Map;
+	public final fun getProfileId ()Ljava/util/Map;
 	public final fun getProfileType ()Ljava/util/Map;
 	public final fun getSbLevel ()Ljava/util/Map;
 	public final fun getSbLevelProgress ()Ljava/util/Map;
 	public fun hashCode ()I
 	public final fun setBingoRank (Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;)V
+	public final fun setProfileId (Ljava/util/Map;)V
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -6417,6 +6458,13 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/EnumArgument$Com
 	public final fun create (Ljava/lang/Class;)Ltech/thatgravyboat/skyblockapi/utils/command/EnumArgument;
 }
 
+public final class tech/thatgravyboat/skyblockapi/utils/command/MapBackedArgumentType : com/mojang/brigadier/arguments/ArgumentType {
+	public fun <init> (Ljava/util/Map;ZLkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Ljava/util/Map;ZLkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun listSuggestions (Lcom/mojang/brigadier/context/CommandContext;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
+	public fun parse (Lcom/mojang/brigadier/StringReader;)Ljava/lang/Object;
+}
+
 public final class tech/thatgravyboat/skyblockapi/utils/extentions/BlockPosExtensionsKt {
 	public static final fun component1 (Lnet/minecraft/core/BlockPos;)I
 	public static final fun component2 (Lnet/minecraft/core/BlockPos;)I
@@ -6887,6 +6935,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/Text {
 	public final fun translatable (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
 	public static synthetic fun translatable$default (Ltech/thatgravyboat/skyblockapi/utils/text/Text;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun wrap (Lnet/minecraft/network/chat/Component;Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;
+	public final fun wrap (Lnet/minecraft/network/chat/Component;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/text/TextBuilder {
@@ -6894,6 +6943,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/TextBuilder {
 	public final fun append (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/Number;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun append (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;I)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun append (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
+	public final fun append (Lnet/minecraft/network/chat/MutableComponent;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun append (Lnet/minecraft/network/chat/MutableComponent;Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun append (Lnet/minecraft/network/chat/MutableComponent;Ltech/thatgravyboat/skyblockapi/utils/text/ComponentLike;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun append (Lnet/minecraft/network/chat/MutableComponent;ZLkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
@@ -6935,6 +6985,8 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/TextStyle {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/utils/text/TextStyle;
 	public final fun getBold (Lnet/minecraft/network/chat/Component;)Z
 	public final fun getBold (Lnet/minecraft/network/chat/MutableComponent;)Z
+	public final fun getClipboard (Lnet/minecraft/network/chat/Component;)Ljava/lang/String;
+	public final fun getClipboard (Lnet/minecraft/network/chat/MutableComponent;)Ljava/lang/String;
 	public final fun getColor (Lnet/minecraft/network/chat/Component;)I
 	public final fun getColor (Lnet/minecraft/network/chat/MutableComponent;)I
 	public final fun getCommand (Lnet/minecraft/network/chat/Component;)Ljava/lang/String;
@@ -6961,6 +7013,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/TextStyle {
 	public final fun getUrl (Lnet/minecraft/network/chat/MutableComponent;)Ljava/lang/String;
 	public final fun onClick (Lnet/minecraft/network/chat/MutableComponent;Lkotlin/jvm/functions/Function0;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun setBold (Lnet/minecraft/network/chat/MutableComponent;Z)V
+	public final fun setClipboard (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;)V
 	public final fun setColor (Lnet/minecraft/network/chat/MutableComponent;I)V
 	public final fun setCommand (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;)V
 	public final fun setFont (Lnet/minecraft/network/chat/MutableComponent;Lnet/minecraft/resources/Identifier;)V

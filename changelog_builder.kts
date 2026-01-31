@@ -1,3 +1,7 @@
+import java.util.*
+import kotlin.io.path.Path
+import kotlin.io.path.reader
+
 fun execute(vararg command: String): String {
     val process = Runtime.getRuntime().exec(command)
     while (process.isAlive) {
@@ -12,7 +16,12 @@ fun execute(vararg command: String): String {
 val lastTag = execute("git", "describe", "--tags", "--abbrev=0").removeSuffix("\n")
 val out = StringBuilder()
 
-out.append("# Release <ADD_VERSION_HERE>\n\n")
+val properties = Properties()
+Path("gradle.properties").reader().use {
+    properties.load(it)
+}
+
+out.append("# Release ${properties["version"] ?: "<ADD_VERSION_HERE>"}\n\n")
 out.append("## Commits\n")
 
 val commits = execute("git", "log", "$lastTag..HEAD", "--pretty=%H||%an||%s", "--no-abbrev-commit").split("\n").forEach {

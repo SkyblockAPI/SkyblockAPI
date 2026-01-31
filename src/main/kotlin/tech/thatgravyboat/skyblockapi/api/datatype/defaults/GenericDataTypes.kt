@@ -52,8 +52,10 @@ object GenericDataTypes {
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
+    val MIDAS_WEAPON_BID: DataType<Int> = DataType.simple("midas_weapon_bid", "winning_bid")
+    val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = DataType.simple("midas_weapon_added_coins", "additional_coins")
     val MIDAS_WEAPON_PAID: DataType<Long> = DataType.of("midas_weapon_paid") { stack ->
-        listOf("winning_bid", "additional_coins").mapNotNull { stack.tag?.getLongOrNull(it) }.sum().takeUnless { it == 0L }
+        listOfNotNull(MIDAS_WEAPON_BID.factory(stack), MIDAS_WEAPON_ADDED_COINS.factory(stack)).sum().toLong().takeUnless { it == 0L }
     }
     val ENRICHMENT: DataType<SkyBlockId> = DataType.of("enrichment") {
         val id = it.tag?.getStringOrNull("talisman_enrichment") ?: return@of null
@@ -83,6 +85,11 @@ object GenericDataTypes {
 
     val PARTY_HAT_COLOR: DataType<String> = DataType.simple("party_hat_color")
     val PARTY_HAT_YEAR: DataType<Int> = DataType.simple("party_hat_year")
+
+    val CULTIVATING_CROPS: DataType<Long> = DataType.simple("cultivating_crops", "farmed_cultivating")
+    val TOOL_LEVEL: DataType<Int> = DataType.simple("tool_level", "levelable_level")
+    val TOOL_EXP: DataType<Double> = DataType.simple("tool_exp", "levelable_exp")
+    val TOOL_OVERCLOCKS: DataType<Int> = DataType.simple("tool_overclocks", "levelable_overclocks")
 
     @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType.of("applied_rune") {

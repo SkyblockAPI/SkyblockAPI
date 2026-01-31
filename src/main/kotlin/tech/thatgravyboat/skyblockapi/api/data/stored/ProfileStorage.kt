@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileType
+import java.util.UUID
 
 internal object ProfileStorage {
     // Todo: use StoredProfileData instead, basically the same just better here
@@ -68,4 +69,12 @@ internal object ProfileStorage {
         PROFILE.save()
     }
 
+    var profileId: UUID?
+        set(value) {
+            if (value == profileId || value == null) return
+            val profileName = ProfileAPI.profileName ?: return
+            data.profileId[profileName] = value
+            PROFILE.save()
+        }
+        get() = data.profileId[ProfileAPI.profileName]
 }

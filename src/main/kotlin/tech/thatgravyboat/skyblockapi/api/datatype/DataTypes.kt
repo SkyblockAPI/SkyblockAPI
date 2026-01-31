@@ -33,6 +33,8 @@ object DataTypes {
     val ART_OF_PEACE: DataType<Boolean> = GenericDataTypes.ART_OF_PEACE
     val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS
     val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
+    val MIDAS_WEAPON_BID: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_BID
+    val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_ADDED_COINS
     val MIDAS_WEAPON_PAID: DataType<Long> = GenericDataTypes.MIDAS_WEAPON_PAID
     val ENRICHMENT: DataType<SkyBlockId> = GenericDataTypes.ENRICHMENT
 
@@ -45,7 +47,6 @@ object DataTypes {
     val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = PersonalAccessoryDataTypes.PERSONAL_ACCESSORY_ACTIVE
     val POTION: DataType<String> = GenericDataTypes.POTION
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
-    val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
     val BOOK_OF_STATS: DataType<Int> = GenericDataTypes.BOOK_OF_STATS
     @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = GenericDataTypes.APPLIED_RUNE
@@ -58,7 +59,6 @@ object DataTypes {
     val LOGS_CUT: DataType<Long> = GenericDataTypes.LOGS_CUT
     val GILDED_GIFTED_COINS: DataType<Long> = GenericDataTypes.GILDED_GIFTED_COINS
     val ABICASE_MODEL: DataType<String> = GenericDataTypes.ABICASE_MODEL
-    val FUNGI_CUTTER_MODE: DataType<String> = GenericDataTypes.FUNGI_CUTTER_MODE
 
     val PARTY_HAT_COLOR: DataType<String> = GenericDataTypes.PARTY_HAT_COLOR
     val PARTY_HAT_YEAR: DataType<Int> = GenericDataTypes.PARTY_HAT_YEAR
@@ -93,4 +93,15 @@ object DataTypes {
     val FUEL_TANK: DataType<String> = MiningDataTypes.FUEL_TANK
     val ENGINE: DataType<String> = MiningDataTypes.ENGINE
     val UPGRADE_MODULE: DataType<String> = MiningDataTypes.UPGRADE_MODULE
+
+    // Farming
+    @RemoveNextVersion
+    val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
+    @RemoveNextVersion
+    val FUNGI_CUTTER_MODE: DataType<String> = GenericDataTypes.FUNGI_CUTTER_MODE
+    val CULTIVATING_CROPS: DataType<Long> = GenericDataTypes.CULTIVATING_CROPS
+    val TOOL_LEVEL: DataType<Int> = GenericDataTypes.TOOL_LEVEL
+    val TOOL_EXP: DataType<Double> = GenericDataTypes.TOOL_EXP
+    val TOOL_OVERCLOCKS: DataType<Int> = GenericDataTypes.TOOL_OVERCLOCKS
+    val WATER_LEVEL: DataType<Pair<Int, Int>> = LoreDataTypes.WATER_LEVEL
 }
