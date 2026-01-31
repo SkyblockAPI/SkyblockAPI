@@ -54,8 +54,7 @@ object SacksAPI {
     val sackTitleRegex = RegexGroup.INVENTORY.create("sackapi.title", ".* Sack")
     val sackAmountRegex = RegexGroup.INVENTORY.create("sackapi.amount", "Stored: (?<amount>[\\d,.]+)/.*")
 
-    val sackItems: Map<String, Int>
-        get() = SacksStorage.items.associate { (key, value) -> key to value }
+    val sackItems: Map<String, Int> get() = SacksStorage.counts
 
     // Diff of updates gotten from recent sacks inventory
     private val recentUpdates: Cache<String, Int> = CacheBuilder.newBuilder()
@@ -124,12 +123,10 @@ object SacksAPI {
         val sacks = member.getPath("inventory.sacks_counts") as? JsonObject ?: return
         sacks.entrySet().forEach { (itemId, amount) ->
             val amount = amount.asInt(0).takeUnless { it <= 0 } ?: return@forEach
-            val entry = SacksStorage.items.find { it.id == itemId }
-            val previousAmount = entry?.amount ?: 0
-            if (amount == previousAmount) {
+            if (amount == (SacksStorage.counts[itemId] ?: 0)) {
                 return@forEach
             }
-            val isInvalid = entry?.lastUpdated?.since()?.let { it < PvLoadingHelper.timeToLive } == true
+            val isInvalid = SacksStorage.timestamps[itemId]?.since()?.let { it < PvLoadingHelper.timeToLive } == true
             if (isInvalid) {
                 return@forEach
             }
