@@ -1572,6 +1572,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getBOOSTERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCATEGORY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getCLEAN_NAME ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOOLDOWN_ABILITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCROPS_BROKEN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1722,6 +1723,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOSTERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getCLEAN_NAME ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCROPS_BROKEN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCULTIVATING_CROPS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEON_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -4031,6 +4033,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/effects/EffectsAPI
 	public final fun getBoosterCookieExpireTime ()Lkotlin/time/Instant;
 	public final fun getGodPotionDuration-UwyO8pc ()J
 	public final fun isBoosterCookieActive ()Z
+	public final fun isGodPotionActive ()Z
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onCommandsRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 	public final fun onInventoryFullyLoaded (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerInitializedEvent;)V
@@ -6017,6 +6020,9 @@ public abstract interface class tech/thatgravyboat/skyblockapi/mixins/accessors/
 
 public abstract interface class tech/thatgravyboat/skyblockapi/mixins/accessors/SynchedEntityDataAccessor {
 	public abstract fun skyblockapi$getItem (Lnet/minecraft/network/syncher/EntityDataAccessor;)Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/mixins/events/BundlerInfoMixin {
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/mixins/events/ChatComponentMixin : tech/thatgravyboat/skyblockapi/impl/events/chat/ChatComponentExtension {
