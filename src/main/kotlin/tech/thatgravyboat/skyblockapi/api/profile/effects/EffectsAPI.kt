@@ -52,7 +52,9 @@ object EffectsAPI {
 
     val boosterCookieExpireTime get() = EffectsStorage.boosterCookieExpireTime
     val godPotionDuration get() = EffectsStorage.godPotionDuration
+
     val isBoosterCookieActive get() = EffectsStorage.boosterCookieExpireTime.until().isPositive()
+    val isGodPotionActive get() = EffectsStorage.godPotionDuration.isPositive()
 
     @Subscription
     fun onChat(event: ChatReceivedEvent.Pre) {
@@ -81,7 +83,7 @@ object EffectsAPI {
         }
 
         godPotionFooterRegex.anyMatch(event.newFooterChunked.flatten(), "duration") { (duration) ->
-            val parsedDuration = duration.parseWordDuration() ?: return@anyMatch
+            val parsedDuration = duration.parseDuration() ?: return@anyMatch
             EffectsStorage.godPotionDuration = parsedDuration
         }
     }
