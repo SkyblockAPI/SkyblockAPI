@@ -89,6 +89,13 @@ public class GuiMixin {
         return !new RenderHudElementEvent(HudElement.AIR, graphics).post(SkyBlockAPI.getEventBus());
     }
 
+    @Inject(method = "renderChat", at = @At("HEAD"), cancellable = true)
+    private void onChatRender(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (new RenderHudElementEvent(HudElement.CHAT, guiGraphics).post(SkyBlockAPI.getEventBus())) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "displayScoreboardSidebar", at = @At("HEAD"), cancellable = true)
     private void onScoreboardRender(GuiGraphics graphics, Objective objective, CallbackInfo ci) {
         if (new RenderHudElementEvent(HudElement.SCOREBOARD, graphics).post(SkyBlockAPI.getEventBus())) {
