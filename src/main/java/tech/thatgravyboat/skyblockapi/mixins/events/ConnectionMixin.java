@@ -16,8 +16,7 @@ public class ConnectionMixin {
     @WrapMethod(method = "genericsFtw")
     private static void genericsFtw(Packet<?> packet, PacketListener listener, Operation<Void> original) {
         // The bundle packets are special and are already handled in the BundleInfoMixin
-        if (packet instanceof ClientboundBundlePacket) return;
-        if (!new PacketReceivedEvent(packet).post(SkyBlockAPI.getEventBus())) {
+        if (packet instanceof ClientboundBundlePacket || !new PacketReceivedEvent(packet).post(SkyBlockAPI.getEventBus())) {
             original.call(packet, listener);
         }
     }
