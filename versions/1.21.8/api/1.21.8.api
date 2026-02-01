@@ -2969,6 +2969,7 @@ public abstract class tech/thatgravyboat/skyblockapi/api/events/render/BaseRende
 public final class tech/thatgravyboat/skyblockapi/api/events/render/HudElement : java/lang/Enum {
 	public static final field AIR Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
 	public static final field ARMOR Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
+	public static final field CHAT Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
 	public static final field EFFECTS Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
 	public static final field EXPERIENCE Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
 	public static final field FOOD Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
