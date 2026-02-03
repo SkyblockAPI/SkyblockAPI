@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
@@ -129,6 +130,7 @@ object GenericDataTypes {
 
     /** In SkyBlock items that are only available in new versions are shown via [DataComponents.ITEM_MODEL], this returns the item that is displayed. */
     val VISIBLE_ITEM: DataType<Item> = DataType.of("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
+    val CLEAN_NAME: DataType<String> = DataType.of("clean_name") { it.hoverName.stripped }
 
 
     private fun getFishingRodPartDataType(name: String) = DataType.of(name) {

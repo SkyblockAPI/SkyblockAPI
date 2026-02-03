@@ -19,10 +19,10 @@ enum class HudElement {
     AIR,
 
     SCOREBOARD,
+    CHAT,
     EFFECTS,
     ;
 
     private val string = toFormattedName()
-
     override fun toString() = string
 }

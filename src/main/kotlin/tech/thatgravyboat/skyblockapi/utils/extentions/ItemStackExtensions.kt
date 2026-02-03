@@ -36,7 +36,7 @@ fun ItemStack.isSkyblockFiller(): Boolean = isEmpty || this in ItemTag.GLASS_PAN
 
 fun ItemStack.getLore(): List<Component> = this[DataComponents.LORE]?.lines() ?: emptyList()
 
-val ItemStack.cleanName: String get() = hoverName.stripped
+val ItemStack.cleanName: String get() = this.getData(DataTypes.CLEAN_NAME) ?: this.hoverName.stripped
 
 fun ItemStack.isSameItem(other: ItemStack?): Boolean {
     if (other == null) return false
