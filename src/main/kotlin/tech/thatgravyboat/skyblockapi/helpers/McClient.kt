@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.helpers
 import com.mojang.authlib.minecraft.MinecraftSessionService
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.SharedConstants
 import net.minecraft.client.Minecraft
@@ -31,16 +32,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
 
-//? if > 1.21.8 {
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader
-//?} else {
-/*import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper
-import net.minecraft.server.packs.resources.ResourceManager
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
-*///?}
-
 object McClient {
 
     private val tabListComparator: Comparator<PlayerInfo> = compareBy(
@@ -55,26 +46,17 @@ object McClient {
     val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
     val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
 
-    //? if > 1.21.5 {
     val version: String = SharedConstants.getCurrentVersion().name()
-    //?} else
-    /*val version: String = SharedConstants.getCurrentVersion().name*/
 
     val sessionService: MinecraftSessionService
-    //? if > 1.21.8 {
         get() = self.services().sessionService()
-    //?} else
-    /*get() = self.minecraftSessionService*/
 
     val self: Minecraft get() = Minecraft.getInstance()
     val connection: ClientPacketListener? get() = self.connection
 
     val window: Window by self::window
     val windowHandle: Long
-        //? if > 1.21.8 {
         get() = window.handle()
-    //?} else
-    /*get() = window.window*/
 
     var clipboard: String
         get() = self.keyboardHandler.clipboard
@@ -143,11 +125,6 @@ object McClient {
         self.executeIfPossible(action)
     }
 
-    //? if = 1.21.5 {
-    /*@Deprecated("Use runNextTick instead")
-    fun tell(action: () -> Unit) = runNextTick(action)
-    *///?}
-
     fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f) {
         McPlayer.self?.playSound(sound, volume, pitch)
     }
@@ -188,26 +165,7 @@ object McClient {
     }
 
     fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
-        //? if > 1.21.8 {
         ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(id, listener)
-        //?} else
-        /*ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(ReloadListenerWrapper(id, listener))*/
     }
-
-    //? if <= 1.21.8 {
-    /*private data class ReloadListenerWrapper(
-        val id: Identifier,
-        val original: PreparableReloadListener,
-    ) : IdentifiableResourceReloadListener {
-        override fun getFabricId(): Identifier = id
-
-        override fun reload(
-            barrier: PreparableReloadListener.PreparationBarrier,
-            manager: ResourceManager,
-            backgroundExecutor: Executor,
-            gameExecutor: Executor,
-        ): CompletableFuture<Void> = original.reload(barrier, manager, backgroundExecutor, gameExecutor)
-    }
-    *///?}
 }
 

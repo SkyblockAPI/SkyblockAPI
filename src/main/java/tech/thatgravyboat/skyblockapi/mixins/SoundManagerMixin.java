@@ -1,4 +1,3 @@
-//? if > 1.21.5 {
 package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.sugar.Local;

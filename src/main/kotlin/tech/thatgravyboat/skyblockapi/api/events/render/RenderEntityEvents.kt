@@ -1,22 +1,16 @@
 package tech.thatgravyboat.skyblockapi.api.events.render
 
+import net.minecraft.client.renderer.entity.state.AvatarRenderState
 import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.world.entity.Avatar
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-//? if > 1.21.8 {
-import net.minecraft.client.renderer.entity.state.AvatarRenderState
-import net.minecraft.world.entity.Avatar
-//?} else {
-/*import net.minecraft.client.player.AbstractClientPlayer
-import net.minecraft.client.renderer.entity.state.PlayerRenderState
-*///?}
-
-abstract class BaseRenderEntityEvent<E : Entity, S : EntityRenderState>() : SkyBlockEvent() {
+abstract class BaseRenderEntityEvent<E : Entity, S : EntityRenderState> : SkyBlockEvent() {
     abstract var state: S?
         internal set
     abstract var entity: E?
@@ -53,14 +47,7 @@ object HumanoidRenderEvent : BaseRenderEntityEvent<LivingEntity, HumanoidRenderS
     override var entity: LivingEntity? = null
 }
 
-//? if > 1.21.8 {
 object AvatarRenderEvent : BaseRenderEntityEvent<Avatar, AvatarRenderState>() {
     override var state: AvatarRenderState? = null
     override var entity: Avatar? = null
 }
-//?} else {
-/*object PlayerRenderEvent : BaseRenderEntityEvent<AbstractClientPlayer, PlayerRenderState>() {
-    override var state: PlayerRenderState? = null
-    override var entity: AbstractClientPlayer? = null
-}
-*///?}
