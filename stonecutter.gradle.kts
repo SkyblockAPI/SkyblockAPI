@@ -2,8 +2,10 @@ import org.gradle.kotlin.dsl.support.serviceOf
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 plugins {
+    kotlin("jvm")
     id("dev.kikugie.stonecutter")
     id("fabric-loom") version "1.15.2" apply false
+    id("net.fabricmc.fabric-loom") version "1.15.2" apply false
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
     `maven-publish`
 }
@@ -73,8 +75,10 @@ stonecutter.versions.forEach { (project, version) ->
 
         project.afterEvaluate {
             this@create.dependencies.addAll(configurations.named("api").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
-            outgoing.artifact(tasks.named("remapJar"))
+            runCatching {
+                this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
+                outgoing.artifact(tasks.named("remapJar"))
+            }
         }
 
         outgoing.capability("tech.thatgravyboat:skyblock-api-$version-remapped:${rootProject.version}")
@@ -98,7 +102,9 @@ stonecutter.versions.forEach { (project, version) ->
 
         project.afterEvaluate {
             this@create.dependencies.addAll(configurations.named("api").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
+            runCatching {
+                this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
+            }
             outgoing.artifact(tasks.named("jar"))
         }
 
@@ -124,10 +130,14 @@ stonecutter.versions.forEach { (project, version) ->
 
         project.afterEvaluate {
             this@create.dependencies.addAll(configurations.named("runtimeOnly").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modRuntimeOnly").get().dependencies)
+            runCatching {
+                this@create.dependencies.addAll(configurations.named("modRuntimeOnly").get().dependencies)
+                this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
+            }
             this@create.dependencies.addAll(configurations.named("api").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
-            outgoing.artifact(tasks.named("remapJar"))
+            runCatching {
+                outgoing.artifact(tasks.named("remapJar"))
+            }
         }
 
         outgoing.capability("tech.thatgravyboat:skyblock-api-$version-remapped:${rootProject.version}")
@@ -150,10 +160,12 @@ stonecutter.versions.forEach { (project, version) ->
         }
 
         project.afterEvaluate {
-            this@create.dependencies.addAll(configurations.named("runtimeOnly").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modRuntimeOnly").get().dependencies)
             this@create.dependencies.addAll(configurations.named("api").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
+            this@create.dependencies.addAll(configurations.named("runtimeOnly").get().dependencies)
+            runCatching {
+                this@create.dependencies.addAll(configurations.named("modRuntimeOnly").get().dependencies)
+                this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
+            }
             outgoing.artifact(tasks.named("jar"))
         }
 

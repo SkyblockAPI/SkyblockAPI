@@ -1,7 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm) version (libs.versions.kotlin.asProvider())
     `kotlin-dsl`
-    `java-gradle-plugin`
 }
 
 repositories {
@@ -15,6 +13,7 @@ dependencies {
     implementation(libs.bundles.kotlin.gradle.plugin)
     implementation(libs.google.gson)
     implementation(libs.meowdding.resources)
+    implementation("dev.kikugie.stonecutter:dev.kikugie.stonecutter.gradle.plugin:0.8.3")
 }
 
 gradlePlugin {
