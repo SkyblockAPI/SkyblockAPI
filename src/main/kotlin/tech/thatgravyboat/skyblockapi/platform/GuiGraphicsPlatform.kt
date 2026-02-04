@@ -112,13 +112,13 @@ fun GuiGraphics.drawFilledBox(x: Int, y: Int, width: Int, height: Int, color: In
 fun GuiGraphics.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
     // I don't know what minecraft cooked here, they reverted this change in 1.21.11
     //? if < 1.21.11 {
-    this.fill(x, y, x + width, y + 1, color)
+    /*this.fill(x, y, x + width, y + 1, color)
     this.fill(x, y + height - 1, x + width, y + height, color)
     this.fill(x, y + 1, x + 1, y + height - 1, color)
     this.fill(x + width - 1, y + 1, x + width, y + height - 1, color)
-    //?} else {
-    /*this.renderOutline(x, y, width, height, color)
-    *///?}
+    *///?} else {
+    this.renderOutline(x, y, width, height, color)
+    //?}
 }
 
 fun GuiGraphics.showTooltip(text: Component, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {

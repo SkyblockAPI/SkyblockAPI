@@ -1,10 +1,6 @@
 import com.google.devtools.ksp.gradle.KspExtension
 import me.owdding.AutoMixinExtension
 import me.owdding.repo.resources.CompactingResourcesExtension
-import org.gradle.kotlin.dsl.add
-import org.gradle.kotlin.dsl.module
-import org.gradle.kotlin.dsl.properties
-import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -38,18 +34,19 @@ repositories {
     )
     scopedMaven("https://maven.nucleoid.xyz/", "eu.pb4")
     mavenCentral()
+    mavenLocal()
 }
 
-fun isNewVersioning() = stonecutter.eval(stonecutter.current.version, ">=26.1")
+fun isUnobfuscated() = stonecutter.eval(stonecutter.current.version, ">=26.1")
 dependencies {
     "ksp"(versionedCatalog.bundles["meowdding"])
 }
 
 afterEvaluate {
     dependencies {
-        val api = if (isNewVersioning()) "api" else "modApi"
-        val implementation = if (isNewVersioning()) "implementation" else "modImplementation"
-        val runtimeOnly = if (isNewVersioning()) "runtimeOnly" else "modRuntimeOnly"
+        val api = if (isUnobfuscated()) "api" else "modApi"
+        val implementation = if (isUnobfuscated()) "implementation" else "modImplementation"
+        val runtimeOnly = if (isUnobfuscated()) "runtimeOnly" else "modRuntimeOnly"
 
         "minecraft"(versionedCatalog["minecraft"])
 
@@ -58,12 +55,14 @@ afterEvaluate {
 
         implementation(versionedCatalog["fabric.language.kotlin"])
 
-        //"api"(versionedCatalog["meowdding.item.dfu"]) {
-        //    capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}") }
-        //}
-        //"include"(versionedCatalog["meowdding.item.dfu"]) {
-        //    capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}-remapped") }
-        //}
+        "api"(versionedCatalog["meowdding.item.dfu"]) {
+            capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}") }
+        }
+        "include"(versionedCatalog["meowdding.item.dfu"]) {
+            capabilities {
+                requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}${if (isUnobfuscated()) "" else "-remapped"}")
+            }
+        }
 
         "api"(versionedCatalog["hypixel.modapi"])
         implementation(versionedCatalog.bundles["hypixel"])
@@ -138,7 +137,7 @@ tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
-val javaVersion get() = if (isNewVersioning()) 25 else 21
+val javaVersion get() = if (isUnobfuscated()) 25 else 21
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
@@ -160,7 +159,7 @@ afterEvaluate {
         enabled = false
     }
 
-    if (!isNewVersioning()) {
+    if (!isUnobfuscated()) {
         tasks.named<AbstractArchiveTask>("remapJar") {
             archiveClassifier = stonecutter.current.version
         }
