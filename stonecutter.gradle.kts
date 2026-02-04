@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 plugins {
     id("dev.kikugie.stonecutter")
-    id("fabric-loom") version "1.14-SNAPSHOT" apply false
+    id("fabric-loom") version "1.15.2" apply false
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
     `maven-publish`
 }
@@ -62,7 +62,7 @@ stonecutter.versions.forEach { (project, version) ->
         attributes {
             attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
-            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)// TODO
             attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
             attribute(KotlinPlatformType.attribute, KotlinPlatformType.jvm)
             attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
@@ -87,7 +87,7 @@ stonecutter.versions.forEach { (project, version) ->
         attributes {
             attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
-            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)// TODO
             attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
             attribute(KotlinPlatformType.attribute, KotlinPlatformType.jvm)
             attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
@@ -113,7 +113,7 @@ stonecutter.versions.forEach { (project, version) ->
         attributes {
             attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
-            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)// TODO
             attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
             attribute(KotlinPlatformType.attribute, KotlinPlatformType.jvm)
             attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
@@ -140,7 +140,7 @@ stonecutter.versions.forEach { (project, version) ->
         attributes {
             attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
-            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21) // TODO
             attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
             attribute(KotlinPlatformType.attribute, KotlinPlatformType.jvm)
             attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))

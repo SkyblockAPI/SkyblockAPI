@@ -3,7 +3,6 @@
 import com.google.devtools.ksp.gradle.KspAATask
 import net.fabricmc.loom.task.RemapJarTask
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -13,7 +12,6 @@ plugins {
     alias(libs.plugins.kotlin.symbol.processor)
     alias(libs.plugins.meowdding.resources)
     alias(libs.plugins.meowdding.auto.mixins)
-    //alias(libs.plugins.detekt)
     `versioned-catalogues`
     `item-data`
 }
@@ -39,18 +37,21 @@ repositories {
 
 dependencies {
     minecraft(versionedCatalog["minecraft"])
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment(variantOf(versionedCatalog["parchment"]) {
-            artifactType("zip")
+
+    if (!isNewVersioning()) {
+        mappings(loom.layered {
+            officialMojangMappings()
+            parchment(variantOf(versionedCatalog["parchment"]) {
+                artifactType("zip")
+            })
         })
-    })
+    }
 
     compileOnly(project(":annotations"))
     compileOnly(libs.bundles.meowdding)
     ksp(libs.bundles.meowdding)
 
-    modImplementation(libs.fabric.language.kotlin)
+    maybeModImplementation(libs.fabric.language.kotlin)
 
     api(libs.meowdding.item.dfu) {
         capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}") }
@@ -60,23 +61,34 @@ dependencies {
     }
 
     api(libs.hypixel.modapi)
-    modImplementation(libs.bundles.hypixel)
+    maybeModImplementation(libs.bundles.hypixel)
     include(libs.hypixel.modapi.fabric)
 
     modApi(libs.skyblockapi.repolib)
     include(libs.skyblockapi.repolib)
 
-    if(stonecutter.eval(stonecutter.current.version, ">=1.21.11")) {
-        // TODO https://github.com/DJtheRedstoner/DevAuth/issues/24
-        runtimeOnly("org.apache.httpcomponents:httpclient:4.5.14")
-        runtimeOnly("org.apache.httpcomponents:httpcore:4.4.16")
-    }
     modRuntimeOnly(libs.devauth)
 
-    modImplementation(versionedCatalog["fabric.api"])
-    modImplementation(libs.fabric.language.kotlin)
-    modImplementation(libs.fabric.loader)
+    maybeModImplementation(versionedCatalog["fabric.api"])
+    maybeModImplementation(libs.fabric.language.kotlin)
+    maybeModImplementation(libs.fabric.loader)
 }
+
+// TODO: remove when 26.1+ only
+fun DependencyHandler.maybeModImplementation(dep: Any) {
+    if (isNewVersioning()) {
+        implementation(dep)
+    } else {
+        modImplementation(dep)
+    }
+}
+
+
+// TODO: remove when 26.1+ only
+fun isNewVersioning() = stonecutter.eval(stonecutter.current.version, ">=26.1")
+
+val javaVersion = if (isNewVersioning()) 25 else 21
+//val jvmTargetVersion = if (isNewVersioning()) JvmTarget.JVM_25 else JvmTarget.JVM_21
 
 val mcVersion = stonecutter.current.version.replace(".", "")
 val accessWidenerFile = rootProject.file("src/sbapi.accesswidener")
@@ -103,8 +115,12 @@ afterEvaluate {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
     withSourcesJar()
+}
+
+kotlin {
+    jvmToolchain(javaVersion)
 }
 
 val archiveName = "skyblock-api"
@@ -130,11 +146,11 @@ compactingResources {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    options.release.set(21)
+    options.release.set(javaVersion)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
+    //compilerOptions.jvmTarget.set(jvmTargetVersion)
     compilerOptions.optIn.add("kotlin.time.ExperimentalTime")
     compilerOptions.freeCompilerArgs.addAll(
         "-Xcontext-parameters",
@@ -190,11 +206,11 @@ tasks.processResources {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    options.release.set(21)
+    options.release.set(javaVersion)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
+    //compilerOptions.jvmTarget.set(jvmTargetVersion)
 }
 
 ksp {

@@ -1,0 +1,12 @@
+[versions]
+minecraft-start = "26.1-snapshot-6"
+minecraft-end = "26.1"
+minecraft = "26.1-snapshot-6"
+
+sbapi-mc-version = "1.21.11"
+fabric-api = "0.143.2+26.1"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+
+fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
