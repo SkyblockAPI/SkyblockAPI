@@ -1,6 +1,10 @@
 import org.gradle.kotlin.dsl.support.serviceOf
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
+repositories {
+    mavenCentral()
+}
+
 plugins {
     kotlin("jvm")
     id("dev.kikugie.stonecutter")

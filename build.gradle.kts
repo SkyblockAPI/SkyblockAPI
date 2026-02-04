@@ -1,17 +1,25 @@
+@file:Suppress("UnstableApiUsage")
+
+import net.fabricmc.loom.task.ValidateAccessWidenerTask
 
 plugins {
-    idea
-    `versioned-catalogues`
     `sbapi-setup`
-    `item-data`
-    alias(libs.plugins.kotlin.symbol.processor)
-    alias(libs.plugins.meowdding.resources)
-    alias(libs.plugins.meowdding.auto.mixins)
-    kotlin("jvm")
     id("net.fabricmc.fabric-loom")
 }
 
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(25)
-    withSourcesJar()
+val mcVersion = stonecutter.current.version.replace(".", "")
+val accessWidenerFile = rootProject.file("src/sbapi.accesswidener")
+
+loom {
+    runConfigs["client"].apply {
+        ideConfigGenerated(true)
+        runDir = "../../run"
+        vmArg("-Dfabric.modsFolder=" + '"' + "${mcVersion}Mods" + '"')
+    }
+
+    if (accessWidenerFile.exists()) {
+        accessWidenerPath.set(accessWidenerFile)
+    }
 }
+
+tasks.withType<ValidateAccessWidenerTask> { enabled = false }

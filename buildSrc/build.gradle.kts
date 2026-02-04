@@ -8,11 +8,17 @@ repositories {
     maven("https://maven.teamresourceful.com/repository/maven-public/")
 }
 
+fun plugin(provider: Provider<PluginDependency>): Provider<String> = provider.map {
+    "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}"
+}
+
 dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.bundles.kotlin.gradle.plugin)
     implementation(libs.google.gson)
-    implementation(libs.meowdding.resources)
+    implementation(plugin(libs.plugins.kotlin.symbol.processor))
+    implementation(plugin(libs.plugins.meowdding.resources))
+    implementation(plugin(libs.plugins.meowdding.auto.mixins))
     implementation("dev.kikugie.stonecutter:dev.kikugie.stonecutter.gradle.plugin:0.8.3")
 }
 

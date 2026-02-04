@@ -27,7 +27,6 @@ google-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson
 
 meowdding-modules = { module = "me.owdding.ktmodules:KtModules", version.ref = "meowdding-modules" }
 meowdding-ktcodecs = { module = "me.owdding.ktcodecs:KtCodecs", version.ref = "meowdding-ktcodecs" }
-meowdding-resources = { module = "me.owdding.repo:compacting-resources", version.ref = "meowdding-resources" }
 meowdding-item-dfu = { module = "me.owdding:item-data-fixer", version.ref = "meowdding-item-dfu" }
 
 fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-language-kotlin" }
@@ -51,7 +50,7 @@ kotlin-gradle-plugin = ["kotlin-gradle-plugin", "kotlin-gradle-plugin-api"]
 
 [plugins]
 
-meowdding-resources = { id = "me.owdding.resources" }
+meowdding-resources = { id = "me.owdding.resources", version.ref = "meowdding-resources" }
 meowdding-auto-mixins = { id = "me.owdding.auto-mixins", version.ref = "meowdding-auto-mixins" }
 
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm" }
