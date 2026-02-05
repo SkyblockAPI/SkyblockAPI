@@ -14,7 +14,7 @@ loom {
     runConfigs["client"].apply {
         ideConfigGenerated(true)
         runDir = "../../run"
-        vmArg("-Dfabric.modsFolder=" + '"' + "${mcVersion}Mods" + '"')
+        vmArg("-Dfabric.modsFolder=\"${mcVersion}Mods\"")
     }
 
     if (accessWidenerFile.exists()) {
