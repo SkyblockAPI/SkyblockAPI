@@ -52,7 +52,7 @@ fun ItemStack.getRarityLineIndex(): Int {
 
 fun ItemStack.getTexture(): String? {
     val skin = this.get(DataComponents.PROFILE) ?: return null
-    return skin.properties.get("textures").first().value()
+    return skin.properties.get("textures").firstOrNull()?.value()
 }
 
 fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
