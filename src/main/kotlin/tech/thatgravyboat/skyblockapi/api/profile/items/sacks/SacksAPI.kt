@@ -72,7 +72,7 @@ object SacksAPI {
 
             val changedItems = hoverComponents.mapNotNull { component ->
                 addedItemsRegex.findOrNull(component.stripped, "amount", "item") { (amount, item) ->
-                    val id = SimpleItemAPI.findIdByName(item) ?: return@findOrNull null
+                    val id = SimpleItemAPI.findIdByName(item)?.cleanId ?: return@findOrNull null
                     return@findOrNull id to amount.replace("+", "").toIntValue()
                 }
             }
