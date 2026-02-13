@@ -72,7 +72,7 @@ object SacksAPI {
 
             val changedItems = hoverComponents.mapNotNull { component ->
                 addedItemsRegex.findOrNull(component.stripped, "amount", "item") { (amount, item) ->
-                    val id = SimpleItemAPI.findIdByName(item)?.cleanId ?: return@findOrNull null
+                    val id = SimpleItemAPI.findIdByName(item)?.skyblockId ?: return@findOrNull null
                     return@findOrNull id to amount.replace("+", "").toIntValue()
                 }
             }
@@ -160,7 +160,7 @@ object SacksAPI {
             thenCallback("id", StringArgumentType.string()) {
                 val id = argument<String>("id")
                 val amount = sackItems[id] ?: run {
-                    Text.sendDebug("This item isnt in sacks!")
+                    Text.sendDebug("This item isn't in sacks!")
                     return@thenCallback
                 }
                 Text.sendDebug("You have $amount of item $id")
