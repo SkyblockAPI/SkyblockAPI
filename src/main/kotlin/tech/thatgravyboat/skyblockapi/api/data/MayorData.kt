@@ -33,7 +33,7 @@ object MayorCandidates {
     //region Candidates
     val AATROX = register("Aatrox", MayorPerks.SLASHED_PRICING, MayorPerks.SLAYER_XP_BUFF, MayorPerks.PATHFINDER)
     val COLE = register("Cole", MayorPerks.PROSPECTION, MayorPerks.MINING_XP_BUFF, MayorPerks.MINING_FIESTA, MayorPerks.MOLTEN_FORGE)
-    val DIANA = register("Diana", MayorPerks.LUCKY, MayorPerks.MYTHOLOGICAL_RITUAL, MayorPerks.PET_XP_BUFF, MayorPerks.SHARING_IS_CARING)
+    val DIANA = register("Diana", MayorPerks.HUNTRESS_INTUITION, MayorPerks.MYTHOLOGICAL_RITUAL, MayorPerks.PET_XP_BUFF, MayorPerks.SHARING_IS_CARING)
     val DIAZ = register("Diaz", MayorPerks.SHOPPING_SPREE, MayorPerks.VOLUME_TRADING, MayorPerks.STOCK_EXCHANGE, MayorPerks.LONG_TERM_INVESTMENT)
     val FINNEGAN = register("Finnegan", MayorPerks.PELT_POCALYPSE, MayorPerks.GOATED, MayorPerks.BLOOMING_BUSINESS, MayorPerks.PEST_ERADICATOR)
     val FOXY = register("Foxy", MayorPerks.SWEET_BENEVOLENCE, MayorPerks.A_TIME_FOR_GIVING, MayorPerks.CHIVALROUS_CARNIVAL, MayorPerks.EXTRA_EVENT)
@@ -87,7 +87,9 @@ object MayorPerks {
     val MOLTEN_FORGE = register("Molten Forge")
 
     // Diana
+    @RemoveNextVersion
     val LUCKY = register("Lucky!")
+    val HUNTRESS_INTUITION = register("Huntress' Intuition")
     val MYTHOLOGICAL_RITUAL = register("Mythological Ritual")
     val PET_XP_BUFF = register("Pet XP Buff")
     val SHARING_IS_CARING = register("Sharing is Caring")
