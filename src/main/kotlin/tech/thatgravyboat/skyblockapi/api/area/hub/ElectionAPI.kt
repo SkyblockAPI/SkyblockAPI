@@ -162,6 +162,9 @@ object ElectionAPI {
         if (electionOverRegex.matches(event.text)) {
             // When the Election is over, schedule a check every minute until a new mayor is found, then schedule every 20 minutes
             updateScheduler(1.minutes, 20.minutes)
+            mayor = null
+            minister = null
+            currentJerryCandidate = null
         }
     }
 
