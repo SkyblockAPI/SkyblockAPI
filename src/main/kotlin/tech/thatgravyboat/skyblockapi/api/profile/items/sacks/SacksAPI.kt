@@ -24,6 +24,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
@@ -71,7 +72,7 @@ object SacksAPI {
 
             val changedItems = hoverComponents.mapNotNull { component ->
                 addedItemsRegex.findOrNull(component.stripped, "amount", "item") { (amount, item) ->
-                    val id = RepoItemsAPI.getItemIdByName(item) ?: return@findOrNull null
+                    val id = SimpleItemAPI.findIdByName(item)?.skyblockId ?: return@findOrNull null
                     return@findOrNull id to amount.replace("+", "").toIntValue()
                 }
             }
@@ -159,7 +160,7 @@ object SacksAPI {
             thenCallback("id", StringArgumentType.string()) {
                 val id = argument<String>("id")
                 val amount = sackItems[id] ?: run {
-                    Text.sendDebug("This item isnt in sacks!")
+                    Text.sendDebug("This item isn't in sacks!")
                     return@thenCallback
                 }
                 Text.sendDebug("You have $amount of item $id")

@@ -6,6 +6,8 @@
     "item:builder_brown_mushroom",
     "item:builder_cactus",
     "item:builder_melon",
+    "item:builder_apple",
+    "item:builder_beetroot",
     "item:carrot", // bugged item called "Carrots", actual Carrot is item:carrot_item
     "item:enchanted_clock", // old admin item, normal one is item:enchanted_time_clock
     "item:enchanted_hay_block", // old Enchanted Hay Bale, new one is item:enchanted_hay_bale
