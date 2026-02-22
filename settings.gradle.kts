@@ -3,7 +3,7 @@ rootProject.name = "skyblock-api"
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven(url = "https://maven.teamresourceful.com/repository/maven-public/")
+        maven("https://maven.teamresourceful.com/repository/maven-public/")
         maven("https://maven.kikugie.dev/snapshots")
         maven("https://maven.fabricmc.net/")
     }

@@ -9,6 +9,7 @@ plugins {
 
 val mcVersion = stonecutter.current.version.replace(".", "")
 val accessWidenerFile = rootProject.file("src/sbapi.accesswidener")
+
 loom {
     runConfigs["client"].apply {
         ideConfigGenerated(true)
