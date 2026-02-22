@@ -3,7 +3,7 @@
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 
 plugins {
-    id("fabric-loom")
+    id("net.fabricmc.fabric-loom-remap")
     `sbapi-setup`
 }
 
