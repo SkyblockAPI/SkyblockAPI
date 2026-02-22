@@ -6,6 +6,8 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.asReversedIterator
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
@@ -28,6 +30,7 @@ object LoreDataTypes {
     private val snowballsRegex = dataTypeGroup.create("snowballs", "Snowballs: (?<snowballs>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
     private val dungeonBreakerRegex = dataTypeGroup.create("dungeonbreaker", "Charges: (?<current>\\d+)/(?<max>\\d+)⸕")
     private val waterRegex = dataTypeGroup.create("water_level", "Water: (?<current>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
+    private val selectedArrowRegex = dataTypeGroup.create("arrow", "^Selected: (?<type>.+)$")
 
     val FUEL: DataType<Pair<Int, Int>> = DataType.of("fuel") {
         var output: Pair<Int, Int>? = null
@@ -105,6 +108,16 @@ object LoreDataTypes {
         var output: Pair<Int, Int>? = null
         waterRegex.anyMatch(it.getRawLore(), "current", "max") { (current, max) ->
             output = current.parseFormattedInt() to max.parseFormattedInt()
+        }
+        output
+    }
+
+    val SELECTED_ARROW: DataType<SkyBlockId> = DataType.of("selected_arrow") {
+        if (DataTypes.ID.factory(it) != "ARROW_SWAPPER") return@of null
+
+        var output: SkyBlockId? = null
+        selectedArrowRegex.anyMatch(it.getRawLore(), "type") { (type) ->
+            output = SkyBlockId.fromName(type, dropLast = false)
         }
         output
     }
