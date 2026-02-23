@@ -165,7 +165,10 @@ object McClient {
     }
 
     fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
-        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(id, listener)
+        //? >= 26.1 {
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(id, listener)
+        //? } else
+        // ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(id, listener)
     }
 }
 
