@@ -1,14 +1,13 @@
 package tech.thatgravyboat.skyblockapi.api.area.farming.garden
 
-import net.minecraft.core.BlockPos
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.StemBlock
 import net.minecraft.world.level.block.state.BlockState
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+//? < 26.1
+// import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
-import tech.thatgravyboat.skyblockapi.helpers.McLevel
 
 enum class Crop(val tool: FarmingTool, vararg block: Block, skyBlockId: String? = null) {
     WHEAT(FarmingTool.THEORETICAL_HOE_WHEAT, Blocks.WHEAT),
@@ -43,8 +42,8 @@ enum class Crop(val tool: FarmingTool, vararg block: Block, skyBlockId: String? 
 
     open fun isCrop(state: BlockState): Boolean = state.block in blocks
 
-    @RemoveNextVersion(ReplaceWith("item"))
-    val icon: () -> ItemStack = { this.skyBlockId.toItem() }
+    //? < 26.1
+    // @RemoveNextVersion(ReplaceWith("item")) val icon: () -> ItemStack = { this.skyBlockId.toItem() }
     val item: ItemStack get() = this.skyBlockId.toItem()
 
     companion object {

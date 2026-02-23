@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.area.hub
 
 import me.owdding.ktmodules.Module
 import net.minecraft.util.TriState
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.*
 import tech.thatgravyboat.skyblockapi.api.datetime.SkyBlockInstant
@@ -11,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.MayorChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.MayorUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
@@ -19,10 +17,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.command.EnumArgument
 import tech.thatgravyboat.skyblockapi.utils.command.MapBackedArgumentType
-import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
-import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
-import tech.thatgravyboat.skyblockapi.utils.extentions.sublistAfter
-import tech.thatgravyboat.skyblockapi.utils.extentions.until
+import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.http.Http
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -30,8 +25,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
-import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
-import tech.thatgravyboat.skyblockapi.utils.time.since
 import java.util.concurrent.ScheduledFuture
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
@@ -63,10 +56,10 @@ object ElectionAPI {
     var currentJerryCandidate: Pair<MayorCandidate, Instant>? = null
         private set
 
-    @RemoveNextVersion(ReplaceWith("mayor"))
+    //? < 26.1 {
+    /* @RemoveNextVersion(ReplaceWith("mayor"))
     val currentMayor: Candidate?
         get() = mayor?.let(Candidate::fromMayorCandidate)
-
     @RemoveNextVersion(ReplaceWith("minister"))
     val currentMinister: Candidate?
         get() = minister?.let(Candidate::fromMayorCandidate)
@@ -76,6 +69,7 @@ object ElectionAPI {
         get() = currentJerryCandidate?.let {
             Candidate.fromMayorCandidate(it.first) to it.second
         }
+    *///? }
 
 
     init {
@@ -97,7 +91,8 @@ object ElectionAPI {
         McClient.runNextTick {
             if (handleResponse(response)) {
                 mayor?.let { MayorChangeEvent(it, minister).post() }
-                currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
+                //? < 26.1 {
+                // currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
 
                 if (newSchedulerTime != null) {
                     updateScheduler(newSchedulerTime)

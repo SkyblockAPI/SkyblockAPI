@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.time
-
+//? < 26.1 {
+/*
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import java.time.format.DateTimeFormatter
 import kotlin.time.Clock
@@ -24,3 +25,4 @@ fun Instant.until(): Duration = this - currentInstant()
 
 @RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extensions.format"))
 fun DateTimeFormatter.format(instant: Instant): String = this.format(instant.toJavaInstant())
+*///? }

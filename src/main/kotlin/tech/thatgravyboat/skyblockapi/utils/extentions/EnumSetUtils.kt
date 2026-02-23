@@ -1,7 +1,8 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
-import java.util.EnumSet
+//? < 26.1
+// import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import java.util.*
 
 // todo: move into enum extensions with 1.21.6
 
@@ -19,9 +20,7 @@ inline fun <reified E : Enum<E>> Collection<E>.toEnumSet(): EnumSet<E> {
 }
 
 inline fun <reified E : Enum<E>> fullEnumSetOf(): EnumSet<E> = EnumSet.allOf(E::class.java)
-
-@RemoveNextVersion // Remove in favor of Collection.toEnumSet()
-inline fun <reified E : Enum<E>> Set<E>.toEnumSet(): EnumSet<E> =
-    if (isEmpty()) emptyEnumSet<E>() else EnumSet.copyOf(this)
+//? < 26.1
+// @RemoveNextVersion inline fun <reified E : Enum<E>> Set<E>.toEnumSet(): EnumSet<E> = if (isEmpty()) emptyEnumSet<E>() else EnumSet.copyOf(this)
 
 operator fun <E : Enum<E>> E.rangeTo(other: E): EnumSet<E> = EnumSet.range(this, other)
