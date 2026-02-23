@@ -1,8 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.events.info
 
 //? < 26.1 {
-/*
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+/*import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.Candidate
  *///? }
 import tech.thatgravyboat.skyblockapi.api.data.MayorCandidate

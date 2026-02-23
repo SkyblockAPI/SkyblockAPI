@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 //? < 26.1
-// import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import net.minecraft.world.item.Item
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
@@ -52,7 +52,7 @@ object DataTypes {
     val BOOK_OF_STATS: DataType<Int> = GenericDataTypes.BOOK_OF_STATS
 
     //? < 26.1
-    // @RemoveNextVersion val APPLIED_RUNE: DataType<Pair<String, Int>> = GenericDataTypes.APPLIED_RUNE
+    //@RemoveNextVersion val APPLIED_RUNE: DataType<Pair<String, Int>> = GenericDataTypes.APPLIED_RUNE
     val USED_RUNE: DataType<SkyBlockId> = GenericDataTypes.USED_RUNE
     val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN
     val APPLIED_DYE: DataType<String> = GenericDataTypes.APPLIED_DYE
@@ -99,9 +99,9 @@ object DataTypes {
 
     // Farming
     //? < 26.1
-    // @RemoveNextVersion val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
+    //@RemoveNextVersion val CROPS_BROKEN: DataType<Long> = GenericDataTypes.CROPS_BROKEN
     //? < 26.1
-    // @RemoveNextVersion val FUNGI_CUTTER_MODE: DataType<String> = GenericDataTypes.FUNGI_CUTTER_MODE
+    //@RemoveNextVersion val FUNGI_CUTTER_MODE: DataType<String> = GenericDataTypes.FUNGI_CUTTER_MODE
     val CULTIVATING_CROPS: DataType<Long> = GenericDataTypes.CULTIVATING_CROPS
     val TOOL_LEVEL: DataType<Int> = GenericDataTypes.TOOL_LEVEL
     val TOOL_EXP: DataType<Double> = GenericDataTypes.TOOL_EXP

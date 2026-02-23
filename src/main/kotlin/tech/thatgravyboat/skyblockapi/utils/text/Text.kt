@@ -87,7 +87,7 @@ object Text {
         //? >= 26.1 {
         McClient.chat.addClientSystemMessage(this)
         //? } else
-        // McClient.chat.addMessage(this)
+        //McClient.chat.addMessage(this)
     }
     fun Component.send(id: String) = McClient.chat.setMessageId(id) {
         this.send()

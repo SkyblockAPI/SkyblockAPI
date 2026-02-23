@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.area.farming.garden
 
 //? < 26.1
-// import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
 enum class FarmingTool() {
     THEORETICAL_HOE_WHEAT,
@@ -19,5 +19,5 @@ enum class FarmingTool() {
     ;
 
     //? < 26.1
-    // @RemoveNextVersion val multipleTiers: Boolean = true
+    //@RemoveNextVersion val multipleTiers: Boolean = true
 }

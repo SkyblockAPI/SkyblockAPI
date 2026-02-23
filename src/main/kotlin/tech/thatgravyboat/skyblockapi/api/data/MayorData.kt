@@ -1,8 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import net.minecraft.util.TriState
-//? < 26.1 {
-// import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+//? < 26.1
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
 import tech.thatgravyboat.skyblockapi.utils.extentions.toScreamingSnakeCase
@@ -157,8 +157,7 @@ object MayorPerks {
 }
 
 //? < 26.1 {
-/*
-//region Old
+/*//region Old
 @RemoveNextVersion(ReplaceWith("MayorCandidate"))
 enum class Candidate(val mayorCandidate: MayorCandidate) {
     AATROX(MayorCandidates.AATROX),

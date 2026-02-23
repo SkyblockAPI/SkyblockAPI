@@ -7,7 +7,7 @@ import net.minecraft.util.FormattedCharSequence
 //? >= 26.1 {
 import net.minecraft.util.LightCoordsUtil as LightTexture
 //? } else
-// import net.minecraft.client.renderer.LightTexture
+//import net.minecraft.client.renderer.LightTexture
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderWorldEvent
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.text.Text

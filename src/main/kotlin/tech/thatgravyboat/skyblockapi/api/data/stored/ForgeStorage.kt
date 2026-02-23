@@ -22,7 +22,7 @@ internal object ForgeStorage {
     )
 
     //? } else {
-    /* private val V0_CODEC = CodecUtils.map(
+    /*private val V0_CODEC = CodecUtils.map(
         IncludedCodecs.INT_KEY,
         RecordCodecBuilder.create { it.group(
             SkyblockAPICodecs.getCodec<SkyBlockId>().fieldOf("id").forGetter { SkyBlockId.item("") },

@@ -101,7 +101,7 @@ value class SkyBlockId private constructor(val id: String) {
             //? >= 26.1 {
             if (stack.item.toString().equals(stack.hoverName.stripped, true)) return null
             //? } else
-            // if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
+            //if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
 
             return fromName(stack.hoverName.stripped, false)
         }

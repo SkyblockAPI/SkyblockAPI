@@ -57,7 +57,7 @@ object ElectionAPI {
         private set
 
     //? < 26.1 {
-    /* @RemoveNextVersion(ReplaceWith("mayor"))
+    /*@RemoveNextVersion(ReplaceWith("mayor"))
     val currentMayor: Candidate?
         get() = mayor?.let(Candidate::fromMayorCandidate)
     @RemoveNextVersion(ReplaceWith("minister"))
@@ -91,8 +91,8 @@ object ElectionAPI {
         McClient.runNextTick {
             if (handleResponse(response)) {
                 mayor?.let { MayorChangeEvent(it, minister).post() }
-                //? < 26.1 {
-                // currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
+                //? < 26.1
+                //currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
 
                 if (newSchedulerTime != null) {
                     updateScheduler(newSchedulerTime)

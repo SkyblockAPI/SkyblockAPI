@@ -12,5 +12,5 @@ class ScreenInitializedEvent(val screen: Screen) : SkyBlockEvent() {
             //? >= 26.1 {
             Screens.getWidgets(this.screen)
     //? } else
-    // Screens.getButtons(this.screen)
+    //Screens.getButtons(this.screen)
 }
