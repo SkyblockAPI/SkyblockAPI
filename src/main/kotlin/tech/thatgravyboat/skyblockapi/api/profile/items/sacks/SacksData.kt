@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.sacks
 
 import me.owdding.ktcodecs.GenerateCodec
-import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import kotlin.time.Instant
 
 internal data class SacksData(
