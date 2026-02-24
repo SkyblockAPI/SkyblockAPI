@@ -34,20 +34,41 @@ stonecutter parameters {
 
     replacements.regex {
         direction = eval(current.version, "< 1.21.11")
-        replace("import net.minecraft.resources.Identifier(?!;)", "import net.minecraft.resources.ResourceLocation as Identifier")
-        reverse("import net.minecraft.resources.ResourceLocation as Identifier", "import net.minecraft.resources.Identifier")
+        replace(
+            "import net.minecraft.resources.Identifier(?!;)", "import net.minecraft.resources.ResourceLocation as Identifier",
+            "import net.minecraft.resources.ResourceLocation as Identifier", "import net.minecraft.resources.Identifier"
+        )
     }
 
     replacements.regex {
         direction = eval(current.version, "< 1.21.11")
-        replace("import net.minecraft.util.IdentifierPattern(?!;)", "import net.minecraft.util.ResourceLocationPattern as IdentifierPattern")
-        reverse("import net.minecraft.util.ResourceLocationPattern as IdentifierPattern", "import net.minecraft.util.IdentifierPattern")
+        replace(
+            "import net.minecraft.util.IdentifierPattern(?!;)", "import net.minecraft.util.ResourceLocationPattern as IdentifierPattern",
+            "import net.minecraft.util.ResourceLocationPattern as IdentifierPattern", "import net.minecraft.util.IdentifierPattern"
+        )
     }
 
-    replacements.regex {
+    replacements.string {
         direction = eval(current.version, "< 1.21.11")
         replace("import net.minecraft.advancements.criterion", "import net.minecraft.advancements.critereon")
-        reverse("import net.minecraft.advancements.critereon", "import net.minecraft.advancements.criterion")
+    }
+
+    replacements.string {
+        direction = eval(current.version, "< 26.1")
+        replace(
+            "import net.fabricmc.fabric.api.client.command.v2.ClientCommands",
+            "import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager as ClientCommands",
+        )
+        replace(
+            "import net.minecraft.client.multiplayer.chat.GuiMessage",
+            "import net.minecraft.client.GuiMessage",
+        )
+        replace(
+            "import net.minecraft.client.multiplayer.chat.GuiMessageTag",
+            "import net.minecraft.client.GuiMessageTag",
+        )
+        replace("Lnet/minecraft/client/multiplayer/chat/GuiMessage", "Lnet/minecraft/client/GuiMessage")
+        replace("Lnet/minecraft/client/multiplayer/chat/GuiMessageTag", "Lnet/minecraft/client/GuiMessageTag")
     }
 }
 

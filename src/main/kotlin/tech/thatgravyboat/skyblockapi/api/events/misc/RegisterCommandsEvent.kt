@@ -7,7 +7,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.suggestion.SuggestionProvider
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.SharedSuggestionProvider
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
@@ -31,7 +31,7 @@ class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClie
             return
         }
 
-        ClientCommandManager.literal(command)
+        ClientCommands.literal(command)
             .apply { LiteralCommandBuilder(this).apply(builder) }
             .let(::register)
     }
@@ -61,12 +61,12 @@ class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal
     fun then(vararg names: String, action: LiteralCommandBuilder.() -> Unit): CommandBuilder<B> {
         for (name in names) {
             if (name.contains(" ")) {
-                val builder = CommandBuilder(ClientCommandManager.literal(name.substringBefore(" ")))
+                val builder = CommandBuilder(ClientCommands.literal(name.substringBefore(" ")))
                 builder.then(name.substringAfter(" "), action = action)
                 this.builder.then(builder.builder)
                 continue
             }
-            val builder = CommandBuilder(ClientCommandManager.literal(name))
+            val builder = CommandBuilder(ClientCommands.literal(name))
             builder.action()
             this.builder.then(builder.builder)
         }
@@ -92,13 +92,13 @@ class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>> internal
         action: ArgumentCommandBuilder<T>.() -> Unit,
     ): CommandBuilder<B> {
         if (name.contains(" ")) {
-            val builder = CommandBuilder(ClientCommandManager.literal(name.substringBefore(" ")))
+            val builder = CommandBuilder(ClientCommands.literal(name.substringBefore(" ")))
             builder.then(name.substringAfter(" "), argument, suggestions, action)
             this.builder.then(builder.builder)
             return this
         }
         val builder = CommandBuilder(
-            ClientCommandManager.argument(name, argument).apply {
+            ClientCommands.argument(name, argument).apply {
                 if (suggestions != null) suggests(suggestions)
             },
         )

@@ -7,7 +7,7 @@ meowdding-resources = "1.0.17"
 meowdding-item-dfu = "1.0.9-beta.1"
 meowdding-auto-mixins = "1.0.8"
 
-fabric-loader = "0.18.0"
+fabric-loader = "0.18.4"
 fabric-language-kotlin = "1.13.8+kotlin.2.3.0"
 
 kotlin = "2.3.0"

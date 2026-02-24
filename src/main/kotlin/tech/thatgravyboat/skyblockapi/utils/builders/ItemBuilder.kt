@@ -59,7 +59,7 @@ class ItemBuilder {
         }
     }
 
-    private val customItemName get() = components.build().get(DataComponents.CUSTOM_NAME)?.getOrNull()
+    private val customItemName: Component? get() = components.build().entrySet().find { it.key == DataComponents.CUSTOM_NAME }?.value?.getOrNull() as? Component
 
     fun namePrefix(prefix: String) = namePrefix(Component.literal(prefix))
     fun namePrefix(prefix: Component) = name(Text.join(prefix, customItemName))

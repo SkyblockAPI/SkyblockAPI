@@ -27,7 +27,7 @@ public class ScreenMixin {
         var screen = (Screen) (Object) this;
         if (new RenderScreenBackgroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus())) {
             new RenderScreenForegroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus());
-            graphics.renderDeferredElements();
+            graphics.renderDeferredElements(mouseX, mouseY, partialTicks);
             ci.cancel();
         }
     }
@@ -36,7 +36,7 @@ public class ScreenMixin {
         method = "renderWithTooltipAndSubtitles",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/GuiGraphics;renderDeferredElements()V"
+            target = "Lnet/minecraft/client/gui/GuiGraphics;renderDeferredElements(IIF)V"
         )
     )
     private void renderAfter(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {

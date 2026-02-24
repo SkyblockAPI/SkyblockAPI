@@ -1,10 +1,10 @@
 [versions]
-minecraft-start = "26.1-snapshot-9"
+minecraft-start = "26.1-snapshot-10"
 minecraft-end = "26.1"
-minecraft = "26.1-snapshot-9"
+minecraft = "26.1-snapshot-10"
 
 sbapi-mc-version = "1.21.11"
-fabric-api = "0.143.5+26.1"
+fabric-api = "0.143.6+26.1"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
