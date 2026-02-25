@@ -82,7 +82,7 @@ object LoreDataTypes {
     }
 
     val RARITY: DataType<SkyBlockRarity> = DataType.of("rarity") {
-        getRarityLine(it)?.second
+        getRarityLine(it)?.second ?: GenericDataTypes.PET_DATA.factory(it)?.rarity
     }
 
     val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") {
