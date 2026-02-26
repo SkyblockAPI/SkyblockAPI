@@ -5,10 +5,10 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemLore
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
-import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumArmorData
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumCategory
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumItemData
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumStorageData
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRarityLineIndex
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
@@ -40,14 +40,14 @@ internal object MuseumStorage {
         return newItem
     }
 
-    /** Should only be called for Weapons and Rarities */
-    fun addItem(category: MuseumCategory, internalName: String, item: ItemStack) {
+    /** Shouldn't be called for special items */
+    fun addItem(category: MuseumCategory, id: SkyBlockId, item: ItemStack) {
         val data = data ?: return
         val cleanedItem = item.removeMuseumLines()
         val items = data.categories.getOrPut(category, ::LinkedHashMap)
-        val currentData = items[internalName]
+        val currentData = items[id]
         if (currentData == null) {
-            items[internalName] = MuseumItemData(cleanedItem)
+            items[id] = MuseumItemData(cleanedItem)
         } else {
             if (cleanedItem.isSameItem(currentData.item)) return
             currentData.item = cleanedItem
@@ -55,13 +55,13 @@ internal object MuseumStorage {
         save()
     }
 
-    /** Should only be called for Weapons and Rarities */
-    fun addNotStoredItem(category: MuseumCategory, internalName: String) {
+    /** Shouldn't be called for special items */
+    fun addNotStoredItem(category: MuseumCategory, id: SkyBlockId) {
         val data = data ?: return
         val items = data.categories.getOrPut(category, ::LinkedHashMap)
-        val currentData = items[internalName]
+        val currentData = items[id]
         if (currentData == null) {
-            items[internalName] = MuseumItemData(null)
+            items[id] = MuseumItemData(null)
         } else {
             if (currentData.item == null) return // Item is already marked as not stored
             currentData.item = null
@@ -71,62 +71,27 @@ internal object MuseumStorage {
 
     /**
      * Completely removes said item from the museum storage.
-     * Should only be called for Weapons and Rarities
+     * Shouldn't be called for special items
      */
-    fun deleteItem(internalName: String) {
+    fun deleteItem(id: SkyBlockId) {
         val data = data ?: return
         var shouldSave = false
         for (map in data.categories.values) {
-            if (map.remove(internalName) != null) shouldSave = true
+            if (map.remove(id) != null) shouldSave = true
         }
         if (shouldSave) save()
-    }
-
-    fun addArmorSet(armorSetName: String, items: Map<String, ItemStack>) {
-        val data = data ?: return
-        val armorSet = data.armorSets.getOrPut(armorSetName, ::MuseumArmorData)
-        var shouldSave = false
-        for ((internalName, item) in items) {
-            val prev = armorSet.items[internalName]
-            val cleanedItem = item.removeMuseumLines()
-            if (!cleanedItem.isSameItem(prev)) {
-                armorSet.items[internalName] = cleanedItem
-                shouldSave = true
-            }
-        }
-        if (shouldSave) save()
-    }
-
-    fun addNotStoredArmorSet(armorSetName: String) {
-        val data = data ?: return
-        var shouldSave = false
-        val armorSet = data.armorSets.getOrPut(armorSetName) {
-            shouldSave = true
-            MuseumArmorData()
-        }
-        if (armorSet.inMuseum) {
-            armorSet.items.clear()
-            shouldSave = true
-        }
-        if (shouldSave) save()
-    }
-
-    fun deleteArmorSet(armorSetName: String) {
-        val data = data ?: return
-        if (data.armorSets.remove(armorSetName) != null) save()
     }
 
     /** Shouldn't be directly edited and should only be used for debugging purposes. */
     fun getRawData() = data
 
     fun getAllItems(): List<ItemStack> {
-        return MuseumCategory.entries.flatMap { getItemsOnCategory(it)}
+        return MuseumCategory.entries.flatMap { getItemsOnCategory(it) }
     }
 
     fun getItemsOnCategory(category: MuseumCategory): List<ItemStack> {
         val data = data ?: return emptyList()
-        return when(category) {
-            MuseumCategory.ARMOR_SETS -> data.armorSets.values.flatMap { it.items.values }
+        return when (category) {
             MuseumCategory.SPECIAL_ITEMS -> data.specialItems
             else -> data.categories[category]?.values?.mapNotNull(MuseumItemData::item).orEmpty()
         }
@@ -136,30 +101,19 @@ internal object MuseumStorage {
         return MuseumCategory.entries.associateWithTo(enumMapOf(), ::getItemsOnCategory)
     }
 
-    fun hasDonatedItem(internalName: String): Boolean {
+    fun hasDonatedItem(id: SkyBlockId): Boolean {
         val data = data ?: return false
-        return data.categories.values.any { it.containsKey(internalName) }
+        return data.categories.values.any { it.containsKey(id) }
     }
 
-    fun hasDonatedArmorSet(armorSetName: String): Boolean {
+    fun isItemStored(id: SkyBlockId): Boolean {
         val data = data ?: return false
-        return data.armorSets.containsKey(armorSetName)
-    }
-
-    fun isItemStored(internalName: String): Boolean {
-        val data = data ?: return false
-        return data.categories.values.any { it[internalName]?.inMuseum == true }
-    }
-
-    fun isArmorSetStored(armorSetName: String): Boolean {
-        val data = data ?: return false
-        return data.armorSets[armorSetName]?.inMuseum == true
+        return data.categories.values.any { it[id]?.inMuseum == true }
     }
 
     fun reset() {
         val data = data ?: return
         data.categories.clear()
-        data.armorSets.clear()
         data.specialItems.clear()
         save()
     }

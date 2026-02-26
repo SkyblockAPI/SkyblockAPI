@@ -79,7 +79,7 @@ abstract class CreateItemDataTask : DefaultTask() {
                     val museumData = item.getAsJsonObject("museum_data")
                     val newData = JsonObject()
 
-                    museumData.get("type")?.let { newData.add("type", it) }
+                    museumData.get("category")?.let { newData.add("category", it) }
                     museumData.getAsJsonObject("armor_set_donation_xp")?.let { armorSetDonationXp ->
                         val armorIds = JsonArray().apply {
                             armorSetDonationXp.keySet().forEach { add(it) }

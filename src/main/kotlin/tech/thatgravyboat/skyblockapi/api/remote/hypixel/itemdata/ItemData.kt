@@ -6,6 +6,7 @@ import me.owdding.ktcodecs.FieldName
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
@@ -19,6 +20,9 @@ object ItemData {
     val data: Map<String, HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
         ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
         .associateBy(HypixelApiItem::id)
+
+    @JvmName("getItemDataFromSkyBlockId")
+    fun getItemData(id: SkyBlockId): HypixelApiItem? = data[id.cleanId]
 
     fun getItemData(id: String): HypixelApiItem? = data[id]
 
