@@ -51,10 +51,10 @@ abstract class CreateItemDataTask : DefaultTask() {
         fun write(element: JsonElement, file: File) = write(GsonBuilder().disableHtmlEscaping().create().toJson(element).toByteArray(), file)
 
         doFirst {
-            if (downloadCache.isCached(itemDataCacheKey)) {
+            /*if (downloadCache.isCached(itemDataCacheKey)) {
                 write(downloadCache.read(itemDataCacheKey), itemDataFile)
                 return@doFirst
-            }
+            }*/
 
             val itemList = JsonParser.parseString(downloadCache.getOrDownload(HYPIXEL_ITEM_LIST).toString(Charsets.UTF_8)).asJsonObject["items"].asJsonArray
 
@@ -98,7 +98,7 @@ abstract class CreateItemDataTask : DefaultTask() {
                     }
                 } else if (item.get("museum")?.asBoolean == true) {
                     val newData = JsonObject().apply {
-                        addProperty("type", "SPECIAL_ITEMS")
+                        addProperty("category", "SPECIAL_ITEMS")
                     }
                     output.add("museum_data", newData)
                 }

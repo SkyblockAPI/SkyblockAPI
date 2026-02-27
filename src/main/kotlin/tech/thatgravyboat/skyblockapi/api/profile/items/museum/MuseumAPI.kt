@@ -224,8 +224,8 @@ object MuseumAPI {
             MuseumStorage.reset()
             PvLoadingHelper.markLoaded(LoadedData.MUSEUM)
             for (entry in event.entries) {
-                val (id, stacks) = entry
-                val isArmor = MuseumData.isArmorSet(id)
+                val (museumId, stacks) = entry
+                val isArmor = MuseumData.isArmorSet(museumId)
                 val map = buildMap {
                     stacks@ for (stack in stacks) {
                         val item = stack.value
@@ -233,7 +233,22 @@ object MuseumAPI {
                         put(id, item)
                     }
                 }
-                // TODO: do again
+                if (map.isNotEmpty()) {
+                    map.forEach { (id, item) ->
+                        val category = getCategory(id) ?: return@forEach
+                        MuseumStorage.addItem(category, id, item)
+                    }
+                } else if (isArmor) {
+                    val items = MuseumData.getArmorSetFromId(museumId)?.map(SkyBlockId::item) ?: return@runAsync
+                    items.forEach { id ->
+                        val category = getCategory(id) ?: return@forEach
+                        MuseumStorage.addNotStoredItem(category, id)
+                    }
+                } else {
+                    val id = SkyBlockId.item(museumId)
+                    val category = getCategory(id) ?: return@runAsync
+                    MuseumStorage.addNotStoredItem(category, id)
+                }
             }
         }
     }

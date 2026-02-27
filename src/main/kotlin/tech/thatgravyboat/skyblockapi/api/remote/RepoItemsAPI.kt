@@ -57,7 +57,7 @@ object RepoItemsAPI {
         nameCache[noStars]?.let { return it }
         val firstWhitespace = noStars.indexOf(' ')
         if (firstWhitespace == -1) return null
-        val withoutFirstWord = noStars.substring(firstWhitespace) // In case the item has a reforge
+        val withoutFirstWord = noStars.substring(firstWhitespace + 1) // In case the item has a reforge
         return nameCache[withoutFirstWord]
     }
 }

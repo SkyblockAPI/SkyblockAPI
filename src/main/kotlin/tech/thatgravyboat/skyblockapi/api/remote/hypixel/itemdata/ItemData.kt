@@ -22,9 +22,9 @@ object ItemData {
         .associateBy(HypixelApiItem::id)
 
     @JvmName("getItemDataFromSkyBlockId")
-    fun getItemData(id: SkyBlockId): HypixelApiItem? = data[id.cleanId]
+    fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.cleanId)
 
-    fun getItemData(id: String): HypixelApiItem? = data[id]
+    fun getItemData(id: String): HypixelApiItem? = data[id.uppercase()]
 
     @Deprecated("Use getNpcSellPrice instead", ReplaceWith("getNpcSellPrice(id)"), DeprecationLevel.ERROR)
     fun getNpcPrice(id: String): Int? = getItemData(id)?.npcSellPrice
