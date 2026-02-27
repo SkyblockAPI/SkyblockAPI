@@ -4,18 +4,21 @@ import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.helpers.getStrippedAttachedLines
 import tech.thatgravyboat.skyblockapi.utils.DiscoverableValue
+import java.lang.ref.WeakReference
 
-data class SlayerInfo(val entity: Entity) {
+data class SlayerInfo(val entity: WeakReference<Entity>) {
+    constructor(entity: Entity) : this(WeakReference(entity))
+
     private fun discoverTypeIfNeeded(): SlayerMob? {
         return SLAYER_MOBS.find { mob ->
             val inGameNames = mob.inGameNames
-            entity.getStrippedAttachedLines().any { line -> inGameNames.any { line.contains(it) } }
+            entity.get()?.getStrippedAttachedLines()?.any { line -> inGameNames.any { line.contains(it) } } ?: false
         }
     }
 
     private fun discoverOwner(): String? {
-        return entity.getStrippedAttachedLines()
-            .find { it.startsWith("spawned by: ", ignoreCase = true) }
+        return entity.get()?.getStrippedAttachedLines()
+            ?.find { it.startsWith("spawned by: ", ignoreCase = true) }
             ?.substringAfterLast(":")?.trim()
     }
 
