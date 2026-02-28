@@ -13,17 +13,14 @@ import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumStorageData
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.museum.MuseumData
-import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs.getCodec
+import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
-import tech.thatgravyboat.skyblockapi.utils.extentions.forNullGetter
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRarityLineIndex
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 import tech.thatgravyboat.skyblockapi.utils.extentions.withoutGetter
-import java.util.Optional
 import kotlin.collections.MutableMap
 import kotlin.jvm.optionals.getOrDefault
-import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 
 @Module
@@ -32,16 +29,22 @@ internal object MuseumStorage {
     //region Codecs
     private val V0_CODEC: Codec<MuseumStorageData> = RecordCodecBuilder.create { instance ->
         instance.group(
-            Codec.INT.optionalFieldOf("milestone", 0).forGetter { it.milestone },
-            CodecUtils.map(
+            Codec.INT.optionalFieldOf("milestone").withoutGetter(),
+            Codec.unboundedMap(
                 Codec.STRING,
-                CodecUtils.map(Codec.STRING, getCodec<ItemStack>().optionalFieldOf("item").codec())
+                Codec.unboundedMap(
+                    Codec.STRING,
+                    getCodec<ItemStack>().optionalFieldOf("item").codec()
+                )
             ).optionalFieldOf("categories").withoutGetter(),
-            CodecUtils.map(
+            Codec.unboundedMap(
                 Codec.STRING,
-                CodecUtils.map(Codec.STRING, getCodec<ItemStack>()).optionalFieldOf("items").codec()
+                Codec.unboundedMap(
+                    Codec.STRING,
+                    getCodec<ItemStack>()
+                ).optionalFieldOf("items").codec()
             ).optionalFieldOf("armorSets").withoutGetter(),
-            CodecUtils.mutableList(getCodec<ItemStack>()).optionalFieldOf("specialItems").withoutGetter(),
+            getCodec<ItemStack>().listOf().optionalFieldOf("specialItems").withoutGetter(),
         ).apply(instance) { milestone, categories, armorSets, specialItems ->
             val newCategories = enumMapOf<MuseumCategory, MutableMap<SkyBlockId, MuseumItemData>>()
 
@@ -69,7 +72,7 @@ internal object MuseumStorage {
               	}
             }
 
-            MuseumStorageData(milestone, newCategories, specialItems.getOrDefault(mutableListOf()))
+            MuseumStorageData(milestone.getOrDefault(0), newCategories, specialItems.getOrDefault(mutableListOf()))
         }
     }
     //endregion
@@ -82,7 +85,7 @@ internal object MuseumStorage {
         when (version) {
             0 -> V0_CODEC
             1 -> MuseumStorageData.CODEC
-            else -> tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils.unit(::MuseumStorageData)
+            else -> CodecUtils.unit(::MuseumStorageData)
         }
     }
 
