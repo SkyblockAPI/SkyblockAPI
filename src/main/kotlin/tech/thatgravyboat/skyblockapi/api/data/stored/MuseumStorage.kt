@@ -64,7 +64,9 @@ internal object MuseumStorage {
                     MuseumData.getArmorSetFromId(armorId)?.forEach { id ->
                         addItem(id, null)
                     }
-                } else items.forEach(::addItem)
+                } else {
+                	items.forEach(::addItem)
+              	}
             }
 
             MuseumStorageData(milestone, newCategories, specialItems.getOrDefault(mutableListOf()))
