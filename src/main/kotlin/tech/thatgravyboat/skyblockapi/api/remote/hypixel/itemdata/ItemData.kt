@@ -22,7 +22,7 @@ object ItemData {
         .associateBy(HypixelApiItem::id)
 
     @JvmName("getItemDataFromSkyBlockId")
-    fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.cleanId)
+    fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.skyblockId)
 
     fun getItemData(id: String): HypixelApiItem? = data[id.uppercase()]
 

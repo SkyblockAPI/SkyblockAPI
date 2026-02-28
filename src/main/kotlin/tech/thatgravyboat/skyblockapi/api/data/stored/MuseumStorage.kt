@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
@@ -9,14 +11,78 @@ import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumCategory
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumItemData
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumStorageData
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.museum.MuseumData
+import tech.thatgravyboat.skyblockapi.generated.CodecUtils
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs.getCodec
 import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
+import tech.thatgravyboat.skyblockapi.utils.extentions.forNullGetter
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRarityLineIndex
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
+import tech.thatgravyboat.skyblockapi.utils.extentions.withoutGetter
+import java.util.Optional
+import kotlin.collections.MutableMap
+import kotlin.jvm.optionals.getOrDefault
+import kotlin.jvm.optionals.getOrElse
+import kotlin.jvm.optionals.getOrNull
 
 @Module
 internal object MuseumStorage {
 
-    private val MUSEUM = StoredProfileData<MuseumStorageData>("museum.json", autoLoadOnProfileSwap = true)
+    //region Codecs
+    private val V0_CODEC: Codec<MuseumStorageData> = RecordCodecBuilder.create { instance ->
+        instance.group(
+            Codec.INT.optionalFieldOf("milestone", 0).forGetter { it.milestone },
+            CodecUtils.map(
+                Codec.STRING,
+                CodecUtils.map(Codec.STRING, getCodec<ItemStack>().optionalFieldOf("item").codec())
+            ).optionalFieldOf("categories").withoutGetter(),
+            CodecUtils.map(
+                Codec.STRING,
+                CodecUtils.map(Codec.STRING, getCodec<ItemStack>()).optionalFieldOf("items").codec()
+            ).optionalFieldOf("armorSets").withoutGetter(),
+            CodecUtils.mutableList(getCodec<ItemStack>()).optionalFieldOf("specialItems").withoutGetter(),
+        ).apply(instance) { milestone, categories, armorSets, specialItems ->
+            val newCategories = enumMapOf<MuseumCategory, MutableMap<SkyBlockId, MuseumItemData>>()
+
+            fun addItem(id: String, item: ItemStack?) {
+                val sbId = SkyBlockId.item(id)
+                val category = ItemData.getItemData(sbId)?.museumData?.category ?: return
+                newCategories.getOrPut(category, ::LinkedHashMap)[sbId] = MuseumItemData(item)
+            }
+
+            categories.getOrNull()?.forEach { (_, items) ->
+                items.forEach { (id, item) ->
+                    addItem(id, item.getOrNull())
+                }
+            }
+
+            armorSets.getOrNull()?.forEach { (armorId, itemsOptional) ->
+                val items = itemsOptional.getOrNull()
+
+                if (items.isNullOrEmpty()) {
+                    MuseumData.getArmorSetFromId(armorId)?.forEach { id ->
+                        addItem(id, null)
+                    }
+                } else items.forEach(::addItem)
+            }
+
+            MuseumStorageData(milestone, newCategories, specialItems.getOrDefault(mutableListOf()))
+        }
+    }
+    //endregion
+
+    private val MUSEUM = StoredProfileData<MuseumStorageData>(
+        "museum.json",
+        1,
+        autoLoadOnProfileSwap = true,
+    ) { version ->
+        when (version) {
+            0 -> V0_CODEC
+            1 -> MuseumStorageData.CODEC
+            else -> tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils.unit(::MuseumStorageData)
+        }
+    }
 
     private val data: MuseumStorageData? get() = MUSEUM.get()
 
@@ -111,6 +177,11 @@ internal object MuseumStorage {
         return data.categories.values.any { it[id]?.inMuseum == true }
     }
 
+    fun getItemStored(id: SkyBlockId): ItemStack? {
+        val data = data ?: return null
+        return data.categories.values.firstNotNullOfOrNull { it[id]?.item }
+    }
+
     fun reset() {
         val data = data ?: return
         data.categories.clear()
@@ -118,6 +189,6 @@ internal object MuseumStorage {
         save()
     }
 
-    private fun save() = MUSEUM.save()
+    fun save() = MUSEUM.save()
 
 }

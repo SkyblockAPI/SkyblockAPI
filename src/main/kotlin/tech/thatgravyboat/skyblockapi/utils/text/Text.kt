@@ -65,7 +65,7 @@ object Text {
                 is Component -> result.append(it)
                 is String -> result.append(it)
                 is Char -> result.append(it.toString())
-                is List<*> -> result.append(join(*it.toTypedArray(), separator = separator))
+                is Collection<*> -> result.append(join(*it.toTypedArray(), separator = separator))
                 null -> return@forEachIndexed
                 else -> error("Unsupported type: ${it::class.simpleName}")
             }

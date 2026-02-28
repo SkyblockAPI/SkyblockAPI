@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.museum
 
 import com.mojang.brigadier.arguments.StringArgumentType
 import me.owdding.ktmodules.Module
+import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.MuseumStorage
@@ -32,13 +33,14 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
 import java.util.concurrent.CompletableFuture
 
 /** Currently doesn't support special items. */
@@ -83,7 +85,6 @@ object MuseumAPI {
 
     //endregion
 
-
     val milestone: Int get() = MuseumStorage.milestone
 
     fun getAllItems(): List<ItemStack> = MuseumStorage.getAllItems()
@@ -99,27 +100,36 @@ object MuseumAPI {
     /** Returns `true` if the item has been donated to museum and is stored in it. Ignores special items. */
     fun isStoredInMuseum(id: SkyBlockId): Boolean = MuseumStorage.isItemStored(id)
 
+    /** Returns the item with id [id] stored in the museum, or null if it's not stored. */
+    fun getItemInMuseum(id: SkyBlockId): ItemStack? = MuseumStorage.getItemStored(id)
+
     private fun internalIsDonated(id: SkyBlockId, checkedIds: MutableSet<SkyBlockId>): Boolean {
         if (!checkedIds.add(id)) return false
 
-        val skyblockId = id.skyblockId
-        val data = ItemData.getItemData(skyblockId)?.museumData ?: return false
-        return MuseumStorage.hasDonatedItem(id) || data.parents.values.any { internalIsDonated(SkyBlockId.item(it), checkedIds) }
+        if (MuseumStorage.hasDonatedItem(id)) return true
+
+        val itemData = ItemData.getItemData(id)?.museumData ?: return false
+
+        return itemData.parents.values.any { parent ->
+            val armorSet = MuseumData.getArmorSetFromId(parent)
+
+            // if the parent is an armor set, check that all items in that armor set have been donated
+            if (armorSet != null) {
+                val hasDonatedAllArmorSet = armorSet.all {
+                    val id = SkyBlockId.item(it)
+                    internalIsDonated(id, checkedIds)
+                }
+                if (hasDonatedAllArmorSet) return true
+            }
+
+            // if the parent isn't an armor set (or as a fallback if it is), check the parent as an item
+            val id = SkyBlockId.item(parent)
+            internalIsDonated(id, checkedIds)
+        }
     }
 
     private fun ItemStack.isNotDonated(): Boolean = this in Items.GRAY_DYE
     private fun ItemStack.isNotStored(): Boolean = this in Items.LIME_DYE
-
-    private fun getArmorSetInternalName(list: Collection<String>): String? {
-        if (list.isEmpty()) return null
-        val armorSets = list.mapNotNull { ItemData.getItemData(it)?.museumData?.armorSets?.toSet() }
-        if (armorSets.isEmpty()) return null
-        val setId = armorSets.reduce { acc, set ->
-            acc.intersect(set)
-        }.singleOrNull() ?: return null
-        if (!MuseumData.isArmorSet(setId)) return null
-        return setId
-    }
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB)
@@ -262,16 +272,27 @@ object MuseumAPI {
             }
             then("check") {
                 thenCallback("id", StringArgumentType.word()) {
-                    val id = argument<String>("id")?.let(SkyBlockId::item) ?: return@thenCallback
+                    val id = argument<String>("id").let(SkyBlockId::item)
                     val item = SimpleItemAPI.getItemByIdOrNull(id) ?: run {
                         Text.sendDebug("Item not found.")
                         return@thenCallback
                     }
                     Text.sendDebug {
-                        append("Item ")
                         append(item.hoverName)
-                        append(" donated status: ")
-                        if (isDonated(id)) append("Donated") { color = TextColor.GREEN }
+                        append(" Museum status: ")
+                        if (isStoredInMuseum(id)) {
+                            append("Stored") {
+                                color = TextColor.GREEN
+                                underlined = true
+                            }
+                            val item = getItemInMuseum(id)
+                            if (item != null) {
+                                val list = mutableListOf<Component>()
+                                list.add(item.hoverName)
+                                list.addAll(item.getLore())
+                                hover = Text.multiline(list)
+                            }
+                        } else if (isDonated(id)) append("Donated") { color = TextColor.AQUA }
                         else append("Not Donated") { color = TextColor.RED }
                     }
                 }
@@ -319,7 +340,7 @@ object MuseumAPI {
                         for ((category, itemList) in items) {
                             appendLine("- $category: ${itemList.size} items")
                             for (item in itemList) {
-                                appendLine("  - ${item.cleanName} (${item.getSkyBlockId()})")
+                                appendLine("  - ${item.cleanName} (${item.getSkyBlockId()?.id})")
                             }
                         }
                     }
