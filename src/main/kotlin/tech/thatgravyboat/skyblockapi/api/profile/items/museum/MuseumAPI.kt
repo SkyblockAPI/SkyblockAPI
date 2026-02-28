@@ -139,7 +139,9 @@ object MuseumAPI {
         val item = event.item
         if (item !in Items.LIME_TERRACOTTA) return
         if (!confirmDonateItem.match(item.cleanName)) return
-        val items = event.slots.subList(0, event.slot.index - 1)
+        val lastIndex = event.slot.index - 1
+        if (lastIndex !in 0..event.slots.lastIndex) return
+        val items = event.slots.subList(0, lastIndex)
             .map { it.item }
             .associateByNotNull { it.getSkyBlockId() }
             .filterValues { !it.isSkyblockFiller() }
