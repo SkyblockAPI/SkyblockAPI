@@ -18,6 +18,7 @@ object MuseumData {
     val museumData: RepoMuseumData = SkyBlockAPI.mod.findPath("repo/museum_data.json").orElseThrow()
         ?.let(Files::readString)?.readJson<JsonObject>().toDataOrThrow(RepoMuseumData.CODEC)
 
+    // TODO: make these defined in repo
     //region Data
     private val exceptions = mapOf(
         "prospector's outfit" to "miner outfit",
