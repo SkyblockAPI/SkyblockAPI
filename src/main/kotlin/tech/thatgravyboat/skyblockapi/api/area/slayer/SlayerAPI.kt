@@ -5,10 +5,8 @@ import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.entity.ComponentAttachEvent
-import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent
-import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineAttachEvent
-import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.entity.*
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
@@ -150,6 +148,16 @@ object SlayerAPI {
                 )
             }
         }
+    }
+
+    @Subscription
+    fun onEntityRemoved(event: EntityRemovedEvent) {
+        slayerBosses.remove(event.entity)
+    }
+
+    @Subscription
+    fun onWorldChange(event: ServerChangeEvent) {
+        slayerBosses.clear()
     }
 }
 

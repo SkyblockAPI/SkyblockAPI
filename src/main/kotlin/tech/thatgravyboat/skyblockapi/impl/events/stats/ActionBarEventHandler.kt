@@ -6,6 +6,7 @@ import org.intellij.lang.annotations.Language
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.item.ArmorStack
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.*
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
@@ -144,6 +145,7 @@ object ActionBarEventHandler {
     private val widgetsToHide = mutableListOf<String>()
 
     @Subscription
+    @OnlyOnSkyBlock
     fun onActionbarReceivedPre(event: ActionBarReceivedEvent.Pre) {
         widgetsToHide.clear()
 
@@ -184,6 +186,7 @@ object ActionBarEventHandler {
     }
 
     @Subscription
+    @OnlyOnSkyBlock
     fun onActionbarReceivedPost(event: ActionBarReceivedEvent.Post) {
         event.component = Text.of(
             event.coloredText.split("     ")
