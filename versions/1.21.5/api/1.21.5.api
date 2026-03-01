@@ -2611,6 +2611,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/TabWidget : ja
 	public static final field TRAPPER Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field TROPHY_FISH Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field VISITORS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
+	public static final field WORMS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public final fun getCurrentLines ()Ljava/util/List;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getRegex ()Lkotlin/text/Regex;
