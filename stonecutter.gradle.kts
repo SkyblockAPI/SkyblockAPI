@@ -8,8 +8,8 @@ repositories {
 plugins {
     kotlin("jvm") apply false
     id("dev.kikugie.stonecutter")
-    id("net.fabricmc.fabric-loom-remap") version "1.15.2" apply false
-    id("net.fabricmc.fabric-loom") version "1.15.2" apply false
+    id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT" apply false
+    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT" apply false
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
     `maven-publish`
 }

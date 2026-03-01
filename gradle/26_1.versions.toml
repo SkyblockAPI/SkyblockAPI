@@ -1,5 +1,5 @@
 [versions]
-minecraft-start = "26.1-snapshot-10"
+minecraft-start = "26.1-alpha.10"
 minecraft-end = "26.1"
 minecraft = "26.1-snapshot-10"
 

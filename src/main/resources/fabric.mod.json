@@ -25,11 +25,15 @@
     },
     "depends": {
         "fabricloader": ">=${fabric_loader}",
-        "fabric": "*",
+        "fabric-api": "*",
         "fabric-language-kotlin": ">=${fabric_lang_kotlin}",
         "minecraft": ">=${minecraft_start} <=${minecraft_end}",
         "hypixel-mod-api": ">=${hypixel_mod_api}"
     },
+    "provides": [
+        "used_to_override_hmodapi_requiring_fabric_instead_of_fabric-api",
+        "fabric"
+    ],
     "custom": {
         "modmenu": {
             "badges": [
