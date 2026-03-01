@@ -11,7 +11,7 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-    id("dev.kikugie.stonecutter") version "0.9-alpha.7"
+    id("dev.kikugie.stonecutter") version "0.9-beta.1"
 }
 
 val versions = listOf("26.1", "1.21.11", "1.21.10")
