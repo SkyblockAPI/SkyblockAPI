@@ -32,7 +32,7 @@ import tech.thatgravyboat.skyblockapi.utils.time.since
 @Module
 object SimpleItemAPI {
 
-    private val unobtainableIds = SkyBlockAPI.getRepo("skyblockid/unobtainable_ids", SkyBlockId.CODEC.listOf())
+    internal val unobtainableIds = SkyBlockAPI.getRepo("skyblockid/unobtainable_ids", SkyBlockId.CODEC.listOf())
     private val cache: MutableMap<SkyBlockId, ItemStack?> = mutableMapOf()
     private val nameCache: MutableMap<String, SkyBlockId> = mutableMapOf()
     private val allIds: MutableList<SkyBlockId> = mutableListOf()
