@@ -6315,8 +6315,11 @@ public class tech/thatgravyboat/skyblockapi/utils/DebugToggle {
 	public fun getDescription ()Ljava/lang/String;
 	public final fun getDevUtils ()Ltech/thatgravyboat/skyblockapi/utils/DevUtils;
 	public fun getLocation ()Lnet/minecraft/resources/ResourceLocation;
+	public final fun getState ()Z
 	public final fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Z
 	public final fun getValue (Ljava/lang/Void;Lkotlin/reflect/KProperty;)Z
+	public final fun setState (Z)V
+	public final fun update ()V
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/utils/DevUtils {
