@@ -5741,6 +5741,12 @@ public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugEntities {
 	public final fun onCommandsRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugHudElement {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/debug/DebugHudElement;
+	public final fun onCommandRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	public final fun onWidgetShow (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderHudElementEvent;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugPackets {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/debug/DebugPackets;
 	public final fun onCommandRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
