@@ -20,14 +20,14 @@ import kotlin.time.toJavaInstant
 abstract class AbstractModRegisterDebugEvent(val prefix: Component, val withDebug: Boolean = false, val base: AbstractModRegisterCommandsEvent) :
     SkyBlockEvent() {
 
-    fun register(name: String, commandName: String = name.lowercase().replace(" ", "_"), init: DebugBuilder.() -> Unit) = register(Text.of(name), commandName, init)
-    fun register(name: Component, commandName: String, init: DebugBuilder.() -> Unit) {
+    open fun register(name: String, commandName: String = name.lowercase().replace(" ", "_"), init: DebugBuilder.() -> Unit) = register(Text.of(name), commandName, init)
+    open fun register(name: Component, commandName: String, init: DebugBuilder.() -> Unit) {
         base.registerWithCallback(name(commandName)) {
             DebugBuilder(prefix, name).apply(init).build().send()
         }
     }
 
-    fun name(name: String) = if (withDebug) "debug $name" else name
+    open fun name(name: String) = if (withDebug) "debug $name" else name
 }
 
 internal class RegisterSkyblockApiDebugEvent(base: RegisterSkyblockApiCommandsEvent) :
