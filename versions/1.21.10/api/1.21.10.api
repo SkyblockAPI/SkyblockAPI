@@ -2687,6 +2687,17 @@ public final class tech/thatgravyboat/skyblockapi/api/events/level/PacketSentEve
 	public fun <init> (Lnet/minecraft/network/protocol/Packet;)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/level/ParticleEmitEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
+	public fun <init> (Lnet/minecraft/client/particle/Particle;)V
+	public final fun component1 ()Lnet/minecraft/client/particle/Particle;
+	public final fun copy (Lnet/minecraft/client/particle/Particle;)Ltech/thatgravyboat/skyblockapi/api/events/level/ParticleEmitEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/level/ParticleEmitEvent;Lnet/minecraft/client/particle/Particle;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/level/ParticleEmitEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getParticle ()Lnet/minecraft/client/particle/Particle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/level/RightClickBlockEvent : tech/thatgravyboat/skyblockapi/api/events/level/RightClickEvent {
 	public fun <init> (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V
 	public final fun getPos ()Lnet/minecraft/core/BlockPos;
@@ -6097,6 +6108,11 @@ public class tech/thatgravyboat/skyblockapi/mixins/events/ItemStackMixin {
 public class tech/thatgravyboat/skyblockapi/mixins/events/LivingEntityRendererMixin {
 	public fun <init> ()V
 	public fun extractRenderState (Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;FLorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;)V
+}
+
+public class tech/thatgravyboat/skyblockapi/mixins/events/ParticalEngineMixin {
+	public fun <init> ()V
+	public fun add (Lnet/minecraft/client/particle/Particle;Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;)V
 }
 
 public class tech/thatgravyboat/skyblockapi/mixins/events/SlotMixin {
