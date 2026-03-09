@@ -124,6 +124,16 @@ object SimpleItemAPI {
         name("Unknown attribute: $id")
     }
 
+    internal fun getUnknownById(id: SkyBlockId): ItemStack? = when {
+        id.isPet -> getPetByIdOrNull(id)
+        id.isRune -> getRuneByIdOrNull(id)
+        id.isEnchantment -> getEnchantmentByIdOrNull(id)
+        id.isAttribute -> getAttributeByIdOrNull(id)
+        id.isItem -> getItemByIdOrNull(id)
+        id.isUnsafe -> getItemByIdOrNull(id)
+        else -> null
+    }
+
     fun getAllIds(): List<SkyBlockId> = allIds
 
     fun getAllNames(): Set<String> = nameCache.keys
