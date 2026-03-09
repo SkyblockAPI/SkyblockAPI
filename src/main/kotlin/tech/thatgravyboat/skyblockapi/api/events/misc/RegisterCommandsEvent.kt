@@ -51,14 +51,14 @@ open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
     val builder: ArgumentBuilder<FabricClientCommandSource, B>,
 ) {
 
-    fun callback(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
+    open fun callback(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
         this.builder.executes {
             callback(it)
             1
         }
     }
 
-    fun then(vararg names: String, action: LiteralCommandBuilder.() -> Unit): CommandBuilder<B> {
+    open fun then(vararg names: String, action: LiteralCommandBuilder.() -> Unit): CommandBuilder<B> {
         for (name in names) {
             if (name.contains(" ")) {
                 val builder = CommandBuilder(ClientCommandManager.literal(name.substringBefore(" ")))
@@ -73,7 +73,7 @@ open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
         return this
     }
 
-    fun <T> then(
+    open fun <T> then(
         name: String,
         argument: ArgumentType<T>,
         suggestions: Collection<String>,
@@ -85,7 +85,7 @@ open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
         action,
     )
 
-    fun <T> then(
+    open fun <T> then(
         name: String,
         argument: ArgumentType<T>,
         suggestions: SuggestionProvider<FabricClientCommandSource>? = null,
@@ -107,13 +107,13 @@ open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
         return this
     }
 
-    fun thenCallback(vararg names: String, block: CommandContext<FabricClientCommandSource>.() -> Unit): CommandBuilder<B> {
+    open fun thenCallback(vararg names: String, block: CommandContext<FabricClientCommandSource>.() -> Unit): CommandBuilder<B> {
         return then(*names) {
             this.callback(block)
         }
     }
 
-    fun <T> thenCallback(
+    open fun <T> thenCallback(
         name: String,
         argument: ArgumentType<T>,
         suggestions: Collection<String>,
@@ -123,7 +123,7 @@ open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
     }
 
 
-    fun <T> thenCallback(
+    open fun <T> thenCallback(
         name: String,
         argument: ArgumentType<T>,
         suggestions: SuggestionProvider<FabricClientCommandSource>? = null,
