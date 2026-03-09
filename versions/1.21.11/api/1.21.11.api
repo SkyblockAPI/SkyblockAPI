@@ -2839,15 +2839,17 @@ public abstract class tech/thatgravyboat/skyblockapi/api/events/misc/AbstractMod
 	public static synthetic fun register$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/AbstractModRegisterDebugEvent;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder {
-	public final fun callback (Lkotlin/jvm/functions/Function1;)V
-	public final fun then (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
-	public final fun then (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
-	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+public class tech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder {
+	public fun <init> (Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public fun callback (Lkotlin/jvm/functions/Function1;)V
+	public final fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun then (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+	public fun then (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+	public fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
 	public static synthetic fun then$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
-	public final fun thenCallback (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
-	public final fun thenCallback (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
-	public final fun thenCallback ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+	public fun thenCallback (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+	public fun thenCallback (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
+	public fun thenCallback ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
 	public static synthetic fun thenCallback$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/brigadier/suggestion/SuggestionProvider;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder;
 }
 
