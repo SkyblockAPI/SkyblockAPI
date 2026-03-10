@@ -33,10 +33,10 @@ abstract class AbstractModRegisterDebugEvent(val prefix: Component, val withDebu
 internal class RegisterSkyblockApiDebugEvent(base: RegisterSkyblockApiCommandsEvent) :
     AbstractModRegisterDebugEvent(Text.of("[SkyblockAPI]", TextColor.YELLOW), false, base)
 
-open class DebugBuilder(private val prefix: Component, private val name: Component) {
-    private val fields: MutableList<Component> = mutableListOf()
+open class DebugBuilder(val prefix: Component, val name: Component) {
+    val fields: MutableList<Component> = mutableListOf()
 
-    fun <T> field(field: String, value: T?, description: Component? = null, copyValue: String? = null) {
+    open fun <T> field(field: String, value: T?, description: Component? = null, copyValue: String? = null) {
         fields.add(
             Text.of {
                 append(field)
@@ -57,7 +57,7 @@ open class DebugBuilder(private val prefix: Component, private val name: Compone
         return dateTimeFormatter.format(LocalDateTime.ofInstant(this.toJavaInstant(), zoneId))
     }
 
-    fun <T> format(value: T?): Component = when (value) {
+    open fun <T> format(value: T?): Component = when (value) {
         null -> Text.of("<null>", TextColor.DARK_GRAY)
         is Iterable<*> -> Text.join(value.map {
             format(it)
@@ -94,7 +94,7 @@ open class DebugBuilder(private val prefix: Component, private val name: Compone
         else -> Text.of(value.toString(), TextColor.YELLOW)
     }
 
-    fun build(): Component = Text.of {
+    open fun build(): Component = Text.of {
         append(prefix)
         append(" ")
         append(name)
