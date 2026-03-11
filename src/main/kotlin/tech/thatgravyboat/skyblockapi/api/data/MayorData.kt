@@ -62,9 +62,18 @@ data class MayorPerk internal constructor(
     var description: String = "Not available",
 ) {
     internal var overrideState: TriState = DEFAULT
+
     var active: Boolean = false
         get() = overrideState.toBoolean(field)
         internal set
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MayorPerk) return false
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = id.hashCode()
 }
 
 

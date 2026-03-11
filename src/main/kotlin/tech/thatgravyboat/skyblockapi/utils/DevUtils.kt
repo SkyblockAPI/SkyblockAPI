@@ -34,18 +34,26 @@ internal fun debugToggle(path: String, description: String = path): DebugToggle 
     return DebugToggle(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils)
 }
 
-open class DebugToggle(open val location: Identifier, open val description: String, val devUtils: DevUtils) {
+open class DebugToggle(
+    open val location: Identifier,
+    open val description: String,
+    val devUtils: DevUtils
+) {
+    var state: Boolean = true
+
     init {
         devUtils.register(this)
     }
 
     operator fun getValue(any: Nothing?, property: KProperty<*>): Boolean {
-        return devUtils.isOn(location)
+        return state
     }
 
     operator fun getValue(any: Any?, property: KProperty<*>): Boolean {
-        return devUtils.isOn(location)
+        return state
     }
+
+    fun update() { state = devUtils.isOn(location) }
 
 }
 
@@ -146,10 +154,12 @@ abstract class DevUtils {
     fun register(debugToggle: DebugToggle) {
         states.putIfAbsent(debugToggle.location, false)
         toggles += debugToggle
+        debugToggle.state = states[debugToggle.location] == true
     }
 
     fun toggle(location: Identifier) {
         states[location] = states[location]?.not() == true
+        toggles.find { it.location == location }?.update()
     }
 
     fun isOn(location: Identifier) = states.getOrDefault(location, false)

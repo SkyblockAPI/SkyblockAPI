@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.sacks
 
 import me.owdding.ktcodecs.GenerateCodec
+import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import kotlin.time.Instant
 
@@ -9,11 +10,24 @@ internal data class SacksData(
     private val _timestamps: MutableMap<String, Instant> = mutableMapOf(),
 ) {
 
+    init {
+        removeUnobtainable()
+    }
+
     val counts: Map<String, Int> get() = _counts
     val timestamps: Map<String, Instant> get() = _timestamps
 
     constructor(entries: List<SackEntry>) : this() {
         entries.forEach { add(it) }
+        removeUnobtainable()
+    }
+
+    private fun removeUnobtainable() {
+        if (_counts.isEmpty() && _timestamps.isEmpty()) return // Minor optimization
+
+        val unobtainableIds = SimpleItemAPI.unobtainableIds.mapNotNull { it.skyblockId }.toSet()
+        _counts.keys.removeAll(unobtainableIds)
+        _timestamps.keys.removeAll(unobtainableIds)
     }
 
     fun clear() {

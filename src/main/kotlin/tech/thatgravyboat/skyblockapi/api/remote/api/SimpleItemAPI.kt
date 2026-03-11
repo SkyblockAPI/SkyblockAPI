@@ -27,7 +27,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.getPath
 @Module
 object SimpleItemAPI {
 
-    private val unobtainableIds = SkyBlockAPI.getRepo("skyblockid/unobtainable_ids", SkyBlockId.CODEC.listOf())
+    internal val unobtainableIds = SkyBlockAPI.getRepo("skyblockid/unobtainable_ids", SkyBlockId.CODEC.listOf())
     private val cache: MutableMap<SkyBlockId, ItemStack?> = mutableMapOf()
     private val nameCache: MutableMap<String, SkyBlockId> = mutableMapOf()
     private val allIds: MutableList<SkyBlockId> = mutableListOf()
@@ -117,6 +117,16 @@ object SimpleItemAPI {
 
     fun getAttributeById(id: SkyBlockId): ItemStack = getAttributeByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {
         name("Unknown attribute: $id")
+    }
+
+    internal fun getUnknownById(id: SkyBlockId): ItemStack? = when {
+        id.isPet -> getPetByIdOrNull(id)
+        id.isRune -> getRuneByIdOrNull(id)
+        id.isEnchantment -> getEnchantmentByIdOrNull(id)
+        id.isAttribute -> getAttributeByIdOrNull(id)
+        id.isItem -> getItemByIdOrNull(id)
+        id.isUnsafe -> getItemByIdOrNull(id)
+        else -> null
     }
 
     fun getAllIds(): List<SkyBlockId> = allIds

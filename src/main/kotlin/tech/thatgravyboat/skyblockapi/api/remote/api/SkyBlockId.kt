@@ -89,8 +89,8 @@ value class SkyBlockId private constructor(val id: String) {
         fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
 
         internal fun createIdForItem(stack: ItemStack): SkyBlockId? {
-            val id = fromItem(stack)
-            if (id != null) return id
+            val itemId = fromItem(stack)
+            if (itemId != null) return itemId
 
             // Used for ignoring same names on things like dyes and barriers where it is usually important to keep it as no id.
             // i.e. anvil with no items has a barrier named 'Anvil'
@@ -103,7 +103,12 @@ value class SkyBlockId private constructor(val id: String) {
             //? } else
             //if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
 
-            return fromName(stack.hoverName.stripped, false)
+            val nameId = fromName(stack.hoverName.stripped, false) ?: return null
+
+            // An item may not be available if it can't be parsed, in this case we will just return the id we suspect.
+            val repoItem = SimpleItemAPI.getUnknownById(nameId) ?: return nameId
+
+            return if (repoItem.item == stack.item) nameId else null
         }
     }
 
