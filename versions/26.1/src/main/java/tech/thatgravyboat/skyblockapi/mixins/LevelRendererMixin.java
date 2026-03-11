@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,7 +30,7 @@ public class LevelRendererMixin {
         RenderWorldEvent.Start.INSTANCE.post(SkyBlockAPI.getEventBus());
     }
 
-    @Inject(method = "method_62214", at = @At(value = "CONSTANT", args = "stringValue=submitBlockEntities"))
+    @Inject(method = "lambda$addMainPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;submitBlockEntities(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/client/renderer/SubmitNodeStorage;)V"))
     public void afterEntities(
         CallbackInfo ci,
         @Local PoseStack poseStack,
@@ -50,7 +50,7 @@ public class LevelRendererMixin {
         ).post(SkyBlockAPI.getEventBus());
     }
 
-    @Inject(method = "method_62214", at = @At(value = "CONSTANT", args = "stringValue=string"))
+    @Inject(method = "lambda$addMainPass$0", at = @At(value = "CONSTANT", args = "stringValue=translucentTerrain"))
     public void afterTranslucent(
         CallbackInfo ci,
         @Local PoseStack poseStack,

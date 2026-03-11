@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.layouts.LinearLayout
@@ -72,13 +72,17 @@ internal class DebugScreenImpl<T>(
         buttons.visitWidgets(this::addRenderableWidget)
     }
 
-    override fun renderBackground(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
-        this.renderTransparentBackground(graphics)
+
+    //~ if >= 26.1 'render' -> 'extract' {
+     override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+        super.extractTransparentBackground(graphics)
     }
+    //~}
 
-    override fun render(graphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
-        super.render(graphics, mouseX, mouseY, partialTicks)
-
+    //~ if >= 26.1 'render' -> 'extractRenderState' {
+    override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks)
+        //~ }
         val messages = filteredMessages
         val status = Text.join(this.title, ": ${messages.size}")
         graphics.drawString(status, (this.width - McFont.width(status)) / 2, 5)

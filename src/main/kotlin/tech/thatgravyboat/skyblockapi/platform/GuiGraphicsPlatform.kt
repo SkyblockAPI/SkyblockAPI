@@ -1,9 +1,9 @@
 package tech.thatgravyboat.skyblockapi.platform
 
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
-import net.minecraft.client.gui.render.state.BlitRenderState
+import net.minecraft.client.renderer.state.gui.BlitRenderState
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.locale.Language
@@ -23,21 +23,21 @@ private inline fun adjustColor(color: Int): Int {
     return if ((color and 0xfc000000.toInt()) == 0) ARGB.opaque(color) else color
 }
 
-inline fun GuiGraphics.pushPop(block: () -> Unit) {
+inline fun GuiGraphicsExtractor.pushPop(block: () -> Unit) {
     this.pose().pushMatrix()
     block()
     this.pose().popMatrix()
 }
 
-fun GuiGraphics.translate(x: Number, y: Number) {
+fun GuiGraphicsExtractor.translate(x: Number, y: Number) {
     pose().translate(x.toFloat(), y.toFloat())
 }
 
-fun GuiGraphics.scale(x: Number, y: Number) {
+fun GuiGraphicsExtractor.scale(x: Number, y: Number) {
     pose().scale(x.toFloat(), y.toFloat())
 }
 
-fun GuiGraphics.rotate(angle: Number, x: Number = 0f, y: Number = 0f) {
+fun GuiGraphicsExtractor.rotate(angle: Number, x: Number = 0f, y: Number = 0f) {
     if (x.toFloat() == 0f && y.toFloat() == 0f) {
         this.pose().rotate(angle.toFloat() * Mth.DEG_TO_RAD)
     } else {
@@ -45,24 +45,24 @@ fun GuiGraphics.rotate(angle: Number, x: Number = 0f, y: Number = 0f) {
     }
 }
 
-fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
-    this.drawString(McFont.self, text, x, y, adjustColor(color), shadow)
+fun GuiGraphicsExtractor.drawString(text: String, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
+    this.text(McFont.self, text, x, y, adjustColor(color), shadow)
 }
 
-fun GuiGraphics.drawString(text: FormattedText, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
-    this.drawString(McFont.self, Language.getInstance().getVisualOrder(text), x, y, adjustColor(color), shadow)
+fun GuiGraphicsExtractor.drawString(text: FormattedText, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
+    this.text(McFont.self, Language.getInstance().getVisualOrder(text), x, y, adjustColor(color), shadow)
 }
 
-fun GuiGraphics.drawString(text: FormattedCharSequence, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
-    this.drawString(McFont.self, text, x, y, adjustColor(color), shadow)
+fun GuiGraphicsExtractor.drawString(text: FormattedCharSequence, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
+    this.text(McFont.self, text, x, y, adjustColor(color), shadow)
 }
 
 
-fun GuiGraphics.drawSprite(texture: Identifier, x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
+fun GuiGraphicsExtractor.drawSprite(texture: Identifier, x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
     this.blitSprite(RenderPipelines.GUI_TEXTURED, texture, x, y, width, height, color)
 }
 
-fun GuiGraphics.drawTexture(
+fun GuiGraphicsExtractor.drawTexture(
     texture: Identifier, x: Int, y: Int, width: Int, height: Int,
     u0: Float = 0f, v0: Float = 0f, u1: Float = 1f, v1: Float = 1f,
     color: Int = -1,
@@ -79,7 +79,8 @@ fun GuiGraphics.drawTexture(
     /*= TextureSetup.singleTexture(McClient.self.textureManager.getTexture(texture).textureView)
      *///?}
 
-    this.guiRenderState.submitGuiElement(
+    //~ if >= 26.1 'submitGuiElement' -> 'addGuiElement'
+    this.guiRenderState.addGuiElement(
         BlitRenderState(
             RenderPipelines.GUI_TEXTURED, setup, Matrix3x2f(this.pose()),
             minx, miny, maxx, maxy, u0, u1, v0, v1, color,
@@ -88,13 +89,14 @@ fun GuiGraphics.drawTexture(
     )
 }
 
-fun GuiGraphics.drawGradient(
+fun GuiGraphicsExtractor.drawGradient(
     x: Int, y: Int, width: Int, height: Int,
     col1: Int, col2: Int, col3: Int, col4: Int,
 ) {
     val scissor = this.scissorStack.peek()
     val pose = Matrix3x2f(this.pose())
-    this.guiRenderState.submitGuiElement(
+    //~ if >= 26.1 'submitGuiElement' -> 'addGuiElement'
+    this.guiRenderState.addGuiElement(
         GradientGuiElement(
             pose,
             x, y, x + width, y + height,
@@ -105,34 +107,34 @@ fun GuiGraphics.drawGradient(
     )
 }
 
-fun GuiGraphics.drawFilledBox(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
+fun GuiGraphicsExtractor.drawFilledBox(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
     this.fill(x, y, x + width, y + height, color)
 }
 
-fun GuiGraphics.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
+fun GuiGraphicsExtractor.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
     this.fill(x, y, x + width, y + 1, color)
     this.fill(x, y + height - 1, x + width, y + height, color)
     this.fill(x, y + 1, x + 1, y + height - 1, color)
     this.fill(x + width - 1, y + 1, x + width, y + height - 1, color)
 }
 
-fun GuiGraphics.showTooltip(text: Component, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {
+fun GuiGraphicsExtractor.showTooltip(text: Component, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {
     val (x, y) = McClient.mouse
     this.setTooltipForNextFrame(McFont.self, McFont.split(text, maxWidth), DefaultTooltipPositioner.INSTANCE, x.toInt(), y.toInt(), false)
 }
 
-fun GuiGraphics.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {
+fun GuiGraphicsExtractor.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {
     this.setTooltipForNextFrame(McFont.self, McFont.split(text, maxWidth), DefaultTooltipPositioner.INSTANCE, x, y, false)
 }
 
-fun GuiGraphics.getTranslation(): Vector2f {
+fun GuiGraphicsExtractor.getTranslation(): Vector2f {
     return Vector2f(this.pose().m20(), this.pose().m21())
 }
 
-fun GuiGraphics.getScale(): Vector2f {
+fun GuiGraphicsExtractor.getScale(): Vector2f {
     return Vector2f(this.pose().m00(), this.pose().m11())
 }
 
-fun GuiGraphics.applyBackgroundBlur() {
+fun GuiGraphicsExtractor.applyBackgroundBlur() {
     this.blurBeforeThisStratum()
 }

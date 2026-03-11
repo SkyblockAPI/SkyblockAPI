@@ -58,8 +58,8 @@ public class ClientPacketListenerMixin {
     @Inject(method = "handleUpdateAttributes", at = @At("TAIL"))
     private void postAttributesUpdate(
         CallbackInfo ci,
-        @Local Entity entity,
-        @Share("modifiedAttributes") LocalRef<Map<Holder<Attribute>, EntityAttributesUpdateEvent.ChangedAttribute>> modifiedAttributesRef
+        @Share("modifiedAttributes") LocalRef<Map<Holder<Attribute>, EntityAttributesUpdateEvent.ChangedAttribute>> modifiedAttributesRef,
+        @Local(name = "entity") Entity entity
     ) {
         var modified = modifiedAttributesRef.get();
         if (modified != null && !modified.isEmpty()) {

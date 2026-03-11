@@ -21,7 +21,6 @@ repositories {
     fun scopedMaven(url: String, vararg paths: String) = maven(url) { content { paths.forEach(::includeGroupAndSubgroups) } }
 
     scopedMaven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1", "me.djtheredstoner")
-    scopedMaven("https://repo.hypixel.net/repository/Hypixel", "net.hypixel")
     scopedMaven("https://maven.parchmentmc.org/", "org.parchmentmc")
     scopedMaven("https://api.modrinth.com/maven", "maven.modrinth")
     scopedMaven(
@@ -30,8 +29,10 @@ repositories {
         "com.teamresourceful",
         "tech.thatgravyboat",
         "me.owdding",
-        "com.terraformersmc"
+        "com.terraformersmc",
+        "net.hypixel"
     )
+    //scopedMaven("https://repo.hypixel.net/repository/Hypixel", "net.hypixel")
     scopedMaven("https://maven.nucleoid.xyz/", "eu.pb4")
     mavenCentral()
     mavenLocal()

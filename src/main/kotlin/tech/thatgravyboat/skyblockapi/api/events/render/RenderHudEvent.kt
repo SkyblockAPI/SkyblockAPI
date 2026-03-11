@@ -1,9 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.events.render
 
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 
 data class RenderHudEvent(
-    val graphics: GuiGraphics,
+    val graphics: GuiGraphicsExtractor,
     val partialTicks: Float,
 ) : CancellableSkyBlockEvent()

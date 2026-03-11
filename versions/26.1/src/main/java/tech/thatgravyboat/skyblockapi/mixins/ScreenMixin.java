@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.mixins;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.ClickEvent;
 import org.spongepowered.asm.mixin.Final;
@@ -22,24 +22,24 @@ public class ScreenMixin {
     @Shadow
     protected Minecraft minecraft;
 
-    @Inject(method = "renderWithTooltipAndSubtitles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;nextStratum()V", ordinal = 0), cancellable = true)
-    private void renderBefore(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+    @Inject(method = "extractRenderStateWithTooltipAndSubtitles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;nextStratum()V", ordinal = 0), cancellable = true)
+    private void renderBefore(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         var screen = (Screen) (Object) this;
         if (new RenderScreenBackgroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus())) {
             new RenderScreenForegroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus());
-            graphics.renderDeferredElements(mouseX, mouseY, partialTicks);
+            graphics.extractDeferredElements(mouseX, mouseY, partialTicks);
             ci.cancel();
         }
     }
 
     @Inject(
-        method = "renderWithTooltipAndSubtitles",
+        method = "extractRenderStateWithTooltipAndSubtitles",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/GuiGraphics;renderDeferredElements(IIF)V"
+            target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;extractDeferredElements(IIF)V"
         )
     )
-    private void renderAfter(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+    private void renderAfter(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         new RenderScreenForegroundEvent((Screen) (Object) this, graphics).post(SkyBlockAPI.getEventBus());
     }
 

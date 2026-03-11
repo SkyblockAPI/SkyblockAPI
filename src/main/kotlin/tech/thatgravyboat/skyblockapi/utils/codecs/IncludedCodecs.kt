@@ -15,8 +15,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.IdentifierPattern
 import net.minecraft.util.Unit
-import net.minecraft.util.valueproviders.FloatProvider
-import net.minecraft.util.valueproviders.IntProvider
+import net.minecraft.util.valueproviders.*
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import org.joml.Vector3f
@@ -57,10 +56,13 @@ internal object IncludedCodecs {
     val UNIT_CODEC: Codec<Unit> = Unit.CODEC
 
     @IncludedCodec
-    val FLOAT_PROVIDER_CODEC: Codec<FloatProvider> = FloatProvider.CODEC
+    //~ if >= 26.1 'FloatProvider' -> 'FloatProviders'
+    val FLOAT_PROVIDER_CODEC: Codec<FloatProvider> = FloatProviders.CODEC
 
     @IncludedCodec
-    val INT_PROVIDER_CODEC: Codec<IntProvider> = IntProvider.CODEC
+
+    //~ if >= 26.1 'IntProvider' -> 'IntProviders'
+    val INT_PROVIDER_CODEC: Codec<IntProvider> = IntProviders.CODEC
 
     @IncludedCodec
     val ITEM_CODEC: Codec<Item> = BuiltInRegistries.ITEM.byNameCodec()
@@ -77,11 +79,10 @@ internal object IncludedCodecs {
     val INT_KEY: Codec<Int> = Codec.STRING.xmap({ it.toInt() }, { it.toString() })
 
     @IncludedCodec(named = "cum_int_list")
-    val CUMULATIVE_INT_LIST: Codec<List<Int>> =
-        Codec.INT.listOf().xmap(
-            { it.runningFold(0, Int::plus).distinct() },
-            { it.reversed().runningFold(0, Int::minus).reversed() },
-        )
+    val CUMULATIVE_INT_LIST: Codec<List<Int>> = Codec.INT.listOf().xmap(
+        { it.runningFold(0, Int::plus).distinct() },
+        { it.reversed().runningFold(0, Int::minus).reversed() },
+    )
 
     @IncludedCodec
     val COMPONENT: Codec<Component> = ComponentSerialization.CODEC

@@ -3,12 +3,10 @@ package tech.thatgravyboat.skyblockapi.mixins.events;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import java.util.List;
-import java.util.Objects;
-
-import net.minecraft.client.multiplayer.chat.GuiMessage;
-import net.minecraft.client.multiplayer.chat.GuiMessageTag;
 import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
+import net.minecraft.client.multiplayer.chat.GuiMessageSource;
+import net.minecraft.client.multiplayer.chat.GuiMessageTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignature;
 import net.minecraft.util.FormattedCharSequence;
@@ -20,6 +18,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatComponentExtension;
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatIdHolder;
+
+import java.util.List;
+import java.util.Objects;
 
 @Mixin(ChatComponent.class)
 public abstract class ChatComponentMixin implements ChatComponentExtension {
@@ -41,11 +42,38 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
     }
 
     @WrapOperation(
-        method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)V",
-        at = @At(value = "NEW", target = "(ILnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)Lnet/minecraft/client/multiplayer/chat/GuiMessage;")
+        method = "addMessage",
+        at = {
+            //? >= 26.1 {
+            @At(
+                value = "NEW",
+                target = "(ILnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageSource;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)Lnet/minecraft/client/multiplayer/chat/GuiMessage;"
+            ),
+            //? } else {
+            /*@At(
+                value = "NEW",
+                target = "(ILnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)Lnet/minecraft/client/multiplayer/chat/GuiMessage;"
+            )*/
+            //? }
+        }
     )
-    private GuiMessage onAddMessage(int i, Component component, MessageSignature messageSignature, GuiMessageTag guiMessageTag, Operation<GuiMessage> original) {
-        GuiMessage message = original.call(i, component, messageSignature, guiMessageTag);
+    private GuiMessage onAddMessage(
+        int addedTime,
+        Component content,
+        MessageSignature signature,
+        //? >= 26.1
+        GuiMessageSource source,
+        GuiMessageTag tag,
+        Operation<GuiMessage> original
+    ) {
+        GuiMessage message = original.call(
+            addedTime,
+            content,
+            signature,
+            //? >= 26.1
+            source,
+            tag
+        );
         if (this.skyblockapi$idToGive != null) {
             ((ChatIdHolder) (Object) message).skyblockapi$setId(this.skyblockapi$idToGive);
 
@@ -65,18 +93,31 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
         method = "addMessageToDisplayQueue",
         at = @At(
             value = "NEW",
-            target = "(ILnet/minecraft/util/FormattedCharSequence;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;Z)Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;"
+            //? >= 26.1 {
+            target = "(Lnet/minecraft/client/multiplayer/chat/GuiMessage;Lnet/minecraft/util/FormattedCharSequence;Z)Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;"
+            //? } else {
+            //target = "(ILnet/minecraft/util/FormattedCharSequence;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;Z)Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;"
+            //? }
         )
     )
     private GuiMessage.Line onAddMessageToDisplayQueue(
-        int time,
+        //? >= 26.1
+        GuiMessage parent,
         FormattedCharSequence content,
-        GuiMessageTag tag,
+        //? < 26.1
+        //GuiMessageTag tag,
         boolean endOfEntry,
         Operation<GuiMessage.Line> original,
         @Local(argsOnly = true) GuiMessage message
     ) {
-        GuiMessage.Line line = original.call(time, content, tag, endOfEntry);
+        GuiMessage.Line line = original.call(
+            //? >= 26.1
+            parent,
+            content,
+            //? < 26.1
+            //tag,
+            endOfEntry
+        );
         ChatIdHolder messageHolder = (ChatIdHolder) (Object) message;
         if (messageHolder != null && messageHolder.skyblockapi$getId() != null) {
             ((ChatIdHolder) (Object) line).skyblockapi$setId(messageHolder.skyblockapi$getId());

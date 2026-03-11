@@ -31,6 +31,13 @@ stonecutter parameters {
 
     filters.include("**/*.fsh", "**/*.vsh")
 
+    replacements.string("graphics") {
+        direction = eval(current.version, "< 26.1")
+        replace(
+            "GuiGraphicsExtractor",
+            "GuiGraphics"
+        )
+    }
 
     replacements.regex {
         direction = eval(current.version, "< 1.21.11")
@@ -67,8 +74,24 @@ stonecutter parameters {
             "import net.minecraft.client.multiplayer.chat.GuiMessageTag",
             "import net.minecraft.client.GuiMessageTag",
         )
+        replace(
+            "import net.minecraft.client.renderer.state.gui.BlitRenderState",
+            "import net.minecraft.client.gui.render.state.BlitRenderState"
+        )
+        replace(
+            "import net.minecraft.client.renderer.state.gui.GuiElementRenderState",
+            "import net.minecraft.client.gui.render.state.GuiElementRenderState"
+        )
         replace("Lnet/minecraft/client/multiplayer/chat/GuiMessage", "Lnet/minecraft/client/GuiMessage")
         replace("Lnet/minecraft/client/multiplayer/chat/GuiMessageTag", "Lnet/minecraft/client/GuiMessageTag")
+    }
+
+    replacements.regex {
+        direction = eval(current.version, "< 26.1")
+        replace(
+            "import net.minecraft.client.gui.GuiGraphicsExtractor(?!;)", "import net.minecraft.client.gui.GuiGraphics as GuiGraphicsExtractor",
+            "import net.minecraft.client.gui.GuiGraphics as GuiGraphicsExtractor", "import net.minecraft.client.gui.GuiGraphicsExtractor"
+        )
     }
 }
 
