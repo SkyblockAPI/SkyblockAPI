@@ -67,3 +67,7 @@ dependencies {
     implementation(versionedCatalog["fabric.api"])
     implementation(versionedCatalog["fabric.loader"])
 }
+
+tasks.withType<Jar> {
+    archiveClassifier = stonecutter.current.version
+}

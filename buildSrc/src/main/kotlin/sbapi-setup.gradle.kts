@@ -20,14 +20,19 @@ plugins {
 }
 
 kotlin {
-    explicitApiWarning()
+    compilerOptions {
+        freeCompilerArgs.add("-Xrender-internal-diagnostic-names")
+    }
 
     abiValidation {
         enabled = true
 
         filters {
             excluded {
-                byNames.add("tech.thatgrabyboat.skyblockapi.impl.**")
+                byNames.addAll(
+                    "tech.thatgrabyboat.skyblockapi.impl.**",
+                    "tech.thatgravyboat.skyblockapi.mixins.**"
+                )
             }
         }
     }
