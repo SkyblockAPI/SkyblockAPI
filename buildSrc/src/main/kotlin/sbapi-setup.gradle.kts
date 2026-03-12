@@ -20,6 +20,8 @@ plugins {
 }
 
 kotlin {
+    explicitApiWarning()
+
     abiValidation {
         enabled = true
 
