@@ -1,3 +1,4 @@
+
 import org.gradle.kotlin.dsl.support.serviceOf
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
@@ -10,13 +11,7 @@ plugins {
     id("dev.kikugie.stonecutter")
     id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT" apply false
     id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT" apply false
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
     `maven-publish`
-}
-
-apiValidation {
-    validationDisabled = false
-    ignoredPackages.add("tech.thatgrabyboat.skyblockapi.impl")
 }
 
 stonecutter active "26.1"

@@ -1,5 +1,3 @@
-rootProject.name = "skyblock-api"
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -8,6 +6,9 @@ pluginManagement {
         maven("https://maven.fabricmc.net/")
     }
 }
+
+
+rootProject.name = "skyblock-api"
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"

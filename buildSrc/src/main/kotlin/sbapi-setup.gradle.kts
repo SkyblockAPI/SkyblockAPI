@@ -1,8 +1,12 @@
+@file:OptIn(ExperimentalAbiValidation::class)
+
 import com.google.devtools.ksp.gradle.KspExtension
+import com.google.devtools.ksp.gradle.utils.useLegacyVariantApi
 import me.owdding.AutoMixinExtension
 import me.owdding.repo.resources.CompactingResourcesExtension
 import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -13,6 +17,18 @@ plugins {
     id("versioned-catalogues")
     id("item-data")
     id("idea")
+}
+
+kotlin {
+    abiValidation {
+        enabled = true
+
+        filters {
+            excluded {
+                byNames.add("tech.thatgrabyboat.skyblockapi.impl.**")
+            }
+        }
+    }
 }
 
 private val stonecutter = project.extensions.getByName("stonecutter") as dev.kikugie.stonecutter.build.StonecutterBuildExtension
@@ -56,7 +72,6 @@ tasks.named("build") {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    options.release.set(25)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -120,10 +135,6 @@ afterEvaluate {
         jvmToolchain(javaVersion)
     }
 
-    tasks.named("apiCheck") {
-        enabled = false
-    }
-
     if (!isUnobfuscated()) {
         tasks.named<AbstractArchiveTask>("remapJar") {
             archiveClassifier = stonecutter.current.version
@@ -162,3 +173,5 @@ extensions.getByType<CompactingResourcesExtension>().apply {
     removeComments("skyblockid/unobtainable_ids")
     substituteFromDifferentFile("slayer", "slayers")
 }
+
+

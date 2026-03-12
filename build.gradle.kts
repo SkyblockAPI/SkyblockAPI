@@ -22,7 +22,17 @@ loom {
     }
 }
 
+kotlin {
+    jvmToolchain(25)
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.VERSION_21
+}
+
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }
+
 
 dependencies {
     val api = "api"

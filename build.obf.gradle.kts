@@ -32,6 +32,17 @@ dependencies {
     })
 }
 
+
+kotlin {
+    jvmToolchain(21)
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_21
+}
+
+
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }
 
 dependencies {

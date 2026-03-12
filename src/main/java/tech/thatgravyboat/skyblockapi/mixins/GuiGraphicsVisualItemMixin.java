@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.gui.Font;
+//~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
+//~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
 @Mixin(GuiGraphicsExtractor.class)
 public abstract class GuiGraphicsVisualItemMixin {
 
@@ -87,8 +89,10 @@ public abstract class GuiGraphicsVisualItemMixin {
     }
 
     // Ignore the warning about no possible signatures for this injector
+    //~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
     @WrapOperation(method = "itemCount", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"))
     private void wrapIsNullCheck(
+        //~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
         GuiGraphicsExtractor instance,
         Font font,
         String string,

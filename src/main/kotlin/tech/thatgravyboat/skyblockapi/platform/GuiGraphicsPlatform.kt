@@ -46,14 +46,17 @@ fun GuiGraphicsExtractor.rotate(angle: Number, x: Number = 0f, y: Number = 0f) {
 }
 
 fun GuiGraphicsExtractor.drawString(text: String, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
+    //~ if >= 26.1 'drawString(' -> 'text('
     this.text(McFont.self, text, x, y, adjustColor(color), shadow)
 }
 
 fun GuiGraphicsExtractor.drawString(text: FormattedText, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
+    //~ if >= 26.1 'drawString(' -> 'text('
     this.text(McFont.self, Language.getInstance().getVisualOrder(text), x, y, adjustColor(color), shadow)
 }
 
 fun GuiGraphicsExtractor.drawString(text: FormattedCharSequence, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
+    //~ if >= 26.1 'drawString(' -> 'text('
     this.text(McFont.self, text, x, y, adjustColor(color), shadow)
 }
 
