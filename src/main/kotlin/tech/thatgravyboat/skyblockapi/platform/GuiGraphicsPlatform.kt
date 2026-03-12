@@ -20,6 +20,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun adjustColor(color: Int): Int {
+    // in 1.21.5 this was done in Font, in 1.21.7 this is no longer the case
     return if ((color and 0xfc000000.toInt()) == 0) ARGB.opaque(color) else color
 }
 

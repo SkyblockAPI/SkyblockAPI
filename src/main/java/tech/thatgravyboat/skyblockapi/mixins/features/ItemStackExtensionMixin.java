@@ -40,13 +40,12 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
     private boolean skyblockapi$dataIsDirty = false;
 
 
-    //~ if >= 26.1 'world/level/ItemLike' -> 'core/Holder'
     @Inject(
+        //~ if >= 26.1 'world/level/ItemLike' -> 'core/Holder'
         method = "<init>(Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/PatchedDataComponentMap;)V",
         at = @At("RETURN")
     )
-    //~ if >= 26.1 'ItemLike' -> 'Holder<Item>'
-    private void skyblockapi$init(Holder<Item> item, int count, PatchedDataComponentMap map, CallbackInfo ci) {
+    private void skyblockapi$init(CallbackInfo ci) {
         if (skyblockapi$COPYING.get() == null) {
             skyblockapi$data = DataTypesRegistry.INSTANCE.getData((ItemStack) (Object) this);
         } else {
@@ -56,6 +55,7 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
 
     //~ if >= 26.1 'world/level/ItemLike' -> 'core/Holder'
     @WrapOperation(method = "copy", at = @At(value = "NEW", target = "(Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/PatchedDataComponentMap;)Lnet/minecraft/world/item/ItemStack;"))
+    //~ if >= 26.1 'ItemLike' -> 'Holder<Item>'
     private ItemStack skyblockapi$copy(Holder<Item> item, int count, PatchedDataComponentMap patch, Operation<ItemStack> operation) {
         skyblockapi$COPYING.set(Unit.INSTANCE);
         var stack = operation.call(item, count, patch);

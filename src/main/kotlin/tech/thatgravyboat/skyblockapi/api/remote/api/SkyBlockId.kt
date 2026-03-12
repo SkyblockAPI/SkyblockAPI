@@ -99,7 +99,7 @@ value class SkyBlockId private constructor(val id: String) {
             // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
             // i.e. ender chest icon in storage
             //? >= 26.1 {
-            if (stack.item.toString().equals(stack.hoverName.stripped, true)) return null
+            if (stack.item.defaultInstance.hoverName.stripped.equals(stack.hoverName.stripped, true)) return null
             //? } else
             //if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
 
