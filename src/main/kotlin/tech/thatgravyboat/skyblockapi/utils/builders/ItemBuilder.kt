@@ -60,13 +60,13 @@ class ItemBuilder {
         }
     }
 
-    private val customItemName: Component
+    private val customItemName: Component?
         get() {
             //? >= 26.1 {
             return components.build().get(DataComponentMap.EMPTY, DataComponents.CUSTOM_NAME)
             //? } else {
-            //return components.build().get(DataComponents.CUSTOM_NAME)?.getOrNull()
-            //? }
+            /*return components.build().get(DataComponents.CUSTOM_NAME)?.getOrNull()
+            *///? }
         }
 
     fun namePrefix(prefix: String) = namePrefix(Component.literal(prefix))

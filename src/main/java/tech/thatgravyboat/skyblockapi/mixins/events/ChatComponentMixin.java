@@ -54,8 +54,8 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             /*@At(
                 value = "NEW",
                 target = "(ILnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)Lnet/minecraft/client/multiplayer/chat/GuiMessage;"
-            )*/
-            //? }
+            )
+            *///? }
         }
     )
     private GuiMessage onAddMessage(
@@ -97,8 +97,8 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             //? >= 26.1 {
             target = "(Lnet/minecraft/client/multiplayer/chat/GuiMessage;Lnet/minecraft/util/FormattedCharSequence;Z)Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;"
             //? } else {
-            //target = "(ILnet/minecraft/util/FormattedCharSequence;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;Z)Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;"
-            //? }
+            /*target = "(ILnet/minecraft/util/FormattedCharSequence;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;Z)Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;"
+            *///? }
         )
     )
     private GuiMessage.Line onAddMessageToDisplayQueue(
