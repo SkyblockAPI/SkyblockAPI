@@ -31,6 +31,7 @@ public abstract class GuiGraphicsVisualItemMixin {
     private final ThreadLocal<ItemStack> skyblockapi$originalItem = new ThreadLocal<>();
 
     @Shadow
+    //~ if >= 26.1 'renderItem' -> 'item'
     public abstract void item(ItemStack itemStack, int i, int j);
 
     @Shadow
@@ -44,6 +45,7 @@ public abstract class GuiGraphicsVisualItemMixin {
     public abstract void fill(int i, int j, int k, int l, int color);
 
     @Shadow
+    //~ if >= 26.1 'drawString' -> 'text'
     public abstract void text(Font par1, Component par2, int par3, int par4, int par5, boolean par6);
 
     @Inject(
@@ -106,6 +108,7 @@ public abstract class GuiGraphicsVisualItemMixin {
     ) {
         var component = componentRef.get();
         if (component == null) original.call(instance, font, string, i, j, k, flag);
+        //~ if >= 26.1 'drawString' -> 'text'
         else this.text(font, component, original_i + 19 - 2 - font.width(component), j, k, flag);
     }
 
@@ -129,6 +132,7 @@ public abstract class GuiGraphicsVisualItemMixin {
         if (backgroundItem != null) {
             this.pose.pushMatrix();
             this.pose.translate(x, y);
+            //~ if >= 26.1 'renderItem' -> 'item'
             this.item(backgroundItem, 0, 0);
             this.pose.popMatrix();
 
