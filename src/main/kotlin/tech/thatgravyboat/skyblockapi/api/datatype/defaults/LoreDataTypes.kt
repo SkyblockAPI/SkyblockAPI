@@ -76,7 +76,7 @@ object LoreDataTypes {
         val isUpgraded = DataTypes.RECOMBOBULATOR.factory(stack) == true
         for (line in stack.getRawLore().asReversedIterator()) {
             val rarityLine = (if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim()).removePrefix("SHINY ")
-            val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.name) }
+            val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.displayName.uppercase()) }
             if (rarity != null) {
                 return rarityLine to rarity
             }
