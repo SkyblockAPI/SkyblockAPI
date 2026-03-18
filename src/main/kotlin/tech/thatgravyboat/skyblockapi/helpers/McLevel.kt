@@ -6,6 +6,7 @@ import net.minecraft.core.RegistryAccess
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.phys.AABB
@@ -17,20 +18,24 @@ object McLevel {
     val hasLevel: Boolean
         get() = selfOrNull != null
 
+    @Suppress("DEPRECATION_ERROR")
+    @Deprecated(level = DeprecationLevel.ERROR, message = "Returns an unsafe value, will return a nullable ClientLevel in the next minecraft version!")
     val self: Level
         get() = level
 
     val selfOrNull: ClientLevel?
         get() = McClient.self.level
 
+    @Deprecated(level = DeprecationLevel.ERROR, message = "Returns an unsafe value, will be removed next minecraft version!")
     val level: ClientLevel
         get() = McClient.self.level!!
 
     val registry: RegistryAccess
+        @Suppress("DEPRECATION_ERROR")
         get() = self.registryAccess()
 
-    operator fun get(pos: BlockPos): BlockState = self.getBlockState(pos)
-    operator fun get(x: Int, y: Int, z: Int): BlockState = self.getBlockState(mutablePos.set(x, y, z))
+    operator fun get(pos: BlockPos): BlockState = selfOrNull?.getBlockState(pos) ?: Blocks.AIR.defaultBlockState()
+    operator fun get(x: Int, y: Int, z: Int): BlockState = selfOrNull?.getBlockState(mutablePos.set(x, y, z)) ?: Blocks.AIR.defaultBlockState()
 
 
     val players: List<Player>
