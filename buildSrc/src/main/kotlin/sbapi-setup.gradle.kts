@@ -62,6 +62,21 @@ repositories {
 }
 
 fun isUnobfuscated() = stonecutter.eval(stonecutter.current.version, ">=26.1")
+
+if (isUnobfuscated()) {
+    listOf(
+        "implementation",
+        "compileOnly",
+        "runtimeOnly",
+        "api"
+    ).forEach {
+        configurations.register("mod${it.replaceFirstChar { it.uppercase() }}") {
+            extendsFrom(configurations.getByName(it))
+        }
+    }
+
+}
+
 dependencies {
     "ksp"(versionedCatalog.bundles["meowdding"])
 }
@@ -181,4 +196,42 @@ extensions.getByType<CompactingResourcesExtension>().apply {
     substituteFromDifferentFile("slayer", "slayers")
 }
 
+kotlin {
+    jvmToolchain(if (isUnobfuscated()) 25 else 21)
+}
+
+java {
+    targetCompatibility = if (isUnobfuscated()) JavaVersion.VERSION_21 else JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.VERSION_21
+}
+
+dependencies {
+    "minecraft"(versionedCatalog["minecraft"])
+
+    "compileOnly"(project(":annotations"))
+    "compileOnly"(versionedCatalog.bundles["meowdding"])
+
+    "modApi"(versionedCatalog["fabric.language.kotlin"])
+
+    "api"(versionedCatalog["meowdding.item.dfu"]) {
+        capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}") }
+    }
+    "include"(versionedCatalog["meowdding.item.dfu"]) {
+        capabilities {
+            requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}")
+        }
+    }
+
+    "api"(versionedCatalog["hypixel.modapi"])
+    "modImplementation"(versionedCatalog.bundles["hypixel"])
+    "include"(versionedCatalog["hypixel.modapi.fabric"])
+
+    "modApi"(versionedCatalog["skyblockapi.repolib"])
+    "include"(versionedCatalog["skyblockapi.repolib"])
+
+    "modRuntimeOnly"(versionedCatalog["devauth"])
+
+    "modImplementation"(versionedCatalog["fabric.api"])
+    "modImplementation"(versionedCatalog["fabric.loader"])
+}
 
