@@ -23,10 +23,10 @@ object McLevel {
     val self: ClientLevel?
         get() = McClient.self.level
     //?} else {
-    @Suppress("DEPRECATION_ERROR")
-    @Deprecated(level = DeprecationLevel.WARNING, message = "Returns an unsafe value, will return a nullable ClientLevel in the next minecraft version!")
-    val self: Level
-        get() = level
+    //@Suppress("DEPRECATION_ERROR")
+    //@Deprecated(level = DeprecationLevel.WARNING, message = "Returns an unsafe value, will return a nullable ClientLevel in the next minecraft version!")
+    //val self: Level
+    //    get() = level
     //? }
 
     val selfOrNull: ClientLevel?
