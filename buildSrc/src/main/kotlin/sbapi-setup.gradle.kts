@@ -71,7 +71,7 @@ if (isUnobfuscated()) {
         "api"
     ).forEach {
         configurations.register("mod${it.replaceFirstChar { it.uppercase() }}") {
-            extendsFrom(configurations.getByName(it))
+            configurations.getByName(it).extendsFrom(this)
         }
     }
 
