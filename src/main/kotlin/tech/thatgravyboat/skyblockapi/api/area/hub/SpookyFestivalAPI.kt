@@ -23,7 +23,7 @@ object SpookyFestivalAPI {
 
     private val durationRegex = scoreboardGroup.create(
         "duration",
-        "Spooky Festival: (?<min>\\d{1,2}):(?<sec>\\d{2})",
+        "Spooky Festival (?<min>\\d{1,2}):(?<sec>\\d{2})",
     )
 
     private val candyRegex = tablistGroup.create(
