@@ -116,10 +116,17 @@ tasks.withType<ProcessResources>().configureEach {
 }
 
 tasks.named<ProcessResources>("processResources") {
+    val range = if (versionedCatalog.versions.has("minecraft.range")) {
+        versionedCatalog.versions.get("minecraft.range").toString()
+    } else {
+        val start = versionedCatalog.versions.getOrFallback("minecraft.start", "minecraft")
+        val end = versionedCatalog.versions.getOrFallback("minecraft.end", "minecraft")
+        ">=$start <=$end"
+    }
+
     val replacements = mapOf(
         "version" to project.version,
-        "minecraft_start" to versionedCatalog.versions.getOrFallback("minecraft.start", "minecraft"),
-        "minecraft_end" to versionedCatalog.versions.getOrFallback("minecraft.end", "minecraft"),
+        "minecraft_range" to range,
         "fabric_lang_kotlin" to versionedCatalog.versions.get("fabric.language.kotlin"),
         "hypixel_mod_api" to versionedCatalog.versions.get("hypixel.modapi.fabric"),
         "fabric_loader" to versionedCatalog.versions.get("fabric.loader"),

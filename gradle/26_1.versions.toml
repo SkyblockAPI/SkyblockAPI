@@ -1,6 +1,5 @@
 [versions]
-minecraft-start = "26.1-rc.1"
-minecraft-end = "26.1.x"
+minecraft-range = "26.1.x"
 minecraft = "26.1-rc-1"
 
 sbapi-mc-version = "26.1"
