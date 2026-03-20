@@ -43,7 +43,10 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
     }
 
     @WrapOperation(
+        //? >= 26.1 {
         method = "addMessage",
+        //? } else
+        //method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)V",
         at = {
             //? >= 26.1 {
             @At(
@@ -102,7 +105,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
         )
     )
     private GuiMessage.Line onAddMessageToDisplayQueue(
-        //? >= 26.1
+        //~ if >= 26.1 'int i' -> 'GuiMessage parent'
         GuiMessage parent,
         FormattedCharSequence content,
         //? < 26.1
@@ -112,7 +115,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
         @Local(argsOnly = true) GuiMessage message
     ) {
         GuiMessage.Line line = original.call(
-            //? >= 26.1
+            //~ if >= 26.1 'i' -> 'parent'
             parent,
             content,
             //? < 26.1

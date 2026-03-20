@@ -42,7 +42,7 @@ public class AbstractContainerScreenMixin {
         final int yo,
         final @Nullable Identifier style,
         Operation<Void> original,
-        @Local(name = "item") ItemStack stack
+        @Local(ordinal = 0) ItemStack stack
     ) {
         if (instance instanceof GuiGraphicsHook hook) {
             hook.skyblockapi$setHoveredItem(stack);

@@ -206,32 +206,43 @@ java {
 }
 
 dependencies {
+    fun makeAlias(configuration: String) = if (isUnobfuscated()) configuration else "mod" + configuration.replaceFirstChar { it.uppercase() }
+
+    val maybeModImplementation = makeAlias("implementation")
+    val maybeModCompileOnly = makeAlias("compileOnly")
+    val maybeModRuntimeOnly = makeAlias("runtimeOnly")
+    val maybeModApi = makeAlias("api")
+
     "minecraft"(versionedCatalog["minecraft"])
 
     "compileOnly"(project(":annotations"))
     "compileOnly"(versionedCatalog.bundles["meowdding"])
 
-    "modApi"(versionedCatalog["fabric.language.kotlin"])
+    maybeModApi(versionedCatalog["fabric.language.kotlin"])
 
-    "api"(versionedCatalog["meowdding.item.dfu"]) {
+    maybeModApi(versionedCatalog["meowdding.item.dfu"]) {
         capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}") }
     }
     "include"(versionedCatalog["meowdding.item.dfu"]) {
         capabilities {
-            requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}")
+            if (isUnobfuscated()) {
+                requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}")
+            } else {
+                requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}-remapped")
+            }
         }
     }
 
     "api"(versionedCatalog["hypixel.modapi"])
-    "modImplementation"(versionedCatalog.bundles["hypixel"])
+    maybeModImplementation(versionedCatalog.bundles["hypixel"])
     "include"(versionedCatalog["hypixel.modapi.fabric"])
 
-    "modApi"(versionedCatalog["skyblockapi.repolib"])
+    maybeModApi(versionedCatalog["skyblockapi.repolib"])
     "include"(versionedCatalog["skyblockapi.repolib"])
 
-    "modRuntimeOnly"(versionedCatalog["devauth"])
+    maybeModRuntimeOnly(versionedCatalog["devauth"])
 
-    "modImplementation"(versionedCatalog["fabric.api"])
-    "modImplementation"(versionedCatalog["fabric.loader"])
+    maybeModImplementation(versionedCatalog["fabric.api"])
+    maybeModImplementation(versionedCatalog["fabric.loader"])
 }
 

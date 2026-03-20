@@ -49,6 +49,7 @@ public abstract class GuiGraphicsVisualItemMixin {
     public abstract void text(Font par1, Component par2, int par3, int par4, int par5, boolean par6);
 
     @Inject(
+        //~ if >= 26.1 '"renderItem' -> '"item'
         method = "item(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
         at = @At("HEAD")
     )
@@ -60,6 +61,7 @@ public abstract class GuiGraphicsVisualItemMixin {
         itemStack.set(visualItem);
     }
 
+    //~ if >= 26.1 '"renderItem' -> '"item'
     @WrapMethod(method = "itemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V")
     private void wrapRenderItemDecorations(Font font, ItemStack itemStack, int i, int j, String string, Operation<Void> original) {
         skyblockapi$originalItem.set(itemStack);
@@ -69,6 +71,7 @@ public abstract class GuiGraphicsVisualItemMixin {
         skyblockapi$originalItem.remove();
     }
 
+    //~ if >= 26.1 '"renderItem' -> '"item'
     @Inject(method = "itemCount", at = @At("HEAD"))
     private void setComponentAndChangeItem(
         CallbackInfo ci,
@@ -85,14 +88,25 @@ public abstract class GuiGraphicsVisualItemMixin {
 
     @Definition(id = "string", local = @Local(type = String.class, argsOnly = true))
     @Expression("string != null")
-    @WrapOperation(method = "itemCount", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0))
+    @WrapOperation(
+        //~ if >= 26.1 '"renderItem' -> '"item'
+        method = "itemCount",
+        at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0)
+    )
     private boolean wrapIsNullCheck(Object left, Object right, Operation<Boolean> original, @Share("component") LocalRef<Component> componentRef) {
         return original.call(left, right) || componentRef.get() != null;
     }
 
     // Ignore the warning about no possible signatures for this injector
-    //~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
-    @WrapOperation(method = "itemCount", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"))
+    @WrapOperation(
+        //~ if >= 26.1 '"renderItem' -> '"item'
+        method = "itemCount",
+        at = @At(
+            value = "INVOKE",
+            //~ if >= 26.1 ';drawString' -> 'Extractor;text'
+            target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"
+        )
+    )
     private void wrapIsNullCheck(
         //~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
         GuiGraphicsExtractor instance,
@@ -113,6 +127,7 @@ public abstract class GuiGraphicsVisualItemMixin {
     }
 
     @Inject(
+        //~ if >= 26.1 '"renderItem' -> '"item'
         method = "item(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
         at = @At("HEAD")
     )
