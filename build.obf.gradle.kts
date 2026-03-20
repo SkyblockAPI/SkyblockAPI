@@ -1,5 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
+import net.fabricmc.loom.task.RemapJarTask
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 
 plugins {
@@ -32,3 +33,16 @@ dependencies {
 }
 
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }
+
+
+tasks.named<Jar>("jar") {
+    archiveClassifier = stonecutter.current.version
+}
+
+tasks.named<RemapJarTask>("remapJar") {
+    archiveClassifier = "${stonecutter.current.version}-remapped"
+}
+
+tasks.named<Jar>("sourcesJar") {
+    archiveClassifier = "${stonecutter.current.version}-sources"
+}

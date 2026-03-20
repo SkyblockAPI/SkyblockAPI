@@ -24,6 +24,10 @@ loom {
 
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }
 
-tasks.withType<Jar> {
+tasks.named<Jar>("jar") {
     archiveClassifier = stonecutter.current.version
+}
+
+tasks.named<Jar>("sourcesJar") {
+    archiveClassifier = "${stonecutter.current.version}-sources"
 }

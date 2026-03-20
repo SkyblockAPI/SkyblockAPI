@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalAbiValidation::class)
 
 import com.google.devtools.ksp.gradle.KspExtension
-import com.google.devtools.ksp.gradle.utils.useLegacyVariantApi
 import me.owdding.AutoMixinExtension
 import me.owdding.repo.resources.CompactingResourcesExtension
 import org.gradle.plugins.ide.idea.model.IdeaModel
