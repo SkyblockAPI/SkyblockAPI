@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.remote.api
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.CommonComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
@@ -99,7 +100,7 @@ value class SkyBlockId private constructor(val id: String) {
             // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
             // i.e. ender chest icon in storage
             //? >= 26.1 {
-            if (stack.item.defaultInstance.hoverName.stripped.equals(stack.hoverName.stripped, true)) return null
+            if (stack.item.components().getOrDefault(DataComponents.ITEM_NAME, CommonComponents.EMPTY).stripped.equals(stack.hoverName.stripped, true)) return null
             //? } else
             //if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
 

@@ -62,20 +62,6 @@ repositories {
 
 fun isUnobfuscated() = stonecutter.eval(stonecutter.current.version, ">=26.1")
 
-if (isUnobfuscated()) {
-    listOf(
-        "implementation",
-        "compileOnly",
-        "runtimeOnly",
-        "api"
-    ).forEach {
-        configurations.register("mod${it.replaceFirstChar { it.uppercase() }}") {
-            configurations.getByName(it).extendsFrom(this)
-        }
-    }
-
-}
-
 dependencies {
     "ksp"(versionedCatalog.bundles["meowdding"])
 }
