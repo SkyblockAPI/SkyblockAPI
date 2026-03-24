@@ -26,9 +26,18 @@ object RegexUtils {
         return find(input)?.let { Destructured(it, group).component1() }
     }
 
+    fun Regex.findGroup(input: List<String>, group: String): String? {
+        return input.firstNotNullOfOrNull { findGroup(it, group) }
+    }
+
     fun Regex.findGroups(input: CharSequence, vararg groups: String = arrayOf()): Destructured? {
         return find(input)?.let { Destructured(it, *groups) }
     }
+
+    fun Regex.hasGroup(input: CharSequence, group: String): Boolean = findGroup(input, group) != null
+
+    fun Regex.hasGroup(input: List<String>, group: String): Boolean = findGroup(input, group) != null
+
 
     fun Regex.contains(input: CharSequence): Boolean = containsMatchIn(input)
 

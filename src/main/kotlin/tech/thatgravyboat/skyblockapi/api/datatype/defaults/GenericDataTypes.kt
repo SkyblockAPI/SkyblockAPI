@@ -28,6 +28,11 @@ object GenericDataTypes {
             else -> id
         }
     }
+    val ID_DAMAGE: DataType<Int> = DataType.of("id_damage") {
+        val id = ID.factory(it) ?: return@of null
+        val damage = id.substringAfterLast(":", "").toIntOrNull() ?: return@of null
+        damage
+    }
     val UUID: DataType<UUID> = DataType.simple("uuid")
     val MODIFIER: DataType<String> = DataType.simple("modifier")
     val TIMESTAMP: DataType<Instant> = DataType.of("timestamp") { it.tag?.getLongOrNull("timestamp")?.let(Instant::fromEpochMilliseconds) }
@@ -64,8 +69,23 @@ object GenericDataTypes {
     }
     val GILDED_GIFTED_COINS: DataType<Long> = DataType.simple("gilded_gifted_coins")
     val CROPS_BROKEN: DataType<Long> = DataType.simple("mined_crops")
+    val THUNDER_CHARGE: DataType<Int> = DataType.simple("thunder_charge")
+    val PELTS_EARNED: DataType<Long> = DataType.simple("pelts_earned")
+    val DONATED_MUSEUM: DataType<Boolean> = DataType.simple("donated_museum")
+    val DAVID_CLOAK_UPGRADE: DataType<Int> = DataType.simple("attribute_menu_value", "attributeMenuValue")
+    val ORIGIN_TAG: DataType<String> = DataType.simple("origin_tag", "originTag")
+
+    val RAFFLE_WIN: DataType<String> = DataType.simple("raffle_win")
+    val RAFFLE_YEAR: DataType<Int> = DataType.simple("raffle_year")
+
+    val DITTO_USED: DataType<Boolean> = DataType.of("ditto_used") { item ->
+        listOf("ditto_applied_skin", "ditto_og_item_id", "skinValue", "skullValue").any { it in (item.tag?.keySet() ?: emptySet()) }.takeIf { it }
+    }
+    val DITTO_ITEM_ID: DataType<String> = DataType.simple("ditto_og_item_id")
+
     val ABSORB_LOGS: DataType<Long> = DataType.simple("absorb_logs_chopped")
     val LOGS_CUT: DataType<Long> = DataType.simple("logs_cut")
+
     val STAR_COUNT: DataType<Int> = DataType.of("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
     val NECRON_SCROLLS: DataType<List<String>> = DataType.of("necron_scrolls") {
         val list = it.tag?.getList("ability_scroll")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull() }
