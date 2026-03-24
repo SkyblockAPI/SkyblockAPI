@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.hasGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
@@ -31,7 +32,7 @@ object LoreDataTypes {
     private val dungeonBreakerRegex = dataTypeGroup.create("dungeonbreaker", "Charges: (?<current>\\d+)/(?<max>\\d+)⸕")
     private val waterRegex = dataTypeGroup.create("water_level", "Water: (?<current>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
     private val selectedArrowRegex = dataTypeGroup.create("arrow", "^Selected: (?<type>.+)$")
-    private val soulboundRegex = dataTypeGroup.create("soulbound", "\\* (?<coop>Co-op )Soulbound \\*")
+    private val soulboundRegex = dataTypeGroup.create("soulbound", "\\* (?<coop>Co-op )?Soulbound \\*")
 
     val FUEL: DataType<Pair<Int, Int>> = DataType.of("fuel") {
         var output: Pair<Int, Int>? = null
@@ -124,8 +125,8 @@ object LoreDataTypes {
     }
 
     val SOULBOUND: DataType<SoulboundType> = DataType.of("soulbound") {
-        if (!soulboundRegex.anyMatch(it.getRawLore())) return@of null
-        if (soulboundRegex.hasGroup(it.getRawLore(), "coop")) SoulboundType.COOP else SoulboundType.SOLO
+        val matches = it.getRawLore().reversed().firstNotNullOfOrNull(soulboundRegex::matchEntire) ?: return@of null
+        if (matches.groups["coop"] != null) SoulboundType.COOP else SoulboundType.SOLO
     }
 
     enum class SoulboundType {
