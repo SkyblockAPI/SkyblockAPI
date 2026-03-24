@@ -1,6 +1,6 @@
 [versions]
 minecraft-range = "26.1.x"
-minecraft = "26.1-rc-1"
+minecraft = "26.1"
 
 sbapi-mc-version = "26.1"
 fabric-api = "0.143.12+26.1"
