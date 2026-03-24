@@ -170,5 +170,8 @@ object McClient {
         //? } else
         //ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(id, listener)
     }
+
+    fun anyModInstalled(modIds: Collection<String>): Boolean = modIds.any { FabricLoader.getInstance().isModLoaded(it) }
+    fun anyModInstalled(vararg modIds: String): Boolean = anyModInstalled(modIds.asList())
 }
 
