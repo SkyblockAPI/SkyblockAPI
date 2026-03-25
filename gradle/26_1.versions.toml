@@ -5,8 +5,8 @@ minecraft = "26.1"
 sbapi-mc-version = "26.1"
 fabric-api = "0.143.12+26.1"
 
-hypixel-modapi = "1.0.1"
-hypixel-modapi-fabric = "1.0.1+build.dev+mc26.1-pre-1-custom.26.1-port.build+2"
+hypixel-modapi = "1.0.2"
+hypixel-modapi-fabric = "1.0.2+build.1+mc26.1"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -14,9 +14,7 @@ minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
 
 hypixel-modapi = { module = "net.hypixel:mod-api", version.ref = "hypixel-modapi" }
-#todo change back to maven.modrinth once hypixel updates
-hypixel-modapi-fabric = { module = "net.hypixel:FabricModAPI", version.ref = "hypixel-modapi-fabric" }
+hypixel-modapi-fabric = { module = "maven.modrinth:hypixel-mod-api", version.ref = "hypixel-modapi-fabric" }
 
-#https://maven.teamresourceful.com/repository/maven-public/net/hypixel/FabricModAPI/1.0.1+build.dev+mc26.1-pre-1-custom.26.1-port/FabricModAPI-1.0.1+build.dev+mc26.1-pre-1-custom.26.1-port.pom
 [bundles]
 hypixel = ["hypixel-modapi", "hypixel-modapi-fabric"]
