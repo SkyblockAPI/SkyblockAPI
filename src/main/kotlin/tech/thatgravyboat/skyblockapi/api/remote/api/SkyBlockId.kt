@@ -8,6 +8,7 @@ import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuIdRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
@@ -25,6 +26,7 @@ value class SkyBlockId private constructor(val id: String) {
     companion object Companion {
         private val amountRegex = Regex(".*?x[\\d,]+")
         private val petRegex = Regex("\\[?lvl \\d+]? (.*)")
+        internal val neuIdRegex = Regex("\\w+;\\d+")
 
         const val DELIMITER = ":"
         const val ITEM = "item$DELIMITER"
@@ -80,18 +82,15 @@ value class SkyBlockId private constructor(val id: String) {
         fun unsafe(id: String) = SkyBlockId("$UNSAFE$id")
 
         @IncludedCodec
-        val CODEC: Codec<SkyBlockId> = Codec.STRING
-            .xmap({ it.lowercase() }, { it })
-            .xmap(::SkyBlockId, SkyBlockId::id)
+        val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap(::SkyBlockId, SkyBlockId::id)
 
-        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it })
-            .xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
+        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
 
         fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
 
         internal fun createIdForItem(stack: ItemStack): SkyBlockId? {
-            val id = fromItem(stack)
-            if (id != null) return id
+            val itemId = fromItem(stack)
+            if (itemId != null) return itemId
 
             // Used for ignoring same names on things like dyes and barriers where it is usually important to keep it as no id.
             // i.e. anvil with no items has a barrier named 'Anvil'
@@ -101,7 +100,12 @@ value class SkyBlockId private constructor(val id: String) {
             // i.e. ender chest icon in storage
             if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
 
-            return fromName(stack.hoverName.stripped, false)
+            val nameId = fromName(stack.hoverName.stripped, false) ?: return null
+
+            // An item may not be available if it can't be parsed, in this case we will just return the id we suspect.
+            val repoItem = SimpleItemAPI.getUnknownById(nameId) ?: return nameId
+
+            return if (repoItem.item == stack.item) nameId else null
         }
     }
 
@@ -157,19 +161,7 @@ value class SkyBlockId private constructor(val id: String) {
     override fun toString() = "SkyBlockId($id)"
 }
 
-private fun ItemStack.getSbId(): SkyBlockId? = when (val data = DataTypes.ID.factory(this)) {
-    "RUNE", "UNIQUE_RUNE" -> DataTypes.USED_RUNE.factory(this)
-    "PET" -> DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) -> "$id$DELIMITER${rarity.name}" }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
-    "ENCHANTED_BOOK" -> {
-        val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
-
-        when (enchants?.size) {
-            null, 0 -> SkyBlockId.enchantment(UNKNOWN)
-            1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key, value) }
-            else -> SkyBlockId.item("enchanted_book")
-        }
-    }
-
+private fun ItemStack.getSbId(): SkyBlockId? = when (val id = DataTypes.ID.factory(this) ?: return null) {
     "ATTRIBUTE_SHARD" -> {
         DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
             .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
@@ -180,5 +172,21 @@ private fun ItemStack.getSbId(): SkyBlockId? = when (val data = DataTypes.ID.fac
     "PARTY_HAT_CRAB_ANIMATED" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
     "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_$it") }
 
-    else -> data?.let(SkyBlockId::item)
+    else if (id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id))) -> {
+        val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
+
+        when (enchants?.size) {
+            null, 0 -> SkyBlockId.enchantment(UNKNOWN)
+            1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key.lowercase(), value) }
+            else -> SkyBlockId.item("enchanted_book")
+        }
+    }
+
+    else if (id == "PET" || id == "RUNE" || id == "UNIQUE_RUNE" || (this.`is`(Items.PLAYER_HEAD) && neuIdRegex.matches(id))) -> {
+        DataTypes.USED_RUNE.factory(this) ?: DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) ->
+            "$id$DELIMITER${rarity.name}"
+        }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
+    }
+
+    else -> SkyBlockId.item(id)
 }

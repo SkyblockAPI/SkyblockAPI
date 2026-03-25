@@ -6,29 +6,35 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreePerk
 
 internal abstract class SkillTreeStorage<Data : SkillTreeData<Perk>, Perk : SkillTreePerk> {
 
-    abstract val STORAGE: StoredProfileData<Data>
+    protected abstract val storage: StoredProfileData<Data>
 
-    var perks: MutableMap<String, Perk>
-        get() = STORAGE.get()?.perks ?: mutableMapOf()
-        private set(value) {
-            STORAGE.get()?.perks = value
-            save()
-        }
+    val perks: Map<String, Perk>
+        get() = storage.get()?.perks ?: mutableMapOf()
 
     var tokens: Int
-        get() = STORAGE.get()?.tokens ?: 1
-        internal set(value) {
-            if (this.tokens == value) return
-            STORAGE.get()?.tokens = value
-            save()
+        get() = storage.get()?.tokens ?: 1
+        internal set(value) = storage.edit {
+            if (tokens == value) return
+            tokens = value
         }
 
-    fun setPerk(name: String, perk: Perk) {
-        if (perks[name] == perk) return
-        perks[name] = perk
-        save()
+    val tier: Int
+        get() = storage.get()?.tier ?: 0
+
+    fun setMinTier(minTier: Int) {
+        storage.edit {
+            if (tier >= minTier) return
+            tier = minTier
+        }
     }
 
-    fun save() = STORAGE.save()
+    fun setPerk(name: String, perk: Perk) {
+        storage.edit {
+            if (perks[name] == perk) return
+            perks[name] = perk
+        }
+    }
+
+    fun save() = storage.save()
 
 }

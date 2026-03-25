@@ -1,28 +1,38 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.AttributeInstance
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.hooks.AttributeInstanceHook
 import tech.thatgravyboat.skyblockapi.hooks.DataItemHook
 import tech.thatgravyboat.skyblockapi.mixins.accessors.LivingEntityAccessor
 import tech.thatgravyboat.skyblockapi.mixins.accessors.SynchedEntityDataAccessor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-fun LivingEntity.getHelmet() = getItemBySlot(EquipmentSlot.HEAD)
-fun LivingEntity.getChestplate() = getItemBySlot(EquipmentSlot.CHEST)
-fun LivingEntity.getLeggings() = getItemBySlot(EquipmentSlot.LEGS)
-fun LivingEntity.getBoots() = getItemBySlot(EquipmentSlot.FEET)
+val Entity.cleanName: String get() = name.stripped
 
-fun Player.isRealPlayer() = uuid.version() == 4
+fun LivingEntity.getHelmet(): ItemStack = getItemBySlot(EquipmentSlot.HEAD)
+fun LivingEntity.getChestplate(): ItemStack = getItemBySlot(EquipmentSlot.CHEST)
+fun LivingEntity.getLeggings(): ItemStack = getItemBySlot(EquipmentSlot.LEGS)
+fun LivingEntity.getBoots(): ItemStack = getItemBySlot(EquipmentSlot.FEET)
 
-fun LivingEntity.getArmor() = listOf(getHelmet(), getChestplate(), getLeggings(), getBoots())
+fun Player.isRealPlayer(): Boolean = uuid.version() == 4
+
+fun LivingEntity.getArmor(): List<ItemStack> = listOf(getHelmet(), getChestplate(), getLeggings(), getBoots())
+
+val AttributeInstance.serverValue: Float
+    get() = (this as? AttributeInstanceHook)?.`skyblockapi$getServerValue`()?.toFloat() ?: 0.0f
 
 val LivingEntity.serverMaxHealth: Float
     get() {
         val attribute = this.getAttribute(Attributes.MAX_HEALTH) ?: return this.maxHealth
         return (attribute as? AttributeInstanceHook)?.`skyblockapi$getServerValue`()?.toFloat() ?: this.maxHealth
     }
+
 val LivingEntity.serverHealth: Float
     get() {
         val accessor = this.entityData as? SynchedEntityDataAccessor ?: return this.health

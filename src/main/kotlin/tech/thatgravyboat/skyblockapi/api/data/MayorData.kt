@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
+import net.minecraft.util.TriState
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
@@ -27,11 +28,12 @@ data class MayorCandidate internal constructor(
 object MayorCandidates {
     private val _mayors = mutableMapOf<String, MayorCandidate>()
     val mayors: Collection<MayorCandidate> by _mayors::values
+    internal val mayorsMap: Map<String, MayorCandidate> get() = _mayors
 
     //region Candidates
     val AATROX = register("Aatrox", MayorPerks.SLASHED_PRICING, MayorPerks.SLAYER_XP_BUFF, MayorPerks.PATHFINDER)
     val COLE = register("Cole", MayorPerks.PROSPECTION, MayorPerks.MINING_XP_BUFF, MayorPerks.MINING_FIESTA, MayorPerks.MOLTEN_FORGE)
-    val DIANA = register("Diana", MayorPerks.LUCKY, MayorPerks.MYTHOLOGICAL_RITUAL, MayorPerks.PET_XP_BUFF, MayorPerks.SHARING_IS_CARING)
+    val DIANA = register("Diana", MayorPerks.HUNTRESS_INTUITION, MayorPerks.MYTHOLOGICAL_RITUAL, MayorPerks.PET_XP_BUFF, MayorPerks.SHARING_IS_CARING)
     val DIAZ = register("Diaz", MayorPerks.SHOPPING_SPREE, MayorPerks.VOLUME_TRADING, MayorPerks.STOCK_EXCHANGE, MayorPerks.LONG_TERM_INVESTMENT)
     val FINNEGAN = register("Finnegan", MayorPerks.PELT_POCALYPSE, MayorPerks.GOATED, MayorPerks.BLOOMING_BUSINESS, MayorPerks.PEST_ERADICATOR)
     val FOXY = register("Foxy", MayorPerks.SWEET_BENEVOLENCE, MayorPerks.A_TIME_FOR_GIVING, MayorPerks.CHIVALROUS_CARNIVAL, MayorPerks.EXTRA_EVENT)
@@ -59,8 +61,19 @@ data class MayorPerk internal constructor(
     val perkName: String,
     var description: String = "Not available",
 ) {
+    internal var overrideState: TriState = DEFAULT
+
     var active: Boolean = false
+        get() = overrideState.toBoolean(field)
         internal set
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MayorPerk) return false
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = id.hashCode()
 }
 
 
@@ -68,6 +81,7 @@ data class MayorPerk internal constructor(
 object MayorPerks {
     private val _perks = mutableMapOf<String, MayorPerk>()
     val perks: Collection<MayorPerk> by _perks::values
+    internal val perksMap: Map<String, MayorPerk> get() = _perks
 
     //region Perks
     // Aatrox
@@ -82,7 +96,9 @@ object MayorPerks {
     val MOLTEN_FORGE = register("Molten Forge")
 
     // Diana
+    @RemoveNextVersion
     val LUCKY = register("Lucky!")
+    val HUNTRESS_INTUITION = register("Huntress' Intuition")
     val MYTHOLOGICAL_RITUAL = register("Mythological Ritual")
     val PET_XP_BUFF = register("Pet XP Buff")
     val SHARING_IS_CARING = register("Sharing is Caring")

@@ -150,6 +150,7 @@ tasks.processResources {
         "minecraft_end" to versionedCatalog.versions.getOrFallback("minecraft.end", "minecraft"),
         "fabric_lang_kotlin" to libs.versions.fabric.language.kotlin.get(),
         "hypixel_mod_api" to libs.versions.hypixel.modapi.fabric.get(),
+        "fabric_loader" to libs.versions.fabric.loader.get(),
     )
     inputs.properties(replacements)
 

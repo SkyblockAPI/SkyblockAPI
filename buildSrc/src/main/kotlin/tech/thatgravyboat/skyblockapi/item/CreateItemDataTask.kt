@@ -48,7 +48,7 @@ abstract class CreateItemDataTask : DefaultTask() {
             filePath.writeBytes(byteArray, options = arrayOf(StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE))
         }
 
-        fun write(element: JsonElement, file: File) = write(GsonBuilder().setPrettyPrinting().create().toJson(element).toByteArray(), file)
+        fun write(element: JsonElement, file: File) = write(GsonBuilder().disableHtmlEscaping().create().toJson(element).toByteArray(), file)
 
         doFirst {
             if (downloadCache.isCached(itemDataCacheKey)) {
@@ -79,7 +79,7 @@ abstract class CreateItemDataTask : DefaultTask() {
                     val museumData = item.getAsJsonObject("museum_data")
                     val newData = JsonObject()
 
-                    museumData.get("type")?.let { newData.add("type", it) }
+                    museumData.get("category")?.let { newData.add("category", it) }
                     museumData.getAsJsonObject("armor_set_donation_xp")?.let { armorSetDonationXp ->
                         val armorIds = JsonArray().apply {
                             armorSetDonationXp.keySet().forEach { add(it) }
@@ -98,7 +98,7 @@ abstract class CreateItemDataTask : DefaultTask() {
                     }
                 } else if (item.get("museum")?.asBoolean == true) {
                     val newData = JsonObject().apply {
-                        addProperty("type", "SPECIAL_ITEMS")
+                        addProperty("category", "SPECIAL_ITEMS")
                     }
                     output.add("museum_data", newData)
                 }

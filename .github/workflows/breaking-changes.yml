@@ -2,7 +2,7 @@ name: Breaking Changes Checker
 
 on:
     pull_request_target:
-        branches: [ "2.0" ]
+        branches: [ "4.0" ]
 
 permissions:
     contents: write
@@ -47,5 +47,5 @@ jobs:
                         cat api.removed >> comment
                         echo "\`\`\`" >> comment
                         gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
-                        exit 1´
+                        exit 1
                     fi

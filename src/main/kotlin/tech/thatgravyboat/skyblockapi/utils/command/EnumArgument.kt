@@ -35,7 +35,7 @@ class EnumArgument<E : Enum<E>> private constructor(
         return entries.find { it.name.equals(input, true) } ?: throw invalidValueException.createWithContext(reader, input)
     }
 
-    override fun <S : Any?> listSuggestions(context: CommandContext<S>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
+    override fun <S : Any> listSuggestions(context: CommandContext<S>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
         val remaining = builder.remaining.lowercase()
         entries.forEach { e ->
             if (e.name.startsWith(remaining, true)) builder.suggest(e.name)

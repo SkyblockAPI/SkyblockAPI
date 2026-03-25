@@ -13,8 +13,10 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
@@ -24,6 +26,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
+import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import kotlin.time.Duration
 
@@ -232,12 +235,14 @@ object DungeonAPI {
         }
 
         val ownName = McPlayer.name
+        var currentIndex = 0
 
         for (line in firstColumn) {
             val stripped = line.stripped
             classRegex.findThenNull(stripped, "name", "class", "level") { (name, dungeonClass, level) ->
                 val dungeonPlayer = teammates.find { it.name == name }
                 if (dungeonPlayer != null) {
+                    dungeonPlayer.index = currentIndex++
                     if (name != ownName) dungeonPlayer.dead = false
                     if (dungeonPlayer.missingData()) {
                         dungeonPlayer.dungeonClass = DungeonClass.getByName(dungeonClass)
@@ -251,6 +256,7 @@ object DungeonAPI {
                     ownPlayer = player
                 }
                 teammates += player
+                player.index = currentIndex++
             } ?: continue
             deadTeammateRegex.find(stripped, "name") { (name) ->
                 var dungeonPlayer = teammates.find { it.name == name }
@@ -259,6 +265,7 @@ object DungeonAPI {
                     teammates += dungeonPlayer
                 }
                 dungeonPlayer.dead = true
+                dungeonPlayer.index = -1
             }
         }
 
@@ -301,5 +308,15 @@ object DungeonAPI {
     }
 
     private fun milestoneCharToInt(char: Char): Int = if (char in '❶'..'❾') '❶'.code - char.code + 1 else 0
+
+    @Subscription
+    fun onRegisterCommands(event: RegisterCommandsEvent) {
+        event.register("sbapi dungeon") {
+            thenCallback("copy teammates") {
+                McClient.clipboard = teammates.toString()
+                Text.sendDebug("Copied Dungeon teammates to clipboard")
+            }
+        }
+    }
 
 }

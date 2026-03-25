@@ -11,7 +11,8 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
-import java.util.UUID
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import java.util.*
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
 
@@ -26,6 +27,11 @@ object GenericDataTypes {
             "PET" -> PET_DATA.factory(it)?.apiId ?: return@of null
             else -> id
         }
+    }
+    val ID_DAMAGE: DataType<Int> = DataType.of("id_damage") {
+        val id = ID.factory(it) ?: return@of null
+        val damage = id.substringAfterLast(":", "").toIntOrNull() ?: return@of null
+        damage
     }
     val UUID: DataType<UUID> = DataType.simple("uuid")
     val MODIFIER: DataType<String> = DataType.simple("modifier")
@@ -52,8 +58,10 @@ object GenericDataTypes {
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }
     }
+    val MIDAS_WEAPON_BID: DataType<Int> = DataType.simple("midas_weapon_bid", "winning_bid")
+    val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = DataType.simple("midas_weapon_added_coins", "additional_coins")
     val MIDAS_WEAPON_PAID: DataType<Long> = DataType.of("midas_weapon_paid") { stack ->
-        listOf("winning_bid", "additional_coins").mapNotNull { stack.tag?.getLongOrNull(it) }.sum().takeUnless { it == 0L }
+        listOfNotNull(MIDAS_WEAPON_BID.factory(stack), MIDAS_WEAPON_ADDED_COINS.factory(stack)).sum().toLong().takeUnless { it == 0L }
     }
     val ENRICHMENT: DataType<SkyBlockId> = DataType.of("enrichment") {
         val id = it.tag?.getStringOrNull("talisman_enrichment") ?: return@of null
@@ -61,8 +69,23 @@ object GenericDataTypes {
     }
     val GILDED_GIFTED_COINS: DataType<Long> = DataType.simple("gilded_gifted_coins")
     val CROPS_BROKEN: DataType<Long> = DataType.simple("mined_crops")
+    val THUNDER_CHARGE: DataType<Int> = DataType.simple("thunder_charge")
+    val PELTS_EARNED: DataType<Long> = DataType.simple("pelts_earned")
+    val DONATED_MUSEUM: DataType<Boolean> = DataType.simple("donated_museum")
+    val DAVID_CLOAK_UPGRADE: DataType<Int> = DataType.simple("attribute_menu_value", "attributeMenuValue")
+    val ORIGIN_TAG: DataType<String> = DataType.simple("origin_tag", "originTag")
+
+    val RAFFLE_WIN: DataType<String> = DataType.simple("raffle_win")
+    val RAFFLE_YEAR: DataType<Int> = DataType.simple("raffle_year")
+
+    val DITTO_USED: DataType<Boolean> = DataType.of("ditto_used") { item ->
+        listOf("ditto_applied_skin", "ditto_og_item_id", "skinValue", "skullValue").any { it in (item.tag?.keySet() ?: emptySet()) }.takeIf { it }
+    }
+    val DITTO_ITEM_ID: DataType<String> = DataType.simple("ditto_og_item_id")
+
     val ABSORB_LOGS: DataType<Long> = DataType.simple("absorb_logs_chopped")
     val LOGS_CUT: DataType<Long> = DataType.simple("logs_cut")
+
     val STAR_COUNT: DataType<Int> = DataType.of("star_count") { it.tag?.getIntOrNull("upgrade_level") ?: it.tag?.getIntOrNull("dungeon_item_level") }
     val NECRON_SCROLLS: DataType<List<String>> = DataType.of("necron_scrolls") {
         val list = it.tag?.getList("ability_scroll")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull() }
@@ -83,6 +106,11 @@ object GenericDataTypes {
 
     val PARTY_HAT_COLOR: DataType<String> = DataType.simple("party_hat_color")
     val PARTY_HAT_YEAR: DataType<Int> = DataType.simple("party_hat_year")
+
+    val CULTIVATING_CROPS: DataType<Long> = DataType.simple("cultivating_crops", "farmed_cultivating")
+    val TOOL_LEVEL: DataType<Int> = DataType.simple("tool_level", "levelable_lvl")
+    val TOOL_EXP: DataType<Double> = DataType.simple("tool_exp", "levelable_exp")
+    val TOOL_OVERCLOCKS: DataType<Int> = DataType.simple("tool_overclocks", "levelable_overclocks")
 
     @RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType.of("applied_rune") {
@@ -122,6 +150,7 @@ object GenericDataTypes {
 
     /** In SkyBlock items that are only available in new versions are shown via [DataComponents.ITEM_MODEL], this returns the item that is displayed. */
     val VISIBLE_ITEM: DataType<Item> = DataType.of("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
+    val CLEAN_NAME: DataType<String> = DataType.of("clean_name") { it.hoverName.stripped }
 
 
     private fun getFishingRodPartDataType(name: String) = DataType.of(name) {

@@ -2,9 +2,11 @@ package tech.thatgravyboat.skyblockapi.api.profile.garden
 
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
+import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlotsStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.*
@@ -114,7 +116,9 @@ object PlotAPI {
     fun getPlot(id: Int): Plot? = plots.find { it.id == id }
     fun getPlotByName(name: String): Plot? = plots.find { it.data?.name == name }
 
-    fun getCurrentPlot(): Plot? = plots.find { McPlayer in it.aabb }
+    fun getPlot(pos: Vec3): Plot? = plots.find { pos in it.aabb }
+    fun getPlot(pos: BlockPos): Plot? = getPlot(Vec3(pos))
+    fun getCurrentPlot(): Plot? = McPlayer.position?.let(::getPlot)
 
 
     private fun clearPests() {
@@ -186,13 +190,15 @@ object PlotAPI {
             pests = amount.toIntValue()
         }
         val locked = item.getRawLore().any { it == "Cost:" }
+        val isGreenhouse = item.getRawLore().any { it == "Greenhouse Plot" }
 
         val plot = PlotData(
-            plotId,
-            name,
-            Pest(pests, inaccurate = false),
-            itemId,
-            locked,
+            id = plotId,
+            name = name,
+            pest = Pest(pests, inaccurate = false),
+            deskIcon = itemId,
+            isGreenhouse = isGreenhouse,
+            locked = locked,
         )
         plot.save()
     }
@@ -289,9 +295,14 @@ object PlotAPI {
                 val string = buildList {
                     add("Plots:")
                     PlotsStorage.plots.forEach { plot ->
-                        val pest = plot.pest
-                        val pestText = if (pest.inaccurate) " (Inacc)" else ""
-                        add("  - Plot ${plot.id}: ${plot.name}, Pests: ${pest.pest}$pestText, Locked: ${plot.locked}, Icon: ${plot.deskIcon ?: "None"}")
+                        val string = buildString {
+                            append("  - Plot ${plot.id}: ${plot.name}, ")
+                            append("Pests: ${plot.pest}${if (plot.pest.inaccurate) " (Inacc)" else ""}, ")
+                            append("Locked: ${plot.locked}, ")
+                            append("Icon: ${plot.deskIcon ?: "None"}, ")
+                            append("Greenhouse: ${plot.isGreenhouse}")
+                        }
+                        add(string)
                     }
                 }
 
@@ -319,6 +330,7 @@ data class PlotData(
     var name: String,
     var pest: Pest,
     var deskIcon: String?,
+    var isGreenhouse: Boolean = false,
     var locked: Boolean = false,
 ) {
     constructor(id: Int, pest: Pest, deskIcon: String? = null, locked: Boolean = false) : this(id, "$id", pest, deskIcon, locked)

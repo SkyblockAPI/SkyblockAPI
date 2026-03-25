@@ -47,7 +47,7 @@ object DebugEntities {
 
     private fun copyEntitiesToClipboard(query: String, range: Int? = null) {
         val filter = getEntityFilter(query)
-        val level = McLevel.self as? ClientLevel ?: return
+        val level = McLevel.selfOrNull ?: return
         val entities = if (range != null) {
             level.getEntities(null, McPlayer.self!!.boundingBox.inflate(range.toDouble()))
         } else {

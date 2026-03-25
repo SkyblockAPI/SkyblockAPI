@@ -14,15 +14,19 @@ abstract class AbstractModRegisterCommandsEvent(
     private val prefixes = listOf(prefix, *extraPrefixes)
 
     /** Default callback for when you execute the command with no args */
-    fun registerBaseCallback(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
+    open fun registerBaseCallback(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
         prefixes.forEach { baseEvent.registerWithCallback(it, callback = callback) }
     }
 
-    fun register(command: String, builder: LiteralCommandBuilder.() -> Unit) {
+    open fun register(command: String, builder: LiteralCommandBuilder.() -> Unit) {
         prefixes.forEach { baseEvent.register("$it $command", builder = builder) }
     }
 
-    fun registerWithCallback(command: String, callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
+    open fun registerWithCallback(command: String, callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
         prefixes.forEach { baseEvent.registerWithCallback("$it $command", callback = callback) }
     }
 }
+
+internal class RegisterSkyblockApiCommandsEvent(
+    baseEvent: RegisterCommandsEvent
+) : AbstractModRegisterCommandsEvent(baseEvent, "sbapi", "skyblockapi")

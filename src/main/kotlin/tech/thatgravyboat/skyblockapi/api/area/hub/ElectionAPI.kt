@@ -1,10 +1,12 @@
 package tech.thatgravyboat.skyblockapi.api.area.hub
 
 import me.owdding.ktmodules.Module
+import net.minecraft.util.TriState
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.*
 import tech.thatgravyboat.skyblockapi.api.datetime.SkyBlockInstant
+import tech.thatgravyboat.skyblockapi.api.datetime.skyblockYears
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
@@ -12,16 +14,24 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.MayorChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.MayorUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
+import tech.thatgravyboat.skyblockapi.utils.command.EnumArgument
+import tech.thatgravyboat.skyblockapi.utils.command.MapBackedArgumentType
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
 import tech.thatgravyboat.skyblockapi.utils.extentions.sublistAfter
 import tech.thatgravyboat.skyblockapi.utils.extentions.until
 import tech.thatgravyboat.skyblockapi.utils.http.Http
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.time.since
 import java.util.concurrent.ScheduledFuture
@@ -131,20 +141,20 @@ object ElectionAPI {
         if (lastEvaluatedExtraJerry.since() < 10.seconds) return
         lastEvaluatedExtraJerry = currentInstant()
         if (!MayorPerks.PERKPOCALYPSE.active) return
-        val electionYear = rawData?.mayor?.election?.year ?: return
+        val electionYear = rawData?.mayor?.election?.year?.plus(1) ?: return
         val stack = itemStacks.getOrNull(MAYOR_SLOT).takeIf { it?.cleanName == "Mayor Jerry" } ?: return
         // TODO: add perk description for the perkpocalypse perk
-        val foundPerk = stack.getRawLore().sublistAfter { it == "Perkpocalypse Perks:" }.firstNotNullOfOrNull { perk -> MayorPerks.getPerk(perk) }
+        val foundPerk = stack.getRawLore().sublistAfter { it == "Perkpocalypse Perks:" }.firstNotNullOfOrNull { perk -> MayorPerks.getPerk(perk) } ?: return
         val extraMayor = MayorCandidates.mayors.find { foundPerk in it.perks } ?: return
 
-        val nextElection = SkyBlockInstant(electionYear + 2, 3, 27).instant // Late Spring 27th, 2 years after the election opened
+        val termStart = SkyBlockInstant(electionYear, 3, 27).instant // Late Spring 27th
 
-        val expireTime = (1..21).map { nextElection - (6.hours * it) }.lastOrNull { it > currentInstant() }?.coerceAtMost(nextElection) ?: return
+        val expireTime = (1..21).map { termStart + (6.hours * it) }.firstOrNull { it.isInFuture() }?.coerceAtMost(termStart + 1.skyblockYears) ?: return
 
         currentJerryCandidate?.first?.clearAllPerks()
 
         currentJerryCandidate = extraMayor.addAllPerks() to expireTime
-        SkyBlockAPI.info("Jerry Mayor Detected: $extraMayor, expires at $expireTime")
+        SkyBlockAPI.info("Jerry Mayor Detected: $extraMayor, expires at $expireTime - in ${expireTime.until()}")
     }
 
     @Subscription
@@ -152,22 +162,53 @@ object ElectionAPI {
         if (electionOverRegex.matches(event.text)) {
             // When the Election is over, schedule a check every minute until a new mayor is found, then schedule every 20 minutes
             updateScheduler(1.minutes, 20.minutes)
+            mayor = null
+            minister = null
+            currentJerryCandidate = null
         }
     }
 
     @Subscription
     fun onRegisterCommands(event: RegisterCommandsEvent) {
-        event.registerWithCallback("sbapi election") {
-            McClient.clipboard = buildString {
-                appendLine("Current mayor: $mayor")
-                appendLine("Current minister: $minister")
-                currentJerryCandidate?.let { (candidate, time) ->
-                    appendLine("Current Jerry Candidate: $candidate [${time.until()}]")
+        event.register("sbapi election") {
+            then("perk override") {
+                then("perk", MapBackedArgumentType(MayorPerks.perksMap)) {
+                    thenCallback("state", EnumArgument<TriState>()) {
+                        val perk = argument<MayorPerk>("perk")
+                        val state = argument<TriState>("state")
+                        perk.overrideState = state
+                        Text.sendDebug("Changed state of perk ") {
+                            append(perk.id) {
+                                color = TextColor.AQUA
+                                hover = Text.of(perk.perkName, TextColor.GOLD)
+                            }
+                            append(" to ")
+                            append(state.name, TextColor.GOLD)
+                            append(".")
+                        }
+                    }
                 }
-                appendLine("Active perks: ${MayorPerks.perks.filter { it.active }}")
-                appendLine("RawData: $rawData")
             }
-            Text.sendDebug("Copied Election Data to clipboard!")
+            thenCallback("copy") {
+                McClient.clipboard = buildString {
+                    appendLine("Current mayor: $mayor")
+                    appendLine("Current minister: $minister")
+                    currentJerryCandidate?.let { (candidate, time) ->
+                        appendLine("Current Jerry Candidate: $candidate [${time.until()}]")
+                    }
+                    appendLine("Active perks: ${MayorPerks.perks.filter { it.active }}")
+                    val overridden = MayorPerks.perks.filter { it.overrideState != DEFAULT }
+                    if (overridden.isNotEmpty()) {
+                        appendLine("Perks with override: ")
+                        overridden.forEach { perk ->
+                            appendLine("  - ${perk.id}: ${perk.overrideState}")
+                        }
+                    }
+
+                    appendLine("RawData: $rawData")
+                }
+                Text.sendDebug("Copied Election Data to clipboard!")
+            }
         }
     }
 

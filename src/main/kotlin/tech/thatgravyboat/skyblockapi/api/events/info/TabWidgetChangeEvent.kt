@@ -39,6 +39,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     FIRE_SALE("Fire Sales: \\((?<amount>[\\d,.]+)\\)"),
     MINIONS("Minions: (?<amount>.*)"),
     PITY("Pity:"),
+    SLAYER("Slayer:"),
 
     // Mining
     FORGES("Forges:(?: \\((?<active>[\\d,.]+)/(?<max>[\\d,.]+)\\))?"),
@@ -48,6 +49,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     MINING_EVENT("Mining Event: (?<event>.*)"),
     FROZEN_CORPSES("Frozen Corpses:"),
     PICKAXE_ABILITY("Pickaxe Ability:"),
+    WORMS("Worms:"),
 
     // Foraging
     AGATHA_CONTEST("Agatha's Contest:"),
