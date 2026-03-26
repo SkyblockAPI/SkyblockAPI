@@ -1,8 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl.events.stats
 
 import me.owdding.ktmodules.Module
-import net.minecraft.util.StringUtil
-import org.intellij.lang.annotations.Language
+import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.item.ArmorStack
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -11,197 +10,315 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.*
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
-import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
-import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentRegex
+import tech.thatgravyboat.skyblockapi.utils.regex.component.Destructured
+import tech.thatgravyboat.skyblockapi.utils.regex.component.find
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.remove
+import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.split
+import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.toStringWithFormattingCodes
+import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.trim
 
 data class ActionBarWidgetType(
     val widget: ActionBarWidget,
-    val regex: Regex,
-    val factory: (String, Destructured) -> ActionBarWidgetChangeEvent,
-    val removalFactory: (Destructured) -> ActionBarWidgetChangeEvent,
-) {
-
-    constructor(
-        widget: ActionBarWidget,
-        @Language("RegExp") regex: String,
-        removalFactory: (Destructured) -> ActionBarWidgetChangeEvent = { ActionBarWidgetChangeEvent(widget, it.string, "") },
-        factory: (String, Destructured) -> ActionBarWidgetChangeEvent = { old, new -> ActionBarWidgetChangeEvent(widget, old, new.string) },
-    ) : this(
-        widget,
-        RegexGroup.ACTIONBAR_WIDGET.create(widget.name.lowercase(), regex),
-        factory,
-        removalFactory,
-    )
-}
+    val regex: ComponentRegex,
+    val factory: (Component, Component, Destructured) -> ActionBarWidgetUpdateEvent?,
+    val legacyFactory: (String, String) -> ActionBarWidgetChangeEvent? = { old, new ->
+        ActionBarWidgetChangeEvent(widget, old, new)
+    },
+)
 
 @Module
 object ActionBarEventHandler {
 
-    @Deprecated("Remove when removing old actionbar events")
     private val types = listOf(
-        // §c1,303/1,303❤
-        ActionBarWidgetType(ActionBarWidget.HEALTH, "§.(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)❤(?:\\+§.[\\d,]+.)?") { old, it ->
-            HealthActionBarWidgetChangeEvent(it["health"].toIntValue(), it["maxhealth"].toIntValue(), old, it.string)
-        },
-        // §a245§a❈ Defense
-        ActionBarWidgetType(ActionBarWidget.DEFENSE, "§.(?<defense>[\\d,]+)§.❈ Defense") { old, it ->
-            DefenseActionBarWidgetChangeEvent(it["defense"].toIntValue(), old, it.string)
-        },
-        // §b319/319✎ Mana
-        // §b319/319✎
-        ActionBarWidgetType(ActionBarWidget.MANA, "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ (?:Mana)?") { old, it ->
-            ManaActionBarWidgetChangeEvent(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, it.string)
-        },
-        // §3400ʬ
+        // Health: §c1,303/1,303❤
         ActionBarWidgetType(
-            ActionBarWidget.OVERFLOW_MANA, "§.(?<overflow>[\\d,]+)ʬ",
-            {
-                OverflowManaActionBarWidgetChangeEvent(0, it.string, "")
+            ActionBarWidget.HEALTH,
+            ComponentRegex("(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)❤(?:\\+§.[\\d,]+.)?"),
+            factory = { old, new, it ->
+                ActionBarWidgetUpdateEvent.Health(it["health"].toIntValue(), it["maxhealth"].toIntValue(), old, new)
             },
-        ) { old, it ->
-            OverflowManaActionBarWidgetChangeEvent(it["overflow"].toIntValue(), old, it.string)
-        },
-        // §c§lNOT ENOUGH MANA
-        ActionBarWidgetType(ActionBarWidget.NO_MANA, "§c§lNOT ENOUGH MANA"),
-        // §a§lⓩⓩⓩ§2§lⓄⓄ
-        // §a§lⓩⓩⓩⓩⓩ§2§l
-        ActionBarWidgetType(ActionBarWidget.CHARGES, "§a§l(?<maxcharges>(?<charges>ⓩ*)§2§lⓄ*)"),
-        // §b+3 SkyBlock XP §7(Accessory Bag§7)§b (68/100)
-        ActionBarWidgetType(ActionBarWidget.SKYBLOCK_XP, "§.\\+(?<amount>[\\d,]+) SkyBlock XP"),
-        // §b-100 Mana (§6Dragon Rage§b)
-        ActionBarWidgetType(ActionBarWidget.ABILITY, "§.-?(?<amount>[\\d,]+) Mana \\(§.(?<ability>[^)]+)§.\\)"),
-        // §3+1.7 Mining (38.19%)
-        ActionBarWidgetType(ActionBarWidget.SKILL_XP, "§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)") { old, it ->
-            SkillXpPercentActionBarWidgetChangeEvent(
-                it["amount"].toFloatValue(),
-                HypixelSkillAPI.Skill.getByName(it["skill"].toString()),
-                it["percent"].toFloatValue() / 100f,
-                old,
-                it.string,
-            )
-        },
-        // §3+87.8 Mining (127,630,594/0)
+            legacyFactory = { old, new ->
+                Regex("§.(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)❤(?:\\+§.[\\d,]+.)?").findOrNull(new) {
+                    HealthActionBarWidgetChangeEvent(it["health"].toIntValue(), it["maxhealth"].toIntValue(), old, new)
+                }
+            },
+        ),
+        // Defense: §a245§a❈ Defense
+        ActionBarWidgetType(
+            ActionBarWidget.DEFENSE,
+            ComponentRegex("(?<defense>[\\d,]+)❈ Defense"),
+            factory = { old, new, it ->
+                ActionBarWidgetUpdateEvent.Defense(it["defense"].toIntValue(), old, new)
+            },
+            legacyFactory = { old, new ->
+                Regex("§.(?<defense>[\\d,]+)§.❈ Defense").findOrNull(new) {
+                    DefenseActionBarWidgetChangeEvent(it["defense"].toIntValue(), old, new)
+                }
+            },
+        ),
+        // Mana: §b319/319✎ Mana
+        ActionBarWidgetType(
+            ActionBarWidget.MANA,
+            ComponentRegex("(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ Mana"),
+            factory = { old, new, it ->
+                ActionBarWidgetUpdateEvent.Mana(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, new)
+            },
+            legacyFactory = { old, new ->
+                Regex("§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ Mana").findOrNull(new) {
+                    ManaActionBarWidgetChangeEvent(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, new)
+                }
+            },
+        ),
+        // Overflow Mana: §3400ʬ
+        ActionBarWidgetType(
+            ActionBarWidget.OVERFLOW_MANA,
+            ComponentRegex("(?<overflow>[\\d,]+)ʬ"),
+            factory = { old, new, it ->
+                ActionBarWidgetUpdateEvent.OverflowMana(it["overflow"].toIntValue(), old, new)
+            },
+            legacyFactory = { old, new ->
+                Regex("§.(?<overflow>[\\d,]+)ʬ").findOrNull(new) {
+                    OverflowManaActionBarWidgetChangeEvent(it["overflow"].toIntValue(), old, new)
+                }
+            },
+        ),
+        // Skill XP (Percent)
+        ActionBarWidgetType(
+            ActionBarWidget.SKILL_XP,
+            ComponentRegex("\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)"),
+            factory = { old, new, it ->
+                val skill = HypixelSkillAPI.Skill.getByName(it["skill"].toString()) ?: return@ActionBarWidgetType null
+                ActionBarWidgetUpdateEvent.SkillXpPercent(it["amount"].toFloatValue(), skill, it["percent"].toFloatValue() / 100f, old, new)
+            },
+            legacyFactory = { old, new ->
+                Regex("§.\\+(?<amount>[\\d.]+) (?<skill>\\w+) \\((?<percent>[\\d.]+)%\\)").findOrNull(new) {
+                    val skill = HypixelSkillAPI.Skill.getByName(it["skill"] ?: "") ?: return@findOrNull null
+                    SkillXpPercentActionBarWidgetChangeEvent(it["amount"].toFloatValue(), skill, it["percent"].toFloatValue() / 100f, old, new)
+                }
+            },
+        ),
+        // Skill XP (Literal)
         ActionBarWidgetType(
             ActionBarWidget.SKILL_XP_LITERAL,
-            "§.\\+(?<amount>[\\d.,]+) (?<skill>\\w+) \\((?<current>[\\d,]+)/(?<needed>[\\d,]+[kmb]?)\\)",
-        ) { old, it ->
-            SkillXpLiteralActionBarWidgetChangeEvent(
-                it["amount"].toFloatValue(),
-                HypixelSkillAPI.Skill.getByName(it["skill"].toString()),
-                it["current"].parseFormattedLong(),
-                it["needed"].parseFormattedLong(),
-                old,
-                it.string,
-            )
-        },
-        // §7⏣ §bLava Springs
-        ActionBarWidgetType(ActionBarWidget.LOCATION, "§.⏣ §.(?<location>.+)"),
-        // §750m40sф Left
-        ActionBarWidgetType(ActionBarWidget.RIFT_TIME, "§.(?<time>.+)ф Left") { old, it ->
-            RiftTimeActionBarWidgetChangeEvent(it["time"].parseDuration(), old, it.string)
-        },
-        // §6Armadillo Energy: §e§l§m               §r §6248.5§e/§6250
-        ActionBarWidgetType(ActionBarWidget.ARMADILLO, "§.Armadillo Energy: (§.| )+ §.(?<current>[\\d.]+)§./§.(?<max>[\\d.]+)") { old, it ->
-            ArmadilloActionBarWidgetChangeEvent(it["current"].toFloatValue(), it["max"].toFloatValue(), old, it.string)
-        },
-        // §6§l10ᝐ
-        // §65ᝐ
-        ActionBarWidgetType(
-            ActionBarWidget.ARMOR_STACK, "§6(?:§l)?(?<amount>\\d+)(?<type>[ᝐ⁑|҉Ѫ⚶])",
-            {
-                ArmorStackActionBarWidgetChangeEvent(0, ArmorStack.fromString(it["type"]), it.string, "")
+            ComponentRegex("\\+(?<amount>[\\d.,]+) (?<skill>\\w+) \\((?<current>[\\d,]+)/(?<needed>[\\d,]+[kmb]?)\\)"),
+            factory = { old, new, it ->
+                val skill = HypixelSkillAPI.Skill.getByName(it["skill"].toString()) ?: return@ActionBarWidgetType null
+                ActionBarWidgetUpdateEvent.SkillXpLiteral(
+                    it["amount"].toFloatValue(),
+                    skill,
+                    it["current"].parseFormattedLong(),
+                    it["needed"].parseFormattedLong(),
+                    old,
+                    new,
+                )
             },
-        ) { old, it ->
-            ArmorStackActionBarWidgetChangeEvent(it["amount"].toIntValue(), ArmorStack.fromString(it["type"]), old, it.string)
-        },
-        // §a |||
-        ActionBarWidgetType(ActionBarWidget.CELLS_ALIGNMENT, "§a \\|{3}"),
-        // §71/6 Secrets
-        ActionBarWidgetType(
-            ActionBarWidget.SECRETS, "§.(?<current>[\\d,]+)/(?<max>[\\d,]+) Secrets",
-            {
-                SecretsActionBarWidgetChangeEvent(0, 0, it.string, "")
+            legacyFactory = { old, new ->
+                Regex("§.\\+(?<amount>[\\d.,]+) (?<skill>\\w+) \\((?<current>[\\d,]+)/(?<needed>[\\d,]+[kmb]?)\\)").findOrNull(new) {
+                    val skill = HypixelSkillAPI.Skill.getByName(it["skill"] ?: "") ?: return@findOrNull null
+                    SkillXpLiteralActionBarWidgetChangeEvent(
+                        it["amount"].toFloatValue(),
+                        skill,
+                        it["current"].parseFormattedLong(),
+                        it["needed"].parseFormattedLong(),
+                        old,
+                        new,
+                    )
+                }
             },
-        ) { old, it ->
-            SecretsActionBarWidgetChangeEvent(it["current"].toIntValue(), it["max"].toIntValue(), old, it.string)
-        },
-        // §9Pressure: ❍8%
+        ),
+        // Rift Time
         ActionBarWidgetType(
-            ActionBarWidget.PRESSURE, "§9Pressure: ❍(?<pressure>\\d+)%",
-            {
-                PressureActionBarWidgetChangeEvent(0, it.string, "")
+            ActionBarWidget.RIFT_TIME,
+            ComponentRegex("(?<time>.+)ф Left"),
+            factory = { old, new, it ->
+                val duration = it["time"]?.stripped?.parseDuration() ?: return@ActionBarWidgetType null
+                ActionBarWidgetUpdateEvent.RiftTime(duration, old, new)
             },
-        ) { old, it ->
-            PressureActionBarWidgetChangeEvent(it["pressure"].toIntValue(), old, it.string)
-        },
-        // §2936/3k Drill Fuel
-        ActionBarWidgetType(ActionBarWidget.DRILL_FUEL, "§2(?<current>\\d+)/(?<max>\\d+[kmb]?) Drill Fuel") { old, it ->
-            DrillActionBarWidgetChangeEvent(it["current"].parseFormattedInt(), it["max"].parseFormattedInt(), old, it.string)
-        },
+            legacyFactory = { old, new ->
+                Regex("§.(?<time>.+)ф Left").findOrNull(new) {
+                    val duration = it["time"].parseDuration() ?: return@findOrNull null
+                    RiftTimeActionBarWidgetChangeEvent(duration, old, new)
+                }
+            },
+        ),
+        // Armadillo
+        ActionBarWidgetType(
+            ActionBarWidget.ARMADILLO,
+            ComponentRegex("Armadillo Energy: (?:.| )+ (?<current>[\\d.]+)§./(?<max>[\\d.]+)"),
+            factory = { old, new, it ->
+                ActionBarWidgetUpdateEvent.Armadillo(it["current"].toFloatValue(), it["max"].toFloatValue(), old, new)
+            },
+            legacyFactory = { old, new ->
+                Regex("§.Armadillo Energy: (§.| )+ §.(?<current>[\\d.]+)§./§.(?<max>[\\d.]+)").findOrNull(new) {
+                    ArmadilloActionBarWidgetChangeEvent(it["current"].toFloatValue(), it["max"].toFloatValue(), old, new)
+                }
+            },
+        ),
+        // Armor Stack
+        ActionBarWidgetType(
+            ActionBarWidget.ARMOR_STACK,
+            ComponentRegex("(?<amount>\\d+)(?<type>[ᝐ⁑|҉Ѫ⚶])"),
+            factory = { old, new, it ->
+                val type = ArmorStack.fromString(it["type"].toString()) ?: return@ActionBarWidgetType null
+                ActionBarWidgetUpdateEvent.ArmorStack(it["amount"].toIntValue(), type, old, new)
+            },
+            legacyFactory = { old, new ->
+                Regex("§6(?:§l)?(?<amount>\\d+)(?<type>[ᝐ⁑|҉Ѫ⚶])").findOrNull(new) {
+                    val type = ArmorStack.fromString(it["type"]) ?: return@findOrNull null
+                    ArmorStackActionBarWidgetChangeEvent(it["amount"].toIntValue(), type, old, new)
+                }
+            },
+        ),
+        // Secrets
+        ActionBarWidgetType(
+            ActionBarWidget.SECRETS,
+            ComponentRegex("(?<current>[\\d,]+)/(?<max>[\\d,]+) Secrets"),
+            factory = { old, new, it ->
+                ActionBarWidgetUpdateEvent.Secrets(it["current"].toIntValue(), it["max"].toIntValue(), old, new)
+            },
+            legacyFactory = { old, new ->
+                Regex("§.(?<current>[\\d,]+)/(?<max>[\\d,]+) Secrets").findOrNull(new) {
+                    SecretsActionBarWidgetChangeEvent(it["current"].toIntValue(), it["max"].toIntValue(), old, new)
+                }
+            },
+        ),
+        // Drill Fuel
+        ActionBarWidgetType(
+            ActionBarWidget.DRILL_FUEL,
+            ComponentRegex("(?<current>\\d+)/(?<max>\\d+[kmb]?) Drill Fuel"),
+            factory = { old, new, it ->
+                ActionBarWidgetUpdateEvent.Drill(it["current"].parseFormattedInt(), it["max"].parseFormattedInt(), old, new)
+            },
+            legacyFactory = { old, new ->
+                Regex("§2(?<current>\\d+)/(?<max>\\d+[kmb]?) Drill Fuel").findOrNull(new) {
+                    DrillActionBarWidgetChangeEvent(it["current"].parseFormattedInt(), it["max"].parseFormattedInt(), old, new)
+                }
+            },
+        ),
+        // Pressure
+        ActionBarWidgetType(
+            ActionBarWidget.PRESSURE,
+            ComponentRegex("Pressure: ❍(?<pressure>\\d+)%"),
+            factory = { old, new, it ->
+                ActionBarWidgetUpdateEvent.Pressure(it["pressure"].toIntValue(), old, new)
+            },
+            legacyFactory = { old, new ->
+                Regex("§9Pressure: ❍(?<pressure>\\d+)%").findOrNull(new) {
+                    PressureActionBarWidgetChangeEvent(it["pressure"].toIntValue(), old, new)
+                }
+            },
+        ),
+        // Location
+        ActionBarWidgetType(
+            ActionBarWidget.LOCATION,
+            ComponentRegex("⏣ (?<location>.+)"),
+            factory = { old, new, it ->
+                val location = it["location"] ?: return@ActionBarWidgetType null
+                ActionBarWidgetUpdateEvent.Location(location, old, new)
+            },
+        ),
+        // SkyBlock XP
+        ActionBarWidgetType(
+            ActionBarWidget.SKYBLOCK_XP,
+            ComponentRegex("\\+(?<amount>[\\d,]+) SkyBlock XP"),
+            factory = { old, new, it ->
+                ActionBarWidgetUpdateEvent.SkyBlockXp(it["amount"].parseFormattedLong(), old, new)
+            },
+        ),
+        // Ability
+        ActionBarWidgetType(
+            ActionBarWidget.ABILITY,
+            ComponentRegex("-?(?<amount>[\\d,]+) Mana \\((?<ability>[^)]+)\\)"),
+            factory = { old, new, it ->
+                val ability = it["ability"] ?: return@ActionBarWidgetType null
+                ActionBarWidgetUpdateEvent.Ability(it["amount"].toIntValue(), ability, old, new)
+            },
+        ),
+        // Charges
+        ActionBarWidgetType(
+            ActionBarWidget.CHARGES,
+            ComponentRegex("(?<maxcharges>(?<charges>ⓩ*)§2§lⓄ*)"),
+            factory = { old, new, it ->
+                val maxCharges = it["maxcharges"] ?: return@ActionBarWidgetType null
+                ActionBarWidgetUpdateEvent.Charges(it["charges"].toString().length, maxCharges, old, new)
+            },
+        ),
+        // Cells Alignment
+        ActionBarWidgetType(
+            ActionBarWidget.CELLS_ALIGNMENT,
+            ComponentRegex("(?<alignment>\\|{1,3})"),
+            factory = { old, new, it ->
+                ActionBarWidgetUpdateEvent.CellsAlignment(it["alignment"].toString().length, old, new)
+            },
+        ),
+        // Not Enough Mana
+        ActionBarWidgetType(
+            ActionBarWidget.NO_MANA,
+            ComponentRegex("NOT ENOUGH MANA"),
+            factory = { old, new, _ -> ActionBarWidgetUpdateEvent.NoMana(old, new) },
+        ),
     )
 
-    private val widgets = mutableMapOf<ActionBarWidget, String>()
-    private val widgetsToHide = mutableListOf<String>()
+    private val widgets = mutableMapOf<ActionBarWidget, Component>()
+    private val widgetsToHide = mutableListOf<Component>()
 
     @Subscription
     @OnlyOnSkyBlock
     fun onActionbarReceivedPre(event: ActionBarReceivedEvent.Pre) {
         widgetsToHide.clear()
 
-        val parts = event.coloredText.split("     ")
-        val output = parts.toMutableList()
+        val parts = event.component.split("     ")
         val foundWidgets = mutableSetOf<ActionBarWidget>()
-        for (p in parts) {
-            var part = p
+
+        for (part in parts) {
             for (type in types) {
-                type.regex.find(part) {
+                type.regex.find(part) { match ->
                     if (RenderActionBarWidgetEvent(type.widget).post(SkyBlockAPI.eventBus)) {
-                        widgetsToHide.add(it.string)
-                        part = part.replace(it.string, "")
+                        widgetsToHide.add(match.component)
                     }
-                    val old = widgets[type.widget] ?: ""
-                    val new = it.string
+
+                    val oldComp = widgets[type.widget] ?: Component.empty()
+                    val newComp = match.component
                     foundWidgets.add(type.widget)
-                    if (old != new) {
-                        widgets[type.widget] = new
-                        type.factory(old, it).post(SkyBlockAPI.eventBus)
+
+                    if (oldComp != newComp) {
+                        widgets[type.widget] = newComp
+                        type.factory(oldComp, newComp, match)?.post()
+                        type.legacyFactory(oldComp.toStringWithFormattingCodes(), newComp.toStringWithFormattingCodes())?.post()
                     }
                 }
             }
         }
-        for (widget in widgets.keys - foundWidgets) {
-            val old = widgets[widget] ?: ""
-            val type = types.find { it.widget == widget }
-            val found = type?.regex?.find(old) {
-                type.removalFactory(it).post()
-            } ?: false
-            if (!found) ActionBarWidgetChangeEvent(widget, old, "").post()
-            widgets.remove(widget)
-        }
 
-        if (output.isEmpty()) {
-            event.cancel()
+        val missing = widgets.keys - foundWidgets
+        for (widget in missing) {
+            val oldComp = widgets[widget] ?: Component.empty()
+            val type = types.find { it.widget == widget }
+            ActionBarWidgetUpdateEvent.Unknown(widget, oldComp, Component.empty()).post()
+            type?.legacyFactory?.invoke(oldComp.toStringWithFormattingCodes(), "")?.post()
+            widgets.remove(widget)
         }
     }
 
     @Subscription
     @OnlyOnSkyBlock
     fun onActionbarReceivedPost(event: ActionBarReceivedEvent.Post) {
-        event.component = Text.of(
-            event.coloredText.split("     ")
-                .map {
-                    var output = it
-                    widgetsToHide.removeIf { widget ->
-                        val before = output
-                        output = output.replace(widget, "")
-                        before != output
-                    }
-                    output
-                }
-                .filter { !StringUtil.stripColor(it).isBlank() }
-                .joinToString("     ") { it.trimIgnoreColor() },
-        )
+        var currentBar = event.component
+
+        val iterator = widgetsToHide.iterator()
+        while (iterator.hasNext()) {
+            val toHide = iterator.next()
+            val nextBar = currentBar.remove(toHide)
+
+            if (nextBar != currentBar) {
+                currentBar = nextBar
+                iterator.remove()
+            }
+        }
+
+        event.component = currentBar.trim()
     }
 }
