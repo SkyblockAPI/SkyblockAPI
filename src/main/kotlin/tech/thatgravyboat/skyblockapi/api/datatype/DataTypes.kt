@@ -18,12 +18,14 @@ object DataTypes {
     val SKYBLOCK_ID: DataType<SkyBlockId> = GenericDataTypes.SKYBLOCK_ID
     val ID: DataType<String> = GenericDataTypes.ID
     val API_ID: DataType<String> = GenericDataTypes.API_ID
+    val ID_DAMAGE: DataType<Int> = GenericDataTypes.ID_DAMAGE
     val UUID: DataType<UUID> = GenericDataTypes.UUID
     val TIMESTAMP: DataType<Instant> = GenericDataTypes.TIMESTAMP
     val RARITY: DataType<SkyBlockRarity> = LoreDataTypes.RARITY
     val CATEGORY: DataType<SkyBlockCategory> = LoreDataTypes.CATEGORY
     val VISIBLE_ITEM: DataType<Item> = GenericDataTypes.VISIBLE_ITEM
     val CLEAN_NAME: DataType<String> = GenericDataTypes.CLEAN_NAME
+    val ORIGIN_TAG: DataType<String> = GenericDataTypes.ORIGIN_TAG
 
     // Item Modifiers
     val MODIFIER: DataType<String> = GenericDataTypes.MODIFIER
@@ -39,6 +41,7 @@ object DataTypes {
     val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_ADDED_COINS
     val MIDAS_WEAPON_PAID: DataType<Long> = GenericDataTypes.MIDAS_WEAPON_PAID
     val ENRICHMENT: DataType<SkyBlockId> = GenericDataTypes.ENRICHMENT
+    val SOULBOUND: DataType<LoreDataTypes.SoulboundType> = LoreDataTypes.SOULBOUND
 
     // Misc (idfk)
     val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = LoreDataTypes.RIGHT_CLICK_MANA_ABILITY
@@ -63,6 +66,16 @@ object DataTypes {
     val LOGS_CUT: DataType<Long> = GenericDataTypes.LOGS_CUT
     val GILDED_GIFTED_COINS: DataType<Long> = GenericDataTypes.GILDED_GIFTED_COINS
     val ABICASE_MODEL: DataType<String> = GenericDataTypes.ABICASE_MODEL
+    val THUNDER_CHARGE: DataType<Int> = GenericDataTypes.THUNDER_CHARGE
+    val PELTS_EARNED: DataType<Long> = GenericDataTypes.PELTS_EARNED
+    val DONATED_MUSEUM: DataType<Boolean> = GenericDataTypes.DONATED_MUSEUM
+    val DAVID_CLOAK_UPGRADE: DataType<Int> = GenericDataTypes.DAVID_CLOAK_UPGRADE
+
+    val RAFFLE_WIN: DataType<String> = GenericDataTypes.RAFFLE_WIN
+    val RAFFLE_YEAR: DataType<Int> = GenericDataTypes.RAFFLE_YEAR
+
+    val DITTO_USED: DataType<Boolean> = GenericDataTypes.DITTO_USED
+    val DITTO_ITEM_ID: DataType<String> = GenericDataTypes.DITTO_ITEM_ID
 
     val PARTY_HAT_COLOR: DataType<String> = GenericDataTypes.PARTY_HAT_COLOR
     val PARTY_HAT_YEAR: DataType<Int> = GenericDataTypes.PARTY_HAT_YEAR

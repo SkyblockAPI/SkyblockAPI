@@ -6,13 +6,14 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.asReversedIterator
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.hasGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import kotlin.time.Duration
@@ -31,6 +32,7 @@ object LoreDataTypes {
     private val dungeonBreakerRegex = dataTypeGroup.create("dungeonbreaker", "Charges: (?<current>\\d+)/(?<max>\\d+)⸕")
     private val waterRegex = dataTypeGroup.create("water_level", "Water: (?<current>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
     private val selectedArrowRegex = dataTypeGroup.create("arrow", "^Selected: (?<type>.+)$")
+    private val soulboundRegex = dataTypeGroup.create("soulbound", "\\* (?<coop>Co-op )?Soulbound \\*")
 
     val FUEL: DataType<Pair<Int, Int>> = DataType.of("fuel") {
         var output: Pair<Int, Int>? = null
@@ -76,7 +78,7 @@ object LoreDataTypes {
         val isUpgraded = DataTypes.RECOMBOBULATOR.factory(stack) == true
         for (line in stack.getRawLore().asReversedIterator()) {
             val rarityLine = (if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim()).removePrefix("SHINY ")
-            val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.displayName, ignoreCase = true) }
+            val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.displayName.uppercase()) }
             if (rarity != null) {
                 return rarityLine to rarity
             }
@@ -120,5 +122,15 @@ object LoreDataTypes {
             output = SkyBlockId.fromName(type, dropLast = false)
         }
         output
+    }
+
+    val SOULBOUND: DataType<SoulboundType> = DataType.of("soulbound") {
+        val matches = it.getRawLore().reversed().firstNotNullOfOrNull(soulboundRegex::matchEntire) ?: return@of null
+        if (matches.groups["coop"] != null) SoulboundType.COOP else SoulboundType.SOLO
+    }
+
+    enum class SoulboundType {
+        SOLO,
+        COOP;
     }
 }
