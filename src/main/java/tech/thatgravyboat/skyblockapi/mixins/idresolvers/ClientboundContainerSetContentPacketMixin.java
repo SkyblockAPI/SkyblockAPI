@@ -18,9 +18,9 @@ public class ClientboundContainerSetContentPacketMixin {
         return new StreamCodec<>() {
             @Override
             public @NonNull C decode(@NonNull B object) {
-                SkyBlockId.Companion.setIdResolverKind(IdResolverKind.ContainerContents);
+                SkyBlockId.Companion.getIdResolverKind().set(IdResolverKind.ContainerContents);
                 var result = original.decode(object);
-                SkyBlockId.Companion.setIdResolverKind(IdResolverKind.Unknown);
+                SkyBlockId.Companion.getIdResolverKind().set(IdResolverKind.Unknown);
                 return result;
             }
 

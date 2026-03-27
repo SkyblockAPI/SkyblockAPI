@@ -11,8 +11,6 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOW
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuIdRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
 import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind
-import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.tryResolve
-import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIIdResolvers
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
@@ -26,8 +24,8 @@ typealias SkyBlockItemId = SkyBlockId
 value class SkyBlockId private constructor(val id: String) {
     companion object Companion {
         @JvmStatic
-        @set:JvmName("setIdResolverKind")
-        internal var idResolverKind: IdResolverKind = IdResolverKind.Unknown
+        @get:JvmName("getIdResolverKind")
+        internal val idResolverKind: ThreadLocal<IdResolverKind> = ThreadLocal.withInitial { IdResolverKind.Unknown }
 
         private val amountRegex = Regex(".*?x[\\d,]+")
         private val petRegex = Regex("\\[?lvl \\d+]? (.*)")
@@ -93,24 +91,9 @@ value class SkyBlockId private constructor(val id: String) {
 
         fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
 
-        private val idResolvers by lazy {
-            buildMap {
-                SkyblockAPIIdResolvers.collected.sortedByDescending { it.priority }.forEach {
-                    for (kind in it.types) {
-                        if (kind == IdResolverKind.Unknown) {
-                            IdResolverKind.entries.forEach { kind ->
-                                getOrPut(kind, ::mutableListOf).add(it)
-                            }
-                        }
-                        getOrPut(kind, ::mutableListOf).add(it)
-                    }
-                }
-            }
-        }
-
         internal fun createIdForItem(stack: ItemStack): SkyBlockId? {
-            val kind = idResolverKind
-            return idResolvers[kind]?.firstNotNullOfOrNull {
+            val kind = idResolverKind.get()
+            return kind.entries().firstNotNullOfOrNull {
                 it.tryResolve(stack, kind)
             }
         }

@@ -2,29 +2,18 @@ package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 
 import me.owdding.ktmodules.AutoCollect
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.util.SortedArraySet
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIIdResolvers
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 
 interface IdResolver {
     val types: List<IdResolverKind>
     val priority: Int
 
-    fun ItemStack.tryResolve(): SkyBlockId?
-
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline fun IdResolver.tryResolve(stack: ItemStack, idResolverKind: IdResolverKind): SkyBlockId? = stack.tryResolve()
-
-interface BaseIdResolver : IdResolver {
-    fun ItemStack.isApplicable(): Boolean
-    fun ItemStack.resolveId(): SkyBlockId?
-
-    override fun ItemStack.tryResolve(): SkyBlockId? {
-        return if (isApplicable()) resolveId() else null
-    }
+    fun tryResolve(itemStack: ItemStack, resolverKind: IdResolverKind): SkyBlockId?
 }
 
 interface InventoryIdResolver : IdResolver {
@@ -34,14 +23,13 @@ interface InventoryIdResolver : IdResolver {
 
     override val types: List<IdResolverKind> get() = InventoryIdResolver.types
 
-    override fun ItemStack.tryResolve(): SkyBlockId? {
+    override fun tryResolve(itemStack: ItemStack, resolverKind: IdResolverKind): SkyBlockId? {
         val screen = McScreen.asMenu ?: return null
-        return if (isApplicable(screen)) resolveId() else null
+        return if (itemStack.isApplicable(screen, resolverKind)) itemStack.resolveId(screen, resolverKind) else null
     }
 
-    fun <T : AbstractContainerMenu> ItemStack.isApplicable(menu: AbstractContainerScreen<T>): Boolean
-    fun ItemStack.resolveId(): SkyBlockId?
-
+    fun <T : AbstractContainerMenu> ItemStack.isApplicable(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): Boolean
+    fun <T : AbstractContainerMenu> ItemStack.resolveId(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): SkyBlockId?
 }
 
 enum class IdResolverKind {
@@ -52,6 +40,27 @@ enum class IdResolverKind {
     EntityData,
     ContainerContents,
     Unknown,
+    ;
+
+    private lateinit var resolvers: MutableSet<IdResolver>
+
+    companion object {
+        fun resolve() {
+            IdResolverKind.entries.forEach {
+                it.resolvers = SortedArraySet.create(Comparator.comparingInt(IdResolver::priority))
+            }
+            SkyblockAPIIdResolvers.collected.forEach {
+                it.types.forEach { kind ->
+                    kind.resolvers.add(it)
+                }
+            }
+        }
+    }
+
+    fun entries(): Set<IdResolver> {
+        if (!::resolvers.isInitialized) resolve()
+        return resolvers
+    }
 }
 
 @Retention(AnnotationRetention.SOURCE)

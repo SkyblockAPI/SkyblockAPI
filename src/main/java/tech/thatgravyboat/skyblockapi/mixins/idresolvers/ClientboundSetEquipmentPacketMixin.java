@@ -9,15 +9,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId;
 import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+
 @Mixin(ClientboundSetEquipmentPacket.class)
 public class ClientboundSetEquipmentPacketMixin {
 
     @WrapOperation(method = "<init>(Lnet/minecraft/network/RegistryFriendlyByteBuf;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/codec/StreamCodec;decode(Ljava/lang/Object;)Ljava/lang/Object;"))
     private Object wrap(StreamCodec<?, ?> instance, Object o, Operation<Object> original) {
-        SkyBlockId.Companion.setIdResolverKind(IdResolverKind.Equipment);
+        SkyBlockId.Companion.getIdResolverKind().set(IdResolverKind.Equipment);
         var result = original.call(instance, o);
-        SkyBlockId.Companion.setIdResolverKind(IdResolverKind.Unknown);
+        SkyBlockId.Companion.getIdResolverKind().set(IdResolverKind.Unknown);
         return result;
     }
-
 }

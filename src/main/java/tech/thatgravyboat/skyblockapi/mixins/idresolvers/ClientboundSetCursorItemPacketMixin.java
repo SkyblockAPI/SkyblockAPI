@@ -17,9 +17,9 @@ public class ClientboundSetCursorItemPacketMixin {
         return new StreamCodec<>() {
             @Override
             public @NonNull C decode(@NonNull B object) {
-                SkyBlockId.Companion.setIdResolverKind(IdResolverKind.Cursor);
+                SkyBlockId.Companion.getIdResolverKind().set(IdResolverKind.Cursor);
                 var result = original.decode(object);
-                SkyBlockId.Companion.setIdResolverKind(IdResolverKind.Unknown);
+                SkyBlockId.Companion.getIdResolverKind().set(IdResolverKind.Unknown);
                 return result;
             }
 

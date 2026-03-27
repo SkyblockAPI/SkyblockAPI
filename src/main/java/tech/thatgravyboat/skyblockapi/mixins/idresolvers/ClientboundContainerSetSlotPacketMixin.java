@@ -14,9 +14,9 @@ public class ClientboundContainerSetSlotPacketMixin {
 
     @WrapOperation(method = "<init>(Lnet/minecraft/network/RegistryFriendlyByteBuf;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/codec/StreamCodec;decode(Ljava/lang/Object;)Ljava/lang/Object;"))
     private Object wrap(StreamCodec<?, ?> instance, Object o, Operation<Object> original) {
-        SkyBlockId.Companion.setIdResolverKind(IdResolverKind.ContainerSlot);
+        SkyBlockId.Companion.getIdResolverKind().set(IdResolverKind.ContainerSlot);
         var result = original.call(instance, o);
-        SkyBlockId.Companion.setIdResolverKind(IdResolverKind.Unknown);
+        SkyBlockId.Companion.getIdResolverKind().set(IdResolverKind.Unknown);
         return result;
     }
 

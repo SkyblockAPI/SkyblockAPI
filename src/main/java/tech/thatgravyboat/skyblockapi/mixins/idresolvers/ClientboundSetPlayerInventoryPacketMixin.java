@@ -16,9 +16,9 @@ public class ClientboundSetPlayerInventoryPacketMixin {
         return new StreamCodec<>() {
             @Override
             public @NonNull C decode(@NonNull B object) {
-                SkyBlockId.Companion.setIdResolverKind(IdResolverKind.Inventory);
+                SkyBlockId.Companion.getIdResolverKind().set(IdResolverKind.Inventory);
                 var result = original.decode(object);
-                SkyBlockId.Companion.setIdResolverKind(IdResolverKind.Unknown);
+                SkyBlockId.Companion.getIdResolverKind().set(IdResolverKind.Unknown);
                 return result;
             }
 
