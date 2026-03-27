@@ -6,6 +6,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.InventoryIdResolver.Companion.priorities
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.contains
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -32,5 +33,5 @@ object AttributeMenuResolver : InventoryIdResolver {
         return SimpleItemAPI.findIdByName(itemName.substringBeforeLast(" "))
     }
 
-    override val priority: Int = 10
+    override val priority: Int = priorities.getAndIncrement()
 }

@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIIdResolvers
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
+import java.util.concurrent.atomic.AtomicInteger
 
 interface IdResolver {
     val types: List<IdResolverKind>
@@ -19,6 +20,7 @@ interface IdResolver {
 interface InventoryIdResolver : IdResolver {
     companion object {
         val types = listOf(IdResolverKind.ContainerSlot, IdResolverKind.ContainerContents)
+        var priorities = AtomicInteger(10)
     }
 
     override val types: List<IdResolverKind> get() = InventoryIdResolver.types
@@ -42,13 +44,10 @@ enum class IdResolverKind {
     Unknown,
     ;
 
-    private lateinit var resolvers: MutableSet<IdResolver>
+    private val resolvers: MutableSet<IdResolver> = SortedArraySet.create(Comparator.comparingInt(IdResolver::priority))
 
     companion object {
-        fun resolve() {
-            IdResolverKind.entries.forEach {
-                it.resolvers = SortedArraySet.create(Comparator.comparingInt(IdResolver::priority))
-            }
+        init {
             SkyblockAPIIdResolvers.collected.forEach {
                 it.types.forEach { kind ->
                     kind.resolvers.add(it)
@@ -57,10 +56,7 @@ enum class IdResolverKind {
         }
     }
 
-    fun entries(): Set<IdResolver> {
-        if (!::resolvers.isInitialized) resolve()
-        return resolvers
-    }
+    fun entries(): Set<IdResolver> = resolvers
 }
 
 @Retention(AnnotationRetention.SOURCE)

@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.remote.api
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
@@ -96,6 +97,18 @@ value class SkyBlockId private constructor(val id: String) {
             return kind.entries().firstNotNullOfOrNull {
                 it.tryResolve(stack, kind)
             }
+        }
+
+        @JvmStatic
+        fun <T : Any, D : Any> wrap(codec: StreamCodec<T, D>, kind: IdResolverKind) = object : StreamCodec<T, D> {
+            override fun decode(first: T): D {
+                idResolverKind.set(kind)
+                return codec.decode(first).apply {
+                    idResolverKind.set(IdResolverKind.Unknown)
+                }
+            }
+
+            override fun encode(first: T, second: D) = codec.encode(first, second)
         }
     }
 
