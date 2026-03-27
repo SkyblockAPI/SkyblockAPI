@@ -10,13 +10,14 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuIdRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
-import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
+import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind
+import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.tryResolve
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIIdResolvers
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 typealias SkyBlockItemId = SkyBlockId
@@ -24,6 +25,10 @@ typealias SkyBlockItemId = SkyBlockId
 @JvmInline
 value class SkyBlockId private constructor(val id: String) {
     companion object Companion {
+        @JvmStatic
+        @set:JvmName("setIdResolverKind")
+        internal var idResolverKind: IdResolverKind = IdResolverKind.Unknown
+
         private val amountRegex = Regex(".*?x[\\d,]+")
         private val petRegex = Regex("\\[?lvl \\d+]? (.*)")
         internal val neuIdRegex = Regex("\\w+;\\d+")
@@ -88,24 +93,26 @@ value class SkyBlockId private constructor(val id: String) {
 
         fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
 
+        private val idResolvers by lazy {
+            buildMap {
+                SkyblockAPIIdResolvers.collected.sortedByDescending { it.priority }.forEach {
+                    for (kind in it.types) {
+                        if (kind == IdResolverKind.Unknown) {
+                            IdResolverKind.entries.forEach { kind ->
+                                getOrPut(kind, ::mutableListOf).add(it)
+                            }
+                        }
+                        getOrPut(kind, ::mutableListOf).add(it)
+                    }
+                }
+            }
+        }
+
         internal fun createIdForItem(stack: ItemStack): SkyBlockId? {
-            val itemId = fromItem(stack)
-            if (itemId != null) return itemId
-
-            // Used for ignoring same names on things like dyes and barriers where it is usually important to keep it as no id.
-            // i.e. anvil with no items has a barrier named 'Anvil'
-            if (stack.item in ItemTag.IGNORE_NAME_LOOKUP) return null
-
-            // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
-            // i.e. ender chest icon in storage
-            if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
-
-            val nameId = fromName(stack.hoverName.stripped, false) ?: return null
-
-            // An item may not be available if it can't be parsed, in this case we will just return the id we suspect.
-            val repoItem = SimpleItemAPI.getUnknownById(nameId) ?: return nameId
-
-            return if (repoItem.item == stack.item) nameId else null
+            val kind = idResolverKind
+            return idResolvers[kind]?.firstNotNullOfOrNull {
+                it.tryResolve(stack, kind)
+            }
         }
     }
 
