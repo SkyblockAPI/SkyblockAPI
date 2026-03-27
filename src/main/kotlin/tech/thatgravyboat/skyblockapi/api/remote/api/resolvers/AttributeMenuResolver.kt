@@ -13,11 +13,17 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 @IdResolvers
 object AttributeMenuResolver : InventoryIdResolver {
 
-    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(menu: AbstractContainerScreen<T>): Boolean {
+    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
+        menu: AbstractContainerScreen<T>,
+        resolverKind: IdResolverKind,
+    ): Boolean {
         return menu.title.stripped == "Attribute Menu"
     }
 
-    override fun ItemStack.resolveId(): SkyBlockId? {
+    override fun <T : AbstractContainerMenu> ItemStack.resolveId(
+        menu: AbstractContainerScreen<T>,
+        resolverKind: IdResolverKind,
+    ): SkyBlockId? {
         val itemName = this.cleanName
         if (this in Items.GRAY_DYE) {
             return SimpleItemAPI.findIdByName(itemName)
