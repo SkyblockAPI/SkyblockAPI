@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.storage
 import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
-import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import kotlin.time.Instant
 
 @GenerateCodec

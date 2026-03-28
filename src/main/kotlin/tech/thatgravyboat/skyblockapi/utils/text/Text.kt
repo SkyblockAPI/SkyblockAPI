@@ -1,8 +1,16 @@
 package tech.thatgravyboat.skyblockapi.utils.text
 
 import net.minecraft.ChatFormatting
-import net.minecraft.network.chat.*
+import net.minecraft.network.chat.ClickEvent
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.FontDescription
+import net.minecraft.network.chat.HoverEvent
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.Style
+import net.minecraft.network.chat.contents.objects.AtlasSprite
+import net.minecraft.network.chat.contents.objects.PlayerSprite
 import net.minecraft.resources.Identifier
+import net.minecraft.world.item.component.ResolvableProfile
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook
@@ -16,11 +24,6 @@ import java.net.URI
 import java.util.*
 import java.util.regex.Pattern
 
-//? > 1.21.8 {
-import net.minecraft.network.chat.contents.objects.AtlasSprite
-import net.minecraft.network.chat.contents.objects.PlayerSprite
-import net.minecraft.world.item.component.ResolvableProfile
-//?}
 
 object CommonText {
 
@@ -40,7 +43,6 @@ object Text {
     fun of(text: String, color: Int) = of(text) { this.color = color }
     fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
 
-    //? > 1.21.8 {
     fun player(profile: ResolvableProfile, hat: Boolean = true, init: MutableComponent.() -> Unit = {}): MutableComponent {
         val spriteObj = PlayerSprite(profile, hat)
         return Component.`object`(spriteObj).also(init)
@@ -50,7 +52,6 @@ object Text {
         val spriteObj = AtlasSprite(atlas, sprite)
         return Component.`object`(spriteObj).also(init)
     }
-    //?}
 
     fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
 
@@ -82,7 +83,12 @@ object Text {
     fun Component.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
     fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
 
-    fun Component.send() = McClient.chat.addMessage(this)
+    fun Component.send() {
+        //? >= 26.1 {
+        McClient.chat.addClientSystemMessage(this)
+        //? } else
+        //McClient.chat.addMessage(this)
+    }
     fun Component.send(id: String) = McClient.chat.setMessageId(id) {
         this.send()
     }
@@ -180,15 +186,17 @@ object TextUtils {
         val sb = StringBuilder()
         var last = Style.EMPTY
 
-        this.visit({ style, text ->
-            if (style != last) {
-                sb.append(ChatFormatting.RESET)
-                sb.appendStyle(style)
-                last = style
-            }
-            sb.append(text)
-            Optional.empty<Unit>()
-        }, Style.EMPTY,
+        this.visit(
+            { style, text ->
+                if (style != last) {
+                    sb.append(ChatFormatting.RESET)
+                    sb.appendStyle(style)
+                    last = style
+                }
+                sb.append(text)
+                Optional.empty<Unit>()
+            },
+            Style.EMPTY,
         )
 
         return sb.toString()
@@ -212,17 +220,12 @@ object TextUtils {
 
 
 internal fun MutableComponent.withFont(location: Identifier?): MutableComponent =
-    //? if > 1.21.8 {
     this.style { if (location == null) withFont(null) else withFont(FontDescription.Resource(location)) }
-//?} else
-/*this.style { withFont(location) }*/
+
 
 
 internal fun Component.font(): Identifier? =
-    //? if > 1.21.8 {
     (this.style.font as? FontDescription.Resource)?.id
-//?} else
-/*this.style.font*/
 
 internal fun Component.hover(): Component? = (this.style.hoverEvent as? HoverEvent.ShowText)?.value()
 

@@ -166,8 +166,8 @@ object MayorPerks {
     }
 }
 
-
-//region Old
+//? < 26.1 {
+/*//region Old
 @RemoveNextVersion(ReplaceWith("MayorCandidate"))
 enum class Candidate(val mayorCandidate: MayorCandidate) {
     AATROX(MayorCandidates.AATROX),
@@ -265,3 +265,4 @@ enum class Perk(val mayorPerk: MayorPerk) {
     }
 }
 //endregion
+*///? }

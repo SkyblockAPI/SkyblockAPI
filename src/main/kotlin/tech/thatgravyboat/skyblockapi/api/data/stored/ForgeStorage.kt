@@ -12,11 +12,14 @@ import kotlin.time.Instant
 internal object ForgeStorage {
     private val V0_CODEC = CodecUtils.map(
         IncludedCodecs.INT_KEY,
-        RecordCodecBuilder.create { it.group(
-            SkyblockAPICodecs.getCodec<String>().fieldOf("id").forGetter(ForgeSlot::id),
-            SkyblockAPICodecs.getCodec<Instant>().fieldOf("expiryTime").forGetter(ForgeSlot::expiryTime),
-        ).apply(it) { item, time -> ForgeSlot(SkyBlockId.item(item), time)} },
+        RecordCodecBuilder.create {
+            it.group(
+                SkyblockAPICodecs.getCodec<SkyBlockId>().fieldOf("id").forGetter { it.skyBlockId },
+                SkyblockAPICodecs.getCodec<Instant>().fieldOf("expiryTime").forGetter(ForgeSlot::expiryTime),
+            ).apply(it) { item, time -> ForgeSlot(item, time) }
+        },
     )
+
     private val V1_CODEC = CodecUtils.map(IncludedCodecs.INT_KEY, SkyblockAPICodecs.getCodec<ForgeSlot>())
 
     private val FORGE = StoredProfileData(

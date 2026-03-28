@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 
+import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.CommonComponents
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
@@ -26,7 +28,10 @@ object DefaultIdResolver : IdResolver {
 
         // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
         // i.e. ender chest icon in storage
-        if (itemStack.item.name.stripped.equals(itemStack.hoverName.stripped, true)) return null
+        //? >= 26.1 {
+        if (itemStack.item.components().getOrDefault(DataComponents.ITEM_NAME, CommonComponents.EMPTY).stripped.equals(itemStack.hoverName.stripped, true)) return null
+        //? } else
+        //if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
 
         val nameId = fromName(itemStack.hoverName.stripped, false) ?: return null
 

@@ -1,47 +1,88 @@
+
 import org.gradle.kotlin.dsl.support.serviceOf
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
+repositories {
+    mavenCentral()
+}
+
 plugins {
+    kotlin("jvm") apply false
     id("dev.kikugie.stonecutter")
-    id("fabric-loom") version "1.14-SNAPSHOT" apply false
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
+    id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT" apply false
+    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT" apply false
     `maven-publish`
 }
 
-apiValidation {
-    validationDisabled = false
-    ignoredPackages.add("tech.thatgrabyboat.skyblockapi.impl")
-}
-
-stonecutter active "1.21.11"
+stonecutter active "26.1"
 
 stonecutter parameters {
     swaps["mod_version"] = "\"" + property("version") + "\";"
     swaps["minecraft"] = "\"" + node.metadata.version + "\";"
-    replacements.string {
-        direction = eval(current.version, "> 1.21.5")
-        replace("// moj_import <", "//!moj_import <")
-    }
 
     filters.include("**/*.fsh", "**/*.vsh")
 
-
-    replacements.regex {
-        direction = eval(current.version, "< 1.21.11")
-        replace("import net.minecraft.resources.Identifier(?!;)", "import net.minecraft.resources.ResourceLocation as Identifier")
-        reverse("import net.minecraft.resources.ResourceLocation as Identifier", "import net.minecraft.resources.Identifier")
+    replacements.string("graphics") {
+        direction = eval(current.version, "< 26.1")
+        replace(
+            "GuiGraphicsExtractor",
+            "GuiGraphics"
+        )
     }
 
     replacements.regex {
         direction = eval(current.version, "< 1.21.11")
-        replace("import net.minecraft.util.IdentifierPattern(?!;)", "import net.minecraft.util.ResourceLocationPattern as IdentifierPattern")
-        reverse("import net.minecraft.util.ResourceLocationPattern as IdentifierPattern", "import net.minecraft.util.IdentifierPattern")
+        replace(
+            "import net.minecraft.resources.Identifier(?!;)", "import net.minecraft.resources.ResourceLocation as Identifier",
+            "import net.minecraft.resources.ResourceLocation as Identifier", "import net.minecraft.resources.Identifier"
+        )
     }
 
     replacements.regex {
+        direction = eval(current.version, "< 1.21.11")
+        replace(
+            "import net.minecraft.util.IdentifierPattern(?!;)", "import net.minecraft.util.ResourceLocationPattern as IdentifierPattern",
+            "import net.minecraft.util.ResourceLocationPattern as IdentifierPattern", "import net.minecraft.util.IdentifierPattern"
+        )
+    }
+
+    replacements.string {
         direction = eval(current.version, "< 1.21.11")
         replace("import net.minecraft.advancements.criterion", "import net.minecraft.advancements.critereon")
-        reverse("import net.minecraft.advancements.critereon", "import net.minecraft.advancements.criterion")
+    }
+
+    replacements.string {
+        direction = eval(current.version, "< 26.1")
+        replace(
+            "import net.fabricmc.fabric.api.client.command.v2.ClientCommands",
+            "import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager as ClientCommands",
+        )
+        replace(
+            "import net.minecraft.client.multiplayer.chat.GuiMessage",
+            "import net.minecraft.client.GuiMessage",
+        )
+        replace(
+            "import net.minecraft.client.multiplayer.chat.GuiMessageTag",
+            "import net.minecraft.client.GuiMessageTag",
+        )
+        replace(
+            "import net.minecraft.client.renderer.state.gui.BlitRenderState",
+            "import net.minecraft.client.gui.render.state.BlitRenderState"
+        )
+        replace(
+            "import net.minecraft.client.renderer.state.gui.GuiElementRenderState",
+            "import net.minecraft.client.gui.render.state.GuiElementRenderState"
+        )
+        replace("Lnet/minecraft/client/multiplayer/chat/GuiMessage", "Lnet/minecraft/client/GuiMessage")
+        replace("Lnet/minecraft/client/multiplayer/chat/GuiMessageTag", "Lnet/minecraft/client/GuiMessageTag")
+    }
+
+    replacements.regex {
+        direction = eval(current.version, "< 26.1")
+        replace(
+            "import net.minecraft.client.gui.GuiGraphicsExtractor(?!;)", "import net.minecraft.client.gui.GuiGraphics as GuiGraphicsExtractor",
+            "import net.minecraft.client.gui.GuiGraphics as GuiGraphicsExtractor", "import net.minecraft.client.gui.GuiGraphicsExtractor"
+        )
     }
 }
 
@@ -53,33 +94,87 @@ val minecraftVersionAttribute = Attribute.of("net.minecraft.version", String::cl
 val remappedAttribute = Attribute.of("net.fabricmc.remapped", String::class.java)
 
 stonecutter.versions.forEach { (project, version) ->
+    fun isObfuscated() = stonecutter.eval(version, "<=1.21.11")
+
+    fun runIfObfuscated(action: () -> Unit) {
+        if (isObfuscated()) action()
+    }
+
+    fun <T> selectIfObfuscated(obfuscated: T, unobfuscated: T) = if (isObfuscated()) obfuscated else unobfuscated
+
     val gradleFriendlyVersion = version.replace(".", "")
     val project = project(project)
-    val remappedApiElements = configurations.create(gradleFriendlyVersion + "remappedApiElements") {
-        isCanBeResolved = false
-        isCanBeConsumed = true
 
-        attributes {
-            attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
-            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
-            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
-            attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
-            attribute(KotlinPlatformType.attribute, KotlinPlatformType.jvm)
-            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
-            attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
-            attribute(minecraftVersionAttribute, version)
-            attribute(remappedAttribute, "true")
+    println("Creating publication for $version")
+    runIfObfuscated {
+        val remappedApiElements = configurations.create(gradleFriendlyVersion + "remappedApiElements") {
+            isCanBeResolved = false
+            isCanBeConsumed = true
+
+            attributes {
+                attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
+                attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
+                attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
+                attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
+                attribute(KotlinPlatformType.attribute, KotlinPlatformType.jvm)
+                attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
+                attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
+                attribute(minecraftVersionAttribute, version)
+                attribute(remappedAttribute, "true")
+            }
+
+            project.afterEvaluate {
+                this@create.dependencies.addAll(configurations.named("api").get().dependencies)
+                this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
+                println("Adding remapped api for $version")
+                outgoing.artifact(tasks.named("remapJar")) {
+                    classifier += "-api"
+                }
+            }
+
+            outgoing.capability("tech.thatgravyboat:skyblock-api-$version-remapped:${rootProject.version}")
+            outgoing.capability("tech.thatgravyboat:skyblock-api:${rootProject.version}")
+        }
+        val remappedRuntimeElements = configurations.create(gradleFriendlyVersion + "remappedRuntimeElements") {
+            isCanBeResolved = false
+            isCanBeConsumed = true
+
+            attributes {
+                attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
+                attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
+                attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
+                attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
+                attribute(KotlinPlatformType.attribute, KotlinPlatformType.jvm)
+                attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
+                attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
+                attribute(minecraftVersionAttribute, version)
+                attribute(remappedAttribute, "true")
+            }
+
+            project.afterEvaluate {
+                this@create.dependencies.addAll(configurations.named("runtimeOnly").get().dependencies)
+                this@create.dependencies.addAll(configurations.named("modRuntimeOnly").get().dependencies)
+                this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
+
+                this@create.dependencies.addAll(configurations.named("api").get().dependencies)
+                outgoing.artifact(tasks.named("remapJar")) {
+                    classifier += "-runtime"
+                }
+                println("Adding remapped runtime for $version")
+            }
+
+            outgoing.capability("tech.thatgravyboat:skyblock-api-$version-remapped:${rootProject.version}")
+            outgoing.capability("tech.thatgravyboat:skyblock-api:${rootProject.version}")
         }
 
-        project.afterEvaluate {
-            this@create.dependencies.addAll(configurations.named("api").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
-            outgoing.artifact(tasks.named("remapJar"))
+        sbapiComponent.addVariantsFromConfiguration(remappedApiElements) {
+            mapToOptional()
         }
-
-        outgoing.capability("tech.thatgravyboat:skyblock-api-$version-remapped:${rootProject.version}")
-        outgoing.capability("tech.thatgravyboat:skyblock-api:${rootProject.version}")
+        sbapiComponent.addVariantsFromConfiguration(remappedRuntimeElements) {
+            mapToOptional()
+        }
     }
+
     val apiElements = configurations.create(gradleFriendlyVersion + "apiElements") {
         isCanBeResolved = false
         isCanBeConsumed = true
@@ -87,7 +182,7 @@ stonecutter.versions.forEach { (project, version) ->
         attributes {
             attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
-            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, selectIfObfuscated(21, 25))
             attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
             attribute(KotlinPlatformType.attribute, KotlinPlatformType.jvm)
             attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
@@ -98,39 +193,16 @@ stonecutter.versions.forEach { (project, version) ->
 
         project.afterEvaluate {
             this@create.dependencies.addAll(configurations.named("api").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
-            outgoing.artifact(tasks.named("jar"))
+            runIfObfuscated {
+                this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
+            }
+            outgoing.artifact(tasks.named("jar")) {
+                classifier += "-api"
+            }
+            println("Adding api for $version")
         }
 
         outgoing.capability("tech.thatgravyboat:skyblock-api-$version:${rootProject.version}")
-        outgoing.capability("tech.thatgravyboat:skyblock-api:${rootProject.version}")
-    }
-
-    val remappedRuntimeElements = configurations.create(gradleFriendlyVersion + "remappedRuntimeElements") {
-        isCanBeResolved = false
-        isCanBeConsumed = true
-
-        attributes {
-            attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
-            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
-            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
-            attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
-            attribute(KotlinPlatformType.attribute, KotlinPlatformType.jvm)
-            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
-            attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
-            attribute(minecraftVersionAttribute, version)
-            attribute(remappedAttribute, "true")
-        }
-
-        project.afterEvaluate {
-            this@create.dependencies.addAll(configurations.named("runtimeOnly").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modRuntimeOnly").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("api").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
-            outgoing.artifact(tasks.named("remapJar"))
-        }
-
-        outgoing.capability("tech.thatgravyboat:skyblock-api-$version-remapped:${rootProject.version}")
         outgoing.capability("tech.thatgravyboat:skyblock-api:${rootProject.version}")
     }
     val runtimeElements = configurations.create(gradleFriendlyVersion + "runtimeElements") {
@@ -140,7 +212,7 @@ stonecutter.versions.forEach { (project, version) ->
         attributes {
             attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
-            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, selectIfObfuscated(21, 25))
             attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
             attribute(KotlinPlatformType.attribute, KotlinPlatformType.jvm)
             attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
@@ -150,11 +222,16 @@ stonecutter.versions.forEach { (project, version) ->
         }
 
         project.afterEvaluate {
-            this@create.dependencies.addAll(configurations.named("runtimeOnly").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modRuntimeOnly").get().dependencies)
             this@create.dependencies.addAll(configurations.named("api").get().dependencies)
-            this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
-            outgoing.artifact(tasks.named("jar"))
+            this@create.dependencies.addAll(configurations.named("runtimeOnly").get().dependencies)
+            runIfObfuscated {
+                this@create.dependencies.addAll(configurations.named("modRuntimeOnly").get().dependencies)
+                this@create.dependencies.addAll(configurations.named("modApi").get().dependencies)
+            }
+            outgoing.artifact(tasks.named("jar")) {
+                classifier += "-runtime"
+            }
+            println("Adding runtime for $version")
         }
 
         outgoing.capability("tech.thatgravyboat:skyblock-api-$version:${rootProject.version}")
@@ -176,18 +253,13 @@ stonecutter.versions.forEach { (project, version) ->
 
         project.afterEvaluate {
             outgoing.artifact(tasks.named("sourcesJar"))
+            println("Adding sources for $version")
         }
 
         outgoing.capability("tech.thatgravyboat:skyblock-api-$version:${rootProject.version}")
         outgoing.capability("tech.thatgravyboat:skyblock-api:${rootProject.version}")
     }
 
-    sbapiComponent.addVariantsFromConfiguration(remappedApiElements) {
-        mapToOptional()
-    }
-    sbapiComponent.addVariantsFromConfiguration(remappedRuntimeElements) {
-        mapToOptional()
-    }
     sbapiComponent.addVariantsFromConfiguration(apiElements) {
         mapToOptional()
     }

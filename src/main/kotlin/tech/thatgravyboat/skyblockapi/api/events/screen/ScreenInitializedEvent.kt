@@ -7,6 +7,10 @@ import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 class ScreenInitializedEvent(val screen: Screen) : SkyBlockEvent() {
 
-    val widgets: MutableList<AbstractWidget> get() =
-        Screens.getButtons(this.screen)
+    val widgets: MutableList<AbstractWidget>
+        get() =
+            //? >= 26.1 {
+            Screens.getWidgets(this.screen)
+    //? } else
+    //Screens.getButtons(this.screen)
 }

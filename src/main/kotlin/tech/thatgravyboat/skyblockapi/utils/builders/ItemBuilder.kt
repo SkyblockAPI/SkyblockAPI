@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.builders
 
+import net.minecraft.core.component.DataComponentMap
 import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.component.DataComponents
@@ -59,7 +60,14 @@ class ItemBuilder {
         }
     }
 
-    private val customItemName get() = components.build().get(DataComponents.CUSTOM_NAME)?.getOrNull()
+    private val customItemName: Component?
+        get() {
+            //? >= 26.1 {
+            return components.build().get(DataComponentMap.EMPTY, DataComponents.CUSTOM_NAME)
+            //? } else {
+            /*return components.build().get(DataComponents.CUSTOM_NAME)?.getOrNull()
+            *///? }
+        }
 
     fun namePrefix(prefix: String) = namePrefix(Component.literal(prefix))
     fun namePrefix(prefix: Component) = name(Text.join(prefix, customItemName))

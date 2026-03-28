@@ -7,7 +7,7 @@ val ResourceKey<*>.identifier: Identifier
     //? if > 1.21.10 {
     get() = this.identifier()
     //?} else
-    /*get() = this.location()*/
+//get() = this.location()
 
 object Identifiers {
 
@@ -22,5 +22,5 @@ object Identifiers {
         //? if > 1.21.10 {
         Identifier.isAllowedInIdentifier(c)
         //?} else
-        /*Identifier.isAllowedInResourceLocation(c)*/
+    //Identifier.isAllowedInResourceLocation(c)
 }

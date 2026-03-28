@@ -2,10 +2,10 @@ package tech.thatgravyboat.skyblockapi.mixins.features;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import java.util.Map;
-import java.util.Objects;
 import kotlin.Unit;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
@@ -24,16 +24,28 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueItemStack;
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueResult;
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry;
 
+import java.util.Map;
+import java.util.Objects;
+
 @Mixin(ItemStack.class)
 public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItemStack {
 
-    @Unique private static final ThreadLocal<Unit> skyblockapi$COPYING = new ThreadLocal<>();
-    @Unique private @Nullable Map<DataType<?>, ?> skyblockapi$data = Map.of();
-    @Unique private ItemValueResult skyblockapi$itemValueResult = null;
-    @Unique private boolean skyblockapi$dataIsDirty = false;
+    @Unique
+    private static final ThreadLocal<Unit> skyblockapi$COPYING = new ThreadLocal<>();
+    @Unique
+    private @Nullable Map<DataType<?>, ?> skyblockapi$data = Map.of();
+    @Unique
+    private ItemValueResult skyblockapi$itemValueResult = null;
+    @Unique
+    private boolean skyblockapi$dataIsDirty = false;
 
-    @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At("RETURN"))
-    private void skyblockapi$init(ItemLike item, int count, PatchedDataComponentMap map, CallbackInfo ci) {
+
+    @Inject(
+        //~ if >= 26.1 'world/level/ItemLike' -> 'core/Holder'
+        method = "<init>(Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/PatchedDataComponentMap;)V",
+        at = @At("RETURN")
+    )
+    private void skyblockapi$init(CallbackInfo ci) {
         if (skyblockapi$COPYING.get() == null) {
             skyblockapi$data = DataTypesRegistry.INSTANCE.getData((ItemStack) (Object) this);
         } else {
@@ -41,8 +53,10 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
         }
     }
 
-    @WrapOperation(method = "copy", at = @At(value = "NEW", target = "(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)Lnet/minecraft/world/item/ItemStack;"))
-    private ItemStack skyblockapi$copy(ItemLike item, int count, PatchedDataComponentMap patch, Operation<ItemStack> operation) {
+    //~ if >= 26.1 'world/level/ItemLike' -> 'core/Holder'
+    @WrapOperation(method = "copy", at = @At(value = "NEW", target = "(Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/PatchedDataComponentMap;)Lnet/minecraft/world/item/ItemStack;"))
+    //~ if >= 26.1 'ItemLike' -> 'Holder<Item>'
+    private ItemStack skyblockapi$copy(Holder<Item> item, int count, PatchedDataComponentMap patch, Operation<ItemStack> operation) {
         skyblockapi$COPYING.set(Unit.INSTANCE);
         var stack = operation.call(item, count, patch);
         if (stack != null) {
