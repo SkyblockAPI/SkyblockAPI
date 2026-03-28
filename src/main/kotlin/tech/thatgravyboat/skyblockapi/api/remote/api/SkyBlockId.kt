@@ -100,7 +100,7 @@ value class SkyBlockId private constructor(val id: String) {
         }
 
         @JvmStatic
-        @JvmName("warp")
+        @JvmName("wrap")
         internal fun <T : Any, D : Any> wrap(codec: StreamCodec<T, D>, kind: IdResolverKind) = object : StreamCodec<T, D> {
             override fun decode(first: T): D {
                 return try {
