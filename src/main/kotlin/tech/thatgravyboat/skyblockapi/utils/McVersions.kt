@@ -4,11 +4,11 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 
 enum class McVersion {
     //? < 26.1 {
-    MC_1_21_5,
+    /*MC_1_21_5,
     MC_1_21_6,
     MC_1_21_7,
     MC_1_21_8,
-    //? }
+    *///? }
     MC_1_21_9,
     MC_1_21_10,
     MC_1_21_11,
@@ -21,13 +21,13 @@ enum class McVersion {
 
 enum class McVersionGroup(vararg versions: McVersion) {
     //? < 26.1 {
-    MC_1_21_5(McVersion.MC_1_21_5),
+    /*MC_1_21_5(McVersion.MC_1_21_5),
     MC_1_21_6(
         McVersion.MC_1_21_6,
         McVersion.MC_1_21_7,
         McVersion.MC_1_21_8,
     ),
-    //? }
+    *///? }
     MC_1_21_9(
         McVersion.MC_1_21_9,
         McVersion.MC_1_21_10,

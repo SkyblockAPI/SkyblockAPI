@@ -31,7 +31,7 @@ object DefaultIdResolver : IdResolver {
         //? >= 26.1 {
         if (itemStack.item.components().getOrDefault(DataComponents.ITEM_NAME, CommonComponents.EMPTY).stripped.equals(itemStack.hoverName.stripped, true)) return null
         //? } else
-        //if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
+        //if (itemStack.item.name.stripped.equals(itemStack.hoverName.stripped, true)) return null
 
         val nameId = fromName(itemStack.hoverName.stripped, false) ?: return null
 
