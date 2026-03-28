@@ -226,7 +226,7 @@ dependencies {
     }
 
     "api"(versionedCatalog["hypixel.modapi"])
-    maybeModApi(versionedCatalog["hypixel.modapi.fabric"])
+    (if (isUnobfuscated()) maybeModApi else maybeModImplementation)(versionedCatalog["hypixel.modapi.fabric"])
     "include"(versionedCatalog["hypixel.modapi.fabric"])
 
     maybeModApi(versionedCatalog["skyblockapi.repolib"])

@@ -15,7 +15,7 @@ kotlin-gradle-plugin = "2.3.0"
 kotlin-symbol-processor = "2.3.5"
 kotlin-binary-compatibility-validator = "0.18.1"
 
-hypixel-modapi = "1.0.2"
+hypixel-modapi = "1.0.1"
 hypixel-modapi-fabric = "1.0.1+build.1+mc1.21"
 
 skyblockapi-repolib = "3.0.2"
