@@ -115,7 +115,6 @@ object MiscEventHandler {
                     event.post()
                     event.component
                 }
-                message
             } else {
                 ChatReceivedEvent.Post(message).let { event ->
                     event.post()
