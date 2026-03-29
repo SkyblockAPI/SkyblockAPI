@@ -16,7 +16,7 @@ object McLevel {
     private val mutablePos = BlockPos.MutableBlockPos()
 
     val hasLevel: Boolean
-        //~ if >= 1.21.11 'selfOrNull' -> 'self'
+        //~ if >= 26.1 'selfOrNull' -> 'self'
         get() = self != null
 
     //? if > 1.21.11 {
