@@ -27,8 +27,7 @@ jobs:
             -   run: chmod +x gradlew
 
             -   name: Build with Gradle
-                run: ./gradlew checkLegacyAbi 2>&1 >/dev/null >> api.removed
-
+                run: ./gradlew checkLegacyAbi 2>api.removed 1>/dev/null
             -   name: Check for breaking changes
                 if: always()
                 env:
