@@ -6,8 +6,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-//? < 26.1
-//import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +29,7 @@ import java.util.Objects;
 public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItemStack {
 
     @Unique
-    private static final ThreadLocal<Boolean> skyblockapi$COPYING = new ThreadLocal<>();
+    private static final ThreadLocal<Boolean> skyblockapi$COPYING = ThreadLocal.withInitial(() -> Boolean.FALSE);
     @Unique
     private @Nullable Map<DataType<?>, ?> skyblockapi$data = Map.of();
     @Unique
