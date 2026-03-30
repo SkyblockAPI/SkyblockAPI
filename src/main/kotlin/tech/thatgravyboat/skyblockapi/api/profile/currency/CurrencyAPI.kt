@@ -201,17 +201,19 @@ object CurrencyAPI {
 
     @ApiDebug("Currency")
     internal fun debug(builder: DebugBuilder) = with(builder) {
-        field("purse", purse)
-        field("purseType", purseType)
-        field("personalBank", personalBank)
-        field("coopBank", coopBank)
-        field("bank", bank)
-        field("motes", motes)
-        field("bits", bits)
-        field("copper", copper)
-        field("sowdust", sowdust)
-        field("northStars", northStars)
-        field("gems", gems)
-        field("soulflow", soulflow)
+        fields(
+            ::purse,
+            ::purseType,
+            ::personalBank,
+            ::coopBank,
+            ::bank,
+            ::motes,
+            ::bits,
+            ::copper,
+            ::sowdust,
+            ::northStars,
+            ::gems,
+            ::soulflow,
+        )
     }
 }

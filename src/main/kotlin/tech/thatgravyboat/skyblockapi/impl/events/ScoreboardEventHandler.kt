@@ -31,9 +31,9 @@ object ScoreboardEventHandler {
         handleTitle()
     }
 
-    @Subscription
-    fun onServerSwitch(event: ServerChangeEvent) {
-        ScoreboardUpdateEvent(scoreboardStripped, emptyList(), emptyList()).post()
+    @Subscription(ServerChangeEvent::class)
+    fun onServerSwitch() {
+        ScoreboardUpdateEvent(scoreboardStripped, emptyList(), scoreboard, emptyList()).post()
         scoreboardStripped = emptyList()
         scoreboard = emptyList()
     }
@@ -42,7 +42,7 @@ object ScoreboardEventHandler {
         val new = McClient.scoreboard
         val newStripped = new.map { it.stripped }
         if (newStripped == scoreboardStripped && new == scoreboard) return // If nothing changed, not even the colors
-        ScoreboardUpdateEvent(scoreboardStripped, newStripped, new.toList()).post(SkyBlockAPI.eventBus)
+        ScoreboardUpdateEvent(scoreboardStripped, newStripped, scoreboard, new.toList()).post(SkyBlockAPI.eventBus)
         scoreboardStripped = newStripped
         scoreboard = new.toList()
     }
