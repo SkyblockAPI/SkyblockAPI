@@ -2,10 +2,12 @@ package tech.thatgravyboat.skyblockapi.mixins.features;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import kotlin.Unit;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +31,7 @@ import java.util.Objects;
 public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItemStack {
 
     @Unique
-    private static final ThreadLocal<Boolean> skyblockapi$COPYING = new ThreadLocal<>();
+    private static final ThreadLocal<Unit> skyblockapi$COPYING = new ThreadLocal<>();
     @Unique
     private @Nullable Map<DataType<?>, ?> skyblockapi$data = Map.of();
     @Unique
@@ -44,7 +46,7 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
         at = @At("RETURN")
     )
     private void skyblockapi$init(CallbackInfo ci) {
-        if (skyblockapi$COPYING.get() == Boolean.FALSE) {
+        if (skyblockapi$COPYING.get() == null) {
             skyblockapi$data = DataTypesRegistry.INSTANCE.getData((ItemStack) (Object) this);
         } else {
             skyblockapi$data = Map.of();
@@ -55,7 +57,7 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
     @WrapOperation(method = "copy", at = @At(value = "NEW", target = "(Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/PatchedDataComponentMap;)Lnet/minecraft/world/item/ItemStack;"))
     //~ if >= 26.1 'ItemLike' -> 'Holder<Item>'
     private ItemStack skyblockapi$copy(Holder<Item> item, int count, PatchedDataComponentMap patch, Operation<ItemStack> operation) {
-        skyblockapi$COPYING.set(Boolean.TRUE);
+        skyblockapi$COPYING.set(Unit.INSTANCE);
         var stack = operation.call(item, count, patch);
         if (stack != null) {
             var self = (ItemStackExtensionMixin) (Object) stack;
@@ -65,7 +67,7 @@ public class ItemStackExtensionMixin implements DataTypeItemStack, ItemValueItem
             ((VisualItemAccessor) (Object) stack).skyblockapi$setVisualItem(((VisualItemAccessor) this).skyblockapi$getVisualItem());
         }
 
-        skyblockapi$COPYING.set(Boolean.FALSE);
+        skyblockapi$COPYING.remove();
         return stack;
     }
 
