@@ -34,12 +34,15 @@ jobs:
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 run: |
-                    if grep -q '[^[:space:]]' < api.removed
+                    if grep -q '<<<ABI has changed>>>' < api.removed
                     then
                         echo "Breaking changes detected, please make sure not to break APIs between MC versions." >> comment
                         echo "Please check the following diff:" >> comment
                         echo "\`\`\`diff" >> comment
-                        cat api.removed >> comment
+                        printf "%s\n" "${${$(cat api.removed)#* <<<ABI has changed>>> 
+                        }%
+                          
+                          You can*}" >> comment
                         echo "\`\`\`" >> comment
                         gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
                         exit 1
