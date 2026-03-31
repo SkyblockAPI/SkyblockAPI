@@ -26,22 +26,25 @@ jobs:
                 uses: gradle/actions/setup-gradle@v5
             -   run: chmod +x gradlew
 
-            -   name: Build with Gradle
-                run: ./gradlew checkLegacyAbi 2>api.removed 1>/dev/null
+            -   name: Update API baseline
+                run: ./gradlew updateLegacyAbi || true
+
+            -   name: Generate API Diffs
+                run: |
+                    git diff versions/26.1/api/26.1.api | grep "^-[^-]" >> api.removed || true
+                    git diff versions/1.21.11/api/1.21.11.api | grep "^-[^-]" >> api.removed || true
+                    git diff versions/1.21.10/api/1.21.10.api | grep "^-[^-]" >> api.removed || true
+
             -   name: Check for breaking changes
-                if: always()
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 run: |
-                    if grep -q '<<<ABI has changed>>>' < api.removed
+                    if grep -q '[^[:space:]]' < api.removed
                     then
                         echo "Breaking changes detected, please make sure not to break APIs between MC versions." >> comment
                         echo "Please check the following diff:" >> comment
                         echo "\`\`\`diff" >> comment
-                        printf "%s\n" "${${$(cat api.removed)#* <<<ABI has changed>>> 
-                        }%
-                          
-                          You can*}" >> comment
+                        cat api.removed >> comment
                         echo "\`\`\`" >> comment
                         gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
                         exit 1
