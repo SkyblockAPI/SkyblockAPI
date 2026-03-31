@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 
 import me.owdding.ktmodules.AutoCollect
+import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.util.SortedArraySet
 import net.minecraft.world.inventory.AbstractContainerMenu
@@ -8,7 +9,6 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIIdResolvers
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
-import java.util.concurrent.atomic.AtomicInteger
 
 interface IdResolver {
     val types: List<IdResolverKind>
@@ -20,7 +20,6 @@ interface IdResolver {
 interface InventoryIdResolver : IdResolver {
     companion object {
         val types = listOf(IdResolverKind.ContainerSlot, IdResolverKind.ContainerContents)
-        var priorities = AtomicInteger(10)
     }
 
     override val types: List<IdResolverKind> get() = InventoryIdResolver.types
@@ -44,13 +43,26 @@ enum class IdResolverKind {
     Unknown,
     ;
 
-    private val resolvers: MutableSet<IdResolver> = SortedArraySet.create(Comparator.comparingInt(IdResolver::priority))
+    private val resolvers: MutableSet<IdResolver> = LinkedHashSet()
 
+    @Module
     companion object {
         init {
             SkyblockAPIIdResolvers.collected.forEach {
                 it.types.forEach { kind ->
+                    if (kind == Unknown) {
+                        for (resolverKind in entries) {
+                            resolverKind.resolvers.add(it)
+                        }
+                        return@forEach
+                    }
                     kind.resolvers.add(it)
+                }
+            }
+            IdResolverKind.entries.forEach {
+                it.resolvers.sortedWith(Comparator.comparingInt(IdResolver::priority).reversed()).apply {
+                    it.resolvers.clear()
+                    it.resolvers.addAll(this)
                 }
             }
         }

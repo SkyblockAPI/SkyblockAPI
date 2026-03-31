@@ -5,7 +5,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
-import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.InventoryIdResolver.Companion.priorities
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -34,7 +33,7 @@ internal object HexEnchantmentIdResolver : InventoryIdResolver {
         return idLookup[this.cleanName]
     }
 
-    override val priority: Int = priorities.getAndIncrement()
+    override val priority: Int = 10
 }
 
 @IdResolvers
@@ -55,7 +54,7 @@ internal object BazaarEnchantmentIdResolver : InventoryIdResolver {
         return idLookup[this.cleanName.substringBeforeLast(" ").trim()]
     }
 
-    override val priority: Int = priorities.getAndIncrement()
+    override val priority: Int = 10
 }
 
 @IdResolvers
@@ -72,5 +71,5 @@ internal object EnchantmentGuideIdResolver : InventoryIdResolver {
         return SkyBlockId.enchantment(id, level)
     }
 
-    override val priority: Int = priorities.getAndIncrement()
+    override val priority: Int = 10
 }

@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
@@ -122,6 +123,8 @@ enum class TrophyFishType(
             TrophyFishTier.DIAMOND -> diamond
         }
     }
+
+    fun getId(tier: TrophyFishTier, default: TrophyFishTier = TrophyFishTier.BRONZE): SkyBlockId = SkyBlockId.item("${this.internalName}_${tier.takeUnless { it == TrophyFishTier.NONE } ?: default}")
 
     companion object {
         fun getByInternalName(internalName: String): TrophyFishType? {

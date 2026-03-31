@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
@@ -46,6 +47,7 @@ value class SkyBlockId private constructor(val id: String) {
         fun item(id: String) = SkyBlockId("$ITEM$id".lowercase())
         fun pet(id: String) = SkyBlockId("$PET$id".lowercase())
         fun pet(id: String, rarity: String) = SkyBlockId("$PET$id$DELIMITER$rarity".lowercase())
+        fun pet(id: String, rarity: SkyBlockRarity) = pet(id, rarity.name)
         fun rune(id: String) = SkyBlockId("$RUNE$id".lowercase())
         fun rune(id: String, level: Int) = SkyBlockId("$RUNE$id$DELIMITER$level".lowercase())
         fun attribute(id: String) = SkyBlockId("$ATTRIBUTE$id".lowercase())
