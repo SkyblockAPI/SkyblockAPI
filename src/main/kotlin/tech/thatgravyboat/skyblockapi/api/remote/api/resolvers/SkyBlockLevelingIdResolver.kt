@@ -7,14 +7,13 @@ import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishTier
 import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishType
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
-import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.InventoryIdResolver.Companion.priorities
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @IdResolvers
 internal object RockMilestonesResolver : InventoryIdResolver {
-    override val priority: Int get() = priorities.getAndIncrement()
+    override val priority: Int = 10
 
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,
@@ -32,7 +31,7 @@ internal object RockMilestonesResolver : InventoryIdResolver {
 
 @IdResolvers
 internal object TrophyFishResolver : InventoryIdResolver {
-    override val priority: Int get() = priorities.getAndIncrement()
+    override val priority: Int = 10
 
     val idLookup = TrophyFishType.entries.flatMap {
         buildList {
@@ -59,7 +58,7 @@ internal object TrophyFishResolver : InventoryIdResolver {
 
 @IdResolvers
 internal object DolphinMilestonesResolver : InventoryIdResolver {
-    override val priority: Int get() = priorities.getAndIncrement()
+    override val priority: Int = 10
 
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,
