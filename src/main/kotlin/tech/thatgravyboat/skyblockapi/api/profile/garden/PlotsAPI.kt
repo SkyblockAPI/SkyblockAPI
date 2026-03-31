@@ -170,7 +170,7 @@ object PlotAPI {
 
         var shouldSynch = false
         scoreboardPestAmountRegex.anyMatch(event.addedComponents, "text", "amount") { (text, amount) ->
-            hasPestDebuff = text.string.contains("§c") // TODO: make it so we dont need to rely on color codes
+            hasPestDebuff = text.string.contains("§c") // TODO: make it so we dont need to rely on color codes 
             currentPestAmount = amount.stripped.toIntValue()
             shouldSynch = true
         }
