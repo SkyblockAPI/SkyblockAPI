@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 
 import me.owdding.ktmodules.AutoCollect
+import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.util.SortedArraySet
 import net.minecraft.world.inventory.AbstractContainerMenu
@@ -44,6 +45,7 @@ enum class IdResolverKind {
 
     private val resolvers: MutableSet<IdResolver> = LinkedHashSet()
 
+    @Module
     companion object {
         init {
             SkyblockAPIIdResolvers.collected.forEach {
@@ -58,7 +60,7 @@ enum class IdResolverKind {
                 }
             }
             IdResolverKind.entries.forEach {
-                it.resolvers.toSortedSet(Comparator.comparingInt(IdResolver::priority).reversed().thenComparing(Comparator.comparingInt(IdResolver::hashCode))).apply {
+                it.resolvers.sortedWith(Comparator.comparingInt(IdResolver::priority).reversed()).apply {
                     it.resolvers.clear()
                     it.resolvers.addAll(this)
                 }
