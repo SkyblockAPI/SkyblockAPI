@@ -502,6 +502,8 @@ public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/Troph
 	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getGold ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getId-MS8-5Ak (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)Ljava/lang/String;
+	public static synthetic fun getId-MS8-5Ak$default (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;ILjava/lang/Object;)Ljava/lang/String;
 	public final fun getInternalName ()Ljava/lang/String;
 	public final fun getItem (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)Lnet/minecraft/world/item/ItemStack;
 	public final fun getSilver ()Lnet/minecraft/world/item/ItemStack;
@@ -5229,6 +5231,7 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId$Comp
 	public final fun item-BCdM1xk (Ljava/lang/String;)Ljava/lang/String;
 	public final fun pet-BCdM1xk (Ljava/lang/String;)Ljava/lang/String;
 	public final fun pet-MS8-5Ak (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public final fun pet-MS8-5Ak (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;)Ljava/lang/String;
 	public final fun rune-BCdM1xk (Ljava/lang/String;)Ljava/lang/String;
 	public final fun rune-MS8-5Ak (Ljava/lang/String;I)Ljava/lang/String;
 	public final fun unknownType-oyA4dd4 (Ljava/lang/String;)Ljava/lang/String;
@@ -5287,9 +5290,7 @@ public abstract interface class tech/thatgravyboat/skyblockapi/api/remote/api/re
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/InventoryIdResolver$Companion {
-	public final fun getPriorities ()Ljava/util/concurrent/atomic/AtomicInteger;
 	public final fun getTypes ()Ljava/util/List;
-	public final fun setPriorities (Ljava/util/concurrent/atomic/AtomicInteger;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/InventoryIdResolver$DefaultImpls {
