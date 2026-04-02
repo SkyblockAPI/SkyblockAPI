@@ -33,6 +33,7 @@ object DefaultIdResolver : IdResolver {
         //? } else
         //if (itemStack.item.name.stripped.equals(itemStack.hoverName.stripped, true)) return null
 
+        if (!SimpleItemAPI.isFullyCached) return null // we can't use repo lookups before the repo isn't fully loaded.
         val nameId = fromName(itemStack.hoverName.stripped, false) ?: return null
 
         // An item may not be available if it can't be parsed, in this case we will just return the id we suspect.

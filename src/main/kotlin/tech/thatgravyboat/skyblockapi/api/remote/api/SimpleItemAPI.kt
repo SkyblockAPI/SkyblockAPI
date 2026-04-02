@@ -31,6 +31,8 @@ object SimpleItemAPI {
     private val cache: MutableMap<SkyBlockId, ItemStack?> = mutableMapOf()
     private val nameCache: MutableMap<String, SkyBlockId> = mutableMapOf()
     private val allIds: MutableList<SkyBlockId> = mutableListOf()
+    var isFullyCached = false
+        private set
 
     init {
         if (RepoAPI.isInitialized()) setupCache()
@@ -46,7 +48,7 @@ object SimpleItemAPI {
 
     fun findIdByName(name: String) = nameCache[name.lowercase().stripColor()]
 
-    fun getItemByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::item)) {
+    fun getItemByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(SkyBlockId::item)) {
         val itemId = id.cleanOrNull() ?: return@getOrPut null
 
         return@getOrPut RepoItemsAPI.getItemOrNull(itemId)
@@ -56,7 +58,7 @@ object SimpleItemAPI {
         name("Unknown item: $id")
     }
 
-    fun getPetByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::pet)) {
+    fun getPetByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(SkyBlockId::pet)) {
         val petId = id.cleanOrNull() ?: return@getOrPut null
 
         if (petId.contains(":")) {
@@ -77,7 +79,7 @@ object SimpleItemAPI {
         name("Unknown pet: $id")
     }
 
-    fun getRuneByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::rune)) {
+    fun getRuneByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(SkyBlockId::rune)) {
         val runeId = id.cleanOrNull() ?: return@getOrPut null
 
         if (runeId.contains(":")) {
@@ -93,7 +95,7 @@ object SimpleItemAPI {
         name("Unknown rune: $id")
     }
 
-    fun getEnchantmentByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::enchantment)) {
+    fun getEnchantmentByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(SkyBlockId::enchantment)) {
         val enchantmentId = id.cleanOrNull() ?: return@getOrPut null
 
         if (enchantmentId.contains(":")) {
@@ -109,7 +111,7 @@ object SimpleItemAPI {
         name("Unknown enchantment: $id")
     }
 
-    fun getAttributeByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(::attribute)) {
+    fun getAttributeByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(SkyBlockId::attribute)) {
         val attributeId = id.cleanOrNull() ?: return@getOrPut null
 
         return@getOrPut RepoAttributeAPI.getAttributeByIdOrNull(attributeId)
@@ -119,11 +121,22 @@ object SimpleItemAPI {
         name("Unknown attribute: $id")
     }
 
+    fun getPotionByIdOrNull(id: SkyBlockId): ItemStack? = cache.getOrPut(id.trySafe(SkyBlockId::potion)) {
+        val potionId = id.cleanOrNull() ?: return@getOrPut null
+
+        return@getOrPut RepoPotionsAPI.getPotionAsItemOrNull(potionId.substringBefore(":"), null)
+    }
+
+    fun getPotionById(id: SkyBlockId): ItemStack = getPotionByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) {
+        name("Unknown potion: $id")
+    }
+
     internal fun getUnknownById(id: SkyBlockId): ItemStack? = when {
         id.isPet -> getPetByIdOrNull(id)
         id.isRune -> getRuneByIdOrNull(id)
         id.isEnchantment -> getEnchantmentByIdOrNull(id)
         id.isAttribute -> getAttributeByIdOrNull(id)
+        id.isPotion -> getPotionByIdOrNull(id)
         id.isItem -> getItemByIdOrNull(id)
         id.isUnsafe -> getItemByIdOrNull(id)
         else -> null
@@ -165,6 +178,12 @@ object SimpleItemAPI {
             )
         }.applyFiltered()
 
+        RepoAPI.potions().potions().flatMap { (_, potion) ->
+            potion.levels.entries.map { (_, level) ->
+                "${potion.name()} ${level.literalLevel}" to RepoPotionsAPI.createId(potion.type, potion.internalPotion, level.level)
+            }
+        }.applyFiltered()
+
         RepoAPI.items().items().entries.mapNotNull { (id, element) ->
             val components = element.getPath("['components'].['minecraft:custom_name'].['text']") ?: return@mapNotNull null
             components.asString.stripColor() to item(id)
@@ -179,6 +198,9 @@ object SimpleItemAPI {
         }.distinct().toMap()
         nameCache.clear()
         nameCache.putAll(newCache)
+        // Force load all items
+        allIds.forEach { it.toItem() }
         SkyBlockAPI.trace("[SimpleItemAPI] Cached ${nameCache.size} item names and ${allIds.size} ids in ${start.since().toReadableTime(allowMs = true)}")
+        isFullyCached = true
     }
 }

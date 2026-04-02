@@ -52,6 +52,7 @@ object DataTypes {
     val PERSONAL_DELETOR_ITEMS: DataType<List<String?>> = PersonalAccessoryDataTypes.PERSONAL_DELETOR_ITEMS
     val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = PersonalAccessoryDataTypes.PERSONAL_ACCESSORY_ACTIVE
     val POTION: DataType<String> = GenericDataTypes.POTION
+    val POTION_TYPE: DataType<String> = GenericDataTypes.POTION_TYPE
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
     val BOOK_OF_STATS: DataType<Int> = GenericDataTypes.BOOK_OF_STATS
 
