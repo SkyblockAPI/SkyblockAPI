@@ -768,6 +768,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/Mine
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/MineshaftType$Companion;
 	public static final field JADE Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/MineshaftType;
 	public static final field JASPER Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/MineshaftType;
+	public static final field LITTLE Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/MineshaftType;
 	public static final field ONYX Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/MineshaftType;
 	public static final field OPAL Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/MineshaftType;
 	public static final field PERIDOT Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/MineshaftType;
