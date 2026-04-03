@@ -19,6 +19,7 @@ enum class MineshaftType(val id: String) {
     PERIDOT("PERI"),
     JASPER("JASP"),
     OPAL("OPAL"),
+    LITTLE("LITT")
     ;
 
     private val string = toFormattedName()
