@@ -94,7 +94,7 @@ object MineshaftAPI {
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         mineshaftTypeRegex.anyFound(event.added, "type", "variant") { (type, variant) ->
             this.mineshaftType = MineshaftType.fromId(type)
-            this.mineshaftVariant = MineshaftVariant.fromId(variant)
+            this.mineshaftVariant = MineshaftVariant.fromId(variant).takeUnless { _ -> this.mineshaftType == MineshaftType.LITTLE }
             MineshaftEnteredEvent(mineshaftType, mineshaftVariant).post()
         }
     }
