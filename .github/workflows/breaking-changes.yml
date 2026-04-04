@@ -5,7 +5,7 @@ on:
         branches: [ "4.0" ]
 
 permissions:
-    contents: write
+    contents: read
     pull-requests: write
 
 jobs:
