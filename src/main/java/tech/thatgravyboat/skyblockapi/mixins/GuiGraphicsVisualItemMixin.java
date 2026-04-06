@@ -45,6 +45,10 @@ public abstract class GuiGraphicsVisualItemMixin {
     public abstract void fill(int i, int j, int k, int l, int color);
 
     @Shadow
+    //~ if >= 26.1 'renderOutline' -> 'outline'
+    public abstract void outline(int x, int y, int width, int height, int color);
+
+    @Shadow
     //~ if >= 26.1 'drawString' -> 'text'
     public abstract void text(Font par1, Component par2, int par3, int par4, int par5, boolean par6);
 
@@ -169,19 +173,15 @@ public abstract class GuiGraphicsVisualItemMixin {
     ) {
         var accessor = VisualItemAccessor.getVisualItemAccessor(itemStack);
 
-        this.nextStratum();
-
-        var borderColor = accessor.skyblockapi$getBorderColor();
-        if (borderColor != 0) {
-            this.fill(x, y, x + 1, y + 16, borderColor);
-            this.fill(x, y, x + 16, y + 1, borderColor);
-            this.fill(x, y + 15, x + 16, y + 16, borderColor);
-            this.fill(x + 15, y, x + 16, y + 16, borderColor);
-        }
-
         var foregroundColor = accessor.skyblockapi$getForegroundColor();
         if (foregroundColor != 0) {
             this.fill(x, y, x + 16, y + 16, foregroundColor);
+        }
+
+        var borderColor = accessor.skyblockapi$getBorderColor();
+        if (borderColor != 0) {
+            //~ if >= 26.1 'renderOutline' -> 'outline'
+            this.outline(x, y, 16, 16, borderColor);
         }
     }
 }
