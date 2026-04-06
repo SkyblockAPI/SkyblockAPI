@@ -155,4 +155,25 @@ public abstract class GuiGraphicsVisualItemMixin {
         }
     }
 
+    @Inject(
+        //~ if >= 26.1 '"renderItem' -> '"item'
+        method = "item(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
+        at = @At("TAIL")
+    )
+    private void skyblockapi$renderForegroundItem(
+        CallbackInfo ci,
+        @Local(argsOnly = true) ItemStack itemStack,
+        @Local(argsOnly = true, ordinal = 0) int x,
+        @Local(argsOnly = true, ordinal = 1) int y,
+        @Local(argsOnly = true, ordinal = 2) int z
+    ) {
+        var accessor = VisualItemAccessor.getVisualItemAccessor(itemStack);
+
+        this.nextStratum();
+
+        var foregroundColor = accessor.skyblockapi$getForegroundColor();
+        if (foregroundColor != 0) {
+            this.fill(x, y, x + 16, y + 16, foregroundColor);
+        }
+    }
 }

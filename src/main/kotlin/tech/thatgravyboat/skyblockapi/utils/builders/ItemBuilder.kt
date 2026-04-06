@@ -27,6 +27,7 @@ class ItemBuilder {
     var customSlotComponent: Component? = null
     var backgroundItem: ItemStack? = null
     var backgroundColor: Int = 0
+    var foregroundColor: Int = 0
 
     companion object {
         operator fun invoke(item: ItemLike, init: ItemBuilder.() -> Unit): ItemStack {
@@ -111,6 +112,7 @@ class ItemBuilder {
                 it.`skyblockapi$setOnClickAction`(clickAction)
                 it.`skyblockapi$setBackgroundItem`(backgroundItem)
                 it.`skyblockapi$setBackgroundColor`(backgroundColor)
+                it.`skyblockapi$setForegroundColor`(foregroundColor)
             }
         }
     }
