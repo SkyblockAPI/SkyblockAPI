@@ -28,6 +28,7 @@ class ItemBuilder {
     var backgroundItem: ItemStack? = null
     var backgroundColor: Int = 0
     var foregroundColor: Int = 0
+    var borderColor: Int = 0
 
     companion object {
         operator fun invoke(item: ItemLike, init: ItemBuilder.() -> Unit): ItemStack {
@@ -113,6 +114,7 @@ class ItemBuilder {
                 it.`skyblockapi$setBackgroundItem`(backgroundItem)
                 it.`skyblockapi$setBackgroundColor`(backgroundColor)
                 it.`skyblockapi$setForegroundColor`(foregroundColor)
+                it.`skyblockapi$setBorderColor`(borderColor)
             }
         }
     }

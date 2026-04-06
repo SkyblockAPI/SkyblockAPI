@@ -171,6 +171,14 @@ public abstract class GuiGraphicsVisualItemMixin {
 
         this.nextStratum();
 
+        var borderColor = accessor.skyblockapi$getBorderColor();
+        if (borderColor != 0) {
+            this.fill(x, y, x + 1, y + 16, borderColor);
+            this.fill(x, y, x + 16, y + 1, borderColor);
+            this.fill(x, y + 15, x + 16, y + 16, borderColor);
+            this.fill(x + 15, y, x + 16, y + 16, borderColor);
+        }
+
         var foregroundColor = accessor.skyblockapi$getForegroundColor();
         if (foregroundColor != 0) {
             this.fill(x, y, x + 16, y + 16, foregroundColor);
