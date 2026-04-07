@@ -273,7 +273,7 @@ object GiveCommands {
 
     fun tryGive(itemStack: ItemStack) {
         val item = itemStack.copyWithCount(1)
-        if (McPlayer.self?.gameMode()?.isCreative != true || !McClient.self.isSingleplayer) {
+        if (McPlayer.self?.gameMode()?.isCreative != true || !McClient.self.isSingleplayer || McPlayer.self?.hasInfiniteMaterials() != true) {
             Text.of("Not in singleplayer and creative!", red).sendWithPrefix("sbapi-dev-give-singleplayer")
             return
         }

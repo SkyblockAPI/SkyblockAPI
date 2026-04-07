@@ -42,9 +42,9 @@ object RepoPotionsAPI {
             val item = if (level.splash) Items.SPLASH_POTION else Items.POTION
             ItemBuilder(item) {
                 val isActualPotion = potion.type == "POTION"
-                val literalLevel = if (isActualPotion) " ${level.literalLevel()}" else ""
-                this[DataComponents.ITEM_NAME] = Text.of("${potion.name()}$literalLevel")
-                this[DataComponents.CUSTOM_NAME] = Text.of("${potion.name()}$literalLevel") {
+                val levelSuffix = if (isActualPotion) " ${level.literalLevel()}" else ""
+                this[DataComponents.ITEM_NAME] = Text.of("${potion.name()}$levelSuffix")
+                this[DataComponents.CUSTOM_NAME] = Text.of("${potion.name()}$levelSuffix") {
                     this.italic = false
                 }
                 this[DataComponents.LORE] = ItemLore(lore, lore)
