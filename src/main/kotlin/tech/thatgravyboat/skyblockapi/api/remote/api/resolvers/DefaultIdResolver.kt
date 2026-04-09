@@ -7,11 +7,21 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.fromItem
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.fromName
+import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @IdResolvers
 object DefaultIdResolver : IdResolver {
+
+    private val ignoreMenuLookup = setOf(
+        "handy block guide",
+        "ores",
+        "blocks",
+        "dwarven metals",
+        "gemstones",
+    )
+
     override val types: List<IdResolverKind> = listOf(IdResolverKind.Unknown)
     override val priority: Int = Int.MIN_VALUE
 
@@ -25,6 +35,10 @@ object DefaultIdResolver : IdResolver {
         // Used for ignoring same names on things like dyes and barriers where it is usually important to keep it as no id.
         // i.e. anvil with no items has a barrier named 'Anvil'
         if (itemStack.item in ItemTag.IGNORE_NAME_LOOKUP) return null
+
+        // Used for ignoring certain menus where the item name shouldn't be determined by a lookup.
+        // i.e. Ore menus
+        if (McScreen.asMenu?.title?.stripped?.lowercase() in ignoreMenuLookup) return null
 
         // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
         // i.e. ender chest icon in storage
