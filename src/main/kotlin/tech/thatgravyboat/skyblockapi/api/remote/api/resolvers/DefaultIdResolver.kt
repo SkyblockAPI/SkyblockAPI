@@ -38,7 +38,7 @@ object DefaultIdResolver : IdResolver {
 
         // Used for ignoring certain menus where the item name shouldn't be determined by a lookup.
         // i.e. Ore menus
-        if (McScreen.asMenu?.title?.stripped?.lowercase() in ignoreMenuLookup) return null
+        if (McScreen.asMenu?.title?.stripped?.lowercase() in ignoreMenuLookup && resolverKind in InventoryIdResolver.types) return null
 
         // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
         // i.e. ender chest icon in storage
