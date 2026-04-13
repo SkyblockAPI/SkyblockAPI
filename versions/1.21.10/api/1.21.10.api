@@ -6264,9 +6264,11 @@ public final class tech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder {
 	public final fun copyFrom (Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
 	public final fun getBackgroundColor ()I
 	public final fun getBackgroundItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getBorderColor ()I
 	public final fun getCount ()I
 	public final fun getCustomSlotComponent ()Lnet/minecraft/network/chat/Component;
 	public final fun getCustomSlotText ()Ljava/lang/String;
+	public final fun getForegroundColor ()I
 	public final fun getItem ()Lnet/minecraft/world/item/Item;
 	public final fun name (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
 	public final fun name (Lnet/minecraft/network/chat/Component;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
@@ -6278,9 +6280,11 @@ public final class tech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder {
 	public final fun set (Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)V
 	public final fun setBackgroundColor (I)V
 	public final fun setBackgroundItem (Lnet/minecraft/world/item/ItemStack;)V
+	public final fun setBorderColor (I)V
 	public final fun setCount (I)V
 	public final fun setCustomSlotComponent (Lnet/minecraft/network/chat/Component;)V
 	public final fun setCustomSlotText (Ljava/lang/String;)V
+	public final fun setForegroundColor (I)V
 	public final fun setItem (Lnet/minecraft/world/item/Item;)V
 	public final fun tooltip (Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;
 }
