@@ -64,11 +64,12 @@ internal class EventListeners {
 
     private fun createNoArgEventConsumer(name: String, instance: Any, method: Method): Consumer<Any> {
         try {
-            val handle = MethodHandles.lookup().unreflect(method)
+            val lookup = MethodHandles.privateLookupIn(method.declaringClass, MethodHandles.lookup())
+            val handle = lookup.unreflect(method)
             val runnable = LambdaMetafactory.metafactory(
-                MethodHandles.lookup(),
+                lookup,
                 "run",
-                MethodType.methodType(Runnable::class.java, instance::class.java),
+                MethodType.methodType(Runnable::class.java, method.declaringClass),
                 MethodType.methodType(Nothing::class.javaPrimitiveType),
                 handle,
                 MethodType.methodType(Nothing::class.javaPrimitiveType),
@@ -86,12 +87,12 @@ internal class EventListeners {
     @Suppress("UNCHECKED_CAST")
     private fun createEventConsumer(name: String, instance: Any, method: Method): Consumer<Any> {
         try {
-            val lookup = MethodHandles.privateLookupIn(instance.javaClass, MethodHandles.lookup())
+            val lookup = MethodHandles.privateLookupIn(method.declaringClass, MethodHandles.lookup())
             val handle = lookup.unreflect(method)
             return LambdaMetafactory.metafactory(
                 lookup,
                 "accept",
-                MethodType.methodType(Consumer::class.java, instance::class.java),
+                MethodType.methodType(Consumer::class.java, method.declaringClass),
                 MethodType.methodType(Nothing::class.javaPrimitiveType, Object::class.java),
                 handle,
                 MethodType.methodType(Nothing::class.javaPrimitiveType, method.parameterTypes[0]),
