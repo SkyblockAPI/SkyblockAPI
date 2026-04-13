@@ -14,6 +14,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import kotlin.reflect.KProperty0
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
 
@@ -35,6 +36,12 @@ internal class RegisterSkyblockApiDebugEvent(base: RegisterSkyblockApiCommandsEv
 
 open class DebugBuilder(val prefix: Component, val name: Component) {
     val fields: MutableList<Component> = mutableListOf()
+
+    open fun fields(vararg fields: KProperty0<Any?>) = fields.forEach(::field)
+
+    open fun <T> field(field: KProperty0<T>, description: Component? = null, copyValue: String? = null) {
+        field(field.name, field.get(), description, copyValue)
+    }
 
     open fun <T> field(field: String, value: T?, description: Component? = null, copyValue: String? = null) {
         fields.add(

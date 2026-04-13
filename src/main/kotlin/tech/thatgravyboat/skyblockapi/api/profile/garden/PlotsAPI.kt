@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.garden
 
+import me.owdding.dfu.item.LegacyTextFixer
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
 import net.minecraft.core.BlockPos
@@ -14,21 +15,29 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer.contains
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
+import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.matchOrNull
+import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import kotlin.math.floor
 
 @Module
@@ -51,8 +60,8 @@ object PlotAPI {
 
     private val scoreboardPestAmountRegex = scoreboardGroup.create(
         "pest_amount",
-        " ⏣ The Garden ൠ x(?<amount>\\d+)",
-    )
+        " ⏣ (?<text>The Garden) ൠ x(?<amount>\\d+)",
+    ).toComponentRegex()
 
     private val scoreboardNoPestsRegex = scoreboardGroup.create(
         "no_pests",
@@ -111,6 +120,8 @@ object PlotAPI {
 
     var currentPestAmount = 0
         private set
+    var hasPestDebuff: Boolean = false
+        private set
 
 
     fun getPlot(id: Int): Plot? = plots.find { it.id == id }
@@ -123,6 +134,7 @@ object PlotAPI {
 
     private fun clearPests() {
         currentPestAmount = 0
+        hasPestDebuff = false
         plots.forEach { plot ->
             plot.data?.pest = Pest(0, inaccurate = false)
             plot.data?.save()
@@ -157,8 +169,9 @@ object PlotAPI {
         }
 
         var shouldSynch = false
-        scoreboardPestAmountRegex.anyMatch(event.new, "amount") { (amount) ->
-            currentPestAmount = amount.toIntValue()
+        scoreboardPestAmountRegex.anyMatch(event.addedComponents, "text", "amount") { (text, amount) ->
+            hasPestDebuff = text.string.contains("§c") // TODO: make it so we dont need to rely on color codes 
+            currentPestAmount = amount.stripped.toIntValue()
             shouldSynch = true
         }
 
@@ -282,33 +295,26 @@ object PlotAPI {
         synch()
     }
 
+    @ApiDebug("PlotAPI")
+    internal fun debug(builder: DebugBuilder) = with(builder) {
+        field(::currentPestAmount)
+        field(::hasPestDebuff)
+        val currentPlot = getCurrentPlot()
+        field("currentPlot", currentPlot?.id, copyValue = currentPlot?.toString())
+        field(
+            "plots",
+            "Click to copy",
+            description = Text.of("Click to copy plot data to clipboard"),
+            plots.toString()
+        )
+    }
+
 
     @Subscription
-    fun onCommand(event: RegisterCommandsEvent) {
-        event.register("sbapi garden plots") {
-            thenCallback("clear") {
-                PlotsStorage.clear()
-                Text.of("Cleared all plots!").sendWithPrefix()
-            }
-
-            callback {
-                val string = buildList {
-                    add("Plots:")
-                    PlotsStorage.plots.forEach { plot ->
-                        val string = buildString {
-                            append("  - Plot ${plot.id}: ${plot.name}, ")
-                            append("Pests: ${plot.pest}${if (plot.pest.inaccurate) " (Inacc)" else ""}, ")
-                            append("Locked: ${plot.locked}, ")
-                            append("Icon: ${plot.deskIcon ?: "None"}, ")
-                            append("Greenhouse: ${plot.isGreenhouse}")
-                        }
-                        add(string)
-                    }
-                }
-
-                McClient.clipboard = string.joinToString("\n")
-                Text.multiline(string).sendWithPrefix()
-            }
+    internal fun onCommand(event: RegisterSkyblockApiCommandsEvent) {
+        event.registerWithCallback("garden plots clear") {
+            PlotsStorage.clear()
+            Text.of("Cleared all plots!").sendWithPrefix()
         }
     }
 
