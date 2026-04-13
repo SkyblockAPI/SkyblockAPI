@@ -2515,18 +2515,21 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/ScoreboardTitl
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
-	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()Ljava/util/List;
 	public final fun component3 ()Ljava/util/List;
-	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;
-	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAdded ()Ljava/util/List;
 	public final fun getAddedComponents ()Ljava/util/List;
 	public final fun getComponents ()Ljava/util/List;
 	public final fun getNew ()Ljava/util/List;
+	public final fun getNewComponents ()Ljava/util/List;
 	public final fun getOld ()Ljava/util/List;
+	public final fun getOldComponents ()Ljava/util/List;
 	public final fun getRemoved ()Ljava/util/List;
 	public final fun getRemovedComponents ()Ljava/util/List;
 	public fun hashCode ()I
@@ -2890,7 +2893,10 @@ public class tech/thatgravyboat/skyblockapi/api/events/misc/DebugBuilder {
 	public fun <init> (Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;)V
 	public fun build ()Lnet/minecraft/network/chat/Component;
 	public fun field (Ljava/lang/String;Ljava/lang/Object;Lnet/minecraft/network/chat/Component;Ljava/lang/String;)V
+	public fun field (Lkotlin/reflect/KProperty0;Lnet/minecraft/network/chat/Component;Ljava/lang/String;)V
 	public static synthetic fun field$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/DebugBuilder;Ljava/lang/String;Ljava/lang/Object;Lnet/minecraft/network/chat/Component;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun field$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/DebugBuilder;Lkotlin/reflect/KProperty0;Lnet/minecraft/network/chat/Component;Ljava/lang/String;ILjava/lang/Object;)V
+	public fun fields ([Lkotlin/reflect/KProperty0;)V
 	public fun format (Ljava/lang/Object;)Lnet/minecraft/network/chat/Component;
 	public final fun getFields ()Ljava/util/List;
 	public final fun getName ()Lnet/minecraft/network/chat/Component;
@@ -4181,13 +4187,13 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/garden/PlotAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/garden/PlotAPI;
 	public final fun getCurrentPestAmount ()I
 	public final fun getCurrentPlot ()Ltech/thatgravyboat/skyblockapi/api/profile/garden/Plot;
+	public final fun getHasPestDebuff ()Z
 	public final fun getPlot (I)Ltech/thatgravyboat/skyblockapi/api/profile/garden/Plot;
 	public final fun getPlot (Lnet/minecraft/core/BlockPos;)Ltech/thatgravyboat/skyblockapi/api/profile/garden/Plot;
 	public final fun getPlot (Lnet/minecraft/world/phys/Vec3;)Ltech/thatgravyboat/skyblockapi/api/profile/garden/Plot;
 	public final fun getPlotByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/garden/Plot;
 	public final fun getPlots ()Ljava/util/List;
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
-	public final fun onCommand (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onTabWidget (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
 }
@@ -5904,8 +5910,8 @@ public final class tech/thatgravyboat/skyblockapi/impl/events/PacketEventHandler
 
 public final class tech/thatgravyboat/skyblockapi/impl/events/ScoreboardEventHandler {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/events/ScoreboardEventHandler;
-	public final fun onServerSwitch (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ServerChangeEvent;)V
-	public final fun onTick (Ltech/thatgravyboat/skyblockapi/api/events/time/TickEvent;)V
+	public final fun onServerSwitch ()V
+	public final fun onTick ()V
 }
 
 public final class tech/thatgravyboat/skyblockapi/impl/events/ScreenEventHandler {
