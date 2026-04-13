@@ -31,6 +31,10 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     private @Nullable ItemStack backgroundItem;
     @Unique
     private int backgroundColor;
+    @Unique
+    private int foregroundColor;
+    @Unique
+    private int borderColor;
 
     @Override
     public void skyblockapi$setVisualItem(@Nullable ItemStack item) {
@@ -96,5 +100,25 @@ public abstract class VisualItemMixin implements VisualItemAccessor {
     @Override
     public int skyblockapi$getBackgroundColor() {
         return this.backgroundColor;
+    }
+
+    @Override
+    public void skyblockapi$setForegroundColor(int color) {
+        this.foregroundColor = color;
+    }
+
+    @Override
+    public int skyblockapi$getForegroundColor() {
+        return this.foregroundColor;
+    }
+
+    @Override
+    public void skyblockapi$setBorderColor(int color) {
+        this.borderColor = color;
+    }
+
+    @Override
+    public int skyblockapi$getBorderColor() {
+        return this.borderColor;
     }
 }
