@@ -5129,6 +5129,15 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/Defau
 	public fun tryResolve-X9spmwk (Lnet/minecraft/world/item/ItemStack;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/HuntingBoxResolver : tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/InventoryIdResolver {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/HuntingBoxResolver;
+	public fun getPriority ()I
+	public fun getTypes ()Ljava/util/List;
+	public fun isApplicable (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Z
+	public fun resolveId--S_X1CQ (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Ljava/lang/String;
+	public fun tryResolve-X9spmwk (Lnet/minecraft/world/item/ItemStack;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Ljava/lang/String;
+}
+
 public abstract interface class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolver {
 	public abstract fun getPriority ()I
 	public abstract fun getTypes ()Ljava/util/List;
