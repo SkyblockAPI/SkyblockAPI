@@ -73,3 +73,22 @@ internal object EnchantmentGuideIdResolver : InventoryIdResolver {
 
     override val priority: Int = 10
 }
+
+@IdResolvers
+internal object EnchantmentTableIdResolver : InventoryIdResolver {
+    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
+        menu: AbstractContainerScreen<T>,
+        resolverKind: IdResolverKind,
+    ): Boolean {
+        return menu.title.stripped == "Enchant Item"
+    }
+
+    override fun <T : AbstractContainerMenu> ItemStack.resolveId(
+        menu: AbstractContainerScreen<T>,
+        resolverKind: IdResolverKind,
+    ): SkyBlockId? {
+        return idLookup[this.cleanName]
+    }
+
+    override val priority: Int = 10
+}
