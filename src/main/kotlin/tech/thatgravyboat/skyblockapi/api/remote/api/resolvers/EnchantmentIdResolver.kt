@@ -23,7 +23,7 @@ internal object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdResolve
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): Boolean {
-        return menu.title.stripped in setOf("The Hex ➜ Enchant Item", "Enchant Item")
+        return menu.title.stripped == "The Hex ➜ Enchant Item" || menu.title.stripped == "Enchant Item"
     }
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(
