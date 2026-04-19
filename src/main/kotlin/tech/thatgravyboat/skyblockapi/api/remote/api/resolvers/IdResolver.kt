@@ -3,7 +3,6 @@ package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 import me.owdding.ktmodules.AutoCollect
 import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.util.SortedArraySet
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId

@@ -17,41 +17,36 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 @Module
 object ScoreboardEventHandler {
 
-    private var scoreboardStripped = listOf<String>()
-    private var scoreboard = listOf<Component>()
-    private var currentTitle: String? = null
+    private var lastStrippedScoreboard = listOf<String>()
+    private var lastScoreboard = listOf<Component>()
+    private var lastTitle: String? = null
 
-    @Subscription
     @OnlyOnSkyBlock
     @TimePassed("1s")
-    fun onTick(event: TickEvent) {
+    @Subscription(TickEvent::class)
+    fun onTick() {
         if (!ProfileAPI.isLoaded) return
 
-        handleScoreboard()
+        handleScoreboard(McClient.scoreboard.toList())
         handleTitle()
     }
 
-    @Subscription
-    fun onServerSwitch(event: ServerChangeEvent) {
-        ScoreboardUpdateEvent(scoreboardStripped, emptyList(), emptyList()).post()
-        scoreboardStripped = emptyList()
-        scoreboard = emptyList()
-    }
+    @Subscription(ServerChangeEvent::class)
+    fun onServerSwitch() = handleScoreboard(emptyList())
 
-    private fun handleScoreboard() {
-        val new = McClient.scoreboard
+    private fun handleScoreboard(new: List<Component>) {
         val newStripped = new.map { it.stripped }
-        if (newStripped == scoreboardStripped && new == scoreboard) return // If nothing changed, not even the colors
-        ScoreboardUpdateEvent(scoreboardStripped, newStripped, new.toList()).post(SkyBlockAPI.eventBus)
-        scoreboardStripped = newStripped
-        scoreboard = new.toList()
+        if (lastScoreboard == new) return
+        ScoreboardUpdateEvent(lastStrippedScoreboard, newStripped, lastScoreboard, new).post()
+        lastStrippedScoreboard = newStripped
+        lastScoreboard = new
     }
 
     private fun handleTitle() {
         val newTitle = McClient.scoreboardTitle?.stripped
-        if (newTitle != null && newTitle != currentTitle) {
-            ScoreboardTitleUpdateEvent(currentTitle, newTitle).post(SkyBlockAPI.eventBus)
-            currentTitle = newTitle
+        if (newTitle != null && newTitle != lastTitle) {
+            ScoreboardTitleUpdateEvent(lastTitle, newTitle).post(SkyBlockAPI.eventBus)
+            lastTitle = newTitle
         }
     }
 }

@@ -19,6 +19,10 @@ internal interface VisualItemAccessor {
     fun `skyblockapi$getBackgroundItem`(): ItemStack?
     fun `skyblockapi$setBackgroundColor`(color: Int)
     fun `skyblockapi$getBackgroundColor`(): Int
+    fun `skyblockapi$setForegroundColor`(color: Int)
+    fun `skyblockapi$getForegroundColor`(): Int
+    fun `skyblockapi$setBorderColor`(color: Int)
+    fun `skyblockapi$getBorderColor`(): Int
 
     companion object {
         @JvmStatic

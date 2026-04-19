@@ -45,6 +45,10 @@ public abstract class GuiGraphicsVisualItemMixin {
     public abstract void fill(int i, int j, int k, int l, int color);
 
     @Shadow
+    //~ if >= 26.1 'renderOutline' -> 'outline'
+    public abstract void outline(int x, int y, int width, int height, int color);
+
+    @Shadow
     //~ if >= 26.1 'drawString' -> 'text'
     public abstract void text(Font par1, Component par2, int par3, int par4, int par5, boolean par6);
 
@@ -155,4 +159,29 @@ public abstract class GuiGraphicsVisualItemMixin {
         }
     }
 
+    @Inject(
+        //~ if >= 26.1 '"renderItem' -> '"item'
+        method = "item(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
+        at = @At("TAIL")
+    )
+    private void skyblockapi$renderForegroundItem(
+        CallbackInfo ci,
+        @Local(argsOnly = true) ItemStack itemStack,
+        @Local(argsOnly = true, ordinal = 0) int x,
+        @Local(argsOnly = true, ordinal = 1) int y,
+        @Local(argsOnly = true, ordinal = 2) int z
+    ) {
+        var accessor = VisualItemAccessor.getVisualItemAccessor(itemStack);
+
+        var foregroundColor = accessor.skyblockapi$getForegroundColor();
+        if (foregroundColor != 0) {
+            this.fill(x, y, x + 16, y + 16, foregroundColor);
+        }
+
+        var borderColor = accessor.skyblockapi$getBorderColor();
+        if (borderColor != 0) {
+            //~ if >= 26.1 'renderOutline' -> 'outline'
+            this.outline(x, y, 16, 16, borderColor);
+        }
+    }
 }

@@ -88,7 +88,7 @@ object RiftAPI {
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_RIFT)
     fun onScoreboardChange(event: ScoreboardUpdateEvent) {
-        effigiesRegex.anyMatch(event.components, "e1", "e2", "e3", "e4", "e5", "e6") { (one, two, three, four, five, six) ->
+        effigiesRegex.anyMatch(event.newComponents, "e1", "e2", "e3", "e4", "e5", "e6") { (one, two, three, four, five, six) ->
             effieges[0].enabled = one.style.color?.value == TextColor.RED
             effieges[1].enabled = two.style.color?.value == TextColor.RED
             effieges[2].enabled = three.style.color?.value == TextColor.RED
