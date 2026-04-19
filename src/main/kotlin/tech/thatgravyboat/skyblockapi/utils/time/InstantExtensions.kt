@@ -7,21 +7,21 @@ import kotlin.time.Duration
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
 
-@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extensions.currentInstant"))
+@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant"))
 fun currentInstant(): Instant = Clock.System.now()
 
-@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extensions.fromNow"))
+@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extentions.fromNow"))
 fun Duration.fromNow(): Instant = currentInstant() + this
 
-@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extensions.ago"))
+@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extentions.ago"))
 fun Duration.ago(): Instant = currentInstant() - this
 
-@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extensions.since"))
+@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extentions.since"))
 fun Instant.since(): Duration = currentInstant() - this
 
-@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extensions.until"))
+@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extentions.until"))
 fun Instant.until(): Duration = this - currentInstant()
 
-@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extensions.format"))
+@RemoveNextVersion(ReplaceWith("tech.thatgravyboat.skyblockapi.utils.extentions.format"))
 fun DateTimeFormatter.format(instant: Instant): String = this.format(instant.toJavaInstant())
 *///? }
