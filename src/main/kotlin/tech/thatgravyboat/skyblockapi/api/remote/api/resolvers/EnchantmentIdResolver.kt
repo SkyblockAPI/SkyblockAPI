@@ -18,12 +18,12 @@ private val nameToIdLookup = RepoAPI.enchantments().enchantments().map { (id, en
 }.toMap()
 
 @IdResolvers
-internal object HexEnchantmentIdResolver : InventoryIdResolver {
+internal object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdResolver {
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): Boolean {
-        return menu.title.stripped == "The Hex ➜ Enchant Item"
+        return menu.title.stripped in setOf("The Hex ➜ Enchant Item", "Enchant Item")
     }
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(
@@ -69,25 +69,6 @@ internal object EnchantmentGuideIdResolver : InventoryIdResolver {
         val id = nameToIdLookup[this.cleanName.substringBeforeLast(" ").trim()] ?: return null
         val level = this.cleanName.substringAfterLast(" ").trim().toIntValue()
         return SkyBlockId.enchantment(id, level)
-    }
-
-    override val priority: Int = 10
-}
-
-@IdResolvers
-internal object EnchantmentTableIdResolver : InventoryIdResolver {
-    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): Boolean {
-        return menu.title.stripped == "Enchant Item"
-    }
-
-    override fun <T : AbstractContainerMenu> ItemStack.resolveId(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): SkyBlockId? {
-        return idLookup[this.cleanName]
     }
 
     override val priority: Int = 10
