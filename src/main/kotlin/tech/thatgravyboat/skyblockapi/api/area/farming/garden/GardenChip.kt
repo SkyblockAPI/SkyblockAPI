@@ -1,9 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.area.farming.garden
 
 import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
-import kotlin.getValue
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
 
 enum class GardenChip {
     CROPSHOT,
@@ -18,8 +18,8 @@ enum class GardenChip {
     VERMIN_VAPORIZER,
     ;
 
-    val displayName: Component by lazy { RepoItemsAPI.getItemName(name) }
     val apiId: String = "${name}_GARDEN_CHIP"
     val skyblockId = SkyBlockId.item(apiId)
-    val itemStack by RepoItemsAPI.getItemLazy(apiId)
+    val itemStack: ItemStack by lazy { SkyBlockItemsRepo.getItemStackOrDefault(apiId) }
+    val displayName: Component by lazy { itemStack.hoverName }
 }
