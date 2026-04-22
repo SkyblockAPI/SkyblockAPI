@@ -18,12 +18,12 @@ private val nameToIdLookup = RepoAPI.enchantments().enchantments().map { (id, en
 }.toMap()
 
 @IdResolvers
-internal object HexEnchantmentIdResolver : InventoryIdResolver {
+internal object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdResolver {
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): Boolean {
-        return menu.title.stripped == "The Hex ➜ Enchant Item"
+        return menu.title.stripped == "The Hex ➜ Enchant Item" || menu.title.stripped == "Enchant Item"
     }
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(
