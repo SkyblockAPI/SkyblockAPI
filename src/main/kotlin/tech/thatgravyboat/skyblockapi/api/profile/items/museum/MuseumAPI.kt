@@ -18,12 +18,12 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
-import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.museum.MuseumData
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
@@ -172,7 +172,7 @@ object MuseumAPI {
                         ids.forEach(MuseumStorage::deleteItem)
                         continue
                     }
-                    val id = RepoItemsAPI.getItemIdByName(item.cleanName) ?: continue
+                    val id = SkyBlockItemsRepo.getIdByName(item.cleanName) ?: continue
                     val sbId = SkyBlockId.item(id)
                     MuseumStorage.deleteItem(sbId)
                 }
@@ -187,7 +187,7 @@ object MuseumAPI {
                         }
                         continue
                     }
-                    val id = RepoItemsAPI.getItemIdByName(item.cleanName)?.let(SkyBlockId::item) ?: continue
+                    val id = SkyBlockItemsRepo.getIdByName(item.cleanName)?.let(SkyBlockId::item) ?: continue
                     val category = getCategory(id) ?: continue
                     MuseumStorage.addNotStoredItem(category, id)
                 }

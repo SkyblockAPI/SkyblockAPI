@@ -4,10 +4,10 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.*
-import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI
-import tech.thatgravyboat.skyblockapi.api.remote.RepoReforgeStonesAPI.getApplyCost
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockReforgeStonesRepo
+import tech.thatgravyboat.skyblockapi.api.repo.getApplyCost
 
 internal object RecombobulatorCalculator : BoolDataTypeCalculator(DataTypes.RECOMBOBULATOR, "RECOMBOBULATOR_3000")
 
@@ -15,10 +15,7 @@ internal object ReforgeCalculator : Calculator {
     override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? {
         val reforgeName = stack.getData(DataTypes.MODIFIER) ?: return null
         val rarity = stack.getData(DataTypes.RARITY) ?: return null
-        val (_, stone) =
-            RepoReforgeStonesAPI.getReforgeByName(reforgeName)
-                ?: RepoReforgeStonesAPI.getReforge(reforgeName)?.let { reforgeName to it }
-                ?: return null
+        val (_, stone) = SkyBlockReforgeStonesRepo.getByName(reforgeName) ?: SkyBlockReforgeStonesRepo.get(reforgeName)?.let { reforgeName to it } ?: return null
 
         return listOf(
             ReforgeEntry(

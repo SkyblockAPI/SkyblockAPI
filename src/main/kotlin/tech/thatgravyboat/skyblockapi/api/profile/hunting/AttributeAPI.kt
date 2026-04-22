@@ -14,8 +14,8 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.item.replaceVisually
-import tech.thatgravyboat.skyblockapi.api.remote.api.RepoAttributeAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
@@ -100,7 +100,7 @@ object AttributeAPI {
         if (event.isOnSides) return
 
         val id = event.item[DataTypes.SKYBLOCK_ID] ?: return
-        val data = RepoAttributeAPI.getAttributeDataById(id.cleanId) ?: return
+        val data = SkyBlockAttributesRepo.get(id.cleanId) ?: return
         val isLocked = event.item in ItemTag.HUNTING_NOT_FOUND
 
         val attributeData = getData(id)
@@ -127,7 +127,7 @@ object AttributeAPI {
         if (event.isOnSides) return
 
         val id = event.item[DataTypes.SKYBLOCK_ID] ?: return
-        val data = RepoAttributeAPI.getAttributeDataById(id.cleanId) ?: return
+        val data = SkyBlockAttributesRepo.get(id.cleanId) ?: return
 
         val attributeData = getData(id)
         val rarity = attributeData.rarity ?: return
