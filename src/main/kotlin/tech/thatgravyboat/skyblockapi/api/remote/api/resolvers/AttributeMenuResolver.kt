@@ -29,7 +29,7 @@ object AttributeMenuResolver : InventoryIdResolver {
             return SimpleItemAPI.findIdByName(itemName)
         }
 
-        return SimpleItemAPI.findIdByName(itemName.substringBeforeLast(" "))
+        return SimpleItemAPI.findIdByName(itemName.substringBeforeLast(" "))?.asFake()
     }
 
     override val priority: Int = 10
