@@ -16,6 +16,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuPot
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
 import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockPotionsRepo
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
@@ -195,7 +196,7 @@ private fun ItemStack.getSbId(): SkyBlockId? {
         "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR()?.let { SkyBlockId.item("party_hat_crab_$it") }
 
         else if (id == "POTION" || neuPotionRegex.matches(id)) -> {
-            RepoPotionsAPI.createId(DataTypes.POTION_TYPE(), DataTypes.POTION(), DataTypes.POTION_LEVEL())
+            SkyBlockPotionsRepo.createId(DataTypes.POTION_TYPE(), DataTypes.POTION(), DataTypes.POTION_LEVEL())
         }
 
         else if (id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id))) -> {

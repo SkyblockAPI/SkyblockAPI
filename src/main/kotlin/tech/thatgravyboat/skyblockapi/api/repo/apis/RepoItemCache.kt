@@ -47,7 +47,6 @@ abstract class RepoItemCache<K> (private val name: String) {
 }
 
 sealed class RepoItemCacheAsQuery<K>(name: String, private val factory: () -> K) : RepoItemCache<K>(name) {
-
     fun getLazyItemStack(query: K.() -> Unit): LazyItemStack? = this.getLazyItemStack(this.factory().apply(query))
     fun getItemStack(query: K.() -> Unit): ItemStack? = getItemStack(this.factory().apply(query))
     fun getItemStackOrDefault(query: K.() -> Unit): ItemStack = getItemStackOrDefault(this.factory().apply(query))
