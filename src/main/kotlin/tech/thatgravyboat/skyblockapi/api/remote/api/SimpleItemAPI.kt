@@ -67,7 +67,7 @@ object SimpleItemAPI {
                         this.id = clean
                     }
                 }
-                key.isEnchantment -> SkyBlockEnchantmentRepo.getLazyItemStack {
+                key.isEnchantment -> SkyBlockEnchantmentsRepo.getLazyItemStack {
                     if (clean.contains(":")) {
                         val (enchantmentId, level) = clean.split(":")
                         this.id = enchantmentId

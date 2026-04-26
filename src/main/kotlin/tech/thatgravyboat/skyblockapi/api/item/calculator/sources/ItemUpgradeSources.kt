@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.*
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockReforgeStonesRepo
-import tech.thatgravyboat.skyblockapi.api.repo.getApplyCost
+import tech.thatgravyboat.skyblockapi.utils.extentions.getApplyCost
 
 internal object RecombobulatorCalculator : BoolDataTypeCalculator(DataTypes.RECOMBOBULATOR, "RECOMBOBULATOR_3000")
 

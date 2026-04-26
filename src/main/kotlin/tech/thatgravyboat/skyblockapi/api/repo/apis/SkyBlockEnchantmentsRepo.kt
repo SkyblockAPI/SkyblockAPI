@@ -13,7 +13,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toData
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 
-object SkyBlockEnchantmentRepo : RepoItemCacheAsQuery<SkyBlockEnchantmentRepo.Query>("Enchantments", ::Query) {
+object SkyBlockEnchantmentsRepo : RepoItemCacheAsQuery<SkyBlockEnchantmentsRepo.Query>("Enchantments", ::Query) {
 
     private val repo get() = RepoAPI.enchantments()
 
