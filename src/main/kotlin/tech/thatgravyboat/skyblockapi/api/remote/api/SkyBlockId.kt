@@ -62,6 +62,13 @@ value class SkyBlockId private constructor(val id: String) {
         fun enchantment(id: String, level: Int) = SkyBlockId("$ENCHANTMENT$id$DELIMITER$level".lowercase())
         fun potion(id: String) = SkyBlockId("$POTION$id".lowercase())
         fun potion(id: String, level: Int) = SkyBlockId("$POTION$id$DELIMITER$level".lowercase())
+        fun potion(type: String?, internalPotion: String?, level: Int?): SkyBlockId = when {
+            type == null -> "water"
+            type != "POTION" -> type
+            internalPotion == null -> UNKNOWN
+            level != null -> "$internalPotion:$level"
+            else -> internalPotion
+        }.let(SkyBlockId::potion)
 
         fun fromItem(item: ItemStack) = item.getSbId()
 
@@ -196,7 +203,7 @@ private fun ItemStack.getSbId(): SkyBlockId? {
         "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR()?.let { SkyBlockId.item("party_hat_crab_$it") }
 
         else if (id == "POTION" || neuPotionRegex.matches(id)) -> {
-            SkyBlockPotionsRepo.createId(DataTypes.POTION_TYPE(), DataTypes.POTION(), DataTypes.POTION_LEVEL())
+            SkyBlockId.potion(DataTypes.POTION_TYPE(), DataTypes.POTION(), DataTypes.POTION_LEVEL())
         }
 
         else if (id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id))) -> {

@@ -173,7 +173,7 @@ object SimpleItemAPI {
 
         RepoAPI.potions().potions().flatMap { (_, potion) ->
             potion.levels.entries.map { (_, level) ->
-                "${potion.name()} ${level.literalLevel}" to SkyBlockPotionsRepo.createId(potion.type, potion.internalPotion, level.level)
+                "${potion.name()} ${level.literalLevel}" to potion(potion.type, potion.internalPotion, level.level)
             }
         }.applyFiltered()
 

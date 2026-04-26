@@ -68,12 +68,4 @@ object SkyBlockPotionsRepo : RepoItemCacheAsQuery<SkyBlockPotionsRepo.Query>("Po
         var id: String = "",
         var level: Int? = null,
     )
-
-    fun createId(type: String?, internalPotion: String?, level: Int?): SkyBlockId = when {
-        type == null -> "water"
-        type != "POTION" -> type
-        internalPotion == null -> SkyBlockId.UNKNOWN
-        level != null -> "$internalPotion:$level"
-        else -> internalPotion
-    }.let(SkyBlockId::potion)
 }
