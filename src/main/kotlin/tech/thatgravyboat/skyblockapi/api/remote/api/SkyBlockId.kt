@@ -218,8 +218,8 @@ private fun ItemStack.getSbId(): SkyBlockId? {
 
         else if (id == "PET" || id == "RUNE" || id == "UNIQUE_RUNE" || (this.`is`(Items.PLAYER_HEAD) && neuIdRegex.matches(id))) -> {
             DataTypes.USED_RUNE() ?: DataTypes.PET_DATA()?.let { (id, _, _, rarity) ->
-                "$id$DELIMITER${rarity.name}"
-            }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
+                SkyBlockId.pet(id, rarity)
+            } ?: SkyBlockId.pet(UNKNOWN)
         }
 
         else -> SkyBlockId.item(id)
