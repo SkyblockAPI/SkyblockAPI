@@ -63,12 +63,12 @@ value class SkyBlockId private constructor(val id: String) {
         fun potion(id: String) = SkyBlockId("$POTION$id".lowercase())
         fun potion(id: String, level: Int) = SkyBlockId("$POTION$id$DELIMITER$level".lowercase())
         fun potion(type: String?, internalPotion: String?, level: Int?): SkyBlockId = when {
-            type == null -> "water"
-            type != "POTION" -> type
-            internalPotion == null -> UNKNOWN
-            level != null -> "$internalPotion:$level"
-            else -> internalPotion
-        }.let(SkyBlockId::potion)
+            type == null -> potion("water")
+            type != "POTION" -> potion(type)
+            internalPotion == null -> potion(UNKNOWN)
+            level != null -> potion(internalPotion, level)
+            else -> potion(internalPotion)
+        }
 
         fun fromItem(item: ItemStack) = item.getSbId()
 
