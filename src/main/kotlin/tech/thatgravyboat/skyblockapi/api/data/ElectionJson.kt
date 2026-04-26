@@ -24,7 +24,7 @@ data class PerkJson(
 data class MinisterJson(
     @Expose val key: String,
     @Expose val name: String,
-    @Expose val perk: PerkJson,
+    @Expose val perk: PerkJson?,
 )
 
 data class ElectionInfo(

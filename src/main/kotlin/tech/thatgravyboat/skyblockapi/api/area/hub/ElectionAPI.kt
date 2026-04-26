@@ -123,7 +123,7 @@ object ElectionAPI {
 
         MayorPerks.reset()
         mayor.perks.forEach { handlePerk(newMayor, it) }
-        if (newMinister != null) {
+        if (newMinister != null && mayor.minister.perk != null) {
             handlePerk(newMinister, mayor.minister.perk)
         }
 
