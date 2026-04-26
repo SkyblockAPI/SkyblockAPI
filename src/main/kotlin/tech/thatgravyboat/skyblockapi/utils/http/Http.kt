@@ -3,7 +3,6 @@ package tech.thatgravyboat.skyblockapi.utils.http
 import com.google.gson.Gson
 import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.utils.json.Json
-import tech.thatgravyboat.skyblockapi.utils.json.Json.gson
 import java.io.InputStream
 import java.net.URI
 import java.net.URLEncoder

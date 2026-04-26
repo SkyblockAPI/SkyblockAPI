@@ -4,10 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
-import tech.thatgravyboat.skyblockapi.utils.json.Json.toData
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
-import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
-import tech.thatgravyboat.skyblockapi.utils.json.Json.toJsonOrThrow
 import java.io.InputStream
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.typeOf
@@ -15,7 +12,7 @@ import kotlin.reflect.typeOf
 data class HttpResponse(
     val statusCode: Int,
     val headers: Map<String, List<String>>,
-    private val stream: InputStream
+    private val stream: InputStream,
 ) {
 
     val status: String
