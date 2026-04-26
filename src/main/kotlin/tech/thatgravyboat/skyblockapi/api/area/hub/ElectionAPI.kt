@@ -17,6 +17,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.MayorChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.command.EnumArgument
@@ -95,7 +96,7 @@ object ElectionAPI {
 
     @JvmStatic
     private suspend fun check(newSchedulerTime: Duration? = null) {
-        val result = Http.getResult<ElectionJson>(URL)
+        val result = Http.getResult(URL, SkyblockAPICodecs.getCodec<ElectionJson>())
         val response = result.getOrNull() ?: return
 
         McClient.runNextTick {
