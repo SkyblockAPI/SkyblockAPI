@@ -182,7 +182,7 @@ value class SkyBlockId private constructor(val id: String) {
 }
 
 private fun ItemStack.getSbId(): SkyBlockId? {
-    operator fun <Type> DataType<Type>.invoke() = this@getSbId[this] ?: this.factory(this@getSbId)
+    operator fun <Type> DataType<Type>.invoke() = this.factory(this@getSbId)
 
     return when (val id = DataTypes.ID() ?: return null) {
         "ATTRIBUTE_SHARD" -> {
