@@ -10,8 +10,6 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.holder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 class LazyItemStack {
 

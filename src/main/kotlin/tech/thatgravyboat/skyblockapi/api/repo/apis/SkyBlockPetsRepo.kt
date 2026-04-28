@@ -7,6 +7,7 @@ import net.minecraft.world.item.component.ItemLore
 import tech.thatgravyboat.repolib.api.PetsAPI
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.platform.ResolvableProfile
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -21,11 +22,11 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<SkyBlockPetsRepo.Query>("Pets", :
         val data = RepoAPI.pets().getPet(key.id) ?: return null
         val pet = data.tiers()[key.rarity.name] ?: return null
         val skin = key.skin?.let { SkyBlockItemsRepo.getLazyItemStack("PET_SKIN_$it") }
-        // TODO skin rarity can not be obtained via the lazy item stack api
+        val skinRarity = skin?.let { LoreDataTypes.getRarityLine(it[DataComponents.LORE]) }?.second
         val name = Text.join(
             Text.of("[Lvl ${key.level}] ", TextColor.GRAY),
             Text.of(data.name(), key.rarity.color),
-            if (key.skin != null) Text.of(" ✦", TextColor.LIGHT_PURPLE) else null,
+            if (key.skin != null) Text.of(" ✦", skinRarity?.color ?: TextColor.LIGHT_PURPLE) else null,
         ) {
             this.italic = false
         }

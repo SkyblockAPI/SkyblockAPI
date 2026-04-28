@@ -1,7 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
 import me.owdding.ktmodules.Module
+import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.ItemLore
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
@@ -12,10 +14,9 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.hasGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -75,8 +76,12 @@ object LoreDataTypes {
     }
 
     private fun getRarityLine(stack: ItemStack): Pair<String, SkyBlockRarity>? {
-        val isUpgraded = DataTypes.RECOMBOBULATOR.factory(stack) == true
-        for (line in stack.getRawLore().asReversedIterator()) {
+        return getRarityLine(stack[DataComponents.LORE], DataTypes.RECOMBOBULATOR.factory(stack) == true)
+    }
+
+    internal fun getRarityLine(lore: ItemLore?, isUpgraded: Boolean = false): Pair<String, SkyBlockRarity>? {
+        val lines = lore?.lines()?.map { it.stripped }?.asReversedIterator() ?: return null
+        for (line in lines) {
             val rarityLine = (if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim()).removePrefix("SHINY ")
             val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.displayName.uppercase()) }
             if (rarity != null) {

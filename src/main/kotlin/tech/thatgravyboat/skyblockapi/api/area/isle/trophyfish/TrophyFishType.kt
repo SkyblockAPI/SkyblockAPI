@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
+import tech.thatgravyboat.skyblockapi.utils.lazy.registryBoundLazy
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
@@ -109,10 +110,10 @@ enum class TrophyFishType(
     val internalName: String = internalName.takeUnless { it.isEmpty() } ?: name
     val strippedName = displayName.stripped
 
-    val bronze by lazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_BRONZE") }
-    val silver by lazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_SILVER") }
-    val gold by lazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_GOLD") }
-    val diamond by lazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_DIAMOND") }
+    val bronze by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_BRONZE") }
+    val silver by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_SILVER") }
+    val gold by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_GOLD") }
+    val diamond by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_DIAMOND") }
 
     fun getItem(tier: TrophyFishTier): ItemStack {
         return when (tier) {
