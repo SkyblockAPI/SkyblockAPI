@@ -13,6 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOW
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuIdRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
 import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
@@ -76,11 +77,11 @@ value class SkyBlockId private constructor(val id: String) {
                 return runCatching { init() }.getOrNull()
             }
 
-            safe { SimpleItemAPI.getItemByIdOrNull(unsafeId) }?.let { return item(input) }
-            safe { SimpleItemAPI.getPetByIdOrNull(unsafeId) }?.let { return pet(input) }
-            safe { SimpleItemAPI.getEnchantmentByIdOrNull(unsafeId) }?.let { return enchantment(input) }
-            safe { SimpleItemAPI.getAttributeByIdOrNull(unsafeId) }?.let { return attribute(input) }
-            safe { SimpleItemAPI.getRuneByIdOrNull(unsafeId) }?.let { return rune(input) }
+            safe { SimpleItemAPI.getLazyItemStackForItem(unsafeId) }?.let { return item(input) }
+            safe { SimpleItemAPI.getLazyItemStackForPet(unsafeId) }?.let { return pet(input) }
+            safe { SimpleItemAPI.getLazyItemStackForEnchantment(unsafeId) }?.let { return enchantment(input) }
+            safe { SimpleItemAPI.getLazyItemStackForAttribute(unsafeId) }?.let { return attribute(input) }
+            safe { SimpleItemAPI.getLazyItemStackForRune(unsafeId) }?.let { return rune(input) }
 
             return null
         }
@@ -133,14 +134,14 @@ value class SkyBlockId private constructor(val id: String) {
             }
 
             isAttribute -> {
-                "${RepoAttributeAPI.getAttributeDataById(cleanId)?.shardName()}_SHARD"
+                "${SkyBlockAttributesRepo.get(cleanId)?.shardName()}_SHARD"
             }
 
             else -> cleanId
         }.uppercase()
     val bazaarId: String
         get() = when {
-            isAttribute -> RepoAttributeAPI.getAttributeDataById(cleanId)?.shardId ?: "UNKNOWN"
+            isAttribute -> SkyBlockAttributesRepo.get(cleanId)?.shardId ?: "UNKNOWN"
             isEnchantment -> "ENCHANTMENT_${cleanId.substringBeforeLast(DELIMITER)}_${cleanId.substringAfterLast(DELIMITER)}"
             else -> skyblockId
         }
@@ -171,7 +172,7 @@ value class SkyBlockId private constructor(val id: String) {
 
 private fun ItemStack.getSbId(): SkyBlockId? = when (val id = DataTypes.ID.factory(this) ?: return null) {
     "ATTRIBUTE_SHARD" -> {
-        DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
+        DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> SkyBlockAttributesRepo.get(key)?.attributeId }
             .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
     }
 

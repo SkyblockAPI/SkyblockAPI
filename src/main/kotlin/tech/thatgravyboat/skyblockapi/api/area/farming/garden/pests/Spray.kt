@@ -1,7 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.area.farming.garden.pests
 
 import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
+import tech.thatgravyboat.skyblockapi.utils.lazy.registryBoundLazy
 
 enum class Spray {
     HONEY_JAR,
@@ -12,6 +13,6 @@ enum class Spray {
     JELLY,
     ;
 
-    val displayName: Component by lazy { RepoItemsAPI.getItemName(name) }
-    val itemStack by RepoItemsAPI.getItemLazy(name)
+    val itemStack by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault(name) }
+    val displayName: Component by lazy { itemStack.hoverName }
 }
