@@ -1,40 +1,46 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
-import com.google.gson.annotations.Expose
+import me.owdding.ktcodecs.GenerateCodec
 
+@GenerateCodec
 data class ElectionJson(
-    @Expose val mayor: MayorJson,
-    @Expose val current: ElectionInfo,
+    val mayor: MayorJson,
+    val current: ElectionInfo,
 )
 
+@GenerateCodec
 data class MayorJson(
-    @Expose val key: String,
-    @Expose val name: String,
-    @Expose val perks: List<PerkJson>,
-    @Expose val minister: MinisterJson?,
-    @Expose val election: ElectionInfo,
+    val key: String,
+    val name: String,
+    val perks: List<PerkJson>,
+    val minister: MinisterJson?,
+    val election: ElectionInfo,
 )
 
+@GenerateCodec
 data class PerkJson(
-    @Expose val name: String,
-    @Expose val description: String,
-    @Expose val minister: Boolean = false,
+    val name: String,
+    val description: String,
+    val minister: Boolean = false,
 )
 
+@GenerateCodec
 data class MinisterJson(
-    @Expose val key: String,
-    @Expose val name: String,
-    @Expose val perk: PerkJson,
+    val key: String,
+    val name: String,
+    val perk: PerkJson?,
 )
 
+@GenerateCodec
 data class ElectionInfo(
-    @Expose val year: Int,
-    @Expose val candidates: List<CandidateJson>,
+    val year: Int,
+    val candidates: List<CandidateJson>,
 )
 
+@GenerateCodec
 data class CandidateJson(
-    @Expose val key: String,
-    @Expose val name: String,
-    @Expose val perks: List<PerkJson>,
-    @Expose val votes: Int,
+    val key: String,
+    val name: String,
+    val perks: List<PerkJson>,
+    val votes: Int,
 )

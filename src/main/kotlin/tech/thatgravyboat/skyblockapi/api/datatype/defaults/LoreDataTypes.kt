@@ -26,7 +26,7 @@ object LoreDataTypes {
     internal val dataTypeGroup = Regexes.group("datatype")
 
     private val fuelRegex = dataTypeGroup.create("fuel", "Fuel: (?<fuel>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")
-    private val rightClickAbilityRegex = dataTypeGroup.create("right_click_ability", "Ability: (?<ability>[\\w ]+) {2}RIGHT CLICK")
+    private val rightClickAbilityRegex = dataTypeGroup.create("right_click_ability", "(?:⦾ )?Ability: (?<ability>[\\w ]+) {2}RIGHT CLICK")
     private val manaCostRegex = dataTypeGroup.create("mana_cost", "Mana Cost: (?<mana>[\\d,kmb]+)")
     private val cooldownRegex = dataTypeGroup.create("cooldown", "Cooldown: (?<cooldown>\\d+)s")
     private val snowballsRegex = dataTypeGroup.create("snowballs", "Snowballs: (?<snowballs>[\\d,kmb]+)/(?<max>[\\d,kmb]+)")

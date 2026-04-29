@@ -35,7 +35,7 @@ object MayorCandidates {
     val COLE = register("Cole", MayorPerks.PROSPECTION, MayorPerks.MINING_XP_BUFF, MayorPerks.MINING_FIESTA, MayorPerks.MOLTEN_FORGE)
     val DIANA = register("Diana", MayorPerks.HUNTRESS_INTUITION, MayorPerks.MYTHOLOGICAL_RITUAL, MayorPerks.PET_XP_BUFF, MayorPerks.SHARING_IS_CARING)
     val DIAZ = register("Diaz", MayorPerks.SHOPPING_SPREE, MayorPerks.VOLUME_TRADING, MayorPerks.STOCK_EXCHANGE, MayorPerks.LONG_TERM_INVESTMENT)
-    val FINNEGAN = register("Finnegan", MayorPerks.PELT_POCALYPSE, MayorPerks.GOATED, MayorPerks.BLOOMING_BUSINESS, MayorPerks.PEST_ERADICATOR)
+    val FINNEGAN = register("Finnegan", MayorPerks.GRAND_FEAST, MayorPerks.GOATED, MayorPerks.BLOOMING_BUSINESS, MayorPerks.PEST_ERADICATOR)
     val FOXY = register("Foxy", MayorPerks.SWEET_BENEVOLENCE, MayorPerks.A_TIME_FOR_GIVING, MayorPerks.CHIVALROUS_CARNIVAL, MayorPerks.EXTRA_EVENT)
     val MARINA = register("Marina", MayorPerks.FISHING_XP_BUFF, MayorPerks.LUCK_OF_THE_SEA, MayorPerks.FISHING_FESTIVAL, MayorPerks.DOUBLE_TROUBLE)
     val PAUL = register("Paul", MayorPerks.MARAUDER, MayorPerks.EZPZ, MayorPerks.BENEDICTION)
@@ -110,7 +110,9 @@ object MayorPerks {
     val LONG_TERM_INVESTMENT = register("Long Term Investment")
 
     // Finnegan
+    @RemoveNextVersion
     val PELT_POCALYPSE = register("Pelt-pocalypse")
+    val GRAND_FEAST = register("Grand Feast")
     val GOATED = register("GOATed", id = "GOATED")
     val BLOOMING_BUSINESS = register("Blooming Business")
     val PEST_ERADICATOR = register("Pest Eradicator")
