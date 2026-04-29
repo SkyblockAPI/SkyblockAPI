@@ -30,7 +30,7 @@ internal object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdResolve
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
-        return idLookup[this.cleanName]?.asFake()
+        return idLookup[this.cleanName]?.asDerived()
     }
 
     override val priority: Int = 10
@@ -51,7 +51,7 @@ internal object BazaarEnchantmentIdResolver : InventoryIdResolver {
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
-        return idLookup[this.cleanName.substringBeforeLast(" ").trim()]?.asFake()
+        return idLookup[this.cleanName.substringBeforeLast(" ").trim()]?.asDerived()
     }
 
     override val priority: Int = 10
@@ -68,7 +68,7 @@ internal object EnchantmentGuideIdResolver : InventoryIdResolver {
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): SkyBlockId? {
         val id = nameToIdLookup[this.cleanName.substringBeforeLast(" ").trim()] ?: return null
         val level = this.cleanName.substringAfterLast(" ").trim().toIntValue()
-        return SkyBlockId.enchantment(id, level)?.asFake()
+        return SkyBlockId.enchantment(id, level)?.asDerived()
     }
 
     override val priority: Int = 10

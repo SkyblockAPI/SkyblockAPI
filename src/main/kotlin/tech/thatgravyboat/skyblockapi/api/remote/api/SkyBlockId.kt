@@ -34,6 +34,7 @@ value class SkyBlockId private constructor(val id: String) {
         internal val neuIdRegex = Regex("\\w+;\\d+")
 
         const val DELIMITER = ":"
+        const val DERIVED = "!"
         const val ITEM = "item$DELIMITER"
 
         const val PET = "pet$DELIMITER"
@@ -43,8 +44,6 @@ value class SkyBlockId private constructor(val id: String) {
         const val UNSAFE = "unsafe$DELIMITER"
         const val UNKNOWN = "sbapi${DELIMITER}unknown"
         val EMPTY: SkyBlockId = item(UNKNOWN)
-
-        val SkyBlockId.isFake get() = this.id.startsWith("!")
 
         fun item(id: String) = SkyBlockId("$ITEM$id".lowercase())
         fun pet(id: String) = SkyBlockId("$PET$id".lowercase())
@@ -90,9 +89,9 @@ value class SkyBlockId private constructor(val id: String) {
         fun unsafe(id: String) = SkyBlockId("$UNSAFE$id")
 
         @IncludedCodec
-        val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap(::SkyBlockId, SkyBlockId::idWithoutFake)
+        val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap(::SkyBlockId, SkyBlockId::rootId)
 
-        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.idWithoutFake })
+        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.rootId })
 
         fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
 
@@ -119,23 +118,24 @@ value class SkyBlockId private constructor(val id: String) {
         }
     }
 
-    fun asFake(fake: Boolean = true) = when {
-        this.isFake && !fake -> SkyBlockId(this.id.removeFake())
-        !this.isFake && fake -> SkyBlockId("!${this.id}")
+    fun asDerived(fake: Boolean = true) = when {
+        this.isDerived && !fake -> SkyBlockId(this.id.removeDerived())
+        !this.isDerived && fake -> SkyBlockId("$DERIVED${this.id}")
         else -> this
     }
 
-    val idWithoutFake get() = this.id.removeFake()
+    val isDerived get() = this.id.startsWith(DERIVED)
+    val rootId get() = this.id.removeDerived()
 
-    private fun String.removeFake() = this.removePrefix("!")
+    private fun String.removeDerived() = this.removePrefix(DERIVED)
 
-    val isItem: Boolean get() = id.removeFake().startsWith(ITEM)
-    val isPet: Boolean get() = id.removeFake().startsWith(PET)
-    val isRune: Boolean get() = id.removeFake().startsWith(RUNE)
-    val isEnchantment: Boolean get() = id.removeFake().startsWith(ENCHANTMENT)
-    val isAttribute: Boolean get() = id.removeFake().startsWith(ATTRIBUTE)
-    val isUnsafe: Boolean get() = id.removeFake().startsWith(UNSAFE)
-    val cleanId: String get() = id.removeFake().substringAfter(DELIMITER)
+    val isItem: Boolean get() = id.removeDerived().startsWith(ITEM)
+    val isPet: Boolean get() = id.removeDerived().startsWith(PET)
+    val isRune: Boolean get() = id.removeDerived().startsWith(RUNE)
+    val isEnchantment: Boolean get() = id.removeDerived().startsWith(ENCHANTMENT)
+    val isAttribute: Boolean get() = id.removeDerived().startsWith(ATTRIBUTE)
+    val isUnsafe: Boolean get() = id.removeDerived().startsWith(UNSAFE)
+    val cleanId: String get() = id.removeDerived().substringAfter(DELIMITER)
     val skyblockId: String
         get() = fixHypixelId() ?: when {
 

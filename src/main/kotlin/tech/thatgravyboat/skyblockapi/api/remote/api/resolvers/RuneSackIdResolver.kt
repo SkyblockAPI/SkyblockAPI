@@ -26,7 +26,7 @@ internal object RuneSackIdResolver : InventoryIdResolver {
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
-        return idLookup[this.cleanName]?.asFake()
+        return idLookup[this.cleanName]?.asDerived()
     }
 
     override val priority: Int = 10

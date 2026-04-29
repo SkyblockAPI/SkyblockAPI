@@ -25,7 +25,7 @@ internal object RockMilestonesResolver : InventoryIdResolver {
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
         val rarity = SkyBlockRarity.fromNameOrNull(this.cleanName.substringBefore(" ")) ?: return null
-        return SkyBlockId.pet("rock", rarity).asFake()
+        return SkyBlockId.pet("rock", rarity).asDerived()
     }
 }
 
@@ -52,7 +52,7 @@ internal object TrophyFishResolver : InventoryIdResolver {
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
-        return idLookup[this.cleanName]?.asFake()
+        return idLookup[this.cleanName]?.asDerived()
     }
 }
 
@@ -70,6 +70,6 @@ internal object DolphinMilestonesResolver : InventoryIdResolver {
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
         val rarity = SkyBlockRarity.fromNameOrNull(this.cleanName.substringBefore(" ")) ?: return null
-        return SkyBlockId.pet("dolphin", rarity).asFake()
+        return SkyBlockId.pet("dolphin", rarity).asDerived()
     }
 }
