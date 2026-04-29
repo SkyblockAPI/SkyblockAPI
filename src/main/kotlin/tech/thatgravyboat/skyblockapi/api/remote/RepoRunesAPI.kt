@@ -4,7 +4,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.RunesAPI.Rune
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockRunesRepo
 
-@Deprecated("")
+@Deprecated("Use SkyBlockRunesRepo instead", ReplaceWith("tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockRunesRepo"))
 object RepoRunesAPI {
 
     fun getRuneById(id: String): List<Rune>? = SkyBlockRunesRepo.get(id)

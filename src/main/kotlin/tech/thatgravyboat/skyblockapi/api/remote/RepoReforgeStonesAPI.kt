@@ -4,7 +4,7 @@ import tech.thatgravyboat.repolib.api.ReforgeStonesAPI.ReforgeData
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockReforgeStonesRepo
 
-@Deprecated("")
+@Deprecated("Use SkyBlockReforgeStonesRepo instead", ReplaceWith("tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockReforgeStonesRepo"))
 object RepoReforgeStonesAPI {
 
     fun getReforge(id: String): ReforgeData? = SkyBlockReforgeStonesRepo.get(id)
