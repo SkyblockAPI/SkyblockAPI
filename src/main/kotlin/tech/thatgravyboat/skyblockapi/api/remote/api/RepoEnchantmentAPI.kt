@@ -4,7 +4,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.EnchantsAPI
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockEnchantmentsRepo
 
-@Deprecated("")
+@Deprecated("Use SkyBlockEnchantmentsRepo instead", ReplaceWith("tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockEnchantmentsRepo"))
 object RepoEnchantmentAPI {
 
     fun getEnchantmentById(id: String): EnchantsAPI.Enchant? = SkyBlockEnchantmentsRepo.get(id)

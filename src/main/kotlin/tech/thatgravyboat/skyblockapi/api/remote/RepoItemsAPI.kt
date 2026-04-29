@@ -5,7 +5,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-@Deprecated("")
+@Deprecated("Use SkyBlockItemsRepo instead", ReplaceWith("tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo"))
 object RepoItemsAPI {
 
     fun getItemOrNull(id: String): ItemStack? = SkyBlockItemsRepo.getItemStack(id)
