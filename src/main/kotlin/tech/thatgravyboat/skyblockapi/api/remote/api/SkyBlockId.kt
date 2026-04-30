@@ -118,9 +118,9 @@ value class SkyBlockId private constructor(val id: String) {
         }
     }
 
-    fun asDerived(fake: Boolean = true) = when {
-        this.isDerived && !fake -> SkyBlockId(this.id.removeDerived())
-        !this.isDerived && fake -> SkyBlockId("$DERIVED${this.id}")
+    fun asDerived(derived: Boolean = true) = when {
+        this.isDerived && !derived -> SkyBlockId(this.id.removeDerived())
+        !this.isDerived && derived -> SkyBlockId("$DERIVED${this.id}")
         else -> this
     }
 
