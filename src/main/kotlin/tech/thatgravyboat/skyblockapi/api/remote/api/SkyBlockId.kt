@@ -35,6 +35,7 @@ value class SkyBlockId private constructor(val id: String) {
         internal val neuIdRegex = Regex("\\w+;\\d+")
 
         const val DELIMITER = ":"
+        const val DERIVED = "!"
         const val ITEM = "item$DELIMITER"
 
         const val PET = "pet$DELIMITER"
@@ -89,9 +90,9 @@ value class SkyBlockId private constructor(val id: String) {
         fun unsafe(id: String) = SkyBlockId("$UNSAFE$id")
 
         @IncludedCodec
-        val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap(::SkyBlockId, SkyBlockId::id)
+        val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap(::SkyBlockId, SkyBlockId::rootId)
 
-        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
+        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.rootId })
 
         fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
 
@@ -118,13 +119,24 @@ value class SkyBlockId private constructor(val id: String) {
         }
     }
 
-    val isItem: Boolean get() = id.startsWith(ITEM)
-    val isPet: Boolean get() = id.startsWith(PET)
-    val isRune: Boolean get() = id.startsWith(RUNE)
-    val isEnchantment: Boolean get() = id.startsWith(ENCHANTMENT)
-    val isAttribute: Boolean get() = id.startsWith(ATTRIBUTE)
-    val isUnsafe: Boolean get() = id.startsWith(UNSAFE)
-    val cleanId: String get() = id.substringAfter(DELIMITER)
+    fun asDerived(derived: Boolean = true) = when {
+        this.isDerived && !derived -> SkyBlockId(this.id.removeDerived())
+        !this.isDerived && derived -> SkyBlockId("$DERIVED${this.id}")
+        else -> this
+    }
+
+    val isDerived get() = this.id.startsWith(DERIVED)
+    val rootId get() = this.id.removeDerived()
+
+    private fun String.removeDerived() = this.removePrefix(DERIVED)
+
+    val isItem: Boolean get() = id.removeDerived().startsWith(ITEM)
+    val isPet: Boolean get() = id.removeDerived().startsWith(PET)
+    val isRune: Boolean get() = id.removeDerived().startsWith(RUNE)
+    val isEnchantment: Boolean get() = id.removeDerived().startsWith(ENCHANTMENT)
+    val isAttribute: Boolean get() = id.removeDerived().startsWith(ATTRIBUTE)
+    val isUnsafe: Boolean get() = id.removeDerived().startsWith(UNSAFE)
+    val cleanId: String get() = id.removeDerived().substringAfter(DELIMITER)
     val skyblockId: String
         get() = fixHypixelId() ?: when {
 

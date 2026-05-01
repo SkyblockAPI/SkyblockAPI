@@ -11,6 +11,6 @@ object DefaultIdResolver : IdResolver {
     override val priority: Int = Int.MIN_VALUE
 
     override fun tryResolve(itemStack: ItemStack, resolverKind: IdResolverKind): SkyBlockId? {
-        return fromItem(itemStack)
+        return fromItem(itemStack)?.asDerived()
     }
 }

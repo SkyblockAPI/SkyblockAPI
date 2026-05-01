@@ -22,7 +22,7 @@ object HuntingBoxResolver : InventoryIdResolver {
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
-        return SimpleItemAPI.findIdByName(this.cleanName)?.takeIf(SkyBlockId::isAttribute)
+        return SimpleItemAPI.findIdByName(this.cleanName)?.takeIf(SkyBlockId::isAttribute)?.asDerived()
     }
 
     override val priority: Int = 10
