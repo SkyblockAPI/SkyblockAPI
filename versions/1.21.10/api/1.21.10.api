@@ -3196,23 +3196,54 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/ItemTooltipE
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/PlayerEquipmentChangeEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public fun <init> (Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)V
+	public final fun component1 ()Lnet/minecraft/world/entity/player/Player;
+	public final fun component2 ()Lnet/minecraft/world/entity/EquipmentSlot;
+	public final fun component3 ()Lnet/minecraft/world/item/ItemStack;
+	public final fun component4 ()Lnet/minecraft/world/item/ItemStack;
+	public final fun copy (Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerEquipmentChangeEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerEquipmentChangeEvent;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerEquipmentChangeEvent;
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCurrent ()Lnet/minecraft/world/item/ItemStack;
 	public final fun getEntity ()Lnet/minecraft/world/entity/player/Player;
 	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
 	public final fun getPrevious ()Lnet/minecraft/world/item/ItemStack;
 	public final fun getSlot ()Lnet/minecraft/world/entity/EquipmentSlot;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/PlayerHotbarChangeEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
-	public fun <init> (ILnet/minecraft/world/item/ItemStack;)V
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerHotbarChangeEvent$Companion;
+	public fun <init> (Lnet/minecraft/world/inventory/Slot;Lnet/minecraft/world/item/ItemStack;)V
+	public final fun component1 ()Lnet/minecraft/world/inventory/Slot;
+	public final fun component2 ()Lnet/minecraft/world/item/ItemStack;
+	public final fun copy (Lnet/minecraft/world/inventory/Slot;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerHotbarChangeEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerHotbarChangeEvent;Lnet/minecraft/world/inventory/Slot;Lnet/minecraft/world/item/ItemStack;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerHotbarChangeEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInventorySlot ()Lnet/minecraft/world/inventory/Slot;
 	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
 	public final fun getSlot ()I
+	public final fun getSlotIndex ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/screen/PlayerHotbarChangeEvent$Companion {
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/PlayerInventoryChangeEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
-	public fun <init> (ILnet/minecraft/world/item/ItemStack;)V
+	public fun <init> (Lnet/minecraft/world/inventory/Slot;Lnet/minecraft/world/item/ItemStack;)V
+	public final fun component1 ()Lnet/minecraft/world/inventory/Slot;
+	public final fun component2 ()Lnet/minecraft/world/item/ItemStack;
+	public final fun copy (Lnet/minecraft/world/inventory/Slot;Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerInventoryChangeEvent;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerInventoryChangeEvent;Lnet/minecraft/world/inventory/Slot;Lnet/minecraft/world/item/ItemStack;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerInventoryChangeEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInventorySlot ()Lnet/minecraft/world/inventory/Slot;
 	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
 	public final fun getSlot ()I
+	public final fun getSlotIndex ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenInitializedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -5197,12 +5228,15 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId {
 	public static final field ATTRIBUTE Ljava/lang/String;
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId$Companion;
 	public static final field DELIMITER Ljava/lang/String;
+	public static final field DERIVED Ljava/lang/String;
 	public static final field ENCHANTMENT Ljava/lang/String;
 	public static final field ITEM Ljava/lang/String;
 	public static final field PET Ljava/lang/String;
 	public static final field RUNE Ljava/lang/String;
 	public static final field UNKNOWN Ljava/lang/String;
 	public static final field UNSAFE Ljava/lang/String;
+	public static final fun asDerived-BCdM1xk (Ljava/lang/String;Z)Ljava/lang/String;
+	public static synthetic fun asDerived-BCdM1xk$default (Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/String;
 	public static final synthetic fun box-impl (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
@@ -5211,10 +5245,12 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId {
 	public static final fun getCleanId-impl (Ljava/lang/String;)Ljava/lang/String;
 	public final fun getId ()Ljava/lang/String;
 	public static final fun getIdResolverKind ()Ljava/lang/ThreadLocal;
+	public static final fun getRootId-impl (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun getSkyblockId-impl (Ljava/lang/String;)Ljava/lang/String;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Ljava/lang/String;)I
 	public static final fun isAttribute-impl (Ljava/lang/String;)Z
+	public static final fun isDerived-impl (Ljava/lang/String;)Z
 	public static final fun isEnchantment-impl (Ljava/lang/String;)Z
 	public static final fun isItem-impl (Ljava/lang/String;)Z
 	public static final fun isPet-impl (Ljava/lang/String;)Z
