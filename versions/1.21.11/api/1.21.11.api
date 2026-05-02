@@ -1622,6 +1622,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getPOLARVOID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPOTION ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPOTION_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getPOTION_TYPE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPOWER_ABILITY_SCROLL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getQUIVER_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRAFFLE_WIN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1772,6 +1773,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getPET_DATA ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPOTION ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPOTION_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getPOTION_TYPE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getQUIVER_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRAFFLE_WIN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRAFFLE_YEAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -5216,9 +5218,12 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SimpleItemAPI {
 	public final fun getLazyItemStackForEnchantment-Sg9Psy0 (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public final fun getLazyItemStackForItem-Sg9Psy0 (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public final fun getLazyItemStackForPet-Sg9Psy0 (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
+	public final fun getLazyItemStackForPotion-Sg9Psy0 (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public final fun getLazyItemStackForRune-Sg9Psy0 (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public final fun getPetById-Sg9Psy0 (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
 	public final fun getPetByIdOrNull-Sg9Psy0 (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
+	public final fun getPotionById-Sg9Psy0 (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
+	public final fun getPotionByIdOrNull-Sg9Psy0 (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
 	public final fun getRuneById-Sg9Psy0 (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
 	public final fun getRuneByIdOrNull-Sg9Psy0 (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
 	public final fun onRepoStatus ()V
@@ -5232,8 +5237,10 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId {
 	public static final field ENCHANTMENT Ljava/lang/String;
 	public static final field ITEM Ljava/lang/String;
 	public static final field PET Ljava/lang/String;
+	public static final field POTION Ljava/lang/String;
 	public static final field RUNE Ljava/lang/String;
 	public static final field UNKNOWN Ljava/lang/String;
+	public static final field UNKNOWN_VALUE Ljava/lang/String;
 	public static final field UNSAFE Ljava/lang/String;
 	public static final fun asDerived-BCdM1xk (Ljava/lang/String;Z)Ljava/lang/String;
 	public static synthetic fun asDerived-BCdM1xk$default (Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/String;
@@ -5254,6 +5261,7 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId {
 	public static final fun isEnchantment-impl (Ljava/lang/String;)Z
 	public static final fun isItem-impl (Ljava/lang/String;)Z
 	public static final fun isPet-impl (Ljava/lang/String;)Z
+	public static final fun isPotion-impl (Ljava/lang/String;)Z
 	public static final fun isRune-impl (Ljava/lang/String;)Z
 	public static final fun isUnsafe-impl (Ljava/lang/String;)Z
 	public static final fun toItem-impl (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
@@ -5279,6 +5287,9 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId$Comp
 	public final fun pet-BCdM1xk (Ljava/lang/String;)Ljava/lang/String;
 	public final fun pet-MS8-5Ak (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public final fun pet-MS8-5Ak (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;)Ljava/lang/String;
+	public final fun potion-BCdM1xk (Ljava/lang/String;)Ljava/lang/String;
+	public final fun potion-MS8-5Ak (Ljava/lang/String;I)Ljava/lang/String;
+	public final fun potion-ziMTado (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/String;
 	public final fun rune-BCdM1xk (Ljava/lang/String;)Ljava/lang/String;
 	public final fun rune-MS8-5Ak (Ljava/lang/String;I)Ljava/lang/String;
 	public final fun unknownType-oyA4dd4 (Ljava/lang/String;)Ljava/lang/String;
@@ -5808,6 +5819,29 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPotionsRepo : tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCacheAsQuery {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPotionsRepo;
+	public synthetic fun create (Ljava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
+	public final fun get (Ljava/lang/String;)Ltech/thatgravyboat/repolib/api/PotionsAPI$Potion;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPotionsRepo$Query {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPotionsRepo$Query;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPotionsRepo$Query;Ljava/lang/String;Ljava/lang/Integer;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPotionsRepo$Query;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getLevel ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public final fun setId (Ljava/lang/String;)V
+	public final fun setLevel (Ljava/lang/Integer;)V
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockReforgeStonesRepo : tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCache {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockReforgeStonesRepo;
 	public synthetic fun create (Ljava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
@@ -6016,6 +6050,39 @@ public final class tech/thatgravyboat/skyblockapi/impl/DataTypesRegistry {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/DataTypesRegistry;
 	public final fun getData (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Map;
 	public final fun getTypes ()Ljava/util/List;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/commands/GiveCommands {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands;
+	public static final field darkRed I
+	public static final field green I
+	public static final field peach I
+	public static final field pink I
+	public static final field red I
+	public static final field text I
+	public static final field yellow I
+	public final fun fillAndGiveShulkers (Ljava/util/List;)V
+	public final fun findBy (Ljava/util/Map;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun tryGive (Lnet/minecraft/world/item/ItemStack;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag : java/lang/Enum, tech/thatgravyboat/skyblockapi/impl/commands/CommandFlag {
+	public static final field ALL Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+	public static final field CONTAINS Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+	public static final field CUSTOM_DATA Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+	public static final field ENDS_WITH Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+	public static final field GIVE Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+	public static final field LIMIT Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+	public static final field MATCH_CASE Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+	public static final field REGEX Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+	public static final field STARTS_WITH Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getFlagType ()Lcom/mojang/brigadier/arguments/ArgumentType;
+	public fun getGroup ()Ljava/lang/String;
+	public fun getLongName ()Ljava/lang/String;
+	public fun getShortName ()C
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
 }
 
 public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugActionBar {
@@ -6683,6 +6750,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/NbtExtensions
 	public static final fun getStringOrNull (Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;)Ljava/lang/String;
 	public static final fun getUuidOrNull (Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;)Ljava/util/UUID;
 	public static final fun putCompound (Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/nbt/Tag;
+	public static final fun putNullableString (Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;Ljava/lang/String;)V
 	public static final fun toData (Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/item/component/CustomData;
 }
 
