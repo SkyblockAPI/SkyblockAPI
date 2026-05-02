@@ -101,6 +101,7 @@ object Text {
 
     internal fun sendDebug(text: String = "", init: MutableComponent.() -> Unit = {}) = debug(text, init).send()
     internal fun Component.sendWithPrefix() = join(CommonText.PREFIX, this).send()
+    internal fun Component.sendWithPrefix(id: String) = join(CommonText.PREFIX, this).send(id)
 }
 
 object TextProperties {

@@ -15,6 +15,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.attrib
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.enchantment
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.item
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.pet
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.potion
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.rune
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.api.repo.apis.*
@@ -76,6 +77,15 @@ object SimpleItemAPI {
                         this.id = clean
                     }
                 }
+                key.isPotion -> SkyBlockPotionsRepo.getLazyItemStack {
+                    if (clean.contains(":")) {
+                        val (potionId, level) = clean.split(":")
+                        this.id = potionId
+                        this.level = level.toIntOrNull()
+                    } else {
+                        this.id = clean
+                    }
+                }
                 key.isAttribute -> SkyBlockAttributesRepo.getLazyItemStack(clean)
                 key.isItem -> clean.let(SkyBlockItemsRepo::getLazyItemStack)
                 key.isUnsafe -> clean.let(SkyBlockItemsRepo::getLazyItemStack)
@@ -116,6 +126,10 @@ object SimpleItemAPI {
     fun getAttributeByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForAttribute(id)?.create()
     fun getAttributeById(id: SkyBlockId): ItemStack = getAttributeByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown attribute: $id") }
 
+    fun getLazyItemStackForPotion(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::potion))
+    fun getPotionByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForPotion(id)?.create()
+    fun getPotionById(id: SkyBlockId): ItemStack = getPotionByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown potion: $id") }
+
     fun getAllIds(): List<SkyBlockId> = ids
     fun getAllNames(): Set<String> = names.keys
 
@@ -155,6 +169,12 @@ object SimpleItemAPI {
                 attribute.shardName() to attribute(attribute.attributeId()),
                 attribute.shardName().removeSuffix("Shard").trim() to attribute(attribute.attributeId()),
             )
+        }.applyFiltered()
+
+        RepoAPI.potions().potions().flatMap { (_, potion) ->
+            potion.levels.entries.map { (_, level) ->
+                "${potion.name()} ${level.literalLevel}" to potion(potion.type, potion.internalPotion, level.level)
+            }
         }.applyFiltered()
 
         RepoAPI.items().items().entries.mapNotNull { (id, element) ->
