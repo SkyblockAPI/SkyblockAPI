@@ -2,10 +2,10 @@ name: Breaking Changes Checker
 
 on:
     pull_request_target:
-        branches: [ "2.0" ]
+        branches: [ "4.0" ]
 
 permissions:
-    contents: write
+    contents: read
     pull-requests: write
 
 jobs:
@@ -14,25 +14,26 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
 
-            - name: Set up JDK 21
-              uses: actions/setup-java@v4.0.0
-              with:
-                  java-version: '21'
-                  distribution: 'temurin'
+            -   name: Setup JDK 21
+                uses: actions/setup-java@v5
+                with:
+                    java-version: '21'
+                    distribution: 'temurin'
 
-            - name: Setup Gradle
-              uses: gradle/actions/setup-gradle@v3
+            -   name: Setup gradle
+                uses: gradle/actions/setup-gradle@v5
+            -   run: chmod +x gradlew
 
-            - name: Grant execute permission for gradlew
-              run: chmod +x gradlew
+            -   name: Update API baseline
+                run: ./gradlew updateLegacyAbi || true
 
-            - name: Build with Gradle
-              run: ./gradlew apiDump || true
-
-            -   name: Compare API
-                run: git diff api/SkyblockAPI.api | grep "^-[^-]" >> api.removed || true
+            -   name: Generate API Diffs
+                run: |
+                    git diff versions/26.1/api/26.1.api | grep "^-[^-]" >> api.removed || true
+                    git diff versions/1.21.11/api/1.21.11.api | grep "^-[^-]" >> api.removed || true
+                    git diff versions/1.21.10/api/1.21.10.api | grep "^-[^-]" >> api.removed || true
 
             -   name: Check for breaking changes
                 env:
@@ -46,4 +47,5 @@ jobs:
                         cat api.removed >> comment
                         echo "\`\`\`" >> comment
                         gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
+                        exit 1
                     fi

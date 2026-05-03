@@ -1,47 +1,38 @@
 [versions]
-google-autoservice = "1.1.1"
-google-autoservice-ksp = "1.2.0"
 google-gson = "2.12.1"
 
 meowdding-modules = "1.0.5"
 meowdding-ktcodecs = "1.0.34"
-meowdding-resources = "1.0.16"
-meowdding-item-dfu = "1.0.5"
+meowdding-resources = "1.0.17"
+meowdding-item-dfu = "1.0.9-beta.1"
+meowdding-auto-mixins = "1.0.8"
 
-terrarium-cloche = "0.13.5"
+fabric-loader = "0.18.4"
+fabric-language-kotlin = "1.13.8+kotlin.2.3.0"
 
-fabric-loader = "0.17.0"
-fabric-api = "0.128.1"
-fabric-language-kotlin = "1.13.4+kotlin.2.2.0"
-
-kotlin = "2.2.0"
-kotlin-gradle-plugin = "2.2.0"
-kotlin-binary-compatibility-checker = "0.17.0"
-kotlin-symbol-processor = "2.2.0-2.0.2"
+kotlin = "2.3.0"
+kotlin-gradle-plugin = "2.3.0"
+kotlin-symbol-processor = "2.3.5"
+kotlin-binary-compatibility-validator = "0.18.1"
 
 hypixel-modapi = "1.0.1"
 hypixel-modapi-fabric = "1.0.1+build.1+mc1.21"
 
-skyblockapi-repolib = "3.0.2"
+skyblockapi-repolib = "4.0.1"
 
 # Dev versions
-devauth-fabric = "1.2.1"
+devauth-fabric = "1.2.2"
 
 [libraries]
 google-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson" }
-google-auto-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "google-autoservice" }
-google-auto-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "google-autoservice-ksp" }
 
 meowdding-modules = { module = "me.owdding.ktmodules:KtModules", version.ref = "meowdding-modules" }
 meowdding-ktcodecs = { module = "me.owdding.ktcodecs:KtCodecs", version.ref = "meowdding-ktcodecs" }
-meowdding-resources = { module = "me.owdding.repo:compacting-resources", version.ref = "meowdding-resources" }
 meowdding-item-dfu = { module = "me.owdding:item-data-fixer", version.ref = "meowdding-item-dfu" }
 
 fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-language-kotlin" }
 fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
-fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
 
-kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle-plugin" }
 kotlin-gradle-plugin-api = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin-api", version.ref = "kotlin-gradle-plugin" }
@@ -53,7 +44,6 @@ skyblockapi-repolib = { module = "tech.thatgravyboat.repo-lib:repo-lib", version
 devauth = { module = "me.djtheredstoner:DevAuth-fabric", version.ref = "devauth-fabric" }
 
 [bundles]
-fabric = ["fabric-loader", "fabric-language-kotlin", "fabric-api"]
 meowdding = ["meowdding-ktcodecs", "meowdding-modules"]
 hypixel = ["hypixel-modapi", "hypixel-modapi-fabric"]
 
@@ -61,10 +51,9 @@ kotlin-gradle-plugin = ["kotlin-gradle-plugin", "kotlin-gradle-plugin-api"]
 
 [plugins]
 
-terrarium-cloche = { id = "earth.terrarium.cloche", version.ref = "terrarium-cloche" }
+meowdding-resources = { id = "me.owdding.resources", version.ref = "meowdding-resources" }
+meowdding-auto-mixins = { id = "me.owdding.auto-mixins", version.ref = "meowdding-auto-mixins" }
 
-meowdding-resources = { id = "me.owdding.resources" }
-
-kotlin-binary-compatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlin-binary-compatibility-checker" }
+kotlin-binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlin-binary-compatibility-validator" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm" }
 kotlin-symbol-processor = { id = "com.google.devtools.ksp", version.ref = "kotlin-symbol-processor" }

@@ -1,0 +1,196 @@
+package tech.thatgravyboat.skyblockapi.api.location
+
+import me.owdding.ktmodules.Module
+import net.hypixel.data.type.GameType
+import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.HypixelJoinEvent
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.SkyBlockLocationEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.debugSelect
+import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.send
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import kotlin.time.Instant
+
+@Module
+object LocationAPI {
+
+    private val unknownAreas = mutableMapOf<String, SkyBlockIsland?>()
+    private var sendUnknownChatMessage = false
+
+    private val locationRegex = RegexGroup.SCOREBOARD.create(
+        "location",
+        " *[⏣ф] *(?<location>(?:\\s?[^ൠ\\s]+)*)(?: ൠ x\\d)?",
+    )
+
+    private val guestRegex = RegexGroup.SCOREBOARD.create(
+        "guest",
+        "^ *\u270C *\\((?<guests>\\d+)/(?<max>\\d+)\\) *$",
+    )
+
+    private val playerCountRegex = RegexGroup.TABLIST.create(
+        "player_count",
+        " *(?:players|party) \\((?<count>\\d+)\\) *",
+    )
+
+    val forceOnSkyblock by debugToggle("force_skyblock", "Always returns true for SkyBlock checks")
+    val forceIsland by debugSelect<SkyBlockIsland>("force_island", "Force a specific island to be returned")
+
+    var isOnSkyBlock: Boolean = false
+        get() = field || forceOnSkyblock
+        private set(value) {
+            if (field != value) {
+                field = value
+                if (value) SkyBlockLocationEvent.Join.post() else SkyBlockLocationEvent.Leave.post()
+            }
+        }
+
+    var island: SkyBlockIsland? = null
+        get() = forceIsland ?: field
+        private set
+
+    var area: SkyBlockArea = SkyBlockAreas.NONE
+        private set
+
+    var serverId: String? = null
+        private set
+
+    var isGuest: Boolean = false
+        private set
+
+    var onHypixel: Boolean = false
+        private set
+
+    var onAlpha: Boolean = false
+        private set
+
+    var playerCount: Int = 0
+        get() = field.coerceAtLeast(McClient.players.size)
+        private set
+
+    val maxPlayercount: Int?
+        get() = when {
+            serverId?.startsWith("mega") == true -> 60
+            else -> when (island) {
+                SkyBlockIsland.PRIVATE_ISLAND, SkyBlockIsland.GARDEN -> null
+                SkyBlockIsland.KUUDRA -> 4
+                SkyBlockIsland.MINESHAFT -> 4
+                SkyBlockIsland.THE_CATACOMBS -> 5
+                SkyBlockIsland.BACKWATER_BAYOU -> 16
+                SkyBlockIsland.HUB -> 26
+                SkyBlockIsland.JERRYS_WORKSHOP -> 27
+                SkyBlockIsland.DARK_AUCTION -> 12
+                else -> 24
+            }
+        }
+
+    var lastServerChange: Instant = Instant.DISTANT_PAST
+        private set
+
+    @Subscription
+    fun onServerChange(event: ServerChangeEvent) {
+        lastServerChange = currentInstant()
+        isOnSkyBlock = event.type == GameType.SKYBLOCK
+        val old = island
+        island = if (isOnSkyBlock && event.mode != null) {
+            SkyBlockIsland.getById(event.mode)
+        } else {
+            null
+        }
+        IslandChangeEvent(old, island).post()
+
+        serverId = event.name
+    }
+
+    @Subscription
+    fun onHypixelJoin(event: HypixelJoinEvent) {
+        onHypixel = true
+        onAlpha = event.onAlpha
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    fun onTabListUpdate(event: TabListChangeEvent) {
+        val component = event.new.firstOrNull()?.firstOrNull() ?: return
+        playerCount = playerCountRegex.findGroup(component.stripped.lowercase(), "count")?.toIntOrNull() ?: 0
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
+        isGuest = event.new.contains("guest", ignoreCase = true)
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    fun onScoreboardChange(event: ScoreboardUpdateEvent) {
+        locationRegex.anyMatch(event.added, "location") { (location) ->
+            val old = area
+            area = SkyBlockArea(location)
+            AreaChangeEvent(old, area).post()
+
+            val knownArea = SkyBlockAreas.registeredAreas.entries.find { it.value.name == location } != null
+            if (!knownArea) {
+                unknownAreas.putIfAbsent(location, island)
+                if (sendUnknownChatMessage) {
+                    Text.of("Unknown area detected: $location").send()
+                }
+            }
+        }
+
+        guestRegex.anyMatch(event.added, "guests") { (current) ->
+            playerCount = current.toIntOrNull() ?: 0
+        }
+    }
+
+    private fun reset() {
+        isOnSkyBlock = false
+        serverId = null
+        isGuest = false
+        area = SkyBlockAreas.NONE
+        onHypixel = false
+        onAlpha = false
+        val old = island
+        island = null
+        if (old != null) {
+            IslandChangeEvent(old, null).post()
+        }
+    }
+
+    @Subscription(ServerDisconnectEvent::class)
+    fun onServerDisconnect() = reset()
+
+    @Subscription
+    fun onCommand(event: RegisterCommandsEvent) {
+        event.registerWithCallback("sbapi unknownareas") {
+            McClient.clipboard = unknownAreas.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
+            Text.of("Copied ${unknownAreas.size} unknown areas to clipboard!").send()
+            sendUnknownChatMessage != sendUnknownChatMessage
+        }
+        event.registerWithCallback("sbapi location") {
+            Text.multiline(
+                "Island: ${island?.displayName ?: "Unknown"}",
+                "Area: ${area.name}",
+                "Server ID: ${serverId ?: "Unknown"}",
+                "Player Count: $playerCount${maxPlayercount?.let { " / $it" }.orEmpty()}",
+                "Is Guest: $isGuest",
+                "On Hypixel: $onHypixel",
+                "On Alpha: $onAlpha",
+            ).send()
+        }
+    }
+}

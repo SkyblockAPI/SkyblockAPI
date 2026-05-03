@@ -2,7 +2,7 @@ name: API Baseline Updater
 
 on:
     push:
-        branches: [ "2.0" ]
+        branches: [ "4.0" ]
 
 permissions:
     contents: write
@@ -14,35 +14,34 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
+                with:
+                    token: ${{ secrets.BOT_TOKEN }}
 
-            - name: Set up JDK 21
-              uses: actions/setup-java@v4.0.0
-              with:
-                  java-version: '21'
-                  distribution: 'temurin'
+            -   name: Setup JDK 21
+                uses: actions/setup-java@v5
+                with:
+                    distribution: temurin
+                    java-version: '21'
 
-            - name: Setup Gradle
-              uses: gradle/actions/setup-gradle@v3
+            -   name: Setup gradle
+                uses: gradle/actions/setup-gradle@v5
 
-            - name: Grant execute permission for gradlew
-              run: chmod +x gradlew
+            -   run: chmod +x gradlew
+            -   name: Build
+                run: ./gradlew build
 
-            - name: Build with Gradle
-              run: ./gradlew apiDump || true
-
-            -   name: Compare API
-                run: git diff api/SkyblockAPI.api | grep "^+[^+]" >> api.added || true
+            -   name: Build with Gradle
+                run: ./gradlew updateLegacyAbi || true
 
             -   name: Check for breaking changes
                 env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    GH_TOKEN: ${{ secrets.BOT_TOKEN }}
                 run: |
-                    if grep -q '[^[:space:]]' < api.added
+                    if ! $(git diff --exit-code versions/26.1/api/26.1.api) || ! $(git diff --exit-code versions/1.21.10/api/1.21.10.api) || ! $(git diff --exit-code versions/1.21.11/api/1.21.11.api);
                     then
-                        rm api.added
-                        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                        git config --global user.name "github-actions[bot]"
+                        git config --global user.email "meowtomation@users.noreply.github.com"
+                        git config --global user.name "meowtomation"
                         git add .
                         git commit -m "update api dump"
                         git push
