@@ -45,8 +45,10 @@ public abstract class GuiGraphicsVisualItemMixin {
     public abstract void fill(int i, int j, int k, int l, int color);
 
     @Shadow
-    //~ if >= 26.1 'renderOutline' -> 'outline'
-    public abstract void outline(int x, int y, int width, int height, int color);
+    public abstract void
+        //$ if >= 26.1 'renderOutline' elif >= 1.21.11 'outline' else 'submitOutline'
+    outline
+    (int x, int y, int width, int height, int color);
 
     @Shadow
     //~ if >= 26.1 'drawString' -> 'text'
@@ -180,8 +182,9 @@ public abstract class GuiGraphicsVisualItemMixin {
 
         var borderColor = accessor.skyblockapi$getBorderColor();
         if (borderColor != 0) {
-            //~ if >= 26.1 'renderOutline' -> 'outline'
-            this.outline(x, y, 16, 16, borderColor);
+            //$ if >= 26.1 'renderOutline' elif >= 1.21.11 'outline' else 'submitOutline'
+            outline
+                (x, y, 16, 16, borderColor);
         }
     }
 }
