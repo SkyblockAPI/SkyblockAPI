@@ -15,4 +15,5 @@ data class CurrencyData(
     var sowdust: Long = 0,
     var northStars: Long = 0,
     var soulflow: Long = 0,
+    var kernels: Long = 0,
 )
