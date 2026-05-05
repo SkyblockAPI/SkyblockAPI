@@ -42,7 +42,7 @@ class LazyItemStack {
             if (value.isEmpty) {
                 components.remove(type)
             } else {
-                components.set(TypedDataComponent.createUnchecked(type, value))
+                components.set(TypedDataComponent.createUnchecked(type, value.get()))
             }
         }
 
