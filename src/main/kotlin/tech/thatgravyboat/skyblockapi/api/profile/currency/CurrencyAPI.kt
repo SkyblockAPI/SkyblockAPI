@@ -59,6 +59,7 @@ object CurrencyAPI {
     private val copperRegex = currencyGroup.create("copper", "^Copper: (?<copper>(?i)[\\d,.kmb]+)")
     private val sowdustRegex = currencyGroup.create("sowdust", "^Sowdust: (?<sowdust>(?i)[\\d,.kmb]+)")
     private val northStarsRegex = currencyGroup.create("northstars", "^North Stars: (?<northstars>(?i)[\\d,.kmb]+)")
+    private val kernelsRegex = currencyGroup.create("kernels", "^Kernels: (?<kernels>(?i)[\\d,.kmb]+)")
 
     var purse: Double by CurrencyStorage::purse
         private set
@@ -84,6 +85,9 @@ object CurrencyAPI {
         private set
 
     var sowdust: Long by CurrencyStorage::sowdust
+        private set
+
+    var kernels: Long by CurrencyStorage::kernels
         private set
 
     var northStars: Long by CurrencyStorage::northStars
@@ -136,6 +140,7 @@ object CurrencyAPI {
             } else if (SkyBlockIsland.GARDEN.inIsland()) {
                 copperRegex.findCurrencyChecked(event.added, "copper", ::copper, CurrencyEvent::Copper)
                 sowdustRegex.findCurrencyChecked(event.added, "sowdust", ::sowdust, CurrencyEvent::SowDust)
+                kernelsRegex.findCurrencyChecked(event.added, "kernels", ::kernels, CurrencyEvent::Kernels)
             }
             purseRegex.anyFound(event.added, "type", "purse") { (type, purse) ->
                 this.purseType = PurseType.fromName(type)
@@ -214,6 +219,7 @@ object CurrencyAPI {
             ::northStars,
             ::gems,
             ::soulflow,
+            ::kernels,
         )
     }
 }
