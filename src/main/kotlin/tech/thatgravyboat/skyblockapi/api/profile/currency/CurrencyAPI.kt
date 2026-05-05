@@ -219,6 +219,7 @@ object CurrencyAPI {
             ::northStars,
             ::gems,
             ::soulflow,
+            ::kernels,
         )
     }
 }
