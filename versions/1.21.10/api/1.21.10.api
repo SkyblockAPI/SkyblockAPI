@@ -5730,6 +5730,7 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/LazyItemStack {
 	public final fun get (Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;
 	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
 	public final fun getOrDefault (Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun invalidate ()V
 	public final fun withComponents (Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 }
 
@@ -6726,6 +6727,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/ItemStackExte
 	public static final fun getTag (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/nbt/CompoundTag;
 	public static final fun getTag (Lnet/minecraft/world/item/ItemStack;Ljava/lang/String;)Lnet/minecraft/nbt/Tag;
 	public static final fun getTexture (Lnet/minecraft/world/item/ItemStack;)Ljava/lang/String;
+	public static final fun getUnsafeTag (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/nbt/CompoundTag;
 	public static final fun isSameItem (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z
 	public static final fun isSkyblockFiller (Lnet/minecraft/world/item/ItemStack;)Z
 	public static final fun set (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;
