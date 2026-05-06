@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes.ID
 import tech.thatgravyboat.skyblockapi.utils.extentions.getIntOrNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.getStringOrNull
-import tech.thatgravyboat.skyblockapi.utils.extentions.tag
+import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
 /**
@@ -33,7 +33,7 @@ object PersonalAccessoryDataTypes {
         val maxItems = it.getMaxItems("COMPACTOR") ?: return@of null
         buildList {
             for (i in 0 until maxItems) {
-                add(it.tag?.getStringOrNull("personal_compact_$i"))
+                add(it.unsafeTag?.getStringOrNull("personal_compact_$i"))
             }
         }
     }
@@ -42,13 +42,13 @@ object PersonalAccessoryDataTypes {
         val maxItems = it.getMaxItems("DELETOR") ?: return@of null
         buildList {
             for (i in 0 until maxItems) {
-                add(it.tag?.getStringOrNull("personal_deletor_$i"))
+                add(it.unsafeTag?.getStringOrNull("personal_deletor_$i"))
             }
         }
     }
 
     val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType.of("personal_accessory_active") {
-        it.tag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE")?.let { active -> active == 1 } ?: run {
+        it.unsafeTag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE")?.let { active -> active == 1 } ?: run {
             personalAccessoryActiveRegex.findOrNull(it.getRawLore().joinToString("\n"), "state") { (state) ->
                 when (state) {
                     "On" -> true

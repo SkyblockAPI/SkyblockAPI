@@ -6,6 +6,8 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.repolib.api.RepoAPI
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
@@ -14,6 +16,16 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 abstract class RepoItemCache<K> (private val name: String) {
 
     private val cache: MutableMap<K, LazyItemStack?> = mutableMapOf()
+
+    init {
+        if (repos.contains(name)) {
+            Logger.warn("RepoItemCache with name '$name' already exists. This may cause issues with cache invalidation.")
+        }
+
+        SkyBlockAPI.eventBus.register<ServerChangeEvent> {
+            this.cache.values.forEach{ it?.invalidate() }
+        }
+    }
 
     protected abstract fun create(key: K): LazyItemStack?
 
@@ -37,6 +49,8 @@ abstract class RepoItemCache<K> (private val name: String) {
     }
 
     companion object {
+
+        private val repos: MutableSet<String> = mutableSetOf()
 
         protected fun LazyItemStack(json: JsonObject): LazyItemStack? = LazyItemStack.CODEC
             .parse(JsonOps.INSTANCE, json)

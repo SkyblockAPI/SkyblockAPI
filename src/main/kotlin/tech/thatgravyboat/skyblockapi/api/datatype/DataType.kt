@@ -4,7 +4,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 import tech.thatgravyboat.skyblockapi.utils.extentions.getCompoundTagFunctionByType
-import tech.thatgravyboat.skyblockapi.utils.extentions.tag
+import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -37,7 +37,7 @@ class DataType<T> @RemoveNextVersion constructor(
 
         fun <T : Any> simple(id: String, type: KType, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
             val function = getCompoundTagFunctionByType<T>(type)
-            return of(id, type, autoRegister) { item -> item.tag?.let { function(it, tagName) } }
+            return of(id, type, autoRegister) { item -> item.unsafeTag?.let { function(it, tagName) } }
         }
 
         /**

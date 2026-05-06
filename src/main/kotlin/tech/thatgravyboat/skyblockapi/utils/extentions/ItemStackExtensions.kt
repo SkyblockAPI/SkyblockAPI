@@ -17,6 +17,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
+import tech.thatgravyboat.skyblockapi.mixins.accessors.CustomDataAccessor
 import tech.thatgravyboat.skyblockapi.platform.GameProfile
 import tech.thatgravyboat.skyblockapi.platform.properties
 import tech.thatgravyboat.skyblockapi.platform.toResolvableProfile
@@ -25,6 +26,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @Suppress("DEPRECATION")
 val ItemStack.tag: CompoundTag? get() = this[DataComponents.CUSTOM_DATA]?.copyTag()
+val ItemStack.unsafeTag: CompoundTag? get() = (this[DataComponents.CUSTOM_DATA] as? CustomDataAccessor)?.`skyblockapi$getTag`()
 fun ItemStack.getTag(key: String): Tag? = this.tag?.get(key)
 
 fun ItemStack.getRawLore(): List<String> {

@@ -17,6 +17,8 @@ class LazyItemStack {
     private val count: Int
     private val components: DataComponentPatch
 
+    private var cached: ItemStack? = null
+
     private constructor(item: Item, count: Int, builder: DataComponentPatch) {
         this.item = item
         this.count = count
@@ -63,7 +65,14 @@ class LazyItemStack {
     }
 
     fun create(): ItemStack {
-        return ItemStack(item.holder, count, components)
+        if (this.cached == null) {
+            this.cached = ItemStack(item.holder, count, components)
+        }
+        return this.cached!!
+    }
+
+    fun invalidate() {
+        this.cached = null
     }
 
     companion object {
