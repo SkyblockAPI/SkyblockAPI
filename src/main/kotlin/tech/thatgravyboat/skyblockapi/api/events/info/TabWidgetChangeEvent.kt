@@ -15,6 +15,7 @@ data class TabWidgetChangeEvent(
     val old: List<String>,
     val new: List<String>,
     val newComponents: List<Component>,
+    val matchResult: MatchResult? = null,
 ) : SkyBlockEvent() {
     val isEmpty: Boolean get() = new.isEmpty()
     override fun post(bus: EventBus): Boolean = bus.post(this, this.widget)
@@ -68,7 +69,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     CROP_MILESTONES("Crop Milestones:"),
 
     // Crimson Isle
-    REPUTATION("(?:Mage|Barbarian) Reputation:"),
+    REPUTATION("(?<type>:Mage|Barbarian) Reputation:"),
     TROPHY_FISH("Trophy Fish:"),
     FACTION_QUESTS("Faction Quests:"),
 
