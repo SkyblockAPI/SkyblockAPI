@@ -212,7 +212,9 @@ enum class SlayerType(override val displayName: String, val otherName: String) :
     REVENANT_HORROR("Revenant Horror", "Zombie") {
         override val inGameNames = listOf("Revenant Horror", "Atoned Horror")
     },
-    TARANTULA_BROODFATHER("Tarantula Broodfather", "Spider"),
+    TARANTULA_BROODFATHER("Tarantula Broodfather", "Spider") {
+        override val inGameNames = listOf("Tarantula Broodfather", "Conjoined Brood")
+    },
     SVEN_PACKMASTER("Sven Packmaster", "Wolf"),
     VOIDGLOOM_SERAPH("Voidgloom Seraph", "Enderman"),
     RIFTSTALKER_BLOODFIEND("Riftstalker Bloodfiend", "Vampire") {
