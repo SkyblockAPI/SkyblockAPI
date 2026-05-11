@@ -1,0 +1,250 @@
+package tech.thatgravyboat.skyblockapi.api.repo.v2
+
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
+import com.mojang.serialization.DataResult
+import me.owdding.ktmodules.Module
+import net.minecraft.commands.arguments.NbtTagArgument
+import net.minecraft.core.component.DataComponents
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.nbt.ByteArrayTag
+import net.minecraft.nbt.ByteTag
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.DoubleTag
+import net.minecraft.nbt.EndTag
+import net.minecraft.nbt.FloatTag
+import net.minecraft.nbt.IntArrayTag
+import net.minecraft.nbt.IntTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.LongArrayTag
+import net.minecraft.nbt.LongTag
+import net.minecraft.nbt.ShortTag
+import net.minecraft.nbt.StringTag
+import net.minecraft.nbt.Tag
+import net.minecraft.network.chat.CommonComponents
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.component.ItemLore
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import tech.thatgravyboat.repolib.v2.RepoInstance
+import tech.thatgravyboat.repolib.v2.RepoLoader
+import tech.thatgravyboat.repolib.v2.expl.ContentInfo
+import tech.thatgravyboat.repolib.v2.expl.value.Array
+import tech.thatgravyboat.repolib.v2.expl.value.Bool
+import tech.thatgravyboat.repolib.v2.expl.value.MutableArray
+import tech.thatgravyboat.repolib.v2.expl.value.MutableStruct
+import tech.thatgravyboat.repolib.v2.expl.value.Num
+import tech.thatgravyboat.repolib.v2.expl.value.Str
+import tech.thatgravyboat.repolib.v2.expl.value.Struct
+import tech.thatgravyboat.repolib.v2.expl.value.Value
+import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
+import tech.thatgravyboat.skyblockapi.impl.commands.GiveCommands
+import tech.thatgravyboat.skyblockapi.platform.Identifiers
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
+import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.font
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.obfuscated
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.shadowColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.strikethrough
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
+import java.nio.file.Path
+import kotlin.jvm.optionals.getOrNull
+
+@Module
+object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
+    val loader = RepoLoader(Path.of("/Users/meowora/Projects/skyblockapi/repo_new"))
+    val instance: RepoInstance = loader.create()
+
+    fun load() {
+        loader.load().forEach {
+            error("Failed to load '{}' due to {}", it.file, it.reason)
+        }
+    }
+
+    init {
+        load()
+    }
+
+    @Subscription
+    internal fun command(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("repo_v2_item") {
+            thenCallback("give data", NbtTagArgument.nbtTag()) {
+                val tag = argument<CompoundTag>("data")
+                val item = createItem(tag)
+
+                if (item.isError) {
+                    val error = item.error().get().message()
+                    Text.of("Failed to create item") {
+                        this.hover = error.asComponent()
+                    }.sendWithPrefix()
+
+                    error(error)
+                    return@thenCallback
+                }
+
+                val stack = item.orThrow
+                GiveCommands.tryGive(stack.create())
+            }
+            thenCallback("reload") {
+                load()
+            }
+        }
+    }
+
+    fun createItem(data: JsonObject): DataResult<LazyItemStack> = createItem(data.toRepoStruct())
+    fun createItem(data: CompoundTag): DataResult<LazyItemStack> = createItem(data.toRepoStruct())
+
+    fun createItem(data: Struct): DataResult<LazyItemStack> {
+        val stack = instance.createStack(data) ?: return DataResult.error { "Result is null." }
+
+        val errors = stack.error
+        if (errors.isNotEmpty()) {
+            return DataResult.error { (errors.joinToString(";") { it.render() }) }
+        }
+        stack.debug.forEach {
+            debug(it.render())
+        }
+
+        return toStack(stack.stack)
+    }
+
+    private fun toStack(data: Struct): DataResult<LazyItemStack> {
+        val item = data.get("item").asString() ?: return DataResult.error { "Stack doesn't set any base item." }
+        val baseItem = BuiltInRegistries.ITEM.get(Identifiers.parse(item))?.getOrNull() ?: return DataResult.error { "Invalid item id $item!" }
+
+        val lore = data.get("lore")?.asArray()?.mapNotNull { it.asComponent() } ?: return DataResult.error { "No lore on stack." }
+        val itemName = data.get("name")?.asComponent() ?: return DataResult.error { "Item name can't be empty!" }
+
+        return DataResult.success(
+            LazyItemStack(baseItem.value(), 1) {
+                this[DataComponents.CUSTOM_NAME] = itemName
+                this[DataComponents.LORE] = ItemLore(lore, lore)
+
+                data.get("minecraft:item_model")?.asString()?.let(Identifiers::parse)?.let {
+                    this[DataComponents.ITEM_MODEL] = it
+                }
+            },
+        )
+    }
+
+    private fun Value?.asComponent(): Component? {
+        this.asString()?.let {
+            return Text.of(it)
+        }
+
+        val struct = this.asStruct() ?: return null
+        if (!struct.iterator().hasNext()) return CommonComponents.EMPTY
+
+        val text = struct.get("text").asString() ?: ""
+        return Text.of(text) {
+
+            struct.get("color").asTextColor()?.let { this.color = it }
+            struct.get("shadow_color").asTextColor()?.let { this.shadowColor = it }
+            struct.get("bold")?.asBool()?.let { this.bold = it }
+            this.italic = false
+            struct.get("italic")?.asBool()?.let { this.italic = it }
+            struct.get("obfuscated")?.asBool()?.let { this.obfuscated = it }
+            struct.get("strikethrough")?.asBool()?.let { this.strikethrough = it }
+            struct.get("underlined")?.asBool()?.let { this.underlined = it }
+            struct.get("font")?.asString()?.let(Identifiers::parse)?.let { this.font = it }
+
+            struct.get("extra")?.asArray()?.forEach {
+                append(it.asComponent() ?: return@forEach)
+            }
+        }
+    }
+
+    private fun Value?.asTextColor(): Int? {
+        val color = this.asString() ?: return null
+        return when (color.lowercase()) {
+            "black" -> TextColor.BLACK
+            "dark_blue" -> TextColor.DARK_BLUE
+            "dark_green" -> TextColor.DARK_GREEN
+            "cyan" -> TextColor.DARK_AQUA
+            "lime" -> TextColor.GREEN
+            "dark_aqua" -> TextColor.DARK_AQUA
+            "dark_red" -> TextColor.DARK_RED
+            "dark_purple" -> TextColor.DARK_PURPLE
+            "magenta" -> TextColor.MAGENTA
+            "gold" -> TextColor.GOLD
+            "orange" -> TextColor.ORANGE
+            "gray" -> TextColor.GRAY
+            "dark_gray" -> TextColor.DARK_GRAY
+            "blue" -> TextColor.BLUE
+            "green" -> TextColor.GREEN
+            "aqua" -> TextColor.AQUA
+            "red" -> TextColor.RED
+            "light_purple" -> TextColor.LIGHT_PURPLE
+            "pink" -> TextColor.PINK
+            "yellow" -> TextColor.YELLOW
+            "white" -> TextColor.WHITE
+            else if color.startsWith("#") -> color.substring(1).toInt(16)
+            else -> null
+        }
+    }
+
+    private fun Value?.asString() = (this as? Str)?.value
+    private fun Value?.asNum() = (this as? Num)?.value
+    private fun Value?.asBool() = (this as? Bool)?.value
+    private fun Value?.asStruct() = (this as? Struct)
+    private fun Value?.asArray() = (this as? Array)?.toList()
+}
+
+private fun ContentInfo.render() = "{Stack: <${this.stack}>, Message: '${this.message}'}"
+
+
+private fun JsonObject.toRepoStruct(): Struct {
+    val struct = MutableStruct()
+
+    for ((key, value) in this.entrySet()) {
+        struct.set(key, value.toRepo())
+    }
+
+    return struct
+}
+
+private fun JsonElement.toRepo(): Value = when (this) {
+    is JsonObject -> this.toRepoStruct()
+    is JsonArray -> MutableArray.create(this.map { it.toRepo() })
+    is JsonPrimitive if this.isNumber -> Num(this.asNumber.toDouble())
+    is JsonPrimitive if this.isBoolean -> Bool(this.asBoolean)
+    is JsonPrimitive if this.isString -> Str(this.asString)
+    else -> Value.NIL
+}
+
+private fun CompoundTag.toRepoStruct(): Struct {
+    val struct = MutableStruct()
+
+    for ((key, value) in this.entrySet()) {
+        struct.set(key, value.toRepo())
+    }
+
+    return struct
+}
+
+private fun Tag.toRepo(): Value = when (this) {
+    is ByteArrayTag -> MutableArray.create(this.asByteArray.toList().map { Num(it.toDouble()) })
+    is IntArrayTag -> MutableArray.create(this.asIntArray.toList().map { Num(it.toDouble()) })
+    is LongArrayTag -> MutableArray.create(this.asLongArray.toList().map { Num(it.toDouble()) })
+    is ListTag -> MutableArray.create(this.map { it.toRepo() })
+    is CompoundTag -> this.toRepoStruct()
+    is EndTag -> Value.NIL
+    is ByteTag -> Num(this.byteValue().toDouble())
+    is DoubleTag -> Num(this.doubleValue())
+    is FloatTag -> Num(this.floatValue().toDouble())
+    is IntTag -> Num(this.intValue().toDouble())
+    is LongTag -> Num(this.longValue().toDouble())
+    is ShortTag -> Num(this.shortValue().toDouble())
+    is StringTag -> Str(this.value())
+}
