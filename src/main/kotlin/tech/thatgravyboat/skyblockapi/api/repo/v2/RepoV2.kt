@@ -4,6 +4,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
+import com.mojang.authlib.properties.Property
 import com.mojang.serialization.DataResult
 import me.owdding.ktmodules.Module
 import net.minecraft.commands.arguments.NbtTagArgument
@@ -31,20 +32,23 @@ import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.v2.RepoInstance
 import tech.thatgravyboat.repolib.v2.RepoLoader
 import tech.thatgravyboat.repolib.v2.expl.ContentInfo
-import tech.thatgravyboat.repolib.v2.expl.value.Array
-import tech.thatgravyboat.repolib.v2.expl.value.Bool
-import tech.thatgravyboat.repolib.v2.expl.value.MutableArray
-import tech.thatgravyboat.repolib.v2.expl.value.MutableStruct
-import tech.thatgravyboat.repolib.v2.expl.value.Num
-import tech.thatgravyboat.repolib.v2.expl.value.Str
-import tech.thatgravyboat.repolib.v2.expl.value.Struct
+import tech.thatgravyboat.repolib.v2.expl.value.ArrayValue
+import tech.thatgravyboat.repolib.v2.expl.value.BoolValue
+import tech.thatgravyboat.repolib.v2.expl.value.MutableArrayValue
+import tech.thatgravyboat.repolib.v2.expl.value.MutableStructValue
+import tech.thatgravyboat.repolib.v2.expl.value.NumValue
+import tech.thatgravyboat.repolib.v2.expl.value.StrValue
+import tech.thatgravyboat.repolib.v2.expl.value.StructValue
 import tech.thatgravyboat.repolib.v2.expl.value.Value
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.impl.commands.GiveCommands
+import tech.thatgravyboat.skyblockapi.platform.GameProfile
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
+import tech.thatgravyboat.skyblockapi.platform.toResolvableProfile
+import tech.thatgravyboat.skyblockapi.utils.extentions.createSkull
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
@@ -105,7 +109,7 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
     fun createItem(data: JsonObject): DataResult<LazyItemStack> = createItem(data.toRepoStruct())
     fun createItem(data: CompoundTag): DataResult<LazyItemStack> = createItem(data.toRepoStruct())
 
-    fun createItem(data: Struct): DataResult<LazyItemStack> {
+    fun createItem(data: StructValue): DataResult<LazyItemStack> {
         val stack = instance.createStack(data) ?: return DataResult.error { "Result is null." }
 
         val errors = stack.error
@@ -119,7 +123,7 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
         return toStack(stack.stack)
     }
 
-    private fun toStack(data: Struct): DataResult<LazyItemStack> {
+    private fun toStack(data: StructValue): DataResult<LazyItemStack> {
         val item = data.get("item").asString() ?: return DataResult.error { "Stack doesn't set any base item." }
         val baseItem = BuiltInRegistries.ITEM.get(Identifiers.parse(item))?.getOrNull() ?: return DataResult.error { "Invalid item id $item!" }
 
@@ -133,6 +137,11 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
 
                 data.get("minecraft:item_model")?.asString()?.let(Identifiers::parse)?.let {
                     this[DataComponents.ITEM_MODEL] = it
+                }
+                data.get("skin")?.asString()?.let {
+                    this[DataComponents.PROFILE] = GameProfile {
+                        put("textures", Property("textures", it))
+                    }.toResolvableProfile()
                 }
             },
         )
@@ -194,18 +203,18 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
         }
     }
 
-    private fun Value?.asString() = (this as? Str)?.value
-    private fun Value?.asNum() = (this as? Num)?.value
-    private fun Value?.asBool() = (this as? Bool)?.value
-    private fun Value?.asStruct() = (this as? Struct)
-    private fun Value?.asArray() = (this as? Array)?.toList()
+    private fun Value?.asString() = (this as? StrValue)?.value
+    private fun Value?.asNum() = (this as? NumValue)?.value
+    private fun Value?.asBool() = (this as? BoolValue)?.value
+    private fun Value?.asStruct() = (this as? StructValue)
+    private fun Value?.asArray() = (this as? ArrayValue)?.toList()
 }
 
 private fun ContentInfo.render() = "{Stack: <${this.stack}>, Message: '${this.message}'}"
 
 
-private fun JsonObject.toRepoStruct(): Struct {
-    val struct = MutableStruct()
+private fun JsonObject.toRepoStruct(): StructValue {
+    val struct = MutableStructValue()
 
     for ((key, value) in this.entrySet()) {
         struct.set(key, value.toRepo())
@@ -216,15 +225,15 @@ private fun JsonObject.toRepoStruct(): Struct {
 
 private fun JsonElement.toRepo(): Value = when (this) {
     is JsonObject -> this.toRepoStruct()
-    is JsonArray -> MutableArray.create(this.map { it.toRepo() })
-    is JsonPrimitive if this.isNumber -> Num(this.asNumber.toDouble())
-    is JsonPrimitive if this.isBoolean -> Bool(this.asBoolean)
-    is JsonPrimitive if this.isString -> Str(this.asString)
+    is JsonArray -> MutableArrayValue.create(this.map { it.toRepo() })
+    is JsonPrimitive if this.isNumber -> NumValue(this.asNumber.toDouble())
+    is JsonPrimitive if this.isBoolean -> BoolValue(this.asBoolean)
+    is JsonPrimitive if this.isString -> StrValue(this.asString)
     else -> Value.NIL
 }
 
-private fun CompoundTag.toRepoStruct(): Struct {
-    val struct = MutableStruct()
+private fun CompoundTag.toRepoStruct(): StructValue {
+    val struct = MutableStructValue()
 
     for ((key, value) in this.entrySet()) {
         struct.set(key, value.toRepo())
@@ -234,17 +243,17 @@ private fun CompoundTag.toRepoStruct(): Struct {
 }
 
 private fun Tag.toRepo(): Value = when (this) {
-    is ByteArrayTag -> MutableArray.create(this.asByteArray.toList().map { Num(it.toDouble()) })
-    is IntArrayTag -> MutableArray.create(this.asIntArray.toList().map { Num(it.toDouble()) })
-    is LongArrayTag -> MutableArray.create(this.asLongArray.toList().map { Num(it.toDouble()) })
-    is ListTag -> MutableArray.create(this.map { it.toRepo() })
+    is ByteArrayTag -> MutableArrayValue.create(this.asByteArray.toList().map { NumValue(it.toDouble()) })
+    is IntArrayTag -> MutableArrayValue.create(this.asIntArray.toList().map { NumValue(it.toDouble()) })
+    is LongArrayTag -> MutableArrayValue.create(this.asLongArray.toList().map { NumValue(it.toDouble()) })
+    is ListTag -> MutableArrayValue.create(this.map { it.toRepo() })
     is CompoundTag -> this.toRepoStruct()
     is EndTag -> Value.NIL
-    is ByteTag -> Num(this.byteValue().toDouble())
-    is DoubleTag -> Num(this.doubleValue())
-    is FloatTag -> Num(this.floatValue().toDouble())
-    is IntTag -> Num(this.intValue().toDouble())
-    is LongTag -> Num(this.longValue().toDouble())
-    is ShortTag -> Num(this.shortValue().toDouble())
-    is StringTag -> Str(this.value())
+    is ByteTag -> NumValue(this.byteValue().toDouble())
+    is DoubleTag -> NumValue(this.doubleValue())
+    is FloatTag -> NumValue(this.floatValue().toDouble())
+    is IntTag -> NumValue(this.intValue().toDouble())
+    is LongTag -> NumValue(this.longValue().toDouble())
+    is ShortTag -> NumValue(this.shortValue().toDouble())
+    is StringTag -> StrValue(this.value())
 }
