@@ -5,11 +5,12 @@ import java.lang.invoke.LambdaMetafactory
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 import java.lang.reflect.Method
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.function.Consumer
 
 internal class EventListeners {
 
-    private val listeners: MutableList<Listener> = mutableListOf()
+    private val listeners: MutableList<Listener> = CopyOnWriteArrayList()
 
     fun removeListener(listener: Any) {
         listeners.removeIf { it.listener == listener }
