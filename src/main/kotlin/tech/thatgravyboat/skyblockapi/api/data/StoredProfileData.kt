@@ -60,6 +60,9 @@ internal class StoredProfileData<T : Any>(
             }
             return StoredProfileData(version, data, file, autoLoadOnProfileSwap, codec)
         }
+
+        private val _allProfileData = mutableListOf<StoredProfileData<*>>()
+        internal val allProfileData: List<StoredProfileData<*>> get() = _allProfileData
     }
 
     private val storedData = StoredData(
@@ -80,6 +83,7 @@ internal class StoredProfileData<T : Any>(
         if (autoLoadOnProfileSwap) {
             SkyBlockAPI.eventBus.register<ProfileChangeEvent> { storedData.loadAsync() }
         }
+        _allProfileData.add(this)
     }
 
     fun get(): T? {
