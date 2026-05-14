@@ -11,6 +11,7 @@ enum class Essence(val canBeSold: Boolean = true) {
     CRIMSON,
     SUN_GECKO(false),
     FOREST,
+    FOSSIL,
     ;
 
     val bazaarId: String? = "ESSENCE_${this.name}".takeIf { canBeSold }
