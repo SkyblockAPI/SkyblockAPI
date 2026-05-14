@@ -3,7 +3,6 @@ package tech.thatgravyboat.skyblockapi.api.data.stored
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.reputation.Faction
 import tech.thatgravyboat.skyblockapi.api.profile.reputation.ReputationData
-import tech.thatgravyboat.skyblockapi.helpers.McClient
 
 internal object ReputationStorage {
 
@@ -35,7 +34,5 @@ internal object ReputationStorage {
         if (prevReputation == amount) return
         reputation[type] = amount
         REPUTATION.save()
-
-        McClient.options.keyJump.isDown
     }
 }
