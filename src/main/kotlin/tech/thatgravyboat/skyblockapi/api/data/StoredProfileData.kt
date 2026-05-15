@@ -119,7 +119,7 @@ internal class StoredProfileData<T : Any>(
     }
 
     fun removeProfile(name: String) {
-        if (storedData.get()[McPlayer.uuid]?.remove(name) == true) save()
+        if (storedData.get()[McPlayer.uuid]?.remove(name) != null) save()
     }
 
     fun save() = storedData.save()
