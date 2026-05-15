@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIIdResolvers
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
-import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 
 interface IdResolver {
     val types: List<IdResolverKind>
@@ -27,7 +26,7 @@ interface InventoryIdResolver : IdResolver {
     override fun tryResolve(itemStack: ItemStack, resolverKind: IdResolverKind): SkyBlockId? {
         val screen = McScreen.asMenu ?: return null
         val menu = screen.menu
-        val slot = menu.slots.find { it.item.isSameItem(itemStack) } ?: return null
+        val slot = menu.slots.find { it.item == itemStack } ?: return null
         val containerSlotCount = menu.slots.size - 36
         return if (slot.index < containerSlotCount && itemStack.isApplicable(screen, resolverKind)) itemStack.resolveId(screen, resolverKind) else null
     }
