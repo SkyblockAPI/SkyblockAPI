@@ -49,8 +49,6 @@ class SkyBlockCategory private constructor(
         val DUNGEON_LONGSWORD = create("dungeon longsword")
         val BOW = create("bow")
         val DUNGEON_BOW = create("dungeon bow")
-        val SHORT_BOW = create("short_bow")
-        val DUNGEON_SHORT_BOW = create("dungeon short bow")
         val WAND = create("wand")
         val DUNGEON_WAND = create("dungeon wand")
         val AXE = create("axe")
