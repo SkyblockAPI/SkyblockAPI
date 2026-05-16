@@ -1045,6 +1045,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/Essence : java/lang/E
 	public static final field DIAMOND Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field DRAGON Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field FOREST Ltech/thatgravyboat/skyblockapi/api/data/Essence;
+	public static final field FOSSIL Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field GOLD Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field ICE Ltech/thatgravyboat/skyblockapi/api/data/Essence;
 	public static final field SPIDER Ltech/thatgravyboat/skyblockapi/api/data/Essence;
@@ -3655,6 +3656,9 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getLIBRARY ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getLONELY_ISLAND ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getLOST_PRECURSOR_CITY ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getLOTUS_ATOLL ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getLOTUS_EATERS_CAVE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getLOTUS_HIGHLANDS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getMAGMA_CHAMBER ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getMAGMA_FIELDS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getMATRIARCH_LAIR ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
@@ -3787,6 +3791,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland : 
 	public static final field HUB Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field JERRYS_WORKSHOP Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field KUUDRA Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
+	public static final field LOTUS_ATOLL Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field MINESHAFT Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field PRIVATE_ISLAND Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field SPIDERS_DEN Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
