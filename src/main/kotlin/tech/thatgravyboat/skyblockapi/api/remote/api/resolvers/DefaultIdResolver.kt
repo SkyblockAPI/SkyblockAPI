@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.fromIt
 object DefaultIdResolver : IdResolver {
 
     override val types: List<IdResolverKind> = listOf(IdResolverKind.Unknown)
-    override val priority: Int = Int.MIN_VALUE
+    override val priority: Int = Int.MAX_VALUE
 
     override fun tryResolve(itemStack: ItemStack, resolverKind: IdResolverKind): SkyBlockId? {
         return fromItem(itemStack)

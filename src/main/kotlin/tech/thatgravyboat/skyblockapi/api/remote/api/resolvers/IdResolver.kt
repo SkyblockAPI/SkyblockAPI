@@ -25,7 +25,10 @@ interface InventoryIdResolver : IdResolver {
 
     override fun tryResolve(itemStack: ItemStack, resolverKind: IdResolverKind): SkyBlockId? {
         val screen = McScreen.asMenu ?: return null
-        return if (itemStack.isApplicable(screen, resolverKind)) itemStack.resolveId(screen, resolverKind) else null
+        val menu = screen.menu
+        val slot = menu.slots.find { it.item === itemStack } ?: return null
+        val containerSlotCount = menu.slots.size - 36
+        return if (slot.index < containerSlotCount && itemStack.isApplicable(screen, resolverKind)) itemStack.resolveId(screen, resolverKind) else null
     }
 
     fun <T : AbstractContainerMenu> ItemStack.isApplicable(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): Boolean
