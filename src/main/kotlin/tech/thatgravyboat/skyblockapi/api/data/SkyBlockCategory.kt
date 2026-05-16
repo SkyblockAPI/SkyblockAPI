@@ -70,7 +70,6 @@ class SkyBlockCategory private constructor(
 
         val FISHING_ROD = create("fishing rod")
         val ROD_PART = create("rod part")
-        val FISHING_BAIT = create("fishing bait")
         val BAIT = create("bait")
         val TROPHY_FISH = create("trophy fish")
         val FISHING_NET = create("fishing net")
