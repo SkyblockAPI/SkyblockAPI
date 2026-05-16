@@ -26,6 +26,8 @@ import net.minecraft.nbt.StringTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
+import net.minecraft.world.item.component.CustomData
+import net.minecraft.world.item.component.DyedItemColor
 import net.minecraft.world.item.component.ItemLore
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -48,7 +50,6 @@ import tech.thatgravyboat.skyblockapi.impl.commands.GiveCommands
 import tech.thatgravyboat.skyblockapi.platform.GameProfile
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.platform.toResolvableProfile
-import tech.thatgravyboat.skyblockapi.utils.extentions.createSkull
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
@@ -107,9 +108,9 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
     }
 
     fun createItem(data: JsonObject): DataResult<LazyItemStack> = createItem(data.toRepoStruct())
-    fun createItem(data: CompoundTag): DataResult<LazyItemStack> = createItem(data.toRepoStruct())
+    fun createItem(data: CompoundTag): DataResult<LazyItemStack> = createItem(data.toRepoStruct(), data)
 
-    fun createItem(data: StructValue): DataResult<LazyItemStack> {
+    fun createItem(data: StructValue, nbtData: CompoundTag = data.toNbt()): DataResult<LazyItemStack> {
         val stack = instance.createStack(data) ?: return DataResult.error { "Result is null." }
 
         val errors = stack.error
@@ -123,7 +124,7 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
         return toStack(stack.stack)
     }
 
-    private fun toStack(data: StructValue): DataResult<LazyItemStack> {
+    private fun toStack(data: StructValue, nbtData: CompoundTag = data.toNbt()): DataResult<LazyItemStack> {
         val item = data.get("item").asString() ?: return DataResult.error { "Stack doesn't set any base item." }
         val baseItem = BuiltInRegistries.ITEM.get(Identifiers.parse(item))?.getOrNull() ?: return DataResult.error { "Invalid item id $item!" }
 
@@ -137,6 +138,13 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
 
                 data.get("minecraft:item_model")?.asString()?.let(Identifiers::parse)?.let {
                     this[DataComponents.ITEM_MODEL] = it
+                }
+                this[DataComponents.CUSTOM_DATA] = CustomData.of(nbtData)
+                data.get("enchanted")?.asBool()?.let {
+                    this[DataComponents.ENCHANTMENT_GLINT_OVERRIDE] = it
+                }
+                data.get("color")?.asNum()?.toInt()?.let {
+                    this[DataComponents.DYED_COLOR] = DyedItemColor(it)
                 }
                 data.get("skin")?.asString()?.let {
                     this[DataComponents.PROFILE] = GameProfile {
@@ -212,6 +220,25 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
 
 private fun ContentInfo.render() = "{Stack: <${this.stack}>, Message: '${this.message}'}"
 
+fun StructValue.toNbt(): CompoundTag {
+    val tag = CompoundTag()
+    for ((key, value) in this) {
+        tag.put(key, value.toTag() ?: continue)
+    }
+
+    return tag
+}
+
+fun Value.toTag(): Tag? = when (this) {
+    is ArrayValue -> ListTag().also {
+        it.addAll(this.map { tag -> tag.toTag() })
+    }
+    is StructValue -> this.toNbt()
+    is BoolValue -> ByteTag.valueOf(value)
+    is NumValue -> DoubleTag.valueOf(value)
+    is StrValue -> StringTag.valueOf(value)
+    else -> null
+}
 
 private fun JsonObject.toRepoStruct(): StructValue {
     val struct = MutableStructValue()
