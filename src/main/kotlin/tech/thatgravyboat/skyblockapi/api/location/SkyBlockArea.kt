@@ -218,6 +218,11 @@ object SkyBlockAreas {
     // Backwater Bayou
     val BACKWATER_BAYOU = register("backwater_bayou", "Backwater Bayou") // The full island uses this
 
+    // Lotus Atoll
+    val LOTUS_ATOLL = register("lotus_atoll", "Lotus Atoll")
+    val LOTUS_EATERS_CAVE = register("lotus_eaters_cave", "Lotus Eater's Cave")
+    val LOTUS_HIGHLANDS = register("lotus_highlands", "Lotus Highlands")
+
     // Galatea
     val TANGLEBURG_PATH = register("tangleburg_path", "Tangleburg's Path")
     val TANGLEBURG = register("tangleburg", "Tangleburg")
