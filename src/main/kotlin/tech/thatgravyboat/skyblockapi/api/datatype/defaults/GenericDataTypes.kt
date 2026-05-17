@@ -153,6 +153,10 @@ object GenericDataTypes {
     val VISIBLE_ITEM: DataType<Item> = DataType.of("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
     val CLEAN_NAME: DataType<String> = DataType.of("clean_name") { it.hoverName.stripped }
 
+    val VINYLS: DataType<List<SkyBlockId>> = DataType.of("vinyls") {
+        val map = it.unsafeTag?.getCompoundOrEmpty("vinyls")?.takeUnless { it.isEmpty } ?: return@of null
+        map.values().mapNotNull { it.asString()?.map(SkyBlockId::unsafe)?.getOrNull() }
+    }
 
     private fun getFishingRodPartDataType(name: String) = DataType.of(name) {
         val tag = it.unsafeTag?.getObjectOrNull(name) ?: return@of null
