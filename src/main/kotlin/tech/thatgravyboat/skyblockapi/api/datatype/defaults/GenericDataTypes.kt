@@ -155,7 +155,7 @@ object GenericDataTypes {
 
     val VINYLS: DataType<List<SkyBlockId>> = DataType.of("vinyls") {
         val map = it.unsafeTag?.getCompoundOrEmpty("vinyls")?.takeUnless { it.isEmpty } ?: return@of null
-        map.values().mapNotNull { it.asString()?.map(SkyBlockId::unsafe)?.getOrNull() }
+        map.values().mapNotNull { it.asString()?.map(SkyBlockId::item)?.getOrNull() }
     }
 
     private fun getFishingRodPartDataType(name: String) = DataType.of(name) {

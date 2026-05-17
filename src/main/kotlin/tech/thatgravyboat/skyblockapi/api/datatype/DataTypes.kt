@@ -122,4 +122,5 @@ object DataTypes {
     val TOOL_EXP: DataType<Double> = GenericDataTypes.TOOL_EXP
     val TOOL_OVERCLOCKS: DataType<Int> = GenericDataTypes.TOOL_OVERCLOCKS
     val WATER_LEVEL: DataType<Pair<Int, Int>> = LoreDataTypes.WATER_LEVEL
+    val VINYLS: DataType<List<SkyBlockId>> = GenericDataTypes.VINYLS
 }
