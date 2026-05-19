@@ -73,7 +73,7 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
 
     fun load() {
         loader.load().forEach {
-            error("Failed to load '{}' due to {}", it.file, it.reason)
+            error("Failed to load '{}' due to", it.file, it.reason)
         }
     }
 
@@ -121,7 +121,7 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
             debug(it.render())
         }
 
-        return toStack(stack.stack)
+        return toStack(stack.stack, nbtData)
     }
 
     private fun toStack(data: StructValue, nbtData: CompoundTag = data.toNbt()): DataResult<LazyItemStack> {
