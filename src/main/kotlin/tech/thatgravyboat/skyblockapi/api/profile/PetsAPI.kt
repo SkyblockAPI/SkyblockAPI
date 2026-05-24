@@ -21,7 +21,7 @@ object PetsAPI {
 
     private val petRegex = petGroup.create(
         "pet",
-        " \\[Lvl (?<level>\\d+)] (?<pet>[\\w ]+)(?: ✦)?"
+        " \\[Lvl (?<level>\\d+)](?: \\[\\d+✦])? (?<pet>[\\w ]+)(?: ✦)?",
     ).toComponentRegex()
 
     private val petXpRegex = petGroup.create(
