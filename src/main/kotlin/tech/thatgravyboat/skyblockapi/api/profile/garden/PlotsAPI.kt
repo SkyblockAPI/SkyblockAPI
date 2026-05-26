@@ -328,6 +328,8 @@ data class Plot(
     val isBarn = id == 0
     val tpName = if (isBarn) "barn" else id
     val data get() = PlotsStorage.getPlot(id)
+
+    override fun toString(): String = "Plot(id=$id, slot=$slot, aabb=$aabb, data=$data)"
 }
 
 @GenerateCodec
