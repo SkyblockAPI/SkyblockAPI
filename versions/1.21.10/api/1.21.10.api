@@ -147,7 +147,6 @@ public final class tech/thatgravyboat/skyblockapi/api/area/dungeon/DungeonFloor 
 public final class tech/thatgravyboat/skyblockapi/api/area/dungeon/DungeonFloor$Companion {
 	public final fun getByLongName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/dungeon/DungeonFloor;
 	public final fun getByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/dungeon/DungeonFloor;
-	public final fun nativeFunction ()V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/dungeon/DungeonKey : java/lang/Enum {
