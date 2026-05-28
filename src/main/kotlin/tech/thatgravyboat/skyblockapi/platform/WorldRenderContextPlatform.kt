@@ -49,15 +49,18 @@ fun RenderWorldEvent.drawString(
     backgroundColor: UInt = 0u,
     light: Int = LightTexture.FULL_BRIGHT,
 ) {
-    McFont.self.drawInBatch(
+    // TODO: fix "drawInBatch methods are removed"
+    //? < 26.2 {
+    /*McFont.self.drawInBatch(
         text,
         x, y,
         color.toInt(),
         dropShadow,
         this.poseStack.last().pose(),
-        this.buffer,
+        //? < 26.2
+        //this.buffer,
         displayMode,
         backgroundColor.toInt(),
         light,
-    )
+    )*///? }
 }

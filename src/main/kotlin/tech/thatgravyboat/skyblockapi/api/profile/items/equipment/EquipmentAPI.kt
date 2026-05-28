@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.RightClickEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
@@ -55,7 +56,7 @@ object EquipmentAPI {
     }
 
     private fun handleInventoryItem(slot: EquipmentSlot, itemStack: ItemStack) {
-        val item = if (itemStack.item == Items.LIGHT_GRAY_STAINED_GLASS_PANE) ItemStack.EMPTY
+        val item = if (itemStack.item == ColoredItems.LIGHT_GRAY_STAINED_GLASS_PANE) ItemStack.EMPTY
         else itemStack
         EquipmentStorage.setEquipment(slot, item)
     }

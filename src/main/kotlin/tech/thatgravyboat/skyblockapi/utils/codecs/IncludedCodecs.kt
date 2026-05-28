@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils.codecs
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
-import net.minecraft.advancements.criterion.BlockPredicate
+import net.minecraft.advancements.predicates.BlockPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.core.GlobalPos
 import net.minecraft.core.Vec3i

@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.roundToNextMultipleOf
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -64,7 +65,7 @@ object WardrobeAPI {
             val id = WARDROBE_SLOTS_PER_PAGE * (currentPage - 1) + index + 1
             var locked = false
 
-            if (selectStack.item == Items.RED_DYE) {
+            if (selectStack.item == ColoredItems.RED_DYE) {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
                 WardrobeStorage.updateCurrentSlot(id)

@@ -14,7 +14,7 @@ plugins {
     `maven-publish`
 }
 
-stonecutter active "26.1"
+stonecutter active "26.2"
 
 stonecutter parameters {
     swaps["mod_version"] = "\"" + property("version") + "\";"
@@ -82,6 +82,14 @@ stonecutter parameters {
         replace(
             "import net.minecraft.client.gui.GuiGraphicsExtractor(?!;)", "import net.minecraft.client.gui.GuiGraphics as GuiGraphicsExtractor",
             "import net.minecraft.client.gui.GuiGraphics as GuiGraphicsExtractor", "import net.minecraft.client.gui.GuiGraphicsExtractor"
+        )
+    }
+
+    replacements.regex {
+        direction = eval(current.version, "< 26.2")
+        replace(
+            "import net.minecraft.advancements.predicates.BlockPredicate", "import net.minecraft.advancements.criterion.BlockPredicate",
+            "import net.minecraft.advancements.criterion.BlockPredicate", "import net.minecraft.advancements.predicates.BlockPredicate"
         )
     }
 }

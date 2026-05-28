@@ -206,8 +206,9 @@ object TextUtils {
     private fun StringBuilder.appendStyle(style: Style) {
         style.color?.let { color ->
             val value = color.value
-            val formatting = ChatFormatting.entries.find { it.isColor && it.color == value } ?: ChatFormatting.RESET
-            append(formatting)
+            // TODO: they fucking removed everything literally kill me
+            //val formatting = ChatFormatting.entries.find { it.isColor && it.color == value } ?: ChatFormatting.RESET
+            //append(formatting)
         }
 
         if (style.isBold) append(ChatFormatting.BOLD)
