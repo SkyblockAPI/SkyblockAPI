@@ -1,8 +1,12 @@
 package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
+import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.IncludedCodec
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemOrigin
+import tech.thatgravyboat.skyblockapi.generated.EnumCodec
 import kotlin.jvm.optionals.getOrNull
 
 enum class Gemstone {
@@ -51,7 +55,8 @@ enum class GemstoneSlot(vararg val gemstones: Gemstone) {
     DEFENSIVE(Gemstone.AMETHYST, Gemstone.RUBY, Gemstone.OPAL),
     MINING(Gemstone.JADE, Gemstone.AMBER, Gemstone.TOPAZ), // exists
     UNIVERSAL(*Gemstone.entries.toTypedArray()),
-    OFFENSIVE(Gemstone.SAPPHIRE, Gemstone.JASPER) // apparently unused
+    OFFENSIVE(Gemstone.SAPPHIRE, Gemstone.JASPER), // apparently unused
+    UNKNOWN,
 }
 
 data class GemstoneSlotData(val gemstone: Gemstone, val slot: GemstoneSlot, val quality: GemstoneQuality) {
