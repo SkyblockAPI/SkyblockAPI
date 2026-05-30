@@ -25,7 +25,7 @@ enum class CostTypes(override val type: KClass<out Cost>) : DispatchHelper<Cost>
 
 @GenerateCodec
 data class EssenceCost(
-    @FieldName("essence_type") @EnumFallback(Essence.UNKNOWN) val essenceType: Essence,
+    @FieldName("essence_type") val essenceType: Essence,
     val amount: Int,
 ) : Cost(CostTypes.ESSENCE) {
     companion object {

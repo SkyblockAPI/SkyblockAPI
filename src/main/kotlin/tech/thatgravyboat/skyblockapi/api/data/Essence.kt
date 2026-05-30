@@ -1,5 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
+import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.IncludedCodec
+import tech.thatgravyboat.skyblockapi.generated.EnumCodec
+
 enum class Essence(val canBeSold: Boolean = true) {
     WITHER,
     UNDEAD,
@@ -19,5 +23,8 @@ enum class Essence(val canBeSold: Boolean = true) {
 
     companion object {
         val actualEntries = entries.filterNot { it == UNKNOWN }
+
+        @IncludedCodec
+        val CODEC: Codec<Essence> = EnumCodec.forKCodec(entries.toTypedArray()).orElse(UNKNOWN)
     }
 }

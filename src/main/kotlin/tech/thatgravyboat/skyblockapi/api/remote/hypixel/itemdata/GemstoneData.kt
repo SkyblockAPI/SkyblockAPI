@@ -6,6 +6,6 @@ import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlot
 
 @GenerateCodec
 data class GemstoneCost(
-    @FieldName("slot_type") @EnumFallback(GemstoneSlot.UNKNOWN) val slotType: GemstoneSlot,
+    @FieldName("slot_type") val slotType: GemstoneSlot,
     @FieldName("costs") val cost: List<Cost> = emptyList(),
 )

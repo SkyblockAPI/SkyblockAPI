@@ -5,7 +5,6 @@ import me.owdding.ktcodecs.IncludedCodec
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
-import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemOrigin
 import tech.thatgravyboat.skyblockapi.generated.EnumCodec
 import kotlin.jvm.optionals.getOrNull
 
@@ -57,6 +56,12 @@ enum class GemstoneSlot(vararg val gemstones: Gemstone) {
     UNIVERSAL(*Gemstone.entries.toTypedArray()),
     OFFENSIVE(Gemstone.SAPPHIRE, Gemstone.JASPER), // apparently unused
     UNKNOWN,
+    ;
+
+    companion object {
+        @IncludedCodec
+        val CODEC: Codec<GemstoneSlot> = EnumCodec.forKCodec(entries.toTypedArray()).orElse(UNKNOWN)
+    }
 }
 
 data class GemstoneSlotData(val gemstone: Gemstone, val slot: GemstoneSlot, val quality: GemstoneQuality) {
