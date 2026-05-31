@@ -54,7 +54,7 @@ object SkyBlockAttributesRepo : RepoItemCache<String>("Attributes") {
 
             val rawLore = attribute.lore()
             val lore = rawLore.map { it.asComponent() }.toMutableList()
-                .also { it.addFirst(Text.of(attribute.name()) { this.color = TextColor.GOLD }) }.toList()
+                .also { it.addFirst(Text.of(attribute.name()) { this.color = TextColor.GOLD; this.italic = false }) }.toList()
 
             this[DataComponents.LORE] = ItemLore(lore, lore)
             this[DataComponents.CUSTOM_DATA] = compoundTag {
