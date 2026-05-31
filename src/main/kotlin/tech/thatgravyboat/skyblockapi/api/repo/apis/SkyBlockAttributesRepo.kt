@@ -40,7 +40,7 @@ object SkyBlockAttributesRepo : RepoItemCache<String>("Attributes") {
             ?.takeUnless { it == Items.AIR }
             ?: Items.BARRIER
 
-        return LazyItemStack(item.takeIf { attribute.texture() != null } ?: Items.PLAYER_HEAD) {
+        return LazyItemStack(item.takeIf { attribute.texture() == null } ?: Items.PLAYER_HEAD) {
             if (attribute.texture() != null) {
                 this[DataComponents.PROFILE] = ResolvableProfile { put("textures", Property("textures", attribute.texture())) }
             }
