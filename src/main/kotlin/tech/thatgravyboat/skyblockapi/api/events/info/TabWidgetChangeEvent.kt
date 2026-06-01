@@ -76,6 +76,9 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     // End
     DRAGON("Dragon: \\((?<type>.+)\\)"),
 
+    // Lotus Atoll
+    TROPHY_FROGS("Trophy Frogs:"),
+
     // Dungeons + Dungeon Hub
     DOWNED("Downed: (?<status>.*)"),
     TEAM_DEATHS("Team Deaths: (?<amount>\\d+)"),
