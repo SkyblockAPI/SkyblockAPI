@@ -2,17 +2,15 @@ package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.gui.contextualbar.ContextualBar;
 import net.minecraft.client.gui.contextualbar.ExperienceBar;
 import net.minecraft.client.gui.contextualbar.JumpableVehicleBar;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.Objective;
 import org.apache.commons.lang3.tuple.Pair;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,20 +21,18 @@ import tech.thatgravyboat.skyblockapi.api.events.render.HudElement;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudEvent;
 
-@Mixin(Gui.class)
-public class GuiMixin {
-
-    @Shadow
-    @Final
-    private Minecraft minecraft;
+@Mixin(Hud.class)
+public abstract class HudMixin {
 
     @Shadow
     private Pair<Enum<?>, ContextualBar> contextualInfoBar;
 
+    @Shadow
+    public abstract boolean isHidden();
 
     @Inject(method = "extractSleepOverlay", at = @At("HEAD"))
     private void onRenderSleepOverlay(GuiGraphicsExtractor graphics, DeltaTracker delta, CallbackInfo ci) {
-        if (this.minecraft.options.hideGui) {
+        if (this.isHidden()) {
             return;
         }
         float partialTicks = delta.getGameTimeDeltaPartialTick(false);
@@ -47,10 +43,10 @@ public class GuiMixin {
         method = "extractHotbarAndDecorations",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/Gui;extractItemHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"
+            target = "Lnet/minecraft/client/gui/Hud;extractItemHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"
         )
     )
-    private boolean onRenderHotbar(Gui instance, GuiGraphicsExtractor graphics, DeltaTracker delta) {
+    private boolean onRenderHotbar(Hud instance, GuiGraphicsExtractor graphics, DeltaTracker delta) {
         return !new RenderHudElementEvent(HudElement.HOTBAR, graphics).post(SkyBlockAPI.getEventBus());
     }
 
@@ -58,7 +54,7 @@ public class GuiMixin {
         method = "extractHotbarAndDecorations",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/contextualbar/ContextualBarRenderer;extractBackground(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"
+            target = "Lnet/minecraft/client/gui/contextualbar/ContextualBar;extractBackground(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"
         )
     )
     private void onRenderBar(GuiGraphicsExtractor graphics, DeltaTracker $$1, CallbackInfo ci) {
@@ -78,21 +74,21 @@ public class GuiMixin {
         method = "extractHotbarAndDecorations",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/contextualbar/ContextualBarRenderer;extractExperienceLevel(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;I)V"
+            target = "Lnet/minecraft/client/gui/contextualbar/ContextualBar;extractExperienceLevel(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;I)V"
         )
     )
     private boolean onRenderExperienceLevel(GuiGraphicsExtractor $$0, Font $$1, int $$2) {
-        return this.contextualInfoBar.getKey().ordinal() != 1 || this.contextualInfoBar.getValue() != ContextualBarRenderer.EMPTY;
+        return this.contextualInfoBar.getKey().ordinal() != 1 || this.contextualInfoBar.getValue() != ContextualBar.EMPTY;
     }
 
     @WrapWithCondition(
         method = "extractHotbarAndDecorations",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/Gui;extractVehicleHealth(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
+            target = "Lnet/minecraft/client/gui/Hud;extractVehicleHealth(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
         )
     )
-    private boolean onRenderVehicleHealth(Gui instance, GuiGraphicsExtractor graphics) {
+    private boolean onRenderVehicleHealth(Hud instance, GuiGraphicsExtractor graphics) {
         return !new RenderHudElementEvent(HudElement.HEALTH, graphics).post(SkyBlockAPI.getEventBus());
     }
 
@@ -100,11 +96,11 @@ public class GuiMixin {
         method = "extractPlayerHealth",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/Gui;extractHearts(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V"
+            target = "Lnet/minecraft/client/gui/Hud;extractHearts(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V"
         )
     )
     private boolean onRenderHealth(
-        Gui instance,
+        Hud instance,
         GuiGraphicsExtractor graphics,
         Player player,
         int i,
@@ -124,7 +120,7 @@ public class GuiMixin {
         method = "extractPlayerHealth",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/Gui;extractArmor(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;IIII)V"
+            target = "Lnet/minecraft/client/gui/Hud;extractArmor(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;IIII)V"
         )
     )
     private boolean onRenderArmor(GuiGraphicsExtractor graphics, Player player, int i, int j, int k, int l) {
@@ -135,10 +131,10 @@ public class GuiMixin {
         method = "extractPlayerHealth",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/Gui;extractFood(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;II)V"
+            target = "Lnet/minecraft/client/gui/Hud;extractAirBubbles(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;III)V"
         )
     )
-    private boolean onRenderFood(Gui instance, GuiGraphicsExtractor graphics, Player player, int i, int j) {
+    private boolean onRenderFood(Hud instance, GuiGraphicsExtractor graphics, Player player, int vehicleHearts, int yLineAir, int xRight) {
         return !new RenderHudElementEvent(HudElement.FOOD, graphics).post(SkyBlockAPI.getEventBus());
     }
 
@@ -146,10 +142,10 @@ public class GuiMixin {
         method = "extractPlayerHealth",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/Gui;extractAirBubbles(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;III)V"
+            target = "Lnet/minecraft/client/gui/Hud;extractAirBubbles(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;III)V"
         )
     )
-    private boolean onRenderAir(Gui instance, GuiGraphicsExtractor graphics, Player player, int i, int j, int k) {
+    private boolean onRenderAir(Hud instance, GuiGraphicsExtractor graphics, Player player, int i, int j, int k) {
         return !new RenderHudElementEvent(HudElement.AIR, graphics).post(SkyBlockAPI.getEventBus());
     }
 

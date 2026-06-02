@@ -104,9 +104,7 @@ object McClient {
     val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
     val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
 
-    val toasts: ToastManager
-        get() =
-            /*? if >= 26.2 {*/gui.toastManager()/*? } else *///self.toastManager
+    val toasts: ToastManager get() =/*? if >= 26.2 {*/gui.toastManager()/*? } else *///self.toastManager
     val gui: Gui get() = self.gui
     val hud: Hud get() = self.gui.hud
     val chat: ChatComponent get() =/*? if >= 26.2 {*/hud.chat/*? } else*///gui.chat
@@ -138,7 +136,7 @@ object McClient {
         hud.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
         hud.setSubtitle(subtitle ?: CommonText.EMPTY)
         hud.setTitle(title)
-        //? }
+        //~ }
     }
 
     fun setScreenAsync(screen: () -> Screen?) = runNextTick {
@@ -146,7 +144,7 @@ object McClient {
         (McScreen.self as? AbstractContainerScreen<*>)?.onClose()
         //? >= 26.2 {
         gui.setScreen(next)
-        //? } else {
+        //? } else
         //self.setScreen(next)
     }
 
@@ -164,7 +162,7 @@ object McClient {
             //? >= 26.2 {
             gui.setScreen(screen)
             //? } else
-            // self.setScreen(screen)
+            //self.setScreen(screen)
         }
     }
 
