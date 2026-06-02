@@ -18,7 +18,8 @@ public class LevelRendererMixin {
     @Unique
     private final ThreadLocal<DeltaTracker> deltaTracker = new ThreadLocal<>();
 
-
+    // TODO
+/*
     @Inject(method = "addMainPass", at = @At("HEAD"))
     public void saveDeltaTracker(CallbackInfo ci, @Local(argsOnly = true) DeltaTracker deltaTracker) {
         this.deltaTracker.set(deltaTracker);
@@ -63,6 +64,6 @@ public class LevelRendererMixin {
             levelRenderState.cameraRenderState.orientation,
             deltaTracker.getGameTimeDeltaPartialTick(false)
         ).post(SkyBlockAPI.getEventBus());
-    }
+    }*/
 
 }
