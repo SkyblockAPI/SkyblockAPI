@@ -81,45 +81,39 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
         if (this.skyblockapi$idToGive != null) {
             ((ChatIdHolder) (Object) message).skyblockapi$setId(this.skyblockapi$idToGive);
 
-            this.allMessages.removeIf(m -> {
-                var msgId = ((ChatIdHolder) (Object) m).skyblockapi$getId();
+            this.allMessages.removeIf(msg -> {
+                var msgId = ((ChatIdHolder) (Object) msg).skyblockapi$getId();
                 return msgId != null && this.skyblockapi$idToGive != null && Objects.equals(msgId, this.skyblockapi$idToGive);
             });
-            this.trimmedMessages.removeIf(it -> {
-                var msgId = ((ChatIdHolder) (Object) it).skyblockapi$getId();
+            this.trimmedMessages.removeIf(line -> {
+                //~ if >= 26.1 'line' -> 'line.parent()'
+                var msgId = ((ChatIdHolder) (Object) line.parent()).skyblockapi$getId();
                 return msgId != null && this.skyblockapi$idToGive != null && Objects.equals(msgId, this.skyblockapi$idToGive);
             });
         }
         return message;
     }
 
-    @WrapOperation(
+    //? if < 26.1 {
+    /*@WrapOperation(
         method = "addMessageToDisplayQueue",
         at = @At(
             value = "NEW",
-            //? >= 26.1 {
-            target = "(Lnet/minecraft/client/multiplayer/chat/GuiMessage;Lnet/minecraft/util/FormattedCharSequence;Z)Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;"
-            //? } else {
-            /*target = "(ILnet/minecraft/util/FormattedCharSequence;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;Z)Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;"
-            *///? }
+            target = "(ILnet/minecraft/util/FormattedCharSequence;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;Z)Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;"
         )
     )
     private GuiMessage.Line onAddMessageToDisplayQueue(
-        //~ if >= 26.1 'int i' -> 'GuiMessage parent'
-        GuiMessage parent,
+        int i,
         FormattedCharSequence content,
-        //? < 26.1
-        //GuiMessageTag tag,
+        GuiMessageTag tag,
         boolean endOfEntry,
         Operation<GuiMessage.Line> original,
         @Local(argsOnly = true) GuiMessage message
     ) {
         GuiMessage.Line line = original.call(
-            //~ if >= 26.1 'i' -> 'parent'
-            parent,
+            i,
             content,
-            //? < 26.1
-            //tag,
+            tag,
             endOfEntry
         );
         ChatIdHolder messageHolder = (ChatIdHolder) (Object) message;
@@ -127,5 +121,5 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             ((ChatIdHolder) (Object) line).skyblockapi$setId(messageHolder.skyblockapi$getId());
         }
         return line;
-    }
+    }*///?}
 }
