@@ -14,6 +14,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
@@ -159,7 +160,7 @@ object CurrencyAPI {
     @OnlyOnSkyBlock
     fun onInventoryUpdate(event: InventoryChangeEvent) {
         when (event.title) {
-            "Grand Bakery" if (event.slot.index == 4) -> {
+            "Grand Bakery" if (event.item.cleanName == "Grand Bakery") -> {
                 inventoryKernelsRegex.findCurrencyChecked(event.item.getRawLore(), "kernels", ::kernels, CurrencyEvent::Kernels)
             }
         }
