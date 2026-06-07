@@ -11,8 +11,11 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -60,6 +63,9 @@ object CurrencyAPI {
     private val sowdustRegex = currencyGroup.create("sowdust", "^Sowdust: (?<sowdust>(?i)[\\d,.kmb]+)")
     private val northStarsRegex = currencyGroup.create("northstars", "^North Stars: (?<northstars>(?i)[\\d,.kmb]+)")
     private val kernelsRegex = currencyGroup.create("kernels", "^Kernels: (?<kernels>(?i)[\\d,.kmb]+)")
+
+    private val inventoryGroup = RegexGroup.INVENTORY.group("currency")
+    private val kernelsInventoryRegex = inventoryGroup.create("kernels", "^Your Kernels: (?<kernels>[\\d,.]+)")
 
     var purse: Double by CurrencyStorage::purse
         private set
@@ -147,6 +153,16 @@ object CurrencyAPI {
                 this.purse = post(purse.parseFormattedDouble(), this.purse, CurrencyEvent::Purse)
             }
             bitsRegex.findCurrency(event.added, "bits", ::bits, CurrencyEvent::Bits)
+        }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    fun onInventoryChange(event: InventoryChangeEvent) {
+        if (event.title != "Grand Bakery") return
+        if (event.slot.item.cleanName != "Grand Bakery") return
+        kernelsInventoryRegex.anyMatch(event.slot.item.getRawLore(), "kernels") { (kernels) ->
+            this.kernels = post(kernels, this.kernels, CurrencyEvent::Kernels)
         }
     }
 
