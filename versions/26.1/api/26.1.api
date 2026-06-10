@@ -6151,6 +6151,7 @@ public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugItems {
 	public final fun getSelectedIndex ()I
 	public final fun getToggledEntries ()Ljava/util/Set;
 	public final fun isEnabled ()Z
+	public final fun onForegroundRender (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderScreenForegroundEvent;)V
 	public final fun onGetDebugTooltip (Ltech/thatgravyboat/skyblockapi/api/events/screen/ItemDebugTooltipEvent;)V
 	public final fun onKeyPressed (Ltech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent$Pre;)V
 	public final fun setEntriesSize (I)V
