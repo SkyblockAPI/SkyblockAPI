@@ -1,4 +1,5 @@
-package tech.thatgravyboat.skyblockapi.mixins.events;
+//? if < 26.1 {
+/*package tech.thatgravyboat.skyblockapi.mixins.events;
 
 import net.minecraft.client.multiplayer.chat.GuiMessage;
 import org.jetbrains.annotations.Nullable;
@@ -22,3 +23,4 @@ public class GuiMessageLineMixin implements ChatIdHolder {
         this.skyblockapi$id = id;
     }
 }
+*///?}
