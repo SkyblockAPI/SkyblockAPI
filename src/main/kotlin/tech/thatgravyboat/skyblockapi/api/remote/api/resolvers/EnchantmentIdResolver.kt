@@ -25,14 +25,22 @@ internal data object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdRe
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): Boolean {
-        return menu.title.stripped == "The Hex ➜ Enchant Item" || menu.title.stripped == "Enchant Item"
+        val stripped = menu.title.stripped
+        val isHex = stripped == "The Hex ➜ Enchant Item"
+        val isTable = stripped == "Enchant Item"
+
+        addDebugString { "Is Hex: $isHex; Is Table: $isTable" }
+        return isHex || isTable
     }
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
-        return idLookup[this.cleanName]?.asDerived()
+        val name = this.cleanName
+        val lookup = idLookup[name]
+        this.addDebugString { "Name to id: $name -> $lookup" }
+        return lookup?.asDerived()
     }
 
     override val priority: Int = 10
@@ -72,11 +80,10 @@ internal data object EnchantmentGuideIdResolver : InventoryIdResolver, ItemDebug
     }
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): SkyBlockId? {
-        this.addDebugString {
-            val name = this.cleanName.substringBeforeLast(" ").trim()
-            "Name to id: $name -> ${nameToIdLookup[name]}"
-        }
-        val id = nameToIdLookup[this.cleanName.substringBeforeLast(" ").trim()] ?: return null
+        val name = this.cleanName.substringBeforeLast(" ").trim()
+        val lookup = nameToIdLookup[name]
+        this.addDebugString { "Name to id: $name -> $lookup" }
+        val id = lookup ?: return null
         val level = this.cleanName.substringAfterLast(" ").trim().toIntValue()
         return SkyBlockId.enchantment(id, level).asDerived()
     }
