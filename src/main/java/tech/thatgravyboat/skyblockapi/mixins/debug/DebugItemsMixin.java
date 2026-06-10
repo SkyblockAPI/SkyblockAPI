@@ -26,7 +26,7 @@ public class DebugItemsMixin implements ItemDebugAccessor {
     @Override
     public void skyblockapi$addEntry(@NotNull ItemDebugCategory category, @NotNull Component entry) {
         if (skyblockapi$debug_map == null) {
-            this.skyblockapi$debug_map = MultimapBuilder.hashKeys().hashSetValues().build();
+            this.skyblockapi$debug_map = MultimapBuilder.hashKeys().linkedListValues().build();
         }
         this.skyblockapi$debug_map.put(category, entry);
     }

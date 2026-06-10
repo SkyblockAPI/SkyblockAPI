@@ -42,6 +42,7 @@ object DebugItems {
         this.lastItem = new
         this.selectedIndex = 0
         this.entriesSize = new?.getEntries()?.asMap()?.keys?.size ?: 0
+        this.toggledEntries.clear()
     }
 
     @Subscription
