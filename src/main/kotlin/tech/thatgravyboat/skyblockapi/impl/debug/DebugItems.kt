@@ -6,15 +6,22 @@ import me.owdding.ktmodules.Module
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
+import tech.thatgravyboat.skyblockapi.impl.debug.DebugInventory.CopyType
+import tech.thatgravyboat.skyblockapi.platform.drawString
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
 import tech.thatgravyboat.skyblockapi.utils.extentions.since
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import kotlin.time.Duration.Companion.seconds
@@ -48,6 +55,43 @@ object DebugItems {
             InputConstants.KEY_UP -> selectedIndex =  if (selectedIndex == 0) entriesSize - 1 else selectedIndex - 1
             InputConstants.KEY_RIGHT -> toggledEntries.add(entries.keySet().toList()[this.selectedIndex])
             InputConstants.KEY_LEFT -> toggledEntries.remove(entries.keySet().toList()[this.selectedIndex])
+            InputConstants.KEY_C -> McClient.clipboard = buildString {
+                append("```")
+                if (McScreen.isControlDown) {
+                    entries.asMap().forEach { (category, components) ->
+                        append("## ").appendLine(category)
+                        appendLine(components.joinToString("\n"))
+                    }
+                } else {
+                    val category = entries.keySet().toList()[selectedIndex]
+                    append("## ").appendLine(category)
+                    appendLine(entries.get(category).joinToString("\n"))
+                }
+                append("```")
+            }
+        }
+    }
+
+    @Subscription
+    fun onForegroundRender(event: RenderScreenForegroundEvent) {
+        if (!isEnabled) return
+        if (!McScreen.isShiftDown) return
+        lastItem ?: return
+
+        buildList {
+            add("Up - Go up")
+            add("Down - Go down")
+            add("Right - Expand category")
+            add("Left - Collapse category")
+            add("C - Copy selected category")
+            add("Ctrl + C - Copy all categories")
+        }.forEachIndexed { index, line ->
+            event.graphics.drawString(
+                line,
+                8,
+                8 + index * McFont.height,
+                0xFFFFFFFF.toInt(),
+            )
         }
     }
 
