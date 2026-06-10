@@ -5303,30 +5303,39 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId$Comp
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/AttributeMenuResolver : tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/InventoryIdResolver {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/AttributeMenuResolver;
+	public fun equals (Ljava/lang/Object;)Z
 	public fun getPriority ()I
 	public fun getTypes ()Ljava/util/List;
+	public fun hashCode ()I
 	public fun isApplicable (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Z
 	public fun resolveId--S_X1CQ (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
 	public fun tryResolve-X9spmwk (Lnet/minecraft/world/item/ItemStack;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/DefaultIdResolver : tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolver {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/DefaultIdResolver;
+	public fun equals (Ljava/lang/Object;)Z
 	public fun getPriority ()I
 	public fun getTypes ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 	public fun tryResolve-X9spmwk (Lnet/minecraft/world/item/ItemStack;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/HuntingBoxResolver : tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/InventoryIdResolver {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/HuntingBoxResolver;
+	public fun equals (Ljava/lang/Object;)Z
 	public fun getPriority ()I
 	public fun getTypes ()Ljava/util/List;
+	public fun hashCode ()I
 	public fun isApplicable (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Z
 	public fun resolveId--S_X1CQ (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
 	public fun tryResolve-X9spmwk (Lnet/minecraft/world/item/ItemStack;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Ljava/lang/String;
 }
 
-public abstract interface class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolver {
+public abstract interface class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolver : tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory {
 	public abstract fun getPriority ()I
 	public abstract fun getTypes ()Ljava/util/List;
 	public abstract fun tryResolve-X9spmwk (Lnet/minecraft/world/item/ItemStack;Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind;)Ljava/lang/String;
@@ -6134,6 +6143,32 @@ public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugHudElement {
 	public final fun onWidgetShow (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderHudElementEvent;)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugItems {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/debug/DebugItems;
+	public final fun getEntriesSize ()I
+	public final fun getLastItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getLastSet ()Lkotlin/time/Instant;
+	public final fun getSelectedIndex ()I
+	public final fun getToggledEntries ()Ljava/util/Set;
+	public final fun isEnabled ()Z
+	public final fun onGetDebugTooltip (Ltech/thatgravyboat/skyblockapi/api/events/screen/ItemDebugTooltipEvent;)V
+	public final fun onKeyPressed (Ltech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent$Pre;)V
+	public final fun setEntriesSize (I)V
+	public final fun setLastItem (Lnet/minecraft/world/item/ItemStack;)V
+	public final fun setLastSet (Lkotlin/time/Instant;)V
+	public final fun setSelectedIndex (I)V
+	public final fun tick (Ltech/thatgravyboat/skyblockapi/api/events/time/TickEvent;)V
+	public final fun updateItem (Lnet/minecraft/world/item/ItemStack;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugItemsKt {
+	public static final fun addDebug (Lnet/minecraft/world/item/ItemStack;Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;Lkotlin/jvm/functions/Function0;)V
+	public static final fun addStringDebug (Lnet/minecraft/world/item/ItemStack;Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;Lkotlin/jvm/functions/Function0;)V
+	public static final fun categoryAddDebug (Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;Lnet/minecraft/world/item/ItemStack;Lkotlin/jvm/functions/Function0;)V
+	public static final fun categoryAddDebugString (Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;Lnet/minecraft/world/item/ItemStack;Lkotlin/jvm/functions/Function0;)V
+	public static final fun getEntries (Lnet/minecraft/world/item/ItemStack;)Lcom/google/common/collect/Multimap;
+}
+
 public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugPackets {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/debug/DebugPackets;
 	public final fun onCommandRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
@@ -6158,6 +6193,15 @@ public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugTooltips {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/debug/DebugTooltips;
 	public final fun onGetDebugTooltip (Ltech/thatgravyboat/skyblockapi/api/events/screen/ItemDebugTooltipEvent;)V
 	public final fun onKeyPressed (Ltech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent$Pre;)V
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugAccessor {
+	public abstract fun skyblockapi$addEntry (Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;Lnet/minecraft/network/chat/Component;)V
+	public abstract fun skyblockapi$getEntries ()Lcom/google/common/collect/Multimap;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory {
+	public abstract fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/impl/debug/packets/DebugWriter {
