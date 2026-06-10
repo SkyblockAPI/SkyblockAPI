@@ -9,14 +9,14 @@ import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuIdRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuPotionRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
 import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
-import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockPotionsRepo
+import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
+import tech.thatgravyboat.skyblockapi.impl.debug.addStringDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
@@ -112,9 +112,14 @@ value class SkyBlockId private constructor(val id: String) {
 
         fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
 
+        private data object SkyblockIdResolver : ItemDebugCategory
+
         internal fun createIdForItem(stack: ItemStack): SkyBlockId? {
             val kind = idResolverKind.get()
             return kind.entries().firstNotNullOfOrNull {
+                stack.addStringDebug(SkyblockIdResolver) {
+                    it.toString()
+                }
                 it.tryResolve(stack, kind)
             }
         }

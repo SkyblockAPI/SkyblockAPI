@@ -14,7 +14,7 @@ private val idLookup = RepoAPI.runes().runes().map { (id, runes) ->
 }.toMap()
 
 @IdResolvers
-internal object RuneSackIdResolver : InventoryIdResolver {
+internal data object RuneSackIdResolver : InventoryIdResolver {
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,

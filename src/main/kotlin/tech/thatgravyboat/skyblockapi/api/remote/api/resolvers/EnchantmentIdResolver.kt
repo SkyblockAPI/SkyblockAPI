@@ -5,6 +5,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
+import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -18,7 +20,7 @@ private val nameToIdLookup = RepoAPI.enchantments().enchantments().map { (id, en
 }.toMap()
 
 @IdResolvers
-internal object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdResolver {
+internal data object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdResolver {
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
@@ -37,7 +39,7 @@ internal object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdResolve
 }
 
 @IdResolvers
-internal object BazaarEnchantmentIdResolver : InventoryIdResolver {
+internal data object BazaarEnchantmentIdResolver : InventoryIdResolver {
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
@@ -58,17 +60,25 @@ internal object BazaarEnchantmentIdResolver : InventoryIdResolver {
 }
 
 @IdResolvers
-internal object EnchantmentGuideIdResolver : InventoryIdResolver {
+internal data object EnchantmentGuideIdResolver : InventoryIdResolver, ItemDebugCategory {
     private val titleRegex = ".* Enchantments Guide".toRegex()
 
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): Boolean {
-        return titleRegex.matches(menu.title.stripped)
+        val matchesTitle = titleRegex.matches(menu.title.stripped)
+        this.addDebugString {
+            "Title Match: $matchesTitle"
+        }
+        return matchesTitle
     }
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): SkyBlockId? {
+        this.addDebugString {
+            val name = this.cleanName.substringBeforeLast(" ").trim()
+            "Name to id: $name -> ${nameToIdLookup[name]}"
+        }
         val id = nameToIdLookup[this.cleanName.substringBeforeLast(" ").trim()] ?: return null
         val level = this.cleanName.substringAfterLast(" ").trim().toIntValue()
-        return SkyBlockId.enchantment(id, level)?.asDerived()
+        return SkyBlockId.enchantment(id, level).asDerived()
     }
 
     override val priority: Int = 10

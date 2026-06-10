@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.fromItem
 
 @IdResolvers
-object DefaultIdResolver : IdResolver {
+data object DefaultIdResolver : IdResolver {
 
     override val types: List<IdResolverKind> = listOf(IdResolverKind.Unknown)
     override val priority: Int = Int.MAX_VALUE

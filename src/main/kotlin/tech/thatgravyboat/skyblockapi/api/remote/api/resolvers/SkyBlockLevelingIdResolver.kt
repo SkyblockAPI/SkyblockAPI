@@ -12,7 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @IdResolvers
-internal object RockMilestonesResolver : InventoryIdResolver {
+internal data object RockMilestonesResolver : InventoryIdResolver {
     override val priority: Int = 10
 
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
@@ -30,7 +30,7 @@ internal object RockMilestonesResolver : InventoryIdResolver {
 }
 
 @IdResolvers
-internal object TrophyFishResolver : InventoryIdResolver {
+internal data object TrophyFishResolver : InventoryIdResolver {
     override val priority: Int = 10
 
     val idLookup = TrophyFishType.entries.flatMap {
@@ -57,7 +57,7 @@ internal object TrophyFishResolver : InventoryIdResolver {
 }
 
 @IdResolvers
-internal object DolphinMilestonesResolver : InventoryIdResolver {
+internal data object DolphinMilestonesResolver : InventoryIdResolver {
     override val priority: Int = 10
 
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
