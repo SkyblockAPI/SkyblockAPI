@@ -4018,6 +4018,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/currency/CurrencyA
 	public final fun getPurseType ()Ltech/thatgravyboat/skyblockapi/api/profile/currency/PurseType;
 	public final fun getSoulflow ()J
 	public final fun getSowdust ()J
+	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onScoreboardChange (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onTabListWidgetChange (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
 }
