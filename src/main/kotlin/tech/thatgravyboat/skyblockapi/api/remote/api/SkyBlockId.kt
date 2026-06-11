@@ -239,6 +239,12 @@ private fun ItemStack.getSbId(): SkyBlockId? {
             hatColor?.let { SkyBlockId.item("party_hat_crab_$it") }
         }
 
+        "CAKE_HAT_2026" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving party hat crab $hatColor" }
+            hatColor?.let { SkyBlockId.item("cake_hat_2026_$it") }
+        }
+
         else if (id == "POTION" || neuPotionRegex.matches(id)) -> {
             val type = DataTypes.POTION_TYPE()
             val internalPotion = DataTypes.POTION()
