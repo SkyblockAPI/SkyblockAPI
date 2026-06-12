@@ -4,7 +4,7 @@ google-gson = "2.12.1"
 meowdding-modules = "1.0.5"
 meowdding-ktcodecs = "1.0.34"
 meowdding-resources = "1.0.17"
-meowdding-item-dfu = "1.0.10-beta.1"
+meowdding-item-dfu = "1.0.10-beta.2"
 meowdding-auto-mixins = "1.0.8"
 
 fabric-loader = "0.18.4"
