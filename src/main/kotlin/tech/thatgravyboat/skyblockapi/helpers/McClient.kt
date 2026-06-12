@@ -24,6 +24,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.util.Util
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 import tech.thatgravyboat.skyblockapi.utils.McVersion
@@ -115,8 +116,7 @@ object McClient {
     }.isSuccess
 
     fun openUri(uri: URI) {
-        /*? if > 1.21.10 {*/net.minecraft.util.Util/*?} else {*//*net.minecraft.Util*//*?}*/
-            .getPlatform().openUri(uri)
+        Util.getPlatform().openUri(uri)
     }
 
     fun runNextTick(action: () -> Unit) {

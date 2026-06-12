@@ -1,4 +1,3 @@
-//? if >= 1.21.11 {
 package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -24,16 +23,13 @@ import java.util.Optional;
 public class AbstractContainerScreenMixin {
 
     @WrapOperation(
-        //~ if >= 26.1 'renderTooltip' -> 'extractTooltip'
         method = "extractTooltip",
         at = @At(
             value = "INVOKE",
-            //~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
             target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"
         )
     )
     private void onRenderTooltip(
-        //~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
         GuiGraphicsExtractor instance,
         final Font font,
         final List<Component> texts,
@@ -50,4 +46,3 @@ public class AbstractContainerScreenMixin {
         original.call(instance, font, texts, optionalImage, xo, yo, style);
     }
 }
-//? }

@@ -1,4 +1,3 @@
-//? if >= 1.21.11 {
 package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -26,7 +25,6 @@ import tech.thatgravyboat.skyblockapi.hooks.GuiGraphicsHook;
 import java.util.ArrayList;
 import java.util.List;
 
-//~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
 @Mixin(GuiGraphicsExtractor.class)
 public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
 
@@ -35,7 +33,6 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
 
 
     @WrapOperation(
-        //~ if >= 26.1 'renderItemBar' -> 'itemBar'
         method = "itemBar",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isBarVisible()Z")
     )
@@ -47,7 +44,6 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
     }
 
     @WrapOperation(
-        //~ if >= 26.1 'renderItemBar' -> 'itemBar'
         method = "itemBar",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getBarWidth()I")
     )
@@ -60,7 +56,6 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
     }
 
     @WrapOperation(
-        //~ if >= 26.1 'renderItemBar' -> 'itemBar'
         method = "itemBar",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getBarColor()I")
     )
@@ -81,12 +76,10 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V",
         at = @At(
             value = "INVOKE",
-            //~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
             target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V"
         )
     )
     private void onRenderTooltipInternal(
-        //~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
         GuiGraphicsExtractor instance,
         Font font,
         List<ClientTooltipComponent> list,
@@ -107,4 +100,3 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         this.lastStack.set(stack);
     }
 }
-//? }

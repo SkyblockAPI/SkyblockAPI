@@ -9,7 +9,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.gui.Font;
-//~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
-//~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
 @Mixin(GuiGraphicsExtractor.class)
 public abstract class GuiGraphicsVisualItemMixin {
 
@@ -31,7 +29,6 @@ public abstract class GuiGraphicsVisualItemMixin {
     private final ThreadLocal<ItemStack> skyblockapi$originalItem = new ThreadLocal<>();
 
     @Shadow
-    //~ if >= 26.1 'renderItem' -> 'item'
     public abstract void item(ItemStack itemStack, int i, int j);
 
     @Shadow
@@ -45,17 +42,12 @@ public abstract class GuiGraphicsVisualItemMixin {
     public abstract void fill(int i, int j, int k, int l, int color);
 
     @Shadow
-    public abstract void
-        //$ if >= 26.1 'outline' elif >= 1.21.11 'renderOutline' else 'submitOutline'
-    outline
-    (int x, int y, int width, int height, int color);
+    public abstract void outline(int x, int y, int width, int height, int color);
 
     @Shadow
-    //~ if >= 26.1 'drawString' -> 'text'
     public abstract void text(Font par1, Component par2, int par3, int par4, int par5, boolean par6);
 
     @Inject(
-        //~ if >= 26.1 '"renderItem' -> '"item'
         method = "item(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
         at = @At("HEAD")
     )
@@ -67,7 +59,6 @@ public abstract class GuiGraphicsVisualItemMixin {
         itemStack.set(visualItem);
     }
 
-    //~ if >= 26.1 '"renderItem' -> '"item'
     @WrapMethod(method = "itemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V")
     private void wrapRenderItemDecorations(Font font, ItemStack itemStack, int i, int j, String string, Operation<Void> original) {
         skyblockapi$originalItem.set(itemStack);
@@ -77,7 +68,6 @@ public abstract class GuiGraphicsVisualItemMixin {
         skyblockapi$originalItem.remove();
     }
 
-    //~ if >= 26.1 '"renderItem' -> '"item'
     @Inject(method = "itemCount", at = @At("HEAD"))
     private void setComponentAndChangeItem(
         CallbackInfo ci,
@@ -95,7 +85,6 @@ public abstract class GuiGraphicsVisualItemMixin {
     @Definition(id = "string", local = @Local(type = String.class, argsOnly = true))
     @Expression("string != null")
     @WrapOperation(
-        //~ if >= 26.1 '"renderItem' -> '"item'
         method = "itemCount",
         at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0)
     )
@@ -105,16 +94,13 @@ public abstract class GuiGraphicsVisualItemMixin {
 
     // Ignore the warning about no possible signatures for this injector
     @WrapOperation(
-        //~ if >= 26.1 '"renderItem' -> '"item'
         method = "itemCount",
         at = @At(
             value = "INVOKE",
-            //~ if >= 26.1 ';drawString' -> 'Extractor;text'
             target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"
         )
     )
     private void wrapIsNullCheck(
-        //~ if >= 26.1 'GuiGraphics' -> 'GuiGraphicsExtractor'
         GuiGraphicsExtractor instance,
         Font font,
         String string,
@@ -128,12 +114,10 @@ public abstract class GuiGraphicsVisualItemMixin {
     ) {
         var component = componentRef.get();
         if (component == null) original.call(instance, font, string, i, j, k, flag);
-        //~ if >= 26.1 'drawString' -> 'text'
         else this.text(font, component, original_i + 19 - 2 - font.width(component), j, k, flag);
     }
 
     @Inject(
-        //~ if >= 26.1 '"renderItem' -> '"item'
         method = "item(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
         at = @At("HEAD")
     )
@@ -153,7 +137,6 @@ public abstract class GuiGraphicsVisualItemMixin {
         if (backgroundItem != null) {
             this.pose.pushMatrix();
             this.pose.translate(x, y);
-            //~ if >= 26.1 'renderItem' -> 'item'
             this.item(backgroundItem, 0, 0);
             this.pose.popMatrix();
 
@@ -162,7 +145,6 @@ public abstract class GuiGraphicsVisualItemMixin {
     }
 
     @Inject(
-        //~ if >= 26.1 '"renderItem' -> '"item'
         method = "item(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;III)V",
         at = @At("TAIL")
     )
@@ -182,9 +164,7 @@ public abstract class GuiGraphicsVisualItemMixin {
 
         var borderColor = accessor.skyblockapi$getBorderColor();
         if (borderColor != 0) {
-            //$ if >= 26.1 'outline' elif >= 1.21.11 'renderOutline' else 'submitOutline'
-            outline
-                (x, y, 16, 16, borderColor);
+            outline(x, y, 16, 16, borderColor);
         }
     }
 }

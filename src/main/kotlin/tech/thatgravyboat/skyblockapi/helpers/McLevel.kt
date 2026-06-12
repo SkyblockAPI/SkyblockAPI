@@ -16,27 +16,13 @@ object McLevel {
     private val mutablePos = BlockPos.MutableBlockPos()
 
     val hasLevel: Boolean
-        //~ if >= 26.1 'selfOrNull' -> 'self'
         get() = self != null
 
-    //? if > 1.21.11 {
     val self: ClientLevel?
         get() = McClient.self.level
-    //?} else {
-    /*@Suppress("DEPRECATION_ERROR")
-    @Deprecated(level = DeprecationLevel.WARNING, message = "Returns an unsafe value, will return a nullable ClientLevel in the next minecraft version!")
-    val self: Level
-        get() = level
-    *///? }
 
     val selfOrNull: ClientLevel?
         get() = McClient.self.level
-
-    //? if < 26.1 {
-    /*@Deprecated(level = DeprecationLevel.ERROR, message = "Returns an unsafe value, will be removed next minecraft version!")
-    val level: ClientLevel
-        get() = McClient.self.level!!
-    *///? }
   
     val registry: RegistryAccess
         get() = self?.registryAccess() ?: RegistryAccess.EMPTY

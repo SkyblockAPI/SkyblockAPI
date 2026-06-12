@@ -15,12 +15,12 @@ plugins {
     id("dev.kikugie.stonecutter") version "0.9-beta.1"
 }
 
-val versions = listOf("26.2", "26.1", "1.21.11", "1.21.10")
+val versions = listOf("26.2", "26.1")
 
 stonecutter {
     create(rootProject) {
         versions.forEach {
-            version(it).buildscript = if (stonecutter.eval(it, "<=1.21.11")) "build.obf.gradle.kts" else "build.gradle.kts"
+            version(it).buildscript = "build.gradle.kts"
         }
         vcsVersion = versions.first()
     }

@@ -20,7 +20,6 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun adjustColor(color: Int): Int {
-    // in 1.21.5 this was done in Font, in 1.21.7 this is no longer the case
     return if ((color and 0xfc000000.toInt()) == 0) ARGB.opaque(color) else color
 }
 
@@ -76,14 +75,8 @@ fun GuiGraphicsExtractor.drawTexture(
     val maxx = (x + width)
     val maxy = (y + height)
 
-    val setup: TextureSetup
-    //? if >= 1.21.11 {
-        = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView, it.sampler) }
-    //?} else {
-    /*= TextureSetup.singleTexture(McClient.self.textureManager.getTexture(texture).textureView)
-     *///?}
+    val setup: TextureSetup = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView, it.sampler) }
 
-    //~ if >= 26.1 'submitGuiElement' -> 'addGuiElement'
     this.guiRenderState.addGuiElement(
         BlitRenderState(
             RenderPipelines.GUI_TEXTURED, setup, Matrix3x2f(this.pose()),
@@ -99,7 +92,6 @@ fun GuiGraphicsExtractor.drawGradient(
 ) {
     val scissor = this.scissorStack.peek()
     val pose = Matrix3x2f(this.pose())
-    //~ if >= 26.1 'submitGuiElement' -> 'addGuiElement'
     this.guiRenderState.addGuiElement(
         GradientGuiElement(
             pose,
