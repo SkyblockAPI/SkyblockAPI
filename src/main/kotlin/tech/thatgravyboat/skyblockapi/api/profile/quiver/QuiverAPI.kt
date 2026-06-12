@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerInventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.bank
 import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.bits
 import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.coopBank
@@ -67,8 +67,7 @@ object QuiverAPI {
         get() = QuiverStorage.arrows
 
     @Subscription
-    fun onHotbarChange(event: PlayerHotbarChangeEvent) {
-        if (event.slotIndex != 8) return
+    fun onPlayerInventoryChange(event: PlayerInventoryChangeEvent) {
         val item = event.item
         if (item.getData(DataTypes.QUIVER_ARROW) != true) return
         arrowCountRegex.anyFound(item.getRawLore(), "amount") { (amount) ->
