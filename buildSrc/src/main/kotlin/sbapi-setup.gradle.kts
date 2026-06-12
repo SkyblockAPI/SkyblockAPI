@@ -87,7 +87,8 @@ tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.freeCompilerArgs.addAll(
         "-Xcontext-parameters",
         "-Xcontext-sensitive-resolution",
-        "-Xnullability-annotations=@org.jspecify.annotations:ignore"
+        "-Xnullability-annotations=@org.jspecify.annotations:ignore",
+        "-Xcontext-parameters"
     )
 }
 

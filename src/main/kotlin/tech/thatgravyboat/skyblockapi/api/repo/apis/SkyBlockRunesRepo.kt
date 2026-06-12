@@ -8,6 +8,9 @@ import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RunesAPI.Rune
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.platform.ResolvableProfile
+import tech.thatgravyboat.skyblockapi.utils.extentions.compoundTag
+import tech.thatgravyboat.skyblockapi.utils.extentions.putCompound
+import tech.thatgravyboat.skyblockapi.utils.extentions.toData
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 object SkyBlockRunesRepo : RepoItemCacheAsQuery<SkyBlockRunesRepo.Query>("Runes", ::Query) {
@@ -21,6 +24,12 @@ object SkyBlockRunesRepo : RepoItemCacheAsQuery<SkyBlockRunesRepo.Query>("Runes"
             this[DataComponents.PROFILE] = ResolvableProfile { put("textures", Property("textures", rune.texture())) }
             this[DataComponents.CUSTOM_NAME] = Text.of(rune.name())
             this[DataComponents.LORE] = ItemLore(rune.lore().map(Text::of))
+            this[DataComponents.CUSTOM_DATA] = compoundTag {
+                putString("id", "RUNE") // Could be UNIQUE_RUNE but surely doesn't matter
+                putCompound("runes") {
+                    putInt(key.id, key.tier ?: 1)
+                }
+            }.toData()
         }
     }
 

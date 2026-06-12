@@ -10,6 +10,9 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.platform.ResolvableProfile
+import tech.thatgravyboat.skyblockapi.utils.extentions.compoundTag
+import tech.thatgravyboat.skyblockapi.utils.extentions.putCompound
+import tech.thatgravyboat.skyblockapi.utils.extentions.toData
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
@@ -32,13 +35,25 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<SkyBlockPetsRepo.Query>("Pets", :
         }
         val lore = ItemLore(pet.getFormattedLore(key.level, key.heldItem).map(Text::of))
 
+        val customData = compoundTag {
+            putString("id", "PET")
+            putCompound("petInfo") {
+                putString("type", key.id)
+                putString("tier", key.rarity.name)
+                putDouble("exp", 0.0)
+                putInt("candyUsed", 0)
+            }
+        }.toData()
+
         return skin?.withComponents {
             this[DataComponents.CUSTOM_NAME] = name
             this[DataComponents.LORE] = lore
+            this[DataComponents.CUSTOM_DATA] = customData
         } ?: LazyItemStack(Items.PLAYER_HEAD) {
             this[DataComponents.PROFILE] = ResolvableProfile { put("textures", Property("textures", pet.texture())) }
             this[DataComponents.CUSTOM_NAME] = name
             this[DataComponents.LORE] = lore
+            this[DataComponents.CUSTOM_DATA] = customData
         }
     }
 
@@ -49,6 +64,6 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<SkyBlockPetsRepo.Query>("Pets", :
         var rarity: SkyBlockRarity = SkyBlockRarity.COMMON,
         var level: Int = 100,
         var skin: String? = null,
-        var heldItem: String? = null
+        var heldItem: String? = null,
     )
 }
