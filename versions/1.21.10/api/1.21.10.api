@@ -5032,9 +5032,9 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/quiver/QuiverAPI {
 	public final fun getArrows ()Ljava/util/Map;
 	public final fun getCurrentAmount ()Ljava/lang/Integer;
 	public final fun getCurrentArrow ()Ljava/lang/String;
-	public final fun onHotbarChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerHotbarChangeEvent;)V
 	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onInventoryInitialized (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerInitializedEvent;)V
+	public final fun onPlayerInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/PlayerInventoryChangeEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/quiver/QuiverData {
