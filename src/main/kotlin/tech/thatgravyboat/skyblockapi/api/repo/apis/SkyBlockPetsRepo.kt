@@ -1,31 +1,22 @@
 package tech.thatgravyboat.skyblockapi.api.repo.apis
 
-import com.google.common.eventbus.Subscribe
 import com.mojang.authlib.properties.Property
-import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
 import tech.thatgravyboat.repolib.api.PetsAPI
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
-import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
-import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.platform.ResolvableProfile
 import tech.thatgravyboat.skyblockapi.utils.extentions.compoundTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.toData
-import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
-import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
 
-@Module
 object SkyBlockPetsRepo : RepoItemCacheAsQuery<SkyBlockPetsRepo.Query>("Pets", ::Query) {
 
     private val repo get() = RepoAPI.pets()
@@ -70,13 +61,6 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<SkyBlockPetsRepo.Query>("Pets", :
     }
 
     fun get(id: String): PetsAPI.Data? = ifInitialized { this.repo.getPet(id) }
-
-    @Subscription
-    fun test(event: RegisterCommandsEvent) {
-        event.registerWithCallback("test") {
-            McClient.clipboard = create(Query("BEE"))?.create()?.toJson(ItemStack.CODEC)?.toPrettyString() ?: ""
-        }
-    }
 
     data class Query(
         var id: String = "",
