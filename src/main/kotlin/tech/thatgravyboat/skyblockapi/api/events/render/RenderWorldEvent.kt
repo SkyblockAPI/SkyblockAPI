@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.events.render
 
 import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.renderer.SubmitNodeCollector
 //? <= 26.1
 //import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.world.phys.Vec3
@@ -12,6 +13,7 @@ sealed class RenderWorldEvent(
     val poseStack: PoseStack,
     //? <= 26.1
     //val buffer: MultiBufferSource,
+    val submitNodeCollector: SubmitNodeCollector,
     val cameraPosition: Vec3,
     var cameraRotation: Quaternionf,
     val partialTicks: Float,
@@ -23,6 +25,7 @@ sealed class RenderWorldEvent(
         poseStack: PoseStack,
         //? <= 26.1
         //buffer: MultiBufferSource,
+        submitNodeCollector: SubmitNodeCollector,
         cameraPosition: Vec3,
         cameraRotation: Quaternionf,
         partialTicks: Float,
@@ -30,6 +33,7 @@ sealed class RenderWorldEvent(
         poseStack,
         //? <= 26.1
         //buffer,
+        submitNodeCollector,
         cameraPosition,
         cameraRotation,
         partialTicks,
@@ -39,6 +43,7 @@ sealed class RenderWorldEvent(
         poseStack: PoseStack,
         //? <= 26.1
         //buffer: MultiBufferSource,
+        submitNodeCollector: SubmitNodeCollector,
         cameraPosition: Vec3,
         cameraRotation: Quaternionf,
         partialTicks: Float,
@@ -46,6 +51,7 @@ sealed class RenderWorldEvent(
         poseStack,
         //? <= 26.1
         //buffer,
+        submitNodeCollector,
         cameraPosition,
         cameraRotation,
         partialTicks,

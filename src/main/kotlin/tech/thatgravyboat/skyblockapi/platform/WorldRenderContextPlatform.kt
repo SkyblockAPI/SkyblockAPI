@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.platform
 
 import net.minecraft.client.gui.Font
+import net.minecraft.gizmos.Gizmos
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FormattedCharSequence
@@ -46,18 +47,5 @@ fun RenderWorldEvent.drawString(
     backgroundColor: UInt = 0u,
     light: Int = LightCoordsUtil.FULL_BRIGHT,
 ) {
-    // TODO: fix "drawInBatch methods are removed"
-    //? < 26.2 {
-    /*McFont.self.drawInBatch(
-        text,
-        x, y,
-        color.toInt(),
-        dropShadow,
-        this.poseStack.last().pose(),
-        //? < 26.2
-        //this.buffer,
-        displayMode,
-        backgroundColor.toInt(),
-        light,
-    )*///? }
+    this.submitNodeCollector.submitText(this.poseStack, x, y, text, dropShadow, displayMode, light, color.toInt(), backgroundColor.toInt(), 0)
 }
