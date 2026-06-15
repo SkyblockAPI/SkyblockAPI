@@ -1,4 +1,5 @@
-package tech.thatgravyboat.skyblockapi.api.remote.api
+//? < 26.2 {
+/*package tech.thatgravyboat.skyblockapi.api.remote.api
 
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.EnchantsAPI
@@ -17,4 +18,4 @@ object RepoEnchantmentAPI {
         this.level = level
     }
 
-}
+}*///?}

@@ -2,7 +2,8 @@ package tech.thatgravyboat.skyblockapi.api.area.hub
 
 import me.owdding.ktmodules.Module
 import net.minecraft.util.TriState
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+//? < 26.2
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.*
 import tech.thatgravyboat.skyblockapi.api.datetime.SkyBlockInstant
@@ -12,8 +13,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.MayorChangeEvent
-//? < 26.1
-//import tech.thatgravyboat.skyblockapi.api.events.info.MayorUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
@@ -67,21 +66,6 @@ object ElectionAPI {
     var currentJerryCandidate: Pair<MayorCandidate, Instant>? = null
         private set
 
-    //? < 26.1 {
-    /*@RemoveNextVersion(ReplaceWith("mayor"))
-    val currentMayor: Candidate?
-        get() = mayor?.let(Candidate::fromMayorCandidate)
-    @RemoveNextVersion(ReplaceWith("minister"))
-    val currentMinister: Candidate?
-        get() = minister?.let(Candidate::fromMayorCandidate)
-
-    @RemoveNextVersion(ReplaceWith("currentJerryCandidate"))
-    val jerryCandidate: Pair<Candidate, Instant>?
-        get() = currentJerryCandidate?.let {
-            Candidate.fromMayorCandidate(it.first) to it.second
-        }
-    *///? }
-
 
     init {
         updateScheduler(10.minutes)
@@ -102,8 +86,6 @@ object ElectionAPI {
         McClient.runNextTick {
             if (handleResponse(response)) {
                 mayor?.let { MayorChangeEvent(it, minister).post() }
-                //? < 26.1
-                //currentMayor?.let { MayorUpdateEvent(it, currentMinister).post() }
 
                 if (newSchedulerTime != null) {
                     updateScheduler(newSchedulerTime)

@@ -1,24 +1,26 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+//? < 26.2
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 import tech.thatgravyboat.skyblockapi.utils.extentions.getCompoundTagFunctionByType
 import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-class DataType<T> @RemoveNextVersion constructor(
+//~ if >= 26.2 '@RemoveNextVersion' -> 'private'
+class DataType<T> private constructor(
     val id: String,
     autoRegister: Boolean,
     val factory: (ItemStack) -> T?,
     val type: KType?,
 ) {
-    @RemoveNextVersion
-    constructor(id: String, autoRegister: Boolean, factory: (ItemStack) -> T?) : this(id, autoRegister, factory, null)
+    //? < 26.2
+    //@RemoveNextVersion constructor(id: String, autoRegister: Boolean, factory: (ItemStack) -> T?) : this(id, autoRegister, factory, null)
 
-    @RemoveNextVersion
-    constructor(id: String, factory: (ItemStack) -> T?) : this(id, true, factory)
+    //? < 26.2
+    //@RemoveNextVersion constructor(id: String, factory: (ItemStack) -> T?) : this(id, true, factory)
 
     init {
         if (autoRegister) DataTypesRegistry.addDataType(this)

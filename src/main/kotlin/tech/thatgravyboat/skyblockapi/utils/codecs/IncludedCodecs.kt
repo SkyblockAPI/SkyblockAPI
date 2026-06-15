@@ -56,12 +56,10 @@ internal object IncludedCodecs {
     val UNIT_CODEC: Codec<Unit> = Unit.CODEC
 
     @IncludedCodec
-    //~ if >= 26.1 'FloatProvider.' -> 'FloatProviders.'
     val FLOAT_PROVIDER_CODEC: Codec<FloatProvider> = FloatProviders.CODEC
 
     @IncludedCodec
 
-    //~ if >= 26.1 'IntProvider.' -> 'IntProviders.'
     val INT_PROVIDER_CODEC: Codec<IntProvider> = IntProviders.CODEC
 
     @IncludedCodec

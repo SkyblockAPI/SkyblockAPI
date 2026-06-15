@@ -1,4 +1,5 @@
-package tech.thatgravyboat.skyblockapi.api.remote
+//? < 26.2
+/*package tech.thatgravyboat.skyblockapi.api.remote
 
 import tech.thatgravyboat.repolib.api.ReforgeStonesAPI.ReforgeData
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
@@ -12,4 +13,4 @@ object RepoReforgeStonesAPI {
 
     fun ReforgeData.getApplyCosts() = SkyBlockRarity.entries.associateWith { applyCost()[it.name] }.filter { it.value != null }
     fun ReforgeData.getApplyCost(rarity: SkyBlockRarity) = getApplyCosts()[rarity]
-}
+}*///?}

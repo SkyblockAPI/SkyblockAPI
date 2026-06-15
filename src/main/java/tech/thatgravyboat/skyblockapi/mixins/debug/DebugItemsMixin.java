@@ -9,8 +9,6 @@ import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-//? < 26.1
-//import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -36,9 +34,7 @@ public class DebugItemsMixin implements ItemDebugAccessor {
         return this.skyblockapi$debug_map;
     }
 
-    //~ if >= 26.1 'world/level/ItemLike' -> 'core/Holder'
     @WrapOperation(method = "copy", at = @At(value = "NEW", target = "(Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/PatchedDataComponentMap;)Lnet/minecraft/world/item/ItemStack;"))
-        //~ if >= 26.1 'ItemLike' -> 'Holder<Item>'
     private ItemStack skyblockapi$copy(Holder<Item> item, int count, PatchedDataComponentMap patch, Operation<ItemStack> operation) {
         var stack = operation.call(item, count, patch);
         if (stack != null && this.skyblockapi$debug_map != null) {

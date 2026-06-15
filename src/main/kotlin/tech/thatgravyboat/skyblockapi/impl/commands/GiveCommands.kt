@@ -274,8 +274,7 @@ object GiveCommands {
 
     fun tryGive(itemStack: ItemStack) {
         val item = itemStack.copyWithCount(1)
-        // TODO: apparently .isSingleplayer got removed so fuck me ig?
-        if (McPlayer.self?.gameMode()?.isCreative != true || /*!McClient.self.isSingleplayer ||*/ McPlayer.self?.hasInfiniteMaterials() != true) {
+        if (McPlayer.self?.gameMode()?.isCreative != true || McClient.self.isMultiplayerServer || McPlayer.self?.hasInfiniteMaterials() != true) {
             Text.of("Not in singleplayer and creative!", red).sendWithPrefix("sbapi-dev-give-singleplayer")
             return
         }

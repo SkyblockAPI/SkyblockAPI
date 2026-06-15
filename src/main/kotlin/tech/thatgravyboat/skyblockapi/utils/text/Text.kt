@@ -84,10 +84,7 @@ object Text {
     fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
 
     fun Component.send() {
-        //? >= 26.1 {
         McClient.chat.addClientSystemMessage(this)
-        //? } else
-        //McClient.chat.addMessage(this)
     }
     fun Component.send(id: String) = McClient.chat.setMessageId(id) {
         this.send()

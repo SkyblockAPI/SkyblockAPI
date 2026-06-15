@@ -176,10 +176,7 @@ object McClient {
     }
 
     fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
-        //? >= 26.1 {
         ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(id, listener)
-        //? } else
-        //ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(id, listener)
     }
 
     fun anyModInstalled(modIds: Collection<String>): Boolean = modIds.any { FabricLoader.getInstance().isModLoaded(it) }

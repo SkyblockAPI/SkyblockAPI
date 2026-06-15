@@ -20,7 +20,6 @@ public class ChatListenerMixin {
         method = "handleSystemMessage",
         at = @At(
             value = "INVOKE",
-            //~ if >= 26.1 'addMessage' -> 'addClientSystemMessage'
             target = "Lnet/minecraft/client/gui/components/ChatComponent;addClientSystemMessage(Lnet/minecraft/network/chat/Component;)V"
         )
     )
