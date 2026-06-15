@@ -9,6 +9,7 @@ import net.minecraft.SharedConstants
 import net.minecraft.client.Minecraft
 import net.minecraft.client.Options
 import net.minecraft.client.gui.Gui
+//? >= 26.2
 import net.minecraft.client.gui.Hud
 import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastManager
@@ -107,6 +108,8 @@ object McClient {
 
     val toasts: ToastManager get() =/*? if >= 26.2 {*/gui.toastManager()/*? } else *///self.toastManager
     val gui: Gui get() = self.gui
+
+    //? >= 26.2
     val hud: Hud get() = self.gui.hud
     val chat: ChatComponent get() =/*? if >= 26.2 {*/hud.chat/*? } else*///gui.chat
     val options: Options get() = self.options
@@ -156,7 +159,7 @@ object McClient {
     }*///? }
 
     fun setScreen(screen: Screen?) {
-        if (gui.screen() is ChatScreen) {
+        if (McScreen.self is ChatScreen) {
             setScreenAsync { screen }
         } else {
             //? >= 26.2 {

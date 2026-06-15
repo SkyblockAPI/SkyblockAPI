@@ -1,4 +1,4 @@
-//? < 26.2
+//? < 26.2 {
 /*package tech.thatgravyboat.skyblockapi.api.remote
 
 import tech.thatgravyboat.repolib.api.ReforgeStonesAPI.ReforgeData
