@@ -11,8 +11,8 @@ import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.platform.ResolvableProfile
 import tech.thatgravyboat.skyblockapi.utils.extentions.compoundTag
-import tech.thatgravyboat.skyblockapi.utils.extentions.putCompound
 import tech.thatgravyboat.skyblockapi.utils.extentions.toData
+import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
@@ -37,12 +37,15 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<SkyBlockPetsRepo.Query>("Pets", :
 
         val customData = compoundTag {
             putString("id", "PET")
-            putCompound("petInfo") {
-                putString("type", key.id)
-                putString("tier", key.rarity.name)
-                putDouble("exp", 0.0)
-                putInt("candyUsed", 0)
-            }
+            putString(
+                "petInfo",
+                JsonObject {
+                    set("type", key.id)
+                    set("tier", key.rarity.name)
+                    set("exp", 0.0)
+                    set("candyUsed", 0)
+                }.toString(),
+            )
         }.toData()
 
         return skin?.withComponents {
