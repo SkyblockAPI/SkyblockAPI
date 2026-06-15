@@ -5,8 +5,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,6 +19,9 @@ import tech.thatgravyboat.skyblockapi.api.events.render.RenderWorldEvent;
 
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin {
+    @Shadow
+    @Final
+    private SubmitNodeStorage submitNodeStorage;
     @Unique
     private final ThreadLocal<DeltaTracker> deltaTracker = new ThreadLocal<>();
 
@@ -44,6 +50,7 @@ public class LevelRendererMixin {
         new RenderWorldEvent.AfterEntities(
             poseStack,
             source,
+            submitNodeStorage,
             levelRenderState.cameraRenderState.pos,
             levelRenderState.cameraRenderState.orientation,
             deltaTracker.getGameTimeDeltaPartialTick(false)
@@ -64,6 +71,7 @@ public class LevelRendererMixin {
         new RenderWorldEvent.AfterTranslucent(
             poseStack,
             source,
+            submitNodeStorage,
             levelRenderState.cameraRenderState.pos,
             levelRenderState.cameraRenderState.orientation,
             deltaTracker.getGameTimeDeltaPartialTick(false)
