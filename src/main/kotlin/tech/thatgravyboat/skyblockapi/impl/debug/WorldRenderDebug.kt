@@ -14,7 +14,7 @@ object WorldRenderDebug {
     @Subscription
     context(event: RenderWorldEvent)
     private fun onWorldRender() {
-        event.atCamera {
+        if (isEnabled) event.atCamera {
             translate(0f, 100f, 0f)
             event.drawString("test", 0f, 0f, (-1).toUInt())
         }
