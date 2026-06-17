@@ -21,10 +21,11 @@ private val nameToIdLookup = RepoAPI.enchantments().enchantments().map { (id, en
     enchantments.name to id
 }.toMap()
 
-private fun resolveEnchantedBookId(name: String, level: Int?): SkyBlockId? {
+context(_: ItemDebugCategory)
+private fun ItemStack.resolveEnchantedBookId(name: String, level: Int?): SkyBlockId? {
     if (level != null) {
         val id = nameToIdLookup[name] ?: return null
-        //this.addDebugString{ "Name to id: $name -> $id" } // idk how to add this back and have it under the resolver that called the function :(
+        this.addDebugString { "Name to id: $name -> $id" }
         return SkyBlockId.enchantment(id, level).asDerived()
     }
     return idLookup[name]?.asDerived()
@@ -46,7 +47,7 @@ internal data object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdRe
         val isInBuyPage = !titleRegex.find(title)?.groupValues[1].isNullOrEmpty()
         val name = if (isInBuyPage) cleanName.substringBeforeLast(" ") else cleanName
         val level = if (isInBuyPage) cleanName.substringAfterLast(" ").parseRomanNumeral() else null
-        addDebugString { "BooksWithLevels: $isInBuyPage" }
+        addDebugString { "is In Buy Page: $isInBuyPage" }
         return resolveEnchantedBookId(name, level)
     }
 
