@@ -114,6 +114,8 @@ object McClient {
     val chat: ChatComponent get() =/*? if >= 26.2 {*/hud.chat/*? } else*///gui.chat
     val options: Options get() = self.options
 
+    val isSingleplayer: Boolean get() = /*? if >= 26.2 {*/!self.isMultiplayerServer/*? } else*///self.isSingleplayer
+
     fun openUri(uri: String): Boolean = runCatching {
         openUri(URI.create(uri))
     }.isSuccess
