@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.equipment
 
 import me.owdding.ktmodules.Module
+import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.EquipmentStorage
@@ -43,13 +44,14 @@ object EquipmentAPI {
     fun onInventoryFullyLoad(event: ContainerInitializedEvent) {
         if (!inventoryNameRegex.matches(event.title)) return
         EquipmentSlot.entries.forEach {
-            handleInventoryItem(it, event.itemStacks[it.slot])
+            handleInventoryItem(it, event.containerItems[it.slot])
         }
     }
 
     @Subscription
     fun onInventoryChange(event: InventoryChangeEvent) {
         if (!inventoryNameRegex.matches(event.title)) return
+        if (event.slot.container is Inventory) return
         val slot = EquipmentSlot.entries.find { it.slot == event.slot.index } ?: return
         handleInventoryItem(slot, event.item)
     }
