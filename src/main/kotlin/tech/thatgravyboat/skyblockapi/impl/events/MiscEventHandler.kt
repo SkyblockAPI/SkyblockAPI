@@ -25,6 +25,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
+import tech.thatgravyboat.skyblockapi.impl.ColoredBlocks
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatComponentExtension
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import kotlin.time.Duration.Companion.seconds
@@ -118,7 +119,7 @@ object MiscEventHandler {
             } else {
                 ChatReceivedEvent.Post(message).let { event ->
                     event.post()
-                    (McClient.self.gui.chat as ChatComponentExtension).`skyblockapi$setIdForMessage`(event.id)
+                    (McClient.chat as ChatComponentExtension).`skyblockapi$setIdForMessage`(event.id)
                     event.component
                 }
             }
@@ -140,7 +141,7 @@ object MiscEventHandler {
         if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.blocks) return true
         if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.blocks || old in MiningBlockFamily.VANILLA_BLOCKS.blocks)) return true
         if (new == Blocks.RED_SANDSTONE && old == Blocks.RED_SAND) return true
-        if (new == Blocks.GRAY_TERRACOTTA && old == Blocks.MYCELIUM) return true
+        if (new == ColoredBlocks.GRAY_TERRACOTTA && old == Blocks.MYCELIUM) return true
 
         return false
     }

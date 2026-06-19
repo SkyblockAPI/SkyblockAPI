@@ -63,13 +63,7 @@ class ItemBuilder {
     }
 
     private val customItemName: Component?
-        get() {
-            //? >= 26.1 {
-            return components.build().get(DataComponentMap.EMPTY, DataComponents.CUSTOM_NAME)
-            //? } else {
-            /*return components.build().get(DataComponents.CUSTOM_NAME)?.getOrNull()
-            *///? }
-        }
+        get() = components.build().get(DataComponentMap.EMPTY, DataComponents.CUSTOM_NAME)
 
     fun namePrefix(prefix: String) = namePrefix(Component.literal(prefix))
     fun namePrefix(prefix: Component) = name(Text.join(prefix, customItemName))

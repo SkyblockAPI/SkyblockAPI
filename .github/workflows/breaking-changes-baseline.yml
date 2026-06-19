@@ -18,11 +18,11 @@ jobs:
                 with:
                     token: ${{ secrets.BOT_TOKEN }}
 
-            -   name: Setup JDK 21
+            -   name: Setup JDK 25
                 uses: actions/setup-java@v5
                 with:
                     distribution: temurin
-                    java-version: '21'
+                    java-version: '25'
 
             -   name: Setup gradle
                 uses: gradle/actions/setup-gradle@v5
@@ -38,7 +38,7 @@ jobs:
                 env:
                     GH_TOKEN: ${{ secrets.BOT_TOKEN }}
                 run: |
-                    if ! $(git diff --exit-code versions/26.1/api/26.1.api) || ! $(git diff --exit-code versions/1.21.10/api/1.21.10.api) || ! $(git diff --exit-code versions/1.21.11/api/1.21.11.api);
+                    if ! $(git diff --exit-code versions/26.1/api/26.1.api) || ! $(git diff --exit-code versions/26.2/api/26.2.api);
                     then
                         git config --global user.email "meowtomation@users.noreply.github.com"
                         git config --global user.name "meowtomation"

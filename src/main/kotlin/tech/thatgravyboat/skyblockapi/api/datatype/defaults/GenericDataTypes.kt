@@ -5,7 +5,8 @@ import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Item
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+//? < 26.2
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
@@ -23,7 +24,7 @@ object GenericDataTypes {
     val ID: DataType<String> = DataType.simple("id")
     val API_ID: DataType<String> = DataType.of("api_id") {
         when (val id = it.unsafeTag?.getStringOrNull("id")) {
-            "RUNE", "UNIQUE_RUNE" -> APPLIED_RUNE.factory(it)?.let { rune -> "rune:${rune.first}:${rune.second}" }
+            "RUNE", "UNIQUE_RUNE" -> USED_RUNE.factory(it)?.id
             "PET" -> PET_DATA.factory(it)?.apiId ?: return@of null
             else -> id
         }
@@ -69,7 +70,6 @@ object GenericDataTypes {
         SkyBlockId.item("talisman_enrichment_$id")
     }
     val GILDED_GIFTED_COINS: DataType<Long> = DataType.simple("gilded_gifted_coins")
-    val CROPS_BROKEN: DataType<Long> = DataType.simple("mined_crops")
     val THUNDER_CHARGE: DataType<Int> = DataType.simple("thunder_charge")
     val PELTS_EARNED: DataType<Long> = DataType.simple("pelts_earned")
     val DONATED_MUSEUM: DataType<Boolean> = DataType.simple("donated_museum")
@@ -102,7 +102,6 @@ object GenericDataTypes {
     val DUNGEON_QUALITY: DataType<Int> = DataType.simple("dungeon_quality", "baseStatBoostPercentage")
 
     val ABICASE_MODEL: DataType<String> = DataType.simple("abicase_model", "model")
-    val FUNGI_CUTTER_MODE: DataType<String> = DataType.simple("fungi_cutter_mode")
 
 
     val PARTY_HAT_COLOR: DataType<String> = DataType.simple("party_hat_color")
@@ -113,13 +112,14 @@ object GenericDataTypes {
     val TOOL_EXP: DataType<Double> = DataType.simple("tool_exp", "levelable_exp")
     val TOOL_OVERCLOCKS: DataType<Int> = DataType.simple("tool_overclocks", "levelable_overclocks")
 
-    @RemoveNextVersion
+    //? < 26.2 {
+    /*@RemoveNextVersion
     val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType.of("applied_rune") {
         it.unsafeTag?.getCompoundOrEmpty("runes")?.let { tag ->
             buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
         }?.entries?.firstOrNull()?.toPair()
-    }
-    val USED_RUNE: DataType<SkyBlockId> = DataType("used_rune") {
+    }*///?}
+    val USED_RUNE: DataType<SkyBlockId> = DataType.of("used_rune") {
         it.unsafeTag?.getCompoundOrEmpty("runes")?.let { tag ->
             tag.keySet().firstNotNullOfOrNull { key -> SkyBlockId.rune(key, tag.getIntOr(key, 0)) }
         }

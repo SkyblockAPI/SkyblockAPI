@@ -9,6 +9,8 @@ import net.minecraft.SharedConstants
 import net.minecraft.client.Minecraft
 import net.minecraft.client.Options
 import net.minecraft.client.gui.Gui
+//? >= 26.2
+import net.minecraft.client.gui.Hud
 import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.gui.screens.ChatScreen
@@ -23,6 +25,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.util.Util
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 import tech.thatgravyboat.skyblockapi.utils.McVersion
@@ -103,18 +106,22 @@ object McClient {
     val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
     val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
 
-    val toasts: ToastManager get() = self.toastManager
+    val toasts: ToastManager get() =/*? if >= 26.2 {*/gui.toastManager()/*? } else *///self.toastManager
     val gui: Gui get() = self.gui
-    val chat: ChatComponent get() = gui.chat
+
+    //? >= 26.2
+    val hud: Hud get() = self.gui.hud
+    val chat: ChatComponent get() =/*? if >= 26.2 {*/hud.chat/*? } else*///gui.chat
     val options: Options get() = self.options
+
+    val isSingleplayer: Boolean get() = /*? if >= 26.2 {*/!self.isMultiplayerServer/*? } else*///self.isSingleplayer
 
     fun openUri(uri: String): Boolean = runCatching {
         openUri(URI.create(uri))
     }.isSuccess
 
     fun openUri(uri: URI) {
-        /*? if > 1.21.10 {*/net.minecraft.util.Util/*?} else {*//*net.minecraft.Util*//*?}*/
-            .getPlatform().openUri(uri)
+        Util.getPlatform().openUri(uri)
     }
 
     fun runNextTick(action: () -> Unit) {
@@ -130,28 +137,37 @@ object McClient {
     }
 
     fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f) {
-        gui.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
-        gui.setSubtitle(subtitle ?: CommonText.EMPTY)
-        gui.setTitle(title)
+        //~ if >= 26.2 'gui.' -> 'hud.' {
+        hud.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
+        hud.setSubtitle(subtitle ?: CommonText.EMPTY)
+        hud.setTitle(title)
+        //~ }
     }
 
     fun setScreenAsync(screen: () -> Screen?) = runNextTick {
         val next = screen()
-        (self.screen as? AbstractContainerScreen<*>)?.onClose()
-        self.setScreen(next)
+        (McScreen.self as? AbstractContainerScreen<*>)?.onClose()
+        //? >= 26.2 {
+        gui.setScreen(next)
+        //? } else
+        //self.setScreen(next)
     }
 
-    @Deprecated("Use setScreenAsync to avoid creating screens off the main thread")
+    //? < 26.2 {
+    /*@Deprecated("Use setScreenAsync to avoid creating screens off the main thread")
     fun setScreenAsync(screen: Screen?) = runNextTick {
         (self.screen as? AbstractContainerScreen<*>)?.onClose()
         self.setScreen(screen)
-    }
+    }*///? }
 
     fun setScreen(screen: Screen?) {
-        if (self.screen is ChatScreen) {
+        if (McScreen.self is ChatScreen) {
             setScreenAsync { screen }
         } else {
-            self.setScreen(screen)
+            //? >= 26.2 {
+            gui.setScreen(screen)
+            //? } else
+            //self.setScreen(screen)
         }
     }
 
@@ -165,10 +181,7 @@ object McClient {
     }
 
     fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
-        //? >= 26.1 {
         ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(id, listener)
-        //? } else
-        //ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(id, listener)
     }
 
     fun anyModInstalled(modIds: Collection<String>): Boolean = modIds.any { FabricLoader.getInstance().isModLoaded(it) }

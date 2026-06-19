@@ -15,11 +15,13 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
+import tech.thatgravyboat.skyblockapi.utils.extentions.associateByNotNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
+import net.minecraft.network.chat.TextColor as McTextColor
 import java.net.URI
 import java.util.*
 import java.util.regex.Pattern
@@ -84,10 +86,7 @@ object Text {
     fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
 
     fun Component.send() {
-        //? >= 26.1 {
         McClient.chat.addClientSystemMessage(this)
-        //? } else
-        //McClient.chat.addMessage(this)
     }
     fun Component.send(id: String) = McClient.chat.setMessageId(id) {
         this.send()
@@ -203,11 +202,15 @@ object TextUtils {
         return sb.toString()
     }
 
+    //? if >= 26.2 {
+    private val colorTable = ChatFormatting.entries.associateByNotNull { McTextColor.fromLegacyFormat(it)?.value }
+    //? } else {
+    /*private val colorTable = ChatFormatting.entries.associateByNotNull { format -> format.color.takeIf { format.isColor } }
+    *///? }
+
     private fun StringBuilder.appendStyle(style: Style) {
         style.color?.let { color ->
-            val value = color.value
-            val formatting = ChatFormatting.entries.find { it.isColor && it.color == value } ?: ChatFormatting.RESET
-            append(formatting)
+            append(colorTable[color.value] ?: ChatFormatting.RESET)
         }
 
         if (style.isBold) append(ChatFormatting.BOLD)

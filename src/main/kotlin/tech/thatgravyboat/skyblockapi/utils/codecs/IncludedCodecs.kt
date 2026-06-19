@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils.codecs
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
-import net.minecraft.advancements.criterion.BlockPredicate
+import net.minecraft.advancements.predicates.BlockPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.core.GlobalPos
 import net.minecraft.core.Vec3i
@@ -56,12 +56,10 @@ internal object IncludedCodecs {
     val UNIT_CODEC: Codec<Unit> = Unit.CODEC
 
     @IncludedCodec
-    //~ if >= 26.1 'FloatProvider.' -> 'FloatProviders.'
     val FLOAT_PROVIDER_CODEC: Codec<FloatProvider> = FloatProviders.CODEC
 
     @IncludedCodec
 
-    //~ if >= 26.1 'IntProvider.' -> 'IntProviders.'
     val INT_PROVIDER_CODEC: Codec<IntProvider> = IntProviders.CODEC
 
     @IncludedCodec
