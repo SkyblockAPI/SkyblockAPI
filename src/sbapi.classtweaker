@@ -1,0 +1,5 @@
+classTweaker v1 official
+inject-interface net/minecraft/world/entity/Entity tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewable
+inject-interface net/minecraft/world/item/ItemStack tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewable
+transitive-inject-interface net/minecraft/world/entity/Entity tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable
+transitive-inject-interface net/minecraft/world/item/ItemStack tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable

@@ -30,6 +30,7 @@
         "minecraft": "${minecraft_range}",
         "hypixel-mod-api": ">=${hypixel_mod_api}"
     },
+    "accessWidener": "sbapi.classtweaker",
     "custom": {
         "modmenu": {
             "badges": [

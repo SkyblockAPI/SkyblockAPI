@@ -13,11 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentDataAttachable;
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugAccessor;
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory;
 
 @Mixin(ItemStack.class)
-public class DebugItemsMixin implements ItemDebugAccessor {
+public abstract class DebugItemsMixin implements ItemDebugAccessor, ComponentDataAttachable {
     @Unique
     private Multimap<ItemDebugCategory, Component> skyblockapi$debug_map;
 
