@@ -21,7 +21,9 @@ data class MayorCandidate internal constructor(
         return jerryCandidate == this && time.isInFuture()
     }
 
-    internal fun addAllPerks(): MayorCandidate = apply { perks.forEach { it.active = true } }
+    internal fun addAllPerks(includeNonPerkapocalypse: Boolean = true): MayorCandidate = apply {
+        perks.forEach { if (includeNonPerkapocalypse || it.perkapocalypse) it.active = true }
+    }
     internal fun clearAllPerks(): MayorCandidate = apply { perks.forEach { it.active = false } }
     override fun toString(): String = candidateName
 }
@@ -61,6 +63,7 @@ data class MayorPerk internal constructor(
     val id: String,
     val perkName: String,
     var description: String = "Not available",
+    val perkapocalypse: Boolean = true,
 ) {
     internal var overrideState: TriState = DEFAULT
 
@@ -113,7 +116,7 @@ object MayorPerks {
     // Finnegan
     //? < 26.2
     //@RemoveNextVersion val PELT_POCALYPSE = register("Pelt-pocalypse")
-    val GRAND_FEAST = register("Grand Feast")
+    val GRAND_FEAST = register("Grand Feast", perkapocalypse = false)
     val GOATED = register("GOATed", id = "GOATED")
     val BLOOMING_BUSINESS = register("Blooming Business")
     val PEST_ERADICATOR = register("Pest Eradicator")
@@ -164,7 +167,7 @@ object MayorPerks {
     fun getPerkById(id: String): MayorPerk? = _perks[id]
     fun getPerk(perkName: String) = perks.find { it.perkName == perkName }
 
-    internal fun register(perkName: String, id: String = perkName.toScreamingSnakeCase()): MayorPerk {
-        return _perks.getOrPut(id) { MayorPerk(id, perkName) }
+    internal fun register(perkName: String, id: String = perkName.toScreamingSnakeCase(), perkapocalypse: Boolean = true): MayorPerk {
+        return _perks.getOrPut(id) { MayorPerk(id, perkName, perkapocalypse = perkapocalypse) }
     }
 }

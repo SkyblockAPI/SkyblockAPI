@@ -2,8 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.area.hub
 
 import me.owdding.ktmodules.Module
 import net.minecraft.util.TriState
-//? < 26.2
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.*
 import tech.thatgravyboat.skyblockapi.api.datetime.SkyBlockInstant
@@ -139,7 +137,7 @@ object ElectionAPI {
 
         currentJerryCandidate?.first?.clearAllPerks()
 
-        currentJerryCandidate = extraMayor.addAllPerks() to expireTime
+        currentJerryCandidate = extraMayor.addAllPerks(includeNonPerkapocalypse = false) to expireTime
         SkyBlockAPI.info("Jerry Mayor Detected: $extraMayor, expires at $expireTime - in ${expireTime.until()}")
     }
 
