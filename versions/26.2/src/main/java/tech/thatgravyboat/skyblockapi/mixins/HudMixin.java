@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.mixins;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.DeltaTracker;
@@ -10,7 +11,9 @@ import net.minecraft.client.gui.contextualbar.ContextualBar;
 import net.minecraft.client.gui.contextualbar.ExperienceBar;
 import net.minecraft.client.gui.contextualbar.JumpableVehicleBar;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.Objective;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +23,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.HudElement;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudEvent;
+import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
 @Mixin(Hud.class)
 public abstract class HudMixin {
@@ -29,6 +33,9 @@ public abstract class HudMixin {
 
     @Shadow
     public abstract boolean isHidden();
+
+    @Shadow
+    private int toolHighlightTimer;
 
     @Inject(method = "extractSleepOverlay", at = @At("HEAD"))
     private void onRenderSleepOverlay(GuiGraphicsExtractor graphics, DeltaTracker delta, CallbackInfo ci) {
@@ -172,4 +179,12 @@ public abstract class HudMixin {
         }
     }
 
+    @ModifyExpressionValue(
+        method = "extractSelectedItemName",
+        at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/Hud;lastToolHighlight:Lnet/minecraft/world/item/ItemStack;", opcode = Opcodes.GETFIELD)
+    )
+    private ItemStack extractSelectedItemName(ItemStack original) {
+        var item = VisualItemAccessor.getVisualItemAccessor(original).skyblockapi$getVisualItem();
+        return item != null ? item : original;
+    }
 }
