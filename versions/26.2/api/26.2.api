@@ -1170,11 +1170,13 @@ public final class tech/thatgravyboat/skyblockapi/api/data/MayorPerk {
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Z
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getActive ()Z
 	public final fun getDescription ()Ljava/lang/String;
 	public final fun getId ()Ljava/lang/String;
 	public final fun getPerkName ()Ljava/lang/String;
+	public final fun getPerkapocalypse ()Z
 	public fun hashCode ()I
 	public final fun setDescription (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
