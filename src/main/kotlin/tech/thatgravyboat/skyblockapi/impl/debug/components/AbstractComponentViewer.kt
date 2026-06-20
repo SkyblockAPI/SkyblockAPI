@@ -1,10 +1,6 @@
 package tech.thatgravyboat.skyblockapi.impl.debug.components
 
-import com.google.gson.JsonArray
 import com.google.gson.JsonElement
-import com.google.gson.JsonNull
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.serialization.DataResult
 import me.owdding.ktmodules.Module
@@ -16,7 +12,6 @@ import net.minecraft.nbt.Tag
 import net.minecraft.nbt.TextComponentTagVisitor
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -27,11 +22,14 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
+import tech.thatgravyboat.skyblockapi.utils.text.JsonVisualizer
+import tech.thatgravyboat.skyblockapi.utils.text.NbtVisualizer
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
+import tech.thatgravyboat.skyblockapi.utils.text.asComponent
 import kotlin.math.sign
 
 val BACKGROUND = Identifier.withDefaultNamespace("popup/background")
@@ -138,120 +136,11 @@ interface ComponentViewerData {
 }
 
 data class JsonComponentData(val jsonData: JsonElement) : ComponentViewerData {
-    override fun visualize(): Component = JsonVisualizer().serialize(jsonData)
-}
-
-class JsonVisualizer {
-
-    val component: MutableComponent = Text.of()
-    var indentCount: Int = 0
-
-    fun serialize(data: JsonElement): Component {
-        visit(data)
-        return component
-    }
-
-    fun visit(element: JsonElement) = when (element) {
-        is JsonObject -> visitObject(element)
-        is JsonArray -> visitArray(element)
-        is JsonPrimitive -> visitPrimitive(element)
-        is JsonNull -> {
-            appendToken(Token.NULL)
-        }
-
-        else -> {
-            append("<Unknown element type: $element>", -1)
-        }
-    }
-
-    fun visitPrimitive(element: JsonPrimitive) = when {
-        element.isBoolean -> appendToken(if (element.asBoolean) Token.TRUE else Token.FALSE)
-        element.isNumber -> append(element.asNumber.toString(), Token.NUMBER)
-        else -> appendToken(Token.STRING_QUOTE).append(element.asString, Token.STRING).appendToken(Token.STRING_QUOTE)
-    }
-
-    fun visitArray(element: JsonArray) {
-        appendToken(Token.OPEN_ARRAY).line()
-        indentCount += 1
-        val iterator = element.iterator()
-        while (iterator.hasNext()) {
-            spaces().visit(iterator.next())
-            if (iterator.hasNext()) {
-                appendToken(Token.COMMA)
-            }
-            line()
-        }
-        indentCount -= 1
-        spaces().appendToken(Token.CLOSE_ARRAY)
-    }
-
-    fun visitObject(element: JsonObject) {
-        appendToken(Token.OPEN_OBJECT).line()
-        indentCount += 1
-        val iterator = element.entrySet().iterator()
-        while (iterator.hasNext()) {
-            val (key, value) = iterator.next()
-            spaces().appendToken(Token.KEY_QUOTE).append(key, Token.KEY).appendToken(Token.KEY_QUOTE)
-            appendToken(Token.COLON).appendToken(Token.SPACE)
-            visit(value)
-            if (iterator.hasNext()) {
-                appendToken(Token.COMMA)
-            }
-            line()
-        }
-        indentCount -= 1
-        spaces().appendToken(Token.CLOSE_OBJECT)
-    }
-
-    fun append(text: String, color: Int) = apply {
-        this.component.append(Text.of(text, color))
-    }
-
-    fun append(text: String, token: Token) = append(text, getColor(token))
-
-    fun line() = apply {
-        component.append("\n")
-    }
-
-    fun spaces() = apply {
-        component.append("  ".repeat(indentCount))
-    }
-
-    fun appendToken(token: Token) = apply {
-        component.append(Text.of(token.value ?: "?", getColor(token)))
-    }
-
-    fun getColor(token: Token): Int = when (token) {
-        Token.TRUE -> TextColor.DARK_GREEN
-        Token.FALSE -> TextColor.RED
-        Token.NULL -> TextColor.GRAY
-        Token.KEY, Token.KEY_QUOTE -> TextColor.AQUA
-        Token.NUMBER -> TextColor.GOLD
-        Token.STRING, Token.STRING_QUOTE -> TextColor.GREEN
-        else -> TextColor.WHITE
-    }
-
-    enum class Token(val value: String?) {
-        OPEN_OBJECT("{"),
-        CLOSE_OBJECT("}"),
-        OPEN_ARRAY("["),
-        CLOSE_ARRAY("]"),
-        COLON(":"),
-        SPACE(" "),
-        COMMA(","),
-        KEY_QUOTE("\""),
-        STRING_QUOTE("\""),
-        TRUE("true"),
-        FALSE("false"),
-        NULL("null"),
-        KEY(null),
-        NUMBER(null),
-        STRING(null),
-    }
+    override fun visualize(): Component = jsonData.asComponent()
 }
 
 data class NbtComponentData(val nbtData: Tag) : ComponentViewerData {
-    override fun visualize(): Component = TextComponentTagVisitor("  ").visit(nbtData)
+    override fun visualize(): Component = nbtData.asComponent()
 }
 
 data class TextComponentData(val text: Component) : ComponentViewerData {
