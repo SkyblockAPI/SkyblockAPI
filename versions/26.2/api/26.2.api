@@ -6394,12 +6394,126 @@ public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/ItemDe
 	public abstract fun skyblockapi$getEntries ()Lcom/google/common/collect/Multimap;
 }
 
-public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory {
-	public abstract fun toString ()Ljava/lang/String;
+public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory : tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory {
 }
 
 public final class tech/thatgravyboat/skyblockapi/impl/debug/WorldRenderDebug {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/debug/WorldRenderDebug;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/AbstractComponentViewer : net/minecraft/client/gui/screens/Screen {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/impl/debug/components/AbstractComponentViewer$Companion;
+	public fun <init> (Ljava/util/Map;)V
+	public fun extractBackground (Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V
+	public fun extractRenderState (Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V
+	public final fun getCategories ()Ljava/util/Set;
+	public final fun getMap ()Ljava/util/Map;
+	public final fun getScroll ()I
+	public final fun getSelectedCategory ()Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory;
+	public final fun getWidgetHeight ()I
+	public fun keyPressed (Lnet/minecraft/client/input/KeyEvent;)Z
+	public fun mouseScrolled (DDDD)Z
+	public final fun setScroll (I)V
+	public final fun setSelectedCategory (Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/AbstractComponentViewer$Companion {
+	public final fun create (Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewable;)Ltech/thatgravyboat/skyblockapi/impl/debug/components/AbstractComponentViewer;
+	public final fun onCommandsRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	public final fun onKey (Ltech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent;)V
+	public final fun open (Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewable;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/AbstractComponentViewerKt {
+	public static final fun addComponent (Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable;Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory;Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerData;)V
+	public static final fun getBACKGROUND ()Lnet/minecraft/resources/Identifier;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/BlockDataCategory : tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/debug/components/BlockDataCategory;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable {
+	public abstract fun getSkyblockapi$getComponentMap ()Ljava/util/Map;
+	public abstract fun skyblockapi$addComponent (Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory;Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerData;)V
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewable {
+	public abstract fun skyblockapi$getComponents ()Ljava/util/Map;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory {
+	public abstract fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerData {
+	public abstract fun visualize ()Lnet/minecraft/network/chat/Component;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/DataResultComponentData : tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerData {
+	public fun <init> (Lcom/mojang/serialization/DataResult;)V
+	public final fun component1 ()Lcom/mojang/serialization/DataResult;
+	public final fun copy (Lcom/mojang/serialization/DataResult;)Ltech/thatgravyboat/skyblockapi/impl/debug/components/DataResultComponentData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/impl/debug/components/DataResultComponentData;Lcom/mojang/serialization/DataResult;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/impl/debug/components/DataResultComponentData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Lcom/mojang/serialization/DataResult;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun visualize ()Lnet/minecraft/network/chat/Component;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/EntityDataCategory : tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/debug/components/EntityDataCategory;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/ItemDataCategory : tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/debug/components/ItemDataCategory;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/JsonComponentData : tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerData {
+	public fun <init> (Lcom/google/gson/JsonElement;)V
+	public final fun component1 ()Lcom/google/gson/JsonElement;
+	public final fun copy (Lcom/google/gson/JsonElement;)Ltech/thatgravyboat/skyblockapi/impl/debug/components/JsonComponentData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/impl/debug/components/JsonComponentData;Lcom/google/gson/JsonElement;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/impl/debug/components/JsonComponentData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getJsonData ()Lcom/google/gson/JsonElement;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun visualize ()Lnet/minecraft/network/chat/Component;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/NbtComponentData : tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerData {
+	public fun <init> (Lnet/minecraft/nbt/Tag;)V
+	public final fun component1 ()Lnet/minecraft/nbt/Tag;
+	public final fun copy (Lnet/minecraft/nbt/Tag;)Ltech/thatgravyboat/skyblockapi/impl/debug/components/NbtComponentData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/impl/debug/components/NbtComponentData;Lnet/minecraft/nbt/Tag;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/impl/debug/components/NbtComponentData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getNbtData ()Lnet/minecraft/nbt/Tag;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun visualize ()Lnet/minecraft/network/chat/Component;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/TextComponentData : tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerData {
+	public fun <init> (Ljava/util/Collection;)V
+	public fun <init> (Lnet/minecraft/network/chat/Component;)V
+	public final fun component1 ()Lnet/minecraft/network/chat/Component;
+	public final fun copy (Lnet/minecraft/network/chat/Component;)Ltech/thatgravyboat/skyblockapi/impl/debug/components/TextComponentData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/impl/debug/components/TextComponentData;Lnet/minecraft/network/chat/Component;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/impl/debug/components/TextComponentData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Lnet/minecraft/network/chat/Component;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun visualize ()Lnet/minecraft/network/chat/Component;
 }
 
 public final class tech/thatgravyboat/skyblockapi/impl/debug/packets/DebugWriter {
@@ -7308,6 +7422,33 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/component/Destruct
 	public final fun getComponent ()Lnet/minecraft/network/chat/Component;
 }
 
+public abstract interface class tech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer {
+	public fun append (Ljava/lang/String;I)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun append (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun appendToken (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public abstract fun color (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)I
+	public abstract fun getComponent ()Lnet/minecraft/network/chat/MutableComponent;
+	public abstract fun getIndentCount ()I
+	public fun line ()Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public abstract fun setIndentCount (I)V
+	public fun spaces ()Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public abstract fun visit (Ljava/lang/Object;)V
+	public fun visualize (Ljava/lang/Object;)Lnet/minecraft/network/chat/Component;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$DefaultImpls {
+	public static fun append (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;Ljava/lang/String;I)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public static fun append (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public static fun appendToken (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public static fun line (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public static fun spaces (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public static fun visualize (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;Ljava/lang/Object;)Lnet/minecraft/network/chat/Component;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken {
+	public abstract fun getToken ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/utils/text/CommonText {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/utils/text/CommonText;
 	public final fun getCOMMA ()Lnet/minecraft/network/chat/Component;
@@ -7319,6 +7460,116 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/CommonText {
 
 public abstract interface class tech/thatgravyboat/skyblockapi/utils/text/ComponentLike {
 	public abstract fun toComponent ()Lnet/minecraft/network/chat/Component;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer : tech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer {
+	public fun <init> ()V
+	public fun append (Ljava/lang/String;I)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public synthetic fun append (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun append (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public synthetic fun appendToken (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun appendToken (Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun color (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)I
+	public fun getComponent ()Lnet/minecraft/network/chat/MutableComponent;
+	public fun getIndentCount ()I
+	public fun line ()Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun setIndentCount (I)V
+	public fun spaces ()Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun visit (Lcom/google/gson/JsonElement;)V
+	public synthetic fun visit (Ljava/lang/Object;)V
+	public final fun visitArray (Lcom/google/gson/JsonArray;)V
+	public final fun visitObject (Lcom/google/gson/JsonObject;)V
+	public final fun visitPrimitive (Lcom/google/gson/JsonPrimitive;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun visualize (Lcom/google/gson/JsonElement;)Lnet/minecraft/network/chat/Component;
+	public synthetic fun visualize (Ljava/lang/Object;)Lnet/minecraft/network/chat/Component;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token : java/lang/Enum, tech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken {
+	public static final field CLOSE_ARRAY Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field CLOSE_OBJECT Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field COLON Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field COMMA Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field FALSE Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field KEY Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field KEY_QUOTE Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field NULL Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field NUMBER Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field OPEN_ARRAY Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field OPEN_OBJECT Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field SPACE Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field STRING Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field STRING_QUOTE Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static final field TRUE Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getToken ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/utils/text/JsonVisualizer$Token;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/text/JsonVisualizerKt {
+	public static final fun asComponent (Lcom/google/gson/JsonElement;)Lnet/minecraft/network/chat/Component;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer : tech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer {
+	public fun <init> ()V
+	public fun append (Ljava/lang/String;I)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public synthetic fun append (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun append (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public synthetic fun appendToken (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun appendToken (Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;)Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public fun color (Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken;)I
+	public fun getComponent ()Lnet/minecraft/network/chat/MutableComponent;
+	public final fun getIgnoreSuffix ()Z
+	public fun getIndentCount ()I
+	public fun line ()Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public final fun setIgnoreSuffix (Z)V
+	public fun setIndentCount (I)V
+	public fun spaces ()Ltech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer;
+	public synthetic fun visit (Ljava/lang/Object;)V
+	public fun visit (Lnet/minecraft/nbt/Tag;)V
+	public final fun visitArray (Lnet/minecraft/nbt/CollectionTag;Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;)V
+	public final fun visitByte (Lnet/minecraft/nbt/ByteTag;)V
+	public final fun visitCompound (Lnet/minecraft/nbt/CompoundTag;)V
+	public final fun visitDouble (Lnet/minecraft/nbt/DoubleTag;)V
+	public final fun visitFloat (Lnet/minecraft/nbt/FloatTag;)V
+	public final fun visitInt (Lnet/minecraft/nbt/IntTag;)V
+	public final fun visitLong (Lnet/minecraft/nbt/LongTag;)V
+	public final fun visitShort (Lnet/minecraft/nbt/ShortTag;)V
+	public final fun visitString (Lnet/minecraft/nbt/StringTag;)V
+	public synthetic fun visualize (Ljava/lang/Object;)Lnet/minecraft/network/chat/Component;
+	public fun visualize (Lnet/minecraft/nbt/Tag;)Lnet/minecraft/network/chat/Component;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token : java/lang/Enum, tech/thatgravyboat/skyblockapi/utils/text/AbstractDataVisualizer$VisualizerToken {
+	public static final field BYTE_ARRAY_PREFIX Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field BYTE_SUFFIX Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field COLON Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field DOUBLE_SUFFIX Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field ELEMENT_SEPARATOR Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field FLOAT_SUFFIX Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field INT_ARRAY_PREFIX Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field KEY Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field KEY_QUOTE Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field LIST_CLOSE Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field LIST_OPEN Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field LIST_TYPE_SEPARATOR Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field LONG_ARRAY_PREFIX Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field LONG_SUFFIX Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field NUMBER Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field SHORT_SUFFIX Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field SPACE Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field STRING Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field STRING_QUOTE Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field STRUCT_CLOSE Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static final field STRUCT_OPEN Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getToken ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/utils/text/NbtVisualizer$Token;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/text/NbtVisualizerKt {
+	public static final fun asComponent (Lnet/minecraft/nbt/Tag;)Lnet/minecraft/network/chat/Component;
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/text/Text {
