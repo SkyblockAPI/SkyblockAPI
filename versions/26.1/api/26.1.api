@@ -3204,6 +3204,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/PlayerHotbar
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getInventorySlot ()Lnet/minecraft/world/inventory/Slot;
 	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getSlot ()I
 	public final fun getSlotIndex ()I
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -3221,6 +3222,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/PlayerInvent
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getInventorySlot ()Lnet/minecraft/world/inventory/Slot;
 	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getSlot ()I
 	public final fun getSlotIndex ()I
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
