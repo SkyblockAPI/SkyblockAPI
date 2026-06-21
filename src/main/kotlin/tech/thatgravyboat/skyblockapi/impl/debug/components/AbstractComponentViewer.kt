@@ -7,6 +7,7 @@ import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.nbt.Tag
 import net.minecraft.nbt.TextComponentTagVisitor
@@ -20,6 +21,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
 import tech.thatgravyboat.skyblockapi.utils.text.JsonVisualizer
@@ -100,9 +102,23 @@ class AbstractComponentViewer(val map: Map<ComponentViewerCategory, ComponentVie
         super.init()
     }
 
+    override fun keyPressed(event: KeyEvent): Boolean {
+        when (event.key) {
+            InputConstants.KEY_PAGEUP -> this.scroll = 0
+            InputConstants.KEY_PAGEDOWN -> this.scroll = Int.MAX_VALUE
+            else -> return super.keyPressed(event)
+        }
+
+        return true
+    }
+
     override fun mouseScrolled(x: Double, y: Double, scrollX: Double, scrollY: Double): Boolean {
-        this.scroll -= scrollY.sign.toInt()
-        this.scroll = scroll.coerceAtLeast(0)
+        val scrollMulti = when {
+            McScreen.isShiftDown -> 5
+            McScreen.isControlDown -> 10
+            else -> 1
+        }
+        this.scroll = (scroll - scrollY * scrollMulti).toInt().coerceAtLeast(0)
         return super.mouseScrolled(x, y, scrollX, scrollY)
     }
 
