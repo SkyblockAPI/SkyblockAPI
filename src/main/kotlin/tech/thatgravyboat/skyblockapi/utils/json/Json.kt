@@ -23,8 +23,9 @@ object Json {
         VanillaRegistries.createLookup()
     }
 
+    internal val registry get() = McClient.connection?.registryAccess() ?: vanillaRegistry
+
     internal val ops: DynamicOps<JsonElement> get() {
-        val registry = McClient.connection?.registryAccess() ?: vanillaRegistry
         return RegistryOps.create(JsonOps.INSTANCE, LenientHolderLookupAdapter(registry))
     }
 

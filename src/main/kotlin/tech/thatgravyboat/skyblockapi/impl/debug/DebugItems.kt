@@ -13,15 +13,13 @@ import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
-import tech.thatgravyboat.skyblockapi.impl.debug.DebugInventory.CopyType
+import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentViewerCategory
 import tech.thatgravyboat.skyblockapi.platform.drawString
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
-import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
 import tech.thatgravyboat.skyblockapi.utils.extentions.since
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import kotlin.time.Duration.Companion.seconds
@@ -180,9 +178,7 @@ context(category: ItemDebugCategory) fun ItemStack.addDebug(entry: () -> Compone
 @JvmName("categoryAddDebugString")
 context(category: ItemDebugCategory) fun ItemStack.addDebugString(entry: () -> String) = addStringDebug(category, entry)
 
-interface ItemDebugCategory {
-    override fun toString(): String
-}
+interface ItemDebugCategory : ComponentViewerCategory
 
 interface ItemDebugAccessor {
     fun `skyblockapi$addEntry`(category: ItemDebugCategory, entry: Component)

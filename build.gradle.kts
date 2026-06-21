@@ -81,7 +81,7 @@ tasks.withType<KotlinCompile>().configureEach {
     )
 }
 
-val accessWidenerFile = rootProject.file("src/sbapi.accesswidener")
+val accessWidenerFile = rootProject.file("src/sbapi.classtweaker")
 
 tasks.withType<ProcessResources>().configureEach {
     with(copySpec {
