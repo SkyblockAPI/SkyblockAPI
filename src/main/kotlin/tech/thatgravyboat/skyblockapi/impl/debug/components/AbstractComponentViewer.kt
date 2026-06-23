@@ -187,12 +187,12 @@ data object ItemDataCategory : ComponentViewerCategory
 data object BlockDataCategory : ComponentViewerCategory
 
 interface ComponentViewable {
-    fun `skyblockapi$getComponents`(): Map<ComponentViewerCategory, ComponentViewerData>?
+    fun `skyblockapi$getComponents`(): Map<ComponentViewerCategory, ComponentViewerData>? = TODO("Implemented in mixin!")
 }
 
 interface ComponentDataAttachable {
-    fun `skyblockapi$addComponent`(category: ComponentViewerCategory, entry: ComponentViewerData)
-    val `skyblockapi$getComponentMap`: Map<ComponentViewerCategory, ComponentViewerData>?
+    fun `skyblockapi$addComponent`(category: ComponentViewerCategory, entry: ComponentViewerData): Unit = TODO("Implemented in mixin!")
+    val `skyblockapi$getComponentMap`: Map<ComponentViewerCategory, ComponentViewerData>? get() = TODO("Implemented in mixin!")
 }
 
 fun ComponentDataAttachable.addComponent(category: ComponentViewerCategory, entry: ComponentViewerData) {
