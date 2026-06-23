@@ -6437,12 +6437,21 @@ public final class tech/thatgravyboat/skyblockapi/impl/debug/components/BlockDat
 }
 
 public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable {
-	public abstract fun getSkyblockapi$getComponentMap ()Ljava/util/Map;
-	public abstract fun skyblockapi$addComponent (Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory;Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerData;)V
+	public fun getSkyblockapi$getComponentMap ()Ljava/util/Map;
+	public fun skyblockapi$addComponent (Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory;Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerData;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable$DefaultImpls {
+	public static fun getSkyblockapi$getComponentMap (Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable;)Ljava/util/Map;
+	public static fun skyblockapi$addComponent (Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable;Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory;Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerData;)V
 }
 
 public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewable {
-	public abstract fun skyblockapi$getComponents ()Ljava/util/Map;
+	public fun skyblockapi$getComponents ()Ljava/util/Map;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewable$DefaultImpls {
+	public static fun skyblockapi$getComponents (Ltech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewable;)Ljava/util/Map;
 }
 
 public abstract interface class tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewerCategory {
