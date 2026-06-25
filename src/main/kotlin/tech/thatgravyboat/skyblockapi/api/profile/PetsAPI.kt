@@ -6,11 +6,18 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
+import tech.thatgravyboat.skyblockapi.api.profile.garden.PlotAPI.currentPestAmount
+import tech.thatgravyboat.skyblockapi.api.profile.garden.PlotAPI.getCurrentPlot
+import tech.thatgravyboat.skyblockapi.api.profile.garden.PlotAPI.hasPestDebuff
+import tech.thatgravyboat.skyblockapi.api.profile.garden.PlotAPI.plots
+import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
+import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @Module
@@ -83,5 +90,15 @@ object PetsAPI {
         isMaxLevel = false
         xp = 0.0
         xpToNextLevel = 0.0
+    }
+
+    @ApiDebug("PetsAPI")
+    internal fun debug(builder: DebugBuilder) = with(builder) {
+        field(::pet)
+        field(::rarity)
+        field(::level)
+        field(::isMaxLevel)
+        field(::xp)
+        field(::xpToNextLevel)
     }
 }
