@@ -32,7 +32,7 @@ object WardrobeAPI {
 
     private val inventoryNameRegex = wardrobeGroup.create(
         "title",
-        "(?:Wardrobe )?\((?<currentPage>\d+)\/\d+\)(?: Armor Sets)?",
+        "(?:Wardrobe )?\\((?<currentPage>\\d+)/\\d+\\)(?: Armor Sets)?",
     )
 
     private val equippedRegex = wardrobeGroup.create(
