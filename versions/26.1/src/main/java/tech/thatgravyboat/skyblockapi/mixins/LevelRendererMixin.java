@@ -57,7 +57,7 @@ public class LevelRendererMixin {
         ).post(SkyBlockAPI.getEventBus());
     }
 
-    @Inject(method = "lambda$addMainPass$0", at = @At(value = "CONSTANT", args = "stringValue=translucentTerrain"))
+    @Inject(method = "lambda$addMainPass$0", at = @At(value = "CONSTANT", args = "stringValue=renderTranslucentFeatures"))
     public void afterTranslucent(
         CallbackInfo ci,
         @Local PoseStack poseStack,
