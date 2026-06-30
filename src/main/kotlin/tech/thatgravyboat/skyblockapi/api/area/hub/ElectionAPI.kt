@@ -79,11 +79,17 @@ object ElectionAPI {
     @JvmStatic
     private suspend fun check(newSchedulerTime: Duration? = null) {
         val result = Http.getResult(URL, SkyblockAPICodecs.getCodec<ElectionJson>())
-        val response = result.getOrNull() ?: return
+        val response = result.getOrNull() ?: run {
+            SkyBlockAPI.error("Failed to get election data", result.exceptionOrNull())
+            return
+        }
 
         McClient.runNextTick {
             if (handleResponse(response)) {
-                mayor?.let { MayorChangeEvent(it, minister).post() }
+                mayor?.let {
+                    MayorChangeEvent(it, minister).post()
+                    SkyBlockAPI.info("Found Mayor $it and Minister $minister")
+                }
 
                 if (newSchedulerTime != null) {
                     updateScheduler(newSchedulerTime)
