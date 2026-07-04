@@ -93,7 +93,7 @@ object LoreDataTypes {
 
     val RARITY: DataType<SkyBlockRarity> = DataType.of("rarity") {
         val tooltipStyleRarity = it.get(DataComponents.TOOLTIP_STYLE)?.path
-        tooltipStyleRarity?.let { style -> SkyBlockRarity.fromNameOrNull(style) }  // ?: getRarityLine(it)?.second ?: GenericDataTypes.PET_DATA.factory(it)?.rarity
+        tooltipStyleRarity?.let { style -> SkyBlockRarity.fromNameOrNull(style) } ?: getRarityLine(it)?.second ?: GenericDataTypes.PET_DATA.factory(it)?.rarity
     }
 
     val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") {
