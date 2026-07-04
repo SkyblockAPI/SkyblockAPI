@@ -53,6 +53,7 @@ object DataTypes {
     val POTION_TYPE: DataType<String> = GenericDataTypes.POTION_TYPE
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
     val BOOK_OF_STATS: DataType<Int> = GenericDataTypes.BOOK_OF_STATS
+    val RUNEBOOK: DataType<Int> = GenericDataTypes.RUNEBOOK
 
     val USED_RUNE: DataType<SkyBlockId> = GenericDataTypes.USED_RUNE
     val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN

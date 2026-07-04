@@ -52,6 +52,7 @@ object GenericDataTypes {
     val ART_OF_WAR: DataType<Boolean> = DataType.simple("art_of_war", "art_of_war_count")
     val ART_OF_PEACE: DataType<Boolean> = DataType.simple("art_of_peace", "artOfPeaceApplied")
     val BOOK_OF_STATS: DataType<Int> = DataType.simple("book_of_stats", "stats_book")
+    val RUNEBOOK: DataType<Int> = DataType.simple("runic_kills")
     val POTION_TYPE: DataType<String> = DataType.simple("potion_type")
     val POTION: DataType<String> = DataType.simple("potion")
     val POTION_LEVEL: DataType<Int> = DataType.simple("potion_level")
