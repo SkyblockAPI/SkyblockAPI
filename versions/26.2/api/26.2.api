@@ -1389,6 +1389,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity : java
 	public static final field ULTIMATE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;
 	public static final field UNCOMMON Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;
 	public static final field VERY_SPECIAL Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;
+	public final fun getAlternativeNames ()[Ljava/lang/String;
 	public final fun getColor ()I
 	public final fun getDisplayName ()Ljava/lang/String;
 	public final fun getDisplayText ()Lnet/minecraft/network/chat/Component;
