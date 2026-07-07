@@ -102,7 +102,7 @@ object MiscEventHandler {
 
         ClientReceiveMessageEvents.ALLOW_GAME.register(phase) { message, overlay ->
             if (overlay) {
-                !ActionBarReceivedEvent.Pre(message).post()
+                !ActionBarReceivedEvent.preparePre(message).post()
             } else if (ChatReceivedEvent.Pre(message).post()) {
                 SkyBlockAPI.logger.info("[Cancelled] [CHAT] {}", message.string)
                 false
@@ -112,7 +112,7 @@ object MiscEventHandler {
         }
         ClientReceiveMessageEvents.MODIFY_GAME.register(phase) { message, overlay ->
             if (overlay) {
-                ActionBarReceivedEvent.Post(message).let { event ->
+                ActionBarReceivedEvent.preparePost(message).let { event ->
                     event.post()
                     event.component
                 }

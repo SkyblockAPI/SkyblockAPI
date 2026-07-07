@@ -25,6 +25,9 @@ import net.minecraft.network.chat.TextColor as McTextColor
 import java.net.URI
 import java.util.*
 import java.util.regex.Pattern
+import tech.thatgravyboat.skyblockapi.utils.extentions.trimIgnoreColor
+import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils.spans
+import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils.tryTrimIgnoreColor
 
 
 object CommonText {
@@ -220,6 +223,41 @@ object TextUtils {
         if (style.isObfuscated) append(ChatFormatting.OBFUSCATED)
     }
 
+    fun Component.remove(component: Component): Component = ComponentUtils.remove(this, component)
+
+    fun Component.trim(): Component {
+        val spans = this.spans.toMutableList()
+        return when {
+            spans.isEmpty() -> Component.empty()
+            spans.size == 1 -> Component.literal(spans[0].first.trimIgnoreColor()).setStyle(spans[0].second)
+            else -> {
+                val prefix = mutableListOf<Component>()
+                val suffix = mutableListOf<Component>()
+
+                while (spans.isNotEmpty()) {
+                    val (content, style) = spans.removeFirst()
+                    val (isEmpty, trimmed) = content.tryTrimIgnoreColor(end = false)
+                    prefix.add(Component.literal(trimmed).setStyle(style))
+
+                    if (!isEmpty) break // Means we found actual content
+                }
+
+                while (spans.isNotEmpty()) {
+                    val (content, style) = spans.removeLast()
+                    val (isEmpty, trimmed) = content.tryTrimIgnoreColor(start = false)
+                    suffix.addFirst(Component.literal(trimmed).setStyle(style))
+
+                    if (!isEmpty) break // Means we found actual content
+                }
+
+                Component.empty().apply {
+                    prefix.forEach(this::append)
+                    spans.forEach { (content, style) -> this.append(Component.literal(content).setStyle(style)) }
+                    suffix.forEach(this::append)
+                }
+            }
+        }
+    }
 }
 
 
