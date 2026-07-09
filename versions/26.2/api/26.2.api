@@ -1512,16 +1512,20 @@ public final class tech/thatgravyboat/skyblockapi/api/data/stored/VaultStorage {
 
 public final class tech/thatgravyboat/skyblockapi/api/datatype/DataType {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/datatype/DataType$Companion;
-	public synthetic fun <init> (Ljava/lang/String;ZLkotlin/jvm/functions/Function1;Lkotlin/reflect/KType;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;ZLkotlin/jvm/functions/Function2;Lkotlin/reflect/KType;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun cast (Ljava/lang/Object;)Ljava/lang/Object;
 	public final fun getFactory ()Lkotlin/jvm/functions/Function1;
 	public final fun getId ()Ljava/lang/String;
 	public final fun getType ()Lkotlin/reflect/KType;
+	public final fun resolve (Lnet/minecraft/world/item/ItemStack;Ltech/thatgravyboat/skyblockapi/api/datatype/ResolutionContext;)Ljava/lang/Object;
+	public static synthetic fun resolve$default (Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;Lnet/minecraft/world/item/ItemStack;Ltech/thatgravyboat/skyblockapi/api/datatype/ResolutionContext;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/datatype/DataType$Companion {
 	public final fun of (Ljava/lang/String;Lkotlin/reflect/KType;ZLkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun of (Ljava/lang/String;Lkotlin/reflect/KType;ZLkotlin/jvm/functions/Function2;)Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public static synthetic fun of$default (Ltech/thatgravyboat/skyblockapi/api/datatype/DataType$Companion;Ljava/lang/String;Lkotlin/reflect/KType;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public static synthetic fun of$default (Ltech/thatgravyboat/skyblockapi/api/datatype/DataType$Companion;Ljava/lang/String;Lkotlin/reflect/KType;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun simple (Ljava/lang/String;Lkotlin/reflect/KType;Ljava/lang/String;Z)Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public static synthetic fun simple$default (Ltech/thatgravyboat/skyblockapi/api/datatype/DataType$Companion;Ljava/lang/String;Lkotlin/reflect/KType;Ljava/lang/String;ZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 }
@@ -1618,6 +1622,20 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getVISIBLE_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getWATER_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getWET_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/datatype/ResolutionContext {
+	public final fun get (Ltech/thatgravyboat/skyblockapi/api/datatype/ResolutionContext$Resolver;)Ljava/lang/Object;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/datatype/ResolutionContext$Resolver {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/datatype/ResolutionContext$Resolver$Companion;
+	public final fun getKey ()Ljava/lang/String;
+	public final fun resolve (Lnet/minecraft/world/item/ItemStack;)Ljava/lang/Object;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/datatype/ResolutionContext$Resolver$Companion {
+	public final fun getRAW_LORE ()Ltech/thatgravyboat/skyblockapi/api/datatype/ResolutionContext$Resolver;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/Gemstone : java/lang/Enum {
