@@ -4,6 +4,7 @@ import me.owdding.ktmodules.Module
 import net.minecraft.util.TriState
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.*
+import tech.thatgravyboat.skyblockapi.api.data.stored.ElectionStorage
 import tech.thatgravyboat.skyblockapi.api.datetime.SkyBlockInstant
 import tech.thatgravyboat.skyblockapi.api.datetime.skyblockYears
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -23,6 +24,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
+import tech.thatgravyboat.skyblockapi.utils.extentions.isInPast
 import tech.thatgravyboat.skyblockapi.utils.extentions.since
 import tech.thatgravyboat.skyblockapi.utils.extentions.sublistAfter
 import tech.thatgravyboat.skyblockapi.utils.extentions.until
@@ -61,12 +63,61 @@ object ElectionAPI {
         private set
     var minister: MayorCandidate? = null
         private set
+    var nextElection: Instant? = null
+        private set
+
     var currentJerryCandidate: Pair<MayorCandidate, Instant>? = null
         private set
 
 
     init {
         updateScheduler(10.minutes)
+    }
+
+    /** Returns `false` if it needs to request the data */
+    private fun loadStoredData(): Boolean {
+
+        for ((id, perk) in MayorPerks.perksMap) {
+            val description = ElectionStorage.getPerkDescription(id) ?: continue
+            perk.description = description
+        }
+
+        val mayorData = ElectionStorage.mayor
+        val ministerData = ElectionStorage.minister
+        val nextTime = ElectionStorage.nextMayorTime
+
+        if (nextTime.isInPast()) {
+            ElectionStorage.resetElection()
+            return false
+        }
+        var foundMayor = false
+        var foundMinister = false
+        if (mayorData != null) {
+            val mayor = MayorCandidates.getCandidateById(mayorData.id)
+            if (mayor != null) {
+                foundMayor = true
+                this.mayor = mayor
+                mayorData.perks.mapNotNull(MayorPerks::getPerkById)
+                    .forEach { perk ->
+                        perk.active = true
+                        mayor.perks.add(perk)
+                    }
+            }
+        }
+
+        if (ministerData != null) {
+            val minister = MayorCandidates.getCandidateById(ministerData.id)
+            if (minister != null) {
+                foundMinister = true
+                this.minister = minister
+                ministerData.perks.mapNotNull(MayorPerks::getPerkById)
+                    .forEach { perk ->
+                        perk.active = true
+                        minister.perks.add(perk)
+                    }
+            }
+        }
+
     }
 
     private fun updateScheduler(time: Duration, updateSchedulerTo: Duration? = null) {
@@ -155,6 +206,7 @@ object ElectionAPI {
             mayor = null
             minister = null
             currentJerryCandidate = null
+            nextElection = Instant.DISTANT_PAST
         }
     }
 

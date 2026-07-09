@@ -20,6 +20,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ScheduledFuture
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.io.path.deleteIfExists
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
@@ -133,6 +135,14 @@ internal class StoredData<T : Any>(
     fun save() {
         saveTime = System.currentTimeMillis() + SAVE_DELAY
         scheduleSave()
+    }
+
+    inline fun edit(edit: T.() -> Unit?) {
+        contract {
+            callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
+        }
+        val data = get()
+        if (edit(data) != null) save()
     }
 
     fun delete() {

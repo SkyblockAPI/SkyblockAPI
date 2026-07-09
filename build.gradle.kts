@@ -72,12 +72,16 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions.optIn.add("kotlin.time.ExperimentalTime")
+    compilerOptions.optIn.addAll(
+        "kotlin.time.ExperimentalTime",
+        "kotlin.contracts.ExperimentalContracts",
+    )
+
     compilerOptions.freeCompilerArgs.addAll(
         "-Xcontext-parameters",
         "-Xcontext-sensitive-resolution",
         "-Xnullability-annotations=@org.jspecify.annotations:ignore",
-        "-Xcontext-parameters"
+        "-Xcontext-parameters",
     )
 }
 
