@@ -24,13 +24,13 @@ object GenericDataTypes {
     val ID: DataType<String> = DataType.simple("id")
     val API_ID: DataType<String> = DataType.of("api_id") {
         when (val id = it.unsafeTag?.getStringOrNull("id")) {
-            "RUNE", "UNIQUE_RUNE" -> USED_RUNE.factory(it)?.id
-            "PET" -> PET_DATA.factory(it)?.apiId ?: return@of null
+            "RUNE", "UNIQUE_RUNE" -> USED_RUNE.resolve(it)?.id
+            "PET" -> PET_DATA.resolve(it)?.apiId ?: return@of null
             else -> id
         }
     }
     val ID_DAMAGE: DataType<Int> = DataType.of("id_damage") {
-        val id = ID.factory(it) ?: return@of null
+        val id = ID.resolve(it) ?: return@of null
         val damage = id.substringAfterLast(":", "").toIntOrNull() ?: return@of null
         damage
     }
@@ -64,7 +64,7 @@ object GenericDataTypes {
     val MIDAS_WEAPON_BID: DataType<Int> = DataType.simple("midas_weapon_bid", "winning_bid")
     val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = DataType.simple("midas_weapon_added_coins", "additional_coins")
     val MIDAS_WEAPON_PAID: DataType<Long> = DataType.of("midas_weapon_paid") { stack ->
-        listOfNotNull(MIDAS_WEAPON_BID.factory(stack), MIDAS_WEAPON_ADDED_COINS.factory(stack)).sum().toLong().takeUnless { it == 0L }
+        listOfNotNull(MIDAS_WEAPON_BID.resolve(stack), MIDAS_WEAPON_ADDED_COINS.resolve(stack)).sum().toLong().takeUnless { it == 0L }
     }
     val ENRICHMENT: DataType<SkyBlockId> = DataType.of("enrichment") {
         val id = it.unsafeTag?.getStringOrNull("talisman_enrichment") ?: return@of null

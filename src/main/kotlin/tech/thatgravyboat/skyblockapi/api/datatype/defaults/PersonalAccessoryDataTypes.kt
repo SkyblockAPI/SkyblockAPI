@@ -4,8 +4,8 @@ import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes.ID
+import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.utils.extentions.getIntOrNull
-import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.getStringOrNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
@@ -16,7 +16,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 @Module
 object PersonalAccessoryDataTypes {
 
-    private fun ItemStack.getMaxItems(type: String) = when (ID.factory(this)) {
+    private fun ItemStack.getMaxItems(type: String) = when (ID.resolve(this)) {
         "PERSONAL_${type}_7000" -> 12
         "PERSONAL_${type}_6000" -> 7
         "PERSONAL_${type}_5000" -> 3
@@ -47,9 +47,9 @@ object PersonalAccessoryDataTypes {
         }
     }
 
-    val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType.of("personal_accessory_active") {
-        it.unsafeTag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE")?.let { active -> active == 1 } ?: run {
-            personalAccessoryActiveRegex.findOrNull(it.getRawLore().joinToString("\n"), "state") { (state) ->
+    val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType.of("personal_accessory_active") { ctx, stack ->
+        stack.unsafeTag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE")?.let { active -> active == 1 } ?: run {
+            personalAccessoryActiveRegex.findOrNull(ctx[ResolutionContext.Resolver.RAW_LORE].joinToString("\n"), "state") { (state) ->
                 when (state) {
                     "On" -> true
                     "Off" -> false

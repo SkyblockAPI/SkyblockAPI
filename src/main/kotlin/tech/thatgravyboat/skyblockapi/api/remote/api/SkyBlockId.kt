@@ -207,7 +207,7 @@ value class SkyBlockId private constructor(val id: String) {
 }
 
 private fun ItemStack.getSbId(): SkyBlockId? {
-    operator fun <Type> DataType<Type>.invoke() = this.factory(this@getSbId)
+    operator fun <Type> DataType<Type>.invoke() = this.resolve(this@getSbId)
 
     val id = DataTypes.ID() ?: run {
         addStringDebug(DefaultIdResolver) { "Item doesn't have id" }

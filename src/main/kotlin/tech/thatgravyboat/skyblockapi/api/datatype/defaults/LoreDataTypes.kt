@@ -8,9 +8,9 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.asReversedIterator
-import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
@@ -35,27 +35,27 @@ object LoreDataTypes {
     private val selectedArrowRegex = dataTypeGroup.create("arrow", "^Selected: (?<type>.+)$")
     private val soulboundRegex = dataTypeGroup.create("soulbound", "\\* (?<coop>Co-op )?Soulbound \\*")
 
-    val FUEL: DataType<Pair<Int, Int>> = DataType.of("fuel") {
+    val FUEL: DataType<Pair<Int, Int>> = DataType.of("fuel") { ctx, _ ->
         var output: Pair<Int, Int>? = null
-        fuelRegex.anyMatch(it.getRawLore(), "fuel", "max") { (fuel, max) ->
+        fuelRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "fuel", "max") { (fuel, max) ->
             output = fuel.parseFormattedInt() to max.parseFormattedInt()
         }
         output
     }
 
-    val SNOWBALLS: DataType<Pair<Int, Int>> = DataType.of("snowballs") {
+    val SNOWBALLS: DataType<Pair<Int, Int>> = DataType.of("snowballs") { ctx, _ ->
         var output: Pair<Int, Int>? = null
-        snowballsRegex.anyMatch(it.getRawLore(), "snowballs", "max") { (snowballs, max) ->
+        snowballsRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "snowballs", "max") { (snowballs, max) ->
             output = snowballs.parseFormattedInt() to max.parseFormattedInt()
         }
         output
     }
 
-    val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = DataType.of("right_click_mana_ability") {
+    val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = DataType.of("right_click_mana_ability") { ctx, _ ->
         var outputAbility: String? = null
         var outputMana: Int? = null
 
-        for (lore in it.getRawLore()) {
+        for (lore in ctx[ResolutionContext.Resolver.RAW_LORE]) {
             rightClickAbilityRegex.match(lore, "ability") { (ability) -> outputAbility = ability }
             if (outputAbility != null && manaCostRegex.match(lore, "mana") { (mana) -> outputMana = mana.parseFormattedInt() }) break
         }
@@ -63,11 +63,11 @@ object LoreDataTypes {
         if (outputAbility != null && outputMana != null) outputAbility to outputMana else null
     }
 
-    val COOLDOWN_ABILITY: DataType<Pair<String, Duration>> = DataType.of("cooldown_ability") {
+    val COOLDOWN_ABILITY: DataType<Pair<String, Duration>> = DataType.of("cooldown_ability") { ctx, _ ->
         var outputAbility: String? = null
         var outputDuration: Duration? = null
 
-        for (lore in it.getRawLore()) {
+        for (lore in ctx[ResolutionContext.Resolver.RAW_LORE]) {
             rightClickAbilityRegex.match(lore, "ability") { (ability) -> outputAbility = ability }
             if (outputAbility != null && cooldownRegex.match(lore, "cooldown") { (cooldown) -> outputDuration = cooldown.toLongValue().seconds }) break
         }
@@ -76,7 +76,7 @@ object LoreDataTypes {
     }
 
     private fun getRarityLine(stack: ItemStack): Pair<String, SkyBlockRarity>? {
-        return getRarityLine(stack[DataComponents.LORE], DataTypes.RECOMBOBULATOR.factory(stack) == true)
+        return getRarityLine(stack[DataComponents.LORE], DataTypes.RECOMBOBULATOR.resolve(stack) == true)
     }
 
     internal fun getRarityLine(lore: ItemLore?, isUpgraded: Boolean = false): Pair<String, SkyBlockRarity>? {
@@ -93,7 +93,7 @@ object LoreDataTypes {
 
     val RARITY: DataType<SkyBlockRarity> = DataType.of("rarity") {
         val tooltipStyleRarity = it.get(DataComponents.TOOLTIP_STYLE)?.path
-        tooltipStyleRarity?.let { style -> SkyBlockRarity.fromNameOrNull(style) } ?: getRarityLine(it)?.second ?: GenericDataTypes.PET_DATA.factory(it)?.rarity
+        tooltipStyleRarity?.let { style -> SkyBlockRarity.fromNameOrNull(style) } ?: getRarityLine(it)?.second ?: GenericDataTypes.PET_DATA.resolve(it)?.rarity
     }
 
     val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") {
@@ -102,36 +102,36 @@ object LoreDataTypes {
         }?.let(SkyBlockCategory::create)
     }
 
-    val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = DataType.of("dungeon_breaker_charges") {
-        if (DataTypes.ID.factory(it) != "DUNGEONBREAKER") return@of null
+    val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = DataType.of("dungeon_breaker_charges") { ctx, stack ->
+        if (DataTypes.ID.resolve(stack) != "DUNGEONBREAKER") return@of null
 
         var output: Pair<Int, Int>? = null
-        dungeonBreakerRegex.anyMatch(it.getRawLore(), "current", "max") { (current, max) ->
+        dungeonBreakerRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "current", "max") { (current, max) ->
             output = current.parseFormattedInt() to max.parseFormattedInt()
         }
         output
     }
 
-    val WATER_LEVEL: DataType<Pair<Int, Int>> = DataType.of("water_level") {
+    val WATER_LEVEL: DataType<Pair<Int, Int>> = DataType.of("water_level") { ctx, _ ->
         var output: Pair<Int, Int>? = null
-        waterRegex.anyMatch(it.getRawLore(), "current", "max") { (current, max) ->
+        waterRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "current", "max") { (current, max) ->
             output = current.parseFormattedInt() to max.parseFormattedInt()
         }
         output
     }
 
-    val SELECTED_ARROW: DataType<SkyBlockId> = DataType.of("selected_arrow") {
-        if (DataTypes.ID.factory(it) != "ARROW_SWAPPER") return@of null
+    val SELECTED_ARROW: DataType<SkyBlockId> = DataType.of("selected_arrow") { ctx, stack ->
+        if (DataTypes.ID.resolve(stack) != "ARROW_SWAPPER") return@of null
 
         var output: SkyBlockId? = null
-        selectedArrowRegex.anyMatch(it.getRawLore(), "type") { (type) ->
+        selectedArrowRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "type") { (type) ->
             output = SkyBlockId.fromName(type, dropLast = false)
         }
         output
     }
 
-    val SOULBOUND: DataType<SoulboundType> = DataType.of("soulbound") {
-        val matches = it.getRawLore().reversed().firstNotNullOfOrNull(soulboundRegex::matchEntire) ?: return@of null
+    val SOULBOUND: DataType<SoulboundType> = DataType.of("soulbound") { ctx, stack ->
+        val matches = ctx[ResolutionContext.Resolver.RAW_LORE].reversed().firstNotNullOfOrNull(soulboundRegex::matchEntire) ?: return@of null
         if (matches.groups["coop"] != null) SoulboundType.COOP else SoulboundType.SOLO
     }
 
