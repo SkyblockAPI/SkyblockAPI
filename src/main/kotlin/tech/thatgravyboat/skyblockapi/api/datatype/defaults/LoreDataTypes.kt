@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.asReversedIterator
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
@@ -75,12 +76,17 @@ object LoreDataTypes {
         if (outputAbility != null && outputDuration != null) outputAbility to outputDuration else null
     }
 
-    private fun getRarityLine(stack: ItemStack): Pair<String, SkyBlockRarity>? {
-        return getRarityLine(stack[DataComponents.LORE], DataTypes.RECOMBOBULATOR.resolve(stack) == true)
+    private fun getRarityLine(stack: ItemStack, ctx: ResolutionContext? = null): Pair<String, SkyBlockRarity>? {
+        val rawLore = ctx?.get(ResolutionContext.Resolver.RAW_LORE) ?: stack.getRawLore()
+        return getRarityLine(rawLore, DataTypes.RECOMBOBULATOR.resolve(stack) == true)
     }
 
     internal fun getRarityLine(lore: ItemLore?, isUpgraded: Boolean = false): Pair<String, SkyBlockRarity>? {
-        val lines = lore?.lines()?.map { it.stripped }?.asReversedIterator() ?: return null
+        return getRarityLine(lore?.lines()?.map { it.stripped }, isUpgraded)
+    }
+
+    internal fun getRarityLine(rawLore: List<String>?, isUpgraded: Boolean = false): Pair<String, SkyBlockRarity>? {
+        val lines = rawLore?.asReversedIterator() ?: return null
         for (line in lines) {
             val rarityLine = (if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim()).removePrefix("SHINY ")
             val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.displayName.uppercase()) }
@@ -91,13 +97,13 @@ object LoreDataTypes {
         return null
     }
 
-    val RARITY: DataType<SkyBlockRarity> = DataType.of("rarity") {
-        val tooltipStyleRarity = it.get(DataComponents.TOOLTIP_STYLE)?.path
-        tooltipStyleRarity?.let { style -> SkyBlockRarity.fromNameOrNull(style) } ?: getRarityLine(it)?.second ?: GenericDataTypes.PET_DATA.resolve(it)?.rarity
+    val RARITY: DataType<SkyBlockRarity> = DataType.of("rarity") { ctx, stack ->
+        val tooltipStyleRarity = stack.get(DataComponents.TOOLTIP_STYLE)?.path
+        tooltipStyleRarity?.let { style -> SkyBlockRarity.fromNameOrNull(style) } ?: getRarityLine(stack, ctx)?.second ?: GenericDataTypes.PET_DATA.resolve(stack)?.rarity
     }
 
-    val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") {
-        getRarityLine(it)?.let { line ->
+    val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") { ctx, stack ->
+        getRarityLine(stack, ctx)?.let { line ->
             line.first.removePrefix(line.second.displayName.uppercase()).trim()
         }?.let(SkyBlockCategory::create)
     }
