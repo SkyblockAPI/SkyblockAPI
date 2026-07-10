@@ -4533,6 +4533,93 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/forge/ForgeS
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/ArmorWardrobeAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/ArmorWardrobeAPI;
+	public final fun getCurrentPage ()I
+	public final fun getCurrentSlot ()Ljava/lang/Integer;
+	public final fun getInWardrobe ()Z
+	public final fun getSlots ()Ljava/util/List;
+	public final fun isCurrentSlotInCurrentPage ()Z
+	public final fun onCommandsRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	public final fun onInventoryClose (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerCloseEvent;)V
+	public final fun onInventoryOpen (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerInitializedEvent;)V
+	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+	public final fun onProfileSwitch (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/EquipmentWardrobeAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/EquipmentWardrobeAPI;
+	public final fun getCurrentPage ()I
+	public final fun getCurrentSlot ()Ljava/lang/Integer;
+	public final fun getInWardrobe ()Z
+	public final fun getSlots ()Ljava/util/List;
+	public final fun isCurrentSlotInCurrentPage ()Z
+	public final fun onCommandsRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	public final fun onInventoryClose (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerCloseEvent;)V
+	public final fun onInventoryOpen (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerInitializedEvent;)V
+	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+	public final fun onProfileSwitch (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutData {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutData$Companion;
+	public fun <init> ()V
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutData;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArmor ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;
+	public final fun getEquipment ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;
+	public fun hashCode ()I
+	public final fun setArmor (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;)V
+	public final fun setEquipment (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutData$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData$Companion;
+	public fun <init> ()V
+	public fun <init> (ILjava/util/List;)V
+	public synthetic fun <init> (ILjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (ILjava/util/List;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;ILjava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrentSlot ()I
+	public final fun getSlots ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun setCurrentSlot (I)V
+	public final fun setSlots (Ljava/util/List;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeData$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeSlot {
+	public fun <init> (ILjava/util/List;Z)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Z
+	public final fun copy (ILjava/util/List;Z)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeSlot;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeSlot;ILjava/util/List;ZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/WardrobeSlot;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()I
+	public final fun getLocked ()Z
+	public final fun getSlots ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/museum/MuseumAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/museum/MuseumAPI;
 	public final fun getAllItems ()Ljava/util/List;
@@ -4695,15 +4782,9 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/wardrobe/War
 	public final fun getInWardrobe ()Z
 	public final fun getSlots ()Ljava/util/List;
 	public final fun isCurrentSlotInCurrentPage ()Z
-	public final fun onCommandsRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
-	public final fun onInventoryClose (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerCloseEvent;)V
-	public final fun onInventoryOpen (Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerInitializedEvent;)V
-	public final fun onInventoryUpdate (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
-	public final fun onProfileSwitch (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileChangeEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/wardrobe/WardrobeData {
-	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/profile/items/wardrobe/WardrobeData$Companion;
 	public fun <init> ()V
 	public fun <init> (ILjava/util/List;)V
 	public synthetic fun <init> (ILjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -4718,10 +4799,6 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/wardrobe/War
 	public final fun setCurrentSlot (I)V
 	public final fun setSlots (Ljava/util/List;)V
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class tech/thatgravyboat/skyblockapi/api/profile/items/wardrobe/WardrobeData$Companion {
-	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/wardrobe/WardrobeSlot {
