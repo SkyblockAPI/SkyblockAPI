@@ -1,9 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe
 
-import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.world.item.ItemStack
 
-@GenerateCodec
+@Deprecated("Replace with WardrobeAPI", ReplaceWith("tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeSlot"))
 data class WardrobeSlot(
     val id: Int,
     val armor: MutableList<ItemStack>,
