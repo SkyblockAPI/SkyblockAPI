@@ -80,9 +80,7 @@ enum class SkyBlockStat(
     FISHING_SPEED('☂', TextColor.AQUA),
     SEA_CREATURE_CHANCE('α', TextColor.DARK_AQUA),
     DOUBLE_HOOK_CHANCE('⚓', TextColor.BLUE),
-    @Deprecated("No longer used in-game, replace with TROPHY_CHANCE")
-    TROPHY_FISH_CHANCE('', TextColor.GOLD),
-    TROPHY_CHANCE('', TextColor.GOLD),
+    TROPHY_FISH_CHANCE('♔', TextColor.GOLD),
     BONUS_PEST_CHANCE('ൠ', TextColor.DARK_GREEN),
     HEAT_RESISTANCE('♨', TextColor.RED),
     COLD_RESISTANCE('❄', TextColor.AQUA),
