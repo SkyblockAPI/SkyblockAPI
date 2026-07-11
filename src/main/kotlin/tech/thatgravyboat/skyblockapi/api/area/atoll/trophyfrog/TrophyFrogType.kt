@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
+package tech.thatgravyboat.skyblockapi.api.area.atoll.trophyfrog
 
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
@@ -10,103 +10,71 @@ import tech.thatgravyboat.skyblockapi.utils.lazy.registryBoundLazy
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-enum class TrophyFishType(
+enum class TrophyFrogType(
     val displayName: Component,
     internalName: String = "",
 ) {
-    SULPHUR_SKITTER(
-        displayName = Text.of("Sulphur Skitter") {
+    COMMON_FROG(
+        displayName = Text.of("Common Frog") {
             withStyle(ChatFormatting.WHITE)
         },
     ),
-    OBFUSCATED_ONE(
-        displayName = Text.of("Obfuscated-1") {
-            withStyle(ChatFormatting.WHITE, ChatFormatting.OBFUSCATED)
-        },
-        internalName = "OBFUSCATED_FISH_1",
-    ),
-    STEAMING_HOT_FLOUNDER(
-        displayName = Text.of("Steaming-Hot Flounder") {
-            withStyle(ChatFormatting.WHITE)
-        },
-    ),
-    GUSHER(
-        displayName = Text.of("Gusher") {
-            withStyle(ChatFormatting.WHITE)
-        },
-    ),
-    BLOBFISH(
-        displayName = Text.of("Blobfish") {
-            withStyle(ChatFormatting.WHITE)
-        },
-    ),
-    OBFUSCATED_TWO(
-        displayName = Text.of("Obfuscated-2") {
-            withStyle(ChatFormatting.GREEN, ChatFormatting.OBFUSCATED)
-        },
-        internalName = "OBFUSCATED_FISH_2",
-    ),
-    SLUGFISH(
-        displayName = Text.of("Slugfish") {
+    LEAP_FROG(
+        displayName = Text.of("Leap Frog") {
             withStyle(ChatFormatting.GREEN)
         },
     ),
-    FLYFISH(
-        displayName = Text.of("Flyfish") {
+    WETLANDS_FROG(
+        displayName = Text.of("Wetlands Frog") {
             withStyle(ChatFormatting.GREEN)
         },
     ),
-    OBFUSCATED_THREE(
-        displayName = Text.of("Obfuscated-3") {
-            withStyle(ChatFormatting.BLUE, ChatFormatting.OBFUSCATED)
+    REALITY_HOPPER(
+        displayName = Text.of("Reality Hopper") {
+            withStyle(ChatFormatting.GREEN)
         },
-        internalName = "OBFUSCATED_FISH_3",
     ),
-    LAVA_HORSE(
-        displayName = Text.of("Lavahorse") {
+    EXPLODING_FROG(
+        displayName = Text.of("Exploding Frog") {
+            withStyle(ChatFormatting.GREEN)
+        },
+    ),
+    BLESSED_FROG(
+        displayName = Text.of("Blessed Frog") {
             withStyle(ChatFormatting.BLUE)
         },
     ),
-    MANA_RAY(
-        displayName = Text.of("Mana Ray") {
+    SEA_FROG(
+        displayName = Text.of("Sea Frog") {
             withStyle(ChatFormatting.BLUE)
         },
     ),
-    VOLCANIC_STONEFISH(
-        displayName = Text.of("Volcanic Stonefish") {
+    BULLFROG(
+        displayName = Text.of("Bullfrog") {
             withStyle(ChatFormatting.BLUE)
         },
     ),
-    VANILLE(
-        displayName = Text.of("Vanille") {
-            withStyle(ChatFormatting.BLUE)
-        },
-    ),
-    SKELETON_FISH(
-        displayName = Text.of("Skeleton Fish") {
+    TREE_FROG(
+        displayName = Text.of("Tree Frog") {
             withStyle(ChatFormatting.DARK_PURPLE)
         },
     ),
-    MOLDFIN(
-        displayName = Text.of("Moldfin") {
+    CAVE_FROG(
+        displayName = Text.of("Cave Frog") {
             withStyle(ChatFormatting.DARK_PURPLE)
         },
     ),
-    SOUL_FISH(
-        displayName = Text.of("Soul Fish") {
+    HIGHLANDS_FROG(
+        displayName = Text.of("Highlands Frog") {
             withStyle(ChatFormatting.DARK_PURPLE)
         },
     ),
-    KARATE_FISH(
-        displayName = Text.of("Karate Fish") {
-            withStyle(ChatFormatting.DARK_PURPLE)
-        },
-    ),
-    GOLDEN_FISH(
-        displayName = Text.of("Golden Fish") {
+    PUDDLE_JUMPER(
+        displayName = Text.of("Puddle Jumper") {
             withStyle(ChatFormatting.GOLD)
         },
-    );
+    ),
+    ;
 
     val internalName: String = internalName.takeUnless { it.isEmpty() } ?: name
     val strippedName = displayName.stripped
@@ -129,11 +97,11 @@ enum class TrophyFishType(
     fun getId(tier: TrophyTier, default: TrophyTier = TrophyTier.BRONZE): SkyBlockId = SkyBlockId.item("${this.internalName}_${tier.takeUnless { it == TrophyTier.NONE } ?: default}")
 
     companion object {
-        fun getByInternalName(internalName: String): TrophyFishType? {
+        fun getByInternalName(internalName: String): TrophyFrogType? {
             return entries.find { internalName.equals(it.internalName, ignoreCase = true) }
         }
 
-        fun getByDisplayName(name: String): TrophyFishType? {
+        fun getByDisplayName(name: String): TrophyFrogType? {
             return entries.find { name.equals(it.strippedName, ignoreCase = true) }
         }
     }

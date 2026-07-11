@@ -1,74 +1,69 @@
-package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
+package tech.thatgravyboat.skyblockapi.api.area.atoll.trophyfrog
 
 import me.owdding.ktmodules.Module
-import tech.thatgravyboat.skyblockapi.api.data.stored.TrophyFishStorage
+import tech.thatgravyboat.skyblockapi.api.data.stored.TrophyFrogStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.TrophyTier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
-import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
-import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
+import tech.thatgravyboat.skyblockapi.api.events.location.atoll.TrophyFrogCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
-import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
-import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
-import kotlin.math.max
 
 @Module
-object TrophyFishingAPI {
+object TrophyFrogAPI {
 
     private val chatGroup = RegexGroup.CHAT.group("trophy_api")
     private val inventoryGroup = RegexGroup.INVENTORY.group("trophy_api")
 
-    private val trophyFishCaughtRegex = chatGroup.create(
+    private val trophyFrogCaughtRegex = chatGroup.create(
         "caught",
-        "\uE02A TROPHY FISH! You caught an? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })})!",
+        "\uE02A TROPHY FROG! You caught an? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })})!",
     )
 
-    private val trophyFishDescription = inventoryGroup.create(
+    private val trophyFrogDescription = inventoryGroup.create(
         "description",
         "(?<tier>Diamond|Silver|Gold|Bronze) \\S+(?: \\((?<amount>\\d+)\\))?",
     )
 
     @Subscription
-    @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
+    @OnlyIn(SkyBlockIsland.LOTUS_ATOLL)
     fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
-        trophyFishCaughtRegex.match(content, "type", "tier") { (type, tier) ->
-            val fishTier = TrophyTier.valueOf(tier)
-            val type = TrophyFishType.getByDisplayName(type) ?: return@match
+        trophyFrogCaughtRegex.match(content, "type", "tier") { (type, tier) ->
+            val frogTier = TrophyTier.valueOf(tier)
+            val type = TrophyFrogType.getByDisplayName(type) ?: return@match
 
             Text.of {
                 append("Caught: ")
                 append(type.displayName)
                 append(CommonText.SPACE)
-                append(fishTier.nameSuffix)
+                append(frogTier.nameSuffix)
             }.sendWithPrefix()
-            TrophyFishStorage.addCaught(type, fishTier)
-            TrophyFishCaughtEvent(type, fishTier).post()
+            TrophyFrogStorage.addCaught(type, frogTier)
+            TrophyFrogCaughtEvent(type, frogTier).post()
         }
     }
 
     @Subscription
-    @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
+    @OnlyIn(SkyBlockIsland.LOTUS_ATOLL)
     fun onInventory(event: InventoryChangeEvent) {
-        if (event.title != "Trophy Fishing") return
+        if (event.title != "Trophy Frogs") return
         if (event.isInPlayerInventory) return
         if (!event.isInMainPart) return
         if (event.isSkyBlockFiller) return
 
-        val byName = TrophyFishType.getByDisplayName(event.item.cleanName) ?: return
+        val byName = TrophyFrogType.getByDisplayName(event.item.cleanName) ?: return
         val caught = mutableMapOf<TrophyTier, Int>()
         event.item.getRawLore().forEach {
-            trophyFishDescription.match(it, "tier", "amount") { match ->
+            trophyFrogDescription.match(it, "tier", "amount") { match ->
                 val (tierName) = match
                 val amount = match["amount"] ?: "0"
                 val tier = TrophyTier.getByName(tierName)
@@ -83,10 +78,11 @@ object TrophyFishingAPI {
                 append(": $tierAmount")
             }
         }.sendWithPrefix()
-        TrophyFishStorage.setAmounts(byName, caught)
+        TrophyFrogStorage.setAmounts(byName, caught)
     }
 
-    @OptIn(SkyBlockPvRequired::class)
+    // TODO: Data
+    /*@OptIn(SkyBlockPvRequired::class)
     @Subscription
     @OnlyOnSkyBlock
     fun onPv(event: SkyBlockPvOpenedEvent) {
@@ -96,7 +92,7 @@ object TrophyFishingAPI {
         }.filterKeysNotNull()
         var hasLoadedAny = false
 
-        val grouped = obtained.entries.groupBy { group -> TrophyFishType.entries.find { group.key.startsWith(it.internalName, true) } }.filterKeysNotNull()
+        val grouped = obtained.entries.groupBy { group -> TrophyFrogType.entries.find { group.key.startsWith(it.internalName, true) } }.filterKeysNotNull()
         val unlocked = grouped.mapValues { entry ->
             val caught = getCaught(entry.key)
             entry.value.associate { value ->
@@ -115,10 +111,10 @@ object TrophyFishingAPI {
         if (hasLoadedAny) {
             PvLoadingHelper.markLoaded(LoadedData.TROPHY_FISH)
         }
-        unlocked.forEach(TrophyFishStorage::setAmounts)
+        unlocked.forEach(TrophyFrogStorage::setAmounts)
     }
 
-    fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
-        return TrophyFishStorage.getCaught(type)
-    }
+    fun getCaught(type: TrophyFrogType): Map<TrophyTier, Int> {
+        return TrophyFrogStorage.getCaught(type)
+    }*/
 }
