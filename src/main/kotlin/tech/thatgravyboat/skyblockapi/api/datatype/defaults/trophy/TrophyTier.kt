@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.api.datatype.defaults
+package tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy
 
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component

@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.TrophyFishStorage
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.TrophyTier
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock

@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.TrophyTier
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
 import tech.thatgravyboat.skyblockapi.utils.lazy.registryBoundLazy

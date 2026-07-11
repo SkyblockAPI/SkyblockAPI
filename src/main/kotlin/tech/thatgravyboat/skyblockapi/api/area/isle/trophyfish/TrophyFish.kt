@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.TrophyTier
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 data class TrophyFish(val type: TrophyFishType, val tier: TrophyTier) {
