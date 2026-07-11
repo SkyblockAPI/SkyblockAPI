@@ -74,7 +74,7 @@ internal data object TrophyFrogResolver : InventoryIdResolver {
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
-    ): Boolean = menu.title.stripped == "Fishing ➜ Trophy Fish" || menu.title.stripped.startsWith("Trophy Fish ➜ ")
+    ): Boolean = menu.title.stripped == "Fishing ➜ Trophy Frogs" || menu.title.stripped.startsWith("Trophy Frogs ➜ ")
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(
         menu: AbstractContainerScreen<T>,
