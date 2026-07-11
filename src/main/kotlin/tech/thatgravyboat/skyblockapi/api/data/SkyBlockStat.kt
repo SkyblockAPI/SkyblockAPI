@@ -80,7 +80,8 @@ enum class SkyBlockStat(
     FISHING_SPEED('☂', TextColor.AQUA),
     SEA_CREATURE_CHANCE('α', TextColor.DARK_AQUA),
     DOUBLE_HOOK_CHANCE('⚓', TextColor.BLUE),
-    TROPHY_FISH_CHANCE('♔', TextColor.GOLD),
+    // TODO: Should be TROPHY_CHANCE but that's breaking
+    TROPHY_FISH_CHANCE('', TextColor.GOLD),
     BONUS_PEST_CHANCE('ൠ', TextColor.DARK_GREEN),
     HEAT_RESISTANCE('♨', TextColor.RED),
     COLD_RESISTANCE('❄', TextColor.AQUA),
