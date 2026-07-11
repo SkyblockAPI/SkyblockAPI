@@ -24,12 +24,12 @@ object TrophyFrogAPI {
     private val inventoryGroup = RegexGroup.INVENTORY.group("trophy_api")
 
     private val trophyFrogCaughtRegex = chatGroup.create(
-        "caught",
+        "frog_caught",
         "\uE02A TROPHY FROG! You caught an? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })})!",
     )
 
     private val trophyFrogDescription = inventoryGroup.create(
-        "description",
+        "frog_description",
         "(?<tier>Diamond|Silver|Gold|Bronze) \\S+(?: \\((?<amount>\\d+)\\))?",
     )
 
