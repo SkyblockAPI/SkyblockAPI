@@ -7775,6 +7775,26 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/NbtVisualizerKt {
 	public static final fun asComponent (Lnet/minecraft/nbt/Tag;)Lnet/minecraft/network/chat/Component;
 }
 
+public final class tech/thatgravyboat/skyblockapi/utils/text/SkyBlockColor {
+	public static final field AQUA I
+	public static final field BLACK I
+	public static final field BLUE I
+	public static final field DARK_AQUA I
+	public static final field DARK_BLUE I
+	public static final field DARK_GRAY I
+	public static final field DARK_GREEN I
+	public static final field DARK_PURPLE I
+	public static final field DARK_RED I
+	public static final field GOLD I
+	public static final field GRAY I
+	public static final field GREEN I
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/utils/text/SkyBlockColor;
+	public static final field LIGHT_PURPLE I
+	public static final field RED I
+	public static final field WHITE I
+	public static final field YELLOW I
+}
+
 public final class tech/thatgravyboat/skyblockapi/utils/text/Text {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/utils/text/Text;
 	public final fun asComponent (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
