@@ -420,6 +420,7 @@ object TextBuilder {
     fun MutableComponent.append(text: String, color: Int): MutableComponent = this.append(text) { this.color = color }
 }
 
+@Suppress("unused")
 object TextColor {
 
     const val BLACK = 0x000000
@@ -442,4 +443,25 @@ object TextColor {
     const val YELLOW = 0xFFFF55
     const val WHITE = 0xFFFFFF
 
+}
+
+@Suppress("unused")
+object SkyBlockColor {
+
+    const val BLACK = TextColor.BLACK
+    const val DARK_BLUE = 0x353FCE
+    const val DARK_GREEN = TextColor.DARK_GREEN
+    const val DARK_AQUA = TextColor.DARK_AQUA
+    const val DARK_RED = 0xD13228
+    const val DARK_PURPLE = 0xA335EE
+    const val GOLD = 0xFF9000
+    const val GRAY = 0xA8BFD2
+    const val DARK_GRAY = 0x707592
+    const val BLUE = 0x459BFF
+    const val GREEN = TextColor.GREEN
+    const val AQUA = TextColor.AQUA
+    const val RED = TextColor.RED
+    const val LIGHT_PURPLE = TextColor.LIGHT_PURPLE
+    const val YELLOW = 0xFFDE2F
+    const val WHITE = TextColor.WHITE
 }
