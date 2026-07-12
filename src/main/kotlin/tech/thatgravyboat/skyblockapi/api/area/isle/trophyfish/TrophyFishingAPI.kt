@@ -16,6 +16,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import kotlin.math.max
 
 @Module
@@ -25,12 +26,12 @@ object TrophyFishingAPI {
     private val inventoryGroup = RegexGroup.INVENTORY.group("trophy_api")
 
     private val singleTrophyFishCaughtRegex = chatGroup.create(
-        "caught",
+        "singleCaught",
         ". TROPHY FISH! You caught an? (?<type>.+?) (?<tier>${TrophyFishTier.entries.joinToString("|", transform = { it.name })})!",
     )
 
     private val multiTrophyFishCaughtRegex = chatGroup.create(
-        "caught",
+        "multiCaught",
         ". TROPHY FISH! You caught (?<type>.+?) (?<tier>${TrophyFishTier.entries.joinToString("|", transform = { it.name })}) x(?<amount>\\d+)!",
     )
 
@@ -43,25 +44,21 @@ object TrophyFishingAPI {
     @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
     fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
-        when {
-            singleTrophyFishCaughtRegex.matches(content) -> {
-                singleTrophyFishCaughtRegex.match(content, "type", "tier") { (type, tier) ->
-                    val fishTier = TrophyFishTier.valueOf(tier)
-                    val type = TrophyFishType.getByDisplayName(type) ?: return@match
+        matchWhen(content) {
+            case(singleTrophyFishCaughtRegex, "type", "tier") { (type, tier) ->
+                val fishTier = TrophyFishTier.valueOf(type)
+                val type = TrophyFishType.getByDisplayName(tier) ?: return@case
 
-                    TrophyFishStorage.addCaught(type, fishTier)
-                    TrophyFishCaughtEvent(type, fishTier).post()
-                }
+                TrophyFishStorage.addCaught(type, fishTier)
+                TrophyFishCaughtEvent(type, fishTier).post()
             }
-            multiTrophyFishCaughtRegex.matches(content) -> {
-                multiTrophyFishCaughtRegex.match(content, "type", "tier", "amount") { (type, tier, amount) ->
-                    val fishTier = TrophyFishTier.valueOf(tier)
-                    val type = TrophyFishType.getByDisplayName(type) ?: return@match
-                    val amount = amount.toIntOrNull() ?: return@match
+            case(multiTrophyFishCaughtRegex, "type", "tier", "amount") { (type, tier, amount) ->
+                val fishTier = TrophyFishTier.valueOf(tier)
+                val type = TrophyFishType.getByDisplayName(type) ?: return@case
+                val amount = amount.toIntOrNull() ?: return@case
 
-                    TrophyFishStorage.addCaught(type, fishTier)
-                    TrophyFishCaughtEvent(type, fishTier, amount).post()
-                }
+                TrophyFishStorage.addCaught(type, fishTier)
+                TrophyFishCaughtEvent(type, fishTier, amount).post()
             }
         }
     }
