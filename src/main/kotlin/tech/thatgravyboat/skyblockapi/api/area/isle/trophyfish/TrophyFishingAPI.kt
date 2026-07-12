@@ -24,9 +24,14 @@ object TrophyFishingAPI {
     private val chatGroup = RegexGroup.CHAT.group("trophy_api")
     private val inventoryGroup = RegexGroup.INVENTORY.group("trophy_api")
 
-    private val trophyFishCaughtRegex = chatGroup.create(
+    private val singleTrophyFishCaughtRegex = chatGroup.create(
         "caught",
         ". TROPHY FISH! You caught an? (?<type>.+?) (?<tier>${TrophyFishTier.entries.joinToString("|", transform = { it.name })})!",
+    )
+
+    private val multiTrophyFishCaughtRegex = chatGroup.create(
+        "caught",
+        ". TROPHY FISH! You caught (?<type>.+?) (?<tier>${TrophyFishTier.entries.joinToString("|", transform = { it.name })}) x(?<amount>\\d+)!",
     )
 
     private val trophyFishDescription = inventoryGroup.create(
@@ -38,12 +43,26 @@ object TrophyFishingAPI {
     @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
     fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
-        trophyFishCaughtRegex.match(content, "type", "tier") { (type, tier) ->
-            val fishTier = TrophyFishTier.valueOf(tier)
-            val type = TrophyFishType.getByDisplayName(type) ?: return@match
+        when {
+            singleTrophyFishCaughtRegex.matches(content) -> {
+                singleTrophyFishCaughtRegex.match(content, "type", "tier") { (type, tier) ->
+                    val fishTier = TrophyFishTier.valueOf(tier)
+                    val type = TrophyFishType.getByDisplayName(type) ?: return@match
 
-            TrophyFishStorage.addCaught(type, fishTier)
-            TrophyFishCaughtEvent(type, fishTier).post()
+                    TrophyFishStorage.addCaught(type, fishTier)
+                    TrophyFishCaughtEvent(type, fishTier).post()
+                }
+            }
+            multiTrophyFishCaughtRegex.matches(content) -> {
+                multiTrophyFishCaughtRegex.match(content, "type", "tier", "amount") { (type, tier, amount) ->
+                    val fishTier = TrophyFishTier.valueOf(tier)
+                    val type = TrophyFishType.getByDisplayName(type) ?: return@match
+                    val amount = amount.toIntOrNull() ?: return@match
+
+                    TrophyFishStorage.addCaught(type, fishTier)
+                    TrophyFishCaughtEvent(type, fishTier, amount).post()
+                }
+            }
         }
     }
 
