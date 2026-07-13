@@ -1397,6 +1397,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity : java
 	public final fun getDisplayName ()Ljava/lang/String;
 	public final fun getDisplayText ()Lnet/minecraft/network/chat/Component;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getSkyBlockColor ()I
 	public fun toString ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;
