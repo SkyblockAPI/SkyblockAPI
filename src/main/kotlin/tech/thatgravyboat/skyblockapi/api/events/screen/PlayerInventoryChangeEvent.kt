@@ -7,20 +7,14 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 data class PlayerInventoryChangeEvent(val inventorySlot: Slot, val item: ItemStack) : SkyBlockEvent() {
-    //? < 26.1 {
-    @Deprecated("Use slotIndex instead", ReplaceWith("slotIndex"))
-    val slot get() = slotIndex
-
-    //? }
+    //? < 26.2
+    //val slot get() = slotIndex
     val slotIndex get() = inventorySlot.index
 }
 
 data class PlayerHotbarChangeEvent(val inventorySlot: Slot, val item: ItemStack) : SkyBlockEvent() {
-    //? < 26.1 {
-    @Deprecated("Use slotIndex instead", ReplaceWith("slotIndex"))
-    val slot get() = slotIndex
-
-    //? }
+    //? < 26.2
+    //val slot get() = slotIndex
     val slotIndex get() = inventorySlot.index - FIRST_HOTBAR_SLOT
 
     companion object {

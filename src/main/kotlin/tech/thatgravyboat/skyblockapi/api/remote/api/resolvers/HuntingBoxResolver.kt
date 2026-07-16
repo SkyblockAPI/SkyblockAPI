@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @IdResolvers
-object HuntingBoxResolver : InventoryIdResolver {
+data object HuntingBoxResolver : InventoryIdResolver {
 
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,

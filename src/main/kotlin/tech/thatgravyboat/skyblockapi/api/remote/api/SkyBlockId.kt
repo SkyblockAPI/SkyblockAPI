@@ -9,14 +9,16 @@ import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuIdRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuPotionRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
+import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.DefaultIdResolver
 import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
-import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockPotionsRepo
+import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
+import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
+import tech.thatgravyboat.skyblockapi.impl.debug.addStringDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
@@ -112,9 +114,13 @@ value class SkyBlockId private constructor(val id: String) {
 
         fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
 
+        private data object SkyblockIdResolver : ItemDebugCategory
+
         internal fun createIdForItem(stack: ItemStack): SkyBlockId? {
             val kind = idResolverKind.get()
+            stack.addStringDebug(SkyblockIdResolver) { "Using $kind resolvers" }
             return kind.entries().firstNotNullOfOrNull {
+                stack.addStringDebug(SkyblockIdResolver) { "Trying $it" }
                 it.tryResolve(stack, kind)
             }
         }
@@ -201,26 +207,56 @@ value class SkyBlockId private constructor(val id: String) {
 }
 
 private fun ItemStack.getSbId(): SkyBlockId? {
-    operator fun <Type> DataType<Type>.invoke() = this.factory(this@getSbId)
+    operator fun <Type> DataType<Type>.invoke() = this.resolve(this@getSbId)
 
-    return when (val id = DataTypes.ID() ?: return null) {
+    val id = DataTypes.ID() ?: run {
+        addStringDebug(DefaultIdResolver) { "Item doesn't have id" }
+        return null
+    }
+
+    return when (id) {
         "ATTRIBUTE_SHARD" -> {
-            DataTypes.ATTRIBUTES()?.entries?.firstOrNull()?.let { (key, _) -> SkyBlockAttributesRepo.get(key)?.attributeId }
+            val attributes = DataTypes.ATTRIBUTES()
+            addStringDebug(DefaultIdResolver) { "Trying attributes $attributes" }
+            attributes?.entries?.firstOrNull()?.let { (key, _) -> SkyBlockAttributesRepo.get(key)?.attributeId }
                 .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
         }
 
-        "ABICASE" -> DataTypes.ABICASE_MODEL()?.let { SkyBlockId.item("abicase_$it") }
+        "ABICASE" -> {
+            val model = DataTypes.ABICASE_MODEL()
+            addStringDebug(DefaultIdResolver) { "Resolving to abicase $model" }
+            model?.let { SkyBlockId.item("abicase_$it") }
+        }
 
-        "PARTY_HAT_CRAB_ANIMATED" -> DataTypes.PARTY_HAT_COLOR()?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
-        "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR()?.let { SkyBlockId.item("party_hat_crab_$it") }
+        "PARTY_HAT_CRAB_ANIMATED" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving animated party hat crab $hatColor" }
+            hatColor?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
+        }
+        "PARTY_HAT_CRAB" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving party hat crab $hatColor" }
+            hatColor?.let { SkyBlockId.item("party_hat_crab_$it") }
+        }
+
+        "CAKE_HAT_2026" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving party hat crab $hatColor" }
+            hatColor?.let { SkyBlockId.item("cake_hat_2026_$it") }
+        }
 
         else if (id == "POTION" || neuPotionRegex.matches(id)) -> {
-            SkyBlockId.potion(DataTypes.POTION_TYPE(), DataTypes.POTION(), DataTypes.POTION_LEVEL())
+            val type = DataTypes.POTION_TYPE()
+            val internalPotion = DataTypes.POTION()
+            val level = DataTypes.POTION_LEVEL()
+            addStringDebug(DefaultIdResolver) { "Resolving potion type: $type, internalPotion: $internalPotion, level: $level" }
+            SkyBlockId.potion(type, internalPotion, level)
         }
 
         else if (id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id))) -> {
             val enchants = DataTypes.ENCHANTMENTS()?.entries
 
+            addStringDebug(DefaultIdResolver) { "Resolving enchantments $enchants" }
             when (enchants?.size) {
                 null, 0 -> SkyBlockId.enchantment(UNKNOWN)
                 1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key.lowercase(), value) }

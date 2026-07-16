@@ -5,13 +5,14 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.debug.DebugEvents
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.full.extensionReceiverParameter
 import kotlin.reflect.jvm.kotlinFunction
 
 class EventBus {
 
-    private val listeners: MutableMap<Class<*>, EventListeners> = mutableMapOf()
-    private val handlers: MutableMap<Class<*>, EventHandler<*>> = mutableMapOf()
+    private val listeners: MutableMap<Class<*>, EventListeners> = ConcurrentHashMap()
+    private val handlers: MutableMap<Class<*>, EventHandler<*>> = ConcurrentHashMap()
 
     fun register(instance: Any) {
         var clazz: Class<*>? = instance.javaClass
@@ -125,9 +126,9 @@ class EventBus {
         val events: List<Class<*>>,
     )
 
-    private fun unregisterHandler(clazz: Class<*>) = this.handlers.keys
-        .filter { it.isAssignableFrom(clazz) }
-        .forEach(this.handlers::remove)
+    private fun unregisterHandler(clazz: Class<*>) {
+        this.handlers.keys.removeIf { it.isAssignableFrom(clazz) }
+    }
 
     private fun getEventClasses(clazz: Class<*>): List<Class<*>> {
         val classes = mutableListOf<Class<*>>()

@@ -1,4 +1,5 @@
-package tech.thatgravyboat.skyblockapi.api.remote
+//? < 26.2 {
+/*package tech.thatgravyboat.skyblockapi.api.remote
 
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
@@ -14,4 +15,4 @@ object RepoItemsAPI {
     fun getItemLazy(id: String): Lazy<ItemStack> = lazy { SkyBlockItemsRepo.getItemStackOrDefault(id) }
     fun getItemName(id: String): Component = SkyBlockItemsRepo.getLazyItemStack(id)?.getDisplayName() ?: Text.of("Unknown Item")
     fun getItemIdByName(name: String): String? = SkyBlockItemsRepo.getIdByName(name)
-}
+}*///?}

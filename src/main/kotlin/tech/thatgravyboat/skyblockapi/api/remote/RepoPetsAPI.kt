@@ -1,4 +1,5 @@
-package tech.thatgravyboat.skyblockapi.api.remote
+//? < 26.2 {
+/*package tech.thatgravyboat.skyblockapi.api.remote
 
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.PetsAPI
@@ -39,4 +40,4 @@ data class PetQuery(
     val level: Int,
     val skin: String? = null,
     val heldItem: String? = null,
-)
+)*///?}

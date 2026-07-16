@@ -3,11 +3,7 @@ package tech.thatgravyboat.skyblockapi.platform
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 
-val ResourceKey<*>.identifier: Identifier
-    //? if > 1.21.10 {
-    get() = this.identifier()
-    //?} else
-//get() = this.location()
+val ResourceKey<*>.identifier: Identifier get() = this.identifier()
 
 object Identifiers {
 
@@ -18,9 +14,5 @@ object Identifiers {
     fun parse(namespace: String, path: String): Identifier? = Identifier.tryBuild(namespace, path)
     fun parseWithSeparator(id: String, separator: Char): Identifier? = Identifier.tryBySeparator(id, separator)
 
-    fun isAllowedInIdentifier(c: Char): Boolean =
-        //? if > 1.21.10 {
-        Identifier.isAllowedInIdentifier(c)
-        //?} else
-    //Identifier.isAllowedInResourceLocation(c)
+    fun isAllowedInIdentifier(c: Char): Boolean = Identifier.isAllowedInIdentifier(c)
 }

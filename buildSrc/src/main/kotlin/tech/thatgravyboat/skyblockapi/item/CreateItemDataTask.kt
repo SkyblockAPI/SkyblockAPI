@@ -64,7 +64,7 @@ abstract class CreateItemDataTask : DefaultTask() {
                 val output = JsonObject()
 
                 output.add("id", item.get("id"))
-                val objectsToKeep = listOf("upgrade_costs", "dungeon_item_conversion_cost", "gemstone_slots", "npc_sell_price")
+                val objectsToKeep = listOf("upgrade_costs", "dungeon_item_conversion_cost", "gemstone_slots", "npc_sell_price", "motes_sell_price")
                 for (objectToKeep in objectsToKeep) {
                     val obj = item.get(objectToKeep) ?: continue
                     output.add(objectToKeep, obj)

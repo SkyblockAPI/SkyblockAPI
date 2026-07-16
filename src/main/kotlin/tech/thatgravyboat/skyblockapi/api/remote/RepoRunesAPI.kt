@@ -1,4 +1,5 @@
-package tech.thatgravyboat.skyblockapi.api.remote
+//? < 26.2 {
+/*package tech.thatgravyboat.skyblockapi.api.remote
 
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.RunesAPI.Rune
@@ -36,4 +37,4 @@ object RepoRunesAPI {
     }
 
     fun Rune.getItem(): ItemStack? = getRuneAsItem(this.id(), this.tier())
-}
+}*///?}

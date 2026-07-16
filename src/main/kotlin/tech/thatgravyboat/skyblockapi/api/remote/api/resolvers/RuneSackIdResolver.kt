@@ -5,6 +5,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -14,19 +15,24 @@ private val idLookup = RepoAPI.runes().runes().map { (id, runes) ->
 }.toMap()
 
 @IdResolvers
-internal object RuneSackIdResolver : InventoryIdResolver {
+internal data object RuneSackIdResolver : InventoryIdResolver {
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): Boolean {
-        return menu.title.stripped == "Runes Sack"
+        val titleMatch = menu.title.stripped.endsWith("Runes Sack")
+        addDebugString { "Title Match: $titleMatch" }
+        return titleMatch
     }
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
-        return idLookup[this.cleanName]?.asDerived()
+        val name = this.cleanName
+        val lookup = idLookup[name]
+        addDebugString { "Lookup $name -> $lookup" }
+        return lookup?.asDerived()
     }
 
     override val priority: Int = 10

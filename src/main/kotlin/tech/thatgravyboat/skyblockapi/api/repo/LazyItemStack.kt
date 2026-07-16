@@ -52,11 +52,7 @@ class LazyItemStack {
     }
 
     operator fun <T : Any> get(component: DataComponentType<T>): T? {
-        //? >=26.1 {
          return components.get(net.minecraft.core.component.DataComponentMap.EMPTY, component)
-        //? } else {
-        /*return components.get(component)?.orElse(null)
-        *///? }
     }
     fun <T : Any> getOrDefault(component: DataComponentType<T>, default: T): T = get(component) ?: default
 
@@ -77,18 +73,10 @@ class LazyItemStack {
 
     companion object {
 
-        //? >=26.1 {
         val CODEC: Codec<LazyItemStack> = net.minecraft.world.item.ItemStackTemplate.MAP_CODEC.codec().xmap({ template ->
             LazyItemStack(template.item.value(), template.count, template.components)
         }, { stack ->
             net.minecraft.world.item.ItemStackTemplate(stack.item.holder, stack.count, stack.components)
         })
-         //? } else {
-        /*val CODEC: Codec<LazyItemStack> = ItemStack.CODEC.xmap({ stack ->
-            LazyItemStack(stack.item, stack.count, stack.componentsPatch)
-        }, { stack ->
-            ItemStack(stack.item.holder, stack.count, stack.components)
-        })
-        *///? }
     }
 }

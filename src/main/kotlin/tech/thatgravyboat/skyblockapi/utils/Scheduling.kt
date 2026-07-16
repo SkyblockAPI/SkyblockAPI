@@ -9,7 +9,9 @@ object Scheduling {
 
     private val counter = AtomicInteger(0)
     private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(10) { target: Runnable? ->
-        Thread(target, "Scheduling-Thread-${counter.getAndIncrement()}")
+        Thread(target, "Scheduling-Thread-${counter.getAndIncrement()}").apply {
+            isDaemon = true
+        }
     }
 
     fun schedule(time: Duration, runnable: suspend () -> Unit): ScheduledFuture<*> = scheduler.schedule(

@@ -73,13 +73,10 @@ internal class DebugScreenImpl<T>(
     }
 
 
-    //~ if >= 26.1 'render' -> 'extract' {
      override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.extractTransparentBackground(graphics)
     }
-    //~}
 
-    //~ if >= 26.1 'render' -> 'extractRenderState' {
     override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTicks)
         //~ }

@@ -1,14 +1,16 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
+import java.util.concurrent.CopyOnWriteArrayList
+
 internal class EventHandler<T : SkyBlockEvent> private constructor(
     val name: String,
-    private val listeners: List<EventListeners.Listener>,
+    private val listeners: CopyOnWriteArrayList<EventListeners.Listener>,
     private val canReceiveCancelled: Boolean,
 ) {
 
     constructor(event: Class<T>, listeners: List<EventListeners.Listener>) : this(
         (event.name.split(".").lastOrNull() ?: event.name).replace("$", "."),
-        listeners.sortedBy { it.priority }.toList(),
+        CopyOnWriteArrayList(listeners.sortedBy { it.priority }),
         listeners.any { it.receiveCancelled }
     )
 

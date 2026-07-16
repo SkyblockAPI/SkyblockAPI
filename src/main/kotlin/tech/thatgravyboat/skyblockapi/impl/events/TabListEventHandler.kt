@@ -84,18 +84,16 @@ internal object TabListEventHandler {
 
     @Subscription
     fun onTabListChange(event: TabListChangeEvent) {
-        val lines = event.new
-            .filter { it.isNotEmpty() && infoRegex.contains(it.first().stripped) }
-            .map { it.drop(1) }
-            .flatten()
+        val lines = event.new.filter { it.isNotEmpty() && infoRegex.contains(it.first().stripped) }.flatMap { it.drop(1) }
 
-        val widgetLines = mutableMapOf<TabWidget, List<Component>>()
+        val widgetLines = mutableMapOf<TabWidget, Pair<List<Component>, MatchResult?>>()
         val currentComponents = mutableListOf<Component>()
         var currentWidget: TabWidget? = null
+        var currentMatchResult: MatchResult? = null
 
         fun flushWidget() {
             if (currentWidget != null && currentComponents.isNotEmpty()) {
-                widgetLines[currentWidget!!] = currentComponents.toList()
+                widgetLines[currentWidget!!] = currentComponents.toList() to currentMatchResult
                 currentComponents.clear()
             }
         }
@@ -104,8 +102,11 @@ internal object TabListEventHandler {
             val stripped = line.stripped
             if (stripped.isBlank()) continue
 
-            val widget = widgetRegexes.entries.find { it.value.matches(stripped) }?.key
-            if (widget == null) {
+            val match = widgetRegexes.entries.firstNotNullOfOrNull { (widget, regex) ->
+                regex.find(stripped)?.let { widget to it }
+            }
+
+            if (match == null) {
                 if (couldBeUnknownWidgetStart(currentWidget, stripped)) {
                     handleUnknownWidget(stripped)
                 }
@@ -114,16 +115,19 @@ internal object TabListEventHandler {
             }
             flushWidget()
             currentComponents.add(line)
-            currentWidget = widget
+            currentWidget = match.first
+            currentMatchResult = match.second
         }
         flushWidget()
 
-        widgetLines.forEach { (widget, section) ->
+        widgetLines.forEach { (widget, data) ->
+            val section = data.first
+            val matchResult = data.second
             val old = widgets[widget] ?: emptyList()
             val new = section.map { it.stripped }
             if (old != new) {
                 widgets[widget] = new
-                TabWidgetChangeEvent(widget, old, new, section).post()
+                TabWidgetChangeEvent(widget, old, new, section, matchResult).post()
             }
         }
 

@@ -40,7 +40,7 @@ object SkyBlockAttributesRepo : RepoItemCache<String>("Attributes") {
             ?.takeUnless { it == Items.AIR }
             ?: Items.BARRIER
 
-        return LazyItemStack(item.takeIf { attribute.texture() != null } ?: Items.PLAYER_HEAD) {
+        return LazyItemStack(item.takeIf { attribute.texture() == null } ?: Items.PLAYER_HEAD) {
             if (attribute.texture() != null) {
                 this[DataComponents.PROFILE] = ResolvableProfile { put("textures", Property("textures", attribute.texture())) }
             }
@@ -54,7 +54,7 @@ object SkyBlockAttributesRepo : RepoItemCache<String>("Attributes") {
 
             val rawLore = attribute.lore()
             val lore = rawLore.map { it.asComponent() }.toMutableList()
-                .also { it.addFirst(Text.of(attribute.name()) { this.color = TextColor.GOLD }) }.toList()
+                .also { it.addFirst(Text.of(attribute.name()) { this.color = TextColor.GOLD; this.italic = false }) }.toList()
 
             this[DataComponents.LORE] = ItemLore(lore, lore)
             this[DataComponents.CUSTOM_DATA] = compoundTag {

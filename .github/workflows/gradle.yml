@@ -13,11 +13,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v5
-            - name: Setup JDK 21
+            - name: Setup JDK 25
               uses: actions/setup-java@v5
               with:
                   distribution: temurin
-                  java-version: '21'
+                  java-version: '25'
             - name: Setup gradle
               uses: gradle/actions/setup-gradle@v5
             - run: chmod +x gradlew
@@ -26,17 +26,10 @@ jobs:
             - name: Upload Artifact
               uses: actions/upload-artifact@v4.0.0
               with:
-                  name: 1.21.5
-                  path: build/libs/*-1.21.5.jar
+                  name: 26.1
+                  path: build/libs/*-26.1.jar
             - uses: actions/upload-artifact@v4.0.0
               with:
-                  name: 1.21.8
-                  path: build/libs/*-1.21.8.jar
-            - uses: actions/upload-artifact@v4.0.0
-              with:
-                  name: 1.21.10
-                  path: build/libs/*-1.21.10.jar
-            - uses: actions/upload-artifact@v4.0.0
-              with:
-                  name: 1.21.11
-                  path: build/libs/*-1.21.11.jar
+                  name: 26.2
+                  path: build/libs/*-26.2.jar
+

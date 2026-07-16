@@ -28,6 +28,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
@@ -217,22 +218,22 @@ object GiveCommands {
         val maxAmount = items.size
         items.chunked(28).mapIndexed { index, items ->
             when ((index + 10) % 16) {
-                0 -> Items.WHITE_SHULKER_BOX
-                1 -> Items.ORANGE_SHULKER_BOX
-                2 -> Items.MAGENTA_SHULKER_BOX
-                3 -> Items.LIGHT_BLUE_SHULKER_BOX
-                4 -> Items.YELLOW_SHULKER_BOX
-                5 -> Items.LIME_SHULKER_BOX
-                6 -> Items.PINK_SHULKER_BOX
-                7 -> Items.GRAY_SHULKER_BOX
-                8 -> Items.LIGHT_GRAY_SHULKER_BOX
-                9 -> Items.CYAN_SHULKER_BOX
-                10 -> Items.PURPLE_SHULKER_BOX
-                11 -> Items.BLUE_SHULKER_BOX
-                12 -> Items.BROWN_SHULKER_BOX
-                13 -> Items.GREEN_SHULKER_BOX
-                14 -> Items.RED_SHULKER_BOX
-                15 -> Items.BLACK_SHULKER_BOX
+                0 -> ColoredItems.WHITE_SHULKER_BOX
+                1 -> ColoredItems.ORANGE_SHULKER_BOX
+                2 -> ColoredItems.MAGENTA_SHULKER_BOX
+                3 -> ColoredItems.LIGHT_BLUE_SHULKER_BOX
+                4 -> ColoredItems.YELLOW_SHULKER_BOX
+                5 -> ColoredItems.LIME_SHULKER_BOX
+                6 -> ColoredItems.PINK_SHULKER_BOX
+                7 -> ColoredItems.GRAY_SHULKER_BOX
+                8 -> ColoredItems.LIGHT_GRAY_SHULKER_BOX
+                9 -> ColoredItems.CYAN_SHULKER_BOX
+                10 -> ColoredItems.PURPLE_SHULKER_BOX
+                11 -> ColoredItems.BLUE_SHULKER_BOX
+                12 -> ColoredItems.BROWN_SHULKER_BOX
+                13 -> ColoredItems.GREEN_SHULKER_BOX
+                14 -> ColoredItems.RED_SHULKER_BOX
+                15 -> ColoredItems.BLACK_SHULKER_BOX
                 else -> TODO("no.")
             }.defaultInstance.apply {
                 set(DataComponents.CONTAINER, ItemContainerContents.fromItems(items))
@@ -273,7 +274,7 @@ object GiveCommands {
 
     fun tryGive(itemStack: ItemStack) {
         val item = itemStack.copyWithCount(1)
-        if (McPlayer.self?.gameMode()?.isCreative != true || !McClient.self.isSingleplayer || McPlayer.self?.hasInfiniteMaterials() != true) {
+        if (McPlayer.self?.gameMode()?.isCreative != true || !McClient.isSingleplayer || McPlayer.self?.hasInfiniteMaterials() != true) {
             Text.of("Not in singleplayer and creative!", red).sendWithPrefix("sbapi-dev-give-singleplayer")
             return
         }
