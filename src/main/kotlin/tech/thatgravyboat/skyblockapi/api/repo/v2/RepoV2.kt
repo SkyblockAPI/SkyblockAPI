@@ -63,12 +63,16 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.obfuscated
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.shadowColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.strikethrough
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
+import java.nio.file.LinkOption
 import java.nio.file.Path
+import kotlin.io.path.readSymbolicLink
 import kotlin.jvm.optionals.getOrNull
 
 @Module
 object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
-    val loader = RepoLoader(Path.of("/Users/meowora/Projects/skyblockapi/repo_new"))
+    val loader = RepoLoader(Path.of("skyblock_repo_v2").toRealPath().also {
+        println(it)
+    })
     val instance: RepoInstance = loader.create()
 
     fun load() {
@@ -158,6 +162,10 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
     private fun Value?.asComponent(): Component? {
         this.asString()?.let {
             return Text.of(it)
+        }
+
+        this.asArray()?.let {
+            return Text.join(it.map { it.asComponent() })
         }
 
         val struct = this.asStruct() ?: return null
