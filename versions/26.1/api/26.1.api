@@ -7436,6 +7436,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/json/Json {
 	public final fun toDataOrThrow (Lcom/google/gson/JsonElement;Lcom/mojang/serialization/Codec;)Ljava/lang/Object;
 	public final fun toJson (Ljava/lang/Object;Lcom/mojang/serialization/Codec;)Lcom/google/gson/JsonElement;
 	public final fun toJsonOrThrow (Ljava/lang/Object;Lcom/mojang/serialization/Codec;)Lcom/google/gson/JsonElement;
+	public final fun toNbt (Ljava/lang/Object;Lcom/mojang/serialization/Codec;)Lnet/minecraft/nbt/Tag;
 	public final fun toPrettyString (Lcom/google/gson/JsonElement;)Ljava/lang/String;
 }
 
