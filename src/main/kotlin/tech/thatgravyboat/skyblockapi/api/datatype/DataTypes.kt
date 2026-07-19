@@ -40,6 +40,9 @@ object DataTypes {
     val MIDAS_WEAPON_PAID: DataType<Long> = GenericDataTypes.MIDAS_WEAPON_PAID
     val ENRICHMENT: DataType<SkyBlockId> = GenericDataTypes.ENRICHMENT
     val SOULBOUND: DataType<LoreDataTypes.SoulboundType> = LoreDataTypes.SOULBOUND
+    val ETHERMERGE: DataType<Boolean> = GenericDataTypes.ETHERMERGE
+    val TUNED_TRANSMISSION: DataType<Int> = GenericDataTypes.TUNED_TRANSMISSION
+
 
     // Misc (idfk)
     val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = LoreDataTypes.RIGHT_CLICK_MANA_ABILITY
