@@ -1582,6 +1582,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getENCHANTMENTS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getENGINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getENRICHMENT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getETHERMERGE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getFUEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getFUEL_TANK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getGEMSTONES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1633,6 +1634,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getTOOL_EXP ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getTOOL_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getTOOL_OVERCLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getTUNED_TRANSMISSION ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUPGRADE_MODULE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUSED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUUID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1761,6 +1763,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getDUNGEON_TIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getENCHANTMENTS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getENRICHMENT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getETHERMERGE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getGILDED_GIFTED_COINS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHELMET_SKIN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1798,6 +1801,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getTOOL_EXP ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getTOOL_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getTOOL_OVERCLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getTUNED_TRANSMISSION ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUSED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUUID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getVINYLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
