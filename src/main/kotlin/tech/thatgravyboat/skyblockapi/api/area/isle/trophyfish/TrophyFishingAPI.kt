@@ -46,8 +46,8 @@ object TrophyFishingAPI {
         val content = event.text.trim()
         matchWhen(content) {
             case(singleTrophyFishCaughtRegex, "type", "tier") { (type, tier) ->
-                val fishTier = TrophyFishTier.valueOf(type)
-                val type = TrophyFishType.getByDisplayName(tier) ?: return@case
+                val fishTier = TrophyFishTier.valueOf(tier)
+                val type = TrophyFishType.getByDisplayName(type) ?: return@case
 
                 TrophyFishStorage.addCaught(type, fishTier)
                 TrophyFishCaughtEvent(type, fishTier).post()
