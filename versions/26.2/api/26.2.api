@@ -5966,6 +5966,7 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McClient {
 	public final fun playSound (Lnet/minecraft/sounds/SoundEvent;FF)V
 	public static synthetic fun playSound$default (Ltech/thatgravyboat/skyblockapi/helpers/McClient;Lnet/minecraft/sounds/SoundEvent;FFILjava/lang/Object;)V
 	public final fun registerClientReloadListener (Lnet/minecraft/resources/Identifier;Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V
+	public final fun reloadResourcePacks ()V
 	public final fun runNextTick (Lkotlin/jvm/functions/Function0;)V
 	public final fun runOrNextTick (Lkotlin/jvm/functions/Function0;)V
 	public final fun sendClientCommand (Ljava/lang/String;)V
@@ -6390,6 +6391,10 @@ public final class tech/thatgravyboat/skyblockapi/impl/DataTypesRegistry {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/DataTypesRegistry;
 	public final fun getData (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Map;
 	public final fun getTypes ()Ljava/util/List;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/HypixelPackLoader {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/HypixelPackLoader;
 }
 
 public final class tech/thatgravyboat/skyblockapi/impl/commands/GiveCommands {
