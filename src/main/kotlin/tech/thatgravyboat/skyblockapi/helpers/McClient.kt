@@ -120,6 +120,10 @@ object McClient {
         openUri(URI.create(uri))
     }.isSuccess
 
+    fun reloadResourcePacks() {
+        self.reloadResourcePacks()
+    }
+
     fun openUri(uri: URI) {
         Util.getPlatform().openUri(uri)
     }
