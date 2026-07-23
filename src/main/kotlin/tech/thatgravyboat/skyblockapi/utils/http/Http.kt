@@ -32,7 +32,7 @@ object Http {
         return URI.create("$url?$query")
     }
 
-    private fun connect(
+    internal fun connect(
         url: String,
         timeout: Int = 10000,
         queries: Map<String, Any> = mapOf(),

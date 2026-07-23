@@ -90,6 +90,13 @@ tasks.withType<ProcessResources>().configureEach {
     filteringCharset = "UTF-8"
 }
 
+afterEvaluate {
+    loom.apply {
+        log4jConfigs.removeAll { true }
+        log4jConfigs.from(rootProject.layout.projectDirectory.file("gradle/log4j.config.xml"))
+    }
+}
+
 tasks.named<ProcessResources>("processResources") {
     val range = if (versionedCatalog.versions.has("minecraft.range")) {
         versionedCatalog.versions.get("minecraft.range").toString()

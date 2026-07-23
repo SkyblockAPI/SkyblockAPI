@@ -1,12 +1,15 @@
 package tech.thatgravyboat.skyblockapi.api.repo.v2
 
+import com.google.common.hash.Hashing
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.mojang.authlib.properties.Property
+import com.mojang.datafixers.util.Either
 import com.mojang.serialization.DataResult
 import me.owdding.ktmodules.Module
+import net.minecraft.client.Minecraft
 import net.minecraft.commands.arguments.NbtTagArgument
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
@@ -26,9 +29,11 @@ import net.minecraft.nbt.StringTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.component.DyedItemColor
 import net.minecraft.world.item.component.ItemLore
+import org.apache.logging.log4j.core.tools.picocli.CommandLine
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.v2.RepoInstance
@@ -42,6 +47,7 @@ import tech.thatgravyboat.repolib.v2.expl.value.NumValue
 import tech.thatgravyboat.repolib.v2.expl.value.StrValue
 import tech.thatgravyboat.repolib.v2.expl.value.StructValue
 import tech.thatgravyboat.repolib.v2.expl.value.Value
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
@@ -50,6 +56,12 @@ import tech.thatgravyboat.skyblockapi.impl.commands.GiveCommands
 import tech.thatgravyboat.skyblockapi.platform.GameProfile
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.platform.toResolvableProfile
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.since
+import tech.thatgravyboat.skyblockapi.utils.extentions.toReadableTime
+import tech.thatgravyboat.skyblockapi.utils.http.Http
+import tech.thatgravyboat.skyblockapi.utils.http.Http.connect
+import tech.thatgravyboat.skyblockapi.utils.http.Http.get
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
@@ -63,16 +75,40 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.obfuscated
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.shadowColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.strikethrough
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import java.nio.file.InvalidPathException
 import java.nio.file.LinkOption
 import java.nio.file.Path
+import java.util.Optional
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import kotlin.io.path.Path
+import kotlin.io.path.createDirectories
+import kotlin.io.path.createParentDirectories
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.notExists
+import kotlin.io.path.readBytes
 import kotlin.io.path.readSymbolicLink
+import kotlin.io.path.readText
+import kotlin.io.path.relativeToOrNull
+import kotlin.io.path.writeText
 import kotlin.jvm.optionals.getOrNull
 
-@Module
-object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
-    val loader = RepoLoader(Path.of("skyblock_repo_v2").toRealPath().also {
-        println(it)
-    })
+@RequiresOptIn
+annotation class ExperimentalRepo
+
+@ExperimentalRepo
+object RepoV2 : Logger by SkyBlockAPI {
+
+    val storageDir: Path = when (Util.getPlatform()) {
+        Util.OS.WINDOWS -> Path(System.getenv("APPDATA"))
+        Util.OS.OSX -> Path("/Library/Application Support/")
+        else -> Path(System.getProperty("user.home")).resolve(".local/share")
+    }.resolve("skyblock-api/repo").createDirectories().toRealPath()
+
+    val loader = RepoLoader(storageDir)
     val instance: RepoInstance = loader.create()
 
     fun load() {
@@ -81,11 +117,105 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
         }
     }
 
-    init {
-        load()
+    fun fileHash(path: String) : String? {
+        val file = file(path)
+        if (file.notExists()) {
+            return null
+        }
+        return Hashing.sha256().hashBytes(file.readBytes()).asBytes().toHexString()
+    }
+    fun fileContent(path: String) : String? {
+        val file = file(path)
+        if (file.notExists()) {
+            return null
+        }
+        return file.readText()
     }
 
-    @Subscription
+    fun file(path: String): Path = storageDir.resolve(path.removePrefix("./")).toAbsolutePath().also {
+        if (!it.startsWith(storageDir)) {
+            throw InvalidPathException(it.toString(), "Path escapes repo directory!")
+        }
+    }
+
+    fun parseHashes(content: String?): Map<String, String> {
+        if (content == null) return emptyMap()
+
+        return content.lines().mapNotNull {
+            if (it.isEmpty()) return@mapNotNull null
+            it.substring(66) to it.substring(0, 65)
+        }.toMap()
+    }
+
+    fun getFromRemote(path: String): String? {
+        val result = connect("https://raw.githubusercontent.com/SkyblockAPI/Repo-Data/refs/heads/master/${URLEncoder.encode(path.removePrefix("./"), StandardCharsets.UTF_8)}") {
+            GET()
+        }
+
+        if (result.statusCode() !in 200..<300) {
+            return null
+        }
+
+        return result.body().use {
+            it.readAllBytes().decodeToString()
+        }
+    }
+
+    fun checkForUpdates() {
+        val indexSha = getFromRemote("index.sha256")?.substringBefore(' ')
+        if (indexSha == null) {
+            error("Failed to load index sha, using current version!")
+            return
+        }
+
+        val localIndexSha = fileHash("index")
+
+        if (indexSha == localIndexSha) {
+            info("Remote and local are the same, skipping update!")
+            return
+        }
+
+        info("Hash missmatch, updating repo!")
+
+        val hashFile = getFromRemote("index") ?: return error("Failed to fetch index from remote!")
+        val remoteIndex = parseHashes(hashFile)
+        val currentIndex = parseHashes(fileContent("index"))
+
+        val remoteFiles = remoteIndex.keys
+        val localFiles = currentIndex.keys
+        val orphanFiles = localFiles - remoteFiles
+
+        val start = currentInstant()
+        val pool = Executors.newFixedThreadPool(5)
+
+        remoteIndex.forEach { (path, hash) ->
+            if (currentIndex[path] == hash) return@forEach info("Skipping $path")
+            val file = file(path)
+
+            pool.submit {
+                val content = getFromRemote(path) ?: return@submit error("Failed to get $path from remote!")
+                debug("Writing $path")
+                file.createParentDirectories().writeText(content)
+            }
+        }
+
+        pool.shutdown()
+        pool.awaitTermination(2, TimeUnit.MINUTES)
+        info("Took ${start.since().toReadableTime(allowMs = true)}")
+
+        orphanFiles.map(::file).forEach {
+            it.deleteIfExists()
+        }
+
+        file("index").writeText(hashFile)
+    }
+
+    init {
+        checkForUpdates()
+        load()
+        SkyBlockAPI.eventBus.register(this)
+    }
+
     internal fun command(event: RegisterSkyblockApiCommandsEvent) {
         event.register("repo_v2_item") {
             thenCallback("give data", NbtTagArgument.nbtTag()) {
@@ -221,7 +351,7 @@ object RepoV2 : Logger by LoggerFactory.getLogger("Sbapi repo v2") {
 
     private fun Value?.asString() = (this as? StrValue)?.value
     private fun Value?.asNum() = (this as? NumValue)?.value
-    private fun Value?.asBool() = (this as? BoolValue)?.value
+    private fun Value?.asBool() = (this as? BoolValue)?.value()
     private fun Value?.asStruct() = (this as? StructValue)
     private fun Value?.asArray() = (this as? ArrayValue)?.toList()
 }
@@ -241,8 +371,9 @@ fun Value.toTag(): Tag? = when (this) {
     is ArrayValue -> ListTag().also {
         it.addAll(this.map { tag -> tag.toTag() })
     }
+
     is StructValue -> this.toNbt()
-    is BoolValue -> ByteTag.valueOf(value)
+    is BoolValue -> ByteTag.valueOf(value())
     is NumValue -> DoubleTag.valueOf(value)
     is StrValue -> StringTag.valueOf(value)
     else -> null
@@ -262,7 +393,7 @@ private fun JsonElement.toRepo(): Value = when (this) {
     is JsonObject -> this.toRepoStruct()
     is JsonArray -> MutableArrayValue.create(this.map { it.toRepo() })
     is JsonPrimitive if this.isNumber -> NumValue(this.asNumber.toDouble())
-    is JsonPrimitive if this.isBoolean -> BoolValue(this.asBoolean)
+    is JsonPrimitive if this.isBoolean -> BoolValue.wrap(this.asBoolean)
     is JsonPrimitive if this.isString -> StrValue(this.asString)
     else -> Value.NIL
 }
