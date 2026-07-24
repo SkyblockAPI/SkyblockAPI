@@ -30,7 +30,7 @@ object EquipmentAPI {
 
     private val inventoryNameRegex = RegexGroup.INVENTORY.group("equipment").create(
         "title",
-        "Your Equipment and Stats",
+        "Your Equipment and Stats|Stats & Equipment",
     )
 
     private val chatEquipRegex = RegexGroup.CHAT.group("equipment").create(
