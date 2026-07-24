@@ -4560,6 +4560,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/Armo
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/EquipmentWardrobeAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/EquipmentWardrobeAPI;
 	public final fun getCurrentPage ()I
+	public final fun getCurrentSet ()Ljava/util/Map;
 	public final fun getCurrentSlot ()Ljava/lang/Integer;
 	public final fun getInWardrobe ()Z
 	public final fun getSlots ()Ljava/util/List;
