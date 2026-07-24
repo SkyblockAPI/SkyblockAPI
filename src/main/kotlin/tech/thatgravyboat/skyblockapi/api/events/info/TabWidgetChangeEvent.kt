@@ -62,7 +62,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     SHARD_TRAPS("Shard Traps"),
 
     // Hunting
-    SALTS(""),
+    SALTS("Salts:"),
 
     // Garden + Farming
     COMPOSTER("Composter:"),
