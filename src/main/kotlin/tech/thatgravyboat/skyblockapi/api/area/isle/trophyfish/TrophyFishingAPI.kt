@@ -46,8 +46,8 @@ object TrophyFishingAPI {
         val content = event.text.trim()
         matchWhen(content) {
             case(singleTrophyFishCaughtRegex, "type", "tier") { (type, tier) ->
-                val fishTier = TrophyFishTier.valueOf(type)
-                val type = TrophyFishType.getByDisplayName(tier) ?: return@case
+                val fishTier = TrophyFishTier.valueOf(tier)
+                val type = TrophyFishType.getByDisplayName(type) ?: return@case
 
                 TrophyFishStorage.addCaught(type, fishTier)
                 TrophyFishCaughtEvent(type, fishTier).post()
@@ -66,7 +66,7 @@ object TrophyFishingAPI {
     @Subscription
     @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
     fun onInventory(event: InventoryChangeEvent) {
-        if (event.title != "Trophy Fishing") return
+        if (event.title != "Trophy Fish") return
         if (event.isInPlayerInventory) return
         if (!event.isInMainPart) return
         if (event.isSkyBlockFiller) return
@@ -78,7 +78,7 @@ object TrophyFishingAPI {
                 val (tierName) = match
                 val amount = match["amount"] ?: "0"
                 val tier = TrophyFishTier.getByName(tierName)
-                caught.put(tier, amount.toInt())
+                caught[tier] = amount.toInt()
             }
         }
         TrophyFishStorage.setAmounts(byName, caught)

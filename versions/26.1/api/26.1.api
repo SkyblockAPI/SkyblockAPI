@@ -1582,6 +1582,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getENCHANTMENTS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getENGINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getENRICHMENT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getETHERMERGE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getFUEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getFUEL_TANK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getGEMSTONES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1623,6 +1624,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getRUNEBOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSECONDS_HELD ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSELECTED_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getSHINY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSINKER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSKYBLOCK_ID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSNOWBALLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1633,6 +1635,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getTOOL_EXP ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getTOOL_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getTOOL_OVERCLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getTUNED_TRANSMISSION ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUPGRADE_MODULE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUSED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUUID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1761,6 +1764,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getDUNGEON_TIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getENCHANTMENTS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getENRICHMENT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getETHERMERGE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getGILDED_GIFTED_COINS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHELMET_SKIN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1790,6 +1794,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getRIFT_DISCRITE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRUNEBOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSECONDS_HELD ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getSHINY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSINKER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSKYBLOCK_ID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getSTAR_COUNT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1798,6 +1803,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getTOOL_EXP ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getTOOL_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getTOOL_OVERCLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getTUNED_TRANSMISSION ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUSED_RUNE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getUUID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getVINYLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -6050,6 +6056,7 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McClient {
 	public final fun playSound (Lnet/minecraft/sounds/SoundEvent;FF)V
 	public static synthetic fun playSound$default (Ltech/thatgravyboat/skyblockapi/helpers/McClient;Lnet/minecraft/sounds/SoundEvent;FFILjava/lang/Object;)V
 	public final fun registerClientReloadListener (Lnet/minecraft/resources/Identifier;Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V
+	public final fun reloadResourcePacks ()V
 	public final fun runNextTick (Lkotlin/jvm/functions/Function0;)V
 	public final fun runOrNextTick (Lkotlin/jvm/functions/Function0;)V
 	public final fun sendClientCommand (Ljava/lang/String;)V
@@ -6475,6 +6482,10 @@ public final class tech/thatgravyboat/skyblockapi/impl/DataTypesRegistry {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/DataTypesRegistry;
 	public final fun getData (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Map;
 	public final fun getTypes ()Ljava/util/List;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/HypixelPackLoader {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/HypixelPackLoader;
 }
 
 public final class tech/thatgravyboat/skyblockapi/impl/commands/GiveCommands {
@@ -7436,6 +7447,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/json/Json {
 	public final fun toDataOrThrow (Lcom/google/gson/JsonElement;Lcom/mojang/serialization/Codec;)Ljava/lang/Object;
 	public final fun toJson (Ljava/lang/Object;Lcom/mojang/serialization/Codec;)Lcom/google/gson/JsonElement;
 	public final fun toJsonOrThrow (Ljava/lang/Object;Lcom/mojang/serialization/Codec;)Lcom/google/gson/JsonElement;
+	public final fun toNbt (Ljava/lang/Object;Lcom/mojang/serialization/Codec;)Lnet/minecraft/nbt/Tag;
 	public final fun toPrettyString (Lcom/google/gson/JsonElement;)Ljava/lang/String;
 }
 
