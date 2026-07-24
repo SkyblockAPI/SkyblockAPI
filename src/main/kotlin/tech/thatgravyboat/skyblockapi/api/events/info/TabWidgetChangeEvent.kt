@@ -56,8 +56,13 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     AGATHA_CONTEST("Agatha's Contest:"),
     STARBORN_TEMPLE("Starborn Temple:"),
     FOREST_WHISPERS("Forest Whispers: (?<amount>[\\dkmbKMB,.]+)"),
+    DESERT_WHISPERS("Desert Whispers: (?<amount>[\\dkmbKMB,.]+)"),
     MOONGLADE_BEACON("Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
+    TORRHUS_BEACON("Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
     SHARD_TRAPS("Shard Traps"),
+
+    // Hunting
+    SALTS(""),
 
     // Garden + Farming
     COMPOSTER("Composter:"),

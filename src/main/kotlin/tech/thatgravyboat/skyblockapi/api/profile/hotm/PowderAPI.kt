@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 @Module
 object PowderAPI : SkillTreeCurrencyAPI<PowderType, PowderAPI>(
     "powder",
-    TabWidget.POWDERS,
+    listOf(TabWidget.POWDERS),
     PowderStorage,
     PowderType::class,
     SkillTreeType.Hotm,
