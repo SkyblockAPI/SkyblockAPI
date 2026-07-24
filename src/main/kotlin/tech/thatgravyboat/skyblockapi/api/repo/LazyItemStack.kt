@@ -8,6 +8,7 @@ import net.minecraft.core.component.TypedDataComponent
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.ItemStackTemplate
 import tech.thatgravyboat.skyblockapi.utils.extentions.holder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
@@ -73,10 +74,13 @@ class LazyItemStack {
 
     companion object {
 
-        val CODEC: Codec<LazyItemStack> = net.minecraft.world.item.ItemStackTemplate.MAP_CODEC.codec().xmap({ template ->
-            LazyItemStack(template.item.value(), template.count, template.components)
-        }, { stack ->
-            net.minecraft.world.item.ItemStackTemplate(stack.item.holder, stack.count, stack.components)
-        })
+        val CODEC: Codec<LazyItemStack> = ItemStackTemplate.MAP_CODEC.codec().xmap(
+            { template ->
+                LazyItemStack(template.item.value(), template.count, template.components)
+            },
+            { stack ->
+                ItemStackTemplate(stack.item.holder, stack.count, stack.components)
+            },
+        )
     }
 }

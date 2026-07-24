@@ -3,17 +3,19 @@ package tech.thatgravyboat.skyblockapi.api.repo.apis
 import com.google.gson.JsonObject
 import com.mojang.serialization.JsonOps
 import net.minecraft.core.component.DataComponents
+import net.minecraft.resources.RegistryOps
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
+import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-abstract class RepoItemCache<K> (private val name: String) {
+abstract class RepoItemCache<K>(private val name: String) {
 
     private val cache: MutableMap<K, LazyItemStack?> = mutableMapOf()
 
@@ -23,7 +25,7 @@ abstract class RepoItemCache<K> (private val name: String) {
         }
 
         SkyBlockAPI.eventBus.register<ServerChangeEvent> {
-            this.cache.values.forEach{ it?.invalidate() }
+            this.cache.values.forEach { it?.invalidate() }
         }
     }
 
@@ -52,8 +54,16 @@ abstract class RepoItemCache<K> (private val name: String) {
 
         private val repos: MutableSet<String> = mutableSetOf()
 
+        private val registryOps by lazy {
+            val registryAccess = McLevel.self?.registryAccess()
+            if (registryAccess == null) {
+                Logger.error("No Registry Access found.")
+                null
+            } else RegistryOps.create(JsonOps.INSTANCE, registryAccess)
+        }
+
         protected fun LazyItemStack(json: JsonObject): LazyItemStack? = LazyItemStack.CODEC
-            .parse(JsonOps.INSTANCE, json)
+            .parse(registryOps, json)
             .ifError { Logger.error(it.message()) }
             .result()
             .orElse(null)
