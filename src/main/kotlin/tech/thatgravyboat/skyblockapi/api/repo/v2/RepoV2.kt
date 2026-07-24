@@ -8,6 +8,14 @@ import com.google.gson.JsonPrimitive
 import com.mojang.authlib.properties.Property
 import com.mojang.datafixers.util.Either
 import com.mojang.serialization.DataResult
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import me.owdding.ktmodules.Module
 import net.minecraft.client.Minecraft
 import net.minecraft.commands.arguments.NbtTagArgument
@@ -41,6 +49,7 @@ import tech.thatgravyboat.repolib.v2.RepoLoader
 import tech.thatgravyboat.repolib.v2.expl.ContentInfo
 import tech.thatgravyboat.repolib.v2.expl.value.ArrayValue
 import tech.thatgravyboat.repolib.v2.expl.value.BoolValue
+import tech.thatgravyboat.repolib.v2.expl.value.ImmutableStructValue
 import tech.thatgravyboat.repolib.v2.expl.value.MutableArrayValue
 import tech.thatgravyboat.repolib.v2.expl.value.MutableStructValue
 import tech.thatgravyboat.repolib.v2.expl.value.NumValue
@@ -81,9 +90,14 @@ import java.nio.file.InvalidPathException
 import java.nio.file.LinkOption
 import java.nio.file.Path
 import java.util.Optional
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.CoroutineContext
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.createParentDirectories
@@ -160,6 +174,7 @@ object RepoV2 : Logger by SkyBlockAPI {
             it.readAllBytes().decodeToString()
         }
     }
+    val pool = Executors.newFixedThreadPool(5)
 
     fun checkForUpdates() {
         val indexSha = getFromRemote("index.sha256")?.substringBefore(' ')
@@ -186,21 +201,23 @@ object RepoV2 : Logger by SkyBlockAPI {
         val orphanFiles = localFiles - remoteFiles
 
         val start = currentInstant()
-        val pool = Executors.newFixedThreadPool(5)
+        runBlocking {
+            remoteIndex.mapNotNull { (path, hash) ->
+                if (currentIndex[path] == hash) {
+                    debug("Skipping $path")
+                    return@mapNotNull null
+                }
+                val file = file(path)
 
-        remoteIndex.forEach { (path, hash) ->
-            if (currentIndex[path] == hash) return@forEach info("Skipping $path")
-            val file = file(path)
-
-            pool.submit {
-                val content = getFromRemote(path) ?: return@submit error("Failed to get $path from remote!")
-                debug("Writing $path")
-                file.createParentDirectories().writeText(content)
-            }
+                async {
+                    info("Loading $path")
+                    val content = getFromRemote(path) ?: return@async error("Failed to get $path from remote!")
+                    info("Writing $path")
+                    file.createParentDirectories().writeText(content)
+                }
+            }.awaitAll()
         }
 
-        pool.shutdown()
-        pool.awaitTermination(2, TimeUnit.MINUTES)
         info("Took ${start.since().toReadableTime(allowMs = true)}")
 
         orphanFiles.map(::file).forEach {
@@ -216,6 +233,7 @@ object RepoV2 : Logger by SkyBlockAPI {
         SkyBlockAPI.eventBus.register(this)
     }
 
+    @Subscription
     internal fun command(event: RegisterSkyblockApiCommandsEvent) {
         event.register("repo_v2_item") {
             thenCallback("give data", NbtTagArgument.nbtTag()) {
@@ -245,7 +263,10 @@ object RepoV2 : Logger by SkyBlockAPI {
     fun createItem(data: CompoundTag): DataResult<LazyItemStack> = createItem(data.toRepoStruct(), data)
 
     fun createItem(data: StructValue, nbtData: CompoundTag = data.toNbt()): DataResult<LazyItemStack> {
-        val stack = instance.createStack(data) ?: return DataResult.error { "Result is null." }
+
+        val stack = instance.createStack(ImmutableStructValue(buildMap {
+            data.iterator().forEach { (key, value) -> put(key, value) }
+        })) ?: return DataResult.error { "Result is null." }
 
         val errors = stack.error
         if (errors.isNotEmpty()) {
