@@ -9,6 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.profile.items.equipment.EquipmentSlot
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
@@ -51,6 +52,16 @@ object EquipmentWardrobeAPI {
     val slots get() = LoadoutStorage.equipment?.slots ?: emptyList()
     val currentSlot: Int? get() = LoadoutStorage.equipment?.currentSlot
 
+    val currentSet: Map<EquipmentSlot, ItemStack>
+        get() {
+            val slots = slots.getOrNull(currentSlot ?: return emptyMap())?.slots ?: return emptyMap()
+            return mapOf(
+                EquipmentSlot.NECKLACE to slots[0],
+                EquipmentSlot.CLOAK to slots[1],
+                EquipmentSlot.BELT to slots[2],
+                EquipmentSlot.GLOVES to slots[3],
+            )
+        }
 
     private fun processInventory(title: String, items: List<ItemStack>) {
         inventoryNameRegex.match(title, "currentPage") { (currentpage) ->
