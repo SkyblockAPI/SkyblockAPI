@@ -18,7 +18,7 @@ kotlin-binary-compatibility-validator = "0.18.1"
 hypixel-modapi = "1.0.2"
 hypixel-modapi-fabric = "1.0.2+build.1+mc26.1"
 
-skyblockapi-repolib = "4.1.2"
+skyblockapi-repolib = "4.1.2.rework-13"
 
 # Dev versions
 devauth-fabric = "1.2.2"

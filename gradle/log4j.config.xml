@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copy of the fabric log4j config, you can find the original at https://github.com/FabricMC/fabric-loom/blob/fd8cc101203a58b44187dbc4cf4509fcf45e8ccb/src/main/resources/log4j2.fabric.xml -->
-<!-- All credits belong to them -->
+<!-- This configuration based of the one from fabric-loom   -->
 <Configuration status="WARN">
     <Appenders>
 
@@ -19,7 +18,7 @@
                     disableAnsi="false">
                     <!-- Dont show the logger name for minecraft classes-->
                     <PatternMatch key="net.minecraft.,com.mojang."
-                                  pattern="%style{[%d{HH:mm:ss}]}{blue} %highlight{[%t/%level]}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=blue} %style{(Minecraft)}{magenta} %highlight{%msg{nolookups}%n}{FATAL=red, ERROR=red, WARN=normal, INFO=normal, DEBUG=normal, TRACE=normal}"/>
+                                  pattern="%style{[%d{HH:mm:ss}]}{blue} %highlight{[%t/%level]}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=cyan, TRACE=blue} %style{(Minecraft)}{magenta} %highlight{%msg{nolookups}%n}{FATAL=red, ERROR=red, WARN=normal, INFO=normal, DEBUG=normal, TRACE=normal}"/>
                 </LoggerNamePatternSelector>
             </PatternLayout>
         </Console>
@@ -70,11 +69,11 @@
             <AppenderRef ref="LatestFile" level="info"/>
             <AppenderRef ref="ServerGuiConsole" level="info"/>
         </Root>
-        <Logger level="all" name="SkyBlockAPI">
-            <AppenderRef ref="DebugFile" level="debug"/>
-            <AppenderRef ref="SysOut" level="all"/>
-            <AppenderRef ref="LatestFile" level="all"/>
-            <AppenderRef ref="ServerGuiConsole" level="info"/>
+        <Logger level="ALL" name="SkyBlockAPI" additivity="false">
+            <AppenderRef ref="DebugFile" level="trace"/>
+            <AppenderRef ref="SysOut" level="trace"/>
+            <AppenderRef ref="LatestFile" level="trace"/>
+            <AppenderRef ref="ServerGuiConsole" level="trace"/>
         </Logger>
     </Loggers>
 </Configuration>
