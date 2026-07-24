@@ -2613,6 +2613,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/TabWidget : ja
 	public static final field CROP_MILESTONES Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field CRYSTALS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field DAILY_QUESTS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
+	public static final field DESERT_WHISPERS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field DISCOVERIES Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field DOWNED Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field DRAGON Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
@@ -2642,6 +2643,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/TabWidget : ja
 	public static final field PUZZLES Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field REPUTATION Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field RNG_METER Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
+	public static final field SALTS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field SHARD_TRAPS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field SHEN Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field SKILLS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
@@ -2650,6 +2652,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/TabWidget : ja
 	public static final field STATS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field TEAM_DEATHS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field TIMERS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
+	public static final field TORRHUS_BEACON Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field TRAPPER Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field TROPHY_FISH Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
 	public static final field TROPHY_FROGS Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidget;
@@ -3655,6 +3658,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas;
 	public final fun getABANDONED_QUARRY ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getANCIENT_RUINS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getANTS_CAVE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getARACHNES_BURROW ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getARACHNES_SANCTUARY ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getARCHAEOLOGISTS_CAMP ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
@@ -3697,6 +3701,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getDARK_THICKET ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getDEEP_CAVERNS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getDESERT_SETTLEMENT ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getDESERT_TEMPLE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getDIAMOND_RESERVE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getDIVANS_GATEWAY ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getDIVE_EMBER_PASS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
@@ -3752,6 +3757,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getHALF_EATEN_CAVE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getHANGING_COURT ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getHEXATORUM ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getHOTSPOT_HAVEN ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getHOT_SPRINGS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getHOWLING_CAVE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getINFESTED_HOUSE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
@@ -3779,6 +3785,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getMELODYS_PLATEAU ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getMINES_OF_DIVAN ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getMINION_SHOP ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getMIRIAS_HUT ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getMIRRORVERSE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getMITHRIL_DEPOSITS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getMOONGLADE_EDGE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
@@ -3819,6 +3826,8 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getROYAL_PALACE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getROYAL_QUARTERS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getRUINS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getSAFARI_ZONE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getSAFARI_ZONE_ENTRANCE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSAVANNA_WOODLAND ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSCARLETON ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSCARLETON_AUCTION_HOUSE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
@@ -3839,6 +3848,9 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getSOUTH_WETLANDS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSPIDER_MOUND ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSPIRIT_CAVE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getSPRING_DEPTHS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getSPRING_PATH ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getSPRING_SHALLOWS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSPRUCE_WOODS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSTILLGORE_CHATEAU ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getSTRIDE_EMBER_FISSURE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
@@ -3862,6 +3874,9 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getTHE_WASTELAND ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTIME_CHAMBER ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTOMB_FLOODWAY ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getTORRHUS_CANYON ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getTORRHUS_HEIGHTS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getTORRHUS_SPRINGS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTRADE_CENTER ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTRANQUILITY_SANCTUM ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getTRANQUIL_PASS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
@@ -3908,12 +3923,14 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland : 
 	public static final field LOTUS_ATOLL Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field MINESHAFT Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field PRIVATE_ISLAND Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
+	public static final field SAFARI Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field SPIDERS_DEN Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field THE_BARN Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field THE_CATACOMBS Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field THE_END Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field THE_PARK Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public static final field THE_RIFT Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
+	public static final field TORRHUS_CANYON Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public final fun getDisplayName ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getId ()Ljava/lang/String;
@@ -4299,6 +4316,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/HotfPerk : te
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/WhisperType : java/lang/Enum, tech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTreeCurrency {
+	public static final field DESERT Ltech/thatgravyboat/skyblockapi/api/profile/hotf/WhisperType;
 	public static final field FOREST Ltech/thatgravyboat/skyblockapi/api/profile/hotf/WhisperType;
 	public fun getCurrent ()J
 	public fun getData ()Ltech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTreeCurrencyData;
@@ -4312,6 +4330,8 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/WhisperType :
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/WhispersAPI : tech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTreeCurrencyAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/hotf/WhispersAPI;
+	public final fun getDesert ()J
+	public final fun getDesertTotal ()J
 	public final fun getForest ()J
 	public final fun getForestTotal ()J
 }
