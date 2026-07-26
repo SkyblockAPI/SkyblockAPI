@@ -40,17 +40,16 @@ data class ActionBarWidgetType(
 object ActionBarEventHandler {
 
     private val types = listOf(
-        // §c1,303/1,303❤
+        // §c3,487/3,487
         ActionBarWidgetType(ActionBarWidget.HEALTH, "§.(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)[❤\uE010](?:\\+§.[\\d,]+.)?") { old, it ->
             HealthActionBarWidgetChangeEvent(it["health"].toIntValue(), it["maxhealth"].toIntValue(), old, it.string)
         },
-        // §a245§a❈ Defense
-        ActionBarWidgetType(ActionBarWidget.DEFENSE, "§.(?<defense>[\\d,]+)§.[❈\uE008] Defense") { old, it ->
+        // §a435
+        ActionBarWidgetType(ActionBarWidget.DEFENSE, "§.(?<defense>[\\d,]+)[❈\uE008]") { old, it ->
             DefenseActionBarWidgetChangeEvent(it["defense"].toIntValue(), old, it.string)
         },
-        // §b319/319✎ Mana
-        // §b319/319✎
-        ActionBarWidgetType(ActionBarWidget.MANA, "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)[✎\uE003] (?:Mana)?") { old, it ->
+        // §b527/527
+        ActionBarWidgetType(ActionBarWidget.MANA, "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)[✎\uE003]") { old, it ->
             ManaActionBarWidgetChangeEvent(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, it.string)
         },
         // §3400ʬ
@@ -138,6 +137,16 @@ object ActionBarEventHandler {
         // §2936/3k Drill Fuel
         ActionBarWidgetType(ActionBarWidget.DRILL_FUEL, "§2(?<current>\\d+)/(?<max>\\d+[kmb]?) Drill Fuel") { old, it ->
             DrillActionBarWidgetChangeEvent(it["current"].parseFormattedInt(), it["max"].parseFormattedInt(), old, it.string)
+        },
+        // §4122/122
+        ActionBarWidgetType(
+            ActionBarWidget.VITALITY,
+            "§.(?<current>[\\d,]+)/(?<max>[\\d,]+)\uE028",
+            {
+                VitalityActionBarWidgetChangeEvent(0, 0, it.string, "")
+            },
+        ) { old, it ->
+            VitalityActionBarWidgetChangeEvent(it["current"].parseFormattedInt(), it["max"].parseFormattedInt(), old, it.string)
         },
     )
 
