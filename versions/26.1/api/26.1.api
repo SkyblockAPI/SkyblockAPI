@@ -2393,6 +2393,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidge
 	public static final field SKILL_XP Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field SKILL_XP_LITERAL Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static final field SKYBLOCK_XP Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
+	public static final field VITALITY Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun toString ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidget;
@@ -2695,6 +2696,12 @@ public final class tech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChang
 	public final fun isEmpty ()Z
 	public fun post (Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;)Z
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/info/VitalityActionBarWidgetChangeEvent : tech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidgetChangeEvent {
+	public fun <init> (IILjava/lang/String;Ljava/lang/String;)V
+	public final fun getCurrent ()I
+	public final fun getMax ()I
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/level/BlockChangeEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -3975,7 +3982,9 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/StatsAPI {
 	public final fun getMana ()I
 	public final fun getMaxHealth ()I
 	public final fun getMaxMana ()I
+	public final fun getMaxVitaliy ()I
 	public final fun getOverflowMana ()I
+	public final fun getVitaliy ()I
 	public final fun onActionBarWidget (Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidgetChangeEvent;)V
 }
 
