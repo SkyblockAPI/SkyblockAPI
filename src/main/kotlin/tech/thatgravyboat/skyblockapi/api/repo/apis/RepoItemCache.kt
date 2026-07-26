@@ -13,6 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
+import tech.thatgravyboat.skyblockapi.utils.json.Json
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 abstract class RepoItemCache<K>(private val name: String) {
@@ -54,16 +55,8 @@ abstract class RepoItemCache<K>(private val name: String) {
 
         private val repos: MutableSet<String> = mutableSetOf()
 
-        private val registryOps by lazy {
-            val registryAccess = McLevel.self?.registryAccess()
-            if (registryAccess == null) {
-                Logger.error("No Registry Access found.")
-                null
-            } else RegistryOps.create(JsonOps.INSTANCE, registryAccess)
-        }
-
         protected fun LazyItemStack(json: JsonObject): LazyItemStack? = LazyItemStack.CODEC
-            .parse(registryOps, json)
+            .parse(Json.ops, json)
             .ifError { Logger.error(it.message()) }
             .result()
             .orElse(null)
