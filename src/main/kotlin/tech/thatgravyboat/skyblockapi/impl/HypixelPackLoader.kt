@@ -36,12 +36,14 @@ object HypixelPackLoader {
     @Subscription
     internal fun onCommand(event: RegisterSkyblockApiCommandsEvent) {
         event.register("pack") {
-            thenCallback("stable") { downloadPack("stable") }
-            thenCallback("alpha") { downloadPack("alpha") }
+            thenCallback("stable") { downloadAndApplyPack("stable") }
+            thenCallback("alpha") { downloadAndApplyPack("alpha") }
         }
     }
 
-    private fun downloadPack(path: String) {
+    fun downloadAndApplyStablePack() = downloadAndApplyPack("stable")
+
+    fun downloadAndApplyPack(path: String) {
         if (LocationAPI.isOnSkyBlock) {
             Text.of("Pack Downloading doesn't work on SkyBlock").sendWithPrefix()
             return
