@@ -2209,10 +2209,12 @@ public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityEquipm
 
 public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityEvents {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/entity/EntityEvents;
+	public static field remainingPerTick J
 	public final fun getDebug ()Z
 	public final fun onCommandsRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 	public final fun onNameAttach (Ltech/thatgravyboat/skyblockapi/api/events/entity/ComponentAttachEvent;)V
 	public final fun setDebug (Z)V
+	public final fun tick (Ltech/thatgravyboat/skyblockapi/api/events/time/TickEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/entity/EntityInfoLineAttachEvent : tech/thatgravyboat/skyblockapi/api/events/entity/EntityInfoLineEvent {
