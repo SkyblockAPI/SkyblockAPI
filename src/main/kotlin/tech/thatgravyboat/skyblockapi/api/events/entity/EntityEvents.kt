@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.getAttachedTo
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
@@ -22,6 +23,14 @@ internal interface ListenForNameChange {
 @Module
 object EntityEvents {
     var debug: Boolean = false
+    @JvmField
+    var remainingPerTick: Long = 40
+
+    @Subscription
+    context(_: TickEvent)
+    fun tick() {
+        remainingPerTick = 40
+    }
 
     @Subscription
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
