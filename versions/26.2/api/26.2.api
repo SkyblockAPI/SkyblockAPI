@@ -6427,6 +6427,8 @@ public final class tech/thatgravyboat/skyblockapi/impl/DataTypesRegistry {
 
 public final class tech/thatgravyboat/skyblockapi/impl/HypixelPackLoader {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/HypixelPackLoader;
+	public final fun downloadAndApplyPack (Ljava/lang/String;)V
+	public final fun downloadAndApplyStablePack ()V
 }
 
 public final class tech/thatgravyboat/skyblockapi/impl/commands/GiveCommands {
