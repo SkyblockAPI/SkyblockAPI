@@ -24,6 +24,6 @@ object WhispersAPI : SkillTreeCurrencyAPI<WhisperType, WhispersAPI>(
     val desert: Long
         get() = getCurrent(WhisperType.DESERT)
     val desertTotal: Long
-        get() = getCurrent(WhisperType.DESERT)
+        get() = getTotal(WhisperType.DESERT)
 
 }
