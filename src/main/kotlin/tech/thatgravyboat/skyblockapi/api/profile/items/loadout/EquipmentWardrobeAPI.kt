@@ -54,7 +54,7 @@ object EquipmentWardrobeAPI {
 
     val currentSet: Map<EquipmentSlot, ItemStack>
         get() {
-            val slots = slots.getOrNull(currentSlot ?: return emptyMap())?.slots ?: return emptyMap()
+            val slots = slots.find { it.id == currentSlot }?.slots ?: return emptyMap()
             return mapOf(
                 EquipmentSlot.NECKLACE to slots[0],
                 EquipmentSlot.CLOAK to slots[1],
