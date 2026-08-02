@@ -41,12 +41,12 @@ class LazyItemStack {
     fun withComponents(builder: DataComponentPatch.Builder.() -> Unit): LazyItemStack {
         val components = DataComponentPatch.builder()
 
-        for ((type, value) in this.components.entrySet()) {
-            if (value.isEmpty) {
-                components.remove(type)
-            } else {
-                components.set(TypedDataComponent.createUnchecked(type, value.get()))
-            }
+        val patch = this.components.split()
+        patch.added().forEach { typesComponent ->
+            components.set(TypedDataComponent.createUnchecked(typesComponent.type, typesComponent.value))
+        }
+        patch.removed().forEach { typesComponent ->
+            components.remove(typesComponent)
         }
 
         return LazyItemStack(item, count, components.apply(builder))

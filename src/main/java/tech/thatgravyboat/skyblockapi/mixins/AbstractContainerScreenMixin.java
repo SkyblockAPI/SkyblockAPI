@@ -25,7 +25,10 @@ public class AbstractContainerScreenMixin {
         method = "extractTooltip",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"
+            //? >= 26.3 {
+            target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;Z)V"
+            //?} else
+            // target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"
         )
     )
     private void onRenderTooltip(
@@ -36,12 +39,24 @@ public class AbstractContainerScreenMixin {
         final int xo,
         final int yo,
         final @Nullable Identifier style,
+        //? >= 26.3
+        boolean replaceExisting,
         Operation<Void> original,
         @Local(ordinal = 0) ItemStack stack
     ) {
         if (instance instanceof GuiGraphicsHook hook) {
             hook.skyblockapi$setHoveredItem(stack);
         }
-        original.call(instance, font, texts, optionalImage, xo, yo, style);
+        original.call(
+            instance,
+            font,
+            texts,
+            optionalImage,
+            xo,
+            yo,
+            style
+            //? >= 26.3
+            , replaceExisting
+        );
     }
 }

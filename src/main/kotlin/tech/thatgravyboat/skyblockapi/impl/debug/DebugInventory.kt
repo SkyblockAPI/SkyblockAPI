@@ -158,7 +158,9 @@ internal object DebugInventory {
         ;
 
         val title = name.toTitleCase()
-        val keyName: Component = InputConstants.Type.KEYSYM.getOrCreate(key).displayName
+
+        //~ if >= 26.3 'KEYSYM' -> 'KEYBOARD'
+        val keyName: Component = InputConstants.Type.KEYBOARD.getOrCreate(key).displayName
 
         fun initCopy(slot: Slot): Boolean {
             val data = copy(slot) ?: return false
