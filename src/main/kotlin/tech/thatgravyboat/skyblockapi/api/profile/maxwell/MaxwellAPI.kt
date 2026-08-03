@@ -76,7 +76,7 @@ object MaxwellAPI {
     )
     private val thaumaturgyMpRegex = thaumaturgyGuiGroup.create(
         "mp",
-        "^Total: (?<mp>[\\d,.]+) Magical Power",
+        "^Total: (?<mp>[\\d,.]+) Accessory Power",
     )
     private val thaumaturgyStartTuningRegex = thaumaturgyGuiGroup.create(
         "tuning.start",
@@ -100,7 +100,7 @@ object MaxwellAPI {
     )
     private val bagsMpRegex = bagsGroup.create(
         "mp",
-        "^Magical Power: (?<mp>[\\d,.]+)",
+        "^Accessory Power: (?<mp>[\\d,.]+)",
     )
     private val bagsPowerRegex = bagsGroup.create(
         "power",
