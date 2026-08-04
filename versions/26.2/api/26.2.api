@@ -3626,6 +3626,7 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/sources/Ba
 public final class tech/thatgravyboat/skyblockapi/api/location/LocationAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/location/LocationAPI;
 	public final fun getArea ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+	public final fun getBiome ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
 	public final fun getForceIsland ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public final fun getForceOnSkyblock ()Z
 	public final fun getIsland ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
@@ -3644,6 +3645,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/LocationAPI {
 	public final fun onServerChange (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ServerChangeEvent;)V
 	public final fun onServerDisconnect ()V
 	public final fun onTabListUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/TabListChangeEvent;)V
+	public final fun onTick (Ltech/thatgravyboat/skyblockapi/api/events/time/TickEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockArea {
@@ -3913,6 +3915,51 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockAreas {
 	public final fun getWYLD_WOODS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getWYRMGROVE_TOMB ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getZEALOT_BRUISER_HIDEOUT ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome$Companion;
+	public fun <init> (Lnet/minecraft/resources/Identifier;)V
+	public final fun component1 ()Lnet/minecraft/resources/Identifier;
+	public final fun contains (Lnet/minecraft/core/BlockPos;)Z
+	public final fun contains (Lnet/minecraft/world/entity/Entity;)Z
+	public final fun contains (Lnet/minecraft/world/phys/Vec3;)Z
+	public final fun copy (Lnet/minecraft/resources/Identifier;)Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;Lnet/minecraft/resources/Identifier;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBiome ()Lnet/minecraft/resources/Identifier;
+	public fun hashCode ()I
+	public final fun inBiome ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome$Companion {
+	public final fun inAnyBiome (Ljava/util/Collection;)Z
+	public final fun inAnyBiome ([Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;)Z
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockBiomes {
+	public static final field HYPIXEL_IDENTIFIER Ljava/lang/String;
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiomes;
+	public final fun getBAYOU ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getBIRCH_FOREST ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getBOG ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getCAVERN ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getDARK_FOREST ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getFOREST ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getGRAVEYARD ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getHAUNTED ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getICY ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getICY_CAVES ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getLOTUS_ATOLL ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getMIDNIGHT_FOREST ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getMOONGLADE ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getSPIDERS_DEN ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getSPRUCE_FOREST ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getSkyBlockBiome (Lnet/minecraft/resources/Identifier;)Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getSkyBlockBiomeOrNull (Lnet/minecraft/resources/Identifier;)Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getTORRHUS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
+	public final fun getWILDERNESS ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland : java/lang/Enum {
