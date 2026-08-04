@@ -563,6 +563,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/mining/CommissionsAPI
 public final class tech/thatgravyboat/skyblockapi/api/area/mining/GlaciteAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/mining/GlaciteAPI;
 	public final fun getCold ()I
+	public final fun inColdArea ()Z
 	public final fun inGlaciteTunnels ()Z
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onServerChange (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ServerChangeEvent;)V
