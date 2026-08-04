@@ -24,6 +24,11 @@ object GlaciteAPI {
     var cold: Int = 0
         private set
 
+    fun inColdArea() = when {
+        SkyBlockIsland.SAFARI.inIsland() -> true
+        else -> inGlaciteTunnels()
+    }
+
     fun inGlaciteTunnels() = when {
         SkyBlockIsland.MINESHAFT.inIsland() -> true
         SkyBlockIsland.DWARVEN_MINES.inIsland() -> SkyBlockArea.inAnyArea(
