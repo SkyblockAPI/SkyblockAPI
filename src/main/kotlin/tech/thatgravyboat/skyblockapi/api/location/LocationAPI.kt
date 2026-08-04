@@ -2,8 +2,11 @@ package tech.thatgravyboat.skyblockapi.api.location
 
 import me.owdding.ktmodules.Module
 import net.hypixel.data.type.GameType
+import net.minecraft.core.BlockPos
+import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.HypixelJoinEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
@@ -14,7 +17,11 @@ import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.SkyBlockLocationEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.helpers.McLevel
+import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.platform.identifier
 import tech.thatgravyboat.skyblockapi.utils.debugSelect
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
@@ -24,13 +31,16 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
 
 @Module
 object LocationAPI {
 
     private val unknownAreas = mutableMapOf<String, SkyBlockIsland?>()
-    private var sendUnknownChatMessage = false
+    private var sendUnknownAreaChatMessage = false
+    private val unknownBiomes = mutableSetOf<Identifier>()
+    private var sendUnknownBiomeChatMessage = false
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
         "location",
@@ -64,6 +74,9 @@ object LocationAPI {
         private set
 
     var area: SkyBlockArea = SkyBlockAreas.NONE
+        private set
+
+    var biome: SkyBlockBiome? = null
         private set
 
     var serverId: String? = null
@@ -146,7 +159,7 @@ object LocationAPI {
             val knownArea = SkyBlockAreas.registeredAreas.entries.find { it.value.name == location } != null
             if (!knownArea) {
                 unknownAreas.putIfAbsent(location, island)
-                if (sendUnknownChatMessage) {
+                if (sendUnknownAreaChatMessage) {
                     Text.of("Unknown area detected: $location").send()
                 }
             }
@@ -154,6 +167,35 @@ object LocationAPI {
 
         guestRegex.anyMatch(event.added, "guests") { (current) ->
             playerCount = current.toIntOrNull() ?: 0
+        }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    fun onTick(event: TickEvent) {
+        val pos = McPlayer.self?.blockPosition() ?: return
+        val biome = McLevel.selfOrNull?.getBiome(pos)?.unwrapKey()?.getOrNull()?.identifier ?: run {
+            LocationAPI.biome = null
+            return
+        }
+
+        if (biome.namespace != SkyBlockBiomes.HYPIXEL_IDENTIFIER) {
+            LocationAPI.biome = null
+            return
+        }
+
+        val knownBiome = SkyBlockBiomes.registeredBiomes.contains(biome.path)
+
+        val hypixelBiome = SkyBlockBiomes.getSkyBlockBiome(biome)
+        if (LocationAPI.biome == hypixelBiome) return
+
+        LocationAPI.biome = hypixelBiome
+
+        if (!knownBiome) {
+            unknownBiomes.add(biome)
+            if (sendUnknownBiomeChatMessage) {
+                Text.of("Unknown biome detected: $biome").send()
+            }
         }
     }
 
@@ -179,12 +221,18 @@ object LocationAPI {
         event.registerWithCallback("sbapi unknownareas") {
             McClient.clipboard = unknownAreas.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
             Text.of("Copied ${unknownAreas.size} unknown areas to clipboard!").send()
-            sendUnknownChatMessage != sendUnknownChatMessage
+            sendUnknownAreaChatMessage = !sendUnknownAreaChatMessage
+        }
+        event.registerWithCallback("sbapi unknownbiomes") {
+            McClient.clipboard = unknownBiomes.joinToString("\n") { "$it" }
+            Text.of("Copied ${unknownBiomes.size} unknown biomes to clipboard!").send()
+            sendUnknownBiomeChatMessage = !sendUnknownBiomeChatMessage
         }
         event.registerWithCallback("sbapi location") {
             Text.multiline(
                 "Island: ${island?.displayName ?: "Unknown"}",
                 "Area: ${area.name}",
+                "Biome: ${biome?.biome ?: "Unknown"}",
                 "Server ID: ${serverId ?: "Unknown"}",
                 "Player Count: $playerCount${maxPlayercount?.let { " / $it" }.orEmpty()}",
                 "Is Guest: $isGuest",
