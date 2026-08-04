@@ -42,8 +42,12 @@ object MaxwellAPI {
     val power: MaxwellPower
         get() = MaxwellStorage.power
 
+    @Deprecated("magicalPower has been renamed by Hypixel", ReplaceWith("accessoryPower"))
     val magicalPower: Int
-        get() = MaxwellStorage.magicalPower
+        get() = accessoryPower
+
+    val accessoryPower: Int
+        get() = MaxwellStorage.accessoryPower
 
     val accessories: List<ItemStack>
         get() = MaxwellStorage.accessories
@@ -76,7 +80,7 @@ object MaxwellAPI {
     )
     private val thaumaturgyMpRegex = thaumaturgyGuiGroup.create(
         "mp",
-        "^Total: (?<mp>[\\d,.]+) Magical Power",
+        "^Total: (?<mp>[\\d,.]+) Accessory Power",
     )
     private val thaumaturgyStartTuningRegex = thaumaturgyGuiGroup.create(
         "tuning.start",
@@ -100,7 +104,7 @@ object MaxwellAPI {
     )
     private val bagsMpRegex = bagsGroup.create(
         "mp",
-        "^Magical Power: (?<mp>[\\d,.]+)",
+        "^Accessory Power: (?<mp>[\\d,.]+)",
     )
     private val bagsPowerRegex = bagsGroup.create(
         "power",
@@ -174,7 +178,7 @@ object MaxwellAPI {
 
         items.getOrNull(THAUMATURGY_MP_SLOT)?.getRawLore()?.lastOrNull()?.let {
             thaumaturgyMpRegex.findOrNull(it, "mp") { (mp) ->
-                MaxwellStorage.updateMagicalPower(mp.parseFormattedInt())
+                MaxwellStorage.updateAccessoryPower(mp.parseFormattedInt())
             }
         }
 
@@ -233,7 +237,7 @@ object MaxwellAPI {
             if (!foundMp) {
                 bagsMpRegex.findThenNull(line, "mp") { (mp) ->
                     val newMp = mp.parseFormattedInt()
-                    MaxwellStorage.updateMagicalPower(newMp)
+                    MaxwellStorage.updateAccessoryPower(newMp)
                     foundMp = true
                 } ?: continue
             }
@@ -250,7 +254,7 @@ object MaxwellAPI {
             }
         }
 
-        if (!foundMp) MaxwellStorage.updateMagicalPower(0)
+        if (!foundMp) MaxwellStorage.updateAccessoryPower(0)
         if (!foundPower) MaxwellStorage.updatePower(MaxwellPowers.NO_POWER)
         MaxwellStorage.updateTunings(tunings, false)
         return true

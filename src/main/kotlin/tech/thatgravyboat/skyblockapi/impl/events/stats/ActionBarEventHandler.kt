@@ -45,11 +45,13 @@ object ActionBarEventHandler {
             HealthActionBarWidgetChangeEvent(it["health"].toIntValue(), it["maxhealth"].toIntValue(), old, it.string)
         },
         // §a435
-        ActionBarWidgetType(ActionBarWidget.DEFENSE, "§.(?<defense>[\\d,]+)[❈\uE008]") { old, it ->
+        // §a133§a Defense
+        ActionBarWidgetType(ActionBarWidget.DEFENSE, "§.(?<defense>[\\d,]+)(?:§.)?[❈\uE008](?: Defense)?") { old, it ->
             DefenseActionBarWidgetChangeEvent(it["defense"].toIntValue(), old, it.string)
         },
         // §b527/527
-        ActionBarWidgetType(ActionBarWidget.MANA, "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)[✎\uE003]") { old, it ->
+        // §b264/264 Mana
+        ActionBarWidgetType(ActionBarWidget.MANA, "§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)[✎\uE003](?: Mana)?") { old, it ->
             ManaActionBarWidgetChangeEvent(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, it.string)
         },
         // §3400ʬ

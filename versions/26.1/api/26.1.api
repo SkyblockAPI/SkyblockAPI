@@ -563,6 +563,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/mining/CommissionsAPI
 public final class tech/thatgravyboat/skyblockapi/api/area/mining/GlaciteAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/mining/GlaciteAPI;
 	public final fun getCold ()I
+	public final fun inColdArea ()Z
 	public final fun inGlaciteTunnels ()Z
 	public final fun onScoreboardUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onServerChange (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ServerChangeEvent;)V
@@ -4872,6 +4873,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/wardrobe/War
 public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI;
 	public final fun getAccessories ()Ljava/util/List;
+	public final fun getAccessoryPower ()I
 	public final fun getMagicalPower ()I
 	public final fun getPower ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getTunings ()Ljava/util/List;
@@ -4906,6 +4908,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPow
 	public final fun getBIZARRE ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getBLOODY ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getBUBBA ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
+	public final fun getBUTTERY ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getById (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getCOMMANDO ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
