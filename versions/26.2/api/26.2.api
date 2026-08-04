@@ -4891,6 +4891,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPow
 	public final fun getBIZARRE ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getBLOODY ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getBUBBA ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
+	public final fun getBUTTERY ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getById (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getCOMMANDO ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
