@@ -4873,6 +4873,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/wardrobe/War
 public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI;
 	public final fun getAccessories ()Ljava/util/List;
+	public final fun getAccessoryPower ()I
 	public final fun getMagicalPower ()I
 	public final fun getPower ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getTunings ()Ljava/util/List;
