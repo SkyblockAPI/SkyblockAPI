@@ -14,8 +14,8 @@ import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiDebugEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIApiDebug
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIDevModules
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIModules
