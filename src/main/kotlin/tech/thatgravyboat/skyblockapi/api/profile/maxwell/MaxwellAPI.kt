@@ -42,9 +42,8 @@ object MaxwellAPI {
     val power: MaxwellPower
         get() = MaxwellStorage.power
 
-    @Deprecated("magicalPower has been renamed by Hypixel", ReplaceWith("accessoryPower"))
-    val magicalPower: Int
-        get() = accessoryPower
+    //? < 26.3
+    //@Deprecated("magicalPower has been renamed by Hypixel", ReplaceWith("accessoryPower")) val magicalPower: Int get() = accessoryPower
 
     val accessoryPower: Int
         get() = MaxwellStorage.accessoryPower

@@ -1,5 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe
 
+//? < 26.3 {
+/*import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeSlot
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeData as NewWardrobeData
 
 @Deprecated("Replace with WardrobeAPI", ReplaceWith("tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeData"))
@@ -9,4 +11,4 @@ data class WardrobeData(
 )
 
 internal fun NewWardrobeData.into() = WardrobeData(currentSlot, slots.mapTo(mutableListOf()) { it.into() })
-
+*///?}
