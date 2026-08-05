@@ -108,7 +108,7 @@ enum class SkyBlockStat(
     //? < 26.3
     //@Deprecated("Unused in game, use TROPHY_CHANCE instead.") TROPHY_FISH_CHANCE('♔', TextColor.GOLD),
     //? < 26.3
-    // @Deprecated("Unused in game, use HUNTER_FORTUNE instead.") SYPHON_LUCK('♣', TextColor.LIGHT_PURPLE),
+    //@Deprecated("Unused in game, use HUNTER_FORTUNE instead.") SYPHON_LUCK('♣', TextColor.LIGHT_PURPLE),
     ;
 
     constructor(stat: SkyBlockStat) : this(stat.icon, stat.color)
