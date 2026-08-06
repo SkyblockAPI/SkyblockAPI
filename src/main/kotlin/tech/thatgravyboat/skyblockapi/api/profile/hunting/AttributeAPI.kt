@@ -81,7 +81,7 @@ object AttributeAPI {
     private val sentToHuntingBoxRegex = chatGroup.create("sent_to_hunting_box", "You sent (?<amount>an?|\\d+) (?<shard>.*? Shard)s? to your Hunting Box.")
 
     private val fishingRegex = chatGroup.create("fishing", "^\uE025 .*? CATCH! You caught a (?<name>.*) Shard!$")
-    private val fishingMultipleRegex = chatGroup.create("fishing_multiple", "^\uE025 .*? CATCH! You caught a (?<name>.*) Shard! x(?<amount>\\d+)$")
+    private val fishingMultipleRegex = chatGroup.create("fishing_multiple", "^\uE025 .*? CATCH! You caught (?<name>.*) Shard! x(?<amount>\\d+)$")
     //endregion
 
     private val deferredFusion = DeferredFusion()
