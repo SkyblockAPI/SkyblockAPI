@@ -4,6 +4,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 
 @Suppress("unused")
+@Deprecated("With 26.1 dropped soon this will become useless")
 object ColoredItems {
     //? >= 26.2 {
     val WHITE_WOOL: Item = Items.WOOL.white
