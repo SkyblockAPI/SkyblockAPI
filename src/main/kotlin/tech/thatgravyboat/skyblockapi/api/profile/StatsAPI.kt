@@ -34,11 +34,14 @@ object StatsAPI {
     var overflowMana: Int = 0
         private set
 
-    var vitaliy: Int = 0
+    var vitality: Int = 0
         private set
 
-    var maxVitaliy: Int = 100
+    var maxVitality: Int = 100
         private set
+
+    val vitaliy: Int get() = vitality
+    val maxVitaliy: Int get() = maxVitality
 
     @Subscription
     fun onActionBarWidget(event: ActionBarWidgetChangeEvent) {
@@ -67,8 +70,8 @@ object StatsAPI {
             }
 
             is VitalityActionBarWidgetChangeEvent -> {
-                vitaliy = event.current
-                maxVitaliy = event.max
+                vitality = event.current
+                maxVitality = event.max
             }
         }
 
