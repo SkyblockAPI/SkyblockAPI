@@ -34,10 +34,11 @@ object StatsAPI {
     var maxVitality: Int = 100
         private set
 
-    @Deprecated("Use vitality instead", ReplaceWith("vitality"))
+    //? < 26.3 {
+    /*@Deprecated("Use vitality instead", ReplaceWith("vitality"))
     val vitaliy: Int get() = vitality
     @Deprecated("Use maxVitality instead", ReplaceWith("maxVitality"))
-    val maxVitaliy: Int get() = maxVitality
+    val maxVitaliy: Int get() = maxVitality*///?}
 
     @Subscription
     fun onActionBarWidget(event: ActionBarWidgetChangeEvent) {
