@@ -1,5 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
+import me.owdding.ktcodecs.GenerateCodec
+
+@GenerateCodec
 data class SkyBlockArea(val name: String) {
     fun inArea() = LocationAPI.area == this
 

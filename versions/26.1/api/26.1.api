@@ -4032,8 +4032,10 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/StatsAPI {
 	public final fun getMana ()I
 	public final fun getMaxHealth ()I
 	public final fun getMaxMana ()I
+	public final fun getMaxVitality ()I
 	public final fun getMaxVitaliy ()I
 	public final fun getOverflowMana ()I
+	public final fun getVitality ()I
 	public final fun getVitaliy ()I
 	public final fun onActionBarWidget (Ltech/thatgravyboat/skyblockapi/api/events/info/ActionBarWidgetChangeEvent;)V
 }

@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
+import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.Entity
@@ -9,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.platform.identifier
 import kotlin.jvm.optionals.getOrNull
 
+@GenerateCodec
 data class SkyBlockBiome(val biome: Identifier) {
     fun inBiome() = LocationAPI.biome == this
 
