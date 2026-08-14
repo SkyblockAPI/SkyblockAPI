@@ -4003,6 +4003,32 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland$Co
 	public final fun inAnyIsland ([Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;)Z
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockRegion {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockRegion$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V
+	public synthetic fun <init> (Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/Set;
+	public final fun component2 ()Ljava/util/Set;
+	public final fun component3 ()Ljava/util/Set;
+	public final fun copy (Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockRegion;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockRegion;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockRegion;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAreas ()Ljava/util/Set;
+	public final fun getBiomes ()Ljava/util/Set;
+	public final fun getIslands ()Ljava/util/Set;
+	public fun hashCode ()I
+	public final fun inAnyRegion ()Z
+	public final fun inArea ()Z
+	public final fun inBiome ()Z
+	public final fun inIsland ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockRegion$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/profile/PetsAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/PetsAPI;
 	public final fun getLevel ()I

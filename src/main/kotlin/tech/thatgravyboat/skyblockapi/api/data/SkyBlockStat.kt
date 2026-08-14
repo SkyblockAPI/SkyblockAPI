@@ -66,6 +66,7 @@ enum class SkyBlockStat(
     FORAGING_FORTUNE(GENERIC_FORAGING_FORTUNE),
     FIG_FORTUNE(GENERIC_FORAGING_FORTUNE),
     MANGROVE_FORTUNE(GENERIC_FORAGING_FORTUNE),
+    HELIX_FORTUNE(GENERIC_FORAGING_FORTUNE),
 
     // Fishing Stats
     FISHING_SPEED('', TextColor.AQUA),
@@ -87,7 +88,8 @@ enum class SkyBlockStat(
 
     // Hunting Stats
     PULL('', TextColor.AQUA),
-    HUNTER_FORTUNE('', TextColor.LIGHT_PURPLE),
+    HUNTING_FORTUNE('', TextColor.LIGHT_PURPLE),
+    CHARM_CHANCE('❣', TextColor.AQUA),
 
     // Wisdom Stats
     GENERIC_WISDOM('☯', TextColor.DARK_AQUA), // helper
@@ -105,10 +107,10 @@ enum class SkyBlockStat(
     HUNTING_WISDOM(GENERIC_WISDOM),
 
     // Misc Stats
-    //? < 26.3
-    //@Deprecated("Unused in game, use TROPHY_CHANCE instead.") TROPHY_FISH_CHANCE('♔', TextColor.GOLD),
-    //? < 26.3
-    //@Deprecated("Unused in game, use HUNTER_FORTUNE instead.") SYPHON_LUCK('♣', TextColor.LIGHT_PURPLE),
+    //? < 26.3 {
+    /*@Deprecated("Unused in game, use TROPHY_CHANCE instead.") TROPHY_FISH_CHANCE('♔', TextColor.GOLD),
+    @Deprecated("Unused in game, use HUNTING_FORTUNE instead.") SYPHON_LUCK('♣', TextColor.LIGHT_PURPLE),
+    @Deprecated("Unused in game, use HUNTING_FORTUNE instead.") HUNTER_FORTUNE('', TextColor.LIGHT_PURPLE),*///?}
     ;
 
     constructor(stat: SkyBlockStat) : this(stat.icon, stat.color)
