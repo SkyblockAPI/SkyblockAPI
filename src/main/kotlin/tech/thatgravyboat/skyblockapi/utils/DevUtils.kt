@@ -118,7 +118,7 @@ internal object SkyBlockApiDevUtils : DevUtils() {
 
     private fun loadFromProperties(): Map<String, String> {
         val properties = Properties()
-        val path = System.getProperty("sbapi.property_path")?.let { Path(it) } ?: McClient.config.resolve("sbapi.properties")
+        val path = (System.getenv("tech_thatgravyboat_sbapi_debug_property_path") ?: System.getProperty("sbapi.property_path"))?.let { Path(it) } ?: McClient.config.resolve("sbapi.properties")
         if (path.notExists()) return emptyMap()
         path.reader(Charsets.UTF_8).use {
             properties.load(it)

@@ -3,3 +3,4 @@ inject-interface net/minecraft/world/entity/Entity tech/thatgravyboat/skyblockap
 inject-interface net/minecraft/world/item/ItemStack tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentViewable
 transitive-inject-interface net/minecraft/world/entity/Entity tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable
 transitive-inject-interface net/minecraft/world/item/ItemStack tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable
+transitive-inject-interface net/minecraft/world/item/ItemStack tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugAccessor
