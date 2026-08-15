@@ -165,6 +165,7 @@ object DebugItems {
 }
 
 fun ItemDebugAccessor.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
+fun ItemStack.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
 
 fun ItemDebugAttachable.addDebug(category: ItemDebugCategory, entry: () -> Component) {
     if (!DebugItems.isEnabled) return
