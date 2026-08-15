@@ -1,7 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.Loadout
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutData
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutSlot
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeData
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeSlot
 
@@ -24,6 +26,12 @@ internal object LoadoutStorage {
             LOADOUT.get()?.equipment = value ?: WardrobeData()
         }
 
+    var loadout: Loadout?
+        get() = LOADOUT.get()?.loadouts
+        private set(value) {
+            LOADOUT.get()?.loadouts = value ?: Loadout()
+        }
+
 
     fun updateCurrentArmorSlot(slot: Int?) {
         if (slot == armor?.currentSlot) return
@@ -34,6 +42,12 @@ internal object LoadoutStorage {
     fun updateCurrentEquipmentSlot(slot: Int?) {
         if (slot == equipment?.currentSlot) return
         equipment?.currentSlot = slot ?: -1
+        LOADOUT.save()
+    }
+
+    fun updateCurrentLoadoutSlot(slot: Int?) {
+        if (slot == loadout?.currentSlot) return
+        loadout?.currentSlot = slot ?: -1
         LOADOUT.save()
     }
 
@@ -49,6 +63,12 @@ internal object LoadoutStorage {
         LOADOUT.save()
     }
 
+    fun updateLoadoutSlot(loadoutSlot: LoadoutSlot) {
+        loadout?.slots = loadout?.slots?.filter { it.id != loadoutSlot.id }?.toMutableList()?.apply { add(loadoutSlot) } ?: mutableListOf()
+        loadout?.slots?.sortBy { it.id }
+        LOADOUT.save()
+    }
+
     fun clearArmor() {
         armor = null
         LOADOUT.save()
@@ -56,6 +76,11 @@ internal object LoadoutStorage {
 
     fun clearEquipment() {
         equipment = null
+        LOADOUT.save()
+    }
+
+    fun clearLoadouts() {
+        loadout = null
         LOADOUT.save()
     }
 }
