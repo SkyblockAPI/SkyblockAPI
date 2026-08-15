@@ -1,10 +1,21 @@
 package tech.thatgravyboat.skyblockapi.api.repo.apis
 
+import com.mojang.brigadier.arguments.IntegerArgumentType
+import com.mojang.brigadier.arguments.StringArgumentType
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RunesAPI.Rune
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockRunesRepo.Query
 
-object SkyBlockRunesRepo : RepoItemCacheAsQuery<SkyBlockRunesRepo.Query>("Runes", ::Query) {
+private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
+    field("id", StringArgumentType.string(), Query::id)
+    optionalField("tier", IntegerArgumentType.integer(1), Query::tier)
+}
+
+
+@Module
+object SkyBlockRunesRepo : RepoItemCacheAsQuery<Query>("Runes", ::Query, schema) {
 
     private val repo get() = RepoAPI.runes()
 

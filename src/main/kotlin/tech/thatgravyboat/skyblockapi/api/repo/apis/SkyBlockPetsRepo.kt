@@ -1,18 +1,34 @@
 package tech.thatgravyboat.skyblockapi.api.repo.apis
 
 import com.google.gson.JsonParser
+import com.mojang.brigadier.arguments.IntegerArgumentType
+import com.mojang.brigadier.arguments.StringArgumentType
+import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
 import tech.thatgravyboat.repolib.api.PetsAPI
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockPetsRepo.Query
+import tech.thatgravyboat.skyblockapi.utils.command.EnumArgument
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
 import java.text.DecimalFormat
 
-object SkyBlockPetsRepo : RepoItemCacheAsQuery<SkyBlockPetsRepo.Query>("Pets", ::Query) {
+
+private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
+    field("id", StringArgumentType.string(), Query::id)
+    optionalField("level", IntegerArgumentType.integer(1), Query::level)
+    optionalField("rarity", EnumArgument.create(SkyBlockRarity::class.java), Query::rarity)
+    optionalField("skin", StringArgumentType.string(), Query::skin)
+    optionalField("heldItem", StringArgumentType.string(), Query::heldItem)
+    flag("showStatBounds", Query::showStatBounds)
+}
+
+@Module
+object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
 
     private val repo get() = RepoAPI.pets()
     private val loreFormatter = DecimalFormat("0.####")

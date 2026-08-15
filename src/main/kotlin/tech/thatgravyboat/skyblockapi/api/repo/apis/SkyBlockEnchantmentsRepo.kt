@@ -1,11 +1,21 @@
 package tech.thatgravyboat.skyblockapi.api.repo.apis
 
+import com.mojang.brigadier.arguments.IntegerArgumentType
+import com.mojang.brigadier.arguments.StringArgumentType
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.repolib.api.EnchantsAPI
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockEnchantmentsRepo.Query
 import tech.thatgravyboat.skyblockapi.utils.extentions.firstOrElseLast
 
-object SkyBlockEnchantmentsRepo : RepoItemCacheAsQuery<SkyBlockEnchantmentsRepo.Query>("Enchantments", ::Query) {
+private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
+    field("id", StringArgumentType.string(), Query::id)
+    optionalField("level", IntegerArgumentType.integer(1), Query::level)
+}
+
+@Module
+object SkyBlockEnchantmentsRepo : RepoItemCacheAsQuery<Query>("Enchantments", ::Query, schema) {
 
     private val repo get() = RepoAPI.enchantments()
 
