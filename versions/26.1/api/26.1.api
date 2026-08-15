@@ -6703,6 +6703,7 @@ public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugItemsKt {
 	public static final fun categoryAddDebug (Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugAttachable;Lkotlin/jvm/functions/Function0;)V
 	public static final fun categoryAddDebugString (Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;Lnet/minecraft/world/item/ItemStack;Lkotlin/jvm/functions/Function0;)V
 	public static final fun categoryAddDebugString (Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugAttachable;Lkotlin/jvm/functions/Function0;)V
+	public static final fun getEntries (Lnet/minecraft/world/item/ItemStack;)Lcom/google/common/collect/Multimap;
 	public static final fun getEntries (Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugAccessor;)Lcom/google/common/collect/Multimap;
 }
 
