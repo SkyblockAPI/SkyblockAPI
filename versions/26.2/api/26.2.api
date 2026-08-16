@@ -5926,10 +5926,94 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCache$Co
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCacheAsQuery : tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCache {
-	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getItemStack (Lkotlin/jvm/functions/Function1;)Lnet/minecraft/world/item/ItemStack;
 	public final fun getItemStackOrDefault (Lkotlin/jvm/functions/Function1;)Lnet/minecraft/world/item/ItemStack;
 	public final fun getLazyItemStack (Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema {
+	public fun field (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun field (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;Ljava/lang/Iterable;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun field (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun field (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun field (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;Ljava/lang/Iterable;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun field (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public abstract fun field (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;ZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public abstract fun flag (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun flag (Ljava/lang/String;Lkotlin/reflect/KMutableProperty1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun optionalField (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun optionalField (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;Ljava/lang/Iterable;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun optionalField (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun optionalField (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun optionalField (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;Ljava/lang/Iterable;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public fun optionalField (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema$DefaultImpls {
+	public static fun field (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun field (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;Ljava/lang/Iterable;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun field (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun field (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun field (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;Ljava/lang/Iterable;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun field (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun flag (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lkotlin/reflect/KMutableProperty1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun optionalField (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun optionalField (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;Ljava/lang/Iterable;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun optionalField (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun optionalField (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun optionalField (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;Ljava/lang/Iterable;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+	public static fun optionalField (Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/reflect/KMutableProperty1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemQuerySchema;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/api/repo/apis/SchemaEntry {
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getSetter ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SchemaField : tech/thatgravyboat/skyblockapi/api/repo/apis/SchemaEntry {
+	public fun <init> (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;ZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/mojang/brigadier/arguments/ArgumentType;
+	public final fun component3 ()Z
+	public final fun component4 ()Lkotlin/jvm/functions/Function2;
+	public final fun component5 ()Lkotlin/jvm/functions/Function1;
+	public final fun copy (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;ZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaField;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaField;Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;ZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaField;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArgument ()Lcom/mojang/brigadier/arguments/ArgumentType;
+	public fun getName ()Ljava/lang/String;
+	public final fun getOptional ()Z
+	public fun getSetter ()Lkotlin/jvm/functions/Function2;
+	public final fun getSuggestionProvider ()Lkotlin/jvm/functions/Function1;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SchemaFieldArgument {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaEntry;Ljava/lang/Object;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaEntry;
+	public final fun component2 ()Ljava/lang/Object;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaEntry;Ljava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaFieldArgument;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaFieldArgument;Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaEntry;Ljava/lang/Object;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaFieldArgument;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getField ()Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaEntry;
+	public final fun getValue ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SchemaFlag : tech/thatgravyboat/skyblockapi/api/repo/apis/SchemaEntry {
+	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lkotlin/jvm/functions/Function2;
+	public final fun copy (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaFlag;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaFlag;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SchemaFlag;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun getSetter ()Lkotlin/jvm/functions/Function2;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockAttributesRepo : tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCache {
@@ -5977,26 +6061,29 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo
 
 public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query {
 	public fun <init> ()V
-	public fun <init> (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;
 	public final fun component3 ()I
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query;
-	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query;Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query;
+	public final fun component6 ()Z
+	public final fun copy (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;Z)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query;Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getHeldItem ()Ljava/lang/String;
 	public final fun getId ()Ljava/lang/String;
 	public final fun getLevel ()I
 	public final fun getRarity ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;
+	public final fun getShowStatBounds ()Z
 	public final fun getSkin ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun setHeldItem (Ljava/lang/String;)V
 	public final fun setId (Ljava/lang/String;)V
 	public final fun setLevel (I)V
 	public final fun setRarity (Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;)V
+	public final fun setShowStatBounds (Z)V
 	public final fun setSkin (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 }
@@ -6054,6 +6141,15 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockRunesRep
 	public final fun setId (Ljava/lang/String;)V
 	public final fun setTier (Ljava/lang/Integer;)V
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/api/repo/apis/SuggestionConsumer {
+	public fun invoke (Ljava/lang/String;)V
+	public abstract fun suggest (Ljava/lang/String;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SuggestionConsumer$DefaultImpls {
+	public static fun invoke (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SuggestionConsumer;Ljava/lang/String;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/helpers/McClient {
@@ -6871,6 +6967,18 @@ public final class tech/thatgravyboat/skyblockapi/impl/imc/ImcHandler {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/imc/ImcHandler;
 }
 
+public final class tech/thatgravyboat/skyblockapi/impl/suggestion/ArgumentTypeSuggestionProvider : com/mojang/brigadier/suggestion/SuggestionProvider {
+	public fun <init> (Lcom/mojang/brigadier/arguments/ArgumentType;)V
+	public final fun component1 ()Lcom/mojang/brigadier/arguments/ArgumentType;
+	public final fun copy (Lcom/mojang/brigadier/arguments/ArgumentType;)Ltech/thatgravyboat/skyblockapi/impl/suggestion/ArgumentTypeSuggestionProvider;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/impl/suggestion/ArgumentTypeSuggestionProvider;Lcom/mojang/brigadier/arguments/ArgumentType;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/impl/suggestion/ArgumentTypeSuggestionProvider;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArgumentType ()Lcom/mojang/brigadier/arguments/ArgumentType;
+	public fun getSuggestions (Lcom/mojang/brigadier/context/CommandContext;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/impl/suggestion/IterableSuggestionProvider : tech/thatgravyboat/skyblockapi/impl/suggestion/SkyBlockAPICommandSuggestionProvider {
 	public fun <init> (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)V
 	public synthetic fun <init> (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -6882,6 +6990,19 @@ public final class tech/thatgravyboat/skyblockapi/impl/suggestion/IterableSugges
 	public final fun getProviders ()Ljava/lang/Iterable;
 	public fun getSuggestions (Lcom/mojang/brigadier/context/CommandContext;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 	public final fun getTransformer ()Lkotlin/jvm/functions/Function1;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/suggestion/LayeredSuggestionProvider : com/mojang/brigadier/suggestion/SuggestionProvider {
+	public fun <init> (Ljava/lang/Iterable;)V
+	public fun <init> ([Lcom/mojang/brigadier/suggestion/SuggestionProvider;)V
+	public final fun component1 ()Ljava/lang/Iterable;
+	public final fun copy (Ljava/lang/Iterable;)Ltech/thatgravyboat/skyblockapi/impl/suggestion/LayeredSuggestionProvider;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/impl/suggestion/LayeredSuggestionProvider;Ljava/lang/Iterable;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/impl/suggestion/LayeredSuggestionProvider;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getProviders ()Ljava/lang/Iterable;
+	public fun getSuggestions (Lcom/mojang/brigadier/context/CommandContext;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
