@@ -19,7 +19,7 @@ import java.text.DecimalFormat
 
 
 private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
-    field("id", StringArgumentType.string(), Query::id)
+    field("id", StringArgumentType.string(), Query::id, RepoAPI.pets().pets().keys)
     optionalField("level", IntegerArgumentType.integer(1), Query::level)
     optionalField("rarity", EnumArgument.create(SkyBlockRarity::class.java), Query::rarity)
     optionalField("skin", StringArgumentType.string(), Query::skin)
@@ -59,8 +59,9 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
 
         var baseItem = JsonParser.parseString(itemString).asJsonObject.let(::LazyItemStack) ?: return null
 
-        if (key.skin != null) {
-            val skin = SkyBlockItemsRepo.getLazyItemStack("PET_SKIN_${key.skin}")
+        val skin = key.skin
+        if (skin != null) {
+            val skin = SkyBlockItemsRepo.getLazyItemStack("PET_SKIN_${skin.removePrefix("PET_SKIN_")}")
             val skinRarity = skin?.let { LoreDataTypes.getRarityLine(it[DataComponents.LORE]) }?.second
 
             val newName = Text.join(
