@@ -9,6 +9,7 @@ import tech.thatgravyboat.repolib.api.PetsAPI
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
+import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockPetsRepo.Query
 import tech.thatgravyboat.skyblockapi.utils.command.EnumArgument
@@ -22,7 +23,12 @@ private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
     field("id", StringArgumentType.string(), Query::id, RepoAPI.pets().pets().keys)
     optionalField("level", IntegerArgumentType.integer(1), Query::level)
     optionalField("rarity", EnumArgument.create(SkyBlockRarity::class.java), Query::rarity)
-    optionalField("skin", StringArgumentType.string(), Query::skin)
+    optionalField("skin", StringArgumentType.string(), Query::skin) { suggestions ->
+        SimpleItemAPI.getAllIds().filter { it.isItem && it.cleanId.startsWith("pet_skin_") }.map { it.cleanId.lowercase() }.forEach {
+            suggestions(it)
+            suggestions(it.removePrefix("pet_skin_"))
+        }
+    }
     optionalField("heldItem", StringArgumentType.string(), Query::heldItem)
     flag("showStatBounds", Query::showStatBounds)
 }

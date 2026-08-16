@@ -313,16 +313,28 @@ private class SchemaArgument<Query>(val entries: List<SchemaEntry<Query, *>>) :
             consumedEntries.add(entry)
             if (entry is SchemaField<Query, *>) {
                 val flagType = entry.argument
+                reader.expect(' ')
                 reader.skipWhitespace()
-                val offset = builder.createOffset(reader.cursor)
+
                 if (reader.canRead()) {
                     flagType.parse(reader)
                 }
                 if (reader.remainingLength >= 2 && reader.peek(1) == '-') {
+                    reader.expect(' ')
                     reader.skipWhitespace()
                     continue
                 }
-                return flagType.listSuggestions(context, offset)
+                val list = mutableListOf<String>()
+                entry.suggestionProvider(SuggestionConsumer { list.add(it) })
+                val first = SharedSuggestionProvider.suggest(list, builder.createOffset(reader.cursor))
+                val second = flagType.listSuggestions(context, builder.createOffset(reader.cursor))
+
+                return CompletableFuture.allOf(first, second).thenApply {
+                    val first = first.get()
+                    val second = second.get()
+
+                    Suggestions.merge(builder.input, listOf(first, second))
+                }
             }
             if (reader.remainingLength >= 2 && reader.peek(1) == '-') reader.skipWhitespace()
         }
