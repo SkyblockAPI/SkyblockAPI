@@ -25,6 +25,15 @@ data class MayorCandidate internal constructor(
         perks.forEach { if (includeNonPerkapocalypse || it.perkapocalypse) it.active = true }
     }
     internal fun clearAllPerks(): MayorCandidate = apply { perks.forEach { it.active = false } }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MayorCandidate) return false
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = id.hashCode()
+
     override fun toString(): String = candidateName
 }
 
