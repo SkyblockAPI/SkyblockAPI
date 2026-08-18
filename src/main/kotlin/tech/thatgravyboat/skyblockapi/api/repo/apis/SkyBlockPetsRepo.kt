@@ -95,5 +95,7 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
         var skin: String? = null,
         var heldItem: String? = null,
         var showStatBounds: Boolean = false,
-    )
+    ) {
+        constructor(id: String = "", rarity: SkyBlockRarity = SkyBlockRarity.COMMON, level: Int = 100, skin: String? = null, heldItem: String? = null): this(id, rarity, level, skin, heldItem, false)
+    }
 }
