@@ -13,7 +13,12 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutChangeEvent
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.value
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
@@ -158,6 +163,18 @@ object MaxwellAPI {
     @Subscription
     fun onInventoryFullyOpened(event: ContainerInitializedEvent) {
         if (handleBagsGui(event)) return
+    }
+
+    @Subscription
+    context(event: LoadoutChangeEvent)
+    private fun onLoadoutChange() {
+        val newStone = event.new?.powerstone?.value() ?: return
+        MaxwellStorage.updatePower(MaxwellPowers.getByName(newStone) ?: return debugString(loadoutDebug) {
+            "Unknown power stone $newStone"
+        })
+        debugString(loadoutDebug) {
+            "Set power stone to $newStone"
+        }
     }
 
     private fun handleThaumaturgyGui(event: InventoryChangeEvent): Boolean {

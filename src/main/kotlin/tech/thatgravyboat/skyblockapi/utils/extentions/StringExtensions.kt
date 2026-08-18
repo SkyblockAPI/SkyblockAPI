@@ -173,7 +173,20 @@ fun Int.toRomanNumeral(subtractive: Boolean = false): String {
     }
 }
 
-fun String.stripColor(): String = formattingCodesRegex.replace(this, "")
+fun String.stripColor(): String {
+    val sb = StringBuilder(this.length)
+    var i = 0
+    while (i < this.length) {
+        val c = this[i]
+        if (c == '\u00A7' && i + 1 < this.length) {
+            i += 2
+        } else {
+            sb.append(c)
+            i++
+        }
+    }
+    return sb.toString()
+}
 
 fun String.capitalize() = lowercase().split(" ", "_").joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
 fun String.toTitleCase() = capitalize()
