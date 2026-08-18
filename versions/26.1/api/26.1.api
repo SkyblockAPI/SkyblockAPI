@@ -6294,6 +6294,8 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo
 
 public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query {
 	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;Z)V
 	public synthetic fun <init> (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
