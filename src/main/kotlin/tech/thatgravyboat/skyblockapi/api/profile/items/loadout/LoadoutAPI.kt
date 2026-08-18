@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.loadout
 
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -18,11 +19,13 @@ import tech.thatgravyboat.skyblockapi.utils.container.ContainerRegion
 import tech.thatgravyboat.skyblockapi.utils.container.ContentFlow
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import java.util.UUID
 import java.util.function.Function
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
@@ -72,6 +75,8 @@ data object LoadoutAPI : ItemDebugCategory {
                     this.name = name
                     this.locked = locked
 
+                    val uuid = event.item[DataTypes.UUID]
+
                     val armorNames = MutableList<String?>(4) { null }
                     val equipmentNames = MutableList<String?>(4) { null }
                     var hotm: String? = null
@@ -115,14 +120,11 @@ data object LoadoutAPI : ItemDebugCategory {
                         }
                     }
 
-                    this.armor = value(
-                        ArmorWardrobeAPI.slots.indexOfFirst {
-                            it.slots.mapIndexed { index, stack ->
-                                val name = armorNames[index] ?: return@mapIndexed stack.isEmpty
-                                stack.cleanName == name || stack.cleanName.stripColor() == name.stripColor()
-                            }.all { it }
-                        },
-                    )
+                    val armorNotNull = armorNames.indexOfFirst { it != null }
+
+                    addArmorOrEquipment(ArmorWardrobeAPI.slots, armorNames, uuid, armorNotNull) { "armor" }
+                    addArmorOrEquipment(EquipmentWardrobeAPI.slots, equipmentNames, uuid, if (armorNotNull != -1) -1 else equipmentNames.indexOfFirst { it != null }) { "equipment" }
+
                     this.equipment = value(
                         EquipmentWardrobeAPI.slots.indexOfFirst {
                             it.slots.mapIndexed { index, stack ->
@@ -140,6 +142,28 @@ data object LoadoutAPI : ItemDebugCategory {
                 }
             }
         }
+    }
+
+    context(_: DataSource, event: InventoryChangeEvent)
+    private inline fun LoadoutSlot.addArmorOrEquipment(slots: List<WardrobeSlot>, names: MutableList<String?>, uuid: UUID?, firstNotNull: Int, type: () -> String) {
+        if (uuid != null && firstNotNull != -1) {
+            val result = slots.indexOfFirst { it.slots[firstNotNull][DataTypes.UUID] == uuid }
+            if (result != -1) {
+                this.armor = value(result)
+                event.addDebugString { "Matched ${type()} by uuid" }
+                return
+            }
+        }
+
+        this.armor = value(
+            slots.indexOfFirst {
+                it.slots.mapIndexed { index, stack ->
+                    val name = names[index] ?: return@mapIndexed stack.isEmpty
+                    stack.cleanName == name || stack.cleanName.stripColor() == name.stripColor()
+                }.all { it }
+            }.takeUnless { it == -1 },
+        )
+
     }
 
     private fun swapLoadout(new: LoadoutSlot) {
