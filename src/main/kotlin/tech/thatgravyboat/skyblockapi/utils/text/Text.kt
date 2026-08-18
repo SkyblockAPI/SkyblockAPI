@@ -41,10 +41,10 @@ object CommonText {
 
 object Text {
 
-    fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
-    fun of(init: MutableComponent.() -> Unit = {}) = "".asComponent(init)
+    inline fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
+    inline fun of(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.empty().also(init)
     fun of(text: String, color: Int) = of(text) { this.color = color }
-    fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
+    inline fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
 
     fun player(profile: ResolvableProfile, hat: Boolean = true, init: MutableComponent.() -> Unit = {}): MutableComponent {
         val spriteObj = PlayerSprite(profile, hat)
@@ -56,7 +56,7 @@ object Text {
         return Component.`object`(spriteObj).also(init)
     }
 
-    fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
+    inline fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
 
     @JvmOverloads
     fun multiline(vararg lines: Any?, init: MutableComponent.() -> Unit = {}) = join(*lines, separator = CommonText.NEWLINE, init = init)
@@ -84,7 +84,7 @@ object Text {
     fun Component.prefix(prefix: String): MutableComponent = join(prefix, this)
     fun Component.suffix(suffix: String): MutableComponent = join(this, suffix)
     fun Component.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
-    fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
+    inline fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
 
     fun Component.send() {
         McClient.chat.addClientSystemMessage(this)

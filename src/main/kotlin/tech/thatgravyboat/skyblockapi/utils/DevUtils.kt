@@ -20,7 +20,6 @@ import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.utils.command.VirtualResourceArgument
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
