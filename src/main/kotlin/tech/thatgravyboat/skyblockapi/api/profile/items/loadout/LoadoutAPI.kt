@@ -186,23 +186,3 @@ data object LoadoutAPI : ItemDebugCategory {
 
 data class LoadoutChangeEvent(val old: LoadoutSlot?, val new: LoadoutSlot?) : SkyBlockEvent()
 
-/*
-Helmet: Ancient Warden Helmet ✦
-Chestplate: ✿ Ancient Fiery Crimson Chestplate ✪✪✪✪
-Leggings: ✿ Ancient Fiery Crimson Leggings ✪✪✪✪
-Boots: ✿ Ancient Fiery Crimson Boots ✪✪✪✪
-
-Necklace:  Waxed Bone Necklace ✪✪✪✪✪➊
-Cloak:  Waxed Shadow Assassin Cloak ✪✪✪✪✪➋
-Belt:  Waxed Adaptive Belt ✪✪✪✪✪➋
-Gloves/Bracelet: Waxed Soulweaver Gloves ✪✪✪✪✪➋
-
-Pet: [Lvl 100] Black Cat ✦
-HOTM: Heart of the Mountain 2
-HOTF: Heart of the Forest 1
-Power Stone: Bizarre
-Tuning Template Slot: 1
-
-Left-click to equip!
-Right-click to edit
-*/

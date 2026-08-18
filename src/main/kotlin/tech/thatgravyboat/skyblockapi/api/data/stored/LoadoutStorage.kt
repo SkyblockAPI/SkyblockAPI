@@ -14,8 +14,6 @@ internal object LoadoutStorage {
         "loadout.json",
     )
 
-    fun save() = LOADOUT.save()
-
     var armor: WardrobeData?
         get() = LOADOUT.get()?.armor
         private set(value) {
@@ -85,4 +83,6 @@ internal object LoadoutStorage {
         loadout = null
         LOADOUT.save()
     }
+
+    fun save() = LOADOUT.save()
 }
