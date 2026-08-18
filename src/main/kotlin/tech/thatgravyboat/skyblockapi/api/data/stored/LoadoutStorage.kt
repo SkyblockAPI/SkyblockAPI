@@ -14,6 +14,8 @@ internal object LoadoutStorage {
         "loadout.json",
     )
 
+    fun save() = LOADOUT.save()
+
     var armor: WardrobeData?
         get() = LOADOUT.get()?.armor
         private set(value) {
@@ -64,10 +66,10 @@ internal object LoadoutStorage {
     }
 
     fun updateLoadoutSlot(loadoutSlot: LoadoutSlot) {
-        loadout?.slots = loadout?.slots?.filter { it.id != loadoutSlot.id }?.toMutableList()?.apply { add(loadoutSlot) } ?: mutableListOf()
-        loadout?.slots?.sortBy { it.id }
+        loadout?.slots?.put(loadoutSlot.id, loadoutSlot)
         LOADOUT.save()
     }
+
 
     fun clearArmor() {
         armor = null

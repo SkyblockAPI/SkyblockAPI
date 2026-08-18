@@ -16,6 +16,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
 import tech.thatgravyboat.skyblockapi.utils.extentions.associateByNotNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -104,11 +105,8 @@ object Text {
 }
 
 object TextProperties {
-
-    private val STRIP_COLOR_PATTERN = Pattern.compile("(?i)\\u00A7.")
-
     val Component.width: Int get() = McFont.width(this)
-    val Component.stripped: String get() = STRIP_COLOR_PATTERN.matcher(this.string).replaceAll("")
+    val Component.stripped: String get() = this.string.stripColor()
 }
 
 object TextUtils {

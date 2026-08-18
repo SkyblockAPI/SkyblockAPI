@@ -24,6 +24,9 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.util.function.BiFunction
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
@@ -166,18 +169,40 @@ object DebugItems {
 
 fun ItemDebugAccessor.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
 
-fun ItemDebugAttachable.addDebug(category: ItemDebugCategory, entry: () -> Component) {
+@OptIn(ExperimentalContracts::class)
+inline fun ItemDebugAttachable.addDebug(category: ItemDebugCategory, entry: () -> Component) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
     if (!DebugItems.isEnabled) return
     this.`skyblockapi$addEntry`(category, entry())
 }
 
+@OptIn(ExperimentalContracts::class)
 @JvmName("categoryAddDebug")
-context(category: ItemDebugCategory) fun ItemDebugAttachable.addDebug(entry: () -> Component) = addDebug(category, entry)
+inline context(category: ItemDebugCategory) fun ItemDebugAttachable.addDebug(entry: () -> Component) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
+    addDebug(category, entry)
+}
 
+@OptIn(ExperimentalContracts::class)
 @JvmName("categoryAddDebugString")
-context(category: ItemDebugCategory) fun ItemDebugAttachable.addDebugString(entry: () -> String) = addStringDebug(category, entry)
+inline context(category: ItemDebugCategory) fun ItemDebugAttachable.addDebugString(entry: () -> String) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
+    addStringDebug(category, entry)
+}
 
-fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory, entry: () -> String) = addDebug(category) { Component.literal(entry()) }
+@OptIn(ExperimentalContracts::class)
+inline fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory, entry: () -> String) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
+    addDebug(category) { Component.literal(entry()) }
+}
 
 
 @JvmName("addDebug")
