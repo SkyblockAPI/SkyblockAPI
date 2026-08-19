@@ -114,6 +114,16 @@ internal object SkyBlockApiDevUtils : DevUtils() {
     override fun send(component: MutableComponent) = component.sendWithPrefix()
     val properties: Map<String, String> = loadFromProperties()
 
+    fun init() {
+        toggles.forEach {
+            val properties = System.getProperties()
+            if (properties.containsKey(it.location.namespace + "_" + it.location.path)) {
+                states[it.location] = true
+                it.update()
+            }
+        }
+    }
+
     fun getInt(key: String, default: Int = 0): Int {
         return properties[key].parseFormattedInt(default)
     }
