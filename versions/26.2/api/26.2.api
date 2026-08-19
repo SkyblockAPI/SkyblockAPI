@@ -6195,6 +6195,13 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockItemsRep
 	public final fun getIdByName (Ljava/lang/String;)Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockMobsRepo : tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCache {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockMobsRepo;
+	public synthetic fun create (Ljava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
+	public final fun get (Ljava/lang/String;)Ltech/thatgravyboat/repolib/api/mobs/Mob;
+	public final fun getLootTables (Ljava/lang/String;)Ljava/util/List;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo : tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCacheAsQuery {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo;
 	public synthetic fun create (Ljava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
