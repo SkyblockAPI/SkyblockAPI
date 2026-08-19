@@ -6861,6 +6861,78 @@ public final class tech/thatgravyboat/skyblockapi/impl/HypixelPackLoader {
 	public final fun downloadAndApplyStablePack ()V
 }
 
+public final class tech/thatgravyboat/skyblockapi/impl/RepoLibLogging : org/slf4j/Logger, tech/thatgravyboat/repolib/api/RepoLibLogger {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/RepoLibLogging;
+	public fun debug (Ljava/lang/String;)V
+	public fun debug (Ljava/lang/String;Ljava/lang/Object;)V
+	public fun debug (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun debug (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun debug (Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun debug (Lorg/slf4j/Marker;Ljava/lang/String;)V
+	public fun debug (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;)V
+	public fun debug (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun debug (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun debug (Lorg/slf4j/Marker;Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun debug0 (Ljava/lang/String;)V
+	public fun error (Ljava/lang/String;)V
+	public fun error (Ljava/lang/String;Ljava/lang/Object;)V
+	public fun error (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun error (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun error (Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun error (Lorg/slf4j/Marker;Ljava/lang/String;)V
+	public fun error (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;)V
+	public fun error (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun error (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun error (Lorg/slf4j/Marker;Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun error0 (Ljava/lang/String;)V
+	public fun error0 (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun getEnableDebugLogging ()Z
+	public fun getName ()Ljava/lang/String;
+	public fun info (Ljava/lang/String;)V
+	public fun info (Ljava/lang/String;Ljava/lang/Object;)V
+	public fun info (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun info (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun info (Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;)V
+	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;)V
+	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun info0 (Ljava/lang/String;)V
+	public fun isDebugEnabled ()Z
+	public fun isDebugEnabled (Lorg/slf4j/Marker;)Z
+	public fun isErrorEnabled ()Z
+	public fun isErrorEnabled (Lorg/slf4j/Marker;)Z
+	public fun isInfoEnabled ()Z
+	public fun isInfoEnabled (Lorg/slf4j/Marker;)Z
+	public fun isTraceEnabled ()Z
+	public fun isTraceEnabled (Lorg/slf4j/Marker;)Z
+	public fun isWarnEnabled ()Z
+	public fun isWarnEnabled (Lorg/slf4j/Marker;)Z
+	public fun trace (Ljava/lang/String;)V
+	public fun trace (Ljava/lang/String;Ljava/lang/Object;)V
+	public fun trace (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun trace (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun trace (Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun trace (Lorg/slf4j/Marker;Ljava/lang/String;)V
+	public fun trace (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;)V
+	public fun trace (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun trace (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun trace (Lorg/slf4j/Marker;Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun trace0 (Ljava/lang/String;)V
+	public fun warn (Ljava/lang/String;)V
+	public fun warn (Ljava/lang/String;Ljava/lang/Object;)V
+	public fun warn (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun warn (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun warn (Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun warn (Lorg/slf4j/Marker;Ljava/lang/String;)V
+	public fun warn (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;)V
+	public fun warn (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun warn (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun warn (Lorg/slf4j/Marker;Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun warn0 (Ljava/lang/String;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/impl/commands/GiveCommands {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands;
 	public static final field darkRed I
