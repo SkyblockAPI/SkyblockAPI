@@ -6200,6 +6200,8 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockMobsRepo
 	public synthetic fun create (Ljava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public final fun get (Ljava/lang/String;)Ltech/thatgravyboat/repolib/api/mobs/Mob;
 	public final fun getLootTables (Ljava/lang/String;)Ljava/util/List;
+	public final fun getMobId (Lnet/minecraft/world/item/ItemStack;)Ljava/lang/String;
+	public final fun getMobId (Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;)Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo : tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCacheAsQuery {
