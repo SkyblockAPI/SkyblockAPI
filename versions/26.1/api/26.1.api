@@ -5228,6 +5228,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/profile/ProfileAPI
 	public final fun onProfileLevelChange (Ltech/thatgravyboat/skyblockapi/api/events/profile/ProfileLevelChangeEvent;)V
 	public final fun onServerChange (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ServerChangeEvent;)V
 	public final fun onTabListWidgetChange (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
+	public final fun onTablistUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/TabListChangeEvent;)V
 	public final fun onTick (Ltech/thatgravyboat/skyblockapi/api/events/time/TickEvent;)V
 }
 
