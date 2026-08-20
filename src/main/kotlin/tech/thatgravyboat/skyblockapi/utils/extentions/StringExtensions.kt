@@ -73,6 +73,7 @@ fun String?.parseDuration(): Duration? = this?.runCatching {
                     'm' -> 60 * 1000
                     'h' -> 60 * 60 * 1000
                     'd' -> 24 * 60 * 60 * 1000
+                    'y' -> 365L * 24 * 60 * 60 * 1000
                     else -> 0
                 }
                 current = 0
