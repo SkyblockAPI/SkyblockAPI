@@ -1,9 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.equipment
 
 import me.owdding.ktmodules.Module
-import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.EquipmentStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
@@ -16,9 +14,6 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEven
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.EquipmentWardrobeAPI
-import tech.thatgravyboat.skyblockapi.api.profile.quiver.QuiverAPI.arrows
-import tech.thatgravyboat.skyblockapi.api.profile.quiver.QuiverAPI.currentAmount
-import tech.thatgravyboat.skyblockapi.api.profile.quiver.QuiverAPI.currentArrow
 import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
@@ -40,7 +35,7 @@ object EquipmentAPI {
 
     private var lastClickedEquipment: Pair<ItemStack, EquipmentSlot>? = null
 
-    val normalEquipment: MutableMap<EquipmentSlot, ItemStack> get() = EquipmentWardrobeAPI.currentSet.toMutableMap()
+    val normalEquipment: MutableMap<EquipmentSlot, ItemStack> get() = EquipmentStorage.normalEquipment
     fun getNormalEquipment(slot: EquipmentSlot): ItemStack = normalEquipment[slot] ?: ItemStack.EMPTY
 
     val riftEquipment: MutableMap<EquipmentSlot, ItemStack> get() = EquipmentStorage.riftEquipment

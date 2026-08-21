@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.loadout
 
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.data.stored.EquipmentStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
@@ -81,6 +82,7 @@ object EquipmentWardrobeAPI {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
                 LoadoutStorage.updateCurrentEquipmentSlot(id)
+                EquipmentStorage.setEquipment(LoadoutStorage.equipment?.slots[id - 1])
                 foundCurrentSlot = true
             }
 
