@@ -5,20 +5,24 @@ import tech.thatgravyboat.skyblockapi.api.data.CrystalStatus
 import tech.thatgravyboat.skyblockapi.api.data.stored.CrystalStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
+import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.forEachMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
 @Module
 object CrystalAPI {
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("crystal")
-    private val chatGroup = RegexGroup.CHAT.group("chat")
+    private val chatGroup = RegexGroup.CHAT.group("crystal")
+    private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("crystal")
 
     private val itemRegex = inventoryGroup.create("hotmItem", "Crystal Hollows Crystals")
 
@@ -28,7 +32,7 @@ object CrystalAPI {
      * REGEX-TEST:   Ruby ✔ Found
      * REGEX-TEST:   Jade ✔ Placed
      */
-    private val crystalLoreRegex = inventoryGroup.create("crystalLore", " {2}(?<name>[A-Za-z]+) (?<status>✖ Not Found|✔ Found|✔ Placed)")
+    private val crystalLoreRegex = inventoryGroup.create("crystalLore", " {1,2}(?<name>[A-Za-z]+) (?<status>✖ Not Found|✔ Found|✔ Placed)")
 
     /**
      * REGEX-TEST:                                 Jade Crystal
@@ -47,8 +51,8 @@ object CrystalAPI {
         if (!itemRegex.matches(event.item.cleanName)) return
 
         val lore = event.item.getRawLore()
-        crystalLoreRegex.anyMatch(lore, "name", "status") { (name, status) ->
-            if (CrystalStorage.setCrystalStatusByName(name, CrystalStatus.fromString(status) ?: return@anyMatch)) {
+        crystalLoreRegex.forEachMatch(lore, "name", "status") { (name, status) ->
+            if (CrystalStorage.setCrystalStatusByName(name, CrystalStatus.fromString(status) ?: return@forEachMatch)) {
                 Logger.info("Updated $name to $status based on inventory.")
             } else {
                 Logger.info("Failed to update crystal status for $name with status $status")
@@ -64,6 +68,18 @@ object CrystalAPI {
             }
             case(crystalPlacedRegex, "name") { (name) ->
                 CrystalStorage.setCrystalStatusByName(name, CrystalStatus.PLACED)
+            }
+        }
+    }
+
+    @Subscription
+    @OnlyWidget(TabWidget.CRYSTALS)
+    fun onTabWidget(event: TabWidgetChangeEvent) {
+        crystalLoreRegex.forEachMatch(event.new, "name", "status") { (name, status) ->
+            if (CrystalStorage.setCrystalStatusByName(name, CrystalStatus.fromString(status) ?: return@forEachMatch)) {
+                Logger.info("Updated $name to $status based on inventory.")
+            } else {
+                Logger.info("Failed to update crystal status for $name with status $status")
             }
         }
     }
