@@ -58,6 +58,7 @@ object DataTypes {
     val BOOK_OF_STATS: DataType<Int> = GenericDataTypes.BOOK_OF_STATS
     val RUNEBOOK: DataType<Int> = GenericDataTypes.RUNEBOOK
     val DOWSING_MODE: DataType<String> = GenericDataTypes.DOWSING_MODE
+    val HONEY_POT_USES: DataType<Int> = GenericDataTypes.HONEY_POT_USES
 
     val USED_RUNE: DataType<SkyBlockId> = GenericDataTypes.USED_RUNE
     val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN
