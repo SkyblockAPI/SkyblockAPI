@@ -20,7 +20,7 @@ object CrystalAPI {
     private val inventoryGroup = RegexGroup.INVENTORY.group("crystal")
     private val chatGroup = RegexGroup.CHAT.group("chat")
 
-    val itemRegex = inventoryGroup.create("hotmItem", "Crystal Hollows Crystals")
+    private val itemRegex = inventoryGroup.create("hotmItem", "Crystal Hollows Crystals")
 
     /**
      * REGEX-TEST:   Jade ✖ Not Found
@@ -28,18 +28,18 @@ object CrystalAPI {
      * REGEX-TEST:   Ruby ✔ Found
      * REGEX-TEST:   Jade ✔ Placed
      */
-    val crystalLoreRegex = inventoryGroup.create("crystalLore", " {2}(?<name>[A-Za-z]+) (?<status>✖ Not Found|✔ Found|✔ Placed)")
+    private val crystalLoreRegex = inventoryGroup.create("crystalLore", " {2}(?<name>[A-Za-z]+) (?<status>✖ Not Found|✔ Found|✔ Placed)")
 
     /**
      * REGEX-TEST:                                 Jade Crystal
      * REGEX-TEST:                                 Amber Crystal
      */
-    val crystalFoundRegex = chatGroup.create("crystalFound", " {32}(?<name>[A-Za-z]+) Crystal")
+    private val crystalFoundRegex = chatGroup.create("crystalFound", " {32}(?<name>[A-Za-z]+) Crystal")
 
     /**
      * REGEX-TEST: ✦ You placed the Jade Crystal!
      */
-    val crystalPlacedRegex = chatGroup.create("crystalPlaced", "✦ You placed the (?<name>[A-Za-z]+) Crystal!")
+    private val crystalPlacedRegex = chatGroup.create("crystalPlaced", "✦ You placed the (?<name>[A-Za-z]+) Crystal!")
 
     @Subscription
     @InventoryTitle("Heart of the Mountain")
