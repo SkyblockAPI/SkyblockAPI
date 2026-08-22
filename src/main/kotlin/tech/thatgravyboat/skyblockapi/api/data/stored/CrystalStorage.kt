@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.data.CrystalType
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.profile.hotm.CrystalData
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
@@ -32,11 +33,16 @@ internal object CrystalStorage {
     }
 
     @Subscription
-    fun onCommandRegister(event: RegisterCommandsEvent) {
-        event.register("meowmrrow") {
+    fun onCommandRegister(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("crystal") {
             callback {
                 val statuses = crystalData.entries.joinToString(", ") { "${it.key.name}: ${it.value}" }
                 Text.of(statuses).sendWithPrefix()
+            }
+
+            thenCallback("clear") {
+                CRYSTAL_DATA.get()?.crystals?.clear()
+                CRYSTAL_DATA.save()
             }
         }
     }
