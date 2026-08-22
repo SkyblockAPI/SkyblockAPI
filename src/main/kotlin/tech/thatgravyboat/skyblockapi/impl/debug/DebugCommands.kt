@@ -68,19 +68,24 @@ object DebugCommands {
                     }.send()
                 }
             }
-            then("itemdata id", StringArgumentType.greedyString()) {
-                callback {
+            then("itemdata") {
+                thenCallback("id", StringArgumentType.greedyString()) {
                     val id = this.getArgument("id", String::class.java)
                     val itemData = ItemData.getItemData(id) ?: run {
                         Text.debug("ItemData for $id not found.") {
                             this.color = TextColor.RED
                         }.send()
-                        return@callback
+                        return@thenCallback
                     }
 
                     McClient.clipboard = itemData.toString()
 
                     Text.debug("ItemData of $id copied to clipboard.").send()
+                }
+                thenCallback("all") {
+                    McClient.clipboard = ItemData.data.toString()
+
+                    Text.debug("Full ItemData copied to clipboard.").send()
                 }
             }
             then("copy") {
