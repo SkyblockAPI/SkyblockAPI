@@ -8,6 +8,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
@@ -25,20 +26,25 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.util.*
 import java.util.concurrent.CompletableFuture
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.io.path.Path
 import kotlin.io.path.notExists
 import kotlin.io.path.reader
 import kotlin.reflect.KProperty
 
-internal fun debugToggle(path: String, description: String = path): DebugToggle {
-    return DebugToggle(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils)
+internal fun debugToggle(path: String, description: String = path, prefix: String = path): DebugToggle {
+    return DebugToggle(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils, path)
 }
 
-open class DebugToggle(
+open class DebugToggle @JvmOverloads constructor(
     open val location: Identifier,
     open val description: String,
-    val devUtils: DevUtils
+    val devUtils: DevUtils,
+    prefix: String = location.toString()
 ) {
+    open val prefix = Text.of(prefix, TextColor.DARK_PURPLE)
     var state: Boolean = true
 
     init {
@@ -108,6 +114,16 @@ internal object SkyBlockApiDevUtils : DevUtils() {
     override fun send(component: MutableComponent) = component.sendWithPrefix()
     val properties: Map<String, String> = loadFromProperties()
 
+    fun init() {
+        toggles.forEach {
+            val properties = System.getProperties()
+            if (properties.containsKey(it.location.namespace + "_" + it.location.path)) {
+                states[it.location] = true
+                it.update()
+            }
+        }
+    }
+
     fun getInt(key: String, default: Int = 0): Int {
         return properties[key].parseFormattedInt(default)
     }
@@ -118,7 +134,7 @@ internal object SkyBlockApiDevUtils : DevUtils() {
 
     private fun loadFromProperties(): Map<String, String> {
         val properties = Properties()
-        val path = System.getProperty("sbapi.property_path")?.let { Path(it) } ?: McClient.config.resolve("sbapi.properties")
+        val path = (System.getenv("tech_thatgravyboat_sbapi_debug_property_path") ?: System.getProperty("sbapi.property_path"))?.let { Path(it) } ?: McClient.config.resolve("sbapi.properties")
         if (path.notExists()) return emptyMap()
         path.reader(Charsets.UTF_8).use {
             properties.load(it)
@@ -235,6 +251,34 @@ abstract class DevUtils {
 
     abstract val commandName: String
     abstract fun send(component: MutableComponent)
+
+    @JvmName("debugMessageString")
+    @OptIn(ExperimentalContracts::class)
+    inline fun <T : DebugToggle> debugString(toggle: T, provider: () -> String) {
+        contract {
+            callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
+        }
+        debugMessage(toggle) { Text.of(provider()) }
+    }
+
+    @JvmName("debugMessageComponent")
+    @OptIn(ExperimentalContracts::class)
+    inline fun <T : DebugToggle> debugComponent(toggle: T, provider: () -> Component) {
+        contract {
+            callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
+        }
+        debugMessage(toggle) { provider().copy() }
+    }
+
+    @OptIn(ExperimentalContracts::class)
+    inline fun <T : DebugToggle> debugMessage(toggle: T, provider: () -> MutableComponent) {
+        contract {
+            callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
+        }
+        if (toggle.state) {
+            send(Text.join("<", toggle.prefix, "> ", provider().copy()))
+        }
+    }
 }
 
 private data class DevToolSuggestionProvider<T>(val utils: Iterable<T>, val location: T.() -> Identifier, val description: T.() -> String) :

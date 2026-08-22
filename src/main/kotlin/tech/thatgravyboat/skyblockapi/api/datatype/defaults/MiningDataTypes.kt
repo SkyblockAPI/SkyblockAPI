@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
-import tech.thatgravyboat.skyblockapi.utils.extentions.tag
+import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 
 @Module
 internal object MiningDataTypes {
@@ -11,7 +11,7 @@ internal object MiningDataTypes {
     val ENGINE: DataType<String> = DataType.simple("drill_part_engine")
     val UPGRADE_MODULE: DataType<String> = DataType.simple("drill_part_upgrade_module")
 
-    val GEMSTONES: DataType<List<GemstoneSlotData>> = DataType.of("gemstones") { it.tag?.let(::parseGemstones) }
+    val GEMSTONES: DataType<List<GemstoneSlotData>> = DataType.of("gemstones") { it.unsafeTag?.let(::parseGemstones) }
 
     val DIVAN_POWDER_COATING: DataType<Int> = DataType.simple("divan_powder_coating")
     val POLARVOID: DataType<Int> = DataType.simple("polarvoid")

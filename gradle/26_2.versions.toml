@@ -1,0 +1,20 @@
+[versions]
+minecraft-range = "26.2.x"
+minecraft = "26.2"
+
+sbapi-mc-version = "26.2"
+fabric-api = "0.154.0+26.2"
+
+hypixel-modapi = "1.0.2"
+hypixel-modapi-fabric = "1.0.2+build.1+mc26.1"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+
+fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
+
+hypixel-modapi = { module = "net.hypixel:mod-api", version.ref = "hypixel-modapi" }
+hypixel-modapi-fabric = { module = "maven.modrinth:hypixel-mod-api", version.ref = "hypixel-modapi-fabric" }
+
+[bundles]
+hypixel = ["hypixel-modapi", "hypixel-modapi-fabric"]

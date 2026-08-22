@@ -1,6 +1,9 @@
 package tech.thatgravyboat.skyblockapi.mixins;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -10,8 +13,10 @@ import net.minecraft.client.gui.contextualbar.ContextualBarRenderer;
 import net.minecraft.client.gui.contextualbar.ExperienceBarRenderer;
 import net.minecraft.client.gui.contextualbar.JumpableVehicleBarRenderer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.Objective;
 import org.apache.commons.lang3.tuple.Pair;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,6 +27,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.HudElement;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudEvent;
+import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
 @Mixin(Gui.class)
 public class GuiMixin {
@@ -135,7 +141,7 @@ public class GuiMixin {
         method = "extractPlayerHealth",
         at = @At(
             value = "INVOKE",
-        target = "Lnet/minecraft/client/gui/Gui;extractFood(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;II)V"
+            target = "Lnet/minecraft/client/gui/Gui;extractFood(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;II)V"
         )
     )
     private boolean onRenderFood(Gui instance, GuiGraphicsExtractor graphics, Player player, int i, int j) {
@@ -176,4 +182,13 @@ public class GuiMixin {
         }
     }
 
+
+    @ModifyExpressionValue(
+        method = "extractSelectedItemName",
+        at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/Gui;lastToolHighlight:Lnet/minecraft/world/item/ItemStack;", opcode = Opcodes.GETFIELD)
+    )
+    private ItemStack extractSelectedItemName(ItemStack original) {
+        var item = VisualItemAccessor.getVisualItemAccessor(original).skyblockapi$getVisualItem();
+        return item != null ? item : original;
+    }
 }

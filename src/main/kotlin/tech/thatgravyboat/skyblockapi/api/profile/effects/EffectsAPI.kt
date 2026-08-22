@@ -32,8 +32,12 @@ object EffectsAPI {
         "\\s*Cookie Buff: (?<duration>.*)",
     )
     private val cookieInventoryRegex = RegexGroup.INVENTORY.create(
-        "effects.cookie",
-        "Duration: (?<duration>.*)",
+        "effects.cookie.inventory",
+        "\\s*Duration: (?<duration>.*)",
+    )
+    private val cookieNotActiveRegex = RegexGroup.INVENTORY.create(
+        "effects.cookie.not_active",
+        "\\s*Status: Not active!",
     )
     private val godPotionWidgetRegex = RegexGroup.TABLIST_WIDGET.create(
         "effects.god_potion",
@@ -65,6 +69,9 @@ object EffectsAPI {
             cookieInventoryRegex.anyMatch(cookieLore, "duration") { (duration) ->
                 val parsedDuration = duration.parseDuration() ?: return@anyMatch
                 updateBoosterCookieExpireTime(parsedDuration)
+            }
+            cookieNotActiveRegex.anyMatch(cookieLore) {
+                EffectsStorage.boosterCookieExpireTime = Instant.DISTANT_PAST
             }
         }
     }

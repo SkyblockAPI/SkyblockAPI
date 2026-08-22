@@ -73,6 +73,7 @@ fun String?.parseDuration(): Duration? = this?.runCatching {
                     'm' -> 60 * 1000
                     'h' -> 60 * 60 * 1000
                     'd' -> 24 * 60 * 60 * 1000
+                    'y' -> 365L * 24 * 60 * 60 * 1000
                     else -> 0
                 }
                 current = 0
@@ -173,7 +174,20 @@ fun Int.toRomanNumeral(subtractive: Boolean = false): String {
     }
 }
 
-fun String.stripColor(): String = formattingCodesRegex.replace(this, "")
+fun String.stripColor(): String {
+    val sb = StringBuilder(this.length)
+    var i = 0
+    while (i < this.length) {
+        val c = this[i]
+        if (c == '\u00A7' && i + 1 < this.length) {
+            i += 2
+        } else {
+            sb.append(c)
+            i++
+        }
+    }
+    return sb.toString()
+}
 
 fun String.capitalize() = lowercase().split(" ", "_").joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
 fun String.toTitleCase() = capitalize()

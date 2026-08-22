@@ -13,7 +13,12 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutChangeEvent
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.value
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
@@ -42,8 +47,12 @@ object MaxwellAPI {
     val power: MaxwellPower
         get() = MaxwellStorage.power
 
+    @Deprecated("magicalPower has been renamed by Hypixel", ReplaceWith("accessoryPower"))
     val magicalPower: Int
-        get() = MaxwellStorage.magicalPower
+        get() = accessoryPower
+
+    val accessoryPower: Int
+        get() = MaxwellStorage.accessoryPower
 
     val accessories: List<ItemStack>
         get() = MaxwellStorage.accessories
@@ -76,7 +85,7 @@ object MaxwellAPI {
     )
     private val thaumaturgyMpRegex = thaumaturgyGuiGroup.create(
         "mp",
-        "^Total: (?<mp>[\\d,.]+) Magical Power",
+        "^Total: (?<mp>[\\d,.]+) Accessory Power",
     )
     private val thaumaturgyStartTuningRegex = thaumaturgyGuiGroup.create(
         "tuning.start",
@@ -100,7 +109,7 @@ object MaxwellAPI {
     )
     private val bagsMpRegex = bagsGroup.create(
         "mp",
-        "^Magical Power: (?<mp>[\\d,.]+)",
+        "^Accessory Power: (?<mp>[\\d,.]+)",
     )
     private val bagsPowerRegex = bagsGroup.create(
         "power",
@@ -156,6 +165,18 @@ object MaxwellAPI {
         if (handleBagsGui(event)) return
     }
 
+    @Subscription
+    context(event: LoadoutChangeEvent)
+    private fun onLoadoutChange() {
+        val newStone = event.new?.powerstone?.value() ?: return
+        MaxwellStorage.updatePower(MaxwellPowers.getByName(newStone) ?: return debugString(loadoutDebug) {
+            "Unknown power stone $newStone"
+        })
+        debugString(loadoutDebug) {
+            "Set power stone to $newStone"
+        }
+    }
+
     private fun handleThaumaturgyGui(event: InventoryChangeEvent): Boolean {
         if (!thaumaturgyTitleRegex.contains(event.title)) return false
         val items = event.itemStacks
@@ -174,7 +195,7 @@ object MaxwellAPI {
 
         items.getOrNull(THAUMATURGY_MP_SLOT)?.getRawLore()?.lastOrNull()?.let {
             thaumaturgyMpRegex.findOrNull(it, "mp") { (mp) ->
-                MaxwellStorage.updateMagicalPower(mp.parseFormattedInt())
+                MaxwellStorage.updateAccessoryPower(mp.parseFormattedInt())
             }
         }
 
@@ -233,7 +254,7 @@ object MaxwellAPI {
             if (!foundMp) {
                 bagsMpRegex.findThenNull(line, "mp") { (mp) ->
                     val newMp = mp.parseFormattedInt()
-                    MaxwellStorage.updateMagicalPower(newMp)
+                    MaxwellStorage.updateAccessoryPower(newMp)
                     foundMp = true
                 } ?: continue
             }
@@ -250,7 +271,7 @@ object MaxwellAPI {
             }
         }
 
-        if (!foundMp) MaxwellStorage.updateMagicalPower(0)
+        if (!foundMp) MaxwellStorage.updateAccessoryPower(0)
         if (!foundPower) MaxwellStorage.updatePower(MaxwellPowers.NO_POWER)
         MaxwellStorage.updateTunings(tunings, false)
         return true

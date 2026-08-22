@@ -5,24 +5,29 @@ import com.mojang.serialization.Codec
 import me.owdding.dfu.item.MeowddingItemDfu
 import me.owdding.ktmodules.Module
 import net.fabricmc.loader.api.FabricLoader
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.Configurator
 import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.api.RepoAPI
+import tech.thatgravyboat.repolib.api.RepoLibLogger
 import tech.thatgravyboat.repolib.api.RepoVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiDebugEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIApiDebug
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIDevModules
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIModules
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
+import tech.thatgravyboat.skyblockapi.impl.RepoLibLogging
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
+import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import java.nio.file.Files
@@ -45,7 +50,9 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
     @ApiStatus.Internal
     fun init() {
         debug("Starting sbapi!")
+        RepoLibLogger.setInstance(RepoLibLogging)
         SkyblockAPIModules.init { eventBus.register(it) }
+        SkyBlockApiDevUtils.init()
         if (McClient.isDev) SkyblockAPIDevModules.init(eventBus::register)
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
             RepoStatusEvent(status).post()

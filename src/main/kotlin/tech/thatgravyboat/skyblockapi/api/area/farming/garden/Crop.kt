@@ -5,8 +5,6 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.StemBlock
 import net.minecraft.world.level.block.state.BlockState
-//? < 26.1
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 
 enum class Crop(val tool: FarmingTool, vararg block: Block, skyBlockId: String? = null) {
@@ -42,8 +40,6 @@ enum class Crop(val tool: FarmingTool, vararg block: Block, skyBlockId: String? 
 
     open fun isCrop(state: BlockState): Boolean = state.block in blocks
 
-    //? < 26.1
-    //@RemoveNextVersion(ReplaceWith("item")) val icon: () -> ItemStack = { this.skyBlockId.toItem() }
     val item: ItemStack get() = this.skyBlockId.toItem()
 
     companion object {

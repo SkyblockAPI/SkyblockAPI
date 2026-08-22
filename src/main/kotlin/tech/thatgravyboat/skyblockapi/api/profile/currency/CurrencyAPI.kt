@@ -11,8 +11,11 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -59,6 +62,10 @@ object CurrencyAPI {
     private val copperRegex = currencyGroup.create("copper", "^Copper: (?<copper>(?i)[\\d,.kmb]+)")
     private val sowdustRegex = currencyGroup.create("sowdust", "^Sowdust: (?<sowdust>(?i)[\\d,.kmb]+)")
     private val northStarsRegex = currencyGroup.create("northstars", "^North Stars: (?<northstars>(?i)[\\d,.kmb]+)")
+    private val kernelsRegex = currencyGroup.create("kernels", "^Kernels: (?<kernels>(?i)[\\d,.kmb]+)")
+
+    private val inventoryGroup = RegexGroup.INVENTORY.group("currency")
+    private val inventoryKernelsRegex = inventoryGroup.create("kernels", "^Your Kernels: (?<kernels>(?i)[\\d,.kmb]+)")
 
     var purse: Double by CurrencyStorage::purse
         private set
@@ -84,6 +91,9 @@ object CurrencyAPI {
         private set
 
     var sowdust: Long by CurrencyStorage::sowdust
+        private set
+
+    var kernels: Long by CurrencyStorage::kernels
         private set
 
     var northStars: Long by CurrencyStorage::northStars
@@ -136,12 +146,23 @@ object CurrencyAPI {
             } else if (SkyBlockIsland.GARDEN.inIsland()) {
                 copperRegex.findCurrencyChecked(event.added, "copper", ::copper, CurrencyEvent::Copper)
                 sowdustRegex.findCurrencyChecked(event.added, "sowdust", ::sowdust, CurrencyEvent::SowDust)
+                kernelsRegex.findCurrencyChecked(event.added, "kernels", ::kernels, CurrencyEvent::Kernels)
             }
             purseRegex.anyFound(event.added, "type", "purse") { (type, purse) ->
                 this.purseType = PurseType.fromName(type)
                 this.purse = post(purse.parseFormattedDouble(), this.purse, CurrencyEvent::Purse)
             }
             bitsRegex.findCurrency(event.added, "bits", ::bits, CurrencyEvent::Bits)
+        }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    fun onInventoryUpdate(event: InventoryChangeEvent) {
+        when (event.title) {
+            "Grand Bakery" if (event.item.cleanName == "Grand Bakery") -> {
+                inventoryKernelsRegex.findCurrencyChecked(event.item.getRawLore(), "kernels", ::kernels, CurrencyEvent::Kernels)
+            }
         }
     }
 
@@ -214,6 +235,7 @@ object CurrencyAPI {
             ::northStars,
             ::gems,
             ::soulflow,
+            ::kernels,
         )
     }
 }

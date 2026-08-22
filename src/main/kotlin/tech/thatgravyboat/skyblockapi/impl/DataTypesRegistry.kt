@@ -4,6 +4,7 @@ import net.minecraft.world.item.ItemStack
 import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
+import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterDataTypesEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterValuesNotNull
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
@@ -30,8 +31,9 @@ object DataTypesRegistry {
     fun getData(item: ItemStack): Map<DataType<*>, *>? = if (initialized) getDataImpl(item) else null
 
     internal fun getDataImpl(item: ItemStack): Map<DataType<*>, *> = runCatching {
+        val context = ResolutionContext(item)
         _types
-            .associateWith { it.factory(item) }
+            .associateWith { it.resolve(item, context) }
             .filterValuesNotNull()
             .filterValues { if (it is Map<*, *>) it.isNotEmpty() else true }
             .filterValues { if (it is Collection<*>) it.isNotEmpty() else true }

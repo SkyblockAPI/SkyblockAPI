@@ -8,6 +8,7 @@ import net.minecraft.core.component.TypedDataComponent
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.ItemStackTemplate
 import tech.thatgravyboat.skyblockapi.utils.extentions.holder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
@@ -16,6 +17,8 @@ class LazyItemStack {
     private val item: Item
     private val count: Int
     private val components: DataComponentPatch
+
+    private var cached: ItemStack? = null
 
     private constructor(item: Item, count: Int, builder: DataComponentPatch) {
         this.item = item
@@ -42,7 +45,7 @@ class LazyItemStack {
             if (value.isEmpty) {
                 components.remove(type)
             } else {
-                components.set(TypedDataComponent.createUnchecked(type, value))
+                components.set(TypedDataComponent.createUnchecked(type, value.get()))
             }
         }
 
@@ -50,11 +53,7 @@ class LazyItemStack {
     }
 
     operator fun <T : Any> get(component: DataComponentType<T>): T? {
-        //? >=26.1 {
          return components.get(net.minecraft.core.component.DataComponentMap.EMPTY, component)
-        //? } else {
-        /*return components.get(component)?.orElse(null)
-        *///? }
     }
     fun <T : Any> getOrDefault(component: DataComponentType<T>, default: T): T = get(component) ?: default
 
@@ -63,23 +62,25 @@ class LazyItemStack {
     }
 
     fun create(): ItemStack {
-        return ItemStack(item.holder, count, components)
+        if (this.cached == null) {
+            this.cached = ItemStack(item.holder, count, components)
+        }
+        return this.cached!!
+    }
+
+    fun invalidate() {
+        this.cached = null
     }
 
     companion object {
 
-        //? >=26.1 {
-        val CODEC: Codec<LazyItemStack> = net.minecraft.world.item.ItemStackTemplate.MAP_CODEC.codec().xmap({ template ->
-            LazyItemStack(template.item.value(), template.count, template.components)
-        }, { stack ->
-            net.minecraft.world.item.ItemStackTemplate(stack.item.holder, stack.count, stack.components)
-        })
-         //? } else {
-        /*val CODEC: Codec<LazyItemStack> = ItemStack.CODEC.xmap({ stack ->
-            LazyItemStack(stack.item, stack.count, stack.componentsPatch)
-        }, { stack ->
-            ItemStack(stack.item.holder, stack.count, stack.components)
-        })
-        *///? }
+        val CODEC: Codec<LazyItemStack> = ItemStackTemplate.MAP_CODEC.codec().xmap(
+            { template ->
+                LazyItemStack(template.item.value(), template.count, template.components)
+            },
+            { stack ->
+                ItemStackTemplate(stack.item.holder, stack.count, stack.components)
+            },
+        )
     }
 }

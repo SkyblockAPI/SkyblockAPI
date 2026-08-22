@@ -32,7 +32,5 @@ enum class DungeonFloor(
     companion object {
         fun getByName(name: String) = valueOfOrNull<DungeonFloor>(name.uppercase())
         fun getByLongName(name: String) = DungeonFloor.entries.firstOrNull { it.longName == name }
-
-        external fun nativeFunction()
     }
 }

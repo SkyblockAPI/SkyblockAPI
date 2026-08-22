@@ -18,7 +18,10 @@ enum class SkyBlockIsland(val id: String, displayName: String? = null) {
     CRIMSON_ISLE("crimson_isle"),
     GARDEN("garden"),
     BACKWATER_BAYOU("fishing_1"),
-    GALATEA("foraging_2"),
+    LOTUS_ATOLL("lotus_atoll"),
+    GALATEA("foraging_2", "Moonglade Marsh"),
+    TORRHUS_CANYON("foraging_3"),
+    SAFARI("safari", "Critter Safari"),
 
     THE_RIFT("rift"),
     DARK_AUCTION("dark_auction"),

@@ -22,21 +22,21 @@ dependencies {
         capabilities { requireCapability("tech.thatgravyboat:skyblock-api-<minecraft_version>") }
     }
     include("tech.thatgravyboat:skyblock-api:<version>") {
-        capabilities { requireCapability("tech.thatgravyboat:skyblock-api-<minecraft_version>-remapped") }
+        capabilities { requireCapability("tech.thatgravyboat:skyblock-api-<minecraft_version>") }
     }
 }
 ```
 
 <minecraft_version> is:
 
-- `1.21.5` for 1.21.5
-- `1.21.8` for 1.21.6-1.21.8
-- `1.21.10` for 1.21.9-1.21.10
-- `1.21.11` for 1.21.11
+- `26.1` for 26.1.x
+- `26.2` for 26.2.x
 
 
 ## Major Change Logs
 
+- **v4.2.0**: Update to 26.2
+- **v4.1.0**: Update to 26.1
 - **v4.0.0**: Update to 1.21.11 and switch to stonecutter
 - **v3.0.0**: Update to 1.21.9/1.21.10
 - **v2.3.0**: Switch to kotlin.time vs kotlinx.datetime, required because of fabric kotlin version update.

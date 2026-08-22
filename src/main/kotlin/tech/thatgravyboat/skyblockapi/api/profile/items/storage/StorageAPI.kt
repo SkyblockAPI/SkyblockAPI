@@ -27,7 +27,7 @@ object StorageAPI {
 
     private val enderchestRegex = inventoryGroup.create("enderchest", "Ender Chest \\((?<page>\\d+)/\\d+\\)")
     private val backpackRegex = inventoryGroup.create("backpack", ".* Backpack (?:✦ )?\\(Slot #(?<page>\\d+)\\)")
-    private val riftStorageRegex = inventoryGroup.create("rift", "Rift Storage \\((?<page>\\d+)/\\d+\\)")
+    private val riftStorageRegex = inventoryGroup.create("rift", "Rift Storage(?: \\((?<page>\\d+)/\\d+\\))?")
 
 
     /**
@@ -60,8 +60,9 @@ object StorageAPI {
             PlayerStorageStorage.setBackpack(PlayerStorageInstance(pageId - 1, items.toMutableList()))
         }
 
-        riftStorageRegex.match(event.title, "page") { (page) ->
-            val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
+        riftStorageRegex.match(event.title) { matcher ->
+            val page = matcher["page"]?.toIntValue() ?: 1
+            val pageId = page.takeIf { it > 0 } ?: return@match
             val items = event.itemStacks.take(size).drop(9)
             PlayerStorageStorage.setRiftStorage(PlayerStorageInstance(pageId - 1, items.toMutableList()))
         }
@@ -87,8 +88,9 @@ object StorageAPI {
             PlayerStorageStorage.setBackpack(instance)
         }
 
-        riftStorageRegex.match(event.title, "page") { (page) ->
-            val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
+        riftStorageRegex.match(event.title) { matcher ->
+            val page = matcher["page"]?.toIntValue() ?: 1
+            val pageId = page.takeIf { it > 0 } ?: return@match
             val instance = PlayerStorageStorage.riftStorage.find { it.index == pageId - 1 } ?: return@match
             instance.items.setAt(index - 9, event.item)
             PlayerStorageStorage.setRiftStorage(instance)

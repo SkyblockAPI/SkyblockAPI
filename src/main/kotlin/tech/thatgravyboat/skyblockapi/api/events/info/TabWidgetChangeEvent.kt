@@ -15,6 +15,7 @@ data class TabWidgetChangeEvent(
     val old: List<String>,
     val new: List<String>,
     val newComponents: List<Component>,
+    val matchResult: MatchResult? = null,
 ) : SkyBlockEvent() {
     val isEmpty: Boolean get() = new.isEmpty()
     override fun post(bus: EventBus): Boolean = bus.post(this, this.widget)
@@ -55,8 +56,13 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     AGATHA_CONTEST("Agatha's Contest:"),
     STARBORN_TEMPLE("Starborn Temple:"),
     FOREST_WHISPERS("Forest Whispers: (?<amount>[\\dkmbKMB,.]+)"),
+    DESERT_WHISPERS("Desert Whispers: (?<amount>[\\dkmbKMB,.]+)"),
     MOONGLADE_BEACON("Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
+    TORRHUS_BEACON("Torrhus Beacon: (?<amount>[\\d,.]+) Stacks?"),
     SHARD_TRAPS("Shard Traps"),
+
+    // Hunting
+    SALTS("Salts:"),
 
     // Garden + Farming
     COMPOSTER("Composter:"),
@@ -68,12 +74,15 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     CROP_MILESTONES("Crop Milestones:"),
 
     // Crimson Isle
-    REPUTATION("(?:Mage|Barbarian) Reputation:"),
+    REPUTATION("(?<type>Mage|Barbarian) Reputation:"),
     TROPHY_FISH("Trophy Fish:"),
     FACTION_QUESTS("Faction Quests:"),
 
     // End
     DRAGON("Dragon: \\((?<type>.+)\\)"),
+
+    // Lotus Atoll
+    TROPHY_FROGS("Trophy Frogs:"),
 
     // Dungeons + Dungeon Hub
     DOWNED("Downed: (?<status>.*)"),

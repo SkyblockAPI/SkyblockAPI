@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -23,7 +24,7 @@ object SpookyFestivalAPI {
 
     private val durationRegex = scoreboardGroup.create(
         "duration",
-        "Spooky Festival (?<min>\\d{1,2}):(?<sec>\\d{2})",
+        "Spooky Festival ((?<hour>\\d+):)?(?<min>\\d{1,2}):(?<sec>\\d{2})",
     )
 
     private val candyRegex = tablistGroup.create(
@@ -48,8 +49,12 @@ object SpookyFestivalAPI {
 
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
-        durationRegex.anyMatch(event.added, "min", "sec") { (min, sec) ->
-            duration = min.toIntValue().minutes + sec.toIntValue().seconds
+        durationRegex.anyMatch(event.added) { match ->
+            val hours = match["hour"]?.takeUnless { it.isBlank() }?.toIntValue() ?: 0
+            val minutes = match["min"]?.toIntValue() ?: 0
+            val seconds = match["sec"]?.toIntValue() ?: 0
+
+            duration = hours.hours + minutes.minutes + seconds.seconds
         }
     }
 

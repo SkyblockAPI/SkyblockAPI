@@ -5,7 +5,7 @@ import me.owdding.ktcodecs.GenerateCodec
 @GenerateCodec
 data class ElectionJson(
     val mayor: MayorJson,
-    val current: ElectionInfo,
+    val current: ElectionInfo?,
 )
 
 @GenerateCodec

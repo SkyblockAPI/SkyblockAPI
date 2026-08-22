@@ -15,11 +15,14 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook
 import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
+import tech.thatgravyboat.skyblockapi.utils.extentions.associateByNotNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
+import net.minecraft.network.chat.TextColor as McTextColor
 import java.net.URI
 import java.util.*
 import java.util.regex.Pattern
@@ -38,10 +41,10 @@ object CommonText {
 
 object Text {
 
-    fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
-    fun of(init: MutableComponent.() -> Unit = {}) = "".asComponent(init)
+    inline fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
+    inline fun of(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.empty().also(init)
     fun of(text: String, color: Int) = of(text) { this.color = color }
-    fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
+    inline fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
 
     fun player(profile: ResolvableProfile, hat: Boolean = true, init: MutableComponent.() -> Unit = {}): MutableComponent {
         val spriteObj = PlayerSprite(profile, hat)
@@ -53,7 +56,7 @@ object Text {
         return Component.`object`(spriteObj).also(init)
     }
 
-    fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
+    inline fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
 
     @JvmOverloads
     fun multiline(vararg lines: Any?, init: MutableComponent.() -> Unit = {}) = join(*lines, separator = CommonText.NEWLINE, init = init)
@@ -81,13 +84,10 @@ object Text {
     fun Component.prefix(prefix: String): MutableComponent = join(prefix, this)
     fun Component.suffix(suffix: String): MutableComponent = join(this, suffix)
     fun Component.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
-    fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
+    inline fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
 
     fun Component.send() {
-        //? >= 26.1 {
         McClient.chat.addClientSystemMessage(this)
-        //? } else
-        //McClient.chat.addMessage(this)
     }
     fun Component.send(id: String) = McClient.chat.setMessageId(id) {
         this.send()
@@ -105,11 +105,8 @@ object Text {
 }
 
 object TextProperties {
-
-    private val STRIP_COLOR_PATTERN = Pattern.compile("(?i)\\u00A7.")
-
     val Component.width: Int get() = McFont.width(this)
-    val Component.stripped: String get() = STRIP_COLOR_PATTERN.matcher(this.string).replaceAll("")
+    val Component.stripped: String get() = this.string.stripColor()
 }
 
 object TextUtils {
@@ -203,11 +200,15 @@ object TextUtils {
         return sb.toString()
     }
 
+    //? if >= 26.2 {
+    private val colorTable = ChatFormatting.entries.associateByNotNull { McTextColor.fromLegacyFormat(it)?.value }
+    //? } else {
+    /*private val colorTable = ChatFormatting.entries.associateByNotNull { format -> format.color.takeIf { format.isColor } }
+    *///? }
+
     private fun StringBuilder.appendStyle(style: Style) {
         style.color?.let { color ->
-            val value = color.value
-            val formatting = ChatFormatting.entries.find { it.isColor && it.color == value } ?: ChatFormatting.RESET
-            append(formatting)
+            append(colorTable[color.value] ?: ChatFormatting.RESET)
         }
 
         if (style.isBold) append(ChatFormatting.BOLD)
@@ -417,6 +418,7 @@ object TextBuilder {
     fun MutableComponent.append(text: String, color: Int): MutableComponent = this.append(text) { this.color = color }
 }
 
+@Suppress("unused")
 object TextColor {
 
     const val BLACK = 0x000000
@@ -439,4 +441,25 @@ object TextColor {
     const val YELLOW = 0xFFFF55
     const val WHITE = 0xFFFFFF
 
+}
+
+@Suppress("unused")
+object SkyBlockColor {
+
+    const val BLACK = TextColor.BLACK
+    const val DARK_BLUE = 0x353FCE
+    const val DARK_GREEN = TextColor.DARK_GREEN
+    const val DARK_AQUA = TextColor.DARK_AQUA
+    const val DARK_RED = 0xD13228
+    const val DARK_PURPLE = 0xA335EE
+    const val GOLD = 0xFF9000
+    const val GRAY = 0xA8BFD2
+    const val DARK_GRAY = 0x707592
+    const val BLUE = 0x459BFF
+    const val GREEN = TextColor.GREEN
+    const val AQUA = TextColor.AQUA
+    const val RED = TextColor.RED
+    const val LIGHT_PURPLE = TextColor.LIGHT_PURPLE
+    const val YELLOW = 0xFFDE2F
+    const val WHITE = TextColor.WHITE
 }

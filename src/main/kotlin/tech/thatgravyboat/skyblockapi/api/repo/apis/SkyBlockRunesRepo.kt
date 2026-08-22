@@ -1,27 +1,27 @@
 package tech.thatgravyboat.skyblockapi.api.repo.apis
 
-import com.mojang.authlib.properties.Property
-import net.minecraft.core.component.DataComponents
-import net.minecraft.world.item.Items
-import net.minecraft.world.item.component.ItemLore
+import com.mojang.brigadier.arguments.IntegerArgumentType
+import com.mojang.brigadier.arguments.StringArgumentType
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RunesAPI.Rune
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
-import tech.thatgravyboat.skyblockapi.platform.ResolvableProfile
-import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockRunesRepo.Query
 
-object SkyBlockRunesRepo : RepoItemCacheAsQuery<SkyBlockRunesRepo.Query>("Runes", ::Query) {
+private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
+    field("id", StringArgumentType.string(), Query::id, RepoAPI.runes().runes().keys)
+    optionalField("tier", IntegerArgumentType.integer(1), Query::tier)
+}
+
+
+@Module
+object SkyBlockRunesRepo : RepoItemCacheAsQuery<Query>("Runes", ::Query, schema) {
 
     private val repo get() = RepoAPI.runes()
 
     override fun create(key: Query): LazyItemStack? {
         val rune = (if (key.tier == null) this.get(key.id)?.maxByOrNull(Rune::tier) else this.getTier(key.id, key.tier!!)) ?: return null
-
-        return LazyItemStack(Items.PLAYER_HEAD) {
-            this[DataComponents.PROFILE] = ResolvableProfile { put("textures", Property("textures", rune.texture())) }
-            this[DataComponents.CUSTOM_NAME] = Text.of(rune.name())
-            this[DataComponents.LORE] = ItemLore(rune.lore().map(Text::of))
-        }
+        return rune.item.let(::LazyItemStack)
     }
 
     fun get(id: String): List<Rune>? = ifInitialized { this.repo.getRunes(id) }
@@ -29,6 +29,6 @@ object SkyBlockRunesRepo : RepoItemCacheAsQuery<SkyBlockRunesRepo.Query>("Runes"
 
     data class Query(
         var id: String = "",
-        var tier: Int? = null
+        var tier: Int? = null,
     )
 }

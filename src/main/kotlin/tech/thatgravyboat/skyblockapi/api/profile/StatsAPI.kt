@@ -28,6 +28,17 @@ object StatsAPI {
     var overflowMana: Int = 0
         private set
 
+    var vitality: Int = 0
+        private set
+
+    var maxVitality: Int = 100
+        private set
+
+    @Deprecated("Use vitality instead", ReplaceWith("vitality"))
+    val vitaliy: Int get() = vitality
+    @Deprecated("Use maxVitality instead", ReplaceWith("maxVitality"))
+    val maxVitaliy: Int get() = maxVitality
+
     @Subscription
     fun onActionBarWidget(event: ActionBarWidgetChangeEvent) {
         when (event) {
@@ -35,19 +46,28 @@ object StatsAPI {
                 health = event.current
                 maxHealth = event.max
             }
+
             is DefenseActionBarWidgetChangeEvent -> {
                 defense = event.current
             }
+
             is ManaActionBarWidgetChangeEvent -> {
                 mana = event.current
                 maxMana = event.max
             }
+
             is OverflowManaActionBarWidgetChangeEvent -> {
                 overflowMana = event.current
             }
+
             is ArmadilloActionBarWidgetChangeEvent -> {
                 val healthPercent = McPlayer.health.toFloat() / McPlayer.maxHealth.toFloat()
                 health = (maxHealth * healthPercent).toInt()
+            }
+
+            is VitalityActionBarWidgetChangeEvent -> {
+                vitality = event.current
+                maxVitality = event.max
             }
         }
 

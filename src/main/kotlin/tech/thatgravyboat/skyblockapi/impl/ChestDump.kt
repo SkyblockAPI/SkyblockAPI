@@ -82,15 +82,9 @@ object ChestDump {
                     super.onClose()
                 }
 
-                //? >= 26.1 {
                 override fun slotClicked(slot: Slot?, slotId: Int, buttonNum: Int, containerInput: ContainerInput?) {
                     SkyBlockAPI.info("<ChestDump> Clicked slot $slotId with button $buttonNum and click type $containerInput")
                 }
-                //? } else {
-                /*override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ClickType?) {
-                    SkyBlockAPI.info("<ChestDump> Clicked slot $slotId with button $mouseButton and click type $type")
-                }
-                *///?}
 
                 override fun handleSlotStateChanged(slotId: Int, containerId: Int, newState: Boolean) {
                     SkyBlockAPI.info("<ChestDump> Slot state changed $slotId with container $containerId and new state $newState")

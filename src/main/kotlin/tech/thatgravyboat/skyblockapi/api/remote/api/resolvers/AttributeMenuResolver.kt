@@ -6,12 +6,13 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.contains
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @IdResolvers
-object AttributeMenuResolver : InventoryIdResolver {
+data object AttributeMenuResolver : InventoryIdResolver {
 
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
         menu: AbstractContainerScreen<T>,
@@ -25,7 +26,7 @@ object AttributeMenuResolver : InventoryIdResolver {
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
         val itemName = this.cleanName
-        if (this in Items.GRAY_DYE) {
+        if (this in ColoredItems.GRAY_DYE) {
             return SimpleItemAPI.findIdByName(itemName)
         }
 

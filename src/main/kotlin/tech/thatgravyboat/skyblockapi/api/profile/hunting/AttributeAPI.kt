@@ -80,7 +80,8 @@ object AttributeAPI {
 
     private val sentToHuntingBoxRegex = chatGroup.create("sent_to_hunting_box", "You sent (?<amount>an?|\\d+) (?<shard>.*? Shard)s? to your Hunting Box.")
 
-    private val fishingRegex = chatGroup.create("fishing", "^⛃ .*? CATCH! You caught a (?<name>.*) Shard!$")
+    private val fishingRegex = chatGroup.create("fishing", "^\uE025 .*? CATCH! You caught a (?<name>.*) Shard!$")
+    private val fishingMultipleRegex = chatGroup.create("fishing_multiple", "^\uE025 .*? CATCH! You caught (?<name>.*) Shard! x(?<amount>\\d+)$")
     //endregion
 
     private val deferredFusion = DeferredFusion()
@@ -248,6 +249,12 @@ object AttributeAPI {
             val id = SkyBlockId.fromName(name, true) ?: return@match
 
             addOwnedAttributeAmount(id, 1)
+        }
+        fishingMultipleRegex.match(event.text, "name", "amount") { (name, amount) ->
+            val id = SkyBlockId.fromName(name, true) ?: return@match
+            val amount = amount.toIntValue()
+
+            addOwnedAttributeAmount(id, amount)
         }
     }
 
