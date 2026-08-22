@@ -39,7 +39,7 @@ object CrystalAPI {
     /**
      * REGEX-TEST: ✦ You placed the Jade Crystal!
      */
-    val crystalPlacedRegex = chatGroup.create("crystalPlaced", "✦ You placed the (?<name>[A-Za-z]+) Crystal!$")
+    val crystalPlacedRegex = chatGroup.create("crystalPlaced", "✦ You placed the (?<name>[A-Za-z]+) Crystal!")
 
     @Subscription
     @InventoryTitle("Heart of the Mountain")
