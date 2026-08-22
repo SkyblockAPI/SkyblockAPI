@@ -3186,6 +3186,10 @@ public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldE
 	public fun <init> (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/world/phys/Vec3;Lorg/joml/Quaternionf;F)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent$CollectSubmits : tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent {
+	public fun <init> (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/world/phys/Vec3;Lorg/joml/Quaternionf;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent$Start : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent$Start;
 }
