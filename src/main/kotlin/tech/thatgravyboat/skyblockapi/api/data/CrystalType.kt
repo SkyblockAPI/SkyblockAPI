@@ -32,4 +32,14 @@ enum class CrystalStatus {
     NOT_FOUND,
     FOUND,
     PLACED,
+    ;
+
+    companion object {
+        fun fromString(str: String): CrystalStatus? = when (str) {
+            "Not Found", "✖ Not Found" -> NOT_FOUND
+            "Found", "✔ Found" -> FOUND
+            "Placed", "✔ Placed" -> PLACED
+            else -> null
+        }
+    }
 }

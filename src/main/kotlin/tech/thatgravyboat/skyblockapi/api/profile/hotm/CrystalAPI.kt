@@ -48,16 +48,7 @@ object CrystalAPI {
 
         val lore = event.item.getRawLore()
         crystalLoreRegex.anyMatch(lore, "name", "status") { (name, status) ->
-            if (CrystalStorage.setCrystalStatusByName(
-                    name,
-                    when (status) {
-                        "✖ Not Found" -> CrystalStatus.NOT_FOUND
-                        "✔ Found" -> CrystalStatus.FOUND
-                        "✔ Placed" -> CrystalStatus.PLACED
-                        else -> return@anyMatch
-                    },
-                )
-            ) {
+            if (CrystalStorage.setCrystalStatusByName(name, CrystalStatus.fromString(status) ?: return@anyMatch)) {
                 Logger.info("Updated $name to $status based on inventory.")
             } else {
                 Logger.info("Failed to update crystal status for $name with status $status")
