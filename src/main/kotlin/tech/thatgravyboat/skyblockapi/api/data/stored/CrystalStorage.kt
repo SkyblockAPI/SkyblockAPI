@@ -28,6 +28,11 @@ internal object CrystalStorage {
         return true
     }
 
+    fun setCrystalStatus(crystal: CrystalType, status: CrystalStatus) {
+        crystalData[crystal] = status
+        save()
+    }
+
     fun save() {
         CRYSTAL_DATA.save()
     }
