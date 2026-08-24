@@ -1066,6 +1066,22 @@ public final class tech/thatgravyboat/skyblockapi/api/data/Essence$Companion {
 	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType : java/lang/Enum {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType$Companion;
+	public static final field FISHING_FESTIVAL Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+	public static final field MINING_FIESTA Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+	public static final field SPOOKY_FESTIVAL Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+	public static final field UNKNOWN Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getEventName ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType$Companion {
+	public final fun fromDescription (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/data/FriendData {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/data/FriendData$Companion;
 	public fun <init> ()V
@@ -1198,6 +1214,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/MayorPerks {
 	public final fun getFISHING_FESTIVAL ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
 	public final fun getFISHING_XP_BUFF ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
 	public final fun getFUNDRAISING ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
+	public final fun getFoxyExtraEventType ()Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
 	public final fun getGOATED ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
 	public final fun getGRAND_FEAST ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
 	public final fun getHUNTRESS_INTUITION ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
