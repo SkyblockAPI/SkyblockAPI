@@ -76,7 +76,7 @@ object MaxwellAPI {
     private val thaumaturgyGuiGroup = inventoryGroup.group("thaumaturgy")
     private val thaumaturgyTitleRegex = thaumaturgyGuiGroup.create(
         "title",
-        "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Accessory Bag Thaumatur?g?y?$",
+        "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Accessory Bag Thaumaturgy$",
     )
     private val selectedPowerRegex = thaumaturgyGuiGroup.create(
         "selected",
