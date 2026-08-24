@@ -49,11 +49,11 @@ object AttributeAPI {
     private val inventoryGroup = RegexGroup.INVENTORY.group("attribute")
 
     private val attributeMenuGroup = inventoryGroup.group("attribute_menu")
-    private val attributeMenuRegex = attributeMenuGroup.create("title", "^Attribute Menu$")
+    val attributeMenuRegex = attributeMenuGroup.create("title", "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Attribute Menu$")
     private val syphonMoreRegex = attributeMenuGroup.create("more", "^Syphon (\\d+) more to level up!")
 
     private val huntingBoxGroup = inventoryGroup.group("hunting_box")
-    private val huntingBoxMenuRegex = huntingBoxGroup.create("title", "^Hunting Box$")
+    val huntingBoxMenuRegex = huntingBoxGroup.create("title", "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Hunting Box$")
     private val ownedRegex = huntingBoxGroup.create("owned", "^Owned: (?<amount>[\\d,.]+) Shards?$")
     private val attributeMaxedRegex = huntingBoxGroup.create("maxed", "^Attribute Maxed!$")
     private val levelRegex = huntingBoxGroup.create("level", "[IXV0-9]+")
@@ -125,7 +125,7 @@ object AttributeAPI {
     @OnlyOnSkyBlock
     fun huntingBox(event: InventoryChangeEvent) {
         if (!event.title.matches(huntingBoxMenuRegex)) return
-        if (event.isOnSides) return
+        if (!event.isInMainPart) return
 
         val id = event.item[DataTypes.SKYBLOCK_ID] ?: return
         val data = SkyBlockAttributesRepo.get(id.cleanId) ?: return
