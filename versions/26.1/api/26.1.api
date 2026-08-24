@@ -4576,6 +4576,8 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hunting/AttributeA
 	public final fun fusionMenu (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun getAttributeLevelData ()Ljava/util/Map;
 	public final fun getAttributeMap ()Ljava/util/Map;
+	public final fun getAttributeMenuRegex ()Lkotlin/text/Regex;
+	public final fun getHuntingBoxMenuRegex ()Lkotlin/text/Regex;
 	public final fun huntingBox (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun huntingBox (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onCommandRegister (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
