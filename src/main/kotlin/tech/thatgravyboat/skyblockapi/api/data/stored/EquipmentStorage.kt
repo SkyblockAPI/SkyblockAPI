@@ -35,11 +35,10 @@ internal object EquipmentStorage {
     }
 
     fun setEquipment(wardrobeSlot: WardrobeSlot?) {
-        if (wardrobeSlot == null) return
-        equipment[EquipmentSlot.NECKLACE] = wardrobeSlot.slots[0]
-        equipment[EquipmentSlot.CLOAK] = wardrobeSlot.slots[1]
-        equipment[EquipmentSlot.BELT] = wardrobeSlot.slots[2]
-        equipment[EquipmentSlot.GLOVES] = wardrobeSlot.slots[3]
+        equipment[EquipmentSlot.NECKLACE] = wardrobeSlot?.slots[0] ?: ItemStack.EMPTY
+        equipment[EquipmentSlot.CLOAK] = wardrobeSlot?.slots[1] ?: ItemStack.EMPTY
+        equipment[EquipmentSlot.BELT] = wardrobeSlot?.slots[2] ?: ItemStack.EMPTY
+        equipment[EquipmentSlot.GLOVES] = wardrobeSlot?.slots[3] ?: ItemStack.EMPTY
         EQUIPMENT.save()
     }
 }

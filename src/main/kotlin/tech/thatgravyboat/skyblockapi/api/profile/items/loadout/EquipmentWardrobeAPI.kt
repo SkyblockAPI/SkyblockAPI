@@ -4,12 +4,15 @@ import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.EquipmentStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getDataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.profile.items.equipment.EquipmentAPI
 import tech.thatgravyboat.skyblockapi.api.profile.items.equipment.EquipmentSlot
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -54,6 +57,7 @@ object EquipmentWardrobeAPI {
 
     val slots get() = LoadoutStorage.equipment?.slots ?: emptyList()
     val currentSlot: Int? get() = LoadoutStorage.equipment?.currentSlot
+    var previousSlot: Int? = null
 
     val currentSet: Map<EquipmentSlot, ItemStack>
         get() {
@@ -81,6 +85,7 @@ object EquipmentWardrobeAPI {
             if (selectStack.item == ColoredItems.RED_DYE) {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
+                previousSlot = currentSlot
                 LoadoutStorage.updateCurrentEquipmentSlot(id)
                 EquipmentStorage.setEquipment(LoadoutStorage.equipment?.slots[id - 1])
                 foundCurrentSlot = true
@@ -98,6 +103,7 @@ object EquipmentWardrobeAPI {
 
         if (!foundCurrentSlot && isCurrentSlotInCurrentPage()) {
             LoadoutStorage.updateCurrentEquipmentSlot(null)
+            if (previousSlot != null) clearPotentiallyDesyncedEquipment()
         }
     }
 
@@ -106,6 +112,21 @@ object EquipmentWardrobeAPI {
         val first = (currentPage - 1) * WARDROBE_SLOTS_PER_PAGE + 1
         val last = first + WARDROBE_SLOTS_PER_PAGE - 1
         return slot in first..last
+    }
+
+    fun clearPotentiallyDesyncedEquipment() {
+        val storedEquipmentUUIDs =
+            EquipmentSlot.entries.associateWith { equipmentSlot -> EquipmentAPI.islandEquipment[equipmentSlot]?.getDataTypes()[DataTypes.UUID] }
+        val previousEquipmentWardrobeSlotUUIDs =
+            EquipmentSlot.entries.associateWith { equipmentSlot -> slots[previousSlot!!.minus(1)].slots[equipmentSlot.ordinal].getDataTypes()[DataTypes.UUID] }
+
+        previousEquipmentWardrobeSlotUUIDs.forEach { (equipmentSlot, previousUUID) ->
+            if (previousUUID == storedEquipmentUUIDs[equipmentSlot]) {
+                EquipmentStorage.setEquipment(equipmentSlot, ItemStack.EMPTY)
+            }
+        }
+
+        previousSlot = null
     }
 
     @Subscription
@@ -148,6 +169,7 @@ object EquipmentWardrobeAPI {
     context(event: LoadoutChangeEvent)
     fun onLoadoutSwitch() {
         LoadoutStorage.equipment?.currentSlot = event.new?.equipment.value() ?: return
+        if (currentSlot != -1) EquipmentStorage.setEquipment(LoadoutStorage.equipment?.slots[currentSlot!!])
         debugString(loadoutDebug) { "Setting equipment!" }
     }
 
