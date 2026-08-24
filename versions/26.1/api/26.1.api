@@ -1501,6 +1501,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockStat : java/l
 	public static final field SWING_RANGE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field SYPHON_LUCK Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TAMING_WISDOM Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
+	public static final field TIMBER Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TRACKING Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TREASURE_CHANCE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TROPHY_CHANCE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
