@@ -26,7 +26,7 @@ abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Se
     protected open val levelRegex = inventoryGroup.create("level", "Level (?<level>\\d+)(?:/\\d+)?")
     protected open val disabledRegex = inventoryGroup.create("disabled", "DISABLED|Click to select!")
     protected open val mainItemRegex = inventoryGroup.create("mainitem", "Heart of the $identifier")
-    protected open val tokensRegex = inventoryGroup.create("tokens", "Tokens of the $identifier: (?<tokens>\\d+)")
+    protected open val tokensRegex = inventoryGroup.create("tokens", "Tokens? of the $identifier: (?<tokens>\\d+)")
     protected open val tierRegex = inventoryGroup.create("tier", "Tier (?<tier>\\d+)")
     protected open val tierUnlockedRegex = inventoryGroup.create("tier.unlocked", "UNLOCKED")
 
