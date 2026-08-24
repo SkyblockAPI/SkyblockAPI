@@ -35,10 +35,6 @@ import java.nio.file.Files
 @Module
 object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
-    init {
-        RepoLibLogger.setInstance(RepoLibLogging)
-    }
-
     internal val mod = FabricLoader.getInstance().getModContainer("skyblock-api").orElseThrow()
     val MOD_ID: String get() = mod.metadata.id
     const val NAMESPACE: String = "skyblockapi"
@@ -54,6 +50,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
     @ApiStatus.Internal
     fun init() {
         debug("Starting sbapi!")
+        RepoLibLogger.setInstance(RepoLibLogging)
         SkyblockAPIModules.init { eventBus.register(it) }
         SkyBlockApiDevUtils.init()
         if (McClient.isDev) SkyblockAPIDevModules.init(eventBus::register)

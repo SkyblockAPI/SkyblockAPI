@@ -1066,6 +1066,22 @@ public final class tech/thatgravyboat/skyblockapi/api/data/Essence$Companion {
 	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType : java/lang/Enum {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType$Companion;
+	public static final field FISHING_FESTIVAL Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+	public static final field MINING_FIESTA Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+	public static final field SPOOKY_FESTIVAL Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+	public static final field UNKNOWN Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getEventName ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType$Companion {
+	public final fun fromDescription (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/data/FriendData {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/data/FriendData$Companion;
 	public fun <init> ()V
@@ -1198,6 +1214,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/MayorPerks {
 	public final fun getFISHING_FESTIVAL ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
 	public final fun getFISHING_XP_BUFF ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
 	public final fun getFUNDRAISING ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
+	public final fun getFoxyExtraEventType ()Ltech/thatgravyboat/skyblockapi/api/data/FoxyExtraEventType;
 	public final fun getGOATED ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
 	public final fun getGRAND_FEAST ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
 	public final fun getHUNTRESS_INTUITION ()Ltech/thatgravyboat/skyblockapi/api/data/MayorPerk;
@@ -1484,6 +1501,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockStat : java/l
 	public static final field SWING_RANGE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field SYPHON_LUCK Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TAMING_WISDOM Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
+	public static final field TIMBER Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TRACKING Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TREASURE_CHANCE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
 	public static final field TROPHY_CHANCE Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockStat;
@@ -1579,6 +1597,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getDITTO_USED ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDIVAN_POWDER_COATING ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDONATED_MUSEUM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getDOWSING_MODE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEONBREAKER_CHARGES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEON_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEON_QUALITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1592,6 +1611,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getGEMSTONES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getGILDED_GIFTED_COINS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHELMET_SKIN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getHONEY_POT_USES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHOT_POTATO_BOOKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1763,6 +1783,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getDITTO_ITEM_ID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDITTO_USED ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDONATED_MUSEUM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getDOWSING_MODE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEON_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEON_QUALITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDUNGEON_TIER ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1771,6 +1792,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getETHERMERGE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getGILDED_GIFTED_COINS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHELMET_SKIN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getHONEY_POT_USES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHOT_POTATO_BOOKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -3182,6 +3204,10 @@ public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldE
 	public fun <init> (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/world/phys/Vec3;Lorg/joml/Quaternionf;F)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent$CollectSubmits : tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent {
+	public fun <init> (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/world/phys/Vec3;Lorg/joml/Quaternionf;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent$Start : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent$Start;
 }
@@ -4551,6 +4577,8 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hunting/AttributeA
 	public final fun fusionMenu (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun getAttributeLevelData ()Ljava/util/Map;
 	public final fun getAttributeMap ()Ljava/util/Map;
+	public final fun getAttributeMenuRegex ()Lkotlin/text/Regex;
+	public final fun getHuntingBoxMenuRegex ()Lkotlin/text/Regex;
 	public final fun huntingBox (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun huntingBox (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onCommandRegister (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V

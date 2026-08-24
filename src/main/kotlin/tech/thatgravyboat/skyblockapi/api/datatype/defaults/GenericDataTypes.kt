@@ -164,6 +164,9 @@ object GenericDataTypes {
 
     val SHINY: DataType<Boolean> = DataType.simple("is_shiny")
 
+    val DOWSING_MODE: DataType<String> = DataType.simple("dowsing_mode")
+    val HONEY_POT_USES: DataType<Int> = DataType.simple("honey_pot_uses")
+
     private fun getFishingRodPartDataType(name: String) = DataType.of(name) {
         val tag = it.unsafeTag?.getObjectOrNull(name) ?: return@of null
         val uuid = tag.getUuidOrNull("uuid") ?: UUID(0L, 0L)

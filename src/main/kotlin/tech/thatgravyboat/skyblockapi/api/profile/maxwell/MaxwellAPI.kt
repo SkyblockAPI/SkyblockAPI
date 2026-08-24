@@ -13,7 +13,6 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutChangeEvent
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.value
@@ -77,7 +76,7 @@ object MaxwellAPI {
     private val thaumaturgyGuiGroup = inventoryGroup.group("thaumaturgy")
     private val thaumaturgyTitleRegex = thaumaturgyGuiGroup.create(
         "title",
-        "^Accessory Bag Thaumaturgy$",
+        "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Accessory Bag Thaumaturgy$",
     )
     private val selectedPowerRegex = thaumaturgyGuiGroup.create(
         "selected",
