@@ -1014,6 +1014,46 @@ public final class tech/thatgravyboat/skyblockapi/api/data/CandidateJson {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/data/CrystalStatus : java/lang/Enum {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/data/CrystalStatus$Companion;
+	public static final field FOUND Ltech/thatgravyboat/skyblockapi/api/data/CrystalStatus;
+	public static final field NOT_FOUND Ltech/thatgravyboat/skyblockapi/api/data/CrystalStatus;
+	public static final field PLACED Ltech/thatgravyboat/skyblockapi/api/data/CrystalStatus;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/CrystalStatus;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/data/CrystalStatus;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/data/CrystalStatus$Companion {
+	public final fun fromString (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/CrystalStatus;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/data/CrystalType : java/lang/Enum {
+	public static final field AMBER Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field AMETHYST Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field AQUAMARINE Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field CITRINE Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/data/CrystalType$Companion;
+	public static final field JADE Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field JASPER Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field ONYX Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field OPAL Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field PERIDOT Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field RUBY Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field SAPPHIRE Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static final field TOPAZ Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public final fun getDisplayName ()Lnet/minecraft/network/chat/MutableComponent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getId-EnzYQXU ()Ljava/lang/String;
+	public final fun getTextColor ()I
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/data/CrystalType$Companion {
+	public final fun byName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/data/ElectionInfo {
 	public fun <init> (ILjava/util/List;)V
 	public final fun component1 ()I
@@ -3388,6 +3428,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/SlotClickEve
 	public fun <init> (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/inventory/Slot;ILnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;)V
 	public final fun getButton ()I
 	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getMenuSlots ()Ljava/util/List;
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;
 	public final fun getSlot ()Lnet/minecraft/world/inventory/Slot;
 	public final fun getSlots ()Ljava/util/List;
@@ -4462,6 +4503,33 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/WhispersAPI :
 	public final fun getDesertTotal ()J
 	public final fun getForest ()J
 	public final fun getForestTotal ()J
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/CrystalAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/hotm/CrystalAPI;
+	public final fun onChatReceived (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
+	public final fun onContainerClick (Ltech/thatgravyboat/skyblockapi/api/events/screen/SlotClickEvent;)V
+	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+	public final fun onTabWidget (Ltech/thatgravyboat/skyblockapi/api/events/info/TabWidgetChangeEvent;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/CrystalData {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/profile/hotm/CrystalData$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/Map;)Ltech/thatgravyboat/skyblockapi/api/profile/hotm/CrystalData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/hotm/CrystalData;Ljava/util/Map;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/hotm/CrystalData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCrystals ()Ljava/util/Map;
+	public fun hashCode ()I
+	public final fun setCrystals (Ljava/util/Map;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/CrystalData$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/HotmAPI : tech/thatgravyboat/skyblockapi/api/profile/skilltree/SkillTreeAPI {
@@ -8176,6 +8244,8 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/RegexUtils {
 	public static synthetic fun findOrNull$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexUtils;Lkotlin/text/Regex;Ljava/lang/CharSequence;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun findThenNull (Lkotlin/text/Regex;Ljava/lang/CharSequence;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lkotlin/Unit;
 	public static synthetic fun findThenNull$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexUtils;Lkotlin/text/Regex;Ljava/lang/CharSequence;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlin/Unit;
+	public final fun forEachMatch (Lkotlin/text/Regex;Ljava/util/List;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Z
+	public static synthetic fun forEachMatch$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexUtils;Lkotlin/text/Regex;Ljava/util/List;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 	public final fun hasGroup (Lkotlin/text/Regex;Ljava/lang/CharSequence;Ljava/lang/String;)Z
 	public final fun hasGroup (Lkotlin/text/Regex;Ljava/util/List;Ljava/lang/String;)Z
 	public final fun indexOfFirstFind (Lkotlin/text/Regex;Ljava/util/List;)I
