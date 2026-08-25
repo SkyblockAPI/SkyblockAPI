@@ -4507,6 +4507,11 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hotf/WhispersAPI :
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/CrystalAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/hotm/CrystalAPI;
+	public final fun getCrystalStatus (Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;)Ltech/thatgravyboat/skyblockapi/api/data/CrystalStatus;
+	public final fun getCrystals ()Ljava/util/Map;
+	public final fun getCrystalsByStatus (Ltech/thatgravyboat/skyblockapi/api/data/CrystalStatus;)Ljava/util/List;
+	public final fun isFound (Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;)Z
+	public final fun isPlaced (Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;)Z
 	public final fun onChatReceived (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onContainerClick (Ltech/thatgravyboat/skyblockapi/api/events/screen/SlotClickEvent;)V
 	public final fun onInventoryChange (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
