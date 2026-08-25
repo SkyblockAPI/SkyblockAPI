@@ -5,7 +5,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.EquipmentStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getDataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
@@ -116,9 +116,9 @@ object EquipmentWardrobeAPI {
 
     fun clearPotentiallyDesyncedEquipment() {
         val storedEquipmentUUIDs =
-            EquipmentSlot.entries.associateWith { equipmentSlot -> EquipmentAPI.islandEquipment[equipmentSlot]?.getDataTypes()[DataTypes.UUID] }
+            EquipmentSlot.entries.associateWith { equipmentSlot -> EquipmentAPI.islandEquipment[equipmentSlot]?.getData(DataTypes.UUID) }
         val previousEquipmentWardrobeSlotUUIDs =
-            EquipmentSlot.entries.associateWith { equipmentSlot -> slots[previousSlot!!.minus(1)].slots[equipmentSlot.ordinal].getDataTypes()[DataTypes.UUID] }
+            EquipmentSlot.entries.associateWith { equipmentSlot -> slots[previousSlot!!.minus(1)].slots[equipmentSlot.ordinal].getData(DataTypes.UUID) }
 
         previousEquipmentWardrobeSlotUUIDs.forEach { (equipmentSlot, previousUUID) ->
             if (previousUUID == storedEquipmentUUIDs[equipmentSlot]) {
