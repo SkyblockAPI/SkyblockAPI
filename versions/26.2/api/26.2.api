@@ -4709,6 +4709,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/Data
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/EquipmentWardrobeAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/EquipmentWardrobeAPI;
+	public final fun clearPotentiallyDesyncedEquipment ()V
 	public final fun getCurrentPage ()I
 	public final fun getCurrentSet ()Ljava/util/Map;
 	public final fun getCurrentSlot ()Ljava/lang/Integer;
