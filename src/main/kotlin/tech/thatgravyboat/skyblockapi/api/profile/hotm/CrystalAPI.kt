@@ -23,6 +23,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.forEachMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
 @Module
@@ -30,28 +31,18 @@ object CrystalAPI {
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("crystal")
     private val chatGroup = RegexGroup.CHAT.group("crystal")
-    private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("crystal")
 
     private val itemRegex = inventoryGroup.create("hotmItem", "Crystal Hollows Crystals")
-
-    /**
-     * REGEX-TEST:   Jade ✖ Not Found
-     * REGEX-TEST:   Amber ✖ Not Found
-     * REGEX-TEST:   Ruby ✔ Found
-     * REGEX-TEST:   Jade ✔ Placed
-     */
     private val crystalLoreRegex = inventoryGroup.create("crystalLore", " {1,2}(?<name>[A-Za-z]+) (?<status>✖ Not Found|✔ Found|✔ Placed)")
 
-    /**
-     * REGEX-TEST:                                 Jade Crystal
-     * REGEX-TEST:                                 Amber Crystal
-     */
     private val crystalFoundRegex = chatGroup.create("crystalFound", " {32}(?<name>[A-Za-z]+) Crystal")
-
-    /**
-     * REGEX-TEST: ✦ You placed the Jade Crystal!
-     */
     private val crystalPlacedRegex = chatGroup.create("crystalPlaced", "✦ You placed the (?<name>[A-Za-z]+) Crystal!")
+    private val lootStartRegex = chatGroup.create("lootStart", "\\s*(CRYSTAL NUCLEUS LOOT BUNDLE|(UMBER|TUNGSTEN|VANGUARD) CORPSE LOOT!).*")
+    private val lootItemRegex = chatGroup.create("lootItem", " +(?<item>.+?)(?: x(?<amount>[\\\\d,]+)|$)")
+    private val lootEndRegex = chatGroup.create("lootEnd", "▬{64}")
+
+
+    private var inLoot = false
 
     @Subscription
     @InventoryTitle("Heart of the Mountain")
@@ -70,12 +61,26 @@ object CrystalAPI {
 
     @Subscription
     fun onChatReceived(event: ChatReceivedEvent.Pre) {
-        matchWhen(event.text) {
+        val match = matchWhen(event.text) {
             case(crystalFoundRegex, "name") { (name) ->
                 CrystalStorage.setCrystalStatusByName(name, CrystalStatus.FOUND)
             }
             case(crystalPlacedRegex, "name") { (name) ->
                 CrystalStorage.setCrystalStatusByName(name, CrystalStatus.PLACED)
+            }
+            case(lootStartRegex) {
+                inLoot = true
+            }
+            case(lootEndRegex) {
+                inLoot = false
+            }
+        }
+
+        if (match || !inLoot) return
+
+        lootItemRegex.match(event.text, "item") { (item) ->
+            if (CrystalType.entries.any { item.contains(it.name, true) }) {
+                CrystalStorage.setCrystalStatusByName(item, CrystalStatus.FOUND)
             }
         }
     }

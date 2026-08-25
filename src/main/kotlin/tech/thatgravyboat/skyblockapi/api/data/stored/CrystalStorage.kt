@@ -22,7 +22,7 @@ internal object CrystalStorage {
     val crystalData: MutableMap<CrystalType, CrystalStatus> get() = CRYSTAL_DATA.get()?.crystals ?: mutableMapOf()
 
     fun setCrystalStatusByName(typeName: String, status: CrystalStatus): Boolean {
-        val type = CrystalType.entries.find { it.name.equals(typeName, true) } ?: return false
+        val type = CrystalType.byName(typeName) ?: return false
         crystalData[type] = status
         save()
         return true

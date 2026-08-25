@@ -26,6 +26,12 @@ enum class CrystalType(val textColor: Int, skyblockId: String? = null) {
     val displayName = Text.of("${toFormattedName()} Crystal") {
         this.color = textColor
     }
+
+    companion object {
+        fun byName(name: String): CrystalType? {
+            return entries.find { it.name.equals(name, true) || "${it.name} Crystal".equals(name, true) }
+        }
+    }
 }
 
 enum class CrystalStatus {
