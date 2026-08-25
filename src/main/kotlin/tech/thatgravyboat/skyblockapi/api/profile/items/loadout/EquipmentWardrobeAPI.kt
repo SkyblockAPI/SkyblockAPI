@@ -57,7 +57,6 @@ object EquipmentWardrobeAPI {
 
     val slots get() = LoadoutStorage.equipment?.slots ?: emptyList()
     val currentSlot: Int? get() = LoadoutStorage.equipment?.currentSlot
-    var previousSlot: Int? = null
 
     val currentSet: Map<EquipmentSlot, ItemStack>
         get() {
@@ -85,7 +84,6 @@ object EquipmentWardrobeAPI {
             if (selectStack.item == ColoredItems.RED_DYE) {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
-                previousSlot = currentSlot
                 LoadoutStorage.updateCurrentEquipmentSlot(id)
                 EquipmentStorage.setEquipment(LoadoutStorage.equipment?.slots[id - 1])
                 foundCurrentSlot = true
@@ -102,8 +100,8 @@ object EquipmentWardrobeAPI {
         }
 
         if (!foundCurrentSlot && isCurrentSlotInCurrentPage()) {
+            if (currentSlot != null && currentSlot != -1) clearPotentiallyDesyncedEquipment()
             LoadoutStorage.updateCurrentEquipmentSlot(null)
-            if (previousSlot != null) clearPotentiallyDesyncedEquipment()
         }
     }
 
@@ -117,16 +115,14 @@ object EquipmentWardrobeAPI {
     fun clearPotentiallyDesyncedEquipment() {
         val storedEquipmentUUIDs =
             EquipmentSlot.entries.associateWith { equipmentSlot -> EquipmentAPI.islandEquipment[equipmentSlot]?.getData(DataTypes.UUID) }
-        val previousEquipmentWardrobeSlotUUIDs =
-            EquipmentSlot.entries.associateWith { equipmentSlot -> slots[previousSlot!!.minus(1)].slots[equipmentSlot.ordinal].getData(DataTypes.UUID) }
+        val currentSetUUIDs =
+            EquipmentSlot.entries.associateWith { equipmentSlot -> currentSet[equipmentSlot]?.getData(DataTypes.UUID) }
 
-        previousEquipmentWardrobeSlotUUIDs.forEach { (equipmentSlot, previousUUID) ->
-            if (previousUUID == storedEquipmentUUIDs[equipmentSlot]) {
+        currentSetUUIDs.forEach { (equipmentSlot, uuid) ->
+            if (uuid == storedEquipmentUUIDs[equipmentSlot]) {
                 EquipmentStorage.setEquipment(equipmentSlot, ItemStack.EMPTY)
             }
         }
-
-        previousSlot = null
     }
 
     @Subscription
