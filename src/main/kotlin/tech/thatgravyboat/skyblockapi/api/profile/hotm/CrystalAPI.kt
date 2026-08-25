@@ -29,6 +29,16 @@ import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 @Module
 object CrystalAPI {
 
+    val crystals: Map<CrystalType, CrystalStatus> get() = CrystalStorage.crystalData.toMap()
+
+    fun getCrystalStatus(type: CrystalType): CrystalStatus = CrystalStorage.crystalData[type] ?: CrystalStatus.NOT_FOUND
+
+    fun isFound(type: CrystalType): Boolean = getCrystalStatus(type) == CrystalStatus.FOUND
+    fun isPlaced(type: CrystalType): Boolean = getCrystalStatus(type) == CrystalStatus.PLACED
+
+    fun getCrystalsByStatus(status: CrystalStatus): List<CrystalType> = CrystalStorage.crystalData.filter { it.value == status }.map { it.key }
+
+
     private val inventoryGroup = RegexGroup.INVENTORY.group("crystal")
     private val chatGroup = RegexGroup.CHAT.group("crystal")
 
