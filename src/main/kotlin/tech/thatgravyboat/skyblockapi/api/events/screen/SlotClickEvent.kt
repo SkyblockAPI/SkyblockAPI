@@ -18,5 +18,6 @@ class SlotClickEvent(
     val titleComponent: Component = screen.title
     val title: String = titleComponent.stripped
     val slots: List<Slot> = screen.menu.slots
+    val menuSlots: List<Slot> = screen.menu.slots.filter { it.container !is Inventory }
     val isInPlayerInventory = slot.container is Inventory
 }
