@@ -1,9 +1,9 @@
 [versions]
 minecraft-range = "26.3.x"
-minecraft = "26.3-snapshot-9"
+minecraft = "26.3-snapshot-10"
 
 sbapi-mc-version = "26.3"
-fabric-api = "0.157.2+26.3"
+fabric-api = "0.158.2+26.3"
 
 hypixel-modapi = "1.0.2"
 hypixel-modapi-fabric = "1.0.2+build.1+mc26.1"
