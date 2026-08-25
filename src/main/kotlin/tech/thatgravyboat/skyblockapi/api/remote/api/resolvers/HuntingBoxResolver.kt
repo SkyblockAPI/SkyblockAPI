@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.profile.hunting.AttributeAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
@@ -15,7 +16,7 @@ data object HuntingBoxResolver : InventoryIdResolver {
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): Boolean {
-        return menu.title.stripped == "Hunting Box"
+        return AttributeAPI.huntingBoxMenuRegex.matches(menu.title.stripped)
     }
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(

@@ -187,6 +187,9 @@ object ElectionAPI {
                         appendLine("Current Jerry Candidate: $candidate [${time.until()}]")
                     }
                     appendLine("Active perks: ${MayorPerks.perks.filter { it.active }}")
+                    MayorPerks.foxyExtraEventType?.let {
+                        appendLine("Foxy Extra Event: ${it.eventName}")
+                    }
                     val overridden = MayorPerks.perks.filter { it.overrideState != DEFAULT }
                     if (overridden.isNotEmpty()) {
                         appendLine("Perks with override: ")

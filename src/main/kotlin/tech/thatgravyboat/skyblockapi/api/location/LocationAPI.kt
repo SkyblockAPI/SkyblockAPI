@@ -44,7 +44,7 @@ object LocationAPI {
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
         "location",
-        " *[⏣ф\uE067\uE020] *(?<location>(?:\\s?[^[ൠ\uE018]\\s]+)*)(?: [ൠ\uE018] x\\d)?",
+        " *[⏣ф\uE067\uE020] *(?<location>(?:\\s?[^[ൠ\uE07F\uE018]\\s]+)*)(?: [[ൠ\uE07F\uE018]\uE018] x\\d)?",
     )
 
     private val guestRegex = RegexGroup.SCOREBOARD.create(

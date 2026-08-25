@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
+import tech.thatgravyboat.skyblockapi.api.profile.hunting.AttributeAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.impl.ColoredItems
@@ -18,7 +18,7 @@ data object AttributeMenuResolver : InventoryIdResolver {
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): Boolean {
-        return menu.title.stripped == "Attribute Menu"
+        return AttributeAPI.attributeMenuRegex.matches(menu.title.stripped)
     }
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(
