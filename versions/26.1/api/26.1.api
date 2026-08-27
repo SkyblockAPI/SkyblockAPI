@@ -1626,6 +1626,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOSTERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOOSTER_TIERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCATEGORY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCLEAN_NAME ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1816,6 +1817,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getATTRIBUTES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOSTERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getBOOSTER_TIERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCLEAN_NAME ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCULTIVATING_CROPS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
