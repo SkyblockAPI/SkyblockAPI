@@ -14,6 +14,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.*
+import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
 
@@ -141,8 +142,15 @@ object GenericDataTypes {
     }
     val JALAPENO_BOOK: DataType<Boolean> = DataType.simple("jalapeno_book", "jalapeno_count")
 
+    @Deprecated("Removed DataType", ReplaceWith("GenericDataTypes.BOOSTER_TIERS"))
     val BOOSTERS: DataType<List<String>> = DataType.of("boosters") {
         it.unsafeTag?.getList("boosters")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull()?.let { "${it}_BOOSTER" } } ?: emptyList()
+    }
+
+    val BOOSTER_TIERS: DataType<Map<SkyBlockId, Int>> = DataType.of("booster_tiers") {
+        it.unsafeTag?.getCompound("booster_tiers")?.getOrNull()?.entrySet()?.associate { (k, v) ->
+            SkyBlockId.item("${k}_booster") to v.asInt().getOrElse { 0 }
+        } ?: emptyMap()
     }
 
     val WET_BOOK: DataType<Int> = DataType.simple("wet_book", "wet_book_count")
