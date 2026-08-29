@@ -107,7 +107,7 @@ object MiscEventHandler {
                 ctx.submitNodeCollector(),
                 camera.position(),
                 camera.rotation(),
-            )
+            ).post()
         }
 
         // Chat Events
