@@ -7796,6 +7796,825 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/MapBackedArgumen
 	public fun parse (Lcom/mojang/brigadier/StringReader;)Ljava/lang/Object;
 }
 
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Class;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Class;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Class;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ljava/lang/String;Ljava/lang/Class;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArgument ()Ljava/lang/Class;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public abstract fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public abstract fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public abstract fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder$DefaultImpls {
+	public static fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public static fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public static fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder0 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder0;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun register (Lcom/mojang/brigadier/CommandDispatcher;)V
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder1 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function1;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder1;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder10 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function10;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder10;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder11 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function11;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder11;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder12 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function12;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder12;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder13 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function13;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder13;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder14 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function14;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder14;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder15 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function15;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder15;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder16 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function16;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder16;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder17 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function17;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getQArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder17;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder18 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function18;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getQArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getRArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder18;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder19 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function19;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getQArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getRArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getSArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder19;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder2 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function2;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder2;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder20 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function20;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getQArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getRArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getSArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getTArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder20;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder21 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function21;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getQArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getRArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getSArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getTArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getUArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder21;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder22 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function22;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getQArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getRArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getSArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getTArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getUArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getVArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder22;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder23 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/FunctionN;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getQArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getRArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getSArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getTArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getUArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getVArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getWArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder23;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder24 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/FunctionN;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getQArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getRArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getSArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getTArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getUArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getVArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getWArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getXArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder24;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder25 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/FunctionN;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getQArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getRArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getSArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getTArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getUArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getVArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getWArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getXArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getYArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder25;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder26 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/FunctionN;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getJArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getKArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getLArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getMArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getNArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getPArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getQArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getRArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getSArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getTArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getUArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getVArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getWArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getXArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getYArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getZArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder26;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder3 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function3;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder3;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder4 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function4;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder4;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder5 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function5;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder5;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder6 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function6;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder6;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder7 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function7;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder7;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder8 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function8;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder8;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder9 : tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder {
+	public fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;)V
+	public synthetic fun <init> (Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;Lcom/mojang/brigadier/builder/ArgumentBuilder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public fun argument (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public fun build ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
+	public final fun execute (Lkotlin/jvm/functions/Function9;)V
+	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
+	public final fun getCArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
+	public final fun getDArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getEArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getFArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getGArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getHArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getIArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
+	public final fun getName ()Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder9;
+	public fun literal (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;
+	public final fun then ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public abstract interface annotation class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandClass : java/lang/annotation/Annotation {
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandsKt {
+	public static final fun command (Lcom/mojang/brigadier/CommandDispatcher;Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Lkotlin/jvm/functions/Function1;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/utils/container/Anchor : java/lang/Enum {
 	public static final field BOTTOM_LEFT Ltech/thatgravyboat/skyblockapi/utils/container/Anchor;
 	public static final field BOTTOM_RIGHT Ltech/thatgravyboat/skyblockapi/utils/container/Anchor;
