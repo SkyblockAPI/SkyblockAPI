@@ -6249,6 +6249,7 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/LazyItemStack {
 
 public final class tech/thatgravyboat/skyblockapi/api/repo/LazyItemStack$Companion {
 	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+	public final fun toLazy (Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCache {
