@@ -33,7 +33,9 @@ object DataTypes {
     val HOT_POTATO_BOOKS: DataType<Int> = GenericDataTypes.HOT_POTATO_BOOKS
     val ART_OF_WAR: DataType<Boolean> = GenericDataTypes.ART_OF_WAR
     val ART_OF_PEACE: DataType<Boolean> = GenericDataTypes.ART_OF_PEACE
+    @Deprecated("Removed DataType", ReplaceWith("GenericDataTypes.BOOSTER_TIERS"))
     val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS
+    val BOOSTER_TIERS: DataType<Map<SkyBlockId, Int>> = GenericDataTypes.BOOSTER_TIERS
     val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
     val MIDAS_WEAPON_BID: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_BID
     val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_ADDED_COINS
@@ -57,6 +59,8 @@ object DataTypes {
     val POTION_LEVEL: DataType<Int> = GenericDataTypes.POTION_LEVEL
     val BOOK_OF_STATS: DataType<Int> = GenericDataTypes.BOOK_OF_STATS
     val RUNEBOOK: DataType<Int> = GenericDataTypes.RUNEBOOK
+    val DOWSING_MODE: DataType<String> = GenericDataTypes.DOWSING_MODE
+    val HONEY_POT_USES: DataType<Int> = GenericDataTypes.HONEY_POT_USES
 
     val USED_RUNE: DataType<SkyBlockId> = GenericDataTypes.USED_RUNE
     val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN
@@ -81,6 +85,8 @@ object DataTypes {
 
     val PARTY_HAT_COLOR: DataType<String> = GenericDataTypes.PARTY_HAT_COLOR
     val PARTY_HAT_YEAR: DataType<Int> = GenericDataTypes.PARTY_HAT_YEAR
+
+    val RABBIT_FACTION: DataType<String> = GenericDataTypes.RABBIT_FACTION
 
     // Aging Items
     val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD

@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 data class LoadoutData(
     var armor: WardrobeData = WardrobeData(),
     var equipment: WardrobeData = WardrobeData(),
+    var loadouts: Loadout = Loadout(),
 ) {
     companion object {
         val CODEC = SkyblockAPICodecs.getCodec<LoadoutData>()

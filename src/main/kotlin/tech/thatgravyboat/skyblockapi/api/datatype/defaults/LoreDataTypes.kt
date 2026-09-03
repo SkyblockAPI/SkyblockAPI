@@ -89,6 +89,7 @@ object LoreDataTypes {
         val lines = rawLore?.asReversedIterator() ?: return null
         for (line in lines) {
             val rarityLine = (if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim()).removePrefix("SHINY ")
+            if (rarityLine.any(Char::isLowerCase)) continue
             val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.displayName.uppercase()) }
             if (rarity != null) {
                 return rarityLine to rarity
