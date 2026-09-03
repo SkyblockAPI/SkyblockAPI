@@ -109,6 +109,8 @@ object GenericDataTypes {
     val PARTY_HAT_COLOR: DataType<String> = DataType.simple("party_hat_color")
     val PARTY_HAT_YEAR: DataType<Int> = DataType.simple("party_hat_year")
 
+    val RABBIT_FACTION: DataType<String> = DataType.simple("faction_rabbit_id")
+
     val CULTIVATING_CROPS: DataType<Long> = DataType.simple("cultivating_crops", "farmed_cultivating")
     val TOOL_LEVEL: DataType<Int> = DataType.simple("tool_level", "levelable_lvl")
     val TOOL_EXP: DataType<Double> = DataType.simple("tool_exp", "levelable_exp")

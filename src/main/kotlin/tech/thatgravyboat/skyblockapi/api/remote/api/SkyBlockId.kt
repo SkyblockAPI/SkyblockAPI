@@ -17,7 +17,6 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.DefaultIdResolver
 import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
-import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.impl.debug.addStringDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
@@ -243,6 +242,12 @@ private fun ItemStack.getSbId(): SkyBlockId? {
             val hatColor = DataTypes.PARTY_HAT_COLOR()
             addStringDebug(DefaultIdResolver) { "Resolving party hat crab $hatColor" }
             hatColor?.let { SkyBlockId.item("cake_hat_2026_$it") }
+        }
+
+        "FACTION_RABBIT" -> {
+            val faction = DataTypes.RABBIT_FACTION()
+            addStringDebug(DefaultIdResolver) { "Resolving rabbit faction $faction" }
+            faction?.let { SkyBlockId.item("faction_rabbit_$it") }
         }
 
         else if (id == "POTION" || neuPotionRegex.matches(id)) -> {

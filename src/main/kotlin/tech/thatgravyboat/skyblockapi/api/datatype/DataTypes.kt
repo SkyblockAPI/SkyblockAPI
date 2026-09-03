@@ -86,6 +86,8 @@ object DataTypes {
     val PARTY_HAT_COLOR: DataType<String> = GenericDataTypes.PARTY_HAT_COLOR
     val PARTY_HAT_YEAR: DataType<Int> = GenericDataTypes.PARTY_HAT_YEAR
 
+    val RABBIT_FACTION: DataType<String> = GenericDataTypes.RABBIT_FACTION
+
     // Aging Items
     val SECONDS_HELD: DataType<Int> = GenericDataTypes.SECONDS_HELD
     val BOTTLE_OF_JYRRE_SECONDS: DataType<Int> = GenericDataTypes.BOTTLE_OF_JYRRE_SECONDS
