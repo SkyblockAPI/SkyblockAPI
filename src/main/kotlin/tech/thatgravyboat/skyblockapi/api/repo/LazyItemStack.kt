@@ -82,5 +82,15 @@ class LazyItemStack {
                 ItemStackTemplate(stack.item.holder, stack.count, stack.components)
             },
         )
+
+        fun ItemStack.toLazy(): LazyItemStack = LazyItemStack(this.item, this.count) {
+            for ((type, value) in this@toLazy.componentsPatch.entrySet()) {
+                if (value.isEmpty) {
+                    this.remove(type)
+                } else {
+                    this.set(TypedDataComponent.createUnchecked(type, value.get()))
+                }
+            }
+        }
     }
 }
