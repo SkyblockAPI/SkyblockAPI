@@ -20,7 +20,10 @@ import java.text.DecimalFormat
 
 
 private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
-    field("id", StringArgumentType.string(), Query::id, RepoAPI.pets().pets().keys)
+    field("id", StringArgumentType.string(), Query::id) { suggestions ->
+        if (!RepoAPI.isInitialized()) return@field
+        RepoAPI.pets().pets().keys.forEach(suggestions)
+    }
     optionalField("level", IntegerArgumentType.integer(1), Query::level)
     optionalField("rarity", EnumArgument.create(SkyBlockRarity::class.java), Query::rarity)
     optionalField("skin", StringArgumentType.string(), Query::skin) { suggestions ->

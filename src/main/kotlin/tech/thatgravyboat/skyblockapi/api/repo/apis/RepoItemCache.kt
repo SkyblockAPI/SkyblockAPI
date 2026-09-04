@@ -355,9 +355,9 @@ sealed class RepoItemCacheAsQuery<Query>(name: String, internal val factory: () 
     fun getItemStackOrDefault(query: Query.() -> Unit): ItemStack = getItemStackOrDefault(this.factory().apply(query))
 }
 
-fun interface SuggestionConsumer {
+fun interface SuggestionConsumer : ((String) -> Unit) {
     fun suggest(name: String)
-    operator fun invoke(name: String) = suggest(name)
+    override operator fun invoke(name: String) = suggest(name)
 }
 
 sealed interface RepoItemQuerySchema<Query> {
