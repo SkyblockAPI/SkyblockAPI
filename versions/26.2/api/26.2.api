@@ -6429,7 +6429,8 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockRunesRep
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class tech/thatgravyboat/skyblockapi/api/repo/apis/SuggestionConsumer {
+public abstract interface class tech/thatgravyboat/skyblockapi/api/repo/apis/SuggestionConsumer : kotlin/jvm/functions/Function1 {
+	public synthetic fun invoke (Ljava/lang/Object;)Ljava/lang/Object;
 	public fun invoke (Ljava/lang/String;)V
 	public abstract fun suggest (Ljava/lang/String;)V
 }
