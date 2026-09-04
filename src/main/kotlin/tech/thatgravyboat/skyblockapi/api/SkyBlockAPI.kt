@@ -5,8 +5,6 @@ import com.mojang.serialization.Codec
 import me.owdding.dfu.item.MeowddingItemDfu
 import me.owdding.ktmodules.Module
 import net.fabricmc.loader.api.FabricLoader
-import org.apache.logging.log4j.Level
-import org.apache.logging.log4j.core.config.Configurator
 import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -19,6 +17,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiDebugEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
+import tech.thatgravyboat.skyblockapi.api.events.repo.RepoEvent
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIApiDebug
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIDevModules
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIModules
@@ -56,6 +55,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         if (McClient.isDev) SkyblockAPIDevModules.init(eventBus::register)
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
             RepoStatusEvent(status).post()
+            RepoEvent.Status(status).post()
         }
         MeowddingItemDfu.load()
     }

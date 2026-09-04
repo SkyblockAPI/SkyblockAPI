@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnRepoStatus
-import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
+import tech.thatgravyboat.skyblockapi.api.events.repo.RepoEvent
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.attribute
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.enchantment
@@ -59,6 +59,7 @@ object SimpleItemAPI {
                         }.getOrNull()
                     }
                 }
+
                 key.isRune -> SkyBlockRunesRepo.getLazyItemStack {
                     if (clean.contains(":")) {
                         val (runeId, level) = clean.split(":")
@@ -68,6 +69,7 @@ object SimpleItemAPI {
                         this.id = clean
                     }
                 }
+
                 key.isEnchantment -> SkyBlockEnchantmentsRepo.getLazyItemStack {
                     if (clean.contains(":")) {
                         val (enchantmentId, level) = clean.split(":")
@@ -77,6 +79,7 @@ object SimpleItemAPI {
                         this.id = clean
                     }
                 }
+
                 key.isPotion -> SkyBlockPotionsRepo.getLazyItemStack {
                     if (clean.contains(":")) {
                         val (potionId, level) = clean.split(":")
@@ -86,6 +89,7 @@ object SimpleItemAPI {
                         this.id = clean
                     }
                 }
+
                 key.isAttribute -> SkyBlockAttributesRepo.getLazyItemStack(clean)
                 key.isItem -> clean.let(SkyBlockItemsRepo::getLazyItemStack)
                 key.isUnsafe -> clean.let(SkyBlockItemsRepo::getLazyItemStack)
@@ -133,7 +137,7 @@ object SimpleItemAPI {
     fun getAllIds(): List<SkyBlockId> = ids
     fun getAllNames(): Set<String> = names.keys
 
-    @Subscription(RepoStatusEvent::class)
+    @Subscription(RepoEvent.Reload::class)
     @OnRepoStatus(RepoStatus.SUCCESS)
     fun onRepoStatus() {
         setupCache()

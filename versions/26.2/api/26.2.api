@@ -1674,6 +1674,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getPOTION_TYPE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPOWER_ABILITY_SCROLL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getQUIVER_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getRABBIT_FACTION ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRAFFLE_WIN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRAFFLE_YEAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRARITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1849,6 +1850,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getPOTION_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPOTION_TYPE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getQUIVER_ARROW ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getRABBIT_FACTION ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRAFFLE_WIN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRAFFLE_YEAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getRECOMBOBULATOR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -6156,6 +6158,7 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/LazyItemStack {
 
 public final class tech/thatgravyboat/skyblockapi/api/repo/LazyItemStack$Companion {
 	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+	public final fun toLazy (Lnet/minecraft/world/item/ItemStack;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCache {

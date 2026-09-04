@@ -82,5 +82,15 @@ class LazyItemStack {
                 ItemStackTemplate(stack.item.holder, stack.count, stack.components)
             },
         )
+
+        fun ItemStack.toLazy(): LazyItemStack = LazyItemStack(this.item, this.count) {
+            val patch = this@toLazy.componentsPatch.split()
+            patch.added().forEach { typesComponent ->
+                this.set(typesComponent.type as DataComponentType<Any>, typesComponent.value)
+            }
+            patch.removed().forEach { typesComponent ->
+                this.remove(typesComponent)
+            }
+        }
     }
 }
