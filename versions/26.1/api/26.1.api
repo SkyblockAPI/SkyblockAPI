@@ -3256,6 +3256,31 @@ public final class tech/thatgravyboat/skyblockapi/api/events/render/RenderWorldE
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/render/RenderWorldEvent$Start;
 }
 
+public abstract class tech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent$Reload : tech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent {
+	public fun <init> (Ltech/thatgravyboat/repolib/api/RepoStatus;)V
+	public final fun component1 ()Ltech/thatgravyboat/repolib/api/RepoStatus;
+	public final fun copy (Ltech/thatgravyboat/repolib/api/RepoStatus;)Ltech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent$Reload;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent$Reload;Ltech/thatgravyboat/repolib/api/RepoStatus;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent$Reload;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getStatus ()Ltech/thatgravyboat/repolib/api/RepoStatus;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent$Status : tech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent {
+	public fun <init> (Ltech/thatgravyboat/repolib/api/RepoStatus;)V
+	public final fun component1 ()Ltech/thatgravyboat/repolib/api/RepoStatus;
+	public final fun copy (Ltech/thatgravyboat/repolib/api/RepoStatus;)Ltech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent$Status;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent$Status;Ltech/thatgravyboat/repolib/api/RepoStatus;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/repo/RepoEvent$Status;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getStatus ()Ltech/thatgravyboat/repolib/api/RepoStatus;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ContainerCloseEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/screen/ContainerCloseEvent;
 }
@@ -7072,6 +7097,10 @@ public final class tech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$Fin
 	public fun getShortName ()C
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/impl/commands/GiveCommands$FindFlag;
+}
+
+public final class tech/thatgravyboat/skyblockapi/impl/commands/RepoReloadCommand {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/commands/RepoReloadCommand;
 }
 
 public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugActionBar {
