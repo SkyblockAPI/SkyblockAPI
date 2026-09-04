@@ -6,7 +6,7 @@ import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RepoStatus
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnRepoStatus
-import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
+import tech.thatgravyboat.skyblockapi.api.events.repo.RepoEvent
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 
 @Module
@@ -21,7 +21,7 @@ object SkyBlockAttributesRepo : RepoItemCache<String>("Attributes") {
         return attribute.itemStack.let(::LazyItemStack)
     }
 
-    @Subscription(RepoStatusEvent::class)
+    @Subscription(RepoEvent.Reload::class)
     @OnRepoStatus(RepoStatus.SUCCESS)
     fun onRepoReady() {
         this.attributes.putAll(this.repo.attributes().values.associateBy { it.attributeId().lowercase() })
