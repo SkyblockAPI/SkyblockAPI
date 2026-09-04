@@ -16,7 +16,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.holder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
-import kotlin.jvm.optionals.getOrNull
 
 class ItemBuilder {
     lateinit var item: Item
@@ -54,11 +53,12 @@ class ItemBuilder {
         this.item = stack.item
         this.count = stack.count
 
-        val patch = stack.componentsPatch.entrySet()
-        patch.forEach { (type, data) ->
-            val data = data.getOrNull() ?: return@forEach
-            @Suppress("UNCHECKED_CAST")
-            components.set(type as DataComponentType<Any>, data)
+        val patch = stack.componentsPatch.split()
+        patch.added().forEach { typesComponent ->
+            components.set(typesComponent.type as DataComponentType<Any>, typesComponent.value)
+        }
+        patch.removed().forEach { typesComponent ->
+            components.remove(typesComponent)
         }
     }
 

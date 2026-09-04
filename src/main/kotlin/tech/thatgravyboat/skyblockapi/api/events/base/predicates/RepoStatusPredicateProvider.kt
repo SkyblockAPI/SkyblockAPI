@@ -3,7 +3,8 @@ package tech.thatgravyboat.skyblockapi.api.events.base.predicates
 import tech.thatgravyboat.repolib.api.RepoStatus
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
-import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
+//? < 26.3
+//import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.api.events.repo.RepoEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import java.lang.reflect.Method
@@ -15,7 +16,8 @@ class RepoStatusPredicateProvider : EventPredicateProvider {
         val status = method.getAnnotation<OnRepoStatus>() ?: return null
         return { event, _ ->
             when (event) {
-                is RepoStatusEvent -> event.status == status.repoStatus
+                //? < 26.3
+                //is RepoStatusEvent -> event.status == status.repoStatus
                 is RepoEvent.Reload -> event.status == status.repoStatus
                 is RepoEvent.Status -> event.status == status.repoStatus
                 else -> true

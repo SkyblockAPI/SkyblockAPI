@@ -16,7 +16,8 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiDebugEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
+//? < 26.3
+//import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.api.events.repo.RepoEvent
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIApiDebug
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIDevModules
@@ -54,7 +55,8 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         SkyBlockApiDevUtils.init()
         if (McClient.isDev) SkyblockAPIDevModules.init(eventBus::register)
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
-            RepoStatusEvent(status).post()
+            //? < 26.3
+            //RepoStatusEvent(status).post()
             RepoEvent.Status(status).post()
         }
         MeowddingItemDfu.load()

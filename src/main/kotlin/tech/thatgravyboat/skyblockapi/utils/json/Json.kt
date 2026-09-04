@@ -23,7 +23,8 @@ object Json {
     val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
 
     private val vanillaRegistry by lazy {
-        VanillaRegistries.createLookup()
+        //~ if >= 26.3 'createLookup' -> 'createWorldLookup'
+        VanillaRegistries.createWorldLookup()
     }
 
     internal val registry get() = McClient.connection?.registryAccess() ?: vanillaRegistry

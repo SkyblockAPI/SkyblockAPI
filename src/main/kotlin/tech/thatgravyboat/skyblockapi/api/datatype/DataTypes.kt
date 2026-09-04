@@ -33,9 +33,11 @@ object DataTypes {
     val HOT_POTATO_BOOKS: DataType<Int> = GenericDataTypes.HOT_POTATO_BOOKS
     val ART_OF_WAR: DataType<Boolean> = GenericDataTypes.ART_OF_WAR
     val ART_OF_PEACE: DataType<Boolean> = GenericDataTypes.ART_OF_PEACE
-    @Deprecated("Removed DataType", ReplaceWith("GenericDataTypes.BOOSTER_TIERS"))
-    val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS
-    val BOOSTER_TIERS: DataType<Map<SkyBlockId, Int>> = GenericDataTypes.BOOSTER_TIERS
+
+    //? < 26.3 {
+    /*@Deprecated("Removed DataType", ReplaceWith("GenericDataTypes.BOOSTER_TIERS"))
+    val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS*///?}
+    val BOOSTER_TIERS: DataType<Map<String, Int>> = GenericDataTypes.BOOSTER_TIERS
     val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
     val MIDAS_WEAPON_BID: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_BID
     val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_ADDED_COINS
