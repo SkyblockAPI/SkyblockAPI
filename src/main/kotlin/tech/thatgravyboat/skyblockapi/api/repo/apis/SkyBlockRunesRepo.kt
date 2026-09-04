@@ -9,7 +9,10 @@ import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockRunesRepo.Query
 
 private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
-    field("id", StringArgumentType.string(), Query::id, RepoAPI.runes().runes().keys)
+    field("id", StringArgumentType.string(), Query::id) { suggestions ->
+        if (!RepoAPI.isInitialized()) return@field
+        RepoAPI.runes().runes().keys.forEach(suggestions)
+    }
     optionalField("tier", IntegerArgumentType.integer(1), Query::tier)
 }
 

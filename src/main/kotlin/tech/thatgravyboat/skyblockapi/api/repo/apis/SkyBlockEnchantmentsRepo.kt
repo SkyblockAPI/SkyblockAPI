@@ -10,7 +10,10 @@ import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockEnchantmentsRepo.Que
 import tech.thatgravyboat.skyblockapi.utils.extentions.firstOrElseLast
 
 private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
-    field("id", StringArgumentType.string(), Query::id, RepoAPI.enchantments().enchantments().keys)
+    field("id", StringArgumentType.string(), Query::id) { suggestions ->
+        if (!RepoAPI.isInitialized()) return@field
+        RepoAPI.enchantments().enchantments().keys.forEach(suggestions)
+    }
     optionalField("level", IntegerArgumentType.integer(1), Query::level)
 }
 
