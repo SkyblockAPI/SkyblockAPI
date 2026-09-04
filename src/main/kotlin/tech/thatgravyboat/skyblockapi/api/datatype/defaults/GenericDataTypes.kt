@@ -144,14 +144,15 @@ object GenericDataTypes {
     }
     val JALAPENO_BOOK: DataType<Boolean> = DataType.simple("jalapeno_book", "jalapeno_count")
 
-    @Deprecated("Removed DataType", ReplaceWith("GenericDataTypes.BOOSTER_TIERS"))
+    //? < 26.3
+    /*@Deprecated("Removed DataType", ReplaceWith("GenericDataTypes.BOOSTER_TIERS"))
     val BOOSTERS: DataType<List<String>> = DataType.of("boosters") {
         it.unsafeTag?.getList("boosters")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull()?.let { "${it}_BOOSTER" } } ?: emptyList()
-    }
+    }*///?}
 
-    val BOOSTER_TIERS: DataType<Map<SkyBlockId, Int>> = DataType.of("booster_tiers") {
+    val BOOSTER_TIERS: DataType<Map<String, Int>> = DataType.of("booster_tiers") {
         it.unsafeTag?.getCompound("booster_tiers")?.getOrNull()?.entrySet()?.associate { (k, v) ->
-            SkyBlockId.item("${k}_booster") to v.asInt().getOrElse { 0 }
+            k to v.asInt().getOrElse { 0 }
         } ?: emptyMap()
     }
 
