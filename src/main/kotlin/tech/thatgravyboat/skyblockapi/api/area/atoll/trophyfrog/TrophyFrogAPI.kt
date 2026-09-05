@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.location.atoll.TrophyFrogCaughtEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.TrophyCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
@@ -48,7 +48,7 @@ object TrophyFrogAPI {
                 append(frogTier.nameSuffix)
             }.sendWithPrefix()
             TrophyFrogStorage.addCaught(type, frogTier)
-            TrophyFrogCaughtEvent(type, frogTier).post()
+            TrophyCaughtEvent.Frog(type, frogTier).post()
         }
     }
 

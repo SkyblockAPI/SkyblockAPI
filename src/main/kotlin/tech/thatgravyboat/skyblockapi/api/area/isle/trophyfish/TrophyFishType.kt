@@ -126,7 +126,13 @@ enum class TrophyFishType(
         }
     }
 
-    fun getId(tier: TrophyTier, default: TrophyTier = TrophyTier.BRONZE): SkyBlockId = SkyBlockId.item("${this.internalName}_${tier.takeUnless { it == TrophyTier.NONE } ?: default}")
+    fun getItem(tier: TrophyFishTier): ItemStack = getItem(TrophyFishTier.valueOf(tier.name))
+
+    fun getId(tier: TrophyFishTier, default: TrophyFishTier = TrophyFishTier.BRONZE): SkyBlockId =
+        SkyBlockId.item("${this.internalName}_${tier.takeUnless { it == TrophyFishTier.NONE } ?: default}")
+
+    fun getId(tier: TrophyTier, default: TrophyTier = TrophyTier.BRONZE): SkyBlockId =
+        getId(TrophyFishTier.valueOf(tier.name), TrophyFishTier.valueOf(default.name))
 
     companion object {
         fun getByInternalName(internalName: String): TrophyFishType? {

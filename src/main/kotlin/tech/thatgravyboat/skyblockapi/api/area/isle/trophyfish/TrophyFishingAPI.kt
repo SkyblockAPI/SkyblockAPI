@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.TrophyCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
@@ -53,7 +54,8 @@ object TrophyFishingAPI {
                 append(fishTier.nameSuffix)
             }.sendWithPrefix()
             TrophyFishStorage.addCaught(type, fishTier)
-            TrophyFishCaughtEvent(type, fishTier).post()
+            TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name)).post()
+            TrophyCaughtEvent.Fish(type, fishTier).post()
         }
     }
 
@@ -118,6 +120,12 @@ object TrophyFishingAPI {
         unlocked.forEach(TrophyFishStorage::setAmounts)
     }
 
+    @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
+    fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
+        return TrophyFishStorage.getCaught(type).map { TrophyFishTier.valueOf(it.key.name) to it.value }.toMap()
+    }
+
+    @JvmName("getCaughtTiers")
     fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
         return TrophyFishStorage.getCaught(type)
     }
