@@ -28,7 +28,8 @@
         "fabric-api": "*",
         "fabric-language-kotlin": ">=${fabric_lang_kotlin}",
         "minecraft": "${minecraft_range}",
-        "hypixel-mod-api": ">=${hypixel_mod_api}"
+        "hypixel-mod-api": ">=${hypixel_mod_api}",
+        "tech_thatgravyboat_repo-lib_repo-lib": ">=${repo_lib}"
     },
     "accessWidener": "sbapi.classtweaker",
     "custom": {
