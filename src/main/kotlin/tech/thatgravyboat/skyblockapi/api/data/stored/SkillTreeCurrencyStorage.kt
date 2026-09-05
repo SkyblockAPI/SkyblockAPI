@@ -17,7 +17,7 @@ internal abstract class SkillTreeCurrencyStorage<Currency>(
     @Suppress("UNCHECKED_CAST")
     protected open val STORAGE: StoredProfileData<EnumMap<Currency, SkillTreeCurrencyData>> = StoredProfileData(
         { EnumMap(clazz.java) },
-        CodecUtils.enumMap(SkyblockAPICodecs.getCodec(clazz.java) as Codec<Currency>, SkyblockAPICodecs.getCodec<SkillTreeCurrencyData>()),
+        CodecUtils.enumMap(clazz.java, SkyblockAPICodecs.getCodec(clazz.java) as Codec<Currency>, SkyblockAPICodecs.getCodec<SkillTreeCurrencyData>()),
         fileName,
     )
 

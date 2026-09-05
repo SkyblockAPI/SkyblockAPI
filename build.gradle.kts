@@ -1,6 +1,5 @@
 @file:OptIn(ExperimentalAbiValidation::class)
 
-import me.owdding.repo.resources.CompactingResourcesExtension
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -13,6 +12,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("versioned-catalogues")
     id("item-data")
+    id("commands")
     id("idea")
 }
 

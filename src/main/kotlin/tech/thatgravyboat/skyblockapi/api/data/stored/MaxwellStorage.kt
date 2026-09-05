@@ -24,7 +24,7 @@ internal object MaxwellStorage {
             data?.power = value
         }
 
-    var magicalPower: Int
+    var accessoryPower: Int
         get() = data?.magicalPower ?: 0
         private set(value) {
             data?.magicalPower = value
@@ -49,9 +49,9 @@ internal object MaxwellStorage {
         save()
     }
 
-    fun updateMagicalPower(newMagicalPower: Int) {
-        if (magicalPower == newMagicalPower) return
-        magicalPower = newMagicalPower
+    fun updateAccessoryPower(newAccessoryPower: Int) {
+        if (accessoryPower == newAccessoryPower) return
+        accessoryPower = newAccessoryPower
         save()
     }
 
@@ -101,7 +101,7 @@ internal object MaxwellStorage {
 
     fun reset() {
         power = MaxwellPowers.NO_POWER
-        magicalPower = 0
+        accessoryPower = 0
         accessories.clear()
         unlockedPowers.clear()
         tunings = emptyList()

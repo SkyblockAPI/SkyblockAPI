@@ -1,5 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
+import me.owdding.ktcodecs.GenerateCodec
+
+@GenerateCodec
 data class SkyBlockArea(val name: String) {
     fun inArea() = LocationAPI.area == this
 
@@ -285,4 +288,21 @@ object SkyBlockAreas {
     val FAR_RESERVE = register("far_reserve", "Far Reserve")
     val UPPER_MINES = register("upper_mines", "Upper Mines")
     val ABANDONED_QUARRY = register("abandoned_quarry", "Abandoned Quarry")
+
+    // Torrhus Canyon
+    val SAFARI_ZONE_ENTRANCE = register("safari_zone_entrance", "Safari Zone Entrance")
+    val TORRHUS_CANYON = register("torrhus_canyon", "Torrhus Canyon")
+    val TORRHUS_HEIGHTS = register("torrhus_heights", "Torrhus Heights")
+    val TORRHUS_SPRINGS = register("torrhus_springs", "Torrhus Springs")
+    val SPRING_SHALLOWS = register("spring_shallows", "Spring Shallows")
+    val SPRING_DEPTHS = register("spring_depths", "Spring Depths")
+    val SPRING_PATH = register("spring_path", "Spring Path")
+    val HOTSPOT_HAVEN = register("hotspot_haven", "Hotspot Haven")
+    val ANTS_CAVE = register("ants_cave", "Ant's Cave")
+    val DESERT_TEMPLE = register("desert_temple", "Desert Temple")
+    val MIRIAS_HUT = register("mirias_hut", "Miria's Hut")
+
+    // Safari
+    val SAFARI_ZONE = register("safari_zone", "Safari Zone")
+
 }

@@ -4,6 +4,7 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 
 @Suppress("unused")
+@Deprecated("With 26.1 dropped soon this will become useless, will be removed with 26.4")
 object ColoredBlocks {
     //? >= 26.2 {
     val WHITE_WOOL: Block = Blocks.WOOL.white

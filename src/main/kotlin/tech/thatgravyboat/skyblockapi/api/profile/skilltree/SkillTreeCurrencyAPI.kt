@@ -21,7 +21,7 @@ private const val RESET_SLOT = 52
 
 abstract class SkillTreeCurrencyAPI<Currency, Self> internal constructor(
     val name: String,
-    private val tabWidget: TabWidget,
+    private val tabWidgets: List<TabWidget>,
     private val storage: SkillTreeCurrencyStorage<Currency>,
     currencyClass: KClass<Currency>,
     val type: SkillTreeType<*>,
@@ -60,7 +60,7 @@ abstract class SkillTreeCurrencyAPI<Currency, Self> internal constructor(
 
     @Subscription(inherited = true)
     fun onTabWidgetChange(event: TabWidgetChangeEvent) {
-        if (event.widget != tabWidget) return
+        if (event.widget !in tabWidgets) return
         widgetCurrencyRegex.matchAll(event.new, "currency", "amount") { (currency, amount) ->
             val currency = fromWidgetName(currency) ?: return@matchAll
             val amount = amount.parseFormattedLong()

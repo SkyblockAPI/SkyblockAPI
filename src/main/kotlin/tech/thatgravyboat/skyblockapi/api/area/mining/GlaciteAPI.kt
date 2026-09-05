@@ -6,6 +6,8 @@ import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockBiome
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockBiomes
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -23,6 +25,11 @@ object GlaciteAPI {
 
     var cold: Int = 0
         private set
+
+    fun inColdArea() = when {
+        SkyBlockIsland.SAFARI.inIsland() -> SkyBlockBiome.inAnyBiome(SkyBlockBiomes.ICY, SkyBlockBiomes.ICY_CAVES)
+        else -> inGlaciteTunnels()
+    }
 
     fun inGlaciteTunnels() = when {
         SkyBlockIsland.MINESHAFT.inIsland() -> true

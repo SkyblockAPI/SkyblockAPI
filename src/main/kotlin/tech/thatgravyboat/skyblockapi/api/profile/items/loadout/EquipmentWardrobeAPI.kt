@@ -2,16 +2,23 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.loadout
 
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.data.stored.EquipmentStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.profile.items.equipment.EquipmentAPI
+import tech.thatgravyboat.skyblockapi.api.profile.items.equipment.EquipmentSlot
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
+import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.extentions.roundToNextMultipleOf
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
@@ -51,6 +58,16 @@ object EquipmentWardrobeAPI {
     val slots get() = LoadoutStorage.equipment?.slots ?: emptyList()
     val currentSlot: Int? get() = LoadoutStorage.equipment?.currentSlot
 
+    val currentSet: Map<EquipmentSlot, ItemStack>
+        get() {
+            val slots = slots.find { it.id == currentSlot }?.slots ?: return emptyMap()
+            return mapOf(
+                EquipmentSlot.NECKLACE to slots[0],
+                EquipmentSlot.CLOAK to slots[1],
+                EquipmentSlot.BELT to slots[2],
+                EquipmentSlot.GLOVES to slots[3],
+            )
+        }
 
     private fun processInventory(title: String, items: List<ItemStack>) {
         inventoryNameRegex.match(title, "currentPage") { (currentpage) ->
@@ -68,6 +85,7 @@ object EquipmentWardrobeAPI {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
                 LoadoutStorage.updateCurrentEquipmentSlot(id)
+                EquipmentStorage.setEquipment(LoadoutStorage.equipment?.slots[id - 1])
                 foundCurrentSlot = true
             }
 
@@ -82,6 +100,7 @@ object EquipmentWardrobeAPI {
         }
 
         if (!foundCurrentSlot && isCurrentSlotInCurrentPage()) {
+            if (currentSlot != null && currentSlot != -1) clearPotentiallyDesyncedEquipment()
             LoadoutStorage.updateCurrentEquipmentSlot(null)
         }
     }
@@ -91,6 +110,19 @@ object EquipmentWardrobeAPI {
         val first = (currentPage - 1) * WARDROBE_SLOTS_PER_PAGE + 1
         val last = first + WARDROBE_SLOTS_PER_PAGE - 1
         return slot in first..last
+    }
+
+    fun clearPotentiallyDesyncedEquipment() {
+        val storedEquipmentUUIDs =
+            EquipmentSlot.entries.associateWith { equipmentSlot -> EquipmentAPI.islandEquipment[equipmentSlot]?.getData(DataTypes.UUID) }
+        val currentSetUUIDs =
+            EquipmentSlot.entries.associateWith { equipmentSlot -> currentSet[equipmentSlot]?.getData(DataTypes.UUID) }
+
+        currentSetUUIDs.forEach { (equipmentSlot, uuid) ->
+            if (uuid == storedEquipmentUUIDs[equipmentSlot]) {
+                EquipmentStorage.setEquipment(equipmentSlot, ItemStack.EMPTY)
+            }
+        }
     }
 
     @Subscription
@@ -128,6 +160,15 @@ object EquipmentWardrobeAPI {
             }
         }
     }
+
+    @Subscription
+    context(event: LoadoutChangeEvent)
+    fun onLoadoutSwitch() {
+        LoadoutStorage.equipment?.currentSlot = event.new?.equipment.value() ?: return
+        if (currentSlot != -1) EquipmentStorage.setEquipment(LoadoutStorage.equipment?.slots[currentSlot!!])
+        debugString(loadoutDebug) { "Setting equipment!" }
+    }
+
 
     private fun ItemStack.takeOrEmpty() = takeIf { it !in ItemTag.GLASS_PANES } ?: ItemStack.EMPTY
 

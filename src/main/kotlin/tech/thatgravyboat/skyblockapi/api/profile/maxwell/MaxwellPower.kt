@@ -59,5 +59,5 @@ object MaxwellPowers {
     val BUBBA = register("BUBBA_BLISTER", "Bubba")
     val SANGUISUGE = register("DISPLACED_LEECH", "Sanguisuge")
     val FROZEN = register("GLACITE_SHARD", "Frozen")
-
+    val BUTTERY = register("SUNFLOWER_BUTTER", "Buttery")
 }

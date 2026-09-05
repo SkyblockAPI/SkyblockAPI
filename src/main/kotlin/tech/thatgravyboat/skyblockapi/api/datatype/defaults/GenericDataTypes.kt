@@ -14,6 +14,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.*
+import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
 
@@ -108,6 +109,8 @@ object GenericDataTypes {
     val PARTY_HAT_COLOR: DataType<String> = DataType.simple("party_hat_color")
     val PARTY_HAT_YEAR: DataType<Int> = DataType.simple("party_hat_year")
 
+    val RABBIT_FACTION: DataType<String> = DataType.simple("faction_rabbit_id")
+
     val CULTIVATING_CROPS: DataType<Long> = DataType.simple("cultivating_crops", "farmed_cultivating")
     val TOOL_LEVEL: DataType<Int> = DataType.simple("tool_level", "levelable_lvl")
     val TOOL_EXP: DataType<Double> = DataType.simple("tool_exp", "levelable_exp")
@@ -141,8 +144,16 @@ object GenericDataTypes {
     }
     val JALAPENO_BOOK: DataType<Boolean> = DataType.simple("jalapeno_book", "jalapeno_count")
 
+    //? < 26.3 {
+    /*@Deprecated("Removed DataType", ReplaceWith("GenericDataTypes.BOOSTER_TIERS"))
     val BOOSTERS: DataType<List<String>> = DataType.of("boosters") {
         it.unsafeTag?.getList("boosters")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull()?.let { "${it}_BOOSTER" } } ?: emptyList()
+    }*///?}
+
+    val BOOSTER_TIERS: DataType<Map<String, Int>> = DataType.of("booster_tiers") {
+        it.unsafeTag?.getCompound("booster_tiers")?.getOrNull()?.entrySet()?.associate { (k, v) ->
+            k to v.asInt().getOrElse { 0 }
+        } ?: emptyMap()
     }
 
     val WET_BOOK: DataType<Int> = DataType.simple("wet_book", "wet_book_count")
@@ -158,6 +169,14 @@ object GenericDataTypes {
         val map = it.unsafeTag?.getCompoundOrEmpty("vinyls")?.takeUnless { it.isEmpty } ?: return@of null
         map.values().mapNotNull { it.asString()?.map(SkyBlockId::item)?.getOrNull() }
     }
+
+    val ETHERMERGE: DataType<Boolean> = DataType.simple("ethermerge")
+    val TUNED_TRANSMISSION: DataType<Int> = DataType.simple("tuned_transmission")
+
+    val SHINY: DataType<Boolean> = DataType.simple("is_shiny")
+
+    val DOWSING_MODE: DataType<String> = DataType.simple("dowsing_mode")
+    val HONEY_POT_USES: DataType<Int> = DataType.simple("honey_pot_uses")
 
     private fun getFishingRodPartDataType(name: String) = DataType.of(name) {
         val tag = it.unsafeTag?.getObjectOrNull(name) ?: return@of null

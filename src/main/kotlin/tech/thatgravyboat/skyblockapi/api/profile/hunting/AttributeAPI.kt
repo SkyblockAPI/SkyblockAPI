@@ -49,11 +49,11 @@ object AttributeAPI {
     private val inventoryGroup = RegexGroup.INVENTORY.group("attribute")
 
     private val attributeMenuGroup = inventoryGroup.group("attribute_menu")
-    private val attributeMenuRegex = attributeMenuGroup.create("title", "^Attribute Menu$")
+    val attributeMenuRegex = attributeMenuGroup.create("title", "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Attribute Menu$")
     private val syphonMoreRegex = attributeMenuGroup.create("more", "^Syphon (\\d+) more to level up!")
 
     private val huntingBoxGroup = inventoryGroup.group("hunting_box")
-    private val huntingBoxMenuRegex = huntingBoxGroup.create("title", "^Hunting Box$")
+    val huntingBoxMenuRegex = huntingBoxGroup.create("title", "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Hunting Box$")
     private val ownedRegex = huntingBoxGroup.create("owned", "^Owned: (?<amount>[\\d,.]+) Shards?$")
     private val attributeMaxedRegex = huntingBoxGroup.create("maxed", "^Attribute Maxed!$")
     private val levelRegex = huntingBoxGroup.create("level", "[IXV0-9]+")
@@ -80,7 +80,8 @@ object AttributeAPI {
 
     private val sentToHuntingBoxRegex = chatGroup.create("sent_to_hunting_box", "You sent (?<amount>an?|\\d+) (?<shard>.*? Shard)s? to your Hunting Box.")
 
-    private val fishingRegex = chatGroup.create("fishing", "^⛃ .*? CATCH! You caught a (?<name>.*) Shard!$")
+    private val fishingRegex = chatGroup.create("fishing", "^\uE025 .*? CATCH! You caught a (?<name>.*) Shard!$")
+    private val fishingMultipleRegex = chatGroup.create("fishing_multiple", "^\uE025 .*? CATCH! You caught (?<name>.*) Shard! x(?<amount>\\d+)$")
     //endregion
 
     private val deferredFusion = DeferredFusion()
@@ -124,7 +125,7 @@ object AttributeAPI {
     @OnlyOnSkyBlock
     fun huntingBox(event: InventoryChangeEvent) {
         if (!event.title.matches(huntingBoxMenuRegex)) return
-        if (event.isOnSides) return
+        if (!event.isInMainPart) return
 
         val id = event.item[DataTypes.SKYBLOCK_ID] ?: return
         val data = SkyBlockAttributesRepo.get(id.cleanId) ?: return
@@ -248,6 +249,12 @@ object AttributeAPI {
             val id = SkyBlockId.fromName(name, true) ?: return@match
 
             addOwnedAttributeAmount(id, 1)
+        }
+        fishingMultipleRegex.match(event.text, "name", "amount") { (name, amount) ->
+            val id = SkyBlockId.fromName(name, true) ?: return@match
+            val amount = amount.toIntValue()
+
+            addOwnedAttributeAmount(id, amount)
         }
     }
 

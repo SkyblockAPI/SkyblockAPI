@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.item.calculator.sources
 
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.*
@@ -61,7 +62,25 @@ internal object ArtOfWarCalculator : BoolDataTypeCalculator(DataTypes.ART_OF_WAR
 
 internal object ArtOfPeaceCalculator : BoolDataTypeCalculator(DataTypes.ART_OF_PEACE, "THE_ART_OF_PEACE")
 
-internal object BoostersCalculator : DataTypeListCalculator(DataTypes.BOOSTERS)
+internal object BoostersCalculator : Calculator {
+    override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? {
+        val boosters = stack.getData(DataTypes.BOOSTER_TIERS) ?: return null
+        if (boosters.isEmpty()) return null
+
+        return buildList {
+            for ((type, maxTier) in boosters) {
+                for (tier in 1..maxTier) {
+                    if (tier == 1) {
+                        add(ItemEntry("${type}_BOOSTER"))
+                    } else {
+                        val rarity = SkyBlockRarity.entries.getOrNull(tier - 1) ?: continue
+                        add(ItemEntry("${type}_BOOSTER_${rarity.name}"))
+                    }
+                }
+            }
+        }
+    }
+}
 
 internal object JalapenoBookCalculator : BoolDataTypeCalculator(DataTypes.JALAPENO_BOOK, "JALAPENO_BOOK")
 

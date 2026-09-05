@@ -89,6 +89,7 @@ object LoreDataTypes {
         val lines = rawLore?.asReversedIterator() ?: return null
         for (line in lines) {
             val rarityLine = (if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim()).removePrefix("SHINY ")
+            if (rarityLine.any(Char::isLowerCase)) continue
             val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.displayName.uppercase()) }
             if (rarity != null) {
                 return rarityLine to rarity
@@ -99,7 +100,9 @@ object LoreDataTypes {
 
     val RARITY: DataType<SkyBlockRarity> = DataType.of("rarity") { ctx, stack ->
         val tooltipStyleRarity = stack.get(DataComponents.TOOLTIP_STYLE)?.path
-        tooltipStyleRarity?.let { style -> SkyBlockRarity.fromNameOrNull(style) } ?: getRarityLine(stack, ctx)?.second ?: GenericDataTypes.PET_DATA.resolve(stack)?.rarity
+        getRarityLine(stack, ctx)?.second
+            ?: tooltipStyleRarity?.let { style -> SkyBlockRarity.fromNameOrNull(style) }
+            ?: GenericDataTypes.PET_DATA.resolve(stack)?.rarity
     }
 
     val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") { ctx, stack ->

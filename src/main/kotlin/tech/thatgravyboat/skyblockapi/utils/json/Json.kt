@@ -7,6 +7,9 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.JsonOps
 import net.minecraft.data.registries.VanillaRegistries
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtOps
+import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.RegistryOps
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -20,7 +23,8 @@ object Json {
     val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
 
     private val vanillaRegistry by lazy {
-        VanillaRegistries.createLookup()
+        //~ if >= 26.3 'createLookup' -> 'createWorldLookup'
+        VanillaRegistries.createWorldLookup()
     }
 
     internal val registry get() = McClient.connection?.registryAccess() ?: vanillaRegistry
@@ -28,6 +32,10 @@ object Json {
     internal val ops: DynamicOps<JsonElement> get() {
         return RegistryOps.create(JsonOps.INSTANCE, LenientHolderLookupAdapter(registry))
     }
+    internal val nbtOps: DynamicOps<Tag>
+        get() {
+            return RegistryOps.create(NbtOps.INSTANCE, LenientHolderLookupAdapter(registry))
+        }
 
     inline fun <reified T : Any> InputStream.readJson(): T =
         gson.fromJson(bufferedReader(), typeOf<T>().javaType)
@@ -39,6 +47,10 @@ object Json {
 
     fun <T : Any> T.toJson(codec: Codec<T>): JsonElement? {
         return codec.encodeStart(ops, this).result().getOrNull()
+    }
+
+    fun <T : Any> T.toNbt(codec: Codec<T>): Tag? {
+        return codec.encodeStart(nbtOps, this).result().getOrNull()
     }
 
     fun <T : Any> T.toJsonOrThrow(codec: Codec<T>): JsonElement {

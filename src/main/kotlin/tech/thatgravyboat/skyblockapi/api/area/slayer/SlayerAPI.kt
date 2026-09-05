@@ -26,6 +26,7 @@ object SlayerAPI {
     private val slayerBosses: WeakHashMap<Entity, SlayerInfo> = WeakHashMap()
     private val slayerGroup = RegexGroup.SCOREBOARD.group("slayer")
     private val chatSlayerGroup = RegexGroup.CHAT.group("slayer")
+    private val nameTagGroup = RegexGroup.ENTITY.group("slayer")
     private val slayerQuestRegex = slayerGroup.create("quest", "Slayer Quest")
     private val slayerTypeRegex = slayerGroup.create("type", "(?<type>[\\w ]+) (?<level>[MDCLXVI]+)")
     private val slayerAmountRegex = slayerGroup.create(
@@ -38,6 +39,7 @@ object SlayerAPI {
     )
     private val questStarted = chatSlayerGroup.create("started", "\\s+SLAYER QUEST STARTED!")
     private val questCompleted = chatSlayerGroup.create("completed", "\\s+SLAYER QUEST COMPLETE!")
+    private val nametagEndRegex = nameTagGroup.create("end", ".*[❤\uE010] [✯\uE01A]")
 
     var type: SlayerType? = null
         private set
@@ -131,7 +133,7 @@ object SlayerAPI {
         }
     }
 
-    private fun isSlayerLine(line: String) = line.startsWith("☠") || (line.endsWith("❤") || line.endsWith("❤ ✯"))
+    private fun isSlayerLine(line: String) = line.startsWith("☠") || nametagEndRegex.match(line)
 
     @Subscription
     fun onRegisterCommands(event: RegisterCommandsEvent) {

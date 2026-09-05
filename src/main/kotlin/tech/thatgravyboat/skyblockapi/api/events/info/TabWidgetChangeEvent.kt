@@ -56,8 +56,13 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     AGATHA_CONTEST("Agatha's Contest:"),
     STARBORN_TEMPLE("Starborn Temple:"),
     FOREST_WHISPERS("Forest Whispers: (?<amount>[\\dkmbKMB,.]+)"),
+    DESERT_WHISPERS("Desert Whispers: (?<amount>[\\dkmbKMB,.]+)"),
     MOONGLADE_BEACON("Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
+    TORRHUS_BEACON("Torrhus Beacon: (?<amount>[\\d,.]+) Stacks?"),
     SHARD_TRAPS("Shard Traps"),
+
+    // Hunting
+    SALTS("Salts:"),
 
     // Garden + Farming
     COMPOSTER("Composter:"),
@@ -69,7 +74,7 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     CROP_MILESTONES("Crop Milestones:"),
 
     // Crimson Isle
-    REPUTATION("(?<type>:Mage|Barbarian) Reputation:"),
+    REPUTATION("(?<type>Mage|Barbarian) Reputation:"),
     TROPHY_FISH("Trophy Fish:"),
     FACTION_QUESTS("Faction Quests:"),
 

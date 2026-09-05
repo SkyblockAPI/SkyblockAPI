@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe
 
-import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.ArmorWardrobeAPI as NewWardrobeAPI
+//? < 26.3 {
+/*import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.ArmorWardrobeAPI as NewWardrobeAPI
 
 @Deprecated("Replace with ArmorWardrobeAPI", ReplaceWith("ech.thatgravyboat.skyblockapi.api.profile.items.loadout.ArmorWardrobeAPI"))
 object WardrobeAPI {
@@ -13,4 +14,4 @@ object WardrobeAPI {
     val currentSlot: Int? get() = NewWardrobeAPI.currentSlot
 
     fun isCurrentSlotInCurrentPage() = NewWardrobeAPI.isCurrentSlotInCurrentPage()
-}
+}*///?}

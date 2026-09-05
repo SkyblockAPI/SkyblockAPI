@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
 import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
@@ -22,6 +23,10 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import java.util.function.BiFunction
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
@@ -162,25 +167,82 @@ object DebugItems {
 
 }
 
-@Suppress("CAST_NEVER_SUCCEEDS")
-fun ItemStack.getEntries(): Multimap<ItemDebugCategory, Component>? = (this as? ItemDebugAccessor)?.`skyblockapi$getEntries`()
+fun ItemDebugAccessor.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
+fun ItemStack.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
 
-@Suppress("CAST_NEVER_SUCCEEDS")
-fun ItemStack.addDebug(category: ItemDebugCategory, entry: () -> Component) {
+@OptIn(ExperimentalContracts::class)
+inline fun ItemDebugAttachable.addDebug(category: ItemDebugCategory, entry: () -> Component) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
     if (!DebugItems.isEnabled) return
-    (this as? ItemDebugAccessor)?.`skyblockapi$addEntry`(category, entry())
+    this.`skyblockapi$addEntry`(category, entry())
 }
-fun ItemStack.addStringDebug(category: ItemDebugCategory, entry: () -> String) = addDebug(category) { Component.literal(entry()) }
+
+@OptIn(ExperimentalContracts::class)
+@JvmName("categoryAddDebug")
+inline context(category: ItemDebugCategory) fun ItemDebugAttachable.addDebug(entry: () -> Component) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
+    addDebug(category, entry)
+}
+
+@OptIn(ExperimentalContracts::class)
+@JvmName("categoryAddDebugString")
+inline context(category: ItemDebugCategory) fun ItemDebugAttachable.addDebugString(entry: () -> String) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
+    addStringDebug(category, entry)
+}
+
+@OptIn(ExperimentalContracts::class)
+inline fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory, entry: () -> String) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
+    addDebug(category) { Component.literal(entry()) }
+}
+
+
+@JvmName("addDebug")
+@Deprecated(message = "Use interface method instead!")
+fun ItemStack.addDebug0(category: ItemDebugCategory, entry: () -> Component) {
+    if (!DebugItems.isEnabled) return
+    this.`skyblockapi$addEntry`(category, entry())
+}
+
+@JvmName("addStringDebug")
+@Deprecated(message = "Use interface method instead!")
+fun ItemStack.addStringDebug0(category: ItemDebugCategory, entry: () -> String) = addDebug(category) { Component.literal(entry()) }
 
 @JvmName("categoryAddDebug")
-context(category: ItemDebugCategory) fun ItemStack.addDebug(entry: () -> Component) = addDebug(category, entry)
+@Deprecated(message = "Use interface method instead!")
+context(category: ItemDebugCategory) fun ItemStack.addDebug0(entry: () -> Component) = addDebug(category, entry)
 
+@Deprecated(message = "Use interface method instead!")
 @JvmName("categoryAddDebugString")
-context(category: ItemDebugCategory) fun ItemStack.addDebugString(entry: () -> String) = addStringDebug(category, entry)
+context(category: ItemDebugCategory) fun ItemStack.addDebugString0(entry: () -> String) = addStringDebug(category, entry)
 
-interface ItemDebugCategory : ComponentViewerCategory
 
-interface ItemDebugAccessor {
+fun interface ItemDebugAttachable {
+    @Suppress("FunctionName")
     fun `skyblockapi$addEntry`(category: ItemDebugCategory, entry: Component)
+}
+
+fun interface ItemDebugCategory : ComponentViewerCategory {
+    companion object {
+        val fork: BiFunction<ItemDebugCategory, String, ItemDebugCategory> = Util.memoize { parent, name ->
+            return@memoize ItemDebugCategory { "$parent/$name" }
+        }
+    }
+
+    fun fork(name: String) = fork.apply(this, name)
+}
+
+interface ItemDebugAccessor : ItemDebugAttachable {
+    override fun `skyblockapi$addEntry`(category: ItemDebugCategory, entry: Component)
+    @Suppress("FunctionName")
     fun `skyblockapi$getEntries`(): Multimap<ItemDebugCategory, Component>?
 }
