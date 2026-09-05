@@ -77,11 +77,13 @@ fun createCommandClass(parameters: Int, isLast: Boolean): String = buildString {
         indent(1).append("inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, crossinline builder: CommandBuilder0<CommandSender>.(CommandBuildContext) -> Unit)")
         appendLine(": Nothing = TODO(\"Max depth reached!\")")
     } else {
-        indent(1).appendLine("inline fun <reified Argument> then(vararg name: String, argument: ArgumentType<Argument>, crossinline builder: CommandBuilder${parameters + 1}<CommandSender$Generics, Argument>.(CommandBuildContext) -> Unit) = name.forEach { it(argument, builder) }")
+        indent(1).appendLine("@JvmOverloads")
+        indent(1).appendLine("inline fun <reified Argument> then(vararg name: String, argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null, crossinline builder: CommandBuilder${parameters + 1}<CommandSender$Generics, Argument>.(CommandBuildContext) -> Unit) = name.forEach { it(argument, suggestionProvider, builder) }")
 
         appendLine()
 
-        indent(1).append("inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, crossinline builder: CommandBuilder${parameters + 1}<CommandSender$Generics, Argument>.(CommandBuildContext) -> Unit)")
+        indent(1).appendLine("@JvmOverloads")
+        indent(1).append("inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null, crossinline builder: CommandBuilder${parameters + 1}<CommandSender$Generics, Argument>.(CommandBuildContext) -> Unit)")
 
         appendLine("= this@$Self.argument(this, factory = {")
         indent(2).append("$Self(this, context")
@@ -97,11 +99,15 @@ fun createCommandClass(parameters: Int, isLast: Boolean): String = buildString {
             indent(3).appendLine("${it}ArgumentBinding,")
         }
         indent(3).appendLine("CommandArgumentBinding(this, Argument::class.java),")
-        indent(3).appendLine("builder = RequiredArgumentBuilder.argument(this, argument),")
+        indent(3).appendLine("builder = RequiredArgumentBuilder.argument<CommandSender, Argument>(this, argument).apply {")
+        indent(4).appendLine("if (suggestionProvider != null) suggests(suggestionProvider)")
+        indent(3).appendLine("},")
         indent(2).appendLine(").apply { builder(context) }")
         indent(1).appendLine("}")
     }
 
+    appendLine()
+    indent(1).append("infix fun String.executes(callback: (${Generics.drop(2)}) -> Unit) = this { execute(callback) }")
     appendLine()
 
     indent(1).appendLine("fun execute(callback: (${Generics.drop(2)}) -> Unit) {")
@@ -166,6 +172,7 @@ fun createCommandFile(maxArguments: Int) = buildString {
         import com.mojang.brigadier.builder.LiteralArgumentBuilder
         import com.mojang.brigadier.builder.RequiredArgumentBuilder
         import com.mojang.brigadier.context.CommandContext
+        import com.mojang.brigadier.suggestion.SuggestionProvider
         import net.minecraft.commands.CommandBuildContext
 
         @DslMarker
@@ -208,8 +215,14 @@ fun createCommandFile(maxArguments: Int) = buildString {
         data class CommandArgumentBinding<ArgumentType>(val name: String, val argument: Class<ArgumentType>)
 
         fun <CommandSender> CommandDispatcher<CommandSender>.command(name: String, buildContext: CommandBuildContext, init: CommandBuilder0<CommandSender>.() -> Unit) {
-            val builder = CommandBuilder0<CommandSender>(name, buildContext)
-            builder.init()
+            val builder = CommandBuilder0<CommandSender>(name.substringBefore(' '), buildContext)
+            val split = name.substringAfter(' ')
+            if (split.isNotEmpty()) {
+                builder.then(split, builder = init)
+            } else {
+                builder.init()
+            }
+            
             builder.register(this)
         }
     """.trimIndent().let(::appendLine)

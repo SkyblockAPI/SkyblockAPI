@@ -58,6 +58,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
             //? < 26.3
             //RepoStatusEvent(status).post()
             RepoEvent.Status(status).post()
+            RepoEvent.Reload(status).post()
         }
         MeowddingItemDfu.load()
     }

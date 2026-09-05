@@ -1,8 +1,14 @@
 package tech.thatgravyboat.skyblockapi.api.profile.hunting
 
+import com.google.gson.JsonObject
+import com.mojang.brigadier.arguments.StringArgumentType
+import com.mojang.brigadier.suggestion.SuggestionProvider
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.data.stored.AttributeStorage
@@ -12,14 +18,24 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.item.replaceVisually
+import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
+import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
+import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
+import tech.thatgravyboat.skyblockapi.impl.suggestion.LayeredSuggestionProvider
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
+import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugComponent
+import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.codecs.IncludedCodecs
+import tech.thatgravyboat.skyblockapi.utils.command.mapped
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -30,12 +46,16 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import java.util.concurrent.CompletableFuture
 import kotlin.math.max
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Instant
 
 @Module
-object AttributeAPI {
+data object AttributeAPI : ItemDebugCategory {
 
-    private val isDebugEnabled by debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
+    val debugToggle = debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
+    private val isDebugEnabled by debugToggle
 
     private val attributeRarities = SkyBlockRarity.COMMON.rangeTo(SkyBlockRarity.LEGENDARY)
 
@@ -65,7 +85,8 @@ object AttributeAPI {
     private val chatGroup = RegexGroup.CHAT.group("attribute")
 
     private val trapGroup = chatGroup.group("trap")
-    private val foundShardRegex = trapGroup.create("caught", "^(?:You caught|LOOT SHARE You received) (?<amount>an?|x?\\d+) (?<name>.*?) Shards?(?: for assisting \\w+)?!$")
+    private val foundShardRegex =
+        trapGroup.create("caught", "^(?:You caught|LOOT SHARE You received) (?<amount>an?|x?\\d+) (?<name>.*?) Shards?(?: for assisting \\w+)?!$")
 
     private val fusionChatGroup = chatGroup.group("fusion")
     private val fusionObtainedRegex = fusionChatGroup.create("obtained", "FUSION! You obtained (?:an? )?(.*?)(?: (x\\d+))?!.*")
@@ -76,7 +97,8 @@ object AttributeAPI {
 
     private val saltGroup = chatGroup.group("salt")
     private val saltSingularRegex = saltGroup.create("singular", "(?:CHARM|SALT|NAGA) You charmed an? (?<name>.*?) and captured its Shard\\.")
-    private val saltMultipleRegex = saltGroup.create("multiple", "(?:CHARM|SALT|NAGA) You charmed an? (?<name>.*?) and captured (?<amount>\\d+) Shards from it\\.")
+    private val saltMultipleRegex =
+        saltGroup.create("multiple", "(?:CHARM|SALT|NAGA) You charmed an? (?<name>.*?) and captured (?<amount>\\d+) Shards from it\\.")
 
     private val sentToHuntingBoxRegex = chatGroup.create("sent_to_hunting_box", "You sent (?<amount>an?|\\d+) (?<shard>.*? Shard)s? to your Hunting Box.")
 
@@ -117,6 +139,7 @@ object AttributeAPI {
 
             attributeData.calculateSyphoned(level, syphonMore)
         }
+        attributeData.updated()
         AttributeStorage.save()
     }
 
@@ -269,23 +292,16 @@ object AttributeAPI {
         } else {
             this.syphoned = nextLevelSyphoned - syphonMore
         }
+        this.updated()
         AttributeStorage.save()
     }
 
     private fun ItemStack.debugInfo(attributeData: AttributeData) {
-        if (!isDebugEnabled) return
-        replaceVisually {
-            copyFrom(this@debugInfo)
-            tooltip {
-                lines().addAll(this@debugInfo.getLore())
-                space()
-                add("Syphoned: ${attributeData.syphoned}")
-                add("Level: ${attributeData.level}")
-                add("Owned: ${attributeData.owned}")
-                add("Rarity: ${attributeData.rarity}")
-                add("Unlocked: ${attributeData.unlocked}")
-            }
-        }
+        addDebugString { "Syphoned: ${attributeData.syphoned}" }
+        addDebugString { "Level: ${attributeData.level}" }
+        addDebugString { "Owned: ${attributeData.owned}" }
+        addDebugString { "Rarity: ${attributeData.rarity}" }
+        addDebugString { "Unlocked: ${attributeData.unlocked}" }
     }
 
     private fun SkyBlockId.toAttributeData() = AttributeData(
@@ -293,34 +309,42 @@ object AttributeAPI {
     )
 
     internal fun addOwnedAttributeAmount(id: SkyBlockId, amount: Int) {
-        if (isDebugEnabled) {
-            Text.debug("Owned ") {
+        debugComponent(debugToggle) {
+            Text.of("Owned ") {
                 append(id.toItem().hoverName)
                 if (amount >= 0) {
                     append(" +$amount") { this.color = TextColor.GREEN }
                 } else {
                     append(" $amount") { this.color = TextColor.RED }
                 }
-            }.send()
+            }
         }
-        getData(id).owned += amount
+
+        getData(id).apply {
+            owned += amount
+            updated()
+        }
         AttributeStorage.save()
     }
 
     internal fun removeOwnedAttributeAmount(id: SkyBlockId, amount: Int) = addOwnedAttributeAmount(id, -amount)
 
     internal fun addSyphonedAttributeAmount(id: SkyBlockId, amount: Int) {
-        if (isDebugEnabled) {
-            Text.debug("Syphoned ") {
+        debugComponent(debugToggle) {
+            Text.of("Syphoned ") {
                 append(id.toItem().hoverName)
                 if (amount >= 0) {
                     append(" +$amount") { this.color = TextColor.GREEN }
                 } else {
                     append(" $amount") { this.color = TextColor.RED }
                 }
-            }.send()
+            }
         }
-        getData(id).syphoned += amount
+
+        getData(id).apply {
+            syphoned += amount
+            updated()
+        }
         AttributeStorage.save()
     }
 
@@ -331,17 +355,148 @@ object AttributeAPI {
         AttributeStorage.save()
     }
 
+    private fun resetSyphonedAttributeAmount() {
+        for (key in _attributeMap.keys) {
+            _attributeMap[key]?.syphoned = 0
+        }
+        AttributeStorage.save()
+    }
+
     @Subscription
     fun onCommandRegister(event: RegisterCommandsEvent) {
-        event.register("sbapi attributes") {
-            then("reset") {
-                then("owned") {
-                    callback {
-                        resetOwnedAttributeAmounts()
-                        Text.debug("Reset Owned Shards!").send()
-                    }
+        event.command("sbapi attributes") {
+            "reset *" {
+                "owned" executes {
+                    resetOwnedAttributeAmounts()
+                    Text.debug("Reset Owned Shards!").send()
+                }
+
+                "syphoned" executes {
+                    resetSyphonedAttributeAmount()
+                    Text.debug("Reset Syphoned Shards!").send()
+                }
+                execute {
+                    _attributeMap.clear()
+                    Text.debug("Reset All Shards!").send()
+
                 }
             }
+            "reset id"(
+                StringArgumentType.string().mapped { id ->
+                    if (!RepoAPI.isInitialized()) return@mapped null
+                    RepoAPI.attributes().attributes().values.find {
+                        listOf(it.id, it.shardId, it.attributeId).any { it.equals(id, true) }
+                    }
+                },
+                SuggestionProvider<FabricClientCommandSource> { _, builder ->
+                    if (!RepoAPI.isInitialized()) return@SuggestionProvider builder.buildFuture()
+                    SharedSuggestionProvider.suggest(
+                        buildSet {
+                            for (value in _attributeMap.keys.mapNotNull { SkyBlockAttributesRepo.get(it.cleanId) }) {
+                                add(value.id.lowercase())
+                                add(value.shardId.lowercase())
+                                add(value.attributeId.lowercase())
+                            }
+                        },
+                        builder,
+                    )
+                    return@SuggestionProvider builder.buildFuture()
+                },
+            ) {
+                "owned" executes {
+                    if (it == null) {
+                        Text.debug("Unknown shard!").send()
+                        return@executes
+                    }
+                    getData(SkyBlockId.attribute(it.attributeId)).owned = 0
+                    Text.debug("Reset owned ${it.shardName} Shard!").send()
+                }
+                "syphoned" executes {
+                    if (it == null) {
+                        Text.debug("Unknown shard!").send()
+                        return@executes
+                    }
+                    getData(SkyBlockId.attribute(it.attributeId)).syphoned = 0
+                    Text.debug("Reset syphoned ${it.name} Attribute!").send()
+                }
+                execute {
+                    if (it == null) {
+                        Text.debug("Unknown shard!").send()
+                        return@execute
+                    }
+                    _attributeMap.remove(SkyBlockId.attribute(it.attributeId))
+                    Text.debug("Reset ${it.name} Attribute!").send()
+                }
+            }
+        }
+    }
+
+    init {
+        println("meow")
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    @OptIn(SkyBlockPvRequired::class)
+    context(event: SkyBlockPvOpenedEvent)
+    fun udpateAttributes() {
+        var hasLoadedAny = false
+
+        val owned = this._attributeMap.keys
+
+        val used = mutableSetOf<SkyBlockId>()
+
+        val stacks = event.member["attributes"]?.asJsonObject?.get("stacks")?.asMap { key, element ->
+            key to element.asInt(0)
+        } ?: emptyMap()
+
+        stacks.forEach { (key, amount) ->
+            val id = SkyBlockId.attribute(SkyBlockAttributesRepo.get(key)?.attributeId() ?: return@forEach)
+            used.add(id)
+            val data = getData(id)
+            if (data.syphoned != amount && data.lastUpdated.since() >= 5.minutes) {
+                debugComponent(debugToggle) {
+                    Text.of("Set syphoned from pv ") {
+                        append(id.toItem().hoverName)
+                        append(" +$amount") { this.color = TextColor.GREEN }
+                    }
+                }
+                data.syphoned = amount
+                data.updated()
+                hasLoadedAny = true
+            }
+        }
+
+        val ownedArray = event.member["shards"]?.asJsonObject?.get("owned")?.asJsonArray
+        ownedArray?.filterIsInstance<JsonObject>()?.forEach {
+            val type = it["type"]?.asString?.lowercase() ?: return@forEach
+            val amount = it["amount_owned"].asInt(0)
+
+
+            val id = SkyBlockId.attribute(SkyBlockAttributesRepo.get(type)?.attributeId() ?: return@forEach)
+            used.add(id)
+            val data = getData(id)
+            if (data.owned != amount && data.lastUpdated.since() >= 5.minutes) {
+                debugComponent(debugToggle) {
+                    Text.of("Set owned from pv ") {
+                        append(id.toItem().hoverName)
+                        append(" +$amount") { this.color = TextColor.GREEN }
+                    }
+                }
+
+                data.owned = amount
+                data.updated()
+                hasLoadedAny = true
+            }
+        }
+
+        if (hasLoadedAny || used.isNotEmpty()) {
+            owned.removeAll {
+                !used.contains(it)
+            }
+
+            PvLoadingHelper.markLoaded(LoadedData.ATTRIBUTES)
+            AttributeStorage.save()
         }
     }
 
@@ -378,7 +533,12 @@ data class AttributeData(
     var owned: Int = 0,
     var syphoned: Int = 0,
     var rarity: SkyBlockRarity?,
+    var lastUpdated: Instant = Instant.DISTANT_PAST,
 ) {
+    fun updated() {
+        lastUpdated = currentInstant()
+    }
+
     val level: Int get() = AttributeAPI.attributeLevelData[rarity]?.indexOfLast { it <= syphoned } ?: -1
     val unlocked: Boolean get() = syphoned >= 1
 }

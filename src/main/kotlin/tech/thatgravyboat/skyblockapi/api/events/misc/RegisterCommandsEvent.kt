@@ -9,18 +9,26 @@ import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.suggestion.SuggestionProvider
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.SharedSuggestionProvider
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+import tech.thatgravyboat.skyblockapi.utils.command.dsl.CommandBuilder0
+import tech.thatgravyboat.skyblockapi.utils.command.dsl.command
 
 typealias LiteralCommandBuilder = CommandBuilder<LiteralArgumentBuilder<FabricClientCommandSource>>
 typealias ArgumentCommandBuilder<T> = CommandBuilder<RequiredArgumentBuilder<FabricClientCommandSource, T>>
 
 
-class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClientCommandSource>) : SkyBlockEvent() {
+class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClientCommandSource>, val buildContext: CommandBuildContext?) : SkyBlockEvent() {
+
+    @Deprecated("Also provide build context")
+    constructor(dispatcher: CommandDispatcher<FabricClientCommandSource>) : this(dispatcher, null)
 
     fun register(command: LiteralArgumentBuilder<FabricClientCommandSource>) {
         dispatcher.register(command)
     }
+
+    fun command(name: String, init: CommandBuilder0<FabricClientCommandSource>.() -> Unit) = dispatcher.command(name, buildContext!!, init)
 
     fun register(command: String, builder: LiteralCommandBuilder.() -> Unit) {
         if (command.contains(' ')) {

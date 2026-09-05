@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import net.minecraft.world.item.ItemStack
+import java.util.function.Predicate
 
 /**
  * Splits a list into chunks based on a predicate.
@@ -88,3 +89,11 @@ fun <K, V> Map<K, V?>.filterValuesNotNull(): Map<K, V> = this.filterValues { it 
 
 @Suppress("UNCHECKED_CAST")
 fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null } as Map<K, V>
+
+inline fun <Key> MutableMap<Key, *>.removeAll(crossinline predicate: (Key) -> Boolean) {
+    for (key in this.keys.toSet()) {
+        if (predicate(key)) {
+            this.remove(key)
+        }
+    }
+}
