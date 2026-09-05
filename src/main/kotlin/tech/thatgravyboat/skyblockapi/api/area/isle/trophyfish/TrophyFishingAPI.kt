@@ -18,9 +18,6 @@ import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import tech.thatgravyboat.skyblockapi.utils.text.CommonText
-import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import kotlin.math.max
 
 @Module
@@ -47,12 +44,6 @@ object TrophyFishingAPI {
             val fishTier = TrophyTier.valueOf(tier)
             val type = TrophyFishType.getByDisplayName(type) ?: return@match
 
-            Text.of {
-                append("Caught: ")
-                append(type.displayName)
-                append(CommonText.SPACE)
-                append(fishTier.nameSuffix)
-            }.sendWithPrefix()
             TrophyFishStorage.addCaught(type, fishTier)
             TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name)).post()
             TrophyCaughtEvent.Fish(type, fishTier).post()
@@ -77,14 +68,6 @@ object TrophyFishingAPI {
                 caught[tier] = amount.toInt()
             }
         }
-        Text.of {
-            append(byName.displayName)
-            caught.forEach { (tier, tierAmount) ->
-                append(CommonText.SPACE)
-                append(tier.nameSuffix)
-                append(": $tierAmount")
-            }
-        }.sendWithPrefix()
         TrophyFishStorage.setAmounts(byName, caught)
     }
 
