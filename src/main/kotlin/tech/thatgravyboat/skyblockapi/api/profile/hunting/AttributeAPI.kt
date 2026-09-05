@@ -21,7 +21,6 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.item.replaceVisually
 import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
@@ -29,10 +28,8 @@ import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
-import tech.thatgravyboat.skyblockapi.impl.suggestion.LayeredSuggestionProvider
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugComponent
-import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.codecs.IncludedCodecs
 import tech.thatgravyboat.skyblockapi.utils.command.mapped
@@ -46,7 +43,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
-import java.util.concurrent.CompletableFuture
 import kotlin.math.max
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
@@ -429,10 +425,6 @@ data object AttributeAPI : ItemDebugCategory {
                 }
             }
         }
-    }
-
-    init {
-        println("meow")
     }
 
     @Subscription
