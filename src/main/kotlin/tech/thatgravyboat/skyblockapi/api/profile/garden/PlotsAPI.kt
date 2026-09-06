@@ -55,12 +55,12 @@ object PlotAPI {
 
     private val deskPestsRegex = inventoryGroup.create(
         "pests",
-        "ൠ This plot has (?<amount>\\d+) ൠ Pests?!",
+        "[ൠ\uE07F\uE018] This plot has (?<amount>\\d+) [ൠ\uE07F\uE018] Pests?!",
     )
 
     private val scoreboardPestAmountRegex = scoreboardGroup.create(
         "pest_amount",
-        " ⏣ (?<text>The Garden) ൠ x(?<amount>\\d+)",
+        " ⏣ (?<text>The Garden) [ൠ\uE07F\uE018] x(?<amount>\\d+)",
     ).toComponentRegex()
 
     private val scoreboardNoPestsRegex = scoreboardGroup.create(
@@ -70,7 +70,7 @@ object PlotAPI {
 
     private val scoreboardPlotPestAmountRegex = scoreboardGroup.create(
         "plot_pest_amount",
-        " {3}Plot - (?<name>.+) ൠ x(?<amount>\\d+)",
+        " {3}Plot - (?<name>.+) [ൠ\uE07F\uE018] x(?<amount>\\d+)",
     )
 
     private val tablistAliveRegex = tablistGroup.create(
@@ -85,15 +85,15 @@ object PlotAPI {
 
     private val chatSingularSpawnRegex = chatGroup.create(
         "singular_spawn",
-        "[^:]*! A ൠ Pest has appeared in Plot - (?<name>.+)!",
+        "[^:]*! A [ൠ\uE07F\uE018] Pest has appeared in Plot - (?<name>.+)!",
     )
     private val chatPluralSpawnRegex = chatGroup.create(
         "plural_spawn",
-        "[^:]+! (?<amount>\\d+) ൠ Pests? have spawned in Plot - (?<name>.+)!",
+        "[^:]+! (?<amount>\\d+) [ൠ\uE07F\uE018] Pests? have spawned in Plot - (?<name>.+)!",
     )
     private val chatOfflineSpawnRegex = chatGroup.create(
         "offline",
-        "[^:]+! While you were offline, ൠ Pests? spawned in Plots (?<plots>.*)!",
+        "[^:]+! While you were offline, [ൠ\uE07F\uE018] Pests? spawned in Plots (?<plots>.*)!",
     )
 
     //endregion

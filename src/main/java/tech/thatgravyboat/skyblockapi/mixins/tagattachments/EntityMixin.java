@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.entity.ComponentAttachEvent;
+import tech.thatgravyboat.skyblockapi.api.events.entity.EntityEvents;
 import tech.thatgravyboat.skyblockapi.api.events.entity.ListenForNameChange;
 import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent;
 import tech.thatgravyboat.skyblockapi.helpers.EntityAttachmentAccessor;
@@ -83,6 +84,7 @@ public abstract class EntityMixin implements ListenForNameChange, EntityAttachme
         if (!autoAttach) {
             return;
         }
+        if (EntityEvents.remainingPerTick-- <= 0) return;
 
         if (cooldown-- < 0) {
             skyblockapi$attachToClosest();

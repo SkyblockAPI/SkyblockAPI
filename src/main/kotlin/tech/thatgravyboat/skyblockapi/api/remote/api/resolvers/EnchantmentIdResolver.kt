@@ -91,7 +91,7 @@ internal data object BazaarEnchantmentIdResolver : InventoryIdResolver {
 
 @IdResolvers
 internal data object EnchantmentGuideIdResolver : InventoryIdResolver, ItemDebugCategory {
-    private val titleRegex = ".* Enchantments Guide".toRegex()
+    private val titleRegex = ".* Enchantments? Guide".toRegex()
 
     override fun <T : AbstractContainerMenu> ItemStack.isApplicable(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): Boolean {
         if (item != Items.ENCHANTED_BOOK) return false

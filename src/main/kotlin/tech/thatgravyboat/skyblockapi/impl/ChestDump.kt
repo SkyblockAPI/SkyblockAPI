@@ -83,7 +83,9 @@ object ChestDump {
                 }
 
                 override fun slotClicked(slot: Slot?, slotId: Int, buttonNum: Int, containerInput: ContainerInput?) {
+                    val slot = slot ?: return
                     SkyBlockAPI.info("<ChestDump> Clicked slot $slotId with button $buttonNum and click type $containerInput")
+                    SlotClickEvent(slot.item, slot, buttonNum, this).post()
                 }
 
                 override fun handleSlotStateChanged(slotId: Int, containerId: Int, newState: Boolean) {

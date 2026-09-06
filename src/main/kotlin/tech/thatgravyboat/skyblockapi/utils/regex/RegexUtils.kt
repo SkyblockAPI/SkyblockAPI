@@ -16,6 +16,12 @@ object RegexUtils {
         return input.any { match(it, groups = groups, action = action) }
     }
 
+    fun Regex.forEachMatch(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
+        var foundMatch = false
+        input.forEach { if (match(it, groups = groups, action = action)) foundMatch = true }
+        return foundMatch
+    }
+
     fun Regex.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         val match = find(input)
         match?.let { action(Destructured(it, *groups)) }

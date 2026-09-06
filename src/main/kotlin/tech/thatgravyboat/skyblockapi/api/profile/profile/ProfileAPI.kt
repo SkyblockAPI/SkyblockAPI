@@ -5,11 +5,14 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.data.stored.ProfileStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyNonGuest
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
@@ -20,16 +23,25 @@ import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.*
 
 @Module
 object ProfileAPI {
+
+    private val tablistGroup = RegexGroup.TABLIST.group("profile")
+
+    private val coopRegex = tablistGroup.create(
+        "coop",
+        "\\s+ Coop \\((?<amount>\\d+)\\)",
+    )
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("profile")
 
@@ -57,7 +69,7 @@ object ProfileAPI {
 
     private val profileIdRegex = chatGroup.create(
         "uuid",
-        "^Profile ID: (?<id>\\S+)"
+        "^Profile ID: (?<id>\\S+)",
     )
 
     private val levelColors = mapOf(
@@ -160,6 +172,16 @@ object ProfileAPI {
                 val bingoLevel = type.style.color?.let { SkyBlockRarity.fromColorOrNull(it.value) }
                 ProfileStorage.setBingoRank(bingoLevel)
             }
+        }
+    }
+
+    @Subscription
+    @OnlyIn(SkyBlockIsland.PRIVATE_ISLAND)
+    @OnlyNonGuest
+    fun onTablistUpdate(event: TabListChangeEvent) {
+        val line = event.new.firstOrNull()?.firstOrNull()?.stripped ?: return
+        coopRegex.match(line) {
+            ProfileStorage.setCoop(true)
         }
     }
 

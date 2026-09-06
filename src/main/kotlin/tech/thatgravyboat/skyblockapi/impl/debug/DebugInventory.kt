@@ -3,6 +3,8 @@ package tech.thatgravyboat.skyblockapi.impl.debug
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
+import net.minecraft.nbt.NbtIo
+import net.minecraft.nbt.NbtUtils
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.world.inventory.Slot
@@ -20,6 +22,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.platform.drawString
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toNbt
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
@@ -101,7 +104,14 @@ internal object DebugInventory {
     ) {
         RAW_ITEM_DATA(
             InputConstants.KEY_R,
-            { it.item.toJson(ItemStack.CODEC).toPrettyString() },
+            {
+                if (McScreen.isShiftDown) {
+                    NbtUtils.structureToSnbt(it.item.toNbt(ItemStack.CODEC)?.asCompound()?.get())
+                } else {
+                    it.item.toJson(ItemStack.CODEC).toPrettyString()
+                }
+            },
+            "Hold Shift for snbt",
         ),
         SKIN(
             InputConstants.KEY_S,
@@ -148,7 +158,9 @@ internal object DebugInventory {
         ;
 
         val title = name.toTitleCase()
-        val keyName: Component = InputConstants.Type.KEYSYM.getOrCreate(key).displayName
+
+        //~ if >= 26.3 'KEYSYM' -> 'KEYBOARD'
+        val keyName: Component = InputConstants.Type.KEYBOARD.getOrCreate(key).displayName
 
         fun initCopy(slot: Slot): Boolean {
             val data = copy(slot) ?: return false

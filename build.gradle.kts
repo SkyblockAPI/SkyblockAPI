@@ -1,6 +1,5 @@
 @file:OptIn(ExperimentalAbiValidation::class)
 
-import me.owdding.repo.resources.CompactingResourcesExtension
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -13,6 +12,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("versioned-catalogues")
     id("item-data")
+    id("commands")
     id("idea")
 }
 
@@ -96,7 +96,7 @@ tasks.withType<ProcessResources>().configureEach {
 
 tasks.named<ProcessResources>("processResources") {
     val range = if (versionedCatalog.versions.has("minecraft.range")) {
-        versionedCatalog.versions.get("minecraft.range").toString()
+        versionedCatalog.versions["minecraft.range"].toString()
     } else {
         val start = versionedCatalog.versions.getOrFallback("minecraft.start", "minecraft")
         val end = versionedCatalog.versions.getOrFallback("minecraft.end", "minecraft")
@@ -106,9 +106,10 @@ tasks.named<ProcessResources>("processResources") {
     val replacements = mapOf(
         "version" to project.version,
         "minecraft_range" to range,
-        "fabric_lang_kotlin" to versionedCatalog.versions.get("fabric.language.kotlin"),
-        "hypixel_mod_api" to versionedCatalog.versions.get("hypixel.modapi.fabric"),
-        "fabric_loader" to versionedCatalog.versions.get("fabric.loader"),
+        "fabric_lang_kotlin" to versionedCatalog.versions["fabric.language.kotlin"],
+        "hypixel_mod_api" to versionedCatalog.versions["hypixel.modapi.fabric"],
+        "fabric_loader" to versionedCatalog.versions["fabric.loader"],
+        "repo_lib" to versionedCatalog.versions["skyblockapi.repolib"],
     )
     inputs.properties(replacements)
 

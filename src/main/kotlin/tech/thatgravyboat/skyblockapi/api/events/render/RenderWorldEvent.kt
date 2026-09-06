@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.events.render
 
 import com.mojang.blaze3d.vertex.PoseStack
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents
 import net.minecraft.client.renderer.SubmitNodeCollector
 //? <= 26.1
 //import net.minecraft.client.renderer.MultiBufferSource
@@ -55,6 +56,23 @@ sealed class RenderWorldEvent(
         cameraPosition,
         cameraRotation,
         partialTicks,
+    )
+
+    class CollectSubmits(
+        poseStack: PoseStack,
+        //? <= 26.1
+        //buffer: MultiBufferSource,
+        submitNodeCollector: SubmitNodeCollector,
+        cameraPosition: Vec3,
+        cameraRotation: Quaternionf,
+    ) : RenderWorldEvent(
+        poseStack,
+        //? <= 26.1
+        //buffer,
+        submitNodeCollector,
+        cameraPosition,
+        cameraRotation,
+        0f,
     )
 
     fun pushPop(action: PoseStack.() -> Unit) = this.poseStack.pushPop(action)

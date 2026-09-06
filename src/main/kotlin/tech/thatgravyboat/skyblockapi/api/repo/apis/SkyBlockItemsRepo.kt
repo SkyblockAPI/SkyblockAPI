@@ -17,12 +17,12 @@ object SkyBlockItemsRepo : RepoItemCache<String>("Items") {
             val json = entry.value.getPath("['components'].['minecraft:custom_name'].['text']") ?: return@mapNotNull null
             val text = Text.of(json.asString("")).stripped.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
             // neu doesn't store them with : like hypixel does, we however use the hypixel format for eas of use
-            text.lowercase() to entry.key.uppercase().replace("-", ":")
+            text.lowercase() to entry.key.uppercase()
         }.toMap()
     }
 
     override fun create(key: String): LazyItemStack? {
-        val id = key.uppercase().replace(":", "-").takeUnless { it == "MUSHROOM_COLLECTION" } ?: "RED_MUSHROOM"
+        val id = key.uppercase().takeUnless { it == "MUSHROOM_COLLECTION" } ?: "RED_MUSHROOM"
         return RepoAPI.items().getItem(id)?.let(::LazyItemStack)
     }
 

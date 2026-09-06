@@ -5,6 +5,7 @@ import net.minecraft.util.TriState
 //import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
+import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.extentions.toScreamingSnakeCase
 
 @ConsistentCopyVisibility
@@ -15,16 +16,27 @@ data class MayorCandidate internal constructor(
     val isSpecial: Boolean,
 ) {
     val activePerks: Collection<MayorPerk> get() = perks.filter { it.active }
-    val isActive: Boolean get() {
-        if (ElectionAPI.mayor == this || ElectionAPI.minister == this) return true
-        val (jerryCandidate, time) = ElectionAPI.currentJerryCandidate ?: return false
-        return jerryCandidate == this && time.isInFuture()
-    }
+    val isActive: Boolean
+        get() {
+            if (ElectionAPI.mayor == this || ElectionAPI.minister == this) return true
+            val (jerryCandidate, time) = ElectionAPI.currentJerryCandidate ?: return false
+            return jerryCandidate == this && time.isInFuture()
+        }
 
     internal fun addAllPerks(includeNonPerkapocalypse: Boolean = true): MayorCandidate = apply {
         perks.forEach { if (includeNonPerkapocalypse || it.perkapocalypse) it.active = true }
     }
+
     internal fun clearAllPerks(): MayorCandidate = apply { perks.forEach { it.active = false } }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MayorCandidate) return false
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = id.hashCode()
+
     override fun toString(): String = candidateName
 }
 
@@ -47,13 +59,27 @@ object MayorCandidates {
     val SCORPIUS = register("Scorpius", MayorPerks.BRIBE, MayorPerks.DARKER_AUCTIONS, isSpecial = true)
     val JERRY = register("Jerry", MayorPerks.PERKPOCALYPSE, MayorPerks.STATSPOCALYPSE, MayorPerks.JERRYPOCALYPSE, isSpecial = true)
     val DERPY = register("Derpy", MayorPerks.TURBO_MINIONS, MayorPerks.QUAD_TAXES, MayorPerks.DOUBLE_MOBS_HP, MayorPerks.MOAR_SKILLZ, isSpecial = true)
-    val AURA = register("Aura", MayorPerks.FUNDRAISING, MayorPerks.MINION_UNION, MayorPerks.UNIVERSAL_INCOME, MayorPerks.WORK_BETTER, MayorPerks.WORK_HARDER, MayorPerks.WORK_SMARTER, isSpecial = true)
+    val AURA = register(
+        "Aura",
+        MayorPerks.FUNDRAISING,
+        MayorPerks.MINION_UNION,
+        MayorPerks.UNIVERSAL_INCOME,
+        MayorPerks.WORK_BETTER,
+        MayorPerks.WORK_HARDER,
+        MayorPerks.WORK_SMARTER,
+        isSpecial = true,
+    )
     //endregion
 
     fun getCandidateById(id: String): MayorCandidate? = _mayors[id]
     fun getCandidate(candidateName: String): MayorCandidate? = mayors.find { it.candidateName == candidateName }
 
-    internal fun register(candidateName: String, vararg perks: MayorPerk, id: String = candidateName.toScreamingSnakeCase(), isSpecial: Boolean = false): MayorCandidate {
+    internal fun register(
+        candidateName: String,
+        vararg perks: MayorPerk,
+        id: String = candidateName.toScreamingSnakeCase(),
+        isSpecial: Boolean = false,
+    ): MayorCandidate {
         return _mayors.getOrPut(id) { MayorCandidate(id, candidateName, perks.toMutableSet(), isSpecial) }
     }
 }
@@ -80,6 +106,19 @@ data class MayorPerk internal constructor(
     override fun hashCode(): Int = id.hashCode()
 }
 
+enum class FoxyExtraEventType(val eventName: String) {
+    SPOOKY_FESTIVAL("Spooky Festival"),
+    MINING_FIESTA("Mining Fiesta"),
+    FISHING_FESTIVAL("Fishing Festival"),
+    UNKNOWN("Unknown");
+
+    companion object {
+        fun fromDescription(description: String): FoxyExtraEventType {
+            val strippedDescription = description.stripColor()
+            return entries.firstOrNull { it != UNKNOWN && it.eventName in strippedDescription } ?: UNKNOWN
+        }
+    }
+}
 
 @Suppress("unused")
 object MayorPerks {
@@ -127,6 +166,22 @@ object MayorPerks {
     val CHIVALROUS_CARNIVAL = register("Chivalrous Carnival")
     val EXTRA_EVENT = register("Extra Event")
 
+    private var cachedFoxyEventType: FoxyExtraEventType? = null
+    private var lastFoxyEventDescription: String? = null
+
+    val foxyExtraEventType: FoxyExtraEventType?
+        get() {
+            if (!EXTRA_EVENT.active) return null
+
+            val currentDescription = EXTRA_EVENT.description
+
+            if (lastFoxyEventDescription == currentDescription) return cachedFoxyEventType
+
+            cachedFoxyEventType = FoxyExtraEventType.fromDescription(currentDescription)
+            lastFoxyEventDescription = currentDescription
+            return cachedFoxyEventType
+        }
+
     // Marina
     val FISHING_XP_BUFF = register("Fishing XP Buff")
     val LUCK_OF_THE_SEA = register("Luck of the Sea 2.0", id = "LUCK_OF_THE_SEA")
@@ -148,7 +203,7 @@ object MayorPerks {
     val JERRYPOCALYPSE = register("Jerrypocalypse")
 
     // Derpy
-    val TURBO_MINIONS = register("TURBO MINIONS!!!", id = "TURBO_MINIONS",)
+    val TURBO_MINIONS = register("TURBO MINIONS!!!", id = "TURBO_MINIONS")
     val QUAD_TAXES = register("QUAD TAXES!!!", id = "QUAD_TAXES")
     val DOUBLE_MOBS_HP = register("DOUBLE MOBS HP!!!", id = "DOUBLE_MOBS_HP")
     val MOAR_SKILLZ = register("MOAR SKILLZ!!!", id = "MOAR_SKILLZ")

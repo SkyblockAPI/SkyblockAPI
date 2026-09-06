@@ -8,6 +8,7 @@ import net.minecraft.core.component.TypedDataComponent
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.ItemStackTemplate
 import tech.thatgravyboat.skyblockapi.utils.extentions.holder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
@@ -40,12 +41,12 @@ class LazyItemStack {
     fun withComponents(builder: DataComponentPatch.Builder.() -> Unit): LazyItemStack {
         val components = DataComponentPatch.builder()
 
-        for ((type, value) in this.components.entrySet()) {
-            if (value.isEmpty) {
-                components.remove(type)
-            } else {
-                components.set(TypedDataComponent.createUnchecked(type, value.get()))
-            }
+        val patch = this.components.split()
+        patch.added().forEach { typesComponent ->
+            components.set(TypedDataComponent.createUnchecked(typesComponent.type, typesComponent.value))
+        }
+        patch.removed().forEach { typesComponent ->
+            components.remove(typesComponent)
         }
 
         return LazyItemStack(item, count, components.apply(builder))
@@ -73,10 +74,23 @@ class LazyItemStack {
 
     companion object {
 
-        val CODEC: Codec<LazyItemStack> = net.minecraft.world.item.ItemStackTemplate.MAP_CODEC.codec().xmap({ template ->
-            LazyItemStack(template.item.value(), template.count, template.components)
-        }, { stack ->
-            net.minecraft.world.item.ItemStackTemplate(stack.item.holder, stack.count, stack.components)
-        })
+        val CODEC: Codec<LazyItemStack> = ItemStackTemplate.MAP_CODEC.codec().xmap(
+            { template ->
+                LazyItemStack(template.item.value(), template.count, template.components)
+            },
+            { stack ->
+                ItemStackTemplate(stack.item.holder, stack.count, stack.components)
+            },
+        )
+
+        fun ItemStack.toLazy(): LazyItemStack = LazyItemStack(this.item, this.count) {
+            val patch = this@toLazy.componentsPatch.split()
+            patch.added().forEach { typesComponent ->
+                this.set(typesComponent.type as DataComponentType<Any>, typesComponent.value)
+            }
+            patch.removed().forEach { typesComponent ->
+                this.remove(typesComponent)
+            }
+        }
     }
 }

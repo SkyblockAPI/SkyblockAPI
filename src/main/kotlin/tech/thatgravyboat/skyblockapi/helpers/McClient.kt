@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
-import com.mojang.authlib.minecraft.MinecraftSessionService
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
@@ -51,7 +50,8 @@ object McClient {
 
     val version: String = SharedConstants.getCurrentVersion().name()
 
-    val sessionService: MinecraftSessionService
+    //~ if >= 26.3 'MinecraftSessionService' -> 'SessionService'
+    val sessionService: com.mojang.authlib.minecraft.SessionService
         get() = self.services().sessionService()
 
     val self: Minecraft get() = Minecraft.getInstance()
@@ -119,6 +119,10 @@ object McClient {
     fun openUri(uri: String): Boolean = runCatching {
         openUri(URI.create(uri))
     }.isSuccess
+
+    fun reloadResourcePacks() {
+        self.reloadResourcePacks()
+    }
 
     fun openUri(uri: URI) {
         Util.getPlatform().openUri(uri)

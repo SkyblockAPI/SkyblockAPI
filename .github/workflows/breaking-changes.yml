@@ -8,6 +8,12 @@ permissions:
     contents: read
     pull-requests: write
 
+# should hopefully cancel current actions when a newer one happens
+concurrency:
+    group: build-${{ github.ref }}
+    cancel-in-progress: true
+
+
 jobs:
     breaking-change-check:
 

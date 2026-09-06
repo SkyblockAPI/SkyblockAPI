@@ -8,6 +8,7 @@ import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.http.Http
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
@@ -29,12 +30,18 @@ object ItemData {
 
     init {
         Scheduling.async {
-            val response = Http.getResult(URL, SkyblockAPICodecs.getCodec<HypixelItemsResponse>()).getOrNull() ?: return@async
+            val response = Http.getResult(
+                URL,
+                SkyblockAPICodecs.getCodec<HypixelItemsResponse>(),
+            ).getOrElse {
+                Logger.warn("Failed to get item data from URL: $it", it)
+                return@async
+            }
             hypixelData = response.items.associateBy { it.id }
         }
     }
 
-    val data: Map<String, HypixelApiItem> = hypixelData.takeUnless { it.isEmpty() } ?: backupData
+    val data: Map<String, HypixelApiItem> get() = hypixelData.takeUnless { it.isEmpty() } ?: backupData
 
     @JvmName("getItemDataFromSkyBlockId")
     fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.skyblockId)

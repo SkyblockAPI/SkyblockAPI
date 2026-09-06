@@ -14,7 +14,7 @@ plugins {
     `maven-publish`
 }
 
-stonecutter active "26.2"
+stonecutter active "26.3"
 
 stonecutter parameters {
     swaps["mod_version"] = "\"" + property("version") + "\";"

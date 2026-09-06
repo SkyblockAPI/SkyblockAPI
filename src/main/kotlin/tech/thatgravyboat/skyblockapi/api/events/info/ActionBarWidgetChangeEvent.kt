@@ -51,6 +51,9 @@ class SkillXpPercentActionBarWidgetChangeEvent(val amount: Float, val skill: Ski
 class SkillXpLiteralActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val current: Long, val needed: Long, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP_LITERAL, old, new)
 
+class VitalityActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
+    ActionBarWidgetChangeEvent(ActionBarWidget.VITALITY, old, new)
+
 enum class ActionBarWidget {
     HEALTH,
     DEFENSE,
@@ -70,6 +73,7 @@ enum class ActionBarWidget {
     CELLS_ALIGNMENT,
     SECRETS,
     PRESSURE,
+    VITALITY,
     ;
 
     private val string = toFormattedName()

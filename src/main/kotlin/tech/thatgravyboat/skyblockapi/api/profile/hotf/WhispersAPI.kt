@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 @Module
 object WhispersAPI : SkillTreeCurrencyAPI<WhisperType, WhispersAPI>(
     "whispers",
-    TabWidget.FOREST_WHISPERS,
+    listOf(TabWidget.FOREST_WHISPERS, TabWidget.DESERT_WHISPERS),
     WhisperStorage,
     WhisperType::class,
     SkillTreeType.Hotf,
@@ -19,6 +19,11 @@ object WhispersAPI : SkillTreeCurrencyAPI<WhisperType, WhispersAPI>(
     val forest: Long
         get() = getCurrent(WhisperType.FOREST)
     val forestTotal: Long
-        get() = getCurrent(WhisperType.FOREST)
+        get() = getTotal(WhisperType.FOREST)
+
+    val desert: Long
+        get() = getCurrent(WhisperType.DESERT)
+    val desertTotal: Long
+        get() = getTotal(WhisperType.DESERT)
 
 }

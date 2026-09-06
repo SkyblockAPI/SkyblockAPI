@@ -66,6 +66,7 @@ object CurrencyAPI {
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("currency")
     private val inventoryKernelsRegex = inventoryGroup.create("kernels", "^Your Kernels: (?<kernels>(?i)[\\d,.kmb]+)")
+    private val inventoryGemsRegex = inventoryGroup.create("gems", "^Gems: (?<gems>(?i)[\\d,.kmb]+)")
 
     var purse: Double by CurrencyStorage::purse
         private set
@@ -162,6 +163,10 @@ object CurrencyAPI {
         when (event.title) {
             "Grand Bakery" if (event.item.cleanName == "Grand Bakery") -> {
                 inventoryKernelsRegex.findCurrencyChecked(event.item.getRawLore(), "kernels", ::kernels, CurrencyEvent::Kernels)
+            }
+
+            "Community Shop" if (event.item.cleanName == "Community Shop" && event.slot.index == 49) -> {
+                inventoryGemsRegex.findCurrencyChecked(event.item.getRawLore(), "gems", ::gems, CurrencyEvent::Gems)
             }
         }
     }

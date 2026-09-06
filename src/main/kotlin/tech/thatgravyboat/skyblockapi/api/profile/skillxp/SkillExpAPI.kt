@@ -24,7 +24,7 @@ object SkillExpAPI {
     val skills: Map<HypixelSkillAPI.Skill, Float> get() = SkillExpStorage.data?.exp ?: emptyMap()
 
     private val group = RegexGroup.INVENTORY.group("skillexp")
-    private val itemNameRegex = group.create("itemName", "(?<name>.*) (?<level>\\d+)")
+    private val itemNameRegex = group.create("itemName", "(?<name>.*) (?<level>\\d+|[IVXLCDMivxlcdm]+)")
     private val itemLoreXpRegex = group.create("itemLoreExp", "^\\s+(?<current>[\\d,.]+)(?:/(?<needed>[\\d,.]+[kmbKMB]?))?")
 
     @Subscription
@@ -36,7 +36,8 @@ object SkillExpAPI {
 
         itemNameRegex.match(event.item.cleanName, "name", "level") { (name, level) ->
             val skill = HypixelSkillAPI.Skill.getByName(name) ?: return@match
-            val level = level.toIntValue()
+            val level = level.parseRomanOrArabic()
+            if (level <= 0) return@match
 
             itemLoreXpRegex.anyMatch(event.item.getRawLore(), "current") { (current) ->
                 val xp = if (skill.data.maxLevel == level) {

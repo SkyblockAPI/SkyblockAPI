@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.json
 
+import net.minecraft.core.HolderGetter
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.HolderOwner
 import net.minecraft.core.Registry
@@ -12,7 +13,17 @@ internal class LenientHolderOwner<T : Any> : HolderOwner<T>
 
 internal class LenientHolderLookupAdapter(private val provider: HolderLookup.Provider) : RegistryOps.RegistryInfoLookup {
 
-    private val cache = ConcurrentHashMap<ResourceKey<out Registry<*>>, Optional<out RegistryOps.RegistryInfo<*>>>()
+    //? >= 26.3 {
+    private val cache = ConcurrentHashMap<ResourceKey<out Registry<*>>, Optional<out HolderGetter<*>>>()
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Any> lookup(key: ResourceKey<out Registry<out T>>): Optional<HolderGetter<T>> {
+        return this.cache.computeIfAbsent(key) { key ->
+            this.provider.lookup(key)
+        } as Optional<HolderGetter<T>>
+    }
+    //?} else {
+    /*private val cache = ConcurrentHashMap<ResourceKey<out Registry<*>>, Optional<out RegistryOps.RegistryInfo<*>>>()
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : Any> lookup(key: ResourceKey<out Registry<out T>>): Optional<RegistryOps.RegistryInfo<T>> {
@@ -21,7 +32,7 @@ internal class LenientHolderLookupAdapter(private val provider: HolderLookup.Pro
                 RegistryOps.RegistryInfo<Any>(LenientHolderOwner<Any>(), lookup, lookup.registryLifecycle())
             }
         } as Optional<RegistryOps.RegistryInfo<T>>
-    }
+    }*///?}
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -29,7 +40,5 @@ internal class LenientHolderLookupAdapter(private val provider: HolderLookup.Pro
         return this.provider == other.provider
     }
 
-    override fun hashCode(): Int {
-        return this.provider.hashCode()
-    }
+    override fun hashCode(): Int = this.provider.hashCode()
 }

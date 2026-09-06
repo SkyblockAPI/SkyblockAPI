@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
@@ -71,27 +72,39 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         lastStack.set(stack);
     }
 
-    @WrapOperation(
+    //? >= 26.3 {
+    @WrapMethod(
+        method = "setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;ZZ)V"
+    )
+        //?} else {
+    /*@WrapOperation(
         method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V"
         )
-    )
+    )*///?}
     private void onRenderTooltipInternal(
-        GuiGraphicsExtractor instance,
+        //? <= 26.2
+        //GuiGraphicsExtractor instance,
         Font font,
         List<ClientTooltipComponent> list,
-        int x, int y,
+        int x,
+        int y,
         ClientTooltipPositioner positioner,
-        Identifier texture,
-        boolean force,
+        Identifier style,
+        boolean replaceExisting,
+        //? >= 26.3
+        boolean extraSpaceAfterFirstLine,
         Operation<Void> operation
     ) {
         List<ClientTooltipComponent> listCopy = new ArrayList<>(list);
         GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
         event.post(SkyBlockAPI.getEventBus());
-        operation.call(instance, font, listCopy, x, y, positioner, texture, force);
+        //? >= 26.3 {
+        operation.call(font, listCopy, x, y, positioner, style, replaceExisting, extraSpaceAfterFirstLine);
+        //?} else
+        //operation.call(instance, font, listCopy, x, y, positioner, style, replaceExisting);
     }
 
     @Override
