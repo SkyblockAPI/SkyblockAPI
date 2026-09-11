@@ -155,13 +155,15 @@ object PartyAPI {
         transferLeaveRegex.findThenNull(message, "leader", "member") { (leaderName, memberName) ->
             if (checkParty()) return@findThenNull
             setRole(leaderName, PartyRole.LEADER)
+            this.leader = findPlayer(leaderName)
             remove(memberName)
             debugMessage { "Party transferred to $leaderName because $memberName left" }
         } ?: return
         transferRegex.findThenNull(message, "leader", "mod") { (leaderName, modName) ->
             if (checkParty()) return@findThenNull
             setRole(leaderName, PartyRole.LEADER)
-            setRole(modName, PartyRole.MOD)
+            this.leader = findPlayer(leaderName)
+            setRole(modName, PartyRole.MEMBER)
             debugMessage { "Party transferred to $leaderName by $modName" }
         } ?: return
         for (regex in ownLeaveRegex) {
