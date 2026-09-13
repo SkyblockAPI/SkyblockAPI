@@ -4676,10 +4676,9 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/PowderType : 
 public final class tech/thatgravyboat/skyblockapi/api/profile/hunting/AttributeAPI : tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/hunting/AttributeAPI;
 	public final fun attributeMenu (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+	public final fun chatShardGain (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun fishing (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public fun fork (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;
-	public final fun foundShard (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun fusionComplete (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun fusionMenu (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun getAttributeLevelData ()Ljava/util/Map;
@@ -4688,10 +4687,8 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hunting/AttributeA
 	public final fun getDebugToggle ()Ltech/thatgravyboat/skyblockapi/utils/DebugToggle;
 	public final fun getHuntingBoxMenuRegex ()Lkotlin/text/Regex;
 	public fun hashCode ()I
-	public final fun huntingBox (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun huntingBox (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onCommandRegister (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
-	public final fun salt (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun syphoned (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun udpateAttributes (Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;)V
