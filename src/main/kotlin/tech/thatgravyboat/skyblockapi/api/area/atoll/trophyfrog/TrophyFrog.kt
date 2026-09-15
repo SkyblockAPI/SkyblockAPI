@@ -1,19 +1,11 @@
-package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
+package tech.thatgravyboat.skyblockapi.api.area.atoll.trophyfrog
 
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-data class TrophyFish(val type: TrophyFishType, @get:JvmName("getTrophyTier") val tier: TrophyTier) {
-
-    @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
-    constructor(type: TrophyFishType, tier: TrophyFishTier) : this(type, TrophyTier.valueOf(tier.name))
-
-    @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
-    @JvmName("getTier")
-    fun getOldTier(): TrophyFishTier = TrophyFishTier.valueOf(tier.name)
-
+data class TrophyFrog(val type: TrophyFrogType, val tier: TrophyTier) {
     val item: ItemStack by lazy { type.getItem(tier) }
     val displayName: Component by lazy {
         if (tier == TrophyTier.NONE) {
@@ -32,11 +24,11 @@ data class TrophyFish(val type: TrophyFishType, @get:JvmName("getTrophyTier") va
     }
 
     companion object {
-        fun fromString(fish: String): TrophyFish? {
+        fun fromString(fish: String): TrophyFrog? {
             if (fish.contains("/")) {
                 return fish.split("/").let {
-                    TrophyFish(
-                        TrophyFishType.getByInternalName(it[0]) ?: return null,
+                    TrophyFrog(
+                        TrophyFrogType.getByInternalName(it[0]) ?: return null,
                         TrophyTier.getByName(it[1]),
                     )
                 }

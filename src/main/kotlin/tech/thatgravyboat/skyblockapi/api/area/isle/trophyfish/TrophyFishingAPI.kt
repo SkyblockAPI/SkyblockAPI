@@ -2,10 +2,12 @@ package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.TrophyFishStorage
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.TrophyCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
@@ -36,7 +38,7 @@ object TrophyFishingAPI {
     )
 
     private val trophyFishDescription = inventoryGroup.create(
-        "description",
+        "fish_description",
         "(?<tier>Diamond|Silver|Gold|Bronze) \\S+(?: \\((?<amount>\\d+)\\))?",
     )
 
@@ -46,19 +48,21 @@ object TrophyFishingAPI {
         val content = event.text.trim()
         matchWhen(content) {
             case(singleTrophyFishCaughtRegex, "type", "tier") { (type, tier) ->
-                val fishTier = TrophyFishTier.valueOf(tier)
+                val fishTier = TrophyTier.valueOf(tier)
                 val type = TrophyFishType.getByDisplayName(type) ?: return@case
 
                 TrophyFishStorage.addCaught(type, fishTier)
-                TrophyFishCaughtEvent(type, fishTier).post()
+                TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name)).post()
+                TrophyCaughtEvent.Fish(type, fishTier).post()
             }
             case(multiTrophyFishCaughtRegex, "type", "tier", "amount") { (type, tier, amount) ->
-                val fishTier = TrophyFishTier.valueOf(tier)
+                val fishTier = TrophyTier.valueOf(tier)
                 val type = TrophyFishType.getByDisplayName(type) ?: return@case
                 val amount = amount.toIntOrNull() ?: return@case
 
                 TrophyFishStorage.addCaught(type, fishTier)
-                TrophyFishCaughtEvent(type, fishTier, amount).post()
+                TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name), amount).post()
+                TrophyCaughtEvent.Fish(type, fishTier, amount).post()
             }
         }
     }
@@ -72,12 +76,12 @@ object TrophyFishingAPI {
         if (event.isSkyBlockFiller) return
 
         val byName = TrophyFishType.getByDisplayName(event.item.cleanName) ?: return
-        val caught = mutableMapOf<TrophyFishTier, Int>()
+        val caught = mutableMapOf<TrophyTier, Int>()
         event.item.getRawLore().forEach {
             trophyFishDescription.match(it, "tier", "amount") { match ->
                 val (tierName) = match
                 val amount = match["amount"] ?: "0"
-                val tier = TrophyFishTier.getByName(tierName)
+                val tier = TrophyTier.getByName(tierName)
                 caught[tier] = amount.toInt()
             }
         }
@@ -98,7 +102,7 @@ object TrophyFishingAPI {
         val unlocked = grouped.mapValues { entry ->
             val caught = getCaught(entry.key)
             entry.value.associate { value ->
-                val tier = TrophyFishTier.entries.find { value.key.endsWith(it.name, true) }
+                val tier = TrophyTier.entries.find { value.key.endsWith(it.name, true) }
                 val previous = tier?.let(caught::get) ?: 0
                 val value = value.value
 
@@ -116,7 +120,13 @@ object TrophyFishingAPI {
         unlocked.forEach(TrophyFishStorage::setAmounts)
     }
 
+    @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
     fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
+        return TrophyFishStorage.getCaught(type).map { TrophyFishTier.valueOf(it.key.name) to it.value }.toMap()
+    }
+
+    @JvmName("getCaughtTiers")
+    fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
         return TrophyFishStorage.getCaught(type)
     }
 }
