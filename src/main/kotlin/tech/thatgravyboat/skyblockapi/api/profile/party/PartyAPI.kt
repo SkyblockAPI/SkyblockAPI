@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.profile.party
 
 import me.owdding.ktmodules.Module
 import net.hypixel.modapi.packet.impl.clientbound.ClientboundPartyInfoPacket
-import net.minecraft.network.chat.TextColor
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerCacheStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -25,6 +24,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.*
 import kotlin.time.Duration.Companion.minutes
@@ -219,7 +219,7 @@ object PartyAPI {
 
                 val member = PartyMember(name.cleanPlayerName(), partyRole)
                 add(member)
-                member.isOnline = statusStyles.color == TextColor.GREEN
+                member.isOnline = statusStyles.color.value == TextColor.GREEN
                 debugMessage { "Updated party player member: $member" }
                 if (partyRole == PartyRole.LEADER) this.leader = member
             }
