@@ -61,15 +61,19 @@ object PacketEventHandler {
     }
 
     private fun postBlockChange(pos: BlockPos, new: BlockState) {
-        if (!McLevel.hasLevel) return
-        val old = McLevel[pos]
+        McClient.runOrNextTick {
+            val level = McLevel.selfOrNull ?: return@runOrNextTick
+            if (!level.hasChunkAt(pos)) return@runOrNextTick
 
-        val lastChance = lastBlockChanges.getIfPresent(pos)
-        if (lastChance != null && lastChance.first == old && lastChance.second == new) {
-            return
+            val old = level.getBlockState(pos)
+
+            val lastChance = lastBlockChanges.getIfPresent(pos)
+            if (lastChance != null && lastChance.first == old && lastChance.second == new) {
+                return@runOrNextTick
+            }
+
+            lastBlockChanges.put(pos, old to new)
+            BlockChangeEvent(pos, new).post()
         }
-
-        lastBlockChanges.put(pos, old to new)
-        BlockChangeEvent(pos, new).post()
     }
 }
