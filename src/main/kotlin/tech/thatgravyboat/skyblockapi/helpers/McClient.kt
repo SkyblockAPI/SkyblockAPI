@@ -134,10 +134,17 @@ object McClient {
         //Util.getPlatform().openUri(uri)
     }
 
+    /**
+     * Runs the next render tick.
+     */
     fun runNextTick(action: () -> Unit) {
         self.schedule(action)
     }
 
+    /**
+     * Runs either on the current or next render tick
+     * depending on if it's executed from the render thread.
+     */
     fun runOrNextTick(action: () -> Unit) {
         self.executeIfPossible(action)
     }
