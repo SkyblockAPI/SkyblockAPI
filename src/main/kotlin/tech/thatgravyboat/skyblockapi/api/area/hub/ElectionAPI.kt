@@ -6,6 +6,7 @@ import net.minecraft.util.TriState
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.*
 import tech.thatgravyboat.skyblockapi.api.data.stored.ElectionStorage
+import tech.thatgravyboat.skyblockapi.api.data.stored.PERKPOCALYPSE_CANDIDATE_DURATION
 import tech.thatgravyboat.skyblockapi.api.data.stored.StoredMayor
 import tech.thatgravyboat.skyblockapi.api.datetime.SkyBlockInstant
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -23,12 +24,12 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
-import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils
 import tech.thatgravyboat.skyblockapi.utils.command.EnumArgument
 import tech.thatgravyboat.skyblockapi.utils.command.MapBackedArgumentType
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.filterValuesNotNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInPast
@@ -80,6 +81,16 @@ object ElectionAPI {
 
     var currentJerryCandidate: Pair<MayorCandidate, Instant>? = null
         private set
+
+    // The keys are the numbers from 0-5, specifying which "index" in the rotation the mayors are
+    val jerryPerkpocalypseRotation: Map<Int, MayorCandidate>
+        get() = ElectionStorage.jerryPerkpocalypseRotation.mapValues { it.value.getCandidate() }.filterValuesNotNull()
+
+    // What index of the jerry perkpocalypse rotation a certain instant is.
+    fun getPerkpocalypseIndex(instant: Instant): Int? = ElectionStorage.indexOfPerkpocalypse(instant)
+
+    val perkpocalypseRotationDuration: Duration
+        get() = PERKPOCALYPSE_CANDIDATE_DURATION
 
 
     init {
@@ -303,8 +314,13 @@ object ElectionAPI {
                     callback {
                         ElectionStorage.resetElection()
                         resetData()
-                        updateScheduler(1.minutes, 20.minutes)
+                        updateScheduler(1.minutes, 20.minutes, initialDelay = 1.minutes)
                         Text.sendDebug("Reset the Election Cache Storage!")
+                    }
+                    thenCallback("perkpocalypse") {
+                        ElectionStorage.clearPerkpocalypse()
+                        currentJerryCandidate = null
+                        Text.sendDebug("Reset the Perkpocalypse rotation!")
                     }
                     thenCallback("descriptions") {
                         ElectionStorage.resetDescriptions()

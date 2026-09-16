@@ -21,7 +21,7 @@ import kotlin.time.Instant
 
 private val FULL_ELECTION_CYCLE = 1.skyblockYears
 private const val PERKPOCALYPSE_CANDIDATES = 6
-private val PERKPOCALYPSE_CANDIDATE_DURATION = 18.skyblockDays
+internal val PERKPOCALYPSE_CANDIDATE_DURATION = 18.skyblockDays
 
 internal object ElectionStorage {
 
@@ -124,18 +124,19 @@ internal data class ElectionData(
     val perkDescriptions: MutableMap<String, String> = mutableMapOf(),
 ) {
     companion object {
+        // We need to use a custom codec because maps cannot use an integer as a key in JSON
         @IncludedCodec(named = "perkpocalypse_rotation")
         val PERKPOCALYPSE_ROTATION_CODEC: Codec<MutableMap<Int, StoredMayor>> = CodecUtils.map(
             Codec.STRING.xmap(Integer::parseInt, Int::toString),
             SkyblockAPICodecs.getCodec<StoredMayor>()
-        )
+        ).orElseGet(::LinkedHashMap)
     }
 }
 
 @GenerateCodec
 internal data class StoredMayor(
     val id: String,
-    val perks: MutableList<String> = mutableListOf(),
+    @OptionalIfEmpty val perks: MutableList<String> = mutableListOf(),
 ) {
     fun getCandidate(): MayorCandidate? = MayorCandidates.getCandidateById(id)
     companion object {
