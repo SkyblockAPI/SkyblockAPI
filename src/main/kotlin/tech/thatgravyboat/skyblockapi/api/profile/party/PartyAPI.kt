@@ -10,10 +10,13 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.events.HypixelEventHandler
+import tech.thatgravyboat.skyblockapi.utils.components.ComponentStateMachine
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.extentions.asString
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanPlayerName
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.extentions.since
+import tech.thatgravyboat.skyblockapi.utils.extentions.styles
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
@@ -21,6 +24,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.*
 import kotlin.time.Duration.Companion.minutes
@@ -80,6 +84,16 @@ object PartyAPI {
     private val listMembersRegex = chatGroup.create(
         "list",
         "^Party (?<role>Leader|Moderators|Members): (?<members>.+)",
+    ).toComponentRegex()
+
+    private val memberDisconnectRegex = otherGroup.create(
+        "member-disconnect",
+        "^(?:The Party Leader, )?(?<member>.+) has disconnected, they have \\d+ minutes to rejoin before they are removed from the party.",
+    )
+
+    private val memberRejoinRegex = otherGroup.create(
+        "member-rejoin",
+        "^(?:The Party Leader )?(?<member>.+) has rejoined.",
     )
 
     private val partyFinderRegex = chatGroup.create(
@@ -113,6 +127,24 @@ object PartyAPI {
 
     private var requestedPartyInfo: Boolean = false
     private var lastPartyInfoRequest: Instant = Instant.DISTANT_PAST
+
+    private val memberStates = ComponentStateMachine.build {
+        repeat(", ") {
+            optional {
+                char('[')
+                chars('A'..'Z', listOf('ዞ', '+'))
+                char(']')
+                literal(" ")
+            }
+            capture("username") {
+                chars('a'..'z', 'A'..'Z', '0'..'9', listOf('_'), maxLength = 16)
+            }
+            literal(" ")
+            capture("status") {
+                char('●')
+            }
+        }
+    }
 
     private val debug by debugToggle("party_api", "Allows you to see what messages get detected by PartyAPI, and what they modify.")
 
@@ -155,13 +187,15 @@ object PartyAPI {
         transferLeaveRegex.findThenNull(message, "leader", "member") { (leaderName, memberName) ->
             if (checkParty()) return@findThenNull
             setRole(leaderName, PartyRole.LEADER)
+            this.leader = findPlayer(leaderName)
             remove(memberName)
             debugMessage { "Party transferred to $leaderName because $memberName left" }
         } ?: return
         transferRegex.findThenNull(message, "leader", "mod") { (leaderName, modName) ->
             if (checkParty()) return@findThenNull
             setRole(leaderName, PartyRole.LEADER)
-            setRole(modName, PartyRole.MOD)
+            this.leader = findPlayer(leaderName)
+            setRole(modName, PartyRole.MEMBER)
             debugMessage { "Party transferred to $leaderName by $modName" }
         } ?: return
         for (regex in ownLeaveRegex) {
@@ -171,25 +205,37 @@ object PartyAPI {
                 return
             }
         }
-        listMembersRegex.findThenNull(message, "role", "members") { (role, membersList) ->
-            val partyRole = when (role) {
-                "Leader" -> {
-                    this.members = emptyList()
-                    PartyRole.LEADER
-                }
-
+        listMembersRegex.findThenNull(event.component, "role", "members") { (role, membersList) ->
+            this.members = emptyList()
+            val partyRole = when (role.stripped) {
+                "Leader" -> PartyRole.LEADER
                 "Moderators" -> PartyRole.MOD
-
                 else -> PartyRole.MEMBER
             }
-            for (name in membersList.split("●")) {
-                if (name.isBlank()) continue
+
+            memberStates.match(membersList) { groups ->
+                val name = groups["username"]?.asString() ?: return@match
+                val statusStyles = groups["status"]?.styles()?.firstOrNull() ?: return@match
+
                 val member = PartyMember(name.cleanPlayerName(), partyRole)
                 add(member)
+                member.isOnline = statusStyles.color.value == TextColor.GREEN
+                debugMessage { "Updated party player member: $member" }
                 if (partyRole == PartyRole.LEADER) this.leader = member
             }
+
             debugMessage { "Updated party from members list" }
         } ?: return
+        memberDisconnectRegex.findThenNull(message, "member") { (member) ->
+            if (checkParty()) return@findThenNull
+            findPlayer(member.cleanPlayerName())?.isOnline = false
+            debugMessage { "Set $member offline" }
+        }
+        memberRejoinRegex.findThenNull(message, "member") { (member) ->
+            if (checkParty()) return@findThenNull
+            findPlayer(member.cleanPlayerName())?.isOnline = true
+            debugMessage { "Set $member online" }
+        }
         partyFinderRegex.findThenNull(message, "member") { (member) ->
             if (checkParty()) return@findThenNull
             add(PartyMember(member))
@@ -251,7 +297,7 @@ object PartyAPI {
         }
     }
 
-    private fun debugMessage(msg: () -> String) {
+    private inline fun debugMessage(msg: () -> String) {
         if (debug) Text.sendDebug("PartyAPI: ${msg()}")
     }
 

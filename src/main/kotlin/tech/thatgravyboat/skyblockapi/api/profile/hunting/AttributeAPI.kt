@@ -34,10 +34,21 @@ import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.codecs.IncludedCodecs
 import tech.thatgravyboat.skyblockapi.utils.command.mapped
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.get
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanOrArabic
+import tech.thatgravyboat.skyblockapi.utils.extentions.rangeTo
+import tech.thatgravyboat.skyblockapi.utils.extentions.since
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
@@ -81,8 +92,10 @@ data object AttributeAPI : ItemDebugCategory {
     private val chatGroup = RegexGroup.CHAT.group("attribute")
 
     private val trapGroup = chatGroup.group("trap")
-    private val foundShardRegex =
-        trapGroup.create("caught", "^(?:You caught|LOOT SHARE You received) (?<amount>an?|x?\\d+) (?<name>.*?) Shards?(?: for assisting \\w+)?!$")
+    private val foundShardRegex = trapGroup.create(
+        "caught",
+        "^(?:You caught|LOOT SHARE!? You received) (?<amount>an?|x?\\d+|\\d+x?) (?<name>.*?) Shards?(?: for assisting .*| from .*)?!$",
+    )
 
     private val fusionChatGroup = chatGroup.group("fusion")
     private val fusionObtainedRegex = fusionChatGroup.create("obtained", "FUSION! You obtained (?:an? )?(.*?)(?: (x\\d+))?!.*")
@@ -100,6 +113,17 @@ data object AttributeAPI : ItemDebugCategory {
 
     private val fishingRegex = chatGroup.create("fishing", "^\uE025 .*? CATCH! You caught a (?<name>.*) Shard!$")
     private val fishingMultipleRegex = chatGroup.create("fishing_multiple", "^\uE025 .*? CATCH! You caught (?<name>.*) Shard! x(?<amount>\\d+)$")
+
+    private val capturedRegex = chatGroup.create(
+        "capture",
+        "^CAPTURE! You (?:caught an?|found) .+ and (?:gained|as a reward (?:he|she|they|it) gave you) (?<amount>an?|\\d+x) (?<name>.*?) Shard!$",
+    )
+
+    private val floorDropRegex = chatGroup.create("floor_drop.drop", "^FLOOR DROP! You found (?<name>.*?) Shards? on the ground!$")
+
+    private val givenRegex = chatGroup.create("given", "^You have been given a (?<name>.*?)!$")
+
+    private val bossRegex = chatGroup.create("boss", "^SHARD! Your contribution earned you the (?<name>.*?) Shard!$")
     //endregion
 
     private val deferredFusion = DeferredFusion()
@@ -176,18 +200,6 @@ data object AttributeAPI : ItemDebugCategory {
     }
 
     @Subscription
-    @OnlyOnSkyBlock
-    fun foundShard(event: ChatReceivedEvent.Pre) {
-        if (!event.text.matches(foundShardRegex)) return
-        foundShardRegex.match(event.text, "amount", "name") { (amount, name) ->
-            val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
-            val id = SkyBlockId.fromName(name) ?: return@match
-            addOwnedAttributeAmount(id, actualAmount)
-        }
-        AttributeStorage.save()
-    }
-
-    @Subscription
     @MustBeContainer
     @OnlyOnSkyBlock
     fun fusionMenu(event: InventoryChangeEvent) {
@@ -239,41 +251,45 @@ data object AttributeAPI : ItemDebugCategory {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun salt(event: ChatReceivedEvent.Pre) {
-        saltSingularRegex.match(event.text, "name") { (name) ->
-            val id = SkyBlockId.fromName(name) ?: return@match
-            addOwnedAttributeAmount(id, 1)
-        }
-        saltMultipleRegex.match(event.text, "name", "amount") { (name, amount) ->
-            val id = SkyBlockId.fromName(name) ?: return@match
-            addOwnedAttributeAmount(id, amount.toIntValue())
-        }
-    }
-
-    @Subscription
-    @OnlyOnSkyBlock
-    fun huntingBox(event: ChatReceivedEvent.Pre) {
-        sentToHuntingBoxRegex.match(event.text, "amount", "shard") { (amount, shard) ->
-            val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
-            val id = SkyBlockId.fromName(shard, true) ?: return@match
-
-            addOwnedAttributeAmount(id, actualAmount)
-        }
-    }
-
-    @Subscription
-    @OnlyOnSkyBlock
-    fun fishing(event: ChatReceivedEvent.Pre) {
-        fishingRegex.match(event.text, "name") { (name) ->
-            val id = SkyBlockId.fromName(name, true) ?: return@match
-
-            addOwnedAttributeAmount(id, 1)
-        }
-        fishingMultipleRegex.match(event.text, "name", "amount") { (name, amount) ->
-            val id = SkyBlockId.fromName(name, true) ?: return@match
-            val amount = amount.toIntValue()
-
-            addOwnedAttributeAmount(id, amount)
+    fun chatShardGain(event: ChatReceivedEvent.Pre) {
+        matchWhen(event.text) {
+            case(foundShardRegex, "amount", "name") { (amount, name) ->
+                val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
+                addOwnedAttributeAmountFromName(name, actualAmount)
+            }
+            case(saltSingularRegex, "name") { (name) ->
+                addOwnedAttributeAmountFromName(name)
+            }
+            case(saltMultipleRegex, "name", "amount") { (name, amount) ->
+                addOwnedAttributeAmountFromName(name, amount)
+            }
+            case(sentToHuntingBoxRegex, "amount", "shard") { (amount, shard) ->
+                val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
+                addOwnedAttributeAmountFromName(shard, actualAmount)
+            }
+            case(sentToHuntingBoxRegex, "amount", "shard") { (amount, shard) ->
+                val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
+                addOwnedAttributeAmountFromName(shard, actualAmount)
+            }
+            case(fishingRegex, "name") { (name) ->
+                addOwnedAttributeAmountFromName(name)
+            }
+            case(fishingMultipleRegex, "name", "amount") { (name, amount) ->
+                addOwnedAttributeAmountFromName(name, amount)
+            }
+            case(capturedRegex, "amount", "name") { (name, amount) ->
+                val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
+                addOwnedAttributeAmountFromName(name, actualAmount)
+            }
+            case(floorDropRegex, "name") { (name) ->
+                addOwnedAttributeAmountFromName(name)
+            }
+            case(givenRegex, "name") { (name) ->
+                addOwnedAttributeAmountFromName(name)
+            }
+            case(bossRegex, "name") { (name) ->
+                addOwnedAttributeAmountFromName(name)
+            }
         }
     }
 
@@ -303,6 +319,11 @@ data object AttributeAPI : ItemDebugCategory {
     private fun SkyBlockId.toAttributeData() = AttributeData(
         rarity = attributeRarities.find { it.name.startsWith(this.cleanId.take(1), true) },
     )
+
+    internal fun addOwnedAttributeAmountFromName(name: String, amount: String) = addOwnedAttributeAmountFromName(name, amount.toIntValue())
+    internal fun addOwnedAttributeAmountFromName(name: String, amount: Int = 1) {
+        addOwnedAttributeAmount(SkyBlockId.fromName(name) ?: return, amount)
+    }
 
     internal fun addOwnedAttributeAmount(id: SkyBlockId, amount: Int) {
         debugComponent(debugToggle) {

@@ -138,10 +138,10 @@ public abstract class HudMixin {
         method = "extractPlayerHealth",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/Hud;extractAirBubbles(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;III)V"
+            target = "Lnet/minecraft/client/gui/Hud;extractFood(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;II)V"
         )
     )
-    private boolean onRenderFood(Hud instance, GuiGraphicsExtractor graphics, Player player, int vehicleHearts, int yLineAir, int xRight) {
+    private boolean onRenderFood(Hud instance, GuiGraphicsExtractor graphics, Player player, int yLineBase, int xRight) {
         return !new RenderHudElementEvent(HudElement.FOOD, graphics).post(SkyBlockAPI.getEventBus());
     }
 

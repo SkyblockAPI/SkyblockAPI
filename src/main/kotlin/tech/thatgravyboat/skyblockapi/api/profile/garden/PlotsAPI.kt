@@ -60,12 +60,12 @@ object PlotAPI {
 
     private val scoreboardPestAmountRegex = scoreboardGroup.create(
         "pest_amount",
-        " ⏣ (?<text>The Garden) [ൠ\uE07F\uE018] x(?<amount>\\d+)",
+        " [⏣\uE067] (?<text>The Garden) [ൠ\uE07F\uE018] x(?<amount>\\d+)",
     ).toComponentRegex()
 
     private val scoreboardNoPestsRegex = scoreboardGroup.create(
         "no_pests",
-        " ⏣ (?:The Garden|Plot - .+)",
+        " [⏣\uE067] (?:The Garden|Plot - .+)",
     )
 
     private val scoreboardPlotPestAmountRegex = scoreboardGroup.create(

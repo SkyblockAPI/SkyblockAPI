@@ -4676,10 +4676,9 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hotm/PowderType : 
 public final class tech/thatgravyboat/skyblockapi/api/profile/hunting/AttributeAPI : tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/hunting/AttributeAPI;
 	public final fun attributeMenu (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+	public final fun chatShardGain (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun fishing (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public fun fork (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;
-	public final fun foundShard (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun fusionComplete (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun fusionMenu (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun getAttributeLevelData ()Ljava/util/Map;
@@ -4688,10 +4687,8 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/hunting/AttributeA
 	public final fun getDebugToggle ()Ltech/thatgravyboat/skyblockapi/utils/DebugToggle;
 	public final fun getHuntingBoxMenuRegex ()Lkotlin/text/Regex;
 	public fun hashCode ()I
-	public final fun huntingBox (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun huntingBox (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onCommandRegister (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
-	public final fun salt (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun syphoned (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun udpateAttributes (Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;)V
@@ -5352,6 +5349,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/party/PartyMember 
 	public final fun getName ()Ljava/lang/String;
 	public final fun getRole ()Lnet/hypixel/modapi/packet/impl/clientbound/ClientboundPartyInfoPacket$PartyRole;
 	public final fun getUuid ()Ljava/util/UUID;
+	public final fun isOnline ()Z
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -8751,6 +8749,295 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandsKt {
 	public static final fun command (Lcom/mojang/brigadier/CommandDispatcher;Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Lkotlin/jvm/functions/Function1;)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart : tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;Ljava/lang/String;)V
+	public final fun capture (Ltech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart$State;CLnet/minecraft/network/chat/Style;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart;Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;Ljava/lang/String;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart;
+	public synthetic fun createState ()Ljava/lang/Object;
+	public fun createState ()Ltech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart$State;
+	public synthetic fun endState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun endState (Ltech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChildren ()Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun tryConsumeState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public fun tryConsumeState (Ltech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart$State {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;Ljava/util/List;)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart$State;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart$State;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrent ()Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;
+	public final fun getResult ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun setCurrent (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/utils/components/CharSink {
+	public abstract fun tryConsume (C)Z
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachine {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachine$Companion;
+	public fun <init> (Ljava/util/List;)V
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;)V
+	public final fun getParts ()Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;
+	public final fun match (Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;)Z
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachine$Companion {
+	public final fun build (Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachine;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart {
+	public abstract fun createState ()Ljava/lang/Object;
+	public fun endState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public abstract fun tryConsumeState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart$DefaultImpls {
+	public static fun endState (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/utils/components/ComponentStatelessMachinePart : tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart {
+	public synthetic fun createState ()Ljava/lang/Object;
+	public fun createState ()V
+	public fun end (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public synthetic fun endState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun endState (Lkotlin/Unit;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public abstract fun tryConsume (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public synthetic fun tryConsumeState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public fun tryConsumeState (Lkotlin/Unit;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/ComponentStatelessMachinePart$DefaultImpls {
+	public static fun createState (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStatelessMachinePart;)V
+	public static fun end (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStatelessMachinePart;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public static fun endState (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStatelessMachinePart;Lkotlin/Unit;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public static fun tryConsumeState (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStatelessMachinePart;Lkotlin/Unit;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart : tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart;
+	public synthetic fun createState ()Ljava/lang/Object;
+	public fun createState ()Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart$State;
+	public synthetic fun endState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun endState (Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChildren ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun tryConsumeState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public fun tryConsumeState (Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart$State {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;Ljava/util/Iterator;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;
+	public final fun component2 ()Ljava/util/Iterator;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;Ljava/util/Iterator;)Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart$State;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;Ljava/util/Iterator;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart$State;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrent ()Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;
+	public final fun getPart ()Ljava/util/Iterator;
+	public fun hashCode ()I
+	public final fun setCurrent (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/ForkBuilder : tech/thatgravyboat/skyblockapi/utils/components/StateMachineBuilder {
+	public fun <init> ()V
+	public final fun branch (Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/ForkPart : tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/utils/components/ForkPart;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/ForkPart;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/ForkPart;
+	public synthetic fun createState ()Ljava/lang/Object;
+	public fun createState ()Ltech/thatgravyboat/skyblockapi/utils/components/ForkPart$State;
+	public synthetic fun endState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun endState (Ltech/thatgravyboat/skyblockapi/utils/components/ForkPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getForks ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun tryConsumeState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public fun tryConsumeState (Ltech/thatgravyboat/skyblockapi/utils/components/ForkPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/ForkPart$State {
+	public fun <init> ()V
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;)Ltech/thatgravyboat/skyblockapi/utils/components/ForkPart$State;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/ForkPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/ForkPart$State;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getState ()Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;
+	public fun hashCode ()I
+	public final fun setState (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class tech/thatgravyboat/skyblockapi/utils/components/GroupSink {
+	public abstract fun flush ()V
+	public abstract fun group (Ljava/lang/String;Lnet/minecraft/util/FormattedCharSequence;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/LiteralComponentPart : tech/thatgravyboat/skyblockapi/utils/components/ComponentStatelessMachinePart {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/components/LiteralComponentPart;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/LiteralComponentPart;Ljava/lang/String;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/LiteralComponentPart;
+	public synthetic fun createState ()Ljava/lang/Object;
+	public fun createState ()V
+	public fun end (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public synthetic fun endState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun endState (Lkotlin/Unit;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLiteral ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun tryConsume (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public synthetic fun tryConsumeState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public fun tryConsumeState (Lkotlin/Unit;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/OptionalPart : tech/thatgravyboat/skyblockapi/utils/components/ComponentStatelessMachinePart {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;)V
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;)Ltech/thatgravyboat/skyblockapi/utils/components/OptionalPart;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/OptionalPart;Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/OptionalPart;
+	public synthetic fun createState ()Ljava/lang/Object;
+	public fun createState ()V
+	public fun end (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public synthetic fun endState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun endState (Lkotlin/Unit;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPart ()Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun tryConsume (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public synthetic fun tryConsumeState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public fun tryConsumeState (Lkotlin/Unit;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/RepeatPart : tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;)Ltech/thatgravyboat/skyblockapi/utils/components/RepeatPart;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/RepeatPart;Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/RepeatPart;
+	public synthetic fun createState ()Ljava/lang/Object;
+	public fun createState ()Ltech/thatgravyboat/skyblockapi/utils/components/RepeatPart$State;
+	public synthetic fun endState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun endState (Ltech/thatgravyboat/skyblockapi/utils/components/RepeatPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChildren ()Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;
+	public final fun getDelimiter ()Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun tryConsumeState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public fun tryConsumeState (Ltech/thatgravyboat/skyblockapi/utils/components/RepeatPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/RepeatPart$State {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;Z)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;
+	public final fun component2 ()Z
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;Z)Ltech/thatgravyboat/skyblockapi/utils/components/RepeatPart$State;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/RepeatPart$State;Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;ZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/RepeatPart$State;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrent ()Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;
+	public fun hashCode ()I
+	public final fun isDelimiter ()Z
+	public final fun setCurrent (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition;)V
+	public final fun setDelimiter (Z)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public class tech/thatgravyboat/skyblockapi/utils/components/StateMachineBuilder {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun add (Lkotlin/jvm/functions/Function0;)V
+	public final fun capture (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun char (C)V
+	public final fun chars ([Ljava/lang/Iterable;I)V
+	public static synthetic fun chars$default (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachineBuilder;[Ljava/lang/Iterable;IILjava/lang/Object;)V
+	public final fun fork (Lkotlin/jvm/functions/Function1;)V
+	public final fun getParts ()Ljava/util/List;
+	public final fun literal (Ljava/lang/String;)V
+	public final fun optional (Lkotlin/jvm/functions/Function1;)V
+	public final fun repeat (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun toPart ()Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart;
+	public final fun wildcard (Ltech/thatgravyboat/skyblockapi/utils/components/CharSink;I)V
+	public static synthetic fun wildcard$default (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachineBuilder;Ltech/thatgravyboat/skyblockapi/utils/components/CharSink;IILjava/lang/Object;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/StateMachinePosition {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;Ljava/lang/Object;I)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;Ljava/lang/Object;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun end (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public final fun endState (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public final fun getIndex ()I
+	public final fun getPart ()Ltech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart;
+	public final fun getState ()Ljava/lang/Object;
+	public final fun setIndex (I)V
+	public final fun tryConsume (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;CLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/StateResult : java/lang/Enum {
+	public static final field BREAK Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public static final field CONSUME Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public static final field CONTINUE Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public final fun getContinuation ()Z
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMatch ()Z
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/components/WildcardComponentPart : tech/thatgravyboat/skyblockapi/utils/components/ComponentStatelessMachinePart {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/CharSink;I)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/utils/components/CharSink;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/utils/components/CharSink;
+	public final fun component2 ()I
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/utils/components/CharSink;I)Ltech/thatgravyboat/skyblockapi/utils/components/WildcardComponentPart;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/components/WildcardComponentPart;Ltech/thatgravyboat/skyblockapi/utils/components/CharSink;IILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/components/WildcardComponentPart;
+	public synthetic fun createState ()Ljava/lang/Object;
+	public fun createState ()V
+	public fun end (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public synthetic fun endState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun endState (Lkotlin/Unit;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMaxLength ()I
+	public final fun getSink ()Ltech/thatgravyboat/skyblockapi/utils/components/CharSink;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun tryConsume (Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public synthetic fun tryConsumeState (Ljava/lang/Object;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+	public fun tryConsumeState (Lkotlin/Unit;Ltech/thatgravyboat/skyblockapi/utils/components/GroupSink;ICLnet/minecraft/network/chat/Style;)Ltech/thatgravyboat/skyblockapi/utils/components/StateResult;
+}
+
 public final class tech/thatgravyboat/skyblockapi/utils/container/Anchor : java/lang/Enum {
 	public static final field BOTTOM_LEFT Ltech/thatgravyboat/skyblockapi/utils/container/Anchor;
 	public static final field BOTTOM_RIGHT Ltech/thatgravyboat/skyblockapi/utils/container/Anchor;
@@ -8878,6 +9165,11 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/CollectionExt
 	public static final fun peek (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
 	public static final fun removeAll (Ljava/util/Map;Lkotlin/jvm/functions/Function1;)V
 	public static final fun sublistAfter (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/extentions/ComponentExtensionsKt {
+	public static final fun asString (Lnet/minecraft/util/FormattedCharSequence;)Ljava/lang/String;
+	public static final fun styles (Lnet/minecraft/util/FormattedCharSequence;)Ljava/util/Set;
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/extentions/DurationExtensionsKt {
