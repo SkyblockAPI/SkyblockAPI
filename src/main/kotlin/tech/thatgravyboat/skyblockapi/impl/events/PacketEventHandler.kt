@@ -17,10 +17,6 @@ import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
-private const val PLAYER_HOTBAR_CONTAINER_ID = 0
-private const val PLAYER_INVENTORY_CONTAINER_ID = -2
-private const val FIRST_HOTBAR_SLOT = 36
-
 @Module
 object PacketEventHandler {
     private val lastBlockChanges = CacheBuilder.newBuilder()
@@ -42,10 +38,7 @@ object PacketEventHandler {
 
     @Subscription
     fun onPacketReceived(event: PacketReceivedEvent) {
-        val packet = event.packet
-        when (packet) {
-            is ClientboundBlockUpdatePacket -> postBlockChange(packet.pos, packet.blockState)
-            is ClientboundSectionBlocksUpdatePacket -> packet.runUpdates { mutablePos, state -> postBlockChange(mutablePos.immutable(), state) }
+        when (val packet = event.packet) {
             is ClientboundContainerSetContentPacket -> {
                 McClient.runNextTick {
                     val container = McScreen.asMenu?.takeIf { it.menu?.containerId == packet.containerId() } ?: return@runNextTick
@@ -60,10 +53,7 @@ object PacketEventHandler {
         }
     }
 
-    private fun postBlockChange(pos: BlockPos, new: BlockState) {
-        if (!McLevel.hasLevel) return
-        val old = McLevel[pos]
-
+    internal fun postBlockChange(pos: BlockPos, old: BlockState, new: BlockState) {
         val lastChance = lastBlockChanges.getIfPresent(pos)
         if (lastChance != null && lastChance.first == old && lastChance.second == new) {
             return
