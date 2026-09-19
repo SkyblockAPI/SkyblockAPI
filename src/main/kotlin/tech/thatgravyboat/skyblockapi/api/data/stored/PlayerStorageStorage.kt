@@ -14,7 +14,6 @@ internal object PlayerStorageStorage {
         ::StorageData,
         StorageData.CODEC,
         "player_storage.json",
-        true
     )
 
     private inline val storage: StorageData? get() = PLAYER_STORAGE.get()

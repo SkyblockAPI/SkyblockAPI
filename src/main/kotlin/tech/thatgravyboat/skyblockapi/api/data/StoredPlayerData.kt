@@ -12,12 +12,14 @@ internal class StoredPlayerData<T : Any>(
     version: Int = 0,
     private val data: () -> T,
     file: String,
+    differentAlphaData: Boolean = true,
     codec: (Int) -> Codec<T>,
 ) {
-    constructor(data: () -> T, codec: Codec<T>, file: String) : this(
+    constructor(data: () -> T, codec: Codec<T>, file: String, differentAlphaData: Boolean = true) : this(
         0,
         data,
         file,
+        differentAlphaData,
         { codec },
     )
 
@@ -25,6 +27,7 @@ internal class StoredPlayerData<T : Any>(
         version,
         mutableMapOf(),
         file,
+        differentAlphaData,
     ) {
         CodecUtils.map(
             SkyblockAPICodecs.getCodec<UUID>(),
@@ -34,6 +37,16 @@ internal class StoredPlayerData<T : Any>(
 
     fun get(): T = storedData.get().getOrPut(McPlayer.uuid, data)
 
+    fun set(value: T) {
+        storedData.get()[McPlayer.uuid] = value
+        save()
+    }
+
+    fun deleteAll() {
+        storedData.delete()
+        save()
+    }
+
     fun save() = storedData.save()
 
 
@@ -42,6 +55,7 @@ internal class StoredPlayerData<T : Any>(
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
+            differentAlphaData: Boolean = true,
             codec: Codec<T> = SkyblockAPICodecs.getCodec<T>(),
         ): StoredPlayerData<T> {
             return create(T::class, file, version) { codec }
@@ -51,14 +65,16 @@ internal class StoredPlayerData<T : Any>(
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
+            differentAlphaData: Boolean = true,
             noinline codec: (Int) -> Codec<T>,
-        ) = create(T::class, file, version, codec)
+        ) = create(T::class, file, version, differentAlphaData, codec)
 
 
         fun <T : Any> create(
             kClass: KClass<T>,
             file: String,
             version: Int,
+            differentAlphaData: Boolean = true,
             codec: (Int) -> Codec<T>,
         ): StoredPlayerData<T> {
             val constructor = kClass.getEmptyConstructor()
@@ -66,7 +82,7 @@ internal class StoredPlayerData<T : Any>(
             val data: () -> T = {
                 constructor.callBy(emptyMap())
             }
-            return StoredPlayerData(version, data, file, codec)
+            return StoredPlayerData(version, data, file, differentAlphaData, codec)
         }
     }
 }

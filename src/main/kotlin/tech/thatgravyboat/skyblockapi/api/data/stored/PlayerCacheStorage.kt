@@ -21,7 +21,8 @@ internal object PlayerCacheStorage {
     private val PLAYER_CACHE = StoredData(
         PlayerCacheData(),
         PlayerCacheData.CODEC,
-        "player_cache.json"
+        "player_cache.json",
+        differentAlphaData = false,
     )
 
     private val players: MutableMap<UUID, CachedPlayer>

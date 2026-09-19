@@ -42,7 +42,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
     @JvmStatic
     val eventBus = EventBus()
 
-    internal val logger = this
+    internal val logger: Logger = this
 
     internal val isDebug get() = System.getProperty("skyblockapi.debug")?.lowercase() == "true"
 
