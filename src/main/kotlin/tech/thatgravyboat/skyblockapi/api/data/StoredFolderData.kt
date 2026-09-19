@@ -15,7 +15,7 @@ internal class FolderStorage<T : Any>(
 ) {
     constructor(folder: String, default: T, codec: Codec<T>) : this(0, folder, default, { codec })
     private val storages = mutableMapOf<String, StoredData<T>>()
-    private val defaultPath: Path = StoredData.defaultPath.resolve("$folder")
+    private val defaultPath: Path = StoredData.defaultPath.resolve(folder)
 
     init {
         load()

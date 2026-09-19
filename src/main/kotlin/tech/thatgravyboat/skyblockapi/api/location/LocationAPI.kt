@@ -2,16 +2,12 @@ package tech.thatgravyboat.skyblockapi.api.location
 
 import me.owdding.ktmodules.Module
 import net.hypixel.data.type.GameType
-import net.minecraft.core.BlockPos
 import net.minecraft.resources.Identifier
-import tech.thatgravyboat.skyblockapi.api.data.StoredData
-import tech.thatgravyboat.skyblockapi.api.data.StoredData.Companion.allStoredDatas
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.HypixelJoinEvent
-import tech.thatgravyboat.skyblockapi.api.events.hypixel.NewHypixelAlphaDetectedEvent
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.FreshHypixelAlphaDetectedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
@@ -20,7 +16,6 @@ import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.SkyBlockLocationEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -186,7 +181,7 @@ object LocationAPI {
     @Subscription
     fun onChatReceivedPre(event: ChatReceivedEvent.Pre) {
         if (!newAlphaRegex.contains(event.text)) return
-        NewHypixelAlphaDetectedEvent.post()
+        FreshHypixelAlphaDetectedEvent.post()
     }
 
 
@@ -244,7 +239,7 @@ object LocationAPI {
             sendUnknownAreaChatMessage = !sendUnknownAreaChatMessage
         }
         event.registerWithCallback("dev trigger new_alpha") {
-            NewHypixelAlphaDetectedEvent.post()
+            FreshHypixelAlphaDetectedEvent.post()
             Text.sendDebug("Triggered a NewHypixelAlphaDetectedEvent.")
         }
         event.registerWithCallback("unknownbiomes") {

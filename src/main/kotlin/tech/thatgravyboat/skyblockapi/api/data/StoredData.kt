@@ -5,10 +5,9 @@ import com.google.gson.JsonParser
 import com.mojang.serialization.Codec
 import me.owdding.ktmodules.Module
 import org.apache.commons.io.FileUtils
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
-import tech.thatgravyboat.skyblockapi.api.events.hypixel.NewHypixelAlphaDetectedEvent
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.FreshHypixelAlphaDetectedEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
@@ -185,10 +184,8 @@ internal class StoredData<T : Any>(
             }
         }
 
-        @Subscription(NewHypixelAlphaDetectedEvent::class)
-        fun onNewAlpha() {
-            allStoredDatas.forEach(StoredData<*>::deleteAlpha)
-        }
+        @Subscription(FreshHypixelAlphaDetectedEvent::class)
+        fun onFreshAlpha() = allStoredDatas.forEach(StoredData<*>::deleteAlpha)
 
         @TimePassed("10s")
         @Subscription(TickEvent::class)
