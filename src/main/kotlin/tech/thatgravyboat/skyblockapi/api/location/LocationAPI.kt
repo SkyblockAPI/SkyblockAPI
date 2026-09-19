@@ -4,10 +4,14 @@ import me.owdding.ktmodules.Module
 import net.hypixel.data.type.GameType
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.Identifier
+import tech.thatgravyboat.skyblockapi.api.data.StoredData
+import tech.thatgravyboat.skyblockapi.api.data.StoredData.Companion.allStoredDatas
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
+import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.HypixelJoinEvent
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.NewHypixelAlphaDetectedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
@@ -17,6 +21,7 @@ import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.SkyBlockLocationEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
@@ -27,6 +32,7 @@ import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
@@ -57,8 +63,14 @@ object LocationAPI {
         " *(?:players|party) \\((?<count>\\d+)\\) *",
     )
 
+    private val newAlphaRegex = RegexGroup.CHAT.create(
+        "alpha.new",
+        "^Welcome to Hypixel SkyBlock on the Alpha Network!"
+    )
+
     val forceOnSkyblock by debugToggle("force_skyblock", "Always returns true for SkyBlock checks")
     val forceIsland by debugSelect<SkyBlockIsland>("force_island", "Force a specific island to be returned")
+    val forceOnAlpha by debugToggle("force_alpha", "Always returns true when checking for onAlpha")
 
     var isOnSkyBlock: Boolean = false
         get() = field || forceOnSkyblock
@@ -89,6 +101,7 @@ object LocationAPI {
         private set
 
     var onAlpha: Boolean = false
+        get() = field || forceOnAlpha
         private set
 
     var playerCount: Int = 0
@@ -171,8 +184,15 @@ object LocationAPI {
     }
 
     @Subscription
+    fun onChatReceivedPre(event: ChatReceivedEvent.Pre) {
+        if (!newAlphaRegex.contains(event.text)) return
+        NewHypixelAlphaDetectedEvent.post()
+    }
+
+
     @OnlyOnSkyBlock
-    fun onTick(event: TickEvent) {
+    @Subscription(TickEvent::class)
+    fun onTick() {
         val pos = McPlayer.self?.blockPosition() ?: return
         val biome = McLevel.selfOrNull?.getBiome(pos)?.unwrapKey()?.getOrNull()?.identifier ?: run {
             LocationAPI.biome = null
@@ -217,18 +237,22 @@ object LocationAPI {
     fun onServerDisconnect() = reset()
 
     @Subscription
-    fun onCommand(event: RegisterCommandsEvent) {
-        event.registerWithCallback("sbapi unknownareas") {
+    internal fun onCommand(event: RegisterSkyblockApiCommandsEvent) {
+        event.registerWithCallback("unknownareas") {
             McClient.clipboard = unknownAreas.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
             Text.of("Copied ${unknownAreas.size} unknown areas to clipboard!").send()
             sendUnknownAreaChatMessage = !sendUnknownAreaChatMessage
         }
-        event.registerWithCallback("sbapi unknownbiomes") {
+        event.registerWithCallback("dev trigger new_alpha") {
+            NewHypixelAlphaDetectedEvent.post()
+            Text.sendDebug("Triggered a NewHypixelAlphaDetectedEvent.")
+        }
+        event.registerWithCallback("unknownbiomes") {
             McClient.clipboard = unknownBiomes.joinToString("\n") { "$it" }
             Text.of("Copied ${unknownBiomes.size} unknown biomes to clipboard!").send()
             sendUnknownBiomeChatMessage = !sendUnknownBiomeChatMessage
         }
-        event.registerWithCallback("sbapi location") {
+        event.registerWithCallback("location") {
             Text.multiline(
                 "Island: ${island?.displayName ?: "Unknown"}",
                 "Area: ${area.name}",

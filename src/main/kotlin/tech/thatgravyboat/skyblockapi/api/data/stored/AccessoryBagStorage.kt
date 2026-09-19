@@ -12,7 +12,6 @@ internal object AccessoryBagStorage {
         { mutableListOf() },
         CodecUtils.mutableList(SkyblockAPICodecs.getCodec<AccessoryBagItem>()),
         "accessory_bag.json",
-        true
     )
 
     fun addItem(accessoryBagItem: AccessoryBagItem) {

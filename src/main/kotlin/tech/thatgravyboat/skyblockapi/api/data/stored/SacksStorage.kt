@@ -16,7 +16,6 @@ internal object SacksStorage {
         2,
         ::SacksData,
         "sacks.json",
-        true,
     ) { version ->
         when (version) {
             1 -> RecordCodecBuilder.create {

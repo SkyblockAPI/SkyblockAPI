@@ -10,7 +10,8 @@ internal object FriendStorage {
     private val FRIENDS = StoredPlayerData(
         ::FriendData,
         FriendData.CODEC,
-        "friends.json"
+        "friends.json",
+        differentAlphaData = false,
     )
 
     val friends: MutableList<Friend>

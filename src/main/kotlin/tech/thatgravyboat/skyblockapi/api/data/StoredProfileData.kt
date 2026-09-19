@@ -1,8 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import com.mojang.serialization.Codec
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
@@ -15,14 +13,14 @@ internal class StoredProfileData<T : Any>(
     version: Int = 0,
     private val data: () -> T,
     file: String,
-    autoLoadOnProfileSwap: Boolean = false,
+    differentAlphaData: Boolean = true,
     codec: (Int) -> Codec<T>,
 ) {
-    constructor(data: () -> T, codec: Codec<T>, file: String, autoLoadOnProfileSwap: Boolean = false) : this(
+    constructor(data: () -> T, codec: Codec<T>, file: String, differentAlphaData: Boolean = true) : this(
         0,
         data,
         file,
-        autoLoadOnProfileSwap,
+        differentAlphaData,
         { codec },
     )
 
@@ -31,26 +29,26 @@ internal class StoredProfileData<T : Any>(
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
-            autoLoadOnProfileSwap: Boolean = false,
+            differentAlphaData: Boolean = true,
             codec: Codec<T> = SkyblockAPICodecs.getCodec<T>(),
         ): StoredProfileData<T> {
-            return create(T::class, file, version, autoLoadOnProfileSwap) { codec }
+            return create(T::class, file, version, differentAlphaData) { codec }
         }
 
         /** Only use if [T] has an empty constructor. */
         inline operator fun <reified T : Any> invoke(
             file: String,
             version: Int = 0,
-            autoLoadOnProfileSwap: Boolean = false,
+            differentAlphaData: Boolean = true,
             noinline codec: (Int) -> Codec<T>,
-        ) = create(T::class, file, version, autoLoadOnProfileSwap, codec)
+        ) = create(T::class, file, version, differentAlphaData, codec)
 
 
         private fun <T : Any> create(
             kClass: KClass<T>,
             file: String,
             version: Int,
-            autoLoadOnProfileSwap: Boolean = false,
+            differentAlphaData: Boolean = true,
             codec: (Int) -> Codec<T>,
         ): StoredProfileData<T> {
             val constructor = kClass.getEmptyConstructor()
@@ -58,7 +56,7 @@ internal class StoredProfileData<T : Any>(
             val data: () -> T = {
                 constructor.callBy(emptyMap())
             }
-            return StoredProfileData(version, data, file, autoLoadOnProfileSwap, codec)
+            return StoredProfileData(version, data, file, differentAlphaData, codec)
         }
 
         private val _allProfileData = mutableListOf<StoredProfileData<*>>()
@@ -69,6 +67,7 @@ internal class StoredProfileData<T : Any>(
         version,
         mutableMapOf(),
         file,
+        differentAlphaData,
     ) {
         CodecUtils.map(
             SkyblockAPICodecs.getCodec<UUID>(),
@@ -80,9 +79,6 @@ internal class StoredProfileData<T : Any>(
     }
 
     init {
-        if (autoLoadOnProfileSwap) {
-            SkyBlockAPI.eventBus.register<ProfileChangeEvent> { storedData.loadAsync() }
-        }
         _allProfileData.add(this)
     }
 
@@ -90,6 +86,11 @@ internal class StoredProfileData<T : Any>(
         val profile = ProfileAPI.profileName ?: return null
         val storedData = storedData.get()
         return storedData.getOrPut(McPlayer.uuid, ::mutableMapOf).getOrPut(profile, data)
+    }
+
+    fun deleteCurrent() {
+        val profile = ProfileAPI.profileName ?: return
+        removeProfile(profile)
     }
 
     /**
@@ -119,7 +120,10 @@ internal class StoredProfileData<T : Any>(
     }
 
     fun removeProfile(name: String) {
-        if (storedData.get()[McPlayer.uuid]?.remove(name) != null) save()
+        // Deletes both normal data and alpha data
+        val maps = listOfNotNull(storedData.getNormalData(), storedData.getAlphaData())
+        val removedCount = maps.count { it[McPlayer.uuid]?.remove(name) != null }
+        if (removedCount > 0) save()
     }
 
     fun save() = storedData.save()
