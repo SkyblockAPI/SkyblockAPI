@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.FieldName
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktcodecs.IncludedCodec
 import me.owdding.ktcodecs.NamedCodec
@@ -116,11 +117,11 @@ internal data class ElectionData(
     var mayor: StoredMayor? = null,
     @OptionalNullable
     var minister: StoredMayor? = null,
+    @FieldName("next_mayor_time")
     var nextMayorTime: Instant = Instant.DISTANT_PAST,
-    @OptionalIfEmpty @NamedCodec("perkpocalypse_rotation")
+    @FieldName("jerry_perkpocalypse_rotation") @OptionalIfEmpty @NamedCodec("perkpocalypse_rotation")
     val jerryPerkpocalypseRotation: MutableMap<Int, StoredMayor> = mutableMapOf(),
-
-    @OptionalIfEmpty
+    @FieldName("perk_descriptions") @OptionalIfEmpty
     val perkDescriptions: MutableMap<String, String> = mutableMapOf(),
 ) {
     companion object {
