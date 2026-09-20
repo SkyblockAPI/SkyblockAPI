@@ -2,8 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.data
 
 import net.minecraft.util.TriState
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
-//? < 26.2
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
 import tech.thatgravyboat.skyblockapi.api.data.stored.ElectionStorage
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
