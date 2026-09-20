@@ -26,5 +26,5 @@ fun Duration.toReadableTime(biggestUnit: DurationUnit = DurationUnit.DAYS, maxUn
 
     return filteredUnits.joinToString(", ") { (unit, value) ->
         "$value${unitNames[unit]}"
-    }.ifEmpty { "0 seconds" }
+    }.ifEmpty { "0s" }
 }

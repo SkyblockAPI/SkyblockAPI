@@ -4,6 +4,7 @@ import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockBiome
@@ -57,6 +58,6 @@ object GlaciteAPI {
         cold = 0
     }
 
-    @Subscription
-    fun onServerChange(event: ServerChangeEvent) = reset()
+    @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
+    fun onServerChange() = reset()
 }

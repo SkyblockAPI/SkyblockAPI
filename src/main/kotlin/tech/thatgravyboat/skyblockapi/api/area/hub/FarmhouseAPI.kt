@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -42,8 +43,6 @@ object FarmhouseAPI {
         bronzeMedals = 0
     }
 
-    @Subscription
-    fun onServerChange(event: ServerChangeEvent) {
-        reset()
-    }
+    @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
+    fun onServerChange() = reset()
 }
