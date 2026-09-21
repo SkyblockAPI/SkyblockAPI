@@ -80,7 +80,6 @@ internal object MuseumStorage {
     private val MUSEUM = StoredProfileData<MuseumStorageData>(
         "museum.json",
         1,
-        autoLoadOnProfileSwap = true,
     ) { version ->
         when (version) {
             0 -> V0_CODEC
