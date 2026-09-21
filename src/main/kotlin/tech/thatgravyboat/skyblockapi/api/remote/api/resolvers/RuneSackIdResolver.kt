@@ -20,9 +20,7 @@ internal data object RuneSackIdResolver : InventoryIdResolver {
         menu: AbstractContainerScreen<T>,
         resolverKind: IdResolverKind,
     ): Boolean {
-        val titleMatch = menu.title.stripped.endsWith("Runes Sack")
-        addDebugString { "Title Match: $titleMatch" }
-        return titleMatch
+        return menu.title.stripped.endsWith("Runes Sack")
     }
 
     override fun <T : AbstractContainerMenu> ItemStack.resolveId(
