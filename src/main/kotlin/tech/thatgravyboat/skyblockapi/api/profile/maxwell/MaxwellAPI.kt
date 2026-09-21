@@ -8,7 +8,6 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.MaxwellStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.IgnoreFiller
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
@@ -31,7 +30,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.indexOfFirstMatch
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 private const val THAUMATURGY_MP_SLOT = 48
@@ -111,7 +109,7 @@ data object MaxwellAPI : ItemDebugCategory {
         "title",
         "^Your Bags$",
     )
-    private val bagsMpRegex = bagsGroup.create(
+    private val bagsApRegex = bagsGroup.create(
         "ap",
         "^Accessory Power: (?<ap>[\\d,.]+)",
     )
@@ -142,19 +140,19 @@ data object MaxwellAPI : ItemDebugCategory {
     private val tuningTemplatesGroup = tuningsGroup.group("templates")
     private val lockedTemplateNameRegex = tuningTemplatesGroup.create(
         "locked.name",
-        "Locked Slot", // TODO: not correct
+        "Locked Slot",
     )
     private val lockedTemplateIndexRegex = tuningTemplatesGroup.create(
         "locked.index",
-        "Tuning Template #(?<index>[\\d,.]+)", // TODO: not correct
+        "Tuning Template #(?<index>[\\d,.]+)",
     )
     private val unlockedTemplateNameIndexRegex = tuningTemplatesGroup.create(
         "index",
-        "Tuning Template #(?<index>[\\d,.]+)", // TODO: not correct
+        "Tuning Template #(?<index>[\\d,.]+)",
     )
     private val unlockedTemplateStartStatsRegex = tuningTemplatesGroup.create(
         "stats.start",
-        "You are loading:", // TODO: get correct thingy
+        "You are loading:",
     )
     //endregion
     //endregion
@@ -290,7 +288,7 @@ data object MaxwellAPI : ItemDebugCategory {
                 continue
             }
             if (!foundMp) {
-                bagsMpRegex.findThenNull(line, "ap") { (ap) ->
+                bagsApRegex.findThenNull(line, "ap") { (ap) ->
                     val newAp = ap.parseFormattedInt()
                     MaxwellStorage.updateAccessoryPower(newAp)
                     item.addDebugString { "Accessory Power: $newAp" }
