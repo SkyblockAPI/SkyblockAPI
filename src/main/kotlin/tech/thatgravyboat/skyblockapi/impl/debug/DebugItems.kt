@@ -181,7 +181,8 @@ inline fun ItemDebugAttachable.addDebug(category: ItemDebugCategory, entry: () -
 
 @OptIn(ExperimentalContracts::class)
 @JvmName("categoryAddDebug")
-inline context(category: ItemDebugCategory) fun ItemDebugAttachable.addDebug(entry: () -> Component) {
+context(category: ItemDebugCategory)
+inline fun ItemDebugAttachable.addDebug(entry: () -> Component) {
     contract {
         callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
     }
@@ -190,7 +191,8 @@ inline context(category: ItemDebugCategory) fun ItemDebugAttachable.addDebug(ent
 
 @OptIn(ExperimentalContracts::class)
 @JvmName("categoryAddDebugString")
-inline context(category: ItemDebugCategory) fun ItemDebugAttachable.addDebugString(entry: () -> String) {
+context(category: ItemDebugCategory)
+inline fun ItemDebugAttachable.addDebugString(entry: () -> String) {
     contract {
         callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
     }

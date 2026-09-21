@@ -1,12 +1,16 @@
 package tech.thatgravyboat.skyblockapi.api.area.dungeon
 
-enum class DungeonClass(val displayName: String) {
-    ARCHER("Archer"),
-    BERSERKER("Berserk"),
-    HEALER("Healer"),
-    MAGE("Mage"),
-    TANK("Tank")
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+
+enum class DungeonClass {
+    ARCHER,
+    BERSERKER,
+    HEALER,
+    MAGE,
+    TANK,
     ;
+
+    val displayName = toFormattedName()
 
     companion object {
         fun getByName(name: String) = entries.find { it.displayName == name }
