@@ -2351,6 +2351,10 @@ public final class tech/thatgravyboat/skyblockapi/api/events/hypixel/ChangedSack
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/hypixel/FreshHypixelAlphaDetectedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/hypixel/FreshHypixelAlphaDetectedEvent;
+}
+
 public abstract class tech/thatgravyboat/skyblockapi/api/events/hypixel/FriendEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/friends/Friend;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getFriend ()Ltech/thatgravyboat/skyblockapi/api/profile/friends/Friend;
@@ -3713,6 +3717,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/LocationAPI {
 	public final fun getArea ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockArea;
 	public final fun getBiome ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
 	public final fun getForceIsland ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
+	public final fun getForceOnAlpha ()Z
 	public final fun getForceOnSkyblock ()Z
 	public final fun getIsland ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockIsland;
 	public final fun getLastServerChange ()Lkotlin/time/Instant;
@@ -3723,14 +3728,14 @@ public final class tech/thatgravyboat/skyblockapi/api/location/LocationAPI {
 	public final fun getServerId ()Ljava/lang/String;
 	public final fun isGuest ()Z
 	public final fun isOnSkyBlock ()Z
-	public final fun onCommand (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	public final fun onChatReceivedPre (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onHypixelJoin (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/HypixelJoinEvent;)V
 	public final fun onScoreboardChange (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardUpdateEvent;)V
 	public final fun onScoreboardTitleUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/ScoreboardTitleUpdateEvent;)V
 	public final fun onServerChange (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ServerChangeEvent;)V
 	public final fun onServerDisconnect ()V
 	public final fun onTabListUpdate (Ltech/thatgravyboat/skyblockapi/api/events/info/TabListChangeEvent;)V
-	public final fun onTick (Ltech/thatgravyboat/skyblockapi/api/events/time/TickEvent;)V
+	public final fun onTick ()V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockArea {
