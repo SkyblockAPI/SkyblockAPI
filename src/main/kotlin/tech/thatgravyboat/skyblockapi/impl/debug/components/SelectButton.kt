@@ -79,7 +79,6 @@ internal class SelectButton<T>(width: Int, height: Int) : AbstractButton(0, 0, w
 
     override fun updateWidgetNarration(output: NarrationElementOutput?) {}
 
-    //~ if >= 26.1 'renderContents' -> 'extractContents'
     override fun extractContents(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val text = this.getMessage()
 
@@ -108,9 +107,7 @@ internal class SelectButton<T>(width: Int, height: Int) : AbstractButton(0, 0, w
             return mouseX.toInt() >= this.x && mouseX.toInt() <= this.x + button.width && mouseY.toInt() >= this.y && mouseY.toInt() <= this.y + SELECT_BUTTON_MAX_HEIGHT
         }
 
-        //~ if >= 26.1 'renderBackground' -> 'extractBackground'
         override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
-            //~ if >= 26.1 'renderBackground' -> 'extractBackground'
             super.extractBackground(graphics, mouseX, mouseY, partialTick)
 
             val height = min(
@@ -134,7 +131,6 @@ internal class SelectButton<T>(width: Int, height: Int) : AbstractButton(0, 0, w
             }
         }
 
-        //~ if >= 26.1 'render(' -> 'extractRenderState('
         override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
             graphics.scissor(x, y, button.width, SELECT_BUTTON_MAX_HEIGHT) {
                 for (i in 0 until SELECT_BUTTON_MAX_ENTRIES) {

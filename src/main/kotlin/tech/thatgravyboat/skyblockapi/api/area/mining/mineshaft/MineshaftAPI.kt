@@ -8,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseSpawnEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftEnteredEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftFoundEvent
@@ -114,8 +115,6 @@ object MineshaftAPI {
         mineshaftVariant = null
     }
 
-    @Subscription
-    fun onWorldChange(event: ServerChangeEvent) {
-        reset()
-    }
+    @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
+    fun onWorldChange() = reset()
 }

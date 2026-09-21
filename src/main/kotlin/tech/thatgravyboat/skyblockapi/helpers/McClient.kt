@@ -114,7 +114,8 @@ object McClient {
 
     //? >= 26.2
     val hud: Hud get() = self.gui.hud
-    val chat: ChatComponent get() =/*? if >= 26.2 {*/hud.chat/*? } else*///gui.chat
+    //~ if >= 26.2 'gui' -> 'hud'
+    val chat: ChatComponent get() = hud.chat
     val options: Options get() = self.options
 
     val isSingleplayer: Boolean get() = /*? if >= 26.2 {*/!self.isMultiplayerServer/*? } else*///self.isSingleplayer
@@ -164,10 +165,8 @@ object McClient {
     fun setScreenAsync(screen: () -> Screen?) = runNextTick {
         val next = screen()
         (McScreen.self as? AbstractContainerScreen<*>)?.onClose()
-        //? >= 26.2 {
+        //~ if >= 26.2 'self' -> 'gui'
         gui.setScreen(next)
-        //? } else
-        //self.setScreen(next)
     }
 
     //? < 26.2 {
@@ -181,10 +180,8 @@ object McClient {
         if (McScreen.self is ChatScreen) {
             setScreenAsync { screen }
         } else {
-            //? >= 26.2 {
+            //~ if >= 26.2 'self' -> 'gui'
             gui.setScreen(screen)
-            //? } else
-            //self.setScreen(screen)
         }
     }
 

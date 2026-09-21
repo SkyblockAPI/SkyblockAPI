@@ -22,9 +22,7 @@ internal open class Overlay : Screen(Component.empty()) {
         super.repositionElements()
     }
 
-    //~ if >= 26.1 'renderBackground' -> 'extractBackground'
     override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
-        //~ if >= 26.1 'renderWithTooltipAndSubtitles' -> 'extractRenderStateWithTooltipAndSubtitles'
         this.background?.extractRenderStateWithTooltipAndSubtitles(graphics, -1, -1, partialTick)
         graphics.nextStratum()
     }
