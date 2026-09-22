@@ -46,6 +46,7 @@ fun Entity.getMobLevel(): Int? {
         it.string.replace(SkyBlockEntity.mobLevelRegex, "$1").takeIf(String::isNotBlank)
     }.map { it.filter { it.isDigit() } }.map { it.toInt() }.firstOrNull()
 }
+fun Entity.getAttachedEntities(): List<Entity> = this.asAccessor().`skyblockapi$getAttachments`().mapNotNull { it.get() }
 fun Entity.getAttachedTo(): Entity? = this.asAccessor().`skyblockapi$getAttachedTo`()
 fun Entity.getStrippedAttachedLines(): List<String> = this.getAttachedLines().map { it.stripped }
-fun Entity.getAttachedLines(): List<Component> = this.asAccessor().`skyblockapi$getAttachments`().mapNotNull { it.get() }.mapNotNull { it.customName }
+fun Entity.getAttachedLines(): List<Component> = getAttachedEntities().mapNotNull { it.customName }

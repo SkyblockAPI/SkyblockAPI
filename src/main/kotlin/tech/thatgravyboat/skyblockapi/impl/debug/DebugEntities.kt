@@ -1,28 +1,37 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
+import com.google.gson.JsonElement
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.suggestion.SuggestionProvider
+import com.mojang.serialization.Codec
 import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.helpers.getAttachedEntities
+import tech.thatgravyboat.skyblockapi.helpers.getAttachedLines
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.platform.save
 import tech.thatgravyboat.skyblockapi.platform.skin
 import tech.thatgravyboat.skyblockapi.platform.textureUrl
+import tech.thatgravyboat.skyblockapi.utils.codecs.IncludedCodecs
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonArray
+import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import kotlin.jvm.optionals.getOrNull
@@ -44,7 +53,7 @@ object DebugEntities {
         return { it == type }
     }
 
-    private fun copyEntitiesToClipboard(query: String, range: Int? = null) {
+    private fun copyEntitiesToClipboard(query: String, range: Int? = null, includeAttachments: Boolean = false) {
         val filter = getEntityFilter(query)
         val level = McLevel.selfOrNull ?: return
         val entities = if (range != null) {
@@ -64,16 +73,44 @@ object DebugEntities {
             }
         }
 
-        if (json.size() != savedEntities.size) {
-            Text.debug("Failed to serialize some entities, some may not be copied.").send()
-        } else if (json.isEmpty) {
-            Text.debug("No entities matched the filter: $query").send()
+        if (json.isEmpty) {
+            Text.sendDebug("No entities matched the filter: $query")
+            return
         }
 
-        if (!json.isEmpty) {
-            Text.debug("Copied ${json.size()} entities to clipboard with filter: $filter").send()
-            McClient.clipboard = json.toPrettyString()
+        var data: JsonElement = json
+
+        if (includeAttachments) run {
+            @Suppress("UNCHECKED_CAST")
+            val codec = CodecUtils.map(Codec.STRING, CodecUtils.list(IncludedCodecs.COMPONENT)) as Codec<Map<String, List<Component>>>
+
+            val attachments = filteredEntities.mapNotNull { entity ->
+                val lines = entity.getAttachedLines()
+                if (lines.isEmpty()) return@mapNotNull null
+                // we convert entity id to string because json cannot have ints as keys
+                entity.id.toString() to lines
+            }.toMap().toJson(codec)
+
+            if (attachments == null) {
+                Text.sendDebug("Failed to copy entity attachments!")
+                return@run
+            }
+
+            data = JsonObject {
+                set("entities", json)
+                set("attachments", attachments)
+            }
         }
+
+        if (json.size() != savedEntities.size) {
+            Text.debug("Failed to serialize some entities, some may not be copied.").send()
+        }
+
+        Text.sendDebug("Copied ${json.size()} entities ") {
+            if (includeAttachments) append("and attachments ")
+            append("to clipboard with filter: $filter")
+        }
+        McClient.clipboard = data.toPrettyString()
     }
 
     private fun getHoveredEntity(): Entity? {
@@ -88,11 +125,12 @@ object DebugEntities {
     fun onCommandsRegistration(event: RegisterCommandsEvent) {
         event.register("sbapi copy entities") {
             then("range", IntegerArgumentType.integer()) {
-                then("filter", StringArgumentType.greedyString(), suggestions) {
+                then("filter", StringArgumentType.string(), suggestions) {
                     callback {
-                        val range = IntegerArgumentType.getInteger(this, "range")
-                        val filter = StringArgumentType.getString(this, "filter")
-                        copyEntitiesToClipboard(filter, range)
+                        copyEntitiesToClipboard(argument("filter"), argument("range"), false)
+                    }
+                    thenCallback("include_attachments") {
+                        copyEntitiesToClipboard(argument("filter"), argument("range"), true)
                     }
                 }
             }
