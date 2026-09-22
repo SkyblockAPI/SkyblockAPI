@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.utils
 
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 
 enum class McVersion {
     //? < 26.2 {
@@ -17,7 +18,7 @@ enum class McVersion {
     val stringVersion = name.substringAfter("_").replace("_", ".")
 
     /** should match both yy.drop and yy.drop.patch */
-    val isActive: Boolean = this.stringVersion == "26.1.2".substringBefore(" ") || this.stringVersion == "26.1.2".substringBefore(" ").substringBeforeLast(".")
+    val isActive: Boolean = this.stringVersion == McClient.version.substringBefore(" ") || this.stringVersion == McClient.version.substringBefore(" ").substringBeforeLast(".")
 }
 
 @Deprecated(message = "Used mc version instead!")
