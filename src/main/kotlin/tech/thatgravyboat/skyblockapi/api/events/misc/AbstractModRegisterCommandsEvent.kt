@@ -28,7 +28,7 @@ abstract class AbstractModRegisterCommandsEvent(
     }
 
     open fun command(name: String, init: CommandBuilder0<FabricClientCommandSource>.() -> Unit) = prefixes.forEach {
-        baseEvent.command("$it name", init)
+        baseEvent.command("$it $name", init)
     }
 }
 
