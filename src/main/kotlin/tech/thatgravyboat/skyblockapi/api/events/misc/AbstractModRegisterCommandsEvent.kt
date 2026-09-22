@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.misc
 import com.mojang.brigadier.context.CommandContext
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+import tech.thatgravyboat.skyblockapi.utils.command.dsl.CommandBuilder0
 
 /** Utility event for creating commands with shared prefixes. */
 abstract class AbstractModRegisterCommandsEvent(
@@ -24,6 +25,10 @@ abstract class AbstractModRegisterCommandsEvent(
 
     open fun registerWithCallback(command: String, callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
         prefixes.forEach { baseEvent.registerWithCallback("$it $command", callback = callback) }
+    }
+
+    open fun command(name: String, init: CommandBuilder0<FabricClientCommandSource>.() -> Unit) = prefixes.forEach {
+        baseEvent.command("$it name", init)
     }
 }
 
