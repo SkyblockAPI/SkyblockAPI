@@ -18,7 +18,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.HudElement;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
@@ -157,9 +159,20 @@ public abstract class HudMixin {
     }
 
 
+    @ModifyArgs(
+        method = "extractPlayerHealth",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;extractHearts(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V")
+    )
+    private void modifyRenderAbsorptionHearts(Args args) {
+        var isCancelled = new RenderHudElementEvent(HudElement.ABSORPTION_HEARTS, args.get(0)).post(SkyBlockAPI.getEventBus());
+        // index of 'absorption' parameter in the function
+        if (isCancelled) args.set(9, 0);
+    }
+
+
     @Inject(method = "extractChat", at = @At("HEAD"), cancellable = true)
-    private void onChatRender(GuiGraphicsExtractor GuiGraphicsExtractor, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (new RenderHudElementEvent(HudElement.CHAT, GuiGraphicsExtractor).post(SkyBlockAPI.getEventBus())) {
+    private void onChatRender(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (new RenderHudElementEvent(HudElement.CHAT, graphics).post(SkyBlockAPI.getEventBus())) {
             ci.cancel();
         }
     }

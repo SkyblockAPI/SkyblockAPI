@@ -22,7 +22,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.HudElement;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
@@ -157,6 +159,16 @@ public class GuiMixin {
     )
     private boolean onRenderAir(Gui instance, GuiGraphicsExtractor graphics, Player player, int i, int j, int k) {
         return !new RenderHudElementEvent(HudElement.AIR, graphics).post(SkyBlockAPI.getEventBus());
+    }
+
+    @ModifyArgs(
+        method = "extractPlayerHealth",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;extractHearts(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V")
+    )
+    private void modifyRenderAbsorptionHearts(Args args) {
+        var isCancelled = new RenderHudElementEvent(HudElement.ABSORPTION_HEARTS, args.get(0)).post(SkyBlockAPI.getEventBus());
+        // index of 'absorption' parameter in the function
+        if (isCancelled) args.set(9, 0);
     }
 
 
