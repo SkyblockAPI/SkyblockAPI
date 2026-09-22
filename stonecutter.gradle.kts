@@ -55,8 +55,8 @@ stonecutter.versions.forEach { (project, version) ->
             dependencyConstraints.addAll(context.dependencyConstraints)
 
 
-            outgoing.capability("ech.thatgravyboat:skyblock-api-$version:${rootProject.version}")
-            outgoing.capability("ech.thatgravyboat:skyblock-api:${rootProject.version}")
+            outgoing.capability("tech.thatgravyboat:skyblock-api-$version:${rootProject.version}")
+            outgoing.capability("tech.thatgravyboat:skyblock-api:${rootProject.version}")
         }
         sbapiComponent.addVariantsFromConfiguration(config) {
             mapToOptional()

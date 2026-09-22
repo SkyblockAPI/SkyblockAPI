@@ -31,7 +31,7 @@ dependencies {
 
 - `26.1` for 26.1.x
 - `26.2` for 26.2.x
-
+- `26.3` for 26.3.x
 
 ## Major Change Logs
 
