@@ -15,13 +15,13 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.LiteralCommandBuilder
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
-import tech.thatgravyboat.skyblockapi.helpers.getAttachedEntities
 import tech.thatgravyboat.skyblockapi.helpers.getAttachedLines
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.platform.save
@@ -121,43 +121,46 @@ object DebugEntities {
         return hoveredEntity
     }
 
+
+
     @Subscription
-    fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi copy entities") {
-            then("range", IntegerArgumentType.integer()) {
-                then("filter", StringArgumentType.string(), suggestions) {
+    internal fun onCommandsRegistration(event: RegisterSkyblockApiCommandsEvent) {
+        context(builder: LiteralCommandBuilder)
+        fun copyEntitiesCommand(includeAttachments: Boolean) {
+            builder.then("range", IntegerArgumentType.integer()) {
+                then("filter", StringArgumentType.greedyString(), suggestions) {
                     callback {
-                        copyEntitiesToClipboard(argument("filter"), argument("range"), false)
-                    }
-                    thenCallback("include_attachments") {
-                        copyEntitiesToClipboard(argument("filter"), argument("range"), true)
+                        copyEntitiesToClipboard(argument("filter"), argument("range"), includeAttachments)
                     }
                 }
             }
         }
-
-        event.register("sbapi copy entity") {
-            then("texture") {
-                callback {
-                    getHoveredEntity()?.let {
-                        if (it is AbstractClientPlayer) {
-                            it.skin().textureUrl?.let { McClient.clipboard = it }
-                            Text.debug("Copied texture to clipboard.").send()
-                        } else {
-                            Text.debug("Hovered entity is not a player, cannot copy texture.").send()
+        event.register("copy") {
+            then("entities") { copyEntitiesCommand(false) }
+            then("entities_with_attachments") { copyEntitiesCommand(true) }
+            then("entity") {
+                then("texture") {
+                    callback {
+                        getHoveredEntity()?.let {
+                            if (it is AbstractClientPlayer) {
+                                it.skin().textureUrl?.let { McClient.clipboard = it }
+                                Text.debug("Copied texture to clipboard.").send()
+                            } else {
+                                Text.debug("Hovered entity is not a player, cannot copy texture.").send()
+                            }
                         }
                     }
                 }
-            }
 
-            callback {
-                val hoveredEntity = McClient.self.crosshairPickEntity
-                if (hoveredEntity == null) {
-                    Text.debug("No entity is currently hovered.").send()
-                } else {
-                    val json = hoveredEntity.save().toJson(CompoundTag.CODEC).toPrettyString()
-                    McClient.clipboard = json
-                    Text.debug("Copied entity ${hoveredEntity.name} to clipboard: $json").send()
+                callback {
+                    val hoveredEntity = McClient.self.crosshairPickEntity
+                    if (hoveredEntity == null) {
+                        Text.debug("No entity is currently hovered.").send()
+                    } else {
+                        val json = hoveredEntity.save().toJson(CompoundTag.CODEC).toPrettyString()
+                        McClient.clipboard = json
+                        Text.debug("Copied entity ${hoveredEntity.name} to clipboard: $json").send()
+                    }
                 }
             }
         }
