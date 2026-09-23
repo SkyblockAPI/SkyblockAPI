@@ -8,11 +8,13 @@ import org.apache.commons.io.FileUtils
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.FreshHypixelAlphaDetectedEvent
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.HypixelJoinEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.Logger
+import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJsonOrThrow
@@ -40,7 +42,7 @@ internal class StoredData<T : Any>(
         : this(0, { data }, file, differentAlphaData, { codec })
 
 
-    fun get(): T = if (shouldUseAlphaData()) getOrCreateAlphaData() else data
+    fun get(): T = if (shouldUseAlphaData()) getOrCreateAlphaData() else getNormalData()
 
     fun set(value: T) {
         if (shouldUseAlphaData()) this.alphaData = value
@@ -60,7 +62,15 @@ internal class StoredData<T : Any>(
         alphaData = null
     }
 
-    internal fun getNormalData(): T = data
+    private fun loadNormalData() {
+        if (data != null) return
+        this.data = loadData(path, factory)
+    }
+
+    internal fun getNormalData(): T {
+        loadNormalData()
+        return data!!
+    }
     internal fun getAlphaData(): T? = alphaData
 
     init {
@@ -71,12 +81,13 @@ internal class StoredData<T : Any>(
     private val path: Path = defaultPath.resolve(this.fileName)
     private val alphaPath: Path = defaultAlphaPath.resolve(this.fileName)
 
-    private var data: T
+    private var data: T? = null
     private var alphaData: T? = null
 
     private fun shouldUseAlphaData() = differentAlphaData && LocationAPI.onAlpha
 
     private fun copyData(): T {
+        val data = getNormalData()
         try {
             Logger.debug("Creating copy of data for alpha data")
             // we convert to json and then back to make a new copy of the data and not just a reference to it
@@ -122,9 +133,6 @@ internal class StoredData<T : Any>(
         }
     }
 
-    init {
-        this.data = loadData(path, factory)
-    }
 
     private val currentCodec = codec(version)
 
@@ -144,7 +152,7 @@ internal class StoredData<T : Any>(
     }
 
     private fun saveToSystem() {
-        savePath(data, path)
+        savePath(getNormalData(), path)
     }
 
     private fun savePath(data: T, path: Path) {
@@ -181,6 +189,18 @@ internal class StoredData<T : Any>(
             if (copy.isEmpty()) return
             CompletableFuture.runAsync {
                 copy.forEach(block)
+            }
+        }
+
+        private var firstJoin = false
+
+        // we load data asynchronously on hypixel join
+        @Subscription(HypixelJoinEvent::class)
+        fun onHypixelJoin() {
+            if (firstJoin) return
+            firstJoin = true
+            Scheduling.async {
+                allStoredDatas.forEach(StoredData<*>::loadNormalData)
             }
         }
 
