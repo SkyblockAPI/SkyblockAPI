@@ -28,7 +28,6 @@ internal data object RockMilestonesResolver : InventoryIdResolver {
     }
 }
 
-// TODO: add trophy frog resolver
 @IdResolvers
 internal data object TrophyFishResolver : InventoryIdResolver {
     override val priority: Int = 10
