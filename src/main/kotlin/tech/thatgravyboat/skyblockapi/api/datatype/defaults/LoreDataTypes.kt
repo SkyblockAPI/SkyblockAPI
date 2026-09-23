@@ -36,6 +36,8 @@ object LoreDataTypes {
     private val selectedArrowRegex = dataTypeGroup.create("arrow", "^Selected: (?<type>.+)$")
     private val soulboundRegex = dataTypeGroup.create("soulbound", "\\* (?<coop>Co-op )?Soulbound \\*")
 
+    val RAW_LORE: DataType<List<String>> = DataType.of("raw_lore") { ctx, _ -> ctx[ResolutionContext.Resolver.RAW_LORE] }
+
     val FUEL: DataType<Pair<Int, Int>> = DataType.of("fuel") { ctx, _ ->
         var output: Pair<Int, Int>? = null
         fuelRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "fuel", "max") { (fuel, max) ->
@@ -76,21 +78,22 @@ object LoreDataTypes {
         if (outputAbility != null && outputDuration != null) outputAbility to outputDuration else null
     }
 
-    private fun getRarityLine(stack: ItemStack, ctx: ResolutionContext? = null): Pair<String, SkyBlockRarity>? {
-        val rawLore = ctx?.get(ResolutionContext.Resolver.RAW_LORE) ?: stack.getRawLore()
-        return getRarityLine(rawLore, DataTypes.RECOMBOBULATOR.resolve(stack) == true)
+    private fun getRarityLine(stack: ItemStack, ctx: ResolutionContext): Pair<String, SkyBlockRarity>? {
+        val rawLore = ctx[ResolutionContext.Resolver.RAW_LORE]
+        return getRarityLine(rawLore, DataTypes.RECOMBOBULATOR.resolve(stack, ctx) == true)
     }
 
     internal fun getRarityLine(lore: ItemLore?, isUpgraded: Boolean = false): Pair<String, SkyBlockRarity>? {
-        return getRarityLine(lore?.lines()?.map { it.stripped }, isUpgraded)
+        if (lore == null) return null
+        return getRarityLine(lore.lines().map { it.stripped }, isUpgraded)
     }
 
-    internal fun getRarityLine(rawLore: List<String>?, isUpgraded: Boolean = false): Pair<String, SkyBlockRarity>? {
-        val lines = rawLore?.asReversedIterator() ?: return null
+    internal fun getRarityLine(rawLore: List<String>, isUpgraded: Boolean = false): Pair<String, SkyBlockRarity>? {
+        val lines = rawLore.asReversedIterator()
         for (line in lines) {
-            val rarityLine = (if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim()).removePrefix("SHINY ")
+            val rarityLine = (if (isUpgraded && line.length > 4) line.substring(2, line.length - 2) else line).trim().removePrefix("SHINY ")
             if (rarityLine.any(Char::isLowerCase)) continue
-            val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.displayName.uppercase()) }
+            val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.uppercaseDisplayName) }
             if (rarity != null) {
                 return rarityLine to rarity
             }
@@ -99,20 +102,22 @@ object LoreDataTypes {
     }
 
     val RARITY: DataType<SkyBlockRarity> = DataType.of("rarity") { ctx, stack ->
-        val tooltipStyleRarity = stack.get(DataComponents.TOOLTIP_STYLE)?.path
         getRarityLine(stack, ctx)?.second
-            ?: tooltipStyleRarity?.let { style -> SkyBlockRarity.fromNameOrNull(style) }
-            ?: GenericDataTypes.PET_DATA.resolve(stack)?.rarity
+            ?: stack.get(DataComponents.TOOLTIP_STYLE)?.path?.let(SkyBlockRarity::fromNameOrNull)
+            // pets inside inventories don't have the rarity/category line
+            ?: ctx[ResolutionContext.Resolver.PET_DATA]?.rarity
     }
 
     val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") { ctx, stack ->
         getRarityLine(stack, ctx)?.let { line ->
-            line.first.removePrefix(line.second.displayName.uppercase()).trim()
+            line.first.removePrefix(line.second.displayName.uppercase()).trim().ifBlank { null }
         }?.let(SkyBlockCategory::create)
+            // pets inside inventories don't have the rarity/category line
+            ?: if (ctx[ResolutionContext.Resolver.PET_DATA] != null) SkyBlockCategory.PET else null
     }
 
     val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = DataType.of("dungeon_breaker_charges") { ctx, stack ->
-        if (DataTypes.ID.resolve(stack) != "DUNGEONBREAKER") return@of null
+        if (ctx[ResolutionContext.Resolver.ID] != "DUNGEONBREAKER") return@of null
 
         var output: Pair<Int, Int>? = null
         dungeonBreakerRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "current", "max") { (current, max) ->
@@ -129,8 +134,8 @@ object LoreDataTypes {
         output
     }
 
-    val SELECTED_ARROW: DataType<SkyBlockId> = DataType.of("selected_arrow") { ctx, stack ->
-        if (DataTypes.ID.resolve(stack) != "ARROW_SWAPPER") return@of null
+    val SELECTED_ARROW: DataType<SkyBlockId> = DataType.of("selected_arrow") { ctx, _ ->
+        if (ctx[ResolutionContext.Resolver.ID] != "ARROW_SWAPPER") return@of null
 
         var output: SkyBlockId? = null
         selectedArrowRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "type") { (type) ->

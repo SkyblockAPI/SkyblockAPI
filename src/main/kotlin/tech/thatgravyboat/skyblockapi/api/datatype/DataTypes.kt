@@ -23,6 +23,7 @@ object DataTypes {
     val CATEGORY: DataType<SkyBlockCategory> = LoreDataTypes.CATEGORY
     val VISIBLE_ITEM: DataType<Item> = GenericDataTypes.VISIBLE_ITEM
     val CLEAN_NAME: DataType<String> = GenericDataTypes.CLEAN_NAME
+    val RAW_LORE: DataType<List<String>> = LoreDataTypes.RAW_LORE
     val ORIGIN_TAG: DataType<String> = GenericDataTypes.ORIGIN_TAG
 
     // Item Modifiers

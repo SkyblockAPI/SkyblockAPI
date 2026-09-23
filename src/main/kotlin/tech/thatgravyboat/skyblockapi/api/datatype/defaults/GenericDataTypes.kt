@@ -5,12 +5,15 @@ import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 //? < 26.2
 //import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
+import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.*
@@ -22,16 +25,16 @@ import kotlin.time.Instant
 object GenericDataTypes {
 
     val SKYBLOCK_ID: DataType<SkyBlockId> = DataType.of("skyblock_id") { SkyBlockId.createIdForItem(it) }
-    val ID: DataType<String> = DataType.simple("id")
-    val API_ID: DataType<String> = DataType.of("api_id") {
-        when (val id = it.unsafeTag?.getStringOrNull("id")) {
-            "RUNE", "UNIQUE_RUNE" -> USED_RUNE.resolve(it)?.id
-            "PET" -> PET_DATA.resolve(it)?.apiId ?: return@of null
+    val ID: DataType<String> = DataType.of("id") { ctx, _ -> ctx[ResolutionContext.Resolver.ID] }
+    val API_ID: DataType<String> = DataType.of("api_id") { ctx, item ->
+        when (val id = item.unsafeTag?.getStringOrNull("id")) {
+            "RUNE", "UNIQUE_RUNE" -> USED_RUNE.resolve(item, ctx)?.id
+            "PET" -> ctx[ResolutionContext.Resolver.PET_DATA]?.apiId ?: return@of null
             else -> id
         }
     }
-    val ID_DAMAGE: DataType<Int> = DataType.of("id_damage") {
-        val id = ID.resolve(it) ?: return@of null
+    val ID_DAMAGE: DataType<Int> = DataType.of("id_damage") { ctx, item ->
+        val id = ctx[ResolutionContext.Resolver.ID] ?: return@of null
         val damage = id.substringAfterLast(":", "").toIntOrNull() ?: return@of null
         damage
     }
@@ -64,8 +67,8 @@ object GenericDataTypes {
     }
     val MIDAS_WEAPON_BID: DataType<Int> = DataType.simple("midas_weapon_bid", "winning_bid")
     val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = DataType.simple("midas_weapon_added_coins", "additional_coins")
-    val MIDAS_WEAPON_PAID: DataType<Long> = DataType.of("midas_weapon_paid") { stack ->
-        listOfNotNull(MIDAS_WEAPON_BID.resolve(stack), MIDAS_WEAPON_ADDED_COINS.resolve(stack)).sum().toLong().takeUnless { it == 0L }
+    val MIDAS_WEAPON_PAID: DataType<Long> = DataType.of("midas_weapon_paid") { ctx, stack ->
+        listOfNotNull(MIDAS_WEAPON_BID.resolve(stack, ctx), MIDAS_WEAPON_ADDED_COINS.resolve(stack, ctx)).sum().toLong().takeUnless { it == 0L }
     }
     val ENRICHMENT: DataType<SkyBlockId> = DataType.of("enrichment") {
         val id = it.unsafeTag?.getStringOrNull("talisman_enrichment") ?: return@of null
@@ -130,18 +133,7 @@ object GenericDataTypes {
     }
     val APPLIED_DYE: DataType<String> = DataType.simple("applied_dye", "dye_item")
     val HELMET_SKIN: DataType<String> = DataType.simple("helmet_skin", "skin")
-    val PET_DATA: DataType<PetData> = DataType.of("pet_data") {
-        val json = it.unsafeTag?.getStringOrNull("petInfo")?.readJson<JsonObject>() ?: return@of null
-        PetData(
-            json.get("type").asString(""),
-            json.get("active").asBoolean(false),
-            json.get("exp").asLong(0),
-            SkyBlockRarity.fromName(json.get("tier").asString("")),
-            json.get("heldItem")?.asString,
-            json.get("skin")?.asString,
-            json.get("candyUsed").asInt(0),
-        )
-    }
+    val PET_DATA: DataType<PetData> = DataType.of("pet_data") { ctx, _ -> ctx[ResolutionContext.Resolver.PET_DATA] }
     val JALAPENO_BOOK: DataType<Boolean> = DataType.simple("jalapeno_book", "jalapeno_count")
 
     //? < 26.3 {
@@ -194,5 +186,20 @@ object GenericDataTypes {
         val candyUsed: Int,
     ) {
         val apiId = "pet:$id:${rarity.name}"
+
+        internal companion object {
+            fun fromItem(stack: ItemStack): PetData? {
+                val json = stack.unsafeTag?.getStringOrNull("petInfo")?.readJson<JsonObject>() ?: return null
+                return PetData(
+                    json.get("type").asString(""),
+                    json.get("active").asBoolean(false),
+                    json.get("exp").asLong(0),
+                    SkyBlockRarity.fromName(json.get("tier").asString("")),
+                    json.get("heldItem")?.asString,
+                    json.get("skin")?.asString,
+                    json.get("candyUsed").asInt(0),
+                )
+            }
+        }
     }
 }

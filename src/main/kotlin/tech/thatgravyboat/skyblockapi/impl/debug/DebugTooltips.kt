@@ -57,6 +57,7 @@ object DebugTooltips {
                 if (remove(DataTypes.SKYBLOCK_ID)) {
                     addFirst(DataTypes.SKYBLOCK_ID)
                 }
+                remove(DataTypes.RAW_LORE)
             }
             index = 0
             lastItem = hash
