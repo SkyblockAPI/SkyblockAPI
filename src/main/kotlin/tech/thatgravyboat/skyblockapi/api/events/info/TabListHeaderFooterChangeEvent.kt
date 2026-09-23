@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.chunked
-import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 typealias TabListHeaderFooterUpdateEvent = TabListHeaderFooterChangeEvent
 
@@ -18,7 +18,7 @@ data class TabListHeaderFooterChangeEvent(
     val oldFooterChunked by lazy { oldFooter.chunk() }
     val oldHeaderChunked by lazy { oldHeader.chunk() }
 
-    private fun Component.chunk() = string.stripColor().split("\n")
+    private fun Component.chunk() = stripped.split("\n")
         .chunked(CharSequence::isBlank)
         .map { it.filter(CharSequence::isNotBlank) }
         .filter(List<String>::isNotEmpty)
