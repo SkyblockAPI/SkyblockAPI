@@ -11,7 +11,8 @@ enum class McVersion {
     MC_26_1,
     MC_26_2,
     MC_26_3,
-    //? > 26.3
+    MC_26_4,
+    //? > 26.4
     //add new version!
     ;
 

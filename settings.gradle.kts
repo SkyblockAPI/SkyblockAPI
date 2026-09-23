@@ -15,12 +15,12 @@ plugins {
     id("dev.kikugie.stonecutter") version "0.9-beta.1"
 }
 
-val versions = listOf("26.3", "26.2", "26.1")
+val versions = listOf("26.4", "26.3", "26.2", "26.1")
 
 stonecutter {
     create(rootProject) {
         versions.forEach {
-            version(it).buildscript = "build.gradle.kts"
+            version(it)
         }
         vcsVersion = versions.first()
     }
