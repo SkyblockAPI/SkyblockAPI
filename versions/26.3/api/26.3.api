@@ -9767,6 +9767,8 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/TextStyle {
 	public final fun getColor (Lnet/minecraft/network/chat/MutableComponent;)I
 	public final fun getCommand (Lnet/minecraft/network/chat/Component;)Ljava/lang/String;
 	public final fun getCommand (Lnet/minecraft/network/chat/MutableComponent;)Ljava/lang/String;
+	public final fun getCustomPayloadClick (Lnet/minecraft/network/chat/Component;)Lnet/minecraft/network/chat/ClickEvent$Custom;
+	public final fun getCustomPayloadClick (Lnet/minecraft/network/chat/MutableComponent;)Lnet/minecraft/network/chat/ClickEvent$Custom;
 	public final fun getFont (Lnet/minecraft/network/chat/Component;)Lnet/minecraft/resources/Identifier;
 	public final fun getFont (Lnet/minecraft/network/chat/MutableComponent;)Lnet/minecraft/resources/Identifier;
 	public final fun getHover (Lnet/minecraft/network/chat/Component;)Lnet/minecraft/network/chat/Component;
@@ -9792,6 +9794,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/TextStyle {
 	public final fun setClipboard (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;)V
 	public final fun setColor (Lnet/minecraft/network/chat/MutableComponent;I)V
 	public final fun setCommand (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;)V
+	public final fun setCustomPayloadClick (Lnet/minecraft/network/chat/MutableComponent;Lnet/minecraft/network/chat/ClickEvent$Custom;)V
 	public final fun setFont (Lnet/minecraft/network/chat/MutableComponent;Lnet/minecraft/resources/Identifier;)V
 	public final fun setHover (Lnet/minecraft/network/chat/MutableComponent;Lnet/minecraft/network/chat/Component;)V
 	public final fun setItalic (Lnet/minecraft/network/chat/MutableComponent;Z)V
