@@ -1,17 +1,18 @@
 package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.repolib.api.RepoAPI
+import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
+import tech.thatgravyboat.skyblockapi.utils.extentions.splitOnLast
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import tech.thatgravyboat.skyblockapi.utils.extentions.trim
 
 private val idLookup = RepoAPI.enchantments().enchantments().map { (id, enchantments) ->
     enchantments.name to SkyBlockId.enchantment(id, 0)
@@ -34,19 +35,21 @@ private fun ItemStack.resolveEnchantedBookId(name: String, level: Int?): SkyBloc
 @IdResolvers
 internal data object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdResolver {
     private val titleRegex = "(?:The Hex ➜ )?Enchant Item(?: ➜ (.*))?".toRegex()
-    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): Boolean {
-        if (item != Items.ENCHANTED_BOOK) return false
-        return (titleRegex.matches(menu.title.stripped))
-    }
 
-    override fun <T : AbstractContainerMenu> ItemStack.resolveId(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): SkyBlockId? {
-        val title = menu.title.stripped
-        val isInBuyPage = !titleRegex.find(title)?.groupValues[1].isNullOrEmpty()
-        val name = if (isInBuyPage) cleanName.substringBeforeLast(" ") else cleanName
-        val level = if (isInBuyPage) cleanName.substringAfterLast(" ").parseRomanNumeral() else null
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.isApplicable(): Boolean = item == Items.ENCHANTED_BOOK
+
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.resolveId(): SkyBlockId? {
+        val match = titleRegex.matchEntire(title) ?: return null
+        val isInBuyPage = match.groupValues[1].isNotEmpty()
+        val cleanName = this.cleanName
+
+        val (name, level) = if (isInBuyPage) {
+            val (name, romanLevel) = cleanName.splitOnLast(" ")
+            name to romanLevel.parseRomanNumeral()
+        } else cleanName to null
+
         addDebugString { "is In Buy Page: $isInBuyPage" }
         return resolveEnchantedBookId(name, level)
     }
@@ -57,31 +60,23 @@ internal data object EnchantmentTableAndHexEnchantmentIdResolver : InventoryIdRe
 @IdResolvers
 internal data object BazaarEnchantmentIdResolver : InventoryIdResolver {
     private val titleRegex = ("(?:\\(\\d+/\\d+\\) )?(Normal |Ultimate )?Enchantments(?: ➜ .*)?").toRegex()
-    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): Boolean {
-        val title = menu.title.stripped
-        if (!title.contains("➜")) return false
-        if (item != Items.ENCHANTED_BOOK) return false
 
-        val name = cleanName.substringBeforeLast(" ").trim()
-        val isInBuyPage = title.substringBeforeLast("➜").trim() == name
-
-        return (titleRegex.matches(title) || isInBuyPage)
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.isApplicable(): Boolean {
+        return item == Items.ENCHANTED_BOOK && title.contains('➜')
     }
 
-    override fun <T : AbstractContainerMenu> ItemStack.resolveId(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): SkyBlockId? {
-        val title = menu.title.stripped
-        val name = cleanName.substringBeforeLast(" ").trim()
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.resolveId(): SkyBlockId? {
+        val cleanName = this.cleanName
+        val (name, romanLevel) = cleanName.splitOnLast(" ").trim()
         val isInBuyPage = title.substringBeforeLast("➜").trim() == name
-        val isInNormalOrUltimatePage = !titleRegex.find(title)?.groupValues[1].isNullOrEmpty()
+        val match = titleRegex.matchEntire(title)
+        if (!isInBuyPage && match == null) return null
+        val isInNormalOrUltimatePage = !match?.groupValues[1].isNullOrEmpty()
         addDebugString { "Is In Buy Page: $isInBuyPage; Is In Normal/Ultimate Page: $isInNormalOrUltimatePage" }
 
-        val level = if (isInBuyPage || isInNormalOrUltimatePage) cleanName.substringAfterLast(" ").trim().parseRomanNumeral() else null
+        val level = if (isInBuyPage || isInNormalOrUltimatePage) romanLevel.parseRomanNumeral() else null
 
         return resolveEnchantedBookId(name, level)
     }
@@ -93,18 +88,16 @@ internal data object BazaarEnchantmentIdResolver : InventoryIdResolver {
 internal data object EnchantmentGuideIdResolver : InventoryIdResolver, ItemDebugCategory {
     private val titleRegex = ".* Enchantments? Guide".toRegex()
 
-    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): Boolean {
-        if (item != Items.ENCHANTED_BOOK) return false
-        val matchesTitle = titleRegex.matches(menu.title.stripped)
-        this.addDebugString {
-            "Title Match: $matchesTitle"
-        }
-        return matchesTitle
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.isApplicable(): Boolean {
+        return item == Items.ENCHANTED_BOOK && titleRegex.matches(title)
     }
 
-    override fun <T : AbstractContainerMenu> ItemStack.resolveId(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): SkyBlockId? {
-        val name = this.cleanName.substringBeforeLast(" ").trim()
-        val level = this.cleanName.substringAfterLast(" ").trim().toIntValue()
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.resolveId(): SkyBlockId? {
+        val cleanName = this.cleanName
+        val (name, levelString) = cleanName.splitOnLast(" ").trim()
+        val level = levelString.toIntValue()
         return resolveEnchantedBookId(name, level)
     }
 

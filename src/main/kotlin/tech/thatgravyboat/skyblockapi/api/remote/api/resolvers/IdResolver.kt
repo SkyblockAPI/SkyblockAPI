@@ -3,29 +3,31 @@ package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 import me.owdding.ktmodules.AutoCollect
 import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIIdResolvers
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
+import tech.thatgravyboat.skyblockapi.utils.extentions.replaceWith
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-interface IdResolver : ItemDebugCategory {
+internal interface IdResolver : ItemDebugCategory {
     val types: List<IdResolverKind>
     val priority: Int
 
-    fun tryResolve(itemStack: ItemStack, resolverKind: IdResolverKind): SkyBlockId?
+    fun tryResolve(itemStack: ItemStack, context: ResolutionContext, resolverKind: IdResolverKind): SkyBlockId?
 }
 
-interface InventoryIdResolver : IdResolver {
+internal interface InventoryIdResolver : IdResolver {
     companion object {
         val types = listOf(IdResolverKind.ContainerSlot, IdResolverKind.ContainerContents)
     }
 
     override val types: List<IdResolverKind> get() = InventoryIdResolver.types
 
-    override fun tryResolve(itemStack: ItemStack, resolverKind: IdResolverKind): SkyBlockId? {
+    override fun tryResolve(itemStack: ItemStack, context: ResolutionContext, resolverKind: IdResolverKind): SkyBlockId? {
         val screen = McScreen.asMenu ?: run {
             itemStack.addDebugString { "Unable to resolve due to no menu" }
             return null
@@ -33,14 +35,18 @@ interface InventoryIdResolver : IdResolver {
         val menu = screen.menu
         val slot = menu.slots.find { ItemStack.isSameItemSameComponents(it.item, itemStack) } ?: return null
         val containerSlotCount = menu.slots.size - 36
-        return if (slot.index < containerSlotCount && itemStack.isApplicable(screen, resolverKind)) itemStack.resolveId(screen, resolverKind) else null
+        context(screen, screen.title.stripped, context, resolverKind) {
+            return if (slot.index < containerSlotCount && itemStack.isApplicable()) itemStack.resolveId() else null
+        }
     }
 
-    fun <T : AbstractContainerMenu> ItemStack.isApplicable(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): Boolean
-    fun <T : AbstractContainerMenu> ItemStack.resolveId(menu: AbstractContainerScreen<T>, resolverKind: IdResolverKind): SkyBlockId?
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    fun ItemStack.isApplicable(): Boolean
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    fun ItemStack.resolveId(): SkyBlockId?
 }
 
-enum class IdResolverKind {
+internal enum class IdResolverKind {
     Equipment,
     Cursor,
     ContainerSlot,
@@ -55,22 +61,15 @@ enum class IdResolverKind {
     @Module
     companion object {
         init {
-            SkyblockAPIIdResolvers.collected.forEach {
-                it.types.forEach { kind ->
-                    if (kind == Unknown) {
-                        for (resolverKind in entries) {
-                            resolverKind.resolvers.add(it)
-                        }
-                        return@forEach
-                    }
-                    kind.resolvers.add(it)
+            SkyblockAPIIdResolvers.collected.forEach { resolver ->
+                resolver.types.forEach { kind ->
+                    if (kind != Unknown) kind.resolvers.add(resolver)
+                    else entries.forEach { it.resolvers.add(resolver) }
                 }
             }
             IdResolverKind.entries.forEach {
-                it.resolvers.sortedWith(Comparator.comparingInt(IdResolver::priority).reversed()).apply {
-                    it.resolvers.clear()
-                    it.resolvers.addAll(this)
-                }
+                val sorted = it.resolvers.sortedWith(Comparator.comparingInt(IdResolver::priority).reversed())
+                it.resolvers.replaceWith(sorted)
             }
         }
     }
@@ -81,5 +80,5 @@ enum class IdResolverKind {
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
 @AutoCollect
-annotation class IdResolvers
+internal annotation class IdResolvers
 

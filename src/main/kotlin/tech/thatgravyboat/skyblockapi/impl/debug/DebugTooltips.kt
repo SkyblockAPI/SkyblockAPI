@@ -71,7 +71,7 @@ object DebugTooltips {
 
         if (!McScreen.isAltDown) {
             event.add(
-                Text.of("${types.size} Data Type(s) [Alt]") {
+                Text.of("${keys.size} Data Type(s) [Alt]") {
                     this.color = TextColor.DARK_GRAY
                 },
             )

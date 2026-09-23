@@ -24,7 +24,7 @@ import kotlin.time.Instant
 @Module
 object GenericDataTypes {
 
-    val SKYBLOCK_ID: DataType<SkyBlockId> = DataType.of("skyblock_id") { SkyBlockId.createIdForItem(it) }
+    val SKYBLOCK_ID: DataType<SkyBlockId> = DataType.of("skyblock_id") { ctx, item -> SkyBlockId.createIdForItem(item, ctx) }
     val ID: DataType<String> = DataType.of("id") { ctx, _ -> ctx[ResolutionContext.Resolver.ID] }
     val API_ID: DataType<String> = DataType.of("api_id") { ctx, item ->
         when (val id = item.unsafeTag?.getStringOrNull("id")) {
