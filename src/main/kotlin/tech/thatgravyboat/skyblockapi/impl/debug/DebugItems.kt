@@ -18,11 +18,14 @@ import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentViewerCateg
 import tech.thatgravyboat.skyblockapi.platform.drawString
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.replaceWith
 import tech.thatgravyboat.skyblockapi.utils.extentions.since
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 import java.util.function.BiFunction
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
@@ -42,10 +45,30 @@ object DebugItems {
     val toggledEntries = mutableSetOf<ItemDebugCategory>()
 
     fun updateItem(new: ItemStack?) {
+        val entries = new?.getEntries()
+        val newEntriesCategories = entries?.keySet()?.toList().orEmpty()
+        val lastItem = this.lastItem
+        val oldEntries = lastItem?.getEntries()
+        val oldEntriesCategories = oldEntries?.keySet()?.toList().orEmpty()
+
+        if (entries != null && oldEntries != null) {
+            val oldSelectedCategory = oldEntriesCategories[selectedIndex]
+            val newIndex = newEntriesCategories.indexOf(oldSelectedCategory)
+
+            // If we had an entry selected earlier, we try to select the same entry for the new item
+            if (newIndex != -1) this.selectedIndex = newIndex
+            else this.selectedIndex = 0
+
+            // we keep the entries we had open for the previous item open on the new one
+            val newToggledEntries = newEntriesCategories.filter { it in toggledEntries }
+            toggledEntries.replaceWith(newToggledEntries)
+        } else {
+            this.selectedIndex = 0
+            toggledEntries.clear()
+        }
+
         this.lastItem = new
-        this.selectedIndex = 0
-        this.entriesSize = new?.getEntries()?.asMap()?.keys?.size ?: 0
-        this.toggledEntries.clear()
+        this.entriesSize = newEntriesCategories.size
     }
 
     @Subscription
@@ -110,11 +133,10 @@ object DebugItems {
     @Subscription
     fun onGetDebugTooltip(event: ItemDebugTooltipEvent) {
         val item = event.item
-        val entries = item.getEntries()
-        if (lastItem != item || entriesSize != entries?.asMap()?.keys?.size) {
+        val entries = item.getEntries() ?: return
+        if (lastItem != item || entriesSize != entries.asMap()?.keys?.size) {
             updateItem(item)
         }
-        if (entries == null) return
         this.lastSet = currentInstant()
 
 
@@ -154,11 +176,15 @@ object DebugItems {
                 })
                 if (!isExpanded) return@forEachIndexed
                 for (component in entries) {
-                    event.add(Text.of {
-                        this.color = TextColor.GRAY
-                        append("  ")
-                        append(component)
-                    })
+                    val lines = component.splitLines()
+                    for ((index, item) in lines.withIndex()) {
+                        if (index == lines.lastIndex && item.stripped.isBlank()) break
+                        event.add(Text.of {
+                            this.color = TextColor.GRAY
+                            append("  ")
+                            append(item)
+                        })
+                    }
                 }
             }
         }
