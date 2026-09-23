@@ -1,9 +1,7 @@
-package tech.thatgravyboat.skyblockapi.api.datetime
+package tech.thatgravyboat.skyblockapi.api.environmental
 
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
-
-@Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.SkyBlockSeason"))
 enum class SkyBlockSeason {
     EARLY_SPRING,
     SPRING,
