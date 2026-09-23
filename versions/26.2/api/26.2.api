@@ -3141,6 +3141,7 @@ public abstract class tech/thatgravyboat/skyblockapi/api/events/render/BaseRende
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/render/HudElement : java/lang/Enum {
+	public static final field ABSORPTION_HEARTS Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
 	public static final field AIR Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
 	public static final field ARMOR Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
 	public static final field CHAT Ltech/thatgravyboat/skyblockapi/api/events/render/HudElement;
@@ -7056,7 +7057,6 @@ public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugEntities {
 
 public final class tech/thatgravyboat/skyblockapi/impl/debug/DebugHudElement {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/impl/debug/DebugHudElement;
-	public final fun onCommandRegistration (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 	public final fun onWidgetShow (Ltech/thatgravyboat/skyblockapi/api/events/render/RenderHudElementEvent;)V
 }
 
