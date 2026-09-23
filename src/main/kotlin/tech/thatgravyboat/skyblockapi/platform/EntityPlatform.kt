@@ -11,6 +11,7 @@ fun Entity.save(): CompoundTag {
     val collector = ProblemReporter.ScopedCollector(SkyBlockAPI)
     val valueOutput = TagValueOutput.createWithoutContext(collector)
     valueOutput.putString("id", EntityType.getKey(this.type).toString())
+    valueOutput.putString("entity_id", this.id.toString())
     this.saveWithoutId(valueOutput)
     collector.close()
     return valueOutput.buildResult()

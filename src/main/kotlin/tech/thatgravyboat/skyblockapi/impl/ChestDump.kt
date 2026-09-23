@@ -73,7 +73,7 @@ object ChestDump {
                     ContainerInitializedEvent(menu.slots.map { it.item }, this).post()
                     ScreenInitializedEvent(this).post()
                     dump.items.forEachIndexed { index, item ->
-                        InventoryChangeEvent(item, menu.slots[index], dump.title, menu.slots, this).post()
+                        InventoryChangeEvent(item, menu.slots[index], dump.title, menu.slots, this, ItemStack.EMPTY).post()
                     }
                 }
 

@@ -34,6 +34,7 @@ fun ItemStack.getRawLore(): List<String> {
     return lore.lines().map { it.stripped }
 }
 
+// TODO: make this less strict, some items in GUIs are actually glass panes
 fun ItemStack.isSkyblockFiller(): Boolean = isEmpty || this in ItemTag.GLASS_PANES
 
 fun ItemStack.getLore(): List<Component> = this[DataComponents.LORE]?.lines() ?: emptyList()

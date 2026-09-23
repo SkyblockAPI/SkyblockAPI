@@ -48,6 +48,7 @@ object McClient {
     val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
     val config: Path = FabricLoader.getInstance().configDir
 
+    @Deprecated("Use mcVersion instead")
     val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
     val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
 

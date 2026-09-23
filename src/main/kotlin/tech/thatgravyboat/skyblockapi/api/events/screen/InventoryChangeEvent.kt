@@ -17,6 +17,7 @@ class InventoryChangeEvent(
     val titleComponent: Component,
     val inventory: List<Slot>,
     val screen: AbstractContainerScreen<*>,
+    val previousItem: ItemStack,
 ) : SkyBlockEvent(), ItemDebugAttachable by item {
     val isInPlayerInventory = slot.container is Inventory
     val title = titleComponent.stripped

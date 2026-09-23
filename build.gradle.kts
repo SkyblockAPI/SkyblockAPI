@@ -74,9 +74,9 @@ tasks.withType<JavaCompile>().configureEach {
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.optIn.addAll(
         "kotlin.time.ExperimentalTime",
-        "kotlin.contracts.ExperimentalContracts",
+        "kotlin.ExperimentalVersionOverloading",
+        "kotlin.time.ExperimentalTime",
     )
-
     compilerOptions.freeCompilerArgs.addAll(
         "-Xcontext-parameters",
         "-Xcontext-sensitive-resolution",
