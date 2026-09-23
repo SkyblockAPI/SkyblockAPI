@@ -28,12 +28,12 @@ object TrophyFishingAPI {
     private val inventoryGroup = RegexGroup.INVENTORY.group("trophy_api")
 
     private val singleTrophyFishCaughtRegex = chatGroup.create(
-        "singleCaught",
+        "fish_singleCaught",
         ". TROPHY FISH! You caught an? (?<type>.+?) (?<tier>${TrophyFishTier.entries.joinToString("|", transform = { it.name })})!",
     )
 
     private val multiTrophyFishCaughtRegex = chatGroup.create(
-        "multiCaught",
+        "fish_multiCaught",
         ". TROPHY FISH! You caught (?<type>.+?) (?<tier>${TrophyFishTier.entries.joinToString("|", transform = { it.name })}) x(?<amount>\\d+)!",
     )
 
