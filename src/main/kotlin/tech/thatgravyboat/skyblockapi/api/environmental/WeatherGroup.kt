@@ -10,9 +10,12 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
-enum class WeatherIntensity {
-    MILD,
-    EXTREME
+enum class WeatherIntensity(val color: Int, val displayName: String) {
+    MILD(TextColor.YELLOW, "Mild"),
+    EXTREME(TextColor.RED, "EXTREME"),
+    ;
+
+    val component = Text.of(displayName, color)
 }
 
 enum class WeatherType(val icon: Char, val color: Int, weatherName: String? = null) {
@@ -40,21 +43,21 @@ enum class WeatherType(val icon: Char, val color: Int, weatherName: String? = nu
     val iconComponent = Text.of(icon.toString(), color)
 }
 
-data class SkyBlockWeather(
+data class WeatherEvent(
     val type: WeatherType,
     val intensity: WeatherIntensity,
     val bonuses: Map<SkyBlockStat, Double>,
     val specialEffect: Component? = null,
 )
 
-enum class SkyBlockWeatherGroup(
+enum class WeatherGroup(
     val island: SkyBlockIsland,
-    val mild: SkyBlockWeather,
-    val extreme: SkyBlockWeather,
+    val mild: WeatherEvent,
+    val extreme: WeatherEvent,
 ) {
     DWARVEN_MINES(
         island = SkyBlockIsland.DWARVEN_MINES,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = BREEZE,
             intensity = MILD,
             bonuses = mapOf(
@@ -63,7 +66,7 @@ enum class SkyBlockWeatherGroup(
                 SkyBlockStat.FISHING_SPEED to 25.0,
             ),
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = MIST,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -82,7 +85,7 @@ enum class SkyBlockWeatherGroup(
 
     CRYSTAL_HOLLOWS(
         island = SkyBlockIsland.CRYSTAL_HOLLOWS,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = BREEZE,
             intensity = MILD,
             bonuses = mapOf(
@@ -91,7 +94,7 @@ enum class SkyBlockWeatherGroup(
                 SkyBlockStat.FISHING_SPEED to 25.0,
             ),
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = ROCKFALL,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -110,7 +113,7 @@ enum class SkyBlockWeatherGroup(
 
     GLACITE_TUNNELS(
         island = SkyBlockIsland.MINESHAFT,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = BREEZE,
             intensity = MILD,
             bonuses = mapOf(
@@ -119,7 +122,7 @@ enum class SkyBlockWeatherGroup(
                 SkyBlockStat.FISHING_SPEED to 25.0,
             ),
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = SNOWSTORM,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -138,7 +141,7 @@ enum class SkyBlockWeatherGroup(
 
     SPIDERS_DEN(
         island = SkyBlockIsland.SPIDERS_DEN,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = RAIN,
             intensity = MILD,
             bonuses = mapOf(
@@ -152,7 +155,7 @@ enum class SkyBlockWeatherGroup(
                 append(" spawn around the island")
             },
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = THUNDERSTORM,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -170,7 +173,7 @@ enum class SkyBlockWeatherGroup(
 
     THE_END(
         island = SkyBlockIsland.THE_END,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = WISPFALL,
             intensity = MILD,
             bonuses = mapOf(
@@ -179,7 +182,7 @@ enum class SkyBlockWeatherGroup(
                 SkyBlockStat.TRACKING to 1.0,
             ),
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = VOIDSTORM,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -199,7 +202,7 @@ enum class SkyBlockWeatherGroup(
 
     CRIMSON_ISLE(
         island = SkyBlockIsland.CRIMSON_ISLE,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = ASHFALL,
             intensity = MILD,
             bonuses = mapOf(
@@ -208,7 +211,7 @@ enum class SkyBlockWeatherGroup(
                 SkyBlockStat.COMBAT_WISDOM to 5.0,
             ),
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = HELLSTORM,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -231,7 +234,7 @@ enum class SkyBlockWeatherGroup(
 
     MOONGLADE_MARSH(
         island = SkyBlockIsland.GALATEA,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = MOONFALL,
             intensity = MILD,
             bonuses = mapOf(
@@ -240,7 +243,7 @@ enum class SkyBlockWeatherGroup(
                 SkyBlockStat.SEA_CREATURE_CHANCE to 2.5,
             ),
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = THUNDERSTORM,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -259,7 +262,7 @@ enum class SkyBlockWeatherGroup(
 
     BACKWATER_BAYOU(
         island = SkyBlockIsland.BACKWATER_BAYOU,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = SMOG,
             intensity = MILD,
             bonuses = mapOf(
@@ -268,7 +271,7 @@ enum class SkyBlockWeatherGroup(
                 SkyBlockStat.SEA_CREATURE_CHANCE to 2.5,
             ),
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = ACID_RAIN,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -290,7 +293,7 @@ enum class SkyBlockWeatherGroup(
 
     LOTUS_ATOLL(
         island = SkyBlockIsland.LOTUS_ATOLL,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = TROPICAL_RAIN,
             intensity = MILD,
             bonuses = mapOf(
@@ -299,7 +302,7 @@ enum class SkyBlockWeatherGroup(
                 SkyBlockStat.SEA_CREATURE_CHANCE to 2.5,
             ),
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = BLOSSOMING,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -322,7 +325,7 @@ enum class SkyBlockWeatherGroup(
 
     GARDEN(
         island = SkyBlockIsland.GARDEN,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = RAIN,
             intensity = MILD,
             bonuses = mapOf(
@@ -331,7 +334,7 @@ enum class SkyBlockWeatherGroup(
                 SkyBlockStat.OVERBLOOM to 2.5,
             ),
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = BLOOMING,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -350,7 +353,7 @@ enum class SkyBlockWeatherGroup(
 
     JERRYS_WORKSHOP(
         island = SkyBlockIsland.JERRYS_WORKSHOP,
-        mild = SkyBlockWeather(
+        mild = WeatherEvent(
             type = BREEZE,
             intensity = MILD,
             bonuses = mapOf(
@@ -359,7 +362,7 @@ enum class SkyBlockWeatherGroup(
                 SkyBlockStat.TREASURE_CHANCE to 2.5,
             ),
         ),
-        extreme = SkyBlockWeather(
+        extreme = WeatherEvent(
             type = BLIZZARD,
             intensity = EXTREME,
             bonuses = mapOf(
@@ -377,9 +380,9 @@ enum class SkyBlockWeatherGroup(
     );
 
     companion object {
-        fun getGroupFor(island: SkyBlockIsland): SkyBlockWeatherGroup? = entries.find { it.island == island }
+        fun getGroupFor(island: SkyBlockIsland): WeatherGroup? = entries.find { it.island == island }
 
-        fun getCurrentGroup(): SkyBlockWeatherGroup? {
+        fun getCurrentGroup(): WeatherGroup? {
             if (GlaciteAPI.inGlaciteTunnels()) return GLACITE_TUNNELS
             return entries.find { it != GLACITE_TUNNELS && it.island.inIsland() }
         }
