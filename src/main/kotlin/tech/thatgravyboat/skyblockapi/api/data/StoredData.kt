@@ -82,7 +82,6 @@ internal class StoredData<T : Any>(
         return data!!
     }
 
-    internal fun getNormalData(): T = data
     internal fun getAlphaData(): T? = alphaData
 
     init {
