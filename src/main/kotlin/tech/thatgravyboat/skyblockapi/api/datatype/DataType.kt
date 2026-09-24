@@ -37,11 +37,9 @@ class DataType<T> private constructor(
     @Suppress("UNCHECKED_CAST")
     fun cast(value: Any?): T? = value as? T
 
-    fun resolve(stack: ItemStack, context: ResolutionContext): T? {
+    fun resolve(stack: ItemStack, context: ResolutionContext = ResolutionContext(stack)): T? {
         return resolver.invoke(context, stack)
     }
-
-    fun resolve(stack: ItemStack): T? = resolve(stack, ResolutionContext(stack))
 
     companion object {
 
