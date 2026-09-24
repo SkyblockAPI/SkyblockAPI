@@ -347,11 +347,16 @@ public final class tech/thatgravyboat/skyblockapi/api/area/hub/CarnivalAPI {
 public final class tech/thatgravyboat/skyblockapi/api/area/hub/ElectionAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/hub/ElectionAPI;
 	public final fun getCurrentJerryCandidate ()Lkotlin/Pair;
+	public final fun getJerryPerkpocalypseRotation ()Ljava/util/Map;
 	public final fun getMayor ()Ltech/thatgravyboat/skyblockapi/api/data/MayorCandidate;
 	public final fun getMinister ()Ltech/thatgravyboat/skyblockapi/api/data/MayorCandidate;
+	public final fun getNextElection ()Lkotlin/time/Instant;
+	public final fun getPerkpocalypseIndex (Lkotlin/time/Instant;)Ljava/lang/Integer;
+	public final fun getPerkpocalypseRotationDuration-UwyO8pc ()J
 	public final fun getRawData ()Ltech/thatgravyboat/skyblockapi/api/data/ElectionJson;
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onRegisterCommands (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	public final fun onTick ()V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/area/hub/FarmhouseAPI {
@@ -1239,6 +1244,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/MayorPerk {
 	public final fun getId ()Ljava/lang/String;
 	public final fun getPerkName ()Ljava/lang/String;
 	public final fun getPerkapocalypse ()Z
+	public final fun getPerkpocalypse ()Z
 	public fun hashCode ()I
 	public final fun setDescription (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
