@@ -76,6 +76,7 @@ tasks.withType<KotlinCompile>().configureEach {
         "kotlin.time.ExperimentalTime",
         "kotlin.ExperimentalVersionOverloading",
         "kotlin.time.ExperimentalTime",
+        "kotlin.contracts.ExperimentalContracts",
     )
     compilerOptions.freeCompilerArgs.addAll(
         "-Xcontext-parameters",
