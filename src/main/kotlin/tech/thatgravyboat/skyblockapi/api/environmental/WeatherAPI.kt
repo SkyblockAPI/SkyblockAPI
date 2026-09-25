@@ -21,7 +21,7 @@ object WeatherAPI {
         }
 
     val isActive: Boolean
-        get() = (dayOfYear ?: -1) % 3 == 2
+        get() = this.currentIntensity != null
 
     val currentIntensity: WeatherIntensity?
         get() {
