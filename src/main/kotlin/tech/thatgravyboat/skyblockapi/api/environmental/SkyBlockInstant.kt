@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.environmental
 
 import org.jetbrains.annotations.Range
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -71,7 +72,7 @@ data class SkyBlockInstant(val instant: Instant) {
 
     companion object {
 
-        fun now(): SkyBlockInstant = SkyBlockInstant(Clock.System.now())
+        fun now(): SkyBlockInstant = SkyBlockInstant(currentInstant())
     }
 }
 

@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.environmental
 
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.valueOfOrNull
 
 enum class SkyBlockSeason {
     EARLY_SPRING,
@@ -25,9 +26,6 @@ enum class SkyBlockSeason {
     override fun toString() = string
 
     companion object {
-
-        fun parse(value: String): SkyBlockSeason? = runCatching {
-            valueOf(value.replace(" ", "_").uppercase())
-        }.getOrNull()
+        fun parse(value: String): SkyBlockSeason? = valueOfOrNull(value.replace(" ", "_").uppercase())
     }
 }
