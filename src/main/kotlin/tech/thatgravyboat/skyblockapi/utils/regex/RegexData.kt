@@ -41,8 +41,8 @@ internal object RegexData {
         LOCAL_FILE,
     }
 
-    var isCreatingJson: Boolean = true
-        private set
+    val isCreatingJson: Boolean
+        get() = System.getProperty("skyblockapi.generateRegexes.enabled")?.lowercase() == "true"
 
     var source: RegexSource = LOCAL_FILE
         private set
@@ -56,7 +56,7 @@ internal object RegexData {
             return JsonObjectBuilder {
                 value?.let { set("@value", it) }
 
-                for ((key, child) in children) {
+                for ((key, child) in children.toSortedMap()) {
                     var flattenedKey = key
                     var current = child
 
@@ -75,7 +75,7 @@ internal object RegexData {
     }
 
     context(regexes: Map<String, Regex>, regexLists: Map<String, List<Regex>>)
-    private fun createJson(): JsonElement {
+    internal fun createJson(): JsonElement {
         val map = mutableMapOf<String, JsonElement>()
         regexes.mapValuesTo(map) { (_, regex) -> JsonPrimitive(regex.pattern) }
         regexLists.mapValuesTo(map) { (_, list) -> JsonArrayBuilder { list.forEach { add(it.pattern) } } }
@@ -122,7 +122,8 @@ internal object RegexData {
 
             val json = result.onSuccess { json ->
                 // on success, we write to local
-                // TODO: check the date before writing
+                // TODO: check the date before writing. if the date is the same as the one in code,
+                //  we don't need to write it
                 source = REMOTE
                 file.writeText(json.toPrettyString())
             }.recoverCatching {

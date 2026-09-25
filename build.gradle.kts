@@ -1,8 +1,11 @@
 @file:OptIn(ExperimentalAbiValidation::class)
 
+import net.fabricmc.loom.api.fabricapi.FabricApiExtension
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
+import net.fabricmc.loom.task.prod.ClientProductionRunTask
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import kotlin.io.path.createDirectories
 
 plugins {
     kotlin("jvm")
@@ -227,12 +230,37 @@ loom {
     }
 }
 
+val datagenOutput = project.layout.buildDirectory.file("generated/skyblock-api/data").apply {
+    get().asFile.toPath().createDirectories()
+}
+
+fabricApi {
+    configureDataGeneration {
+        client = true
+        modId = "skyblock-api-datagen"
+        createSourceSet = true
+        createRunConfiguration = true
+        outputDirectory.set(datagenOutput)
+    }
+}
+
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }
+
+fun Jar.applyDatagenOutput() {
+    if (rootProject.hasProperty("datagen")) {
+        dependsOn(tasks.named("runDatagen"))
+        with(copySpec {
+            from(datagenOutput).exclude(".cache/**")
+        })
+    }
+}
 
 tasks.named<Jar>("jar") {
     archiveClassifier = stonecutter.current.version
+    applyDatagenOutput()
 }
 
 tasks.named<Jar>("sourcesJar") {
     archiveClassifier = "${stonecutter.current.version}-sources"
+    applyDatagenOutput()
 }
