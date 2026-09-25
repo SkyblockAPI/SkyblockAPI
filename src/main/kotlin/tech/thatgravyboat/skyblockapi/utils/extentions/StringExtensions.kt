@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
+import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import java.text.DecimalFormat
@@ -131,17 +132,10 @@ fun String?.parseRomanNumeral(): Int = runCatching {
 // todo: move into enum extensions with 1.21.6
 fun <T : Enum<T>> Enum<T>.toFormattedName(): String = name.toTitleCase()
 
-private val regexGroup = Regexes.group("string")
-
-private val cleanPlayerNameRegex = regexGroup.create(
-    "clean.playername",
-    "(?:(?<rank>\\[.+]) ?)?(?<name>[a-zA-Z0-9_]+)",
-)
-
 private val formattingCodesRegex = Regex("§.")
 
 fun String.cleanPlayerName(): String {
-    return cleanPlayerNameRegex.findGroup(this, "name") ?: this
+    return CommonRegexes.cleanPlayerNameRegex.findGroup(this, "name") ?: this
 }
 
 fun Number.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
