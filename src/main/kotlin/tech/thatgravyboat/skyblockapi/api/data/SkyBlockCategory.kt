@@ -111,5 +111,6 @@ class SkyBlockCategory private constructor(
         val WATERING_CAN = create("watering can")
         val FARMING_TOOL = create("farming tool")
         val TROPHY = create("trophy")
+        val ABILITY_SCROLL = create("ability scroll")
     }
 }

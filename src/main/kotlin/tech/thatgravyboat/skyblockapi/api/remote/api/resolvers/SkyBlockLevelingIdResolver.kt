@@ -6,6 +6,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishTier
 import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishType
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
+import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
@@ -15,15 +16,13 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 internal data object RockMilestonesResolver : InventoryIdResolver {
     override val priority: Int = 10
 
-    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): Boolean = menu.title.stripped == "Mining ➜ Rock Milestones"
+    private const val TITLE = "Mining ➜ Rock Milestones"
 
-    override fun <T : AbstractContainerMenu> ItemStack.resolveId(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): SkyBlockId? {
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.isApplicable(): Boolean = title == TITLE
+
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.resolveId(): SkyBlockId? {
         val rarity = SkyBlockRarity.fromNameOrNull(this.cleanName.substringBefore(" ")) ?: return null
         return SkyBlockId.pet("rock", rarity).asDerived()
     }
@@ -33,7 +32,7 @@ internal data object RockMilestonesResolver : InventoryIdResolver {
 internal data object TrophyFishResolver : InventoryIdResolver {
     override val priority: Int = 10
 
-    val idLookup = TrophyFishType.entries.flatMap {
+    private val idLookup = TrophyFishType.entries.flatMap {
         buildList {
             val stripped = it.displayName.stripped
             add(stripped to it.getId(TrophyFishTier.DIAMOND))
@@ -43,15 +42,13 @@ internal data object TrophyFishResolver : InventoryIdResolver {
         }
     }.toMap()
 
-    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): Boolean = menu.title.stripped == "Fishing ➜ Trophy Fish" || menu.title.stripped.startsWith("Trophy Fish ➜ ")
+    private val titleRegex = "(?:➜ )?Trophy Fish(?: ➜)?".toRegex()
 
-    override fun <T : AbstractContainerMenu> ItemStack.resolveId(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): SkyBlockId? {
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.isApplicable(): Boolean = titleRegex.containsMatchIn(title)
+
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.resolveId(): SkyBlockId? {
         return idLookup[this.cleanName]?.asDerived()
     }
 }
@@ -60,15 +57,13 @@ internal data object TrophyFishResolver : InventoryIdResolver {
 internal data object DolphinMilestonesResolver : InventoryIdResolver {
     override val priority: Int = 10
 
-    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): Boolean = menu.title.stripped == "Fishing ➜ Dolphin Milestones"
+    private const val TITLE = "Fishing ➜ Dolphin Milestones"
 
-    override fun <T : AbstractContainerMenu> ItemStack.resolveId(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): SkyBlockId? {
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.isApplicable(): Boolean = title == TITLE
+
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.resolveId(): SkyBlockId? {
         val rarity = SkyBlockRarity.fromNameOrNull(this.cleanName.substringBefore(" ")) ?: return null
         return SkyBlockId.pet("dolphin", rarity).asDerived()
     }

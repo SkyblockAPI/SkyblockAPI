@@ -29,7 +29,7 @@ val ItemStack.tag: CompoundTag? get() = this[DataComponents.CUSTOM_DATA]?.copyTa
 val ItemStack.unsafeTag: CompoundTag? get() = (this[DataComponents.CUSTOM_DATA] as? CustomDataAccessor)?.`skyblockapi$getTag`()
 fun ItemStack.getTag(key: String): Tag? = this.tag?.get(key)
 
-fun ItemStack.getRawLore(): List<String> {
+internal fun ItemStack.computeRawLore(): List<String> {
     val lore = this[DataComponents.LORE] ?: return emptyList()
     return lore.lines().map { it.stripped }
 }
@@ -39,6 +39,7 @@ fun ItemStack.isSkyblockFiller(): Boolean = isEmpty || this in ItemTag.GLASS_PAN
 
 fun ItemStack.getLore(): List<Component> = this[DataComponents.LORE]?.lines() ?: emptyList()
 
+fun ItemStack.getRawLore(): List<String> = this.getData(DataTypes.RAW_LORE) ?: this.computeRawLore()
 val ItemStack.cleanName: String get() = this.getData(DataTypes.CLEAN_NAME) ?: this.hoverName.stripped
 
 fun ItemStack.isSameItem(other: ItemStack?): Boolean {
