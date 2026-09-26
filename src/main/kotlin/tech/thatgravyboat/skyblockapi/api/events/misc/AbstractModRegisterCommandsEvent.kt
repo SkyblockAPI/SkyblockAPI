@@ -30,6 +30,16 @@ abstract class AbstractModRegisterCommandsEvent(
     open fun command(name: String, init: CommandBuilder0<FabricClientCommandSource>.() -> Unit) = prefixes.forEach {
         baseEvent.command("$it $name", init)
     }
+
+    open fun command(name: String): BuilderDsl<() -> Unit> {
+        val builders = prefixes.map {
+            baseEvent.command("$it $name")
+        }
+
+        return BuilderDsl {
+            builders.forEach { dsl -> dsl.executes(it) }
+        }
+    }
 }
 
 internal class RegisterSkyblockApiCommandsEvent(

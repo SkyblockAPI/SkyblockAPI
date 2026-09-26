@@ -9,14 +9,9 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import javax.inject.Inject
-import kotlin.io.path.ExperimentalPathApi
-import kotlin.io.path.createDirectories
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.deleteRecursively
-import kotlin.io.path.exists
-import kotlin.io.path.writeText
+import kotlin.io.path.*
 
-fun createCommandClass(parameters: Int, isLast: Boolean): String = buildString {
+fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): String = buildString {
     fun StringBuilder.forArguments(block: StringBuilder.(String) -> Unit) {
         repeat(parameters) {
             block(('a' + it).toString())
@@ -28,6 +23,7 @@ fun createCommandClass(parameters: Int, isLast: Boolean): String = buildString {
             append("    ")
         }
     }
+
     val Self = "CommandBuilder$parameters"
     val Generics = buildString {
         forArguments {
@@ -108,6 +104,8 @@ fun createCommandClass(parameters: Int, isLast: Boolean): String = buildString {
 
     appendLine()
     indent(1).append("infix fun String.executes(callback: (${Generics.drop(2)}) -> Unit) = this { execute(callback) }")
+    appendLine()
+    indent(1).append("infix fun executes(callback: (${Generics.drop(2)}) -> Unit) { execute(callback) }")
     appendLine()
 
     indent(1).appendLine("fun execute(callback: (${Generics.drop(2)}) -> Unit) {")
@@ -214,7 +212,7 @@ fun createCommandFile(maxArguments: Int) = buildString {
 
         data class CommandArgumentBinding<ArgumentType>(val name: String, val argument: Class<ArgumentType>)
 
-        fun <CommandSender> CommandDispatcher<CommandSender>.command(name: String, buildContext: CommandBuildContext, init: CommandBuilder0<CommandSender>.() -> Unit) {
+        fun <CommandSender> CommandDispatcher<CommandSender>.command(name: String, buildContext: CommandBuildContext, init: CommandBuilder0<CommandSender>.() -> Unit): CommandBuilder0<CommandSender> {
             val builder = CommandBuilder0<CommandSender>(name.substringBefore(' '), buildContext)
             val split = name.substringAfter(' ')
             if (split.isNotEmpty()) {
@@ -224,13 +222,14 @@ fun createCommandFile(maxArguments: Int) = buildString {
             }
             
             builder.register(this)
+            return builder
         }
     """.trimIndent().let(::appendLine)
 
     appendLine()
 
     repeat(maxArguments) {
-        append(createCommandClass(it, it == maxArguments -1))
+        append(createCommandClass(it, maxArguments - 1, it == maxArguments - 1))
     }
 }
 
@@ -262,10 +261,12 @@ abstract class CommandFileTask @Inject constructor(layout: ProjectLayout) : Defa
         }
         dir.createDirectories()
         val commands = dir.resolve("commands.kt")
-        commands.writeText(buildString {
-            append("package ").appendLine(packageName.get())
-            appendLine()
-            append(createCommandFile(maxDepth.get()))
-        })
+        commands.writeText(
+            buildString {
+                append("package ").appendLine(packageName.get())
+                appendLine()
+                append(createCommandFile(maxDepth.get()))
+            },
+        )
     }
 }
