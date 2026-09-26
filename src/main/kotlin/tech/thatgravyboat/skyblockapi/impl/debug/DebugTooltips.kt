@@ -57,6 +57,7 @@ object DebugTooltips {
                 if (remove(DataTypes.SKYBLOCK_ID)) {
                     addFirst(DataTypes.SKYBLOCK_ID)
                 }
+                remove(DataTypes.RAW_LORE)
             }
             index = 0
             lastItem = hash
@@ -70,7 +71,7 @@ object DebugTooltips {
 
         if (!McScreen.isAltDown) {
             event.add(
-                Text.of("${types.size} Data Type(s) [Alt]") {
+                Text.of("${keys.size} Data Type(s) [Alt]") {
                     this.color = TextColor.DARK_GRAY
                 },
             )

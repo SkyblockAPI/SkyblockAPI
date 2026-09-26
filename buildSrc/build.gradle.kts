@@ -19,7 +19,6 @@ dependencies {
     implementation(plugin(libs.plugins.kotlin.symbol.processor))
     implementation(plugin(libs.plugins.meowdding.resources))
     implementation(plugin(libs.plugins.meowdding.auto.mixins))
-    implementation(plugin(libs.plugins.kotlin.binary.compatibility.validator))
     implementation("dev.kikugie.stonecutter:dev.kikugie.stonecutter.gradle.plugin:0.8.3")
 }
 
