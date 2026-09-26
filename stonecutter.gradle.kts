@@ -1,7 +1,6 @@
 
 import org.gradle.api.publish.internal.component.DefaultAdhocSoftwareComponent
 import org.gradle.kotlin.dsl.support.serviceOf
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 repositories {
     mavenCentral()
@@ -15,7 +14,7 @@ plugins {
     `maven-publish`
 }
 
-stonecutter active "26.3"
+stonecutter active "26.4"
 
 stonecutter parameters {
     swaps["mod_version"] = "\"" + property("version") + "\";"

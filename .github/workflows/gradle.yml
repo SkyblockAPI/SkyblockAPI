@@ -8,9 +8,13 @@ on:
 
 permissions:
     contents: read
+
 jobs:
     build:
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                version: [ '26.1', '26.2', '26.3', '26.4' ]
         steps:
             - uses: actions/checkout@v5
             - name: Setup JDK 25
@@ -23,13 +27,8 @@ jobs:
             - run: chmod +x gradlew
             - name: Build
               run: ./gradlew build
-            - name: Upload Artifact
+            -   name: Upload Artifact ${{ matrix.version }}
               uses: actions/upload-artifact@v4.0.0
               with:
-                  name: 26.1
-                  path: build/libs/*-26.1.jar
-            - uses: actions/upload-artifact@v4.0.0
-              with:
-                  name: 26.2
-                  path: build/libs/*-26.2.jar
-
+                  name: ${{ matrix.version }}
+                  path: build/libs/*-${{ matrix.version }}.jar
