@@ -55,7 +55,7 @@ open class EntityInfoLineEvent(
     val infoLineEntity: Entity,
 ) : CancellableSkyBlockEvent() {
     val attachedTo: Entity? get() = infoLineEntity.getAttachedTo()
-    val literalComponent by lazy { component.stripped }
+    val literalComponent = component.stripped
 }
 
 class EntityInfoLineAttachEvent(
