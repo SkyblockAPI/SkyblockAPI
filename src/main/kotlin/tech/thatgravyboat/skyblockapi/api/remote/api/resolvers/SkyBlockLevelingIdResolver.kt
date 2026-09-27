@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.area.atoll.trophyfrog.TrophyFrogType
 import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishType
@@ -68,15 +67,13 @@ internal data object TrophyFrogResolver : InventoryIdResolver {
         }
     }.toMap()
 
-    override fun <T : AbstractContainerMenu> ItemStack.isApplicable(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): Boolean = menu.title.stripped == "Fishing ➜ Trophy Frogs" || menu.title.stripped.startsWith("Trophy Frogs ➜ ")
+    private val titleRegex = "(?:➜ )?Trophy Frogs(?: ➜)?".toRegex()
 
-    override fun <T : AbstractContainerMenu> ItemStack.resolveId(
-        menu: AbstractContainerScreen<T>,
-        resolverKind: IdResolverKind,
-    ): SkyBlockId? {
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.isApplicable(): Boolean = titleRegex.containsMatchIn(title)
+
+    context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
+    override fun ItemStack.resolveId(): SkyBlockId? {
         return idLookup[this.cleanName]?.asDerived()
     }
 }
