@@ -9107,6 +9107,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/components/CompositeComp
 public final class tech/thatgravyboat/skyblockapi/utils/components/ForkBuilder : tech/thatgravyboat/skyblockapi/utils/components/StateMachineBuilder {
 	public fun <init> ()V
 	public final fun branch (Lkotlin/jvm/functions/Function1;)V
+	public fun toPart ()Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart;
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/components/ForkPart : tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart {
@@ -9233,7 +9234,7 @@ public class tech/thatgravyboat/skyblockapi/utils/components/StateMachineBuilder
 	public final fun literal (Ljava/lang/String;)V
 	public final fun optional (Lkotlin/jvm/functions/Function1;)V
 	public final fun repeat (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public final fun toPart ()Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart;
+	public fun toPart ()Ltech/thatgravyboat/skyblockapi/utils/components/CompositeComponentPart;
 	public final fun wildcard (Ltech/thatgravyboat/skyblockapi/utils/components/CharSink;I)V
 	public static synthetic fun wildcard$default (Ltech/thatgravyboat/skyblockapi/utils/components/StateMachineBuilder;Ltech/thatgravyboat/skyblockapi/utils/components/CharSink;IILjava/lang/Object;)V
 }
