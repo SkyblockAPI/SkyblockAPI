@@ -22,6 +22,8 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.exists
@@ -62,6 +64,14 @@ internal class StoredData<T : Any>(
         alphaData = null
     }
 
+    inline fun edit(edit: T.() -> Unit?) {
+        contract {
+            callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
+        }
+        val data = get()
+        if (edit(data) != null) save()
+    }
+
     private fun loadNormalData() {
         if (data != null) return
         this.data = loadData(path, factory)
@@ -71,6 +81,7 @@ internal class StoredData<T : Any>(
         loadNormalData()
         return data!!
     }
+
     internal fun getAlphaData(): T? = alphaData
 
     init {
