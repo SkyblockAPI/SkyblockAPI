@@ -176,7 +176,6 @@ data class RepeatPart(
 data class ForkPart(
     val forks: List<StateMachinePosition<*>>,
 ) : ComponentStateMachinePart<ForkPart.State> {
-    constructor(parts: List<ComponentStateMachinePart<*>>) : this(parts.map { StateMachinePosition(it) })
 
     data class State(
         var state: StateMachinePosition<*>? = null,
@@ -279,7 +278,7 @@ class ForkBuilder() : StateMachineBuilder() {
     }
 
     override fun toPart(): CompositeComponentPart {
-        return CompositeComponentPart(listOf(ForkPart(parts)))
+        return CompositeComponentPart(listOf(ForkPart(parts.map { StateMachinePosition(it) })))
     }
 }
 
