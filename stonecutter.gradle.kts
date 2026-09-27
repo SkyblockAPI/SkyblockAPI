@@ -1,4 +1,4 @@
-
+import com.sun.org.apache.xpath.internal.XPathAPI.eval
 import org.gradle.api.publish.internal.component.DefaultAdhocSoftwareComponent
 import org.gradle.kotlin.dsl.support.serviceOf
 
@@ -21,14 +21,6 @@ stonecutter parameters {
     swaps["minecraft"] = "\"" + node.metadata.version + "\";"
 
     filters.include("**/*.fsh", "**/*.vsh")
-
-    replacements.regex {
-        direction = eval(current.version, "< 26.2")
-        replace(
-            "import net.minecraft.advancements.predicates.BlockPredicate", "import net.minecraft.advancements.criterion.BlockPredicate",
-            "import net.minecraft.advancements.criterion.BlockPredicate", "import net.minecraft.advancements.predicates.BlockPredicate"
-        )
-    }
 }
 
 
