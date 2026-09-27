@@ -79,7 +79,6 @@ internal class DebugScreenImpl<T>(
 
     override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTicks)
-        //~ }
         val messages = filteredMessages
         val status = Text.join(this.title, ": ${messages.size}")
         graphics.drawString(status, (this.width - McFont.width(status)) / 2, 5)

@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils.codecs
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
+//~ if >= 26.2 'criterion' -> 'predicates'
 import net.minecraft.advancements.predicates.BlockPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.core.GlobalPos
