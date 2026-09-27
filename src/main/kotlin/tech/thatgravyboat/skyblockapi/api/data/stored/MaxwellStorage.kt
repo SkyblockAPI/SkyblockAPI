@@ -59,8 +59,8 @@ internal object MaxwellStorage {
     fun updateAccessory(page: Int, index: Int, accessory: ItemStack) {
         val firstIndex = (page - 1) * MAX_ACCESSORIES_PER_PAGE
         val newIndex = firstIndex + index
-        if (newIndex < accessories.lastIndex) {
-            while (accessories.lastIndex < newIndex) {
+        if (newIndex > accessories.lastIndex) {
+            while (accessories.lastIndex <= newIndex) {
                 accessories.add(ItemStack.EMPTY)
             }
         }
