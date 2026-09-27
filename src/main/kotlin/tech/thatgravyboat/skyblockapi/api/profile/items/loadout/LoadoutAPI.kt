@@ -45,7 +45,7 @@ data object LoadoutAPI : ItemDebugCategory {
     private val loadoutEquipped = chatGroup.create("equipped", "You equipped (?<name>.+)!")
     private val armorTypes = listOf("Helmet", "Chestplate", "Leggings", "Boots")
     private val equipmentTypes = listOf("Necklace", "Cloak", "Belt", "Gloves/Bracelet")
-    private val containerRegion = ContainerRegion(5..7, 1..4)
+    private val containerRegion = ContainerRegion(width = 3, height = 4, startRow = 1, startColumn = 5)
 
     @OptIn(ExperimentalContracts::class)
     private inline fun editLoadout(id: Int, modifier: LoadoutSlot.() -> Unit) {

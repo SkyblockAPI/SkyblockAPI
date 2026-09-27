@@ -14,6 +14,7 @@ enum class HudElement {
     JUMP,
     EXPERIENCE,
     HEALTH,
+    ABSORPTION_HEARTS,
     ARMOR,
     FOOD,
     AIR,

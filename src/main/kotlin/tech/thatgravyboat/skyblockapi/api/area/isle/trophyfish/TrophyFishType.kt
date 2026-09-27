@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
 import tech.thatgravyboat.skyblockapi.utils.lazy.registryBoundLazy
@@ -115,17 +116,23 @@ enum class TrophyFishType(
     val gold by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_GOLD") }
     val diamond by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_DIAMOND") }
 
-    fun getItem(tier: TrophyFishTier): ItemStack {
+    fun getItem(tier: TrophyTier): ItemStack {
         return when (tier) {
-            TrophyFishTier.NONE -> bronze
-            TrophyFishTier.BRONZE -> bronze
-            TrophyFishTier.SILVER -> silver
-            TrophyFishTier.GOLD -> gold
-            TrophyFishTier.DIAMOND -> diamond
+            TrophyTier.NONE -> bronze
+            TrophyTier.BRONZE -> bronze
+            TrophyTier.SILVER -> silver
+            TrophyTier.GOLD -> gold
+            TrophyTier.DIAMOND -> diamond
         }
     }
 
-    fun getId(tier: TrophyFishTier, default: TrophyFishTier = TrophyFishTier.BRONZE): SkyBlockId = SkyBlockId.item("${this.internalName}_${tier.takeUnless { it == TrophyFishTier.NONE } ?: default}")
+    fun getItem(tier: TrophyFishTier): ItemStack = getItem(TrophyFishTier.valueOf(tier.name))
+
+    fun getId(tier: TrophyFishTier, default: TrophyFishTier = TrophyFishTier.BRONZE): SkyBlockId =
+        SkyBlockId.item("${this.internalName}_${tier.takeUnless { it == TrophyFishTier.NONE } ?: default}")
+
+    fun getId(tier: TrophyTier, default: TrophyTier = TrophyTier.BRONZE): SkyBlockId =
+        getId(TrophyFishTier.valueOf(tier.name), TrophyFishTier.valueOf(default.name))
 
     companion object {
         fun getByInternalName(internalName: String): TrophyFishType? {

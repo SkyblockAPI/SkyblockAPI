@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
@@ -18,7 +19,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.HudElement;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
@@ -154,6 +158,16 @@ public abstract class HudMixin {
     )
     private boolean onRenderAir(Hud instance, GuiGraphicsExtractor graphics, Player player, int i, int j, int k) {
         return !new RenderHudElementEvent(HudElement.AIR, graphics).post(SkyBlockAPI.getEventBus());
+    }
+
+    @ModifyArg(
+        method = "extractPlayerHealth",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;extractHearts(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V"),
+        index = 9
+    )
+    private int modifyRenderAbsorptionHearts(int absorption, @Local(argsOnly = true, name = "graphics") GuiGraphicsExtractor graphics) {
+        var isCancelled = new RenderHudElementEvent(HudElement.ABSORPTION_HEARTS, graphics).post(SkyBlockAPI.getEventBus());
+        return isCancelled ? 0 : absorption;
     }
 
 

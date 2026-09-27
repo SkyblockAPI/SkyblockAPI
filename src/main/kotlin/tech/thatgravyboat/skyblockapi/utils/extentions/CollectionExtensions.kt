@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
 import net.minecraft.world.item.ItemStack
-import java.util.function.Predicate
 
 /**
  * Splits a list into chunks based on a predicate.
@@ -61,7 +60,12 @@ fun <T> List<T>.asReversedIterator(): Iterator<T> {
     }
 }
 
-internal fun <T : Any> MutableCollection<T>.addIfNotNull(element: T?): Boolean = element?.let { add(it) } ?: false
+fun <T, C : MutableCollection<T>> C.replaceWith(collection: Collection<T>): C = apply {
+    clear()
+    addAll(collection)
+}
+
+fun <T : Any> MutableCollection<T>.addIfNotNull(element: T?): Boolean = element?.let { add(it) } ?: false
 
 fun Collection<ItemStack>.filterNotAir() = filterNot { it.isEmpty }
 
@@ -74,21 +78,37 @@ inline fun <T> List<T>.sublistAfter(predicate: (T) -> Boolean): List<T> {
     return if (index == -1) emptyList() else this.subList(index + 1, this.size)
 }
 
+/**
+ * Returns a sublist of the list between the first line that returns true on [beforePredicate], and the first line after that one to match [untilPredicate].
+ * Not inclusive.
+ */
+inline fun <T> List<T>.sublistAfterUntil(beforePredicate: (T) -> Boolean, untilPredicate: (T) -> Boolean): List<T> {
+    val startIndex = this.indexOfFirst(beforePredicate)
+    if (startIndex == -1) return emptyList()
+
+    for (i in (startIndex + 1)..lastIndex) {
+        val item = this[i]
+        if (untilPredicate(item)) {
+            return this.subList(startIndex + 1, i)
+        }
+    }
+    return emptyList()
+}
 
 fun <K> MutableMap<K, Int>.addOrPut(key: K, number: Int): Int = merge(key, number, Int::plus)!!
 fun <K> MutableMap<K, Double>.addOrPut(key: K, number: Double): Double = merge(key, number, Double::plus)!!
 fun <K> MutableMap<K, Float>.addOrPut(key: K, number: Float): Float = merge(key, number, Float::plus)!!
 fun <K> MutableMap<K, Long>.addOrPut(key: K, number: Long): Long = merge(key, number, Long::plus)!!
 
-fun <K, V> Map<K, V>.mapValuesNotNull(transform: (Map.Entry<K, V>) -> V?): Map<K, V> {
+fun <K, V, R : Any> Map<K, V>.mapValuesNotNull(transform: (Map.Entry<K, V>) -> R?): Map<K, R> {
     return this.mapNotNull { transform(it)?.let { value -> it.key to value } }.toMap()
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <K, V> Map<K, V?>.filterValuesNotNull(): Map<K, V> = this.filterValues { it != null } as Map<K, V>
+fun <K, V : Any> Map<K, V?>.filterValuesNotNull(): Map<K, V> = this.filterValues { it != null } as Map<K, V>
 
 @Suppress("UNCHECKED_CAST")
-fun <K, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null } as Map<K, V>
+fun <K : Any, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null } as Map<K, V>
 
 inline fun <Key> MutableMap<Key, *>.removeAll(crossinline predicate: (Key) -> Boolean) {
     for (key in this.keys.toSet()) {

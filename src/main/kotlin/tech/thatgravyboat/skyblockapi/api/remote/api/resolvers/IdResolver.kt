@@ -31,10 +31,7 @@ interface InventoryIdResolver : IdResolver {
             return null
         }
         val menu = screen.menu
-        val slot = menu.slots.find { ItemStack.isSameItemSameComponents(it.item, itemStack) } ?: run {
-            itemStack.addDebugString { "No slot found for item" }
-            return null
-        }
+        val slot = menu.slots.find { ItemStack.isSameItemSameComponents(it.item, itemStack) } ?: return null
         val containerSlotCount = menu.slots.size - 36
         return if (slot.index < containerSlotCount && itemStack.isApplicable(screen, resolverKind)) itemStack.resolveId(screen, resolverKind) else null
     }
@@ -84,5 +81,5 @@ enum class IdResolverKind {
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
 @AutoCollect
-annotation class IdResolvers
+internal annotation class IdResolvers
 

@@ -25,7 +25,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
 import net.minecraft.network.chat.TextColor as McTextColor
 import java.net.URI
 import java.util.*
-import java.util.regex.Pattern
 
 
 object CommonText {
@@ -233,6 +232,8 @@ internal fun Component.hover(): Component? = (this.style.hoverEvent as? HoverEve
 
 internal fun Component.command(): String? = (this.style.clickEvent as? ClickEvent.RunCommand)?.command()
 
+internal fun Component.customPayloadClick(): ClickEvent.Custom? = this.style.clickEvent as? ClickEvent.Custom
+
 internal fun Component.clipboard(): String? = (this.style.clickEvent as? ClickEvent.CopyToClipboard)?.value()
 
 internal fun Component.suggest(): String? = (this.style.clickEvent as? ClickEvent.SuggestCommand)?.command()
@@ -316,6 +317,15 @@ object TextStyle {
         get() = suggest()
         set(value) {
             this.style { withClickEvent(value?.let { ClickEvent.SuggestCommand(it) }) }
+        }
+
+    val Component.customPayloadClick: ClickEvent.Custom?
+        get() = customPayloadClick()
+
+    var MutableComponent.customPayloadClick: ClickEvent.Custom?
+        get() = customPayloadClick()
+        set(value) {
+            this.style { withClickEvent(value) }
         }
 
 

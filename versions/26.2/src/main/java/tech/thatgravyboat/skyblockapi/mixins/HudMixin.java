@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.render.HudElement;
@@ -157,9 +159,20 @@ public abstract class HudMixin {
     }
 
 
+    @ModifyArg(
+        method = "extractPlayerHealth",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;extractHearts(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V"),
+        index = 9
+    )
+    private int modifyRenderAbsorptionHearts(int absorption, @Local(argsOnly = true, name = "graphics") GuiGraphicsExtractor graphics) {
+        var isCancelled = new RenderHudElementEvent(HudElement.ABSORPTION_HEARTS, graphics).post(SkyBlockAPI.getEventBus());
+        return isCancelled ? 0 : absorption;
+    }
+
+
     @Inject(method = "extractChat", at = @At("HEAD"), cancellable = true)
-    private void onChatRender(GuiGraphicsExtractor GuiGraphicsExtractor, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (new RenderHudElementEvent(HudElement.CHAT, GuiGraphicsExtractor).post(SkyBlockAPI.getEventBus())) {
+    private void onChatRender(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (new RenderHudElementEvent(HudElement.CHAT, graphics).post(SkyBlockAPI.getEventBus())) {
             ci.cancel();
         }
     }
