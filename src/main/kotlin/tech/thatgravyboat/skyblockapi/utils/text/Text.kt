@@ -80,8 +80,12 @@ object Text {
         return result.also(init)
     }
 
-    /** Returns a component containing this component */
-    fun Component.repeat(n: Int): MutableComponent = join(List(n) { this })
+    /** 
+    * Returns a component containing this component repeated n times.
+    * 
+    * @param n Amount of repetitions
+    */
+    fun Component.repeat(n: @Range(from = 0, to = Int.MAX_VALUE) Int): MutableComponent = join(List(n) { this })
     fun Component.prefix(prefix: String): MutableComponent = join(prefix, this)
     fun Component.suffix(suffix: String): MutableComponent = join(this, suffix)
     fun Component.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
