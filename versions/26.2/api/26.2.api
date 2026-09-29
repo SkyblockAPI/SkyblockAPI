@@ -73,6 +73,86 @@ public final class tech/thatgravyboat/skyblockapi/api/SkyBlockAPI : org/slf4j/Lo
 	public fun warn (Lorg/slf4j/Marker;Ljava/lang/String;[Ljava/lang/Object;)V
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrog {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrog$Companion;
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;)Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrog;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrog;Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrog;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiName ()Ljava/lang/String;
+	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
+	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getTier ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrog$Companion {
+	public final fun fromString (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrog;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogAPI;
+	public final fun getCaught (Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;)Ljava/util/Map;
+	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
+	public final fun onInventory (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogData {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogData$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/Map;)Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogData;Ljava/util/Map;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogData$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType : java/lang/Enum {
+	public static final field BLESSED_FROG Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field BULLFROG Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field CAVE_FROG Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field COMMON_FROG Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType$Companion;
+	public static final field EXPLODING_FROG Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field HIGHLANDS_FROG Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field LEAP_FROG Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field PUDDLE_JUMPER Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field REALITY_HOPPER Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field SEA_FROG Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field TREE_FROG Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static final field WETLANDS_FROG Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public final fun getBronze ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getDiamond ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getGold ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getId-MS8-5Ak (Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;)Ljava/lang/String;
+	public static synthetic fun getId-MS8-5Ak$default (Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun getInternalName ()Ljava/lang/String;
+	public final fun getItem (Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;)Lnet/minecraft/world/item/ItemStack;
+	public final fun getSilver ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getStrippedName ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType$Companion {
+	public final fun getByDisplayName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public final fun getByInternalName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/area/dungeon/DungeonAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/dungeon/DungeonAPI;
 	public final fun getBloodKeys ()I
@@ -405,16 +485,18 @@ public final class tech/thatgravyboat/skyblockapi/api/area/isle/kuudra/KuudraTie
 
 public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish$Companion;
-	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)V
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;)V
 	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
-	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
-	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish;
-	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFish;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getApiName ()Ljava/lang/String;
 	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
 	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
-	public final fun getTier ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public final synthetic fun getTier ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
+	public final fun getTrophyTier ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
 	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -502,9 +584,12 @@ public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/Troph
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getGold ()Lnet/minecraft/world/item/ItemStack;
 	public final fun getId-MS8-5Ak (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)Ljava/lang/String;
+	public final fun getId-MS8-5Ak (Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;)Ljava/lang/String;
 	public static synthetic fun getId-MS8-5Ak$default (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;ILjava/lang/Object;)Ljava/lang/String;
+	public static synthetic fun getId-MS8-5Ak$default (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;ILjava/lang/Object;)Ljava/lang/String;
 	public final fun getInternalName ()Ljava/lang/String;
 	public final fun getItem (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;)Lnet/minecraft/world/item/ItemStack;
+	public final fun getItem (Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;)Lnet/minecraft/world/item/ItemStack;
 	public final fun getSilver ()Lnet/minecraft/world/item/ItemStack;
 	public final fun getStrippedName ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
@@ -518,7 +603,8 @@ public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/Troph
 
 public final class tech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishingAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishingAPI;
-	public final fun getCaught (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;)Ljava/util/Map;
+	public final synthetic fun getCaught (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;)Ljava/util/Map;
+	public final fun getCaughtTiers (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;)Ljava/util/Map;
 	public final fun onChat (Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre;)V
 	public final fun onInventory (Ltech/thatgravyboat/skyblockapi/api/events/screen/InventoryChangeEvent;)V
 	public final fun onPv (Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;)V
@@ -1938,6 +2024,40 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/Personal
 	public final fun getPERSONAL_DELETOR_ITEMS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyRank : java/lang/Enum {
+	public static final field ADEPT Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyRank;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyRank$Companion;
+	public static final field EXPERT Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyRank;
+	public static final field MASTER Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyRank;
+	public static final field NOVICE Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyRank;
+	public final fun getDisplayName ()Lnet/minecraft/network/chat/Component;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyRank;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyRank;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyRank$Companion {
+	public final fun getById (I)Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyRank;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier : java/lang/Enum {
+	public static final field BRONZE Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier$Companion;
+	public static final field DIAMOND Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public static final field GOLD Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public static final field NONE Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public static final field SILVER Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public final fun getDisplayName ()Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getNameSuffix ()Lnet/minecraft/network/chat/Component;
+	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier$Companion {
+	public final fun getByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/datetime/DateTimeAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/datetime/DateTimeAPI;
 	public final fun getDay ()I
@@ -2015,9 +2135,6 @@ public final class tech/thatgravyboat/skyblockapi/api/datetime/SkyBlockSeason$Co
 public abstract class tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent, tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent$Cancellable {
 	public fun <init> ()V
 	public fun cancel ()V
-}
-
-public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/base/DevModule : java/lang/annotation/Annotation {
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/base/EventBus {
@@ -2190,9 +2307,9 @@ public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/ev
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public fun <init> ()V
-	public final fun getColoredText ()Ljava/lang/String;
+	public fun getColoredText ()Ljava/lang/String;
 	public abstract fun getComponent ()Lnet/minecraft/network/chat/Component;
-	public final fun getText ()Ljava/lang/String;
+	public fun getText ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent {
@@ -2204,15 +2321,17 @@ public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarRecei
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent, tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent$Cancellable {
 	public fun <init> (Lnet/minecraft/network/chat/Component;)V
 	public fun cancel ()V
+	public fun getColoredText ()Ljava/lang/String;
 	public fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public fun getText ()Ljava/lang/String;
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Companion;
 	public fun <init> ()V
-	public final fun getColoredText ()Ljava/lang/String;
+	public fun getColoredText ()Ljava/lang/String;
 	public abstract fun getComponent ()Lnet/minecraft/network/chat/Component;
-	public final fun getText ()Ljava/lang/String;
+	public fun getText ()Ljava/lang/String;
 	public fun post (Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;)Z
 }
 
@@ -2231,7 +2350,9 @@ public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEv
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent, tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent$Cancellable {
 	public fun <init> (Lnet/minecraft/network/chat/Component;)V
 	public fun cancel ()V
+	public fun getColoredText ()Ljava/lang/String;
 	public fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public fun getText ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/dungeon/DungeonEnterEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -2905,6 +3026,41 @@ public final class tech/thatgravyboat/skyblockapi/api/events/location/SkyBlockLo
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/events/location/SkyBlockLocationEvent$Leave;
 }
 
+public abstract class tech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent$Fish : tech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;I)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public final fun component3 ()I
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;I)Ltech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent$Fish;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent$Fish;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;IILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent$Fish;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAmount ()I
+	public final fun getTier ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent$Frog : tech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;I)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public final fun component3 ()I
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;I)Ltech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent$Frog;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent$Frog;Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;IILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/location/TrophyCaughtEvent$Frog;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAmount ()I
+	public final fun getTier ()Ltech/thatgravyboat/skyblockapi/api/datatype/defaults/trophy/TrophyTier;
+	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/atoll/trophyfrog/TrophyFrogType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/location/isle/TrophyFishCaughtEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;I)V
 	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -2972,6 +3128,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/minecraft/ui/Gather
 public abstract class tech/thatgravyboat/skyblockapi/api/events/misc/AbstractModRegisterCommandsEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;Ljava/lang/String;[Ljava/lang/String;)V
 	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;Ljava/lang/String;[Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun command (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/events/misc/BuilderDsl;
 	public fun command (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public fun register (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public fun registerBaseCallback (Lkotlin/jvm/functions/Function1;)V
@@ -2988,6 +3145,18 @@ public abstract class tech/thatgravyboat/skyblockapi/api/events/misc/AbstractMod
 	public fun register (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public fun register (Lnet/minecraft/network/chat/Component;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun register$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/AbstractModRegisterDebugEvent;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/misc/BuilderDsl {
+	public fun <init> (Lkotlin/jvm/functions/Function1;)V
+	public final fun component1 ()Lkotlin/jvm/functions/Function1;
+	public final fun copy (Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/api/events/misc/BuilderDsl;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/BuilderDsl;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/misc/BuilderDsl;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun executes (Ljava/lang/Object;)V
+	public final fun getConsumer ()Lkotlin/jvm/functions/Function1;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public class tech/thatgravyboat/skyblockapi/api/events/misc/CommandBuilder {
@@ -3022,6 +3191,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/misc/RegisterComman
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent$Companion;
 	public fun <init> (Lcom/mojang/brigadier/CommandDispatcher;)V
 	public fun <init> (Lcom/mojang/brigadier/CommandDispatcher;Lnet/minecraft/commands/CommandBuildContext;)V
+	public final fun command (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder0;
 	public final fun command (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public final fun getBuildContext ()Lnet/minecraft/commands/CommandBuildContext;
 	public final fun register (Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;)V
@@ -5848,9 +6018,6 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdRes
 public final class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolverKind$Companion {
 }
 
-public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolvers : java/lang/annotation/Annotation {
-}
-
 public abstract interface class tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/InventoryIdResolver : tech/thatgravyboat/skyblockapi/api/remote/api/resolvers/IdResolver {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/remote/api/resolvers/InventoryIdResolver$Companion;
 	public fun getTypes ()Ljava/util/List;
@@ -7842,6 +8009,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function0;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder0;
+	public final fun executes (Lkotlin/jvm/functions/Function0;)V
 	public synthetic fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;
 	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
@@ -7863,6 +8031,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function1;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder1;
+	public final fun executes (Lkotlin/jvm/functions/Function1;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
 	public final fun getContext ()Lnet/minecraft/commands/CommandBuildContext;
@@ -7883,6 +8052,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function10;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function10;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder10;
+	public final fun executes (Lkotlin/jvm/functions/Function10;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -7912,6 +8082,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function11;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function11;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder11;
+	public final fun executes (Lkotlin/jvm/functions/Function11;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -7942,6 +8113,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function12;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function12;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder12;
+	public final fun executes (Lkotlin/jvm/functions/Function12;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -7973,6 +8145,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function13;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function13;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder13;
+	public final fun executes (Lkotlin/jvm/functions/Function13;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8005,6 +8178,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function14;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function14;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder14;
+	public final fun executes (Lkotlin/jvm/functions/Function14;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8038,6 +8212,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function15;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function15;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder15;
+	public final fun executes (Lkotlin/jvm/functions/Function15;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8072,6 +8247,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function16;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function16;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder16;
+	public final fun executes (Lkotlin/jvm/functions/Function16;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8107,6 +8283,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function17;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function17;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder17;
+	public final fun executes (Lkotlin/jvm/functions/Function17;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8143,6 +8320,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function18;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function18;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder18;
+	public final fun executes (Lkotlin/jvm/functions/Function18;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8180,6 +8358,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function19;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function19;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder19;
+	public final fun executes (Lkotlin/jvm/functions/Function19;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8218,6 +8397,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function2;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder2;
+	public final fun executes (Lkotlin/jvm/functions/Function2;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8239,6 +8419,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function20;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function20;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder20;
+	public final fun executes (Lkotlin/jvm/functions/Function20;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8278,6 +8459,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function21;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function21;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder21;
+	public final fun executes (Lkotlin/jvm/functions/Function21;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8318,6 +8500,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function22;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function22;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder22;
+	public final fun executes (Lkotlin/jvm/functions/Function22;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8359,6 +8542,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/FunctionN;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/FunctionN;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder23;
+	public final fun executes (Lkotlin/jvm/functions/FunctionN;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8401,6 +8585,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/FunctionN;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/FunctionN;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder24;
+	public final fun executes (Lkotlin/jvm/functions/FunctionN;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8444,6 +8629,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/FunctionN;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/FunctionN;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder25;
+	public final fun executes (Lkotlin/jvm/functions/FunctionN;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8488,6 +8674,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/FunctionN;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/FunctionN;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder26;
+	public final fun executes (Lkotlin/jvm/functions/FunctionN;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8531,6 +8718,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function3;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function3;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder3;
+	public final fun executes (Lkotlin/jvm/functions/Function3;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8553,6 +8741,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function4;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function4;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder4;
+	public final fun executes (Lkotlin/jvm/functions/Function4;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8576,6 +8765,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function5;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function5;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder5;
+	public final fun executes (Lkotlin/jvm/functions/Function5;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8600,6 +8790,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function6;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function6;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder6;
+	public final fun executes (Lkotlin/jvm/functions/Function6;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8625,6 +8816,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function7;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function7;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder7;
+	public final fun executes (Lkotlin/jvm/functions/Function7;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8651,6 +8843,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function8;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function8;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder8;
+	public final fun executes (Lkotlin/jvm/functions/Function8;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8678,6 +8871,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuild
 	public fun deferChild (Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder;)V
 	public final fun execute (Lkotlin/jvm/functions/Function9;)V
 	public final fun executes (Ljava/lang/String;Lkotlin/jvm/functions/Function9;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder9;
+	public final fun executes (Lkotlin/jvm/functions/Function9;)V
 	public final fun getAArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public final fun getBArgumentBinding ()Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding;
 	public fun getBuilder ()Lcom/mojang/brigadier/builder/ArgumentBuilder;
@@ -8701,7 +8895,7 @@ public abstract interface annotation class tech/thatgravyboat/skyblockapi/utils/
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandsKt {
-	public static final fun command (Lcom/mojang/brigadier/CommandDispatcher;Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Lkotlin/jvm/functions/Function1;)V
+	public static final fun command (Lcom/mojang/brigadier/CommandDispatcher;Ljava/lang/String;Lnet/minecraft/commands/CommandBuildContext;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/dsl/CommandBuilder0;
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/components/CapturingComponentPart : tech/thatgravyboat/skyblockapi/utils/components/ComponentStateMachinePart {

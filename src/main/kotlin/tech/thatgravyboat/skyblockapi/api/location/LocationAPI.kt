@@ -58,9 +58,8 @@ object LocationAPI {
         " *(?:players|party) \\((?<count>\\d+)\\) *",
     )
 
-    private val newAlphaRegex = RegexGroup.CHAT.createList(
+    private val newAlphaRegex = RegexGroup.CHAT.create(
         "alpha.new",
-        "^Welcome to Hypixel SkyBlock on the Alpha Network!",
         "^.>>\\s+Achievement Unlocked: Achievement Get! Hypixel Server!"
     )
 
@@ -181,7 +180,7 @@ object LocationAPI {
 
     @Subscription
     fun onChatReceivedPre(event: ChatReceivedEvent.Pre) {
-        if (!newAlphaRegex.any { it.contains(event.text) }) return
+        if (!newAlphaRegex.contains(event.text)) return
         FreshHypixelAlphaDetectedEvent.post()
     }
 

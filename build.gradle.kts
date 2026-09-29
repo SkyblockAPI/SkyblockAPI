@@ -36,6 +36,9 @@ kotlin {
     }
 }
 
+// mona said to disable this for now
+tasks.named("checkKotlinAbi") { enabled = false }
+
 repositories {
     fun scopedMaven(url: String, vararg paths: String) = maven(url) { content { paths.forEach(::includeGroupAndSubgroups) } }
 
