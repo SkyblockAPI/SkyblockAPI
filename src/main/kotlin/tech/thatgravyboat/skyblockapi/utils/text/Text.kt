@@ -85,7 +85,7 @@ object Text {
     * 
     * @param n Amount of repetitions
     */
-    fun Component.repeat(n: @Range(from = 0, to = Int.MAX_VALUE) Int): MutableComponent = join(List(n) { this })
+    fun Component.repeat(n: Int): MutableComponent = join(List(n) { this })
     fun Component.prefix(prefix: String): MutableComponent = join(prefix, this)
     fun Component.suffix(suffix: String): MutableComponent = join(this, suffix)
     fun Component.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
