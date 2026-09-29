@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.location.isle
 
-//? < 26.4
+//? < 26.4 {
 /*import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishTier
 import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishType
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
