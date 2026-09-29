@@ -26,9 +26,8 @@ class DataType<T> private constructor(
     //? < 26.2
     //@RemoveNextVersion constructor(id: String, factory: (ItemStack) -> T?) : this(id, true, factory)
 
-    @get:Deprecated("Scheduled for removal in 26.3")
-    @get:ApiStatus.ScheduledForRemoval
-    val factory: (ItemStack) -> T? get() = ::resolve
+    //? < 26.4
+    //@get:Deprecated("Scheduled for removal in 26.3") @get:ApiStatus.ScheduledForRemoval val factory: (ItemStack) -> T? get() = ::resolve
 
     init {
         if (autoRegister) DataTypesRegistry.addDataType(this)

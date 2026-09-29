@@ -28,8 +28,8 @@ data class BuilderDsl<Consumer>(val consumer: (Consumer) -> Unit) {
 
 class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClientCommandSource>, val buildContext: CommandBuildContext?) : SkyBlockEvent() {
 
-    @Deprecated("Also provide build context")
-    constructor(dispatcher: CommandDispatcher<FabricClientCommandSource>) : this(dispatcher, null)
+    //? < 26.4
+    //@Deprecated("Also provide build context") constructor(dispatcher: CommandDispatcher<FabricClientCommandSource>) : this(dispatcher, null)
 
     fun register(command: LiteralArgumentBuilder<FabricClientCommandSource>) {
         dispatcher.register(command)

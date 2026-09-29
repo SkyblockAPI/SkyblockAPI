@@ -31,7 +31,8 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 import tech.thatgravyboat.skyblockapi.utils.McVersion
-import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
+//? < 26.4
+//import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
@@ -48,8 +49,8 @@ object McClient {
     val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
     val config: Path = FabricLoader.getInstance().configDir
 
-    @Deprecated("Use mcVersion instead")
-    val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
+    //? < 26.4
+    //@Deprecated("Use mcVersion instead") val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
     val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
 
     val version: String = SharedConstants.getCurrentVersion().name()

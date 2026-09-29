@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import net.minecraft.util.TriState
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
 import tech.thatgravyboat.skyblockapi.api.data.stored.ElectionStorage
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
@@ -91,9 +90,8 @@ data class MayorPerk internal constructor(
     var description: String = "Not available",
     val perkpocalypse: Boolean = true,
 ) {
-    @RemoveNextVersion
-    @Deprecated("Use MayorPerk.perkpocalypse instead.", ReplaceWith("perkpocalypse"))
-    val perkapocalypse: Boolean get() = perkpocalypse
+    //? < 26.4
+    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Use MayorPerk.perkpocalypse instead.", ReplaceWith("perkpocalypse")) val perkapocalypse: Boolean get() = perkpocalypse
 
     internal var overrideState: TriState = DEFAULT
 

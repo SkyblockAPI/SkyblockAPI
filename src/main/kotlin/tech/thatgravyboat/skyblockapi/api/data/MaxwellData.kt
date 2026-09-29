@@ -7,7 +7,6 @@ import me.owdding.ktcodecs.FieldNames
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktcodecs.OptionalIfEmpty
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPower
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPowers
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
@@ -26,9 +25,8 @@ data class MaxwellData(
     @FieldName("tuning_templates") @OptionalIfEmpty @Compact
     var tuningTemplates: MutableList<MaxwellTuningTemplate> = mutableListOf(),
 ) {
-    @RemoveNextVersion
-    @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN)
-    var magicalPower: Int by ::accessoryPower
+    //? < 26.4
+    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN) var magicalPower: Int by ::accessoryPower
 
     companion object {
         val CODEC: Codec<MaxwellData> = SkyblockAPICodecs.getCodec<MaxwellData>()

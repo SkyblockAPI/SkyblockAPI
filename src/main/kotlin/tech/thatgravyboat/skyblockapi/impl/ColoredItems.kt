@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl
 
-import net.minecraft.world.item.Item
+//? < 26.4 {
+/*import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 
 @Suppress("unused")
@@ -314,3 +315,4 @@ object ColoredItems {
     val BLACK_SHULKER_BOX: Item = Items.BLACK_SHULKER_BOX
     *///? }
 }
+*///?}

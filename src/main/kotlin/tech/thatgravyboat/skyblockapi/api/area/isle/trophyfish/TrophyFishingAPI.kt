@@ -8,7 +8,8 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.TrophyCaughtEvent
-import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
+//? < 26.4
+//import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
@@ -52,7 +53,8 @@ object TrophyFishingAPI {
                 val type = TrophyFishType.getByDisplayName(type) ?: return@case
 
                 TrophyFishStorage.addCaught(type, fishTier)
-                TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name)).post()
+                //? < 26.4
+                //TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name)).post()
                 TrophyCaughtEvent.Fish(type, fishTier).post()
             }
             case(multiTrophyFishCaughtRegex, "type", "tier", "amount") { (type, tier, amount) ->
@@ -61,7 +63,8 @@ object TrophyFishingAPI {
                 val amount = amount.toIntOrNull() ?: return@case
 
                 TrophyFishStorage.addCaught(type, fishTier)
-                TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name), amount).post()
+                //? < 26.4
+                //TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name), amount).post()
                 TrophyCaughtEvent.Fish(type, fishTier, amount).post()
             }
         }
@@ -120,12 +123,13 @@ object TrophyFishingAPI {
         unlocked.forEach(TrophyFishStorage::setAmounts)
     }
 
-    @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
+    //? < 26.4 {
+    /*@Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
     fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
         return TrophyFishStorage.getCaught(type).map { TrophyFishTier.valueOf(it.key.name) to it.value }.toMap()
     }
 
-    @JvmName("getCaughtTiers")
+    @JvmName("getCaughtTiers")*///?}
     fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
         return TrophyFishStorage.getCaught(type)
     }
