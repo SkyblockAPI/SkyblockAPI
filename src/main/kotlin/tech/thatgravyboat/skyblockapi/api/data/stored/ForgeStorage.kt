@@ -48,6 +48,6 @@ internal object ForgeStorage {
 
     fun clear() {
         data.clear()
-        data.save()
+        FORGE.save()
     }
 }

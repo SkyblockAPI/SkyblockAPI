@@ -31,6 +31,12 @@ object ForgeAPI {
         val index = event.slot.index - 9
         val id = event.item.getSkyBlockId() ?: return ForgeStorage.clearSlot(index)
 
+        // Sanity check the index bc we sometimes just have slot 14 in it?
+        if (index > 7) {
+            SkyBlockAPI.logger.warn("Found forge item $id at slot $index")
+            return
+        }
+
         val found = durationRegex.anyMatch(event.item.getRawLore(), "duration") { (duration) ->
             val duration = duration.parseDuration() ?: return@anyMatch
             val expire = currentInstant() + duration
