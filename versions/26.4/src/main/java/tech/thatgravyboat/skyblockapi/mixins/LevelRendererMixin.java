@@ -58,19 +58,20 @@ public abstract class LevelRendererMixin {
         method = "executeClassicTransparency",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;renderGroup(Lnet/minecraft/client/renderer/chunk/ChunkSectionLayerGroup;Lcom/mojang/renderpearl/api/commands/RenderPass;Lcom/mojang/renderpearl/api/textures/GpuSampler;Lcom/mojang/renderpearl/api/textures/GpuTextureView;Z)V"
+            target = "Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;renderGroup(Lnet/minecraft/client/renderer/chunk/ChunkSectionLayerGroup;Lcom/mojang/renderpearl/api/commands/RenderPass;Lcom/mojang/renderpearl/api/textures/GpuSampler;Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender$ImprovedFogTextures;Z)V"
         )
     )
     public void afterTranslucent(
         ChunkSectionsToRender instance,
-        ChunkSectionLayerGroup group,
+        ChunkSectionLayerGroup chunkSectionLayerGroup,
         RenderPass renderPass,
-        GpuSampler sampler,
-        GpuTextureView blockAtlas,
-        boolean renderWireframeTerrain,
+        GpuSampler gpuSampler,
+        GpuTextureView gpuTextureView,
+        ChunkSectionsToRender.ImprovedFogTextures improvedFogTextures,
+        boolean b,
         Operation<Void> original
     ) {
-        original.call(instance, group, renderPass, sampler, blockAtlas, renderWireframeTerrain);
+        original.call(instance, chunkSectionLayerGroup, renderPass, gpuSampler, gpuTextureView, improvedFogTextures, b);
 
         var poseStack = new PoseStack();
         new RenderWorldEvent.AfterTranslucent(
