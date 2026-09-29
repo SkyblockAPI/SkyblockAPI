@@ -45,4 +45,9 @@ internal object ForgeStorage {
         FORGE.get()?.remove(slot)
         FORGE.save()
     }
+
+    fun clear() {
+        data.clear()
+        data.save()
+    }
 }
