@@ -1,8 +1,6 @@
 @file:OptIn(ExperimentalAbiValidation::class)
 
-import net.fabricmc.loom.api.fabricapi.FabricApiExtension
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
-import net.fabricmc.loom.task.prod.ClientProductionRunTask
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlin.io.path.createDirectories
@@ -220,13 +218,16 @@ dependencies {
 }
 
 val mcVersion = stonecutter.current.version.replace(".", "")
+val regexDumpFile = project.layout.buildDirectory.file("regexes/regexes.json")
 
 loom {
     runConfigs["client"].apply {
         ideConfigGenerated(true)
         runDir = "../../run"
         vmArg("-Dfabric.modsFolder=\"${mcVersion}Mods\"")
+        vmArgs.add("-Dskyblockapi.regexes.dumpPath=${regexDumpFile.get().asFile.absolutePath}")
     }
+
 
     if (accessWidenerFile.exists()) {
         accessWidenerPath.set(accessWidenerFile)
@@ -245,6 +246,10 @@ fabricApi {
         createRunConfiguration = true
         outputDirectory.set(datagenOutput)
     }
+}
+
+tasks.named<JavaExec>("runDatagen") {
+    outputs.file(regexDumpFile)
 }
 
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }

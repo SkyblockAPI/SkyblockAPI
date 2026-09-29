@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import java.nio.file.Path
 import kotlin.collections.mutableMapOf
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.writeText
 
@@ -54,26 +55,24 @@ object Regexes {
 
     fun group(prefix: String) = RegexGroup(prefix)
 
-    private val allowedChars: Set<Char> = buildSet {
-        addAll('a'..'z')
-        // TODO: maybe remove uppercase letters from allowed chars in keys?
-        addAll('A'..'Z')
-        addAll("._-".toList())
+    // TODO: maybe remove uppercase letters from allowed chars in keys?
+    private fun isValidChar(char: Char): Boolean {
+        return char.isLetterOrDigit() || char == '.' || char == '-' || char == '_'
     }
 
     private fun validateKey(key: String) {
         if (!McClient.isDev) return
         require(key !in usedKeys) { "Regex Key '$key' is already in use" }
         require("@value" !in key) { "Regex key '$key' cannot contain '@value'" }
-        require(key.split(".").none(String::isBlank)) { "Regex key '$key' has at least 2 '.' in a row." }
-        require(key.all(allowedChars::contains)) { "Regex key '$key' contains illegal characters" }
+        require(key.split(".").none(String::isBlank)) { "Regex key '$key' has at least 2 '.' in a row, or ends/starts with '.'" }
+        require(key.all(::isValidChar)) { "Regex key '$key' contains illegal characters" }
         usedKeys += key
     }
 
     @JvmStatic
     @ApiStatus.Internal
     fun dumpRegexes(path: Path) {
-        SkyBlockAPI.info("Dumping ${regexes.size} regexes and ${regexLists.size} regex lists")
+        SkyBlockAPI.info("Dumping ${regexes.size} regexes and ${regexLists.size} regex lists into ${path.absolutePathString()}")
         val json = context(regexes, regexLists) { RegexData.createJson() }
         path.createParentDirectories()
         path.writeText(json.toPrettyString())

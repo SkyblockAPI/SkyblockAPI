@@ -111,10 +111,11 @@ internal object RegexData {
         }
     }
 
+    // TODO: implement this
     @JvmStatic
     @ApiStatus.Internal
     fun load() {
-        if (McClient.isDev || isCreatingJson) return
+        if (McClient.isDev || isCreatingJson || URL.isBlank()) return
         runCatchBlocking {
             val result = Http.getResult<JsonObject>(URL)
 
