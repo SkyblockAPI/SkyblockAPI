@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.datagen
 
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import kotlin.io.path.Path
 
@@ -13,7 +12,10 @@ object RegexDumping {
         get() = System.getProperty("skyblockapi.regexes.dumpPath")
 
     fun tryDump() {
-        if (!shouldDump) SkyBlockAPIDatagen.info("Not dumping regexes")
+        if (!shouldDump) {
+            SkyBlockAPIDatagen.info("Not dumping regexes")
+            return
+        }
         val path = dumpPath ?: error("skyblockapi.regexes.dumpPath not set")
         Regexes.dumpRegexes(Path(path))
     }

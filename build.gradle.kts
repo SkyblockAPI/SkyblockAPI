@@ -220,27 +220,22 @@ dependencies {
 val mcVersion = stonecutter.current.version.replace(".", "")
 val regexDumpFile = project.layout.buildDirectory.file("regexes/regexes.json")
 
+val datagenOutput = project.layout.buildDirectory.file("generated/skyblock-api/data").apply {
+    get().asFile.toPath().createDirectories()
+}
+
 loom {
     runConfigs["client"].apply {
         ideConfigGenerated(true)
         runDir = "../../run"
         vmArgs.add("-Dfabric.modsFolder=\"${mcVersion}Mods\"")
-
-        // TODO: make it so that these are only actually enabled on a specific task
-        //  that only gets ran from a GitHub workflow
-        vmArgs.add("-Dskyblockapi.regexes.dumpEnabled=true")
-        vmArgs.add("-Dskyblockapi.regexes.dumpPath=${regexDumpFile.get().asFile.absolutePath}")
+        //ideConfigFolder.set(stonecutter.current.version)
     }
-
-
     if (accessWidenerFile.exists()) {
         accessWidenerPath.set(accessWidenerFile)
     }
 }
 
-val datagenOutput = project.layout.buildDirectory.file("generated/skyblock-api/data").apply {
-    get().asFile.toPath().createDirectories()
-}
 
 fabricApi {
     configureDataGeneration {
@@ -257,6 +252,29 @@ tasks.named<JavaExec>("runDatagen") {
 }
 
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }
+
+afterEvaluate {
+    loom {
+        runs {
+            named("datagen") {
+                ideConfigFolder.set("Datagen")
+            }
+            // This creates a gradle task called "runDumpRegexes"
+            create("dumpRegexes") {
+                inherit(getByName("datagen"))
+                name = "Regex Dumping"
+                description = "Dumps the regexes into a file located in 'build/regexes/regexes.json'"
+
+                ideConfigGenerated(false)
+
+                vmArgs.add("-Dskyblockapi.regexes.dumpEnabled=true")
+                vmArgs.add("-Dskyblockapi.regexes.dumpPath=${regexDumpFile.get().asFile.absolutePath}")
+            }
+        }
+    }
+}
+
+
 
 fun Jar.applyDatagenOutput() {
     if (rootProject.hasProperty("datagen")) {
