@@ -129,8 +129,8 @@ object MuseumAPI {
         }
     }
 
-    private fun ItemStack.isNotDonated(): Boolean = this in ColoredItems.GRAY_DYE
-    private fun ItemStack.isNotStored(): Boolean = this in ColoredItems.LIME_DYE
+    private fun ItemStack.isNotDonated(): Boolean = this in Items.DYE.gray
+    private fun ItemStack.isNotStored(): Boolean = this in Items.DYE.lime
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB)

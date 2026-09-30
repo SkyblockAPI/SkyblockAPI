@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.loadout
 
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.EquipmentStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
@@ -16,7 +17,6 @@ import tech.thatgravyboat.skyblockapi.api.profile.items.equipment.EquipmentAPI
 import tech.thatgravyboat.skyblockapi.api.profile.items.equipment.EquipmentSlot
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.extentions.roundToNextMultipleOf
@@ -81,7 +81,7 @@ object EquipmentWardrobeAPI {
             val id = WARDROBE_SLOTS_PER_PAGE * (currentPage - 1) + index + 1
             var locked = false
 
-            if (selectStack.item == ColoredItems.RED_DYE) {
+            if (selectStack.item == Items.DYE.red) {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
                 LoadoutStorage.updateCurrentEquipmentSlot(id)

@@ -1,8 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.hotm
 
 import me.owdding.ktmodules.Module
-import tech.thatgravyboat.repolib.api.recipes.Recipe
-import tech.thatgravyboat.repolib.api.recipes.ingredient.CraftingIngredient
+import net.minecraft.world.item.Items
 import tech.thatgravyboat.repolib.api.recipes.ingredient.ItemIngredient
 import tech.thatgravyboat.skyblockapi.api.data.CrystalStatus
 import tech.thatgravyboat.skyblockapi.api.data.CrystalType
@@ -17,7 +16,6 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.api.remote.RepoRecipeAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
-import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
@@ -110,7 +108,7 @@ object CrystalAPI {
     @Subscription
     fun onContainerClick(event: SlotClickEvent) {
         if (event.title != "Confirm Process") return
-        if (event.item.cleanName != "Confirm" || !event.item.`is`(ColoredItems.GREEN_TERRACOTTA)) return
+        if (event.item.cleanName != "Confirm" || !event.item.`is`(Items.DYED_TERRACOTTA.green)) return
 
         val forgeOutput = event.menuSlots.find { it.index == 16 }?.item?.getSkyBlockId() ?: return
         val recipe = RepoRecipeAPI.getForgeRecipe(forgeOutput.skyblockId) ?: return
