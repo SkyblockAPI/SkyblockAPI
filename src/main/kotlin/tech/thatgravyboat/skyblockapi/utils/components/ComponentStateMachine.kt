@@ -174,8 +174,37 @@ data class RepeatPart(
 }
 
 data class ForkPart(
-    val forks: List<ComponentStateMachinePart<*>>,
+    val forks: List<StateMachinePosition<*>>,
 ) : ComponentStateMachinePart<ForkPart.State> {
+
+    data class State(
+        var state: StateMachinePosition<*>? = null,
+    )
+
+    override fun createState(): State = State()
+
+    context(state: State, _: GroupSink)
+    override fun tryConsumeState(index: Int, char: Char, style: Style): StateResult {
+        if (index == 0) {
+            val machine = forks.find {
+                it.tryConsume(char, style).match
+            } ?: return StateResult.BREAK
+            state.state = machine
+            return StateResult.CONSUME
+        }
+
+        return state.state!!.tryConsume(char, style)
+    }
+
+    context(state: State)
+    override fun endState(groupSink: GroupSink) {
+        state.state?.endState(groupSink)
+    }
+}
+
+internal data class BetterForkPart(
+    val forks: List<ComponentStateMachinePart<*>>,
+) : ComponentStateMachinePart<BetterForkPart.State> {
 
     data class State(
         var state: StateMachinePosition<*>? = null,
@@ -279,7 +308,7 @@ class ForkBuilder() : StateMachineBuilder() {
     }
 
     override fun toPart(): CompositeComponentPart {
-        return CompositeComponentPart(listOf(ForkPart(parts)))
+        return CompositeComponentPart(listOf(BetterForkPart(parts)))
     }
 }
 
