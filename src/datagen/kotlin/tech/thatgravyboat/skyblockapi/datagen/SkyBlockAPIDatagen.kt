@@ -2,12 +2,12 @@ package tech.thatgravyboat.skyblockapi.datagen
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
-import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
-import kotlin.io.path.Path
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-object SkyBlockAPIDatagen : DataGeneratorEntrypoint {
+object SkyBlockAPIDatagen : DataGeneratorEntrypoint, Logger by LoggerFactory.getLogger("SkyBlockAPIDatagen") {
+
     override fun onInitializeDataGenerator(fabricDataGenerator: FabricDataGenerator) {
-        val path = System.getProperty("skyblockapi.regexes.dumpPath") ?: error("skyblockapi.regexes.dumpPath not set")
-        Regexes.dumpRegexes(Path(path))
+        RegexDumping.tryDump()
     }
 }

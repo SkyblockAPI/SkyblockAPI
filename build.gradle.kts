@@ -224,7 +224,11 @@ loom {
     runConfigs["client"].apply {
         ideConfigGenerated(true)
         runDir = "../../run"
-        vmArg("-Dfabric.modsFolder=\"${mcVersion}Mods\"")
+        vmArgs.add("-Dfabric.modsFolder=\"${mcVersion}Mods\"")
+
+        // TODO: make it so that these are only actually enabled on a specific task
+        //  that only gets ran from a GitHub workflow
+        vmArgs.add("-Dskyblockapi.regexes.dumpEnabled=true")
         vmArgs.add("-Dskyblockapi.regexes.dumpPath=${regexDumpFile.get().asFile.absolutePath}")
     }
 

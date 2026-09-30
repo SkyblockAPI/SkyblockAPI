@@ -30,7 +30,7 @@ import kotlin.io.path.writeText
 
 
 private const val URL = ""
-private const val FILE_PATH = "regexes.json"
+private const val FILE_PATH = "skyblockapi/regexes.json"
 
 @Module
 internal object RegexData {
@@ -42,7 +42,7 @@ internal object RegexData {
     }
 
     val isCreatingJson: Boolean
-        get() = System.getProperty("skyblockapi.generateRegexes.enabled")?.lowercase() == "true"
+        get() = System.getProperty("skyblockapi.regexes.dumpEnabled")?.lowercase() == "true"
 
     var source: RegexSource = LOCAL_FILE
         private set
