@@ -26,7 +26,6 @@ import tech.thatgravyboat.skyblockapi.api.remote.hypixel.museum.MuseumData
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
@@ -138,7 +137,7 @@ object MuseumAPI {
         if (event.isInPlayerInventory) return
         if (!donateTitleRegex.match(event.title)) return
         val item = event.item
-        if (item !in ColoredItems.LIME_TERRACOTTA) return
+        if (item !in Items.DYED_TERRACOTTA.lime) return
         if (!confirmDonateItem.match(item.cleanName)) return
         val lastIndex = event.slot.index - 1
         if (lastIndex !in 0..event.slots.lastIndex) return
