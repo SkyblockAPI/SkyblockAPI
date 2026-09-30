@@ -14,8 +14,6 @@ data class PlayerInventoryChangeEvent(
     //? < 26.4
     //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Should pass previousItem as well") constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
 
-    //? < 26.2
-    //val slot get() = slotIndex
     val slotIndex get() = inventorySlot.index
 }
 
@@ -27,8 +25,7 @@ data class PlayerHotbarChangeEvent(
     //? < 26.4
     //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Should pass previousItem as well") constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
 
-    //? < 26.2
-    //val slot get() = slotIndex
+    
     val slotIndex get() = inventorySlot.index - FIRST_HOTBAR_SLOT
 
     companion object {

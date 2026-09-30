@@ -5,8 +5,6 @@ import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Item
-//? < 26.2
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
@@ -116,13 +114,6 @@ object GenericDataTypes {
     val TOOL_EXP: DataType<Double> = DataType.simple("tool_exp", "levelable_exp")
     val TOOL_OVERCLOCKS: DataType<Int> = DataType.simple("tool_overclocks", "levelable_overclocks")
 
-    //? < 26.2 {
-    /*@RemoveNextVersion
-    val APPLIED_RUNE: DataType<Pair<String, Int>> = DataType.of("applied_rune") {
-        it.unsafeTag?.getCompoundOrEmpty("runes")?.let { tag ->
-            buildMap { tag.keySet().forEach { key -> this[key] = tag.getIntOr(key, 0) } }
-        }?.entries?.firstOrNull()?.toPair()
-    }*///?}
     val USED_RUNE: DataType<SkyBlockId> = DataType.of("used_rune") {
         it.unsafeTag?.getCompoundOrEmpty("runes")?.let { tag ->
             tag.keySet().firstNotNullOfOrNull { key -> SkyBlockId.rune(key, tag.getIntOr(key, 0)) }
