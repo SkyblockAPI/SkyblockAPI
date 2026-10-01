@@ -88,7 +88,14 @@ object LoreDataTypes {
     internal fun getRarityLine(rawLore: List<String>?, isUpgraded: Boolean = false): Pair<String, SkyBlockRarity>? {
         val lines = rawLore?.asReversedIterator() ?: return null
         for (line in lines) {
-            val rarityLine = (if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim()).removePrefix("SHINY ")
+            val rarityLine = (if (isUpgraded) line.drop(2).dropLast(2).trim() else line.trim())
+                .removePrefix("SHINY ")
+                .let {
+                    // shards at the end have their id in parentheses, like 'LEGENDARY WATER SHARD (ID L44)'
+                    val lastIndex = it.lastIndexOf('(')
+                    if (lastIndex != -1) it.substring(0, lastIndex).trim()
+                    else it
+                }
             if (rarityLine.any(Char::isLowerCase)) continue
             val rarity = SkyBlockRarity.entries.firstOrNull { rarity -> rarityLine.startsWith(rarity.displayName.uppercase()) }
             if (rarity != null) {
