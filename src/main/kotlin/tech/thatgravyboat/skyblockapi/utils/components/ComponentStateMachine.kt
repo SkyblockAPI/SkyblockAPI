@@ -174,8 +174,11 @@ data class RepeatPart(
 }
 
 data class ForkPart(
-    val forks: List<StateMachinePosition<*>>,
+    val forks: List<ComponentStateMachinePart<*>>,
+    val marker: Unit = Unit,
 ) : ComponentStateMachinePart<ForkPart.State> {
+    @Deprecated("Only for binary compat", level = DeprecationLevel.HIDDEN)
+    constructor(forks: List<StateMachinePosition<*>>) : this(forks.map { it.part }, Unit)
 
     data class State(
         var state: StateMachinePosition<*>? = null,
@@ -186,13 +189,14 @@ data class ForkPart(
     context(state: State, _: GroupSink)
     override fun tryConsumeState(index: Int, char: Char, style: Style): StateResult {
         if (index == 0) {
-            val machine = forks.find {
+            val machine = forks.map { StateMachinePosition(it) }.find {
                 it.tryConsume(char, style).match
             } ?: return StateResult.BREAK
             state.state = machine
             return StateResult.CONSUME
         }
-        return state.state!!.tryConsume(char, style)
+
+        return state.state?.tryConsume(char, style) ?: StateResult.BREAK
     }
 
     context(state: State)
@@ -278,7 +282,7 @@ class ForkBuilder() : StateMachineBuilder() {
     }
 
     override fun toPart(): CompositeComponentPart {
-        return CompositeComponentPart(listOf(ForkPart(parts.map { StateMachinePosition(it) })))
+        return CompositeComponentPart(listOf(ForkPart(parts)))
     }
 }
 

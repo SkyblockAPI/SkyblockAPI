@@ -5,6 +5,7 @@ import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.mobs.Mob
 
 @Module
+@Deprecated("Use SkyBlockMobsRepo instead")
 object RepoMobsAPI {
 
     fun getMobOrNull(id: String): Mob? {
