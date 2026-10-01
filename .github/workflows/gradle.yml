@@ -39,5 +39,5 @@ jobs:
         if: always()
         steps:
             -   name: Check matrix result
-                if: ${{ needs.build.result != 'success' }}
+                if: ${{ needs.build-matrix.result != 'success' }}
                 run: exit 1
