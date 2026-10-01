@@ -1,22 +1,17 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.loadout
 
 import me.owdding.ktmodules.Module
+import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
-import tech.thatgravyboat.skyblockapi.impl.debug.addStringDebug
-import tech.thatgravyboat.skyblockapi.utils.DevUtils
-import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils
-import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugMessage
 import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.container.ContainerRegion
-import tech.thatgravyboat.skyblockapi.utils.container.ContentFlow
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
@@ -25,12 +20,10 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import java.util.UUID
-import java.util.function.Function
+import java.util.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import kotlin.math.floor
 
 @Module
 data object LoadoutAPI : ItemDebugCategory {
@@ -68,7 +61,7 @@ data object LoadoutAPI : ItemDebugCategory {
                 event.item.addDebugString { "Slot: $slot" }
 
                 val name = event.item.cleanName
-                val locked = event.item.`is`(ColoredItems.RED_DYE)
+                val locked = event.item.`is`(Items.DYE.red)
                 event.item.addDebugString { "Locked: $locked" }
 
                 editLoadout(slot) {
@@ -123,7 +116,12 @@ data object LoadoutAPI : ItemDebugCategory {
                     val armorNotNull = armorNames.indexOfFirst { it != null }
 
                     addArmorOrEquipment(ArmorWardrobeAPI.slots, armorNames, uuid, armorNotNull) { "armor" }
-                    addArmorOrEquipment(EquipmentWardrobeAPI.slots, equipmentNames, uuid, if (armorNotNull != -1) -1 else equipmentNames.indexOfFirst { it != null }) { "equipment" }
+                    addArmorOrEquipment(
+                        EquipmentWardrobeAPI.slots,
+                        equipmentNames,
+                        uuid,
+                        if (armorNotNull != -1) -1 else equipmentNames.indexOfFirst { it != null },
+                    ) { "equipment" }
 
                     this.equipment = value(
                         EquipmentWardrobeAPI.slots.indexOfFirst {
@@ -145,7 +143,13 @@ data object LoadoutAPI : ItemDebugCategory {
     }
 
     context(_: DataSource, event: InventoryChangeEvent)
-    private inline fun LoadoutSlot.addArmorOrEquipment(slots: List<WardrobeSlot>, names: MutableList<String?>, uuid: UUID?, firstNotNull: Int, type: () -> String) {
+    private inline fun LoadoutSlot.addArmorOrEquipment(
+        slots: List<WardrobeSlot>,
+        names: MutableList<String?>,
+        uuid: UUID?,
+        firstNotNull: Int,
+        type: () -> String,
+    ) {
         if (uuid != null && firstNotNull != -1) {
             val result = slots.indexOfFirst { it.slots[firstNotNull][DataTypes.UUID] == uuid }
             if (result != -1) {

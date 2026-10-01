@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.equipment
 
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.EquipmentStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
@@ -14,7 +15,6 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEven
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.EquipmentWardrobeAPI
-import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -61,7 +61,7 @@ object EquipmentAPI {
     }
 
     private fun handleInventoryItem(slot: EquipmentSlot, itemStack: ItemStack) {
-        val item = if (itemStack.item == ColoredItems.LIGHT_GRAY_STAINED_GLASS_PANE) ItemStack.EMPTY
+        val item = if (itemStack.item == Items.STAINED_GLASS_PANE.lightGray) ItemStack.EMPTY
         else {
             val category = itemStack.getData(DataTypes.CATEGORY) ?: return
             if (category !in slot.categories) return

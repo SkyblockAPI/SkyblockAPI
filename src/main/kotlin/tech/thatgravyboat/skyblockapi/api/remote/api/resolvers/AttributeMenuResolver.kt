@@ -3,10 +3,10 @@ package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.profile.hunting.AttributeAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
-import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.contains
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -26,7 +26,7 @@ data object AttributeMenuResolver : InventoryIdResolver {
         resolverKind: IdResolverKind,
     ): SkyBlockId? {
         val itemName = this.cleanName
-        if (this in ColoredItems.GRAY_DYE) {
+        if (this in Items.DYE.gray) {
             return SimpleItemAPI.findIdByName(itemName)
         }
 

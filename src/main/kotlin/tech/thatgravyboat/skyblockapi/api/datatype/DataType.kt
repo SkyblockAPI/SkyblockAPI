@@ -2,8 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.datatype
 
 import net.minecraft.world.item.ItemStack
 import org.jetbrains.annotations.ApiStatus
-//? < 26.2
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 import tech.thatgravyboat.skyblockapi.utils.extentions.getCompoundTagFunctionByType
 import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
@@ -17,18 +15,8 @@ class DataType<T> private constructor(
     val type: KType?,
 ) {
 
-    //? < 26.2
-    //@RemoveNextVersion constructor(id: String, autoRegister: Boolean, factory: (ItemStack) -> T?, type: KType?) : this(id, autoRegister, { _, stack -> factory(stack) }, type)
-
-    //? < 26.2
-    //@RemoveNextVersion constructor(id: String, autoRegister: Boolean, factory: (ItemStack) -> T?) : this(id, autoRegister, factory, null)
-
-    //? < 26.2
-    //@RemoveNextVersion constructor(id: String, factory: (ItemStack) -> T?) : this(id, true, factory)
-
-    @get:Deprecated("Scheduled for removal in 26.3")
-    @get:ApiStatus.ScheduledForRemoval
-    val factory: (ItemStack) -> T? get() = ::resolve
+    //? < 26.4
+    //@get:Deprecated("Scheduled for removal in 26.3") @get:ApiStatus.ScheduledForRemoval val factory: (ItemStack) -> T? get() = ::resolve
 
     init {
         if (autoRegister) DataTypesRegistry.addDataType(this)
