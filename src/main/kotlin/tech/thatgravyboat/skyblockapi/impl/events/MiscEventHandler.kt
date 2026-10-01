@@ -98,12 +98,9 @@ object MiscEventHandler {
             InteractionResult.PASS
         }
         LevelRenderEvents.COLLECT_SUBMITS.register { ctx ->
-            //~ if >= 26.2 'mainCamera' -> 'mainCamera()'
             val camera = McClient.self.gameRenderer.mainCamera()
             RenderWorldEvent.CollectSubmits(
                 ctx.poseStack(),
-                //? 26.1
-                //ctx.bufferSource(),
                 ctx.submitNodeCollector(),
                 camera.position(),
                 camera.rotation(),
