@@ -40,7 +40,7 @@ jobs:
         steps:
             -   name: Check matrix result
                 run: |
-                    if [ "${{ needs.build.result }}" != "success" ]; then
+                    if [ "${{ needs.build-matrix.result }}" != "success" ]; then
                       echo "Build matrix failed"
                       exit 1
                     fi
