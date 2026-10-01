@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
@@ -102,8 +102,8 @@ abstract class SkillTreeCurrencyAPI<Currency, Self> internal constructor(
     }
 
     @Subscription(inherited = true)
-    fun onRegisterCommand(event: RegisterCommandsEvent) {
-        event.register("sbapi $name") {
+    internal fun onRegisterCommand(event: RegisterSkyblockApiCommandsEvent) {
+        event.register(name) {
             thenCallback("all") {
                 Text.sendDebug("All $name data:")
                 allCurrencies.forEach { currency ->
