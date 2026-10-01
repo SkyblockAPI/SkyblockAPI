@@ -1467,12 +1467,14 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory$Comp
 	public final fun getBOOTS ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getBOW ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getBRACELET ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
+	public final fun getCAPSULE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getCARNIVAL_MASK ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getCHESTPLATE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getCHISEL ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getCLOAK ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getCOMBAT_SHARD ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getCOSMETIC ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
+	public final fun getCategories ()Ljava/util/Collection;
 	public final fun getDEPLOYABLE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDRILL ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_ACCESSORY ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
@@ -1487,6 +1489,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory$Comp
 	public final fun getDUNGEON_LEGGINGS ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_LONGSWORD ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_NECKLACE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
+	public final fun getDUNGEON_PASS ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_PICKAXE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_SWORD ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_WAND ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
@@ -1507,6 +1510,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory$Comp
 	public final fun getLEGGINGS ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getLONGSWORD ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getMEMENTO ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
+	public final fun getMINING_SHARD ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getMUTATION ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getNECKLACE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getORE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
@@ -1516,6 +1520,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory$Comp
 	public final fun getPORTAL ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getPOTION ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getPOWER_STONE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
+	public final fun getRABBIT ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getREFORGE_STONE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getRIFT_TIMECHARM ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getROD_PART ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
