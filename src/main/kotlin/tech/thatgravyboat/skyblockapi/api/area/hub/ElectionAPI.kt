@@ -16,8 +16,8 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.MayorChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
@@ -307,8 +307,8 @@ object ElectionAPI {
     }
 
     @Subscription
-    fun onRegisterCommands(event: RegisterCommandsEvent) {
-        event.register("sbapi election") {
+    internal fun onRegisterCommands(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("election") {
             then("storage", "cache") {
                 then("reset") {
                     callback {

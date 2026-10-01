@@ -29,13 +29,10 @@ object Json {
 
     internal val registry get() = McClient.connection?.registryAccess() ?: vanillaRegistry
 
-    internal val ops: DynamicOps<JsonElement> get() {
-        return RegistryOps.create(JsonOps.INSTANCE, LenientHolderLookupAdapter(registry))
-    }
+    internal val ops: DynamicOps<JsonElement>
+        get() = RegistryOps.create(JsonOps.INSTANCE, LenientHolderLookupAdapter(registry))
     internal val nbtOps: DynamicOps<Tag>
-        get() {
-            return RegistryOps.create(NbtOps.INSTANCE, LenientHolderLookupAdapter(registry))
-        }
+        get() = RegistryOps.create(NbtOps.INSTANCE, LenientHolderLookupAdapter(registry))
 
     inline fun <reified T : Any> InputStream.readJson(): T =
         gson.fromJson(bufferedReader(), typeOf<T>().javaType)

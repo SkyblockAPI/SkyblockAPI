@@ -45,6 +45,7 @@ fun GuiGraphicsExtractor.rotate(angle: Number, x: Number = 0f, y: Number = 0f) {
     }
 }
 
+
 fun GuiGraphicsExtractor.drawString(text: String, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
     this.text(McFont.self, text, x, y, adjustColor(color), shadow)
 }

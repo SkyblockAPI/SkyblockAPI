@@ -10,82 +10,88 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.PacketFlow
 import net.minecraft.network.protocol.PacketType
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.level.PacketSentEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.PacketEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.debug.packets.DebugWriter.toJson
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toComponent
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
+import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.suggest
 import kotlin.jvm.optionals.getOrNull
-import kotlin.time.Clock
 import kotlin.time.Instant
 
 @Module
 object DebugPackets {
 
+    private data class StoredPacket(
+        val packet: Packet<*>,
+        val cancelled: Boolean,
+        val instant: Instant = currentInstant(),
+    )
+
     private val packetToastId = SystemToast.SystemToastId(1500)
     private var logPackets = false
-    private val packets = mutableListOf<Pair<Instant, Packet<*>>>()
+    private val packets = mutableListOf<StoredPacket>()
     private var entries = listOf<Pair<Instant, PacketEntry>>()
 
     @Subscription
-    fun onCommandRegistration(event: RegisterCommandsEvent) {
-        event.registerWithCallback("sbapi logpackets") {
-            logPackets = !logPackets
-            Text.debug("Packet logging is now ${if (logPackets) "enabled" else "disabled"}").send()
+    internal fun onCommandRegistration(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("logpackets") {
+            callback {
+                logPackets = !logPackets
+                Text.sendDebug("Packet logging is now ${if (logPackets) "enabled" else "disabled"}")
 
-            if (!logPackets && packets.isNotEmpty()) {
-                entries = packets.map { (time, packet) ->
-                    runCatching {
-                        time to PacketEntry(packet.type(), Either.left(packet.toJson()))
-                    }.getOrElse { error ->
-                        time to PacketEntry(packet.type(), Either.right(error))
+                // TODO: maybe make this part async?
+                if (!logPackets && packets.isNotEmpty()) {
+                    entries = packets.map { (packet, cancelled, time) ->
+                        runCatching {
+                            time to PacketEntry(packet.type(), Either.left(packet.toJson()), cancelled)
+                        }.getOrElse { error ->
+                            time to PacketEntry(packet.type(), Either.right(error), cancelled)
+                        }
+                    }
+                    packets.clear()
+                    Text.sendDebug("You have logged ${entries.size} packets. Use /sbapi logpackets open to view them.") {
+                        suggest = "/sbapi logpackets open"
                     }
                 }
-                packets.clear()
-                Text.debug("You have logged ${entries.size} packets. Use /sbapi logpackets open to view them.").send()
             }
-        }
+            thenCallback("open") {
+                if (entries.isEmpty()) {
+                    Text.sendDebug("No packets have been logged yet.")
+                    return@thenCallback
+                }
 
-        event.registerWithCallback("sbapi logpackets open") {
-            if (entries.isEmpty()) {
-                Text.debug("No packets have been logged yet.").send()
-                return@registerWithCallback
+                McClient.setScreen(createScreen(entries))
             }
+            thenCallback("export") {
+                if (entries.isEmpty()) {
+                    Text.sendDebug("No packets have been logged yet.")
+                    return@thenCallback
+                }
 
-            McClient.setScreen(createScreen(entries))
-        }
-
-        event.registerWithCallback("sbapi logpackets export") {
-            if (entries.isEmpty()) {
-                Text.debug("No packets have been logged yet.").send()
-                return@registerWithCallback
+                export(entries)
             }
-
-            export(entries)
         }
     }
 
-    @Subscription
-    fun onPacketReceived(event: PacketReceivedEvent) {
+    // We set the priority as the lowest possible, that way we can know for sure what packets are being cancelled
+    // Also, since both packet received and packet sent events extend PacketEvent, we can simply just use this one
+    @Subscription(priority = Int.MAX_VALUE, receiveCancelled = true)
+    fun onPacket(event: PacketEvent) {
         if (!logPackets) return
-        this.packets.add(Clock.System.now() to event.packet)
-    }
-
-    @Subscription
-    fun onPacketSent(event: PacketSentEvent) {
-        if (!logPackets) return
-        this.packets.add(Clock.System.now() to event.packet)
+        this.packets.add(StoredPacket(event.packet, event.isCancelled))
     }
 
     data class PacketEntry(
         val type: PacketType<*>,
-        val content: Either<JsonElement, Throwable>
+        val content: Either<JsonElement, Throwable>,
+        val cancelled: Boolean,
     )
 
     private fun copyToClipboard(text: String, message: String) {
@@ -93,13 +99,13 @@ object DebugPackets {
         SystemToast.add(
             McClient.toasts,
             packetToastId,
-            Text.of("[SkyBlock API]") { this.color = TextColor.YELLOW },
-            Text.of(message) { this.color = TextColor.YELLOW },
+            CommonText.PREFIX,
+            Text.of(message, TextColor.YELLOW),
         )
     }
 
     private fun export(messages: List<Pair<Instant, PacketEntry>>) {
-        val header = "timestamp,direction,type,packet"
+        val header = "timestamp,direction,type,cancelled,packet"
         val content = messages.mapNotNull { (timestamp, entry) ->
             val packet = entry.content.left().getOrNull()?.toString() ?: return@mapNotNull null
             val direction = when (entry.type.flow()) {
@@ -107,7 +113,8 @@ object DebugPackets {
                 PacketFlow.SERVERBOUND -> "C->S"
             }
             val type = entry.type.id().toShortLanguageKey()
-            "${timestamp.epochSeconds},$direction,$type,$packet"
+            val cancelled = if (entry.cancelled) "Y" else "N"
+            "${timestamp.epochSeconds},$direction,$type,$cancelled,$packet"
         }
         copyToClipboard("$header\n${content.joinToString("\n")}", "Export copied to clipboard!")
     }
@@ -126,22 +133,23 @@ object DebugPackets {
             display = { packet ->
                 Text.join(
                     when (packet.type.flow()) {
-                        PacketFlow.CLIENTBOUND -> Text.of("S -> C") { this.color = TextColor.BLUE }
-                        PacketFlow.SERVERBOUND -> Text.of("C -> S") { this.color = TextColor.LIGHT_PURPLE }
+                        PacketFlow.CLIENTBOUND -> Text.of("S -> C", TextColor.BLUE)
+                        PacketFlow.SERVERBOUND -> Text.of("C -> S", TextColor.LIGHT_PURPLE)
                     },
-                    " ",
-                    Text.of(packet.type.id().toShortLanguageKey()) { this.color = TextColor.YELLOW },
-                    " ",
-                    packet.content.map({ it.toComponent(1, false) }, { Text.of("<error serializing>(${it})") { this.color = TextColor.RED } }),
+                    if (packet.cancelled) Text.of("❌", TextColor.RED) else null,
+                    Text.of(packet.type.id().toShortLanguageKey(), TextColor.YELLOW),
+                    packet.content.map({ it.toComponent(1, false) }, { Text.of("<error serializing>(${it})", TextColor.RED) }),
+                    separator = CommonText.SPACE,
                 )
             },
             tooltip = { packet ->
                 packet.content.map(
                     {
-                        Text.multiline(
+                        Text.join(
                             it.toComponent(4, true),
-                            "",
+                            if (packet.cancelled) Text.of("This packet was cancelled!", TextColor.RED) else null,
                             Text.of("Click to copy to clipboard") { this.color = TextColor.GRAY },
+                            separator = Text.of("\n\n"),
                         )
                     },
                     { Text.of(it.stackTraceToString()) { this.color = TextColor.RED } },

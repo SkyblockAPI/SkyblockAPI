@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.misc
 import net.minecraft.network.chat.Component
 import net.minecraft.util.StringRepresentable
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.Text.wrap
@@ -32,7 +33,7 @@ abstract class AbstractModRegisterDebugEvent(val prefix: Component, val withDebu
 }
 
 internal class RegisterSkyblockApiDebugEvent(base: RegisterSkyblockApiCommandsEvent) :
-    AbstractModRegisterDebugEvent(Text.of("[SkyblockAPI]", TextColor.YELLOW), false, base)
+    AbstractModRegisterDebugEvent(CommonText.PREFIX, false, base)
 
 open class DebugBuilder(val prefix: Component, val name: Component) {
     val fields: MutableList<Component> = mutableListOf()

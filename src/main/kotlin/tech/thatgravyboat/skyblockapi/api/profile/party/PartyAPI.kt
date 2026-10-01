@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerCacheStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.PartyInfoEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.events.HypixelEventHandler
@@ -302,16 +302,16 @@ object PartyAPI {
     }
 
     @Subscription
-    fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi party") {
+    internal fun onCommandsRegistration(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("party") {
             callback {
-                val string = buildList {
-                    add("inParty: $inParty")
-                    add("leader: $leader")
-                    add("members: (${members.joinToString()})")
-                    add("size: ${this@PartyAPI.size}")
-                    add("allInvite: $allInvite")
-                }.joinToString("\n")
+                val string = buildString {
+                    appendLine("inParty: $inParty")
+                    appendLine("leader: $leader")
+                    appendLine("members: (${members.joinToString()})")
+                    appendLine("size: ${this@PartyAPI.size}")
+                    appendLine("allInvite: $allInvite")
+                }
                 McClient.clipboard = string
                 Text.sendDebug("Copied Party Info to clipboard.")
             }

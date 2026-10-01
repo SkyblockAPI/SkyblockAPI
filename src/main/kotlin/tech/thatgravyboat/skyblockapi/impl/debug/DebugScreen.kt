@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package tech.thatgravyboat.skyblockapi.impl.debug
 
 import net.minecraft.client.gui.components.AbstractWidget
