@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 
 //? < 26.4 {
 /*import net.minecraft.ChatFormatting
+import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 @Deprecated("Use TrophyRank instead")
