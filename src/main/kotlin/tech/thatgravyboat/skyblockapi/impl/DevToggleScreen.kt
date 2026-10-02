@@ -66,8 +66,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                         fun component(enabled: Int, default: Int) = Text.of {
                             if (selected) {
                                 append("[x]", enabled)
-                            }
-                            else append("[_]")
+                            } else append("[_]")
                             color = default
                             append(" ")
                             append(name ?: "<null>") {
