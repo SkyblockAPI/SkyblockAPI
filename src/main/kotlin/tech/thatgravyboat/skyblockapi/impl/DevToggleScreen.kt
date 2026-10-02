@@ -195,8 +195,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                         )
                     }
                 }
-            }
-            .toList()
+            }.toList()
     }
 
     private var selectedPath: List<String> = emptyList()
