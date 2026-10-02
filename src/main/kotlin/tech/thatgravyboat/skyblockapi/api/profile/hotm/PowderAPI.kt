@@ -10,10 +10,10 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 @Module
 object PowderAPI : SkillTreeCurrencyAPI<PowderType, PowderAPI>(
     "powder",
-    listOf(TabWidget.POWDERS),
     PowderStorage,
     PowderType::class,
     SkillTreeType.Hotm,
+    TabWidget.POWDERS
 ) {
 
     val mithril: Long get() = getCurrent(PowderType.MITHRIL)

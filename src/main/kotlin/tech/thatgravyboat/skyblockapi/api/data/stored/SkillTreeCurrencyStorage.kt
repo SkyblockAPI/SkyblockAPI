@@ -2,10 +2,12 @@ package tech.thatgravyboat.skyblockapi.api.data.stored
 
 import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillCurrencyData
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeCurrency
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeCurrencyData
 import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
 import java.util.EnumMap
 import kotlin.reflect.KClass
 
@@ -15,13 +17,21 @@ internal abstract class SkillTreeCurrencyStorage<Currency>(
 ) where Currency : SkillTreeCurrency, Currency : Enum<Currency> {
 
     @Suppress("UNCHECKED_CAST")
-    protected open val STORAGE: StoredProfileData<EnumMap<Currency, SkillTreeCurrencyData>> = StoredProfileData(
-        { EnumMap(clazz.java) },
-        CodecUtils.enumMap(clazz.java, SkyblockAPICodecs.getCodec(clazz.java) as Codec<Currency>, SkyblockAPICodecs.getCodec<SkillTreeCurrencyData>()),
-        fileName,
+    protected open val STORAGE: StoredProfileData = StoredProfileData(
+        file = fileName,
+        data = { SkillCurrencyData(currentLoadoutName = null, total = EnumMap(clazz.java)) },
+        codec = SkillCurrencyData
     )
 
     private inline val data get() = STORAGE.get()
+
+    // TODO: Implement
+    var currentPreset: String? = null
+        private set
+
+    internal fun swapPreset(newPreset: String) {
+        // TODO: implement
+    }
 
     val currencies: Map<Currency, SkillTreeCurrencyData>
         get() = data.orEmpty()
@@ -41,6 +51,10 @@ internal abstract class SkillTreeCurrencyStorage<Currency>(
             if (data.current == amount) return@edit null
             this[currency] = data.copy(current = amount)
         }
+    }
+
+    fun setSpent(currency: Currency, amount: Long) {
+        // TODO: implement
     }
 
     fun setTotal(currency: Currency, amount: Long) = STORAGE.edit {

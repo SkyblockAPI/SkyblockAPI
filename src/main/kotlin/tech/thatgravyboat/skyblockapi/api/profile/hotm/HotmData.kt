@@ -2,13 +2,15 @@ package tech.thatgravyboat.skyblockapi.api.profile.hotm
 
 import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeData
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeLoadout
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreePerk
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 data class HotmData(
-    override var perks: MutableMap<String, HotmPerk> = mutableMapOf(),
-    override var tokens: Int = 0,
+    override var currentLoadoutName: String? = null,
+    override val loadouts: MutableList<SkillTreeLoadout<HotmPerk>> = mutableListOf(),
+    override var maxTokens: Int = 1,
     override var tier: Int = 0,
 ) : SkillTreeData<HotmPerk> {
     companion object {
