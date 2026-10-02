@@ -105,13 +105,11 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
             }.mapNotNull { split ->
                 if (split.size <= column) return@mapNotNull null
                 split.take(column + 1)
-            }
-            .distinct()
+            }.distinct()
             .sortedBy { it.last() }
             .map { path ->
                 path to debugEntryByPath(path)
-            }
-            .sortedBy { (_, entry) ->
+            }.sortedBy { (_, entry) ->
                 when (entry) {
                     null -> 0
                     is DebugSelect<*> -> 1
