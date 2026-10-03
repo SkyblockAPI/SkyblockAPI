@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.SkillExpGainedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpLiteralActionBarWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpPercentActionBarWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
@@ -84,8 +84,8 @@ object SkillExpAPI {
     }
 
     @Subscription
-    fun onCommand(event: RegisterCommandsEvent) {
-        event.register("sbapi skill") {
+    internal fun onCommand(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("skill") {
             thenCallback("list") {
                 val skills = SkillExpStorage.data?.exp ?: return@thenCallback Text.of("No skill data found.").send()
                 skills.entries.sortedByDescending { it.value }.forEach { (skill, xp) ->

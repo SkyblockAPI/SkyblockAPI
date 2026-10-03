@@ -4,8 +4,8 @@ import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.command.EnumArgument
 import tech.thatgravyboat.skyblockapi.utils.extentions.enumSetOf
@@ -36,9 +36,9 @@ internal object DebugTabWidgets {
     }
 
     @Subscription
-    fun onRegisterCommands(event: RegisterCommandsEvent) {
-        event.register("sbapi") {
-            thenCallback("copy widget tabwidget", EnumArgument<TabWidget>()) {
+    private fun RegisterSkyblockApiCommandsEvent.onRegisterCommands() {
+        register("copy") {
+            thenCallback("widget tabwidget", EnumArgument<TabWidget>()) {
                 val widget = argument<TabWidget>("tabwidget")
                 if (!widget.isActive) Text.sendDebug("Tab widget ${widget.name} not present.")
                 else {
@@ -55,41 +55,41 @@ internal object DebugTabWidgets {
                     }
                 }
             }
-            then("logtabwidgets") {
-                callback {
-                    logWidgets = !logWidgets
-                    Text.sendDebug("Tab widget logging is now") {
-                        if (logWidgets) append(" Enabled", TextColor.GREEN)
-                        else append(" Disabled", TextColor.RED)
-                    }
+        }
+        register("logtabwidgets") {
+            callback {
+                logWidgets = !logWidgets
+                Text.sendDebug("Tab widget logging is now") {
+                    if (logWidgets) append(" Enabled", TextColor.GREEN)
+                    else append(" Disabled", TextColor.RED)
                 }
-                thenCallback("list") {
-                    if (loggedWidgets.isEmpty()) {
-                        Text.sendDebug("No tab widgets are being logged.")
-                    } else {
-                        Text.sendDebug("Logged tab widgets: ${loggedWidgets.joinToString { it.name }}")
-                    }
+            }
+            thenCallback("list") {
+                if (loggedWidgets.isEmpty()) {
+                    Text.sendDebug("No tab widgets are being logged.")
+                } else {
+                    Text.sendDebug("Logged tab widgets: ${loggedWidgets.joinToString { it.name }}")
                 }
-                thenCallback("add widget", EnumArgument<TabWidget>()) {
-                    val widget = argument<TabWidget>("widget")
-                    if (loggedWidgets.add(widget)) {
-                        Text.sendDebug("Added ${widget.name} to logged tab widgets.")
-                    } else {
-                        Text.sendDebug("${widget.name} is already being logged.")
-                    }
+            }
+            thenCallback("add widget", EnumArgument<TabWidget>()) {
+                val widget = argument<TabWidget>("widget")
+                if (loggedWidgets.add(widget)) {
+                    Text.sendDebug("Added ${widget.name} to logged tab widgets.")
+                } else {
+                    Text.sendDebug("${widget.name} is already being logged.")
                 }
-                thenCallback("remove widget", EnumArgument<TabWidget>()) {
-                    val widget = argument<TabWidget>("widget")
-                    if (loggedWidgets.remove(widget)) {
-                        Text.sendDebug("Removed ${widget.name} from logged tab widgets.")
-                    } else {
-                        Text.sendDebug("${widget.name} is not being logged.")
-                    }
+            }
+            thenCallback("remove widget", EnumArgument<TabWidget>()) {
+                val widget = argument<TabWidget>("widget")
+                if (loggedWidgets.remove(widget)) {
+                    Text.sendDebug("Removed ${widget.name} from logged tab widgets.")
+                } else {
+                    Text.sendDebug("${widget.name} is not being logged.")
                 }
-                thenCallback("clear") {
-                    loggedWidgets.clear()
-                    Text.sendDebug("Cleared logged tab widgets.")
-                }
+            }
+            thenCallback("clear") {
+                loggedWidgets.clear()
+                Text.sendDebug("Cleared logged tab widgets.")
             }
         }
     }

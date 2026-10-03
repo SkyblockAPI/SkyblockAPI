@@ -3,7 +3,6 @@ package tech.thatgravyboat.skyblockapi.impl.debug
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
-import net.minecraft.nbt.NbtIo
 import net.minecraft.nbt.NbtUtils
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
@@ -12,7 +11,6 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
 import tech.thatgravyboat.skyblockapi.api.datatype.getDataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.api.item.calculator.getItemValue
@@ -20,6 +18,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.platform.drawString
+import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toNbt
@@ -27,43 +26,16 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
+import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.appendLine
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
+import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.trimLines
 
 @Module
 internal object DebugInventory {
 
-    private var enabled = false
-
-    @Subscription
-    fun onCommandRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi inventory") {
-            callback {
-                enabled = !enabled
-                Text.of("[SkyBlockAPI] Debug inventory: ") {
-                    append(enabled) {
-                        this.color = if (enabled) TextColor.GREEN else TextColor.RED
-                    }
-
-                    this.color = TextColor.YELLOW
-                }.send()
-                if (!enabled) return@callback
-
-                CopyType.entries.forEach {
-                    Text.of {
-                        append("Press ")
-                        append("[") { this.color = TextColor.GOLD }
-                        append(it.keyName) { this.color = TextColor.AQUA }
-                        append("]") { this.color = TextColor.GOLD }
-                        append(" to copy the ")
-                        append(it.title) { this.color = TextColor.YELLOW }
-                        append(".")
-                    }.send()
-                }
-            }
-        }
-    }
+    val enabled by debugToggle("inventory", "Lets you copy information from items in inventories.")
 
     @Subscription
     fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
@@ -77,23 +49,29 @@ internal object DebugInventory {
     @Subscription
     fun onForegroundRender(event: RenderScreenForegroundEvent) {
         if (!enabled) return
-        val menuScreen = McScreen.asMenu ?: return
-        val slot = menuScreen.getHoveredSlot() ?: return
+        val slot = McScreen.asMenu?.getHoveredSlot() ?: return
 
-        buildList {
-            add("Slot: ${slot.index}")
-            add("")
-            add("Copy options:")
-            CopyType.entries.forEach {
-                add("  [${it.keyName.stripped}] ${it.title}${it.extraDescription?.let { d -> " ($d)" } ?: ""}")
+        Text.of {
+            color = TextColor.YELLOW
+            appendLine("Slot: ") {
+                append(slot.index.toString(), TextColor.AQUA)
             }
-        }.forEachIndexed { index, line ->
-            event.graphics.drawString(
-                line,
-                8,
-                8 + index * McFont.height,
-                0xFFFFFFFF.toInt(),
-            )
+            appendLine()
+            appendLine("Copy options:")
+
+            CopyType.entries.forEach { entry ->
+                append("  ")
+                append("[", TextColor.DARK_GRAY)
+                append(entry.keyName) { color = TextColor.RED }
+                append("] ", TextColor.DARK_GRAY)
+                append(entry.title)
+                if (entry.extraDescription != null) {
+                    append(" (${entry.extraDescription})", TextColor.GRAY)
+                }
+                appendLine()
+            }
+        }.trimLines().splitLines().forEachIndexed { index, line ->
+            event.graphics.drawString(line, 8, 8 + index * McFont.height)
         }
     }
 
@@ -129,35 +107,35 @@ internal object DebugInventory {
             InputConstants.KEY_L,
             {
                 if (McScreen.isShiftDown) {
-                    it.item.getRawLore().joinToString("\n")
-                } else {
                     it.item.getLore().toJson(ComponentSerialization.CODEC.listOf()).toPrettyString()
+                } else {
+                    it.item.getRawLore().joinToString("\n")
                 }
             },
-            "Hold Shift for raw lore",
+            "Hold Shift for components",
         ),
-        DATA_COMPONENT(
+        DATA_TYPES(
             InputConstants.KEY_C,
             {
-                it.item.getDataTypes().map { (k, v) -> "${k.id}: ${v.toString()}" }.joinToString("\n")
+                it.item.getDataTypes().entries.joinToString("\n") { (k, v) -> "${k.id}: ${v.toString()}" }
             },
         ),
         ITEM_VALUE(
             InputConstants.KEY_P,
             { slot ->
-                buildList {
-                    add("Item Value: ${slot.item.getItemValue().price.toFormattedString()}")
-                    add("")
-                    add("Sources:")
+                buildString {
+                    appendLine("Item Value: ${slot.item.getItemValue().price.toFormattedString()}")
+                    appendLine()
+                    appendLine("Sources:")
                     slot.item.getItemValue().entryTree.sortedByDescending { it.price }.forEach {
-                        add(" ${it.source.name}: ${it.price.toFormattedString()}")
+                        appendLine(" ${it.source.name}: ${it.price.toFormattedString()}")
                     }
-                }.joinToString("\n")
+                }
             },
         ),
         ;
 
-        val title = name.toTitleCase()
+        val title = toFormattedName()
 
         //~ if >= 26.3 'KEYSYM' -> 'KEYBOARD'
         val keyName: Component = InputConstants.Type.KEYBOARD.getOrCreate(key).displayName
@@ -165,7 +143,7 @@ internal object DebugInventory {
         fun initCopy(slot: Slot): Boolean {
             val data = copy(slot) ?: return false
             McClient.clipboard = data
-            Text.debug("Copied item $title to clipboard.").send()
+            Text.sendDebug("Copied item $title to clipboard.")
             return true
         }
     }

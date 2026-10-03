@@ -16,8 +16,8 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.FolderStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.*
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -104,8 +104,8 @@ object ChestDump {
     }
 
     @Subscription
-    fun command(event: RegisterCommandsEvent) {
-        event.register("sbapi chestdump") {
+    internal fun command(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("chestdump") {
             val suggestions = IterableSuggestionProvider(storage.getStorages().entries) {
                 val dump = it.value.get()
                 "${dump.title.stripped}-${it.key.take(3)}"

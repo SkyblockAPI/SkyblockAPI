@@ -19,6 +19,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.associateByNotNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
+import tech.thatgravyboat.skyblockapi.utils.text.Text.copy
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
@@ -35,7 +36,7 @@ object CommonText {
     val SPACE: Component = " ".asComponent()
     val EMPTY: Component = "".asComponent()
 
-    internal val PREFIX: Component = Text.of("[SkyBlockAPI] ", TextColor.YELLOW)
+    internal val PREFIX: Component = Text.of("[SkyBlockAPI]", TextColor.YELLOW)
 }
 
 object Text {
@@ -80,10 +81,18 @@ object Text {
         return result.also(init)
     }
 
+    /** 
+    * Returns a component containing this component repeated n times.
+    * 
+    * @param n Amount of repetitions
+    */
+    fun Component.repeat(n: Int): MutableComponent = join(List(n) { this })
     fun Component.prefix(prefix: String): MutableComponent = join(prefix, this)
     fun Component.suffix(suffix: String): MutableComponent = join(this, suffix)
     fun Component.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
     inline fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
+
+    inline fun Component.copy(block: MutableComponent.() -> Unit = {}): MutableComponent = copy().apply(block)
 
     fun Component.send() {
         McClient.chat.addClientSystemMessage(this)
@@ -99,8 +108,8 @@ object Text {
         }
 
     internal fun sendDebug(text: String = "", init: MutableComponent.() -> Unit = {}) = debug(text, init).send()
-    internal fun Component.sendWithPrefix() = join(CommonText.PREFIX, this).send()
-    internal fun Component.sendWithPrefix(id: String) = join(CommonText.PREFIX, this).send(id)
+    internal fun Component.sendWithPrefix() = join(CommonText.PREFIX, CommonText.SPACE, this).send()
+    internal fun Component.sendWithPrefix(id: String) = join(CommonText.PREFIX, CommonText.SPACE, this).send(id)
 }
 
 object TextProperties {
@@ -109,6 +118,14 @@ object TextProperties {
 }
 
 object TextUtils {
+
+    fun Component.isEmpty(): Boolean = this.stripped.isEmpty()
+    fun Component.isBlank(): Boolean = this.stripped.isBlank()
+
+    /** Returns a copy of the component where all the leading and trailing lines that are blank have been removed */
+    fun Component.trimLines(): Component {
+        return Text.multiline(splitLines().dropWhile { it.isBlank() }.dropLastWhile { it.isBlank() })
+    }
 
     fun Component.splitLines(): List<Component> = split("\n")
 
@@ -202,8 +219,8 @@ object TextUtils {
     //? if >= 26.2 {
     private val colorTable = ChatFormatting.entries.associateByNotNull { McTextColor.fromLegacyFormat(it)?.value }
     //? } else {
-    /*private val colorTable = ChatFormatting.entries.associateByNotNull { format -> format.color.takeIf { format.isColor } }
-    *///? }
+    //private val colorTable = ChatFormatting.entries.associateByNotNull { format -> format.color.takeIf { format.isColor } }
+    //? }
 
     private fun StringBuilder.appendStyle(style: Style) {
         style.color?.let { color ->
@@ -421,11 +438,23 @@ object TextStyle {
 object TextBuilder {
     fun MutableComponent.append(like: ComponentLike): MutableComponent = this.append(like.toComponent())
     fun MutableComponent.append(init: MutableComponent.() -> Unit): MutableComponent = this.append(Text.of(init))
-    fun MutableComponent.append(component: Component, init: MutableComponent.() -> Unit): MutableComponent = this.append(component.copy().apply(init))
+    fun MutableComponent.append(component: Component, init: MutableComponent.() -> Unit): MutableComponent = this.append(component.copy(init))
     fun MutableComponent.append(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(text.asComponent(init))
     fun MutableComponent.append(number: Number, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(number.toString().asComponent(init))
     fun MutableComponent.append(boolean: Boolean, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(boolean.toString().asComponent(init))
     fun MutableComponent.append(text: String, color: Int): MutableComponent = this.append(text) { this.color = color }
+
+    /** All of these do the same thing as their counterparts above, except they add a newline after them */
+    fun MutableComponent.appendLine(): MutableComponent = this.append(CommonText.NEWLINE)
+    fun MutableComponent.appendLine(string: String): MutableComponent = append(string).appendLine()
+    fun MutableComponent.appendLine(like: ComponentLike): MutableComponent = this.append(like).appendLine()
+    fun MutableComponent.appendLine(init: MutableComponent.() -> Unit): MutableComponent = this.append(init).appendLine()
+    fun MutableComponent.appendLine(component: Component, init: MutableComponent.() -> Unit): MutableComponent = this.append(component, init).appendLine()
+    fun MutableComponent.appendLine(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(text, init).appendLine()
+    fun MutableComponent.appendLine(number: Number, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(number, init).appendLine()
+    fun MutableComponent.appendLine(boolean: Boolean, init: MutableComponent.() -> Unit = {}): MutableComponent = this.append(boolean, init).appendLine()
+    fun MutableComponent.appendLine(text: String, color: Int): MutableComponent = this.append(text, color).appendLine()
+
 }
 
 @Suppress("unused")

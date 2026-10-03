@@ -13,6 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
@@ -380,8 +381,8 @@ data object MaxwellAPI : ItemDebugCategory {
     }
 
     @Subscription
-    fun onCommandRegister(event: RegisterCommandsEvent) {
-        event.register("sbapi maxwell") {
+    internal fun onCommandRegister(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("maxwell") {
             thenCallback("reset") {
                 MaxwellStorage.reset()
                 Text.sendDebug("Reset Maxwell Data!")

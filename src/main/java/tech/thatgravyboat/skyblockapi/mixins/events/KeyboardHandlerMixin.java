@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.mixins;
+package tech.thatgravyboat.skyblockapi.mixins.events;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -11,6 +11,7 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent;
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyReleasedEvent;
 
+//~ if >= 26.3 'key(), keyEvent.scancode(), keyEvent.modifiers())' -> 'key(), keyEvent.modifiers())' {
 @Mixin(KeyboardHandler.class)
 public class KeyboardHandlerMixin {
 
@@ -44,3 +45,4 @@ public class KeyboardHandlerMixin {
 
 
 }
+//~}

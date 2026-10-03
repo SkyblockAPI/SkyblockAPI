@@ -168,6 +168,15 @@ object SimpleItemAPI {
         }.applyFiltered()
 
         RepoAPI.attributes().attributes().flatMap { (_, attribute) ->
+            val id = attribute.id
+            if (id.isNotBlank()) {
+                ids.add(attribute(id))
+            }
+            val shardId = attribute.shardId
+            if (shardId.isNotBlank()) {
+                ids.add(attribute(shardId))
+            }
+
             listOf(
                 attribute.name() to attribute(attribute.attributeId()),
                 attribute.shardName() to attribute(attribute.attributeId()),
