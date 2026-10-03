@@ -9,6 +9,7 @@ import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuIdRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuPotionRegex
@@ -72,7 +73,11 @@ value class SkyBlockId private constructor(val id: String) {
             else -> potion(internalPotion)
         }
 
-        fun fromItem(item: ItemStack) = item.getSbId()
+        fun fromItem(
+            item: ItemStack,
+            @IntroducedAt("4.2.27")
+            context: ResolutionContext = ResolutionContext(item)
+        ) = item.getSbId(context)
 
         fun fromName(name: String, dropLast: Boolean = true): SkyBlockId? {
             var name = name.lowercase().stripColor()
@@ -111,16 +116,16 @@ value class SkyBlockId private constructor(val id: String) {
 
         val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.rootId })
 
-        fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
+        fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this, ResolutionContext(this))
 
         private data object SkyblockIdResolver : ItemDebugCategory
 
-        internal fun createIdForItem(stack: ItemStack): SkyBlockId? {
+        internal fun createIdForItem(stack: ItemStack, ctx: ResolutionContext): SkyBlockId? {
             val kind = idResolverKind.get()
             stack.addStringDebug(SkyblockIdResolver) { "Using $kind resolvers" }
             return kind.entries().firstNotNullOfOrNull {
                 stack.addStringDebug(SkyblockIdResolver) { "Trying $it" }
-                it.tryResolve(stack, kind)
+                it.tryResolve(stack, ctx, kind)
             }
         }
 
@@ -151,14 +156,14 @@ value class SkyBlockId private constructor(val id: String) {
 
     private fun String.removeDerived() = this.removePrefix(DERIVED)
 
-    val isItem: Boolean get() = id.removeDerived().startsWith(ITEM)
-    val isPet: Boolean get() = id.removeDerived().startsWith(PET)
-    val isRune: Boolean get() = id.removeDerived().startsWith(RUNE)
-    val isEnchantment: Boolean get() = id.removeDerived().startsWith(ENCHANTMENT)
-    val isAttribute: Boolean get() = id.removeDerived().startsWith(ATTRIBUTE)
-    val isPotion: Boolean get() = id.removeDerived().startsWith(POTION)
-    val isUnsafe: Boolean get() = id.removeDerived().startsWith(UNSAFE)
-    val cleanId: String get() = id.removeDerived().substringAfter(DELIMITER)
+    val isItem: Boolean get() = rootId.startsWith(ITEM)
+    val isPet: Boolean get() = rootId.startsWith(PET)
+    val isRune: Boolean get() = rootId.startsWith(RUNE)
+    val isEnchantment: Boolean get() = rootId.startsWith(ENCHANTMENT)
+    val isAttribute: Boolean get() = rootId.startsWith(ATTRIBUTE)
+    val isPotion: Boolean get() = rootId.startsWith(POTION)
+    val isUnsafe: Boolean get() = rootId.startsWith(UNSAFE)
+    val cleanId: String get() = rootId.substringAfter(DELIMITER)
     val skyblockId: String
         get() = fixHypixelId() ?: when {
 
@@ -205,8 +210,8 @@ value class SkyBlockId private constructor(val id: String) {
     override fun toString() = "SkyBlockId($id)"
 }
 
-private fun ItemStack.getSbId(): SkyBlockId? {
-    operator fun <Type> DataType<Type>.invoke() = this.resolve(this@getSbId)
+private fun ItemStack.getSbId(context: ResolutionContext): SkyBlockId? {
+    operator fun <Type> DataType<Type>.invoke() = this.resolve(this@getSbId, context)
 
     val id = DataTypes.ID() ?: run {
         addStringDebug(DefaultIdResolver) { "Item doesn't have id" }
