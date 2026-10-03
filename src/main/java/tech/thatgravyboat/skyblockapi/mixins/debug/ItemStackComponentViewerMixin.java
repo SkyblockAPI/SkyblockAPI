@@ -38,7 +38,7 @@ abstract class ItemStackComponentViewerMixin implements ComponentViewable, ItemD
     @Override
     public @NotNull Map<@NotNull ComponentViewerCategory, @NotNull ComponentViewerData> skyblockapi$getComponents() {
         var map = new HashMap<ComponentViewerCategory, ComponentViewerData>();
-        var data = CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, new LenientHolderLookupAdapter(Json.INSTANCE.getRegistry$skyblock_api())), (ItemStack) (Object) this);
+        var data = CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, new LenientHolderLookupAdapter(Json.INSTANCE.getRegistry$tech_thatgravyboat_skyblock_api())), (ItemStack) (Object) this);
         map.put(ItemDataCategory.INSTANCE, new DataResultComponentData(data.map(NbtComponentData::new)));
 
         var debugEntries = skyblockapi$getEntries();

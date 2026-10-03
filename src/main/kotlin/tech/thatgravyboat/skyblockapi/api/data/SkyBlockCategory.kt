@@ -116,6 +116,7 @@ class SkyBlockCategory private constructor(
         val WATERING_CAN = create("watering can")
         val FARMING_TOOL = create("farming tool")
         val TROPHY = create("trophy")
+        val ABILITY_SCROLL = create("ability scroll")
         val CAPSULE = create("capsule")
         val RABBIT = create("rabbit") // chocolate factory
         val DUNGEON_PASS = create("dungeon pass") // seems to be admin only

@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
+import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 import java.text.DecimalFormat
@@ -131,17 +132,10 @@ fun String?.parseRomanNumeral(): Int = runCatching {
 // todo: move into enum extensions with 1.21.6
 fun <T : Enum<T>> Enum<T>.toFormattedName(): String = name.toTitleCase()
 
-private val regexGroup = Regexes.group("string")
-
-private val cleanPlayerNameRegex = regexGroup.create(
-    "clean.playername",
-    "(?:(?<rank>\\[.+]) ?)?(?<name>[a-zA-Z0-9_]+)",
-)
-
 private val formattingCodesRegex = Regex("§.")
 
 fun String.cleanPlayerName(): String {
-    return cleanPlayerNameRegex.findGroup(this, "name") ?: this
+    return CommonRegexes.cleanPlayerNameRegex.findGroup(this, "name") ?: this
 }
 
 fun Number.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
@@ -191,6 +185,20 @@ fun String.stripColor(): String {
 
 fun String.capitalize() = lowercase().split(" ", "_").joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
 fun String.toTitleCase() = capitalize()
+
+fun <A, B, C, D> Pair<A, B>.map(first: (A) -> C, second: (B) -> D): Pair<C, D> {
+    return first(this.first) to second(this.second)
+}
+
+/** Trims both strings in the pair */
+fun Pair<String, String>.trim() = map(first = String::trim, second = String::trim)
+
+/** Creates a pair of strings from before and after the specified [delimiter], or the entire string and an empty string if there are none. */
+fun String.splitOnLast(delimiter: String): Pair<String, String> {
+    val index = lastIndexOf(delimiter)
+    return if (index == -1) this to ""
+    else substring(0, index) to substring(index + 1)
+}
 
 fun String.trimIgnoreColor(): String {
     val start = colorCodesStart.find(this)?.groups?.get("start")?.value ?: ""
