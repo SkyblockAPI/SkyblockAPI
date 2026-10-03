@@ -50,6 +50,7 @@ internal abstract class SkillTreeStorage<
         internal set(value) {
             val currentLoadout = currentLoadout ?: return
             if (currentLoadout.tokensSpent == value) return
+            currentLoadout.tokensSpent = value
         }
 
     val tokens: Int

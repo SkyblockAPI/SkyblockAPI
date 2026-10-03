@@ -3,6 +3,8 @@ package tech.thatgravyboat.skyblockapi.api.profile.hotf
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.WhisperStorage
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutSlot
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.StringMatch
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeCurrencyAPI
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 
@@ -25,5 +27,7 @@ object WhispersAPI : SkillTreeCurrencyAPI<WhisperType, WhispersAPI>(
         get() = getCurrent(WhisperType.DESERT)
     val desertTotal: Long
         get() = getTotal(WhisperType.DESERT)
+
+    override fun LoadoutSlot.getLoadoutMatch(): StringMatch? = hotm
 
 }

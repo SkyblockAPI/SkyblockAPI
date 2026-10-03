@@ -29,6 +29,8 @@ val ItemStack.tag: CompoundTag? get() = this[DataComponents.CUSTOM_DATA]?.copyTa
 val ItemStack.unsafeTag: CompoundTag? get() = (this[DataComponents.CUSTOM_DATA] as? CustomDataAccessor)?.`skyblockapi$getTag`()
 fun ItemStack.getTag(key: String): Tag? = this.tag?.get(key)
 
+fun ItemStack?.takeUnlessEmpty(): ItemStack? = this?.takeUnless(ItemStack::isEmpty)
+
 fun ItemStack.getRawLore(): List<String> {
     val lore = this[DataComponents.LORE] ?: return emptyList()
     return lore.lines().map { it.stripped }

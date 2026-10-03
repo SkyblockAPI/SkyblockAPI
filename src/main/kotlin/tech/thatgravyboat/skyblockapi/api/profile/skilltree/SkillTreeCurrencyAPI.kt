@@ -7,12 +7,12 @@ import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
-import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
-import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
-import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutChangeEvent
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutSlot
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.StringMatch
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.value
+import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.matchAll
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import kotlin.reflect.KClass
@@ -31,7 +31,6 @@ abstract class SkillTreeCurrencyAPI<
     val type: SkillTreeType<*>,
     vararg tabWidgets: TabWidget,
 ) where Currency : SkillTreeCurrency, Currency : Enum<Currency> {
-
     private val tabWidgets: List<TabWidget> = tabWidgets.toList()
     val currencies: Map<Currency, SkillTreeCurrencyData>
         get() = storage.currencies
@@ -73,7 +72,6 @@ abstract class SkillTreeCurrencyAPI<
             val amount = amount.parseFormattedLong()
             val diff = amount - storage.getCurrent(currency)
             if (diff <= 0) return@matchAll
-            storage.setCurrent(currency, amount)
             storage.addTotal(currency, diff)
         }
     }
@@ -82,14 +80,14 @@ abstract class SkillTreeCurrencyAPI<
     @OnlyOnSkyBlock
     fun onInventoryChange(event: InventoryChangeEvent) {
         if (!titleRegex.matches(event.title)) return
-        val mainItem = event.itemStacks.getOrNull(MAIN_SLOT) ?: return
-        val presetItem = event.itemStacks.getOrNull(PRESET_SLOT)
-        val resetItem = event.itemStacks.getOrNull(RESET_SLOT)
+        val mainItem = event.itemStacks.getOrNull(MAIN_SLOT).takeUnlessEmpty() ?: return
+        val presetItem = event.itemStacks.getOrNull(PRESET_SLOT).takeUnlessEmpty() ?: return
+        val resetItem = event.itemStacks.getOrNull(RESET_SLOT).takeUnlessEmpty() ?: return
 
-        if (presetItem != null) {
-            val lore = presetItem.getRawLore()
-            val currentPreset = skillTreeApi.getCurrentPreset(lore)
-            if (currentPreset != null) storage.swapPreset(currentPreset)
+        val presetLore = presetItem.getRawLore()
+        val currentPreset = skillTreeApi.getCurrentPreset(presetLore)
+        if (currentPreset != null) {
+            storage.currentPreset = currentPreset
         }
 
         // We create the map with all the currency entries so that if one of them doesn't appear, it assumes its 0
@@ -98,17 +96,14 @@ abstract class SkillTreeCurrencyAPI<
         currentCurrencyRegex.matchAll(mainLore, "currency", "amount") { (currency, amount) ->
             val currency = fromInventoryName(currency) ?: return@matchAll
             val amount = amount.toLongValue()
-            storage.setCurrent(currency, amount)
             total.addOrPut(currency, amount)
         }
 
-        if (resetItem != null) {
-            spentCurrencyRegex.matchAll(resetItem.getRawLore(), "currency", "amount") { (currency, amount) ->
-                val currency = fromInventoryName(currency) ?: return@matchAll
-                val amount = amount.parseFormattedLong()
-                total.addOrPut(currency, amount)
-                storage.setSpent(currency, amount)
-            }
+        spentCurrencyRegex.matchAll(resetItem.getRawLore(), "currency", "amount") { (currency, amount) ->
+            val currency = fromInventoryName(currency) ?: return@matchAll
+            val amount = amount.parseFormattedLong()
+            total.addOrPut(currency, amount)
+            storage.setSpent(currency, amount)
         }
 
         total.forEach { (currency, total) ->
@@ -117,12 +112,21 @@ abstract class SkillTreeCurrencyAPI<
     }
 
     @Subscription(inherited = true)
+    context(event: LoadoutChangeEvent)
+    private fun onLoadoutChange() {
+        val newSlot = event.new?.getLoadoutMatch().value() ?: return
+        storage.currentPreset = newSlot
+    }
+
+    protected abstract fun LoadoutSlot.getLoadoutMatch(): StringMatch?
+
+    @Subscription(inherited = true)
     internal fun onRegisterCommand(event: RegisterSkyblockApiCommandsEvent) {
         event.register(name) {
             thenCallback("all") {
                 Text.sendDebug("All $name data:")
                 allCurrencies.forEach { currency ->
-                    Text.sendDebug("${currency.name}: ${currency.current}/${currency.total}")
+                    Text.sendDebug("${currency.name}: ${currency.current.toFormattedString()}/${currency.total.toFormattedString()}")
                 }
             }
             thenCallback("reset") {
