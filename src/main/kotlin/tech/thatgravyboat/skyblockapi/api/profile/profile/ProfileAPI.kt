@@ -94,10 +94,10 @@ object ProfileAPI {
         private set
 
     var profileUuid: UUID?
+        get() = ProfileStorage.profileId
         private set(value) {
             ProfileStorage.profileId = value
         }
-        get() = ProfileStorage.profileId
 
     val profileId: UUID? get() = profileUuid
 
@@ -131,33 +131,35 @@ object ProfileAPI {
     fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
         profileRegex.anyMatch(event.new, "name") { (name) ->
             val oldName = this.profileName
+            var newName: String
             when (name.last()) {
                 '♲' -> {
-                    this.profileName = name.trim(' ', '♲')
+                    newName = name.trim(' ', '♲')
                     ProfileStorage.setProfileType(ProfileType.IRONMAN)
                 }
 
                 'Ⓑ' -> {
-                    this.profileName = name.trim(' ', 'Ⓑ')
+                    newName = name.trim(' ', 'Ⓑ')
                     ProfileStorage.setProfileType(ProfileType.BINGO)
                 }
 
                 '☀' -> {
-                    this.profileName = name.trim(' ', '☀')
+                    newName = name.trim(' ', '☀')
                     ProfileStorage.setProfileType(ProfileType.STRANDED)
                 }
 
                 else -> {
-                    this.profileName = name
+                    newName = name
                     ProfileStorage.setProfileType(ProfileType.NORMAL)
                 }
             }
             if (SkyBlockIsland.THE_RIFT.inIsland()) {
-                this.profileName = this.profileName?.reversed()
+                newName = newName.reversed()
             }
 
-            if (oldName != this.profileName) {
-                ProfileChangeEvent(this.profileName!!).post()
+            if (newName != oldName) {
+                this.profileName = newName
+                ProfileChangeEvent(newName).post()
             }
             this.isLoaded = true
         }
