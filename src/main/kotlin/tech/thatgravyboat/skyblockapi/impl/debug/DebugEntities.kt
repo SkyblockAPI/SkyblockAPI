@@ -103,7 +103,7 @@ object DebugEntities {
         }
 
         if (json.size() != savedEntities.size) {
-            Text.debug("Failed to serialize some entities, some may not be copied.").send()
+            Text.sendDebug("Failed to serialize some entities, some may not be copied.")
         }
 
         Text.sendDebug("Copied ${json.size()} entities ") {
@@ -116,7 +116,7 @@ object DebugEntities {
     private fun getHoveredEntity(): Entity? {
         val hoveredEntity = McClient.self.crosshairPickEntity
         if (hoveredEntity == null) {
-            Text.debug("No entity is currently hovered.").send()
+            Text.sendDebug("No entity is currently hovered.")
         }
         return hoveredEntity
     }
@@ -144,9 +144,9 @@ object DebugEntities {
                         getHoveredEntity()?.let {
                             if (it is AbstractClientPlayer) {
                                 it.skin().textureUrl?.let { McClient.clipboard = it }
-                                Text.debug("Copied texture to clipboard.").send()
+                                Text.sendDebug("Copied texture to clipboard.")
                             } else {
-                                Text.debug("Hovered entity is not a player, cannot copy texture.").send()
+                                Text.sendDebug("Hovered entity is not a player, cannot copy texture.")
                             }
                         }
                     }
@@ -155,11 +155,11 @@ object DebugEntities {
                 callback {
                     val hoveredEntity = McClient.self.crosshairPickEntity
                     if (hoveredEntity == null) {
-                        Text.debug("No entity is currently hovered.").send()
+                        Text.sendDebug("No entity is currently hovered.")
                     } else {
                         val json = hoveredEntity.save().toJson(CompoundTag.CODEC).toPrettyString()
                         McClient.clipboard = json
-                        Text.debug("Copied entity ${hoveredEntity.name} to clipboard: $json").send()
+                        Text.sendDebug("Copied entity ${hoveredEntity.name} to clipboard: $json")
                     }
                 }
             }

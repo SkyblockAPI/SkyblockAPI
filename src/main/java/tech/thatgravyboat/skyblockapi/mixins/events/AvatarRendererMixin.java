@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.mixins;
+package tech.thatgravyboat.skyblockapi.mixins.events;
 
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;

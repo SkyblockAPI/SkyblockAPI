@@ -61,6 +61,8 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
             RepoEvent.Reload(status).post()
         }
         MeowddingItemDfu.load()
+
+        //org.spongepowered.asm.mixin.MixinEnvironment.getCurrentEnvironment().audit()
     }
 
     @JvmStatic
