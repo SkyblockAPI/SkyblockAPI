@@ -8,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.ProfileStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.ProfileDeleteDataEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
@@ -119,6 +120,8 @@ internal object ProfileDeleter {
         SkyBlockAPI.info("Deleting all profile data for profile $profileName")
         ProfileStorage.removeProfile(profileName)
         StoredProfileData.allProfileData.forEach { it.removeProfile(profileName) }
+        ProfileDeleteDataEvent(profileName).post()
+        // This is here so other mods can also delete their own data of specific profiles, if they want to
     }
 
 }
