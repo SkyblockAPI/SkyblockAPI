@@ -192,6 +192,11 @@ fun String.stripColor(): String {
 fun String.capitalize() = lowercase().split(" ", "_").joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
 fun String.toTitleCase() = capitalize()
 
+fun pluralize(n: Int, singular: String, plural: String? = null): String {
+    return if (n == 1 || n == -1) singular else plural ?: "${singular}s"
+}
+fun String.pluralize(n: Int, plural: String? = null): String = pluralize(n, singular = this, plural)
+
 fun String.trimIgnoreColor(): String {
     val start = colorCodesStart.find(this)?.groups?.get("start")?.value ?: ""
     val end = colorCodesEnd.find(this.reversed())?.groups?.get("end")?.value?.reversed() ?: ""
