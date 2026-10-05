@@ -3181,6 +3181,11 @@ public class tech/thatgravyboat/skyblockapi/api/events/misc/DebugBuilder {
 	public final fun getPrefix ()Lnet/minecraft/network/chat/Component;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/misc/ProfileDeleteDataEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getProfileName ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent$Companion;
 	public fun <init> (Lcom/mojang/brigadier/CommandDispatcher;)V
@@ -5528,7 +5533,6 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/profile/ProfileDat
 	public final fun getSbLevelProgress ()Ljava/util/Map;
 	public fun hashCode ()I
 	public final fun setBingoRank (Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;)V
-	public final fun setProfileId (Ljava/util/Map;)V
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -9481,6 +9485,10 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/StringExtensi
 	public static final fun parseRomanNumeral (Ljava/lang/String;)I
 	public static final fun parseRomanOrArabic (Ljava/lang/String;)I
 	public static final fun parseWordDuration (Ljava/lang/String;)Lkotlin/time/Duration;
+	public static final fun pluralize (ILjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public static final fun pluralize (Ljava/lang/String;ILjava/lang/String;)Ljava/lang/String;
+	public static synthetic fun pluralize$default (ILjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static synthetic fun pluralize$default (Ljava/lang/String;ILjava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 	public static final fun removeTrailingChar (Ljava/lang/String;C)Ljava/lang/String;
 	public static final fun sanitizeForCommandInput (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun stripColor (Ljava/lang/String;)Ljava/lang/String;

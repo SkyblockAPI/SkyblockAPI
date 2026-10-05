@@ -20,6 +20,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.Text.copy
+import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
@@ -70,6 +71,9 @@ object Text {
                 is String -> result.append(it)
                 is Char -> result.append(it.toString())
                 is Collection<*> -> result.append(join(*it.toTypedArray(), separator = separator))
+                is ComponentLike -> result.append(it)
+                is Number -> result.append(it)
+                is Boolean -> result.append(it)
                 null -> return@forEachIndexed
                 else -> error("Unsupported type: ${it::class.simpleName}")
             }

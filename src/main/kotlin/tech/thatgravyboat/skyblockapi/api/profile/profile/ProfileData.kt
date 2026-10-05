@@ -12,7 +12,7 @@ data class ProfileData(
     val sbLevel: MutableMap<String, Int> = mutableMapOf(),
     val sbLevelProgress: MutableMap<String, Int> = mutableMapOf(),
     val coop: MutableMap<String, Boolean> = mutableMapOf(),
-    var profileId: MutableMap<String, UUID> = mutableMapOf(),
+    val profileId: MutableMap<String, UUID> = mutableMapOf(),
     var bingoRank: SkyBlockRarity?,
 ) {
     companion object {
