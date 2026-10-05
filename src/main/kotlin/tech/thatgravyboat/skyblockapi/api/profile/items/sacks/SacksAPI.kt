@@ -122,8 +122,10 @@ object SacksAPI {
     @OptIn(SkyBlockPvRequired::class)
     private fun SkyBlockPvOpenedEvent.updateSacks() {
         val sacks = member.getPath("inventory.sacks_counts") as? JsonObject ?: return
-        sacks.entrySet().forEach { (itemId, amount) ->
-            val amount = amount.asInt(0).takeUnless { it <= 0 } ?: return@forEach
+
+        (sacks.keySet() + SacksStorage.counts.keys).forEach { itemId ->
+            val amount = sacks.get(itemId)?.asInt(0)?.coerceAtLeast(0) ?: 0
+
             if (amount == (SacksStorage.counts[itemId] ?: 0)) {
                 return@forEach
             }
@@ -164,6 +166,10 @@ object SacksAPI {
                     return@thenCallback
                 }
                 Text.sendDebug("You have $amount of item $id")
+            }
+            thenCallback("clear") {
+                SacksStorage.clear()
+                Text.sendDebug("Cleared all sack items.")
             }
         }
     }
