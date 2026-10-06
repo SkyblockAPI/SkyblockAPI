@@ -12,7 +12,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
@@ -35,7 +34,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 private const val THAUMATURGY_MP_SLOT = 48
 private const val THAUMATURGY_STATS_TUNING_SLOT = 51
-private const val BAGS_ACCESSORY_BAG_SLOT = 24
+private const val BAGS_ACCESSORY_BAG_SLOT = 23
 
 private val thaumaturgyPowerStonesRegion = ContainerRegion(width = 7, height = 5, startRow = 1, startColumn = 1)
 private val tuningGuiRegion = ContainerRegion(width = 4, height = 2, startRow = 2, startColumn = 1)
