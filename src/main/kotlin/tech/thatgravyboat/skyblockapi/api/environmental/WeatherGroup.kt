@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.environmental
 
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockStat
+import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
@@ -392,21 +393,16 @@ enum class WeatherGroup(
     val formattedName = nameOverride ?: toFormattedName()
     override fun toString(): String = formattedName
 
+    fun inLocation(): Boolean = island.inIsland() && (areas.isEmpty() || SkyBlockArea.inAnyArea(areas))
+
     companion object {
         fun getGroupsFor(island: SkyBlockIsland): List<WeatherGroup> = entries.filter { it.island == island }
-        fun getGroupFor(island: SkyBlockIsland, area: SkyBlockArea): WeatherGroup? = entries.find { it.island == island && area in it.areas }
+        fun getGroupFor(island: SkyBlockIsland, area: SkyBlockArea?): WeatherGroup? = entries.find { it.island == island && (area == null || area in it.areas) }
 
         fun getCurrentGroup(): WeatherGroup? {
-            val currentGroups = entries.filter { it.island.inIsland() }
-            if (currentGroups.isEmpty()) return null
-
-            if (currentGroups.size == 1) {
-                return currentGroups.first()
-            }
-
-            val groupBasedOnAreas = currentGroups.find { group -> group.areas.isNotEmpty() && SkyBlockArea.inAnyArea(group.areas) }
-
-            return groupBasedOnAreas ?: currentGroups.find { it.areas.isEmpty() }
+            val activeGroups = entries.filter { it.inLocation() }
+            // If multiple matches, pick the group that's more specific
+            return activeGroups.find { it.areas.isNotEmpty() } ?: activeGroups.firstOrNull()
         }
     }
 }
