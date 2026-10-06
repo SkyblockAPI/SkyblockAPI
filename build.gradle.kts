@@ -22,8 +22,6 @@ kotlin {
     }
 
     abiValidation {
-        enabled = true
-
         filters {
             exclude {
                 byNames.addAll(
