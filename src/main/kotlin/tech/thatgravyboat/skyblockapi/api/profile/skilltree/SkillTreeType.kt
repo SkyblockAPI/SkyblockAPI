@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.skilltree
 import tech.thatgravyboat.skyblockapi.api.profile.hotf.HotfAPI
 import tech.thatgravyboat.skyblockapi.api.profile.hotm.HotmAPI
 
-sealed class SkillTreeType<out API : SkillTreeAPI<*, *, *>>(api: () -> API) {
+sealed class SkillTreeType<out API : SkillTreeAPI<*, *>>(api: () -> API) {
 
     val api: API by lazy(api)
 
