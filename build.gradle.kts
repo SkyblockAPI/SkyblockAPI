@@ -22,10 +22,8 @@ kotlin {
     }
 
     abiValidation {
-        enabled = true
-
         filters {
-            excluded {
+            exclude {
                 byNames.addAll(
                     "tech.thatgrabyboat.skyblockapi.impl.**",
                     "tech.thatgravyboat.skyblockapi.mixins.**"

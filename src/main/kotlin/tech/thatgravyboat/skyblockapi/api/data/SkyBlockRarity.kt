@@ -18,10 +18,11 @@ enum class SkyBlockRarity(val color: Int, val skyBlockColor: Int, vararg val alt
     ULTIMATE(TextColor.DARK_RED, SkyBlockColor.DARK_RED),
     SPECIAL(TextColor.RED, SkyBlockColor.RED),
     VERY_SPECIAL(TextColor.RED, SkyBlockColor.RED),
-    ADMIN(TextColor.RED, SkyBlockColor.RED),
+    ADMIN(TextColor.RED, SkyBlockColor.RED, "UNOBTAINABLE"),
     ;
 
     val displayName: String = toFormattedName()
+    val uppercaseDisplayName: String = displayName.uppercase()
     val displayText: Component = Text.of(displayName) { this.color = this@SkyBlockRarity.color }
 
     override fun toString(): String = displayName

@@ -70,7 +70,7 @@ internal object BoostersCalculator : Calculator {
         return buildList {
             for ((type, maxTier) in boosters) {
                 for (tier in 1..maxTier) {
-                    if (tier == 1) {
+                    if (tier == 1 && !type.equals("hunting_wisdom", true)) {
                         add(ItemEntry("${type}_BOOSTER"))
                     } else {
                         val rarity = SkyBlockRarity.entries.getOrNull(tier - 1) ?: continue

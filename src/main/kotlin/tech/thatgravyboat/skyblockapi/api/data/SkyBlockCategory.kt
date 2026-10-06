@@ -16,6 +16,8 @@ class SkyBlockCategory private constructor(
     @Suppress("unused")
     companion object {
         private val registeredCategories = mutableMapOf<String, SkyBlockCategory>()
+        val categories: Collection<SkyBlockCategory>
+            get() = registeredCategories.values
 
         fun create(string: String): SkyBlockCategory {
             val formatted = string.lowercase()
@@ -69,7 +71,7 @@ class SkyBlockCategory private constructor(
         val DUNGEON_BOOTS = create("dungeon boots")
 
         val FISHING_ROD = create("fishing rod")
-        val ROD_PART = create("rod part")
+        val ROD_PART = create("rod part") // in the api its called "FISHING_ROD_PART"
         val BAIT = create("bait")
 
         val FISHING_NET = create("fishing net")
@@ -101,13 +103,20 @@ class SkyBlockCategory private constructor(
         val SALT = create("salt")
         val TRAP = create("trap")
         val BOOSTER = create("booster")
+
         val WATER_SHARD = create("water shard")
         val FOREST_SHARD = create("forest shard")
         val COMBAT_SHARD = create("combat shard")
+        val MINING_SHARD = create("mining shard")
+
         val GARDEN_CHIP = create("garden chip")
         val MUTATION = create("mutation")
         val WATERING_CAN = create("watering can")
         val FARMING_TOOL = create("farming tool")
         val TROPHY = create("trophy")
+        val ABILITY_SCROLL = create("ability scroll")
+        val CAPSULE = create("capsule")
+        val RABBIT = create("rabbit") // chocolate factory
+        val DUNGEON_PASS = create("dungeon pass") // seems to be admin only
     }
 }

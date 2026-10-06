@@ -8,13 +8,14 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toData
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
+import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
@@ -25,6 +26,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.toStringWithFormattin
 import kotlin.time.Clock
 import kotlin.time.Instant
 
+// TODO: add indication of cancelled and modified messages
 @Module
 object DebugChat {
 
@@ -39,8 +41,8 @@ object DebugChat {
     }
 
     @Subscription
-    fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.registerWithCallback("sbapi chat") {
+    internal fun onCommandsRegistration(event: RegisterSkyblockApiCommandsEvent) {
+        event.registerWithCallback("chat") {
             val screen = DebugScreen(
                 "Messages",
                 messages,
@@ -59,14 +61,14 @@ object DebugChat {
                     SystemToast.add(
                         McClient.toasts,
                         chatToastId,
-                        Text.of("[SkyBlock API]") { this.color = TextColor.YELLOW },
+                        CommonText.PREFIX,
                         Text.of("Message copied to clipboard! ($title)") { this.color = TextColor.YELLOW },
                     )
                 },
             )
             McClient.setScreen(screen)
         }
-        event.registerWithCallback("sbapi message") {
+        event.registerWithCallback("message") {
             val clipboard = McClient.clipboard.takeUnless { it.isEmpty() } ?: return@registerWithCallback
             val component = runCatching {
                 JsonParser.parseString(clipboard).toData(ComponentSerialization.CODEC)
