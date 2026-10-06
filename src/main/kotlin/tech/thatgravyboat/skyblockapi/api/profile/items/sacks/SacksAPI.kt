@@ -18,6 +18,7 @@ import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
@@ -121,8 +122,10 @@ object SacksAPI {
     @OptIn(SkyBlockPvRequired::class)
     private fun SkyBlockPvOpenedEvent.updateSacks() {
         val sacks = member.getPath("inventory.sacks_counts") as? JsonObject ?: return
-        sacks.entrySet().forEach { (itemId, amount) ->
-            val amount = amount.asInt(0).takeUnless { it <= 0 } ?: return@forEach
+
+        (sacks.keySet() + SacksStorage.counts.keys).forEach { itemId ->
+            val amount = sacks.get(itemId)?.asInt(0)?.coerceAtLeast(0) ?: 0
+
             if (amount == (SacksStorage.counts[itemId] ?: 0)) {
                 return@forEach
             }
@@ -154,8 +157,8 @@ object SacksAPI {
     }
 
     @Subscription
-    fun onRegisterCommands(event: RegisterCommandsEvent) {
-        event.register("sbapi sacks") {
+    internal fun onRegisterCommands(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("sacks") {
             thenCallback("id", StringArgumentType.string()) {
                 val id = argument<String>("id")
                 val amount = sackItems[id] ?: run {
@@ -163,6 +166,10 @@ object SacksAPI {
                     return@thenCallback
                 }
                 Text.sendDebug("You have $amount of item $id")
+            }
+            thenCallback("clear") {
+                SacksStorage.clear()
+                Text.sendDebug("Cleared all sack items.")
             }
         }
     }

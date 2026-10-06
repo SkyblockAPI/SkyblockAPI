@@ -1,9 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import net.minecraft.util.TriState
-//? < 26.2
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
+import tech.thatgravyboat.skyblockapi.api.data.stored.ElectionStorage
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.extentions.toScreamingSnakeCase
@@ -23,8 +23,8 @@ data class MayorCandidate internal constructor(
             return jerryCandidate == this && time.isInFuture()
         }
 
-    internal fun addAllPerks(includeNonPerkapocalypse: Boolean = true): MayorCandidate = apply {
-        perks.forEach { if (includeNonPerkapocalypse || it.perkapocalypse) it.active = true }
+    internal fun addAllPerks(includeNonPerkpocalypse: Boolean = true): MayorCandidate = apply {
+        perks.forEach { if (includeNonPerkpocalypse || it.perkpocalypse) it.active = true }
     }
 
     internal fun clearAllPerks(): MayorCandidate = apply { perks.forEach { it.active = false } }
@@ -89,8 +89,12 @@ data class MayorPerk internal constructor(
     val id: String,
     val perkName: String,
     var description: String = "Not available",
-    val perkapocalypse: Boolean = true,
+    val perkpocalypse: Boolean = true,
 ) {
+    @RemoveNextVersion
+    @Deprecated("Use MayorPerk.perkpocalypse instead.", ReplaceWith("perkpocalypse"))
+    val perkapocalypse: Boolean get() = perkpocalypse
+
     internal var overrideState: TriState = DEFAULT
 
     var active: Boolean = false
@@ -104,6 +108,12 @@ data class MayorPerk internal constructor(
     }
 
     override fun hashCode(): Int = id.hashCode()
+
+    // Try to load perk description from cache
+    init {
+        val description = ElectionStorage.getPerkDescription(id)
+        if (description != null) this.description = description
+    }
 }
 
 enum class FoxyExtraEventType(val eventName: String) {
@@ -155,7 +165,7 @@ object MayorPerks {
     // Finnegan
     //? < 26.2
     //@RemoveNextVersion val PELT_POCALYPSE = register("Pelt-pocalypse")
-    val GRAND_FEAST = register("Grand Feast", perkapocalypse = false)
+    val GRAND_FEAST = register("Grand Feast", perkpocalypse = false)
     val GOATED = register("GOATed", id = "GOATED")
     val BLOOMING_BUSINESS = register("Blooming Business")
     val PEST_ERADICATOR = register("Pest Eradicator")
@@ -222,7 +232,7 @@ object MayorPerks {
     fun getPerkById(id: String): MayorPerk? = _perks[id]
     fun getPerk(perkName: String) = perks.find { it.perkName == perkName }
 
-    internal fun register(perkName: String, id: String = perkName.toScreamingSnakeCase(), perkapocalypse: Boolean = true): MayorPerk {
-        return _perks.getOrPut(id) { MayorPerk(id, perkName, perkapocalypse = perkapocalypse) }
+    internal fun register(perkName: String, id: String = perkName.toScreamingSnakeCase(), perkpocalypse: Boolean = true): MayorPerk {
+        return _perks.getOrPut(id) { MayorPerk(id, perkName, perkpocalypse = perkpocalypse) }
     }
 }

@@ -18,7 +18,6 @@ jobs:
     breaking-change-check:
 
         runs-on: ubuntu-latest
-
         steps:
             -   uses: actions/checkout@v5
 
@@ -37,6 +36,7 @@ jobs:
 
             -   name: Generate API Diffs
                 run: |
+                    git diff versions/26.3/api/26.3.api | grep "^-[^-]" >> api.removed || true
                     git diff versions/26.2/api/26.2.api | grep "^-[^-]" >> api.removed || true
                     git diff versions/26.1/api/26.1.api | grep "^-[^-]" >> api.removed || true
 
@@ -52,5 +52,8 @@ jobs:
                         cat api.removed >> comment
                         echo "\`\`\`" >> comment
                         gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
+                        gh pr edit ${{ github.event.number }} --repo ${{ github.repository }} --add-label "breaking change"
                         exit 1
+                    else
+                        gh pr edit ${{ github.event.number }} --repo ${{ github.repository }} --remove-label "breaking change"
                     fi

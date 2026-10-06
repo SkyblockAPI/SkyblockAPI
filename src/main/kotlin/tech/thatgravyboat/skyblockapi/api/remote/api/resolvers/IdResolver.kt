@@ -81,5 +81,5 @@ enum class IdResolverKind {
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
 @AutoCollect
-annotation class IdResolvers
+internal annotation class IdResolvers
 

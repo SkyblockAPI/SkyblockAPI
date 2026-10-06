@@ -17,7 +17,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
@@ -380,21 +380,21 @@ data object AttributeAPI : ItemDebugCategory {
     }
 
     @Subscription
-    fun onCommandRegister(event: RegisterCommandsEvent) {
+    internal fun onCommandRegister(event: RegisterSkyblockApiCommandsEvent) {
         event.command("sbapi attributes") {
             "reset *" {
                 "owned" executes {
                     resetOwnedAttributeAmounts()
-                    Text.debug("Reset Owned Shards!").send()
+                    Text.sendDebug("Reset Owned Shards!")
                 }
 
                 "syphoned" executes {
                     resetSyphonedAttributeAmount()
-                    Text.debug("Reset Syphoned Shards!").send()
+                    Text.sendDebug("Reset Syphoned Shards!")
                 }
                 execute {
                     _attributeMap.clear()
-                    Text.debug("Reset All Shards!").send()
+                    Text.sendDebug("Reset All Shards!")
 
                 }
             }
@@ -422,27 +422,27 @@ data object AttributeAPI : ItemDebugCategory {
             ) {
                 "owned" executes {
                     if (it == null) {
-                        Text.debug("Unknown shard!").send()
+                        Text.sendDebug("Unknown shard!")
                         return@executes
                     }
                     getData(SkyBlockId.attribute(it.attributeId)).owned = 0
-                    Text.debug("Reset owned ${it.shardName} Shard!").send()
+                    Text.sendDebug("Reset owned ${it.shardName} Shard!")
                 }
                 "syphoned" executes {
                     if (it == null) {
-                        Text.debug("Unknown shard!").send()
+                        Text.sendDebug("Unknown shard!")
                         return@executes
                     }
                     getData(SkyBlockId.attribute(it.attributeId)).syphoned = 0
-                    Text.debug("Reset syphoned ${it.name} Attribute!").send()
+                    Text.sendDebug("Reset syphoned ${it.name} Attribute!")
                 }
                 execute {
                     if (it == null) {
-                        Text.debug("Unknown shard!").send()
+                        Text.sendDebug("Unknown shard!")
                         return@execute
                     }
                     _attributeMap.remove(SkyBlockId.attribute(it.attributeId))
-                    Text.debug("Reset ${it.name} Attribute!").send()
+                    Text.sendDebug("Reset ${it.name} Attribute!")
                 }
             }
         }

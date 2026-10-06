@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
+@Deprecated("Use TrophyRank instead")
 enum class TrophyFishRank(val displayName: Component) {
     NOVICE(displayName = Text.of("Novice") { withStyle(ChatFormatting.DARK_GRAY) }),
     ADEPT(displayName = Text.of("Adept") { withStyle(ChatFormatting.GRAY) }),

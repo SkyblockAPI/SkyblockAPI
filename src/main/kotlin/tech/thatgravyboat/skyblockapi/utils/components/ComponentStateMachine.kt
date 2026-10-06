@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.utils.components
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.util.FormattedCharSequence
+import net.minecraft.util.StringDecomposer
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -174,8 +175,12 @@ data class RepeatPart(
 }
 
 data class ForkPart(
-    val forks: List<StateMachinePosition<*>>,
+    val forks: List<ComponentStateMachinePart<*>>,
+    val marker: Unit = Unit,
 ) : ComponentStateMachinePart<ForkPart.State> {
+    @Deprecated("Only for binary compat", level = DeprecationLevel.HIDDEN)
+    constructor(forks: List<StateMachinePosition<*>>) : this(forks.map { it.part }, Unit)
+
     data class State(
         var state: StateMachinePosition<*>? = null,
     )
@@ -185,13 +190,14 @@ data class ForkPart(
     context(state: State, _: GroupSink)
     override fun tryConsumeState(index: Int, char: Char, style: Style): StateResult {
         if (index == 0) {
-            val machine = forks.find {
+            val machine = forks.map { StateMachinePosition(it) }.find {
                 it.tryConsume(char, style).match
             } ?: return StateResult.BREAK
             state.state = machine
             return StateResult.CONSUME
         }
-        return state.state!!.tryConsume(char, style)
+
+        return state.state?.tryConsume(char, style) ?: StateResult.BREAK
     }
 
     context(state: State)
@@ -201,26 +207,35 @@ data class ForkPart(
 }
 
 data class OptionalPart(
-    val part: StateMachinePosition<*>,
-) : ComponentStatelessMachinePart {
-    constructor(part: ComponentStateMachinePart<*>) : this(StateMachinePosition(part))
+    //? <= 26.3
+    @get:JvmName("newPart")
+    val part: ComponentStateMachinePart<*>,
+) : ComponentStateMachinePart<StateMachinePosition<*>> {
+    constructor(part: StateMachinePosition<*>) : this(part.part)
 
-    context(_: GroupSink)
-    override fun tryConsume(
+    //? <= 26.3
+    @get:JvmName("part") val _part get() = StateMachinePosition(part)
+
+    override fun createState(): StateMachinePosition<*> = StateMachinePosition(part)
+
+    context(state: StateMachinePosition<*>, _: GroupSink)
+    override fun tryConsumeState(
         index: Int,
         char: Char,
         style: Style,
     ): StateResult {
-        val result = part.tryConsume(char, style)
+        val result = state.tryConsume(char, style)
         if (index == 0 && !result.continuation) {
             return StateResult.CONTINUE
         }
         return result
     }
 
-    override fun end(groupSink: GroupSink) {
-        part.endState(groupSink)
+    context(state: StateMachinePosition<*>)
+    override fun endState(groupSink: GroupSink) {
+        state.endState(groupSink)
     }
+
 }
 
 data class CapturingComponentPart(
@@ -276,6 +291,9 @@ class ForkBuilder() : StateMachineBuilder() {
         StateMachineBuilder().apply(builder).toPart()
     }
 
+    override fun toPart(): CompositeComponentPart {
+        return CompositeComponentPart(listOf(ForkPart(parts)))
+    }
 }
 
 open class StateMachineBuilder(
@@ -313,14 +331,14 @@ open class StateMachineBuilder(
     }
 
     fun fork(builder: ForkBuilder.() -> Unit) = add {
-        OptionalPart(ForkBuilder().apply(builder).toPart())
+        ForkBuilder().apply(builder).toPart()
     }
 
     inline fun add(supplier: () -> ComponentStateMachinePart<*>) {
         parts.add(supplier.invoke())
     }
 
-    fun toPart() = CompositeComponentPart(parts)
+    open fun toPart() = CompositeComponentPart(parts)
 }
 
 class StateMachinePosition<Type>(
@@ -351,6 +369,42 @@ class ComponentStateMachine(
     }
 
     constructor(parts: List<ComponentStateMachinePart<*>>) : this(CompositeComponentPart(parts))
+
+    fun decompose(component: Component, consumer: (Map<String, FormattedCharSequence>) -> Unit): Boolean {
+        val current = StateMachinePosition(parts)
+
+        val groups = mutableMapOf<String, FormattedCharSequence>()
+        val sink = object : GroupSink {
+            override fun flush() {
+                consumer(groups)
+                groups.clear()
+            }
+
+            override fun group(name: String, group: FormattedCharSequence) {
+                groups[name] = group
+            }
+
+        }
+
+        context(sink) {
+            val success = StringDecomposer.iterateFormatted(component, Style.EMPTY) { position, style, codepoint ->
+                for (ch in Character.toString(codepoint)) {
+                    val result = current.tryConsume(ch, style)
+                    if (result.continuation && result.match) {
+                        continue
+                    }
+                    return@iterateFormatted false
+                }
+
+                true
+            }
+
+            current.end()
+            sink.flush()
+
+            return success
+        }
+    }
 
     fun match(component: Component, consumer: (Map<String, FormattedCharSequence>) -> Unit): Boolean {
         val groups = mutableMapOf<String, FormattedCharSequence>()

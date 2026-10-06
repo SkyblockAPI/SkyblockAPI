@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvMuseumOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
@@ -267,8 +268,8 @@ object MuseumAPI {
     }
 
     @Subscription
-    fun onRegisterCommands(event: RegisterCommandsEvent) {
-        event.register("sbapi museum") {
+    internal fun onRegisterCommands(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("museum") {
             thenCallback("reset") {
                 MuseumStorage.reset()
                 Text.sendDebug("Museum data has been reset.")

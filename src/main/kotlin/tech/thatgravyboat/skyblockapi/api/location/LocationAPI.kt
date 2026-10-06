@@ -58,14 +58,15 @@ object LocationAPI {
         " *(?:players|party) \\((?<count>\\d+)\\) *",
     )
 
-    private val newAlphaRegex = RegexGroup.CHAT.create(
+    private val newAlphaRegex = RegexGroup.CHAT.createList(
         "alpha.new",
-        "^Welcome to Hypixel SkyBlock on the Alpha Network!"
+        "^Welcome to Hypixel SkyBlock on the Alpha Network!",
+        "^.>>\\s+Achievement Unlocked: Achievement Get! Hypixel Server!"
     )
 
-    val forceOnSkyblock by debugToggle("force_skyblock", "Always returns true for SkyBlock checks")
-    val forceIsland by debugSelect<SkyBlockIsland>("force_island", "Force a specific island to be returned")
-    val forceOnAlpha by debugToggle("force_alpha", "Always returns true when checking for onAlpha")
+    val forceOnSkyblock by debugToggle("location/force_skyblock", "Always returns true for SkyBlock checks")
+    val forceIsland by debugSelect<SkyBlockIsland>("location/force_island", "Force a specific island to be returned")
+    val forceOnAlpha by debugToggle("location/force_alpha", "Always returns true when checking for onAlpha")
 
     var isOnSkyBlock: Boolean = false
         get() = field || forceOnSkyblock
@@ -180,7 +181,7 @@ object LocationAPI {
 
     @Subscription
     fun onChatReceivedPre(event: ChatReceivedEvent.Pre) {
-        if (!newAlphaRegex.contains(event.text)) return
+        if (!newAlphaRegex.any { it.contains(event.text) }) return
         FreshHypixelAlphaDetectedEvent.post()
     }
 

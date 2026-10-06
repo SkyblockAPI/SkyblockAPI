@@ -36,7 +36,7 @@ internal object PvLoadingHelper {
 
     private fun sendAndReset() {
         if (list.isEmpty()) return
-        Text.debug("Loaded some data from pv! ") {
+        Text.sendDebug("Loaded some data from pv! ") {
             append("(hover)") {
                 this.color = TextColor.GRAY
             }
@@ -51,7 +51,7 @@ internal object PvLoadingHelper {
                     }
                 }
             }
-        }.send()
+        }
         list.clear()
     }
 }
