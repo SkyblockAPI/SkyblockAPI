@@ -197,6 +197,20 @@ fun pluralize(n: Int, singular: String, plural: String? = null): String {
 }
 fun String.pluralize(n: Int, plural: String? = null): String = pluralize(n, singular = this, plural)
 
+fun <A, B, C, D> Pair<A, B>.map(first: (A) -> C, second: (B) -> D): Pair<C, D> {
+    return first(this.first) to second(this.second)
+}
+
+/** Trims both strings in the pair */
+fun Pair<String, String>.trim() = map(first = String::trim, second = String::trim)
+
+/** Creates a pair of strings from before and after the specified [delimiter], or the entire string and an empty string if there are none. */
+fun String.splitOnLast(delimiter: String): Pair<String, String> {
+    val index = lastIndexOf(delimiter)
+    return if (index == -1) this to ""
+    else substring(0, index) to substring(index + 1)
+}
+
 fun String.trimIgnoreColor(): String {
     val start = colorCodesStart.find(this)?.groups?.get("start")?.value ?: ""
     val end = colorCodesEnd.find(this.reversed())?.groups?.get("end")?.value?.reversed() ?: ""

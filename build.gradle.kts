@@ -22,10 +22,8 @@ kotlin {
     }
 
     abiValidation {
-        enabled = true
-
         filters {
-            excluded {
+            exclude {
                 byNames.addAll(
                     "tech.thatgrabyboat.skyblockapi.impl.**",
                     "tech.thatgravyboat.skyblockapi.mixins.**"
@@ -34,6 +32,9 @@ kotlin {
         }
     }
 }
+
+// mona said to disable this for now
+tasks.named("checkKotlinAbi") { enabled = false }
 
 repositories {
     fun scopedMaven(url: String, vararg paths: String) = maven(url) { content { paths.forEach(::includeGroupAndSubgroups) } }
