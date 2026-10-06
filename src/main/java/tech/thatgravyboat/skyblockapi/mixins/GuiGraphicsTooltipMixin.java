@@ -50,7 +50,7 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
     private int itemBarWidth(ItemStack instance, Operation<Integer> original, @Share("bar") LocalRef<RenderItemBarEvent> bar) {
         var event = bar.get();
         if (event != null && event.getPercent() >= 0f) {
-            return (int) (Mth.clamp(event.getPercent() * 13, 0, 13));
+            return (int) (Math.clamp(event.getPercent() * 13, 0, 13));
         }
         return original.call(instance);
     }
