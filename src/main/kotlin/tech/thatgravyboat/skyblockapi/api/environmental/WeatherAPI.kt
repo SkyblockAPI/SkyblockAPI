@@ -28,7 +28,7 @@ object WeatherAPI {
         }
 
     private fun getIntensityForDay(day: Int): WeatherIntensity {
-        return if ((day / 3) % 3 == 0) WeatherIntensity.EXTREME else WeatherIntensity.MILD
+        return if ((day / 3) % 3 == 1) WeatherIntensity.EXTREME else WeatherIntensity.MILD
     }
 
     val isActive: Boolean
