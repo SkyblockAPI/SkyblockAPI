@@ -1,8 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.environmental
 
 import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.api.area.mining.GlaciteAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockStat
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -52,6 +53,7 @@ data class WeatherEvent(
 
 enum class WeatherGroup(
     val island: SkyBlockIsland,
+    val areas: List<SkyBlockArea> = emptyList(),
     val mild: WeatherEvent,
     val extreme: WeatherEvent,
 ) {
@@ -112,7 +114,13 @@ enum class WeatherGroup(
     ),
 
     GLACITE_TUNNELS(
-        island = SkyBlockIsland.MINESHAFT,
+        island = SkyBlockIsland.DWARVEN_MINES,
+        areas = listOf(
+            SkyBlockAreas.GLACITE_TUNNELS,
+            SkyBlockAreas.GREAT_LAKE,
+            SkyBlockAreas.BASECAMP,
+            SkyBlockAreas.FOSSIL_RESEARCH,
+        ),
         mild = WeatherEvent(
             type = BREEZE,
             intensity = MILD,
@@ -380,11 +388,20 @@ enum class WeatherGroup(
     );
 
     companion object {
-        fun getGroupFor(island: SkyBlockIsland): WeatherGroup? = entries.find { it.island == island }
+        fun getGroupsFor(island: SkyBlockIsland): List<WeatherGroup> = entries.filter { it.island == island }
+        fun getGroupFor(island: SkyBlockIsland, area: SkyBlockArea): WeatherGroup? = entries.find { it.island == island && area in it.areas }
 
         fun getCurrentGroup(): WeatherGroup? {
-            if (GlaciteAPI.inGlaciteTunnels()) return GLACITE_TUNNELS
-            return entries.find { it != GLACITE_TUNNELS && it.island.inIsland() }
+            val currentGroups = entries.filter { it.island.inIsland() }
+            if (currentGroups.isEmpty()) return null
+
+            if (currentGroups.size == 1) {
+                return currentGroups.first()
+            }
+
+            val groupBasedOnAreas = currentGroups.find { group -> group.areas.isNotEmpty() && SkyBlockArea.inAnyArea(group.areas) }
+
+            return groupBasedOnAreas ?: currentGroups.find { it.areas.isEmpty() }
         }
     }
 }
