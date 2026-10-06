@@ -54,6 +54,7 @@ data class WeatherEvent(
 enum class WeatherGroup(
     val island: SkyBlockIsland,
     val areas: List<SkyBlockArea> = emptyList(),
+    nameOverride: String? = null,
     val mild: WeatherEvent,
     val extreme: WeatherEvent,
 ) {
@@ -121,6 +122,7 @@ enum class WeatherGroup(
             SkyBlockAreas.BASECAMP,
             SkyBlockAreas.FOSSIL_RESEARCH,
         ),
+        nameOverride = "Glacite Tunnels",
         mild = WeatherEvent(
             type = BREEZE,
             intensity = MILD,
@@ -386,6 +388,9 @@ enum class WeatherGroup(
             },
         ),
     );
+
+    val formattedName = nameOverride ?: toFormattedName()
+    override fun toString(): String = formattedName
 
     companion object {
         fun getGroupsFor(island: SkyBlockIsland): List<WeatherGroup> = entries.filter { it.island == island }
