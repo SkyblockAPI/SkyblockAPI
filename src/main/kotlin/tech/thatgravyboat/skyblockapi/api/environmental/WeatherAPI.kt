@@ -10,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 
 @Module
-// TODO: confirm when this is on main
 object WeatherAPI {
 
     private val dayOfYear: Int?
