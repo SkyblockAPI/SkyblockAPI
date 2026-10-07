@@ -40,7 +40,7 @@ object SlayerAPI {
     )
     private val questStarted = chatSlayerGroup.create("started", "\\s+SLAYER QUEST STARTED!")
     private val questCompleted = chatSlayerGroup.create("completed", "\\s+SLAYER QUEST COMPLETE!")
-    private val nametagEndRegex = nameTagGroup.create("end", ".*[❤\uE010] [✯\uE01A]")
+    private val nametagRegex = nameTagGroup.create("nametag", "\\[Lv\\d+] ☠ .*[❤\uE010] [✯\uE01A]")
 
     var type: SlayerType? = null
         private set
@@ -135,7 +135,7 @@ object SlayerAPI {
         }
     }
 
-    private fun isSlayerLine(line: String) = line.startsWith("☠") || nametagEndRegex.match(line)
+    private fun isSlayerLine(line: String) = nametagRegex.match(line)
 
     @ApiDebug("Slayer")
     internal fun debug(builder: DebugBuilder) = with(builder) {
