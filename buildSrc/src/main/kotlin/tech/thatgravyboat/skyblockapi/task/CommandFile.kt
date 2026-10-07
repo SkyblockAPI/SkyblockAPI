@@ -77,7 +77,8 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
         indent(1).appendLine("inline fun <reified Argument> then(vararg name: String, argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null, crossinline builder: CommandBuilder${parameters + 1}<CommandSender$Generics, Argument>.(CommandBuildContext) -> Unit) = name.forEach { it(argument, suggestionProvider, builder) }")
 
         appendLine()
-
+        indent(1).appendLine("@JvmOverloads")
+        indent(1).appendLine("inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null) = this(argument, suggestionProvider) {}")
         indent(1).appendLine("@JvmOverloads")
         indent(1).append("inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null, crossinline builder: CommandBuilder${parameters + 1}<CommandSender$Generics, Argument>.(CommandBuildContext) -> Unit)")
 
