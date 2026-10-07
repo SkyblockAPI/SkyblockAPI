@@ -1,59 +1,81 @@
 package tech.thatgravyboat.skyblockapi.utils.regex
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import org.intellij.lang.annotations.Language
 import org.jetbrains.annotations.ApiStatus
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.utils.http.Http
-import tech.thatgravyboat.skyblockapi.utils.json.Json.isString
-import tech.thatgravyboat.skyblockapi.utils.runCatchBlocking
-
-private const val URL = ""
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
+import java.nio.file.Path
+import kotlin.collections.mutableMapOf
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.createParentDirectories
+import kotlin.io.path.writeText
 
 object Regexes {
-
     private val usedKeys = mutableSetOf<String>()
-    private val regexes = mutableMapOf<String, Regex>()
-    private val regexLists = mutableMapOf<String, List<Regex>>()
+    internal val regexes = mutableMapOf<String, Regex>()
+    internal val regexLists = mutableMapOf<String, List<Regex>>()
 
     fun create(key: String, @Language("RegExp") regex: String): Regex {
         validateKey(key)
-        return regexes.getOrPut(key) {
-            Regex(regex)
+
+        val storedRegex = regexes[key]
+        if (storedRegex != null) return storedRegex
+
+        // We try to get the regex from regex lists if it fails from regexes, in case
+        // in the future a key changes between a list or a single regex.
+        // If we are trying to create the JSON, we ignore this
+        if (!RegexData.isCreatingJson) {
+            val listRegex = regexLists[key]?.firstOrNull()
+            if (listRegex != null) return listRegex
         }
+
+        val newRegex = Regex(regex)
+        regexes[key] = newRegex
+        return newRegex
     }
 
     fun createList(key: String, @Language("RegExp") vararg regex: String): List<Regex> {
         validateKey(key)
-        return regexLists.getOrPut(key) {
-            regex.map(::Regex).toList()
+        val regexList = regexLists[key]
+        if (regexList != null) return regexList
+
+        // We try to get the regex from single regexes if it fails from regexes, in case
+        // in the future a key changes between a list or a single regex
+        // If we are trying to create the JSON, we ignore this
+        if (!RegexData.isCreatingJson) {
+            val normalRegex = regexes[key]
+            if (normalRegex != null) return listOf(normalRegex)
         }
+
+        val newRegexes = regex.map(::Regex)
+        regexLists[key] = newRegexes
+        return newRegexes
     }
 
     fun group(prefix: String) = RegexGroup(prefix)
 
+    // TODO: maybe remove uppercase letters from allowed chars in keys?
+    private fun isValidChar(char: Char): Boolean {
+        return char.isLetterOrDigit() || char == '.' || char == '-' || char == '_'
+    }
+
     private fun validateKey(key: String) {
         if (!McClient.isDev) return
-        if (key in usedKeys) error("Regex Key $key is already in use")
+        require(key !in usedKeys) { "Regex Key '$key' is already in use" }
+        require("@value" !in key) { "Regex key '$key' cannot contain '@value'" }
+        require(key.split(".").none(String::isBlank)) { "Regex key '$key' has at least 2 '.' in a row, or ends/starts with '.'" }
+        require(key.all(::isValidChar)) { "Regex key '$key' contains illegal characters" }
         usedKeys += key
     }
 
     @JvmStatic
     @ApiStatus.Internal
-    fun load() {
-        if (McClient.isDev) return
-        runCatchBlocking {
-            val result = Http.getResult<JsonObject>(URL)
-            val json = result.getOrNull() ?: return@runCatchBlocking
-            json.entrySet().forEach { (key, value) ->
-                if (value is JsonArray) {
-                    regexLists[key] = value.filter { it.isString }.map { it.asString }.map(::Regex).toList()
-                } else if (value.isString) {
-                    regexes[key] = Regex(value.asString)
-                }
-            }
-        }
+    fun dumpRegexes(path: Path) {
+        SkyBlockAPI.info("Dumping ${regexes.size} regexes and ${regexLists.size} regex lists into ${path.absolutePathString()}")
+        val json = context(regexes, regexLists) { RegexData.createJson() }
+        path.createParentDirectories()
+        path.writeText(json.toPrettyString())
     }
 }
 

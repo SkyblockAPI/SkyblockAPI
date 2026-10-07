@@ -17,7 +17,7 @@
         ],
         "main": [
             {
-                "value": "tech.thatgravyboat.skyblockapi.utils.regex.Regexes::load"
+                "value": "tech.thatgravyboat.skyblockapi.utils.regex.RegexData::load"
             },
             {
                 "value": "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::init"
