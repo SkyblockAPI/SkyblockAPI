@@ -32,10 +32,10 @@ jobs:
             -   run: chmod +x gradlew
 
             -   name: Update API baseline
-                run: ./gradlew updateLegacyAbi || true
+                run: ./gradlew updateKotlinAbi || true
 
             -   name: Generate API Diffs
-                run: ./.github/scripts/compare_dumps.main.kts >> api.removed || true
+                run: ./.github/scripts/compare_dumps.main.kts >> api.removed
 
             -   name: Check for breaking changes
                 env:

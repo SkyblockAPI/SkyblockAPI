@@ -15,7 +15,7 @@ fun Path.executeCommand(vararg args: String) {
 
 val failed = mutableListOf<String>()
 
-__FILE__.toPath().parent.parent.parent.resolve("versions").listDirectoryEntries().forEach {
+__FILE__.toPath().toAbsolutePath().parent.parent.parent.resolve("versions").listDirectoryEntries().forEach {
     val diff = it.resolve("diff")
     diff.executeCommand("git", "diff", "HEAD", "api/${it.fileName}.api")
     val content = diff.readText()
@@ -31,5 +31,4 @@ if (failed.isNotEmpty()) {
     failed.forEach {
         println(it)
     }
-    exitProcess(1)
 }
