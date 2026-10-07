@@ -10,7 +10,7 @@ permissions:
 
 # should hopefully cancel current actions when a newer one happens
 concurrency:
-    group: build-${{ github.ref_name }}
+    group: breaking-changes-${{ github.ref_name }}
     cancel-in-progress: true
 
 
