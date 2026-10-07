@@ -27,8 +27,7 @@ __FILE__.toPath().toAbsolutePath().parent.parent.parent.resolve("versions").list
 }
 
 if (failed.isNotEmpty()) {
-    println("Some elements have been removed!")
-    failed.forEach {
+    failed.distinct().forEach {
         println(it)
     }
 }
