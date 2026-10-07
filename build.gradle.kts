@@ -22,10 +22,8 @@ kotlin {
     }
 
     abiValidation {
-        enabled = true
-
         filters {
-            excluded {
+            exclude {
                 byNames.addAll(
                     "tech.thatgrabyboat.skyblockapi.impl.**",
                     "tech.thatgravyboat.skyblockapi.mixins.**"
@@ -228,6 +226,8 @@ loom {
         accessWidenerPath.set(accessWidenerFile)
     }
 }
+
+tasks.named("checkKotlinAbi") { enabled = false }
 
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }
 

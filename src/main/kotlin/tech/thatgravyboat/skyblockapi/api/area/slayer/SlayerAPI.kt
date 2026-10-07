@@ -8,14 +8,15 @@ import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.*
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
+import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.*
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
-import tech.thatgravyboat.skyblockapi.utils.text.Text
 import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Instant
@@ -39,7 +40,7 @@ object SlayerAPI {
     )
     private val questStarted = chatSlayerGroup.create("started", "\\s+SLAYER QUEST STARTED!")
     private val questCompleted = chatSlayerGroup.create("completed", "\\s+SLAYER QUEST COMPLETE!")
-    private val nametagEndRegex = nameTagGroup.create("end", ".*[❤\uE010] [✯\uE01A]")
+    private val nametagRegex = nameTagGroup.create("nametag", "\\[Lv\\d+] ☠ .*[❤\uE010] [✯\uE01A]")
 
     var type: SlayerType? = null
         private set
@@ -58,6 +59,7 @@ object SlayerAPI {
         private set
 
     var questFinished: Instant = Instant.DISTANT_PAST
+        private set
 
     @Subscription
     fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
@@ -133,23 +135,19 @@ object SlayerAPI {
         }
     }
 
-    private fun isSlayerLine(line: String) = line.startsWith("☠") || nametagEndRegex.match(line)
+    private fun isSlayerLine(line: String) = nametagRegex.match(line)
 
-    @Subscription
-    fun onRegisterCommands(event: RegisterCommandsEvent) {
-        event.register("sbapi slayer") {
-            thenCallback("progress") {
-                val progress = progress
-                if (progress == null) {
-                    Text.sendDebug("No slayer progress found.")
-                    return@thenCallback
-                }
-                Text.sendDebug(
-                    "Slayer Progress: ${progress.current}/${progress.max}" +
-                        "(${progress::class.simpleName}) [${progress.percentage.toFormattedString()}%]",
-                )
-            }
+    @ApiDebug("Slayer")
+    internal fun debug(builder: DebugBuilder) = with(builder) {
+        fields(::type, ::level, ::text)
+        val progress = this@SlayerAPI.progress
+        if (progress == null) field(::progress)
+        else {
+            field("progressType", progress::class.simpleName)
+            field("progress", "${progress.current}/${progress.max}")
+            field("progressPercentage", progress.percentage.toFormattedString())
         }
+        fields(::lastType, ::lastLevel, ::questFinished)
     }
 
     @Subscription
@@ -157,8 +155,8 @@ object SlayerAPI {
         slayerBosses.remove(event.entity)
     }
 
-    @Subscription
-    fun onWorldChange(event: ServerChangeEvent) {
+    @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
+    fun onWorldChange() {
         slayerBosses.clear()
     }
 }

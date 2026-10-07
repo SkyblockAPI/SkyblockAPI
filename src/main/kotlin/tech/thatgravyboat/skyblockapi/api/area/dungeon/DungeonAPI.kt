@@ -13,7 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -302,16 +302,14 @@ object DungeonAPI {
         bloodOpened = false
     }
 
-    @Subscription
-    fun onIslandChange(event: IslandChangeEvent) {
-        reset()
-    }
+    @Subscription(IslandChangeEvent::class)
+    fun onIslandChange() = reset()
 
     private fun milestoneCharToInt(char: Char): Int = if (char in '❶'..'❾') '❶'.code - char.code + 1 else 0
 
     @Subscription
-    fun onRegisterCommands(event: RegisterCommandsEvent) {
-        event.register("sbapi dungeon") {
+    internal fun onRegisterCommands(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("dungeon") {
             thenCallback("copy teammates") {
                 McClient.clipboard = teammates.toString()
                 Text.sendDebug("Copied Dungeon teammates to clipboard")

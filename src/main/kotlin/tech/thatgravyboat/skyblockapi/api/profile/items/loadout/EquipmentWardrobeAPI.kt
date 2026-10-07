@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
@@ -139,14 +139,14 @@ object EquipmentWardrobeAPI {
         if (inWardrobe) processInventory(event.title, event.itemStacks)
     }
 
-    @Subscription
-    fun onInventoryClose(event: ContainerCloseEvent) {
+    @Subscription(ContainerCloseEvent::class)
+    fun onInventoryClose() {
         inWardrobe = false
         currentPage = 0
     }
 
-    @Subscription
-    fun onProfileSwitch(event: ProfileChangeEvent) {
+    @Subscription(ProfileChangeEvent::class)
+    fun onProfileSwitch() {
         val slotCount = max(
             slots.size.roundToNextMultipleOf(WARDROBE_SLOTS_PER_PAGE),
             WARDROBE_SLOTS_PER_PAGE * 3,
@@ -173,26 +173,22 @@ object EquipmentWardrobeAPI {
     private fun ItemStack.takeOrEmpty() = takeIf { it !in ItemTag.GLASS_PANES } ?: ItemStack.EMPTY
 
     @Subscription
-    fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.register("sbapi wardrobe equipment") {
+    internal fun onCommandsRegistration(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("wardrobe equipment") {
             then("copy") {
                 callback {
                     val currentSlot = "Current Slot: $currentSlot"
                     val slots =
                         slots.map { "Id: ${it.id} - Equipment: ${it.slots.map { a -> a.hoverName.stripped }} - Locked: ${it.locked}" }
 
-                    Text.of("[SkyBlockAPI] Copied Equipment Wardrobe Data to clipboard.") {
-                        this.color = TextColor.YELLOW
-                    }.send()
+                    Text.sendDebug("Copied Equipment Wardrobe Data to clipboard.")
 
                     McClient.clipboard = "$currentSlot\n${slots.joinToString("\n")}"
                 }
             }
             then("reset") {
                 callback {
-                    Text.of("[SkyBlockAPI] Reset Equipment Wardrobe Data.") {
-                        this.color = TextColor.YELLOW
-                    }.send()
+                    Text.sendDebug("Reset Equipment Wardrobe Data.")
                     LoadoutStorage.clearEquipment()
                 }
             }

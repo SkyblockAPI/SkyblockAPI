@@ -12,7 +12,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.FriendEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -185,37 +185,37 @@ object FriendsAPI {
     }
 
     @Subscription
-    fun onCommandsRegistration(event: RegisterCommandsEvent) {
+    internal fun onCommandsRegistration(event: RegisterSkyblockApiCommandsEvent) {
         val provider = SuggestionProvider<FabricClientCommandSource> { _, builder ->
             val friends = friends.map { it.name }
             SharedSuggestionProvider.suggest(friends, builder)
         }
-        event.register("sbapi friends") {
+        event.register("friends") {
             then("add name", StringArgumentType.string()) {
                 callback {
                     val name = StringArgumentType.getString(this, "name") ?: return@callback
                     FriendStorage.removeFriend(name)
                     FriendStorage.addFriend(name)
-                    Text.debug("Added $name to friends list.").send()
+                    Text.sendDebug("Added $name to friends list.")
                 }
             }
             then("remove name", StringArgumentType.string(), provider) {
                 callback {
                     val name = StringArgumentType.getString(this, "name") ?: return@callback
                     FriendStorage.removeFriend(name)
-                    Text.debug("Removed $name from friends list.").send()
+                    Text.sendDebug("Removed $name from friends list.")
                 }
             }
             then("list") {
                 callback {
                     val friends = friends
                     if (friends.isEmpty()) {
-                        Text.debug("You have no friends. :(").send()
+                        Text.sendDebug("You have no friends. :(")
                         return@callback
                     }
-                    Text.debug("Friends (${friends.size}):").send()
+                    Text.sendDebug("Friends (${friends.size}):")
                     friends.forEach { friend ->
-                        Text.debug(" - ${friend.name}") {
+                        Text.sendDebug(" - ${friend.name}") {
                             if (friend.bestFriend) {
                                 val friendText = Text.of(" (Best Friend)") {
                                     this.color = TextColor.GREEN
@@ -229,7 +229,7 @@ object FriendsAPI {
                                 }
                                 append(friendText)
                             }
-                        }.send()
+                        }
                     }
                 }
             }
@@ -238,7 +238,7 @@ object FriendsAPI {
                     val name = StringArgumentType.getString(this, "name") ?: return@callback
                     val friend = FriendStorage.getFriend(name)
                     if (friend == null) {
-                        Text.debug("$name is not your friend.").send()
+                        Text.sendDebug("$name is not your friend.")
                         return@callback
                     }
                     val bestFriend = if (friend.bestFriend) "Best Friend" else "Friend"
@@ -246,7 +246,7 @@ object FriendsAPI {
                         this.color = TextColor.GREEN
                         this.bold = friend.bestFriend
                     }
-                    Text.debug("${friend.name} is your ") {
+                    Text.sendDebug("${friend.name} is your ") {
                         append(friendText)
                         if (friend.nickname != null) {
                             val nicknameText = Text.of(" (Nick: ${friend.nickname})") {
@@ -254,19 +254,19 @@ object FriendsAPI {
                             }
                             append(nicknameText)
                         }
-                    }.send()
+                    }
                 }
             }
             then("clear") {
                 callback {
                     FriendStorage.clear()
-                    Text.debug("Cleared friends list.").send()
+                    Text.sendDebug("Cleared friends list.")
                 }
             }
         }
     }
 
-    @Subscription
-    fun onDisconnect(event: ServerDisconnectEvent) = resetListSearch()
+    @Subscription(ServerDisconnectEvent::class)
+    fun onDisconnect() = resetListSearch()
 
 }

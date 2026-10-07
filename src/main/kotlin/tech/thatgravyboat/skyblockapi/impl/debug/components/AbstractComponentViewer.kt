@@ -10,13 +10,12 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.nbt.Tag
-import net.minecraft.nbt.TextComponentTagVisitor
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
@@ -24,15 +23,12 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
-import tech.thatgravyboat.skyblockapi.utils.text.JsonVisualizer
-import tech.thatgravyboat.skyblockapi.utils.text.NbtVisualizer
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 import tech.thatgravyboat.skyblockapi.utils.text.asComponent
-import kotlin.math.sign
 
 val BACKGROUND = Identifier.withDefaultNamespace("popup/background")
 
@@ -59,12 +55,12 @@ class AbstractComponentViewer(val map: Map<ComponentViewerCategory, ComponentVie
         }
 
         @Subscription
-        fun onCommandsRegistration(event: RegisterCommandsEvent) {
-            event.register("sbapi view") {
+        internal fun onCommandsRegistration(event: RegisterSkyblockApiCommandsEvent) {
+            event.register("view") {
                 thenCallback("entity") {
                     val hoveredEntity = McClient.self.crosshairPickEntity
                     if (hoveredEntity == null) {
-                        Text.debug("No entity is currently hovered.").send()
+                        Text.sendDebug("No entity is currently hovered.")
                     } else {
                         open(hoveredEntity)
                     }
@@ -72,7 +68,7 @@ class AbstractComponentViewer(val map: Map<ComponentViewerCategory, ComponentVie
                 thenCallback("item") {
                     val heldItem = McPlayer.heldItem.takeUnless { it.isEmpty }
                     if (heldItem == null) {
-                        Text.debug("No item is currently held.").send()
+                        Text.sendDebug("No item is currently held.")
                     } else {
                         open(heldItem)
                     }

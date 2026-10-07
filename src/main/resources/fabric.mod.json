@@ -5,6 +5,7 @@
     "name": "skyblock-api",
     "license": "MIT",
     "icon": "assets/skyblockapi/icon.png",
+    "environment": "client",
     "mixins": [
         "skyblock-api.mixins.json"
     ],

@@ -14,6 +14,7 @@ private const val HOUR_IN_MILLIS = 50000L
 private const val MINUTE_IN_MILLIS = 833L
 private const val SECOND_IN_MILLIS = 13L
 
+@Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.SkyBlockInstant"))
 data class SkyBlockInstant(val instant: Instant) {
 
     constructor(
@@ -75,9 +76,20 @@ data class SkyBlockInstant(val instant: Instant) {
     }
 }
 
+@Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockSeconds"))
 val Int.skyblockSeconds: Duration get() = (this * SECOND_IN_MILLIS).milliseconds
+
+@Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockMinutes"))
 val Int.skyblockMinutes: Duration get() = (this * MINUTE_IN_MILLIS).milliseconds
+
+@Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockHours"))
 val Int.skyblockHours: Duration get() = (this * HOUR_IN_MILLIS).milliseconds
+
+@Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockDays"))
 val Int.skyblockDays: Duration get() = (this * DAY_IN_MILLIS).milliseconds
+
+@Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockMonths"))
 val Int.skyblockMonths: Duration get() = (this * MONTH_IN_MILLIS).milliseconds
+
+@Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockYears"))
 val Int.skyblockYears: Duration get() = (this * YEAR_IN_MILLIS).milliseconds

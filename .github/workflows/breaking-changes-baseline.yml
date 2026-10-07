@@ -10,7 +10,7 @@ permissions:
 
 # should hopefully cancel current actions when a newer one happens
 concurrency:
-    group: build-${{ github.ref_name }}
+    group: breaking-changes-baseline-${{ github.ref_name }}
     cancel-in-progress: true
 
 jobs:
@@ -43,7 +43,7 @@ jobs:
                 env:
                     GH_TOKEN: ${{ secrets.BOT_TOKEN }}
                 run: |
-                    if ! $(git diff --exit-code versions/26.2/api/26.2.api);
+                    if ! $(git diff --exit-code versions/26.2/api/26.2.api) || ! $(git diff --exit-code versions/26.3/api/26.3.api);
                     then
                         git config --global user.email "meowtomation@users.noreply.github.com"
                         git config --global user.name "meowtomation"
