@@ -10136,6 +10136,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/TextProperties {
 
 public final class tech/thatgravyboat/skyblockapi/utils/text/TextStyle {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/utils/text/TextStyle;
+	public final fun clickEvent (Lnet/minecraft/network/chat/MutableComponent;Lkotlin/jvm/functions/Function0;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun getBold (Lnet/minecraft/network/chat/Component;)Z
 	public final fun getBold (Lnet/minecraft/network/chat/MutableComponent;)Z
 	public final fun getClipboard (Lnet/minecraft/network/chat/Component;)Ljava/lang/String;
@@ -10166,6 +10167,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/TextStyle {
 	public final fun getUri (Lnet/minecraft/network/chat/MutableComponent;)Ljava/net/URI;
 	public final fun getUrl (Lnet/minecraft/network/chat/Component;)Ljava/lang/String;
 	public final fun getUrl (Lnet/minecraft/network/chat/MutableComponent;)Ljava/lang/String;
+	public final fun hoverEvent (Lnet/minecraft/network/chat/MutableComponent;Lkotlin/jvm/functions/Function0;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun onClick (Lnet/minecraft/network/chat/MutableComponent;Lkotlin/jvm/functions/Function0;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun setBold (Lnet/minecraft/network/chat/MutableComponent;Z)V
 	public final fun setClipboard (Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/String;)V
