@@ -1,4 +1,4 @@
-package tech.thatgravyboat.skyblockapi.mixins;
+package tech.thatgravyboat.skyblockapi.mixins.events;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
