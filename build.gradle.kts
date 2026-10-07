@@ -227,6 +227,8 @@ loom {
     }
 }
 
+tasks.named("checkKotlinAbi") { enabled = false }
+
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }
 
 tasks.named<Jar>("jar") {

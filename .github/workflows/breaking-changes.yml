@@ -35,10 +35,7 @@ jobs:
                 run: ./gradlew updateLegacyAbi || true
 
             -   name: Generate API Diffs
-                run: |
-                    git diff versions/26.3/api/26.3.api | grep "^-[^-]" >> api.removed || true
-                    git diff versions/26.2/api/26.2.api | grep "^-[^-]" >> api.removed || true
-                    git diff versions/26.1/api/26.1.api | grep "^-[^-]" >> api.removed || true
+                run: ./.github/scripts/compare_dumps.main.kts >> api.removed || true
 
             -   name: Check for breaking changes
                 env:
