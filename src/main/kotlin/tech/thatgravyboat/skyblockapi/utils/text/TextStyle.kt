@@ -52,6 +52,16 @@ object TextStyle {
         return this
     }
 
+    fun MutableComponent.hoverEvent(init: () -> HoverEvent?): MutableComponent {
+        this.style { withHoverEvent(init.invoke()) }
+        return this
+    }
+
+    fun MutableComponent.clickEvent(init: () -> ClickEvent?): MutableComponent {
+        this.style { withClickEvent(init.invoke()) }
+        return this
+    }
+
     fun MutableComponent.onClick(runnable: () -> Unit): MutableComponent = this.style {
         val event = ClickEvent.SuggestCommand("SkyBlockAPI OnClick Action")
         @Suppress("KotlinConstantConditions")
@@ -76,7 +86,7 @@ object TextStyle {
     var MutableComponent.hover: Component?
         get() = hover()
         set(value) {
-            this.style { withHoverEvent(value?.let { HoverEvent.ShowText(it) }) }
+            this.hoverEvent { value?.let { HoverEvent.ShowText(it) } }
         }
 
 
@@ -86,7 +96,7 @@ object TextStyle {
     var MutableComponent.clipboard: String?
         get() = clipboard()
         set(value) {
-            this.style { withClickEvent(value?.let { ClickEvent.CopyToClipboard(it) }) }
+            this.clickEvent { value?.let { ClickEvent.CopyToClipboard(it) } }
         }
 
 
@@ -96,7 +106,7 @@ object TextStyle {
     var MutableComponent.command: String?
         get() = command()
         set(value) {
-            this.style { withClickEvent(value?.let { ClickEvent.RunCommand(it) }) }
+            this.clickEvent { value?.let { ClickEvent.RunCommand(it) } }
         }
 
 
@@ -106,7 +116,7 @@ object TextStyle {
     var MutableComponent.suggest: String?
         get() = suggest()
         set(value) {
-            this.style { withClickEvent(value?.let { ClickEvent.SuggestCommand(it) }) }
+            this.clickEvent { value?.let { ClickEvent.SuggestCommand(it) } }
         }
 
 
@@ -116,7 +126,7 @@ object TextStyle {
     var MutableComponent.customPayloadClick: ClickEvent.Custom?
         get() = customPayloadClick()
         set(value) {
-            this.style { withClickEvent(value) }
+            this.clickEvent { value }
         }
 
 
@@ -126,7 +136,7 @@ object TextStyle {
     var MutableComponent.uri: URI?
         get() = uri()
         set(value) {
-            this.style { withClickEvent(value?.let { ClickEvent.OpenUrl(it) }) }
+            this.clickEvent { value?.let { ClickEvent.OpenUrl(it) } }
         }
 
 
