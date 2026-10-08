@@ -39,7 +39,7 @@ jobs:
 
             -   name: Check for breaking changes
                 env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    GH_TOKEN: ${{ secrets.COMMENT_TOKEN }}
                 run: |
                     if grep -q '[^[:space:]]' < api.removed
                     then
