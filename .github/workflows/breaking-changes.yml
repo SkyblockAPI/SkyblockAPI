@@ -1,7 +1,7 @@
 name: Breaking Changes Checker
 
 on:
-    pull_request:
+    pull_request_target:
         branches: [ "4.0" ]
 
 permissions:
@@ -20,6 +20,19 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v5
+                with:
+                    allow-unsafe-pr-checkout: 'true' # we won't execute any code if any *.gradle file was changes
+                    ref: ${{ github.event.pull_request.head.sha }}
+
+            -   name: Fail if build files are changed
+                if: ${{ github.event.pull_request.head.repo.owner.name == 'SkyblockAPI' || github.event.pull_request.head.repo.owner.name == 'j10a1n15' }}
+                run: |
+                    if git diff --name-only ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -E ".*gradle.*|buildSrc/,*"; then
+                        echo "Unable to check for breaking changes!" >> comment
+                        echo "Build file modifications have been detected, please revert them to run checks!" >> comment
+                        gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
+                        exit 1
+                    fi
 
             -   name: Setup JDK 25
                 uses: actions/setup-java@v5
