@@ -25,7 +25,7 @@ jobs:
                     ref: ${{ github.event.pull_request.head.sha }}
 
             -   name: Fail if build files are changed
-                if: ${{ github.event.pull_request.head.repo.owner.name == 'SkyblockAPI' || github.event.pull_request.head.repo.owner.name == 'j10a1n15' }}
+                if: ${{ github.event.pull_request.head.repo.owner.name != 'SkyblockAPI' && github.event.pull_request.head.repo.owner.name != 'j10a1n15' }}
                 run: |
                     if git diff --name-only ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -E ".*gradle.*|buildSrc/,*"; then
                         echo "Unable to check for breaking changes!" >> comment
