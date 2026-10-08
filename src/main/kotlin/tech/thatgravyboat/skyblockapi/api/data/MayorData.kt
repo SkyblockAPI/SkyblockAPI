@@ -80,7 +80,13 @@ object MayorCandidates {
         id: String = candidateName.toScreamingSnakeCase(),
         isSpecial: Boolean = false,
     ): MayorCandidate {
-        return _mayors.getOrPut(id) { MayorCandidate(id, candidateName, perks.toMutableSet(), isSpecial) }
+        val mayor = _mayors[id]
+        if (mayor != null) return mayor
+        val candidateByName = getCandidate(candidateName)
+        if (candidateByName != null) return candidateByName
+        val newCandidate = MayorCandidate(id, candidateName, perks.toMutableSet(), isSpecial)
+        _mayors[id] = newCandidate
+        return newCandidate
     }
 }
 
@@ -233,6 +239,14 @@ object MayorPerks {
     fun getPerk(perkName: String) = perks.find { it.perkName == perkName }
 
     internal fun register(perkName: String, id: String = perkName.toScreamingSnakeCase(), perkpocalypse: Boolean = true): MayorPerk {
-        return _perks.getOrPut(id) { MayorPerk(id, perkName, perkpocalypse = perkpocalypse) }
+        val perk = _perks[id]
+        if (perk != null) return perk
+        // we check for name because we call this in ElectionAPI.handlePerk without passing the id,
+        // so perks that have a different id specified to them would break
+        val perkByName = getPerk(perkName)
+        if (perkByName != null) return perkByName
+        val newPerk = MayorPerk(id, perkName, perkpocalypse = perkpocalypse)
+        _perks[id] = newPerk
+        return newPerk
     }
 }
