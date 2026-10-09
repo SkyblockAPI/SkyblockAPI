@@ -31,11 +31,11 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
 
-//? >= 26.3
-import com.mojang.blaze3d.Blaze3D
 //? >= 26.2
 import net.minecraft.client.gui.Hud
-//? < 26.3
+//? >= 26.3
+import com.mojang.blaze3d.Blaze3D
+//? else
 //import net.minecraft.util.Util
 
 object McClient {
