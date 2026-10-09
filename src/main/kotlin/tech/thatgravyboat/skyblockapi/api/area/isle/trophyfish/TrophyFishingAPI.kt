@@ -126,12 +126,12 @@ public object TrophyFishingAPI {
 
     @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
     @Suppress("DEPRECATION")
-    internal fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
+    public fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
         return TrophyFishStorage.getCaught(type).map { TrophyFishTier.valueOf(it.key.name) to it.value }.toMap()
     }
 
     @JvmName("getCaughtTiers")
-    internal fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
+    public fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
         return TrophyFishStorage.getCaught(type)
     }
 }
