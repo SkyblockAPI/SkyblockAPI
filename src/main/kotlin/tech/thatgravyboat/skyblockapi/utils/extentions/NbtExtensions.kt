@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.utils.extentions
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.world.item.component.CustomData
-import java.util.*
+import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf

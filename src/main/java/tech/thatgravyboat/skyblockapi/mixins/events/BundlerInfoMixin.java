@@ -3,13 +3,16 @@ package tech.thatgravyboat.skyblockapi.mixins.events;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.network.PacketListener;
-import net.minecraft.network.protocol.*;
+import net.minecraft.network.protocol.BundleDelimiterPacket;
+import net.minecraft.network.protocol.BundlePacket;
+import net.minecraft.network.protocol.BundlerInfo;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.PacketType;
 import net.minecraft.network.protocol.game.GamePacketTypes;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;

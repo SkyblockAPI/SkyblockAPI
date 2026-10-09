@@ -19,7 +19,6 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.CommandBuilder
-import tech.thatgravyboat.skyblockapi.api.events.misc.LiteralCommandBuilder
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
@@ -32,7 +31,6 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import java.util.concurrent.CompletableFuture
-import kotlin.math.max
 import kotlin.reflect.KMutableProperty1
 
 public abstract class RepoItemCache<K>(private val name: String) {

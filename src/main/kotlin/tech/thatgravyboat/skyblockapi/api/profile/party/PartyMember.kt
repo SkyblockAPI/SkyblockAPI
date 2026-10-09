@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.party
 
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerCacheStorage
-import java.util.*
+import java.util.UUID
 
 public class PartyMember internal constructor(uuid: UUID?, role: PartyRole = PartyRole.MEMBER, online: Boolean = true) {
 

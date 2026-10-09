@@ -4,7 +4,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.StringDecomposer
-import java.util.*
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 public enum class StateResult(public val match: Boolean, public val continuation: Boolean) {

@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
-import java.util.*
+import java.util.EnumSet
 
 // todo: move into enum extensions with 1.21.6
 

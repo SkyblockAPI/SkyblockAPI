@@ -1,8 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.museum
 
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+
 //? < 26.2
 //import tech.thatgravyboat.skyblockapi.RemoveNextVersion
-import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 public enum class MuseumCategory(internal val deprecated: Boolean = false) {
     COMBAT,

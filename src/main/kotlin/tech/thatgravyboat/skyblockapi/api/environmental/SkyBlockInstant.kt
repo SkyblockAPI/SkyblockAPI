@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.environmental
 
 import org.jetbrains.annotations.Range
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
-import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Instant

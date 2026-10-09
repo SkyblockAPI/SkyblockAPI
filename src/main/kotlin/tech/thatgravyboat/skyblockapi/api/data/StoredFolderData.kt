@@ -3,9 +3,13 @@ package tech.thatgravyboat.skyblockapi.api.data
 
 import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.helpers.McClient
 import java.nio.file.Path
-import kotlin.io.path.*
+import kotlin.io.path.createDirectories
+import kotlin.io.path.extension
+import kotlin.io.path.isRegularFile
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.nameWithoutExtension
+import kotlin.io.path.relativeTo
 
 internal class FolderStorage<T : Any>(
     private val version: Int = 0,

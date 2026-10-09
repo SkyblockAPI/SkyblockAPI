@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.impl
 
 import me.owdding.ktmodules.Module
 import net.fabricmc.loader.impl.util.FileSystemUtil
-import net.minecraft.util.ARGB.alpha
 import org.apache.commons.io.IOUtils
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription

@@ -1,8 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.hotm
 
 import me.owdding.ktmodules.Module
-import tech.thatgravyboat.repolib.api.recipes.Recipe
-import tech.thatgravyboat.repolib.api.recipes.ingredient.CraftingIngredient
 import tech.thatgravyboat.repolib.api.recipes.ingredient.ItemIngredient
 import tech.thatgravyboat.skyblockapi.api.data.CrystalStatus
 import tech.thatgravyboat.skyblockapi.api.data.CrystalType

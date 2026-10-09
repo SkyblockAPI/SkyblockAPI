@@ -2,13 +2,14 @@ package tech.thatgravyboat.skyblockapi.api.datatype
 
 import net.minecraft.world.item.ItemStack
 import org.jetbrains.annotations.ApiStatus
-//? < 26.2
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 import tech.thatgravyboat.skyblockapi.utils.extentions.getCompoundTagFunctionByType
 import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
+
+//? < 26.2
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
 public class DataType<T> private constructor(
     public val id: String,

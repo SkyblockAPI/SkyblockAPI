@@ -7,7 +7,6 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.JsonOps
 import net.minecraft.data.registries.VanillaRegistries
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtOps
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component

@@ -14,7 +14,6 @@ import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import tech.thatgravyboat.skyblockapi.hooks.GuiGraphicsHook;
-
 import java.util.List;
 import java.util.Optional;
 

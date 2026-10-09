@@ -42,6 +42,7 @@ internal interface InventoryIdResolver : IdResolver {
 
     context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
     fun ItemStack.isApplicable(): Boolean
+
     context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
     fun ItemStack.resolveId(): SkyBlockId?
 }
@@ -58,6 +59,8 @@ internal enum class IdResolverKind {
 
     private val resolvers: MutableSet<IdResolver> = LinkedHashSet()
 
+    fun entries(): Set<IdResolver> = resolvers
+
     @Module
     companion object {
         init {
@@ -68,13 +71,10 @@ internal enum class IdResolverKind {
                 }
             }
             IdResolverKind.entries.forEach {
-                val sorted = it.resolvers.sortedWith(Comparator.comparingInt(IdResolver::priority).reversed())
-                it.resolvers.replaceWith(sorted)
+                it.resolvers.replaceWith(it.resolvers.sortedByDescending(IdResolver::priority))
             }
         }
     }
-
-    fun entries(): Set<IdResolver> = resolvers
 }
 
 @Retention(AnnotationRetention.SOURCE)

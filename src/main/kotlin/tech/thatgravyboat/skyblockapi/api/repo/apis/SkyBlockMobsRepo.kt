@@ -7,7 +7,6 @@ import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.mobs.LootTable
 import tech.thatgravyboat.repolib.api.mobs.Mob
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
-import tech.thatgravyboat.skyblockapi.utils.extentions.compoundTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.toData
 import kotlin.jvm.optionals.getOrNull
 

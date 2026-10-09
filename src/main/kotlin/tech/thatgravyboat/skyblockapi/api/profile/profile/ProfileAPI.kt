@@ -23,7 +23,6 @@ import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
-import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
@@ -31,7 +30,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
-import java.util.*
+import java.util.UUID
 
 @Module
 public object ProfileAPI {
