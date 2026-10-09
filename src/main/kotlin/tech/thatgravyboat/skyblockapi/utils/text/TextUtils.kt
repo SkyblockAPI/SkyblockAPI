@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.extentions.associateByNotNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
-import java.util.*
+import java.util.Optional
 import net.minecraft.network.chat.TextColor as McTextColor
 
 object TextUtils {

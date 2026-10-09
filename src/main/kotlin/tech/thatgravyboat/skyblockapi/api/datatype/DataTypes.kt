@@ -3,10 +3,14 @@ package tech.thatgravyboat.skyblockapi.api.datatype
 import net.minecraft.world.item.Item
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
-import tech.thatgravyboat.skyblockapi.api.datatype.defaults.*
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GemstoneSlotData
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.GenericDataTypes.PetData
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.LoreDataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.MiningDataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.PersonalAccessoryDataTypes
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
-import java.util.*
+import java.util.UUID
 import kotlin.time.Duration
 import kotlin.time.Instant
 

@@ -4,7 +4,11 @@ import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.recipes.CraftingRecipe
 import tech.thatgravyboat.repolib.api.recipes.ForgeRecipe
 import tech.thatgravyboat.repolib.api.recipes.Recipe
-import tech.thatgravyboat.repolib.api.recipes.ingredient.*
+import tech.thatgravyboat.repolib.api.recipes.ingredient.AttributeIngredient
+import tech.thatgravyboat.repolib.api.recipes.ingredient.CraftingIngredient
+import tech.thatgravyboat.repolib.api.recipes.ingredient.EnchantmentIngredient
+import tech.thatgravyboat.repolib.api.recipes.ingredient.ItemIngredient
+import tech.thatgravyboat.repolib.api.recipes.ingredient.PetIngredient
 
 object RepoRecipeAPI {
 

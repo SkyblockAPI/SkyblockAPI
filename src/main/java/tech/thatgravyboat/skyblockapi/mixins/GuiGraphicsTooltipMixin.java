@@ -21,7 +21,6 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.minecraft.ui.GatherItemTooltipComponentsEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderItemBarEvent;
 import tech.thatgravyboat.skyblockapi.hooks.GuiGraphicsHook;
-
 import java.util.ArrayList;
 import java.util.List;
 

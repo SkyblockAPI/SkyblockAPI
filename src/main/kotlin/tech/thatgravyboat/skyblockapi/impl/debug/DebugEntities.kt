@@ -33,7 +33,6 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonArray
 import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import kotlin.jvm.optionals.getOrNull
 
 @Module

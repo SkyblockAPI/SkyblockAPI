@@ -1,12 +1,12 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
-import kotlinx.coroutines.Runnable
 import java.lang.invoke.LambdaMetafactory
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 import java.lang.reflect.Method
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.function.Consumer
+import kotlinx.coroutines.Runnable
 
 internal class EventListeners {
 

@@ -18,13 +18,25 @@ ij_any_line_comment_add_space = true
 # Max line length
 max_line_length = 160
 
-[*.kt]
-ktlint_code_style = intellij_idea
+# Java Files
+[*.java]
+# Java files should not use wildcard imports
+ij_java_names_count_to_use_import_on_demand = 2147483647
+ij_java_class_count_to_use_import_on_demand = 2147483647
+ij_java_packages_to_use_import_on_demand = 2147483647
+ij_java_imports_layout = *,java.**,javax.**,kotlin.**,kotlinx.**,$*
 
+# Kotlin Files
+[*.{kt,kts}]
+ktlint_code_style = intellij_idea
+ij_kotlin_imports_layout = *,java.**,javax.**,kotlin.**,kotlinx.**,^
 # Kotlin files should not use wildcard imports
+ij_kotlin_name_count_to_use_star_import = 2147483647
+ij_kotlin_name_count_to_use_star_import_for_members = 2147483647
 ij_kotlin_enum_constants_wrap = split_into_lines
 ij_kotlin_allow_trailing_comma_on_call_site = true
 ij_kotlin_allow_trailing_comma = true
+ij_kotlin_packages_to_use_import_on_demand = unset
 
 ktlint_standard_multiline-if-else = disabled
 ktlint_standard_no-empty-first-line-in-class-body = disabled
@@ -46,7 +58,6 @@ ktlint_standard_argument-list-wrapping = disabled
 ktlint_standard_class-signature = disabled
 
 ktlint_standard_no-line-break-before-assignment = true
-ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_no-wildcard-imports = enabled
 ktlint_standard_function-expression-body = enabled
 ktlint_standard_annotation = disabled
-

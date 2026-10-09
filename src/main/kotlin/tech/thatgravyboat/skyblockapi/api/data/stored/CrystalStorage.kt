@@ -5,7 +5,6 @@ import tech.thatgravyboat.skyblockapi.api.data.CrystalStatus
 import tech.thatgravyboat.skyblockapi.api.data.CrystalType
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.profile.hotm.CrystalData
 import tech.thatgravyboat.skyblockapi.utils.text.Text

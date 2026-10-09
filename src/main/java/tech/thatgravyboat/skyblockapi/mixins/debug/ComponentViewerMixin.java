@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.Unique;
 import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentDataAttachable;
 import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentViewerCategory;
 import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentViewerData;
-
 import java.util.HashMap;
 import java.util.Map;
 

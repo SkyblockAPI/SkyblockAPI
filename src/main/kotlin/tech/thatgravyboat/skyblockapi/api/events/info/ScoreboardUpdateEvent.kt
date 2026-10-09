@@ -1,9 +1,10 @@
 package tech.thatgravyboat.skyblockapi.api.events.info
 
 import net.minecraft.network.chat.Component
+import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+
 //? < 26.2
 //import tech.thatgravyboat.skyblockapi.RemoveNextVersion
-import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 typealias ScoreboardChangeEvent = ScoreboardUpdateEvent
 
