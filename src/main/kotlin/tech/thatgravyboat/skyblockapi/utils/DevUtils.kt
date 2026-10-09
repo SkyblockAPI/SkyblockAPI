@@ -242,7 +242,7 @@ internal object SkyBlockApiDevUtils : DevUtils() {
     }
 
     @Subscription
-    fun commandRegister(event: RegisterCommandsEvent) = super.onCommandRegister(event)
+    private fun commandRegister(event: RegisterCommandsEvent) = super.onCommandRegister(event)
 }
 
 @Suppress("UNCHECKED_CAST")

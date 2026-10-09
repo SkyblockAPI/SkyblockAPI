@@ -111,7 +111,7 @@ internal data object RepoQueryCommands {
 
     @Subscription
     context(event: RegisterSkyblockApiCommandsEvent)
-    fun registerCommands() {
+    private fun registerCommands() {
         event.register("dev give query") {
             schemas.forEach { (name, schema) ->
                 createCommand(name, schema)

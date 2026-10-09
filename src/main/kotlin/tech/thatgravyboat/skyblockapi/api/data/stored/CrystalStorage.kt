@@ -37,7 +37,7 @@ internal object CrystalStorage {
     }
 
     @Subscription
-    fun onCommandRegister(event: RegisterSkyblockApiCommandsEvent) {
+    private fun onCommandRegister(event: RegisterSkyblockApiCommandsEvent) {
         event.register("crystal") {
             callback {
                 val statuses = crystalData.entries.joinToString(", ") { "${it.key.name}: ${it.value}" }

@@ -41,7 +41,7 @@ public object DateTimeAPI {
         get() = !isDay
 
     @Subscription
-    internal fun onScoreboardChange(event: ScoreboardUpdateEvent) {
+    private fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         dateRegex.anyMatch(event.added, "season", "day") { (season, day) ->
             this.season = SkyBlockSeason.parse(season)
             this.day = day.toIntValue()

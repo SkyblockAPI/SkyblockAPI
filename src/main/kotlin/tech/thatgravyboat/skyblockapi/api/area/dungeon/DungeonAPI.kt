@@ -303,7 +303,7 @@ public object DungeonAPI {
     }
 
     @Subscription(IslandChangeEvent::class)
-    public fun onIslandChange(): Unit = reset()
+    private fun onIslandChange(): Unit = reset()
 
     private fun milestoneCharToInt(char: Char): Int = if (char in '❶'..'❾') '❶'.code - char.code + 1 else 0
 

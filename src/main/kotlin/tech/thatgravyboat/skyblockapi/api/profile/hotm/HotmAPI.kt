@@ -24,7 +24,7 @@ public object HotmAPI : SkillTreeAPI<HotmData, HotmPerk, HotmAPI>(
     private var holdingBlueOmelette = false
 
     @Subscription
-    public fun onInventoryOpen(event: ContainerInitializedEvent) {
+    private fun onInventoryOpen(event: ContainerInitializedEvent) {
         holdingBlueOmelette = McPlayer.self?.mainHandItem?.getData(DataTypes.UPGRADE_MODULE).equals("GOBLIN_OMELETTE_BLUE_CHEESE", true)
     }
 

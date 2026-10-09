@@ -44,7 +44,7 @@ public abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreeP
         get() = storage.tier
 
     @Subscription(inherited = true)
-    public open fun onInventoryChange(event: InventoryChangeEvent) {
+    protected open fun onInventoryChange(event: InventoryChangeEvent) {
         if (!titleRegex.matches(event.title)) return
 
         val lore = event.item.getRawLore()

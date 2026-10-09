@@ -63,12 +63,12 @@ internal object PlayerCacheStorage {
     }
 
     @Subscription
-    fun onServerChange(event: ServerChangeEvent) {
+    private fun onServerChange(event: ServerChangeEvent) {
         if (shouldSave) save()
     }
 
     @Subscription
-    fun onDisconnect(event: ServerDisconnectEvent) = cleanupAndSave()
+    private fun onDisconnect(event: ServerDisconnectEvent) = cleanupAndSave()
 
     private fun save() {
         shouldSave = false

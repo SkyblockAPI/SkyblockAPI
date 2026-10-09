@@ -61,7 +61,7 @@ internal object TabListEventHandler {
     private val lastUnknownTabWidgetAlert = mutableMapOf<String, Instant>()
 
     @Subscription(ServerChangeEvent::class)
-    fun onServerChange() {
+    private fun onServerChange() {
         widgets.entries.clearAnd { (widget, old) ->
             TabWidgetChangeEvent(widget, old, emptyList(), emptyList()).post()
         }
@@ -72,7 +72,7 @@ internal object TabListEventHandler {
     @Subscription(TickEvent::class)
     @OnlyOnSkyBlock
     @TimePassed("1s")
-    fun onTick() {
+    private fun onTick() {
         val newTabList = McClient.tablist.take(TAB_LIST_LENGTH).map { it.displayName }.chunked(TAB_LIST_SECTION)
         val newStringTabList = newTabList.map { list -> list.map { it.stripped } }
 
@@ -83,7 +83,7 @@ internal object TabListEventHandler {
     }
 
     @Subscription
-    fun onTabListChange(event: TabListChangeEvent) {
+    private fun onTabListChange(event: TabListChangeEvent) {
         val lines = event.new.filter { it.isNotEmpty() && infoRegex.contains(it.first().stripped) }.flatMap { it.drop(1) }
 
         val widgetLines = mutableMapOf<TabWidget, Pair<List<Component>, MatchResult?>>()
@@ -167,7 +167,7 @@ internal object TabListEventHandler {
     }
 
     @Subscription
-    fun onPacketReceived(event: PacketReceivedEvent) {
+    private fun onPacketReceived(event: PacketReceivedEvent) {
         if (event.packet is ClientboundTabListPacket) {
             val oldHeader = this.header
             val oldFooter = this.footer
