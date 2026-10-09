@@ -73,7 +73,7 @@ data class LiteralComponentPart(val literal: String) : ComponentStatelessMachine
 data class WildcardComponentPart(val sink: CharSink, val maxLength: Int = 10000) : ComponentStatelessMachinePart {
     context(_: GroupSink)
     override fun tryConsume(index: Int, char: Char, style: Style): StateResult {
-        if (index <= maxLength && sink.tryConsume(char)) {
+        if (index < maxLength && sink.tryConsume(char)) {
             return StateResult.CONSUME
         }
 

@@ -123,9 +123,8 @@ object TextUtils {
         if (style.isBold) append(ChatFormatting.BOLD)
         if (style.isItalic) append(ChatFormatting.ITALIC)
         if (style.isUnderlined) append(ChatFormatting.UNDERLINE)
-        if (style.isStrikethrough) append(ChatFormatting.OBFUSCATED)
+        if (style.isStrikethrough) append(ChatFormatting.STRIKETHROUGH)
         if (style.isObfuscated) append(ChatFormatting.OBFUSCATED)
     }
 
 }
-
