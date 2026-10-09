@@ -326,6 +326,9 @@ public data class Plot(
     val aabb: AABB,
 ) {
     val isBarn: Boolean = id == 0
+    @get:JvmName("getTpName")
+    val _tpName: Any get() = if (isBarn) "barn" else id
+    @get:JvmName("tpName")
     val tpName: String = if (isBarn) "barn" else id.toString()
     val data: PlotData? get() = PlotsStorage.getPlot(id)
 
