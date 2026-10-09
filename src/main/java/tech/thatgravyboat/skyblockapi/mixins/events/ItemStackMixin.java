@@ -1,8 +1,6 @@
 package tech.thatgravyboat.skyblockapi.mixins.events;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import java.util.List;
-import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -17,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.screen.ItemTooltipEvent;
+import java.util.List;
+import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {

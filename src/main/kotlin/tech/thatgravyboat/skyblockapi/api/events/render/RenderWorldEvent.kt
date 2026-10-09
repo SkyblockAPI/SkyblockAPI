@@ -12,8 +12,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.pushPop
 
 sealed class RenderWorldEvent(
     val poseStack: PoseStack,
-    //? <= 26.1
-    //val buffer: MultiBufferSource,
     val submitNodeCollector: SubmitNodeCollector,
     val cameraPosition: Vec3,
     var cameraRotation: Quaternionf,
@@ -24,16 +22,12 @@ sealed class RenderWorldEvent(
 
     class AfterEntities(
         poseStack: PoseStack,
-        //? <= 26.1
-        //buffer: MultiBufferSource,
         submitNodeCollector: SubmitNodeCollector,
         cameraPosition: Vec3,
         cameraRotation: Quaternionf,
         partialTicks: Float,
     ) : RenderWorldEvent(
         poseStack,
-        //? <= 26.1
-        //buffer,
         submitNodeCollector,
         cameraPosition,
         cameraRotation,
@@ -42,16 +36,12 @@ sealed class RenderWorldEvent(
 
     class AfterTranslucent(
         poseStack: PoseStack,
-        //? <= 26.1
-        //buffer: MultiBufferSource,
         submitNodeCollector: SubmitNodeCollector,
         cameraPosition: Vec3,
         cameraRotation: Quaternionf,
         partialTicks: Float,
     ) : RenderWorldEvent(
         poseStack,
-        //? <= 26.1
-        //buffer,
         submitNodeCollector,
         cameraPosition,
         cameraRotation,
@@ -60,15 +50,11 @@ sealed class RenderWorldEvent(
 
     class CollectSubmits(
         poseStack: PoseStack,
-        //? <= 26.1
-        //buffer: MultiBufferSource,
         submitNodeCollector: SubmitNodeCollector,
         cameraPosition: Vec3,
         cameraRotation: Quaternionf,
     ) : RenderWorldEvent(
         poseStack,
-        //? <= 26.1
-        //buffer,
         submitNodeCollector,
         cameraPosition,
         cameraRotation,

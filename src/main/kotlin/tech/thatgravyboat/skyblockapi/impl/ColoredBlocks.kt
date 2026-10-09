@@ -1,12 +1,12 @@
 package tech.thatgravyboat.skyblockapi.impl
 
-import net.minecraft.world.level.block.Block
+//? < 26.4 {
+/*import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 
 @Suppress("unused")
 @Deprecated("With 26.1 dropped soon this will become useless, will be removed with 26.4")
 object ColoredBlocks {
-    //? >= 26.2 {
     val WHITE_WOOL: Block = Blocks.WOOL.white
     val ORANGE_WOOL: Block = Blocks.WOOL.orange
     val MAGENTA_WOOL: Block = Blocks.WOOL.magenta
@@ -142,141 +142,5 @@ object ColoredBlocks {
     val GREEN_SHULKER_BOX: Block = Blocks.DYED_SHULKER_BOX.green
     val RED_SHULKER_BOX: Block = Blocks.DYED_SHULKER_BOX.red
     val BLACK_SHULKER_BOX: Block = Blocks.DYED_SHULKER_BOX.black
-    //? } else {
-    /*val WHITE_WOOL: Block = Blocks.WHITE_WOOL
-    val ORANGE_WOOL: Block = Blocks.ORANGE_WOOL
-    val MAGENTA_WOOL: Block = Blocks.MAGENTA_WOOL
-    val LIGHT_BLUE_WOOL: Block = Blocks.LIGHT_BLUE_WOOL
-    val YELLOW_WOOL: Block = Blocks.YELLOW_WOOL
-    val LIME_WOOL: Block = Blocks.LIME_WOOL
-    val PINK_WOOL: Block = Blocks.PINK_WOOL
-    val GRAY_WOOL: Block = Blocks.GRAY_WOOL
-    val LIGHT_GRAY_WOOL: Block = Blocks.LIGHT_GRAY_WOOL
-    val CYAN_WOOL: Block = Blocks.CYAN_WOOL
-    val PURPLE_WOOL: Block = Blocks.PURPLE_WOOL
-    val BLUE_WOOL: Block = Blocks.BLUE_WOOL
-    val BROWN_WOOL: Block = Blocks.BROWN_WOOL
-    val GREEN_WOOL: Block = Blocks.GREEN_WOOL
-    val RED_WOOL: Block = Blocks.RED_WOOL
-    val BLACK_WOOL: Block = Blocks.BLACK_WOOL
-
-    val WHITE_STAINED_GLASS: Block = Blocks.WHITE_STAINED_GLASS
-    val ORANGE_STAINED_GLASS: Block = Blocks.ORANGE_STAINED_GLASS
-    val MAGENTA_STAINED_GLASS: Block = Blocks.MAGENTA_STAINED_GLASS
-    val LIGHT_BLUE_STAINED_GLASS: Block = Blocks.LIGHT_BLUE_STAINED_GLASS
-    val YELLOW_STAINED_GLASS: Block = Blocks.YELLOW_STAINED_GLASS
-    val LIME_STAINED_GLASS: Block = Blocks.LIME_STAINED_GLASS
-    val PINK_STAINED_GLASS: Block = Blocks.PINK_STAINED_GLASS
-    val GRAY_STAINED_GLASS: Block = Blocks.GRAY_STAINED_GLASS
-    val LIGHT_GRAY_STAINED_GLASS: Block = Blocks.LIGHT_GRAY_STAINED_GLASS
-    val CYAN_STAINED_GLASS: Block = Blocks.CYAN_STAINED_GLASS
-    val PURPLE_STAINED_GLASS: Block = Blocks.PURPLE_STAINED_GLASS
-    val BLUE_STAINED_GLASS: Block = Blocks.BLUE_STAINED_GLASS
-    val BROWN_STAINED_GLASS: Block = Blocks.BROWN_STAINED_GLASS
-    val GREEN_STAINED_GLASS: Block = Blocks.GREEN_STAINED_GLASS
-    val RED_STAINED_GLASS: Block = Blocks.RED_STAINED_GLASS
-    val BLACK_STAINED_GLASS: Block = Blocks.BLACK_STAINED_GLASS
-
-    val WHITE_TERRACOTTA: Block = Blocks.WHITE_TERRACOTTA
-    val ORANGE_TERRACOTTA: Block = Blocks.ORANGE_TERRACOTTA
-    val MAGENTA_TERRACOTTA: Block = Blocks.MAGENTA_TERRACOTTA
-    val LIGHT_BLUE_TERRACOTTA: Block = Blocks.LIGHT_BLUE_TERRACOTTA
-    val YELLOW_TERRACOTTA: Block = Blocks.YELLOW_TERRACOTTA
-    val LIME_TERRACOTTA: Block = Blocks.LIME_TERRACOTTA
-    val PINK_TERRACOTTA: Block = Blocks.PINK_TERRACOTTA
-    val GRAY_TERRACOTTA: Block = Blocks.GRAY_TERRACOTTA
-    val LIGHT_GRAY_TERRACOTTA: Block = Blocks.LIGHT_GRAY_TERRACOTTA
-    val CYAN_TERRACOTTA: Block = Blocks.CYAN_TERRACOTTA
-    val PURPLE_TERRACOTTA: Block = Blocks.PURPLE_TERRACOTTA
-    val BLUE_TERRACOTTA: Block = Blocks.BLUE_TERRACOTTA
-    val BROWN_TERRACOTTA: Block = Blocks.BROWN_TERRACOTTA
-    val GREEN_TERRACOTTA: Block = Blocks.GREEN_TERRACOTTA
-    val RED_TERRACOTTA: Block = Blocks.RED_TERRACOTTA
-    val BLACK_TERRACOTTA: Block = Blocks.BLACK_TERRACOTTA
-
-    val WHITE_STAINED_GLASS_PANE: Block = Blocks.WHITE_STAINED_GLASS_PANE
-    val ORANGE_STAINED_GLASS_PANE: Block = Blocks.ORANGE_STAINED_GLASS_PANE
-    val MAGENTA_STAINED_GLASS_PANE: Block = Blocks.MAGENTA_STAINED_GLASS_PANE
-    val LIGHT_BLUE_STAINED_GLASS_PANE: Block = Blocks.LIGHT_BLUE_STAINED_GLASS_PANE
-    val YELLOW_STAINED_GLASS_PANE: Block = Blocks.YELLOW_STAINED_GLASS_PANE
-    val LIME_STAINED_GLASS_PANE: Block = Blocks.LIME_STAINED_GLASS_PANE
-    val PINK_STAINED_GLASS_PANE: Block = Blocks.PINK_STAINED_GLASS_PANE
-    val GRAY_STAINED_GLASS_PANE: Block = Blocks.GRAY_STAINED_GLASS_PANE
-    val LIGHT_GRAY_STAINED_GLASS_PANE: Block = Blocks.LIGHT_GRAY_STAINED_GLASS_PANE
-    val CYAN_STAINED_GLASS_PANE: Block = Blocks.CYAN_STAINED_GLASS_PANE
-    val PURPLE_STAINED_GLASS_PANE: Block = Blocks.PURPLE_STAINED_GLASS_PANE
-    val BLUE_STAINED_GLASS_PANE: Block = Blocks.BLUE_STAINED_GLASS_PANE
-    val BROWN_STAINED_GLASS_PANE: Block = Blocks.BROWN_STAINED_GLASS_PANE
-    val GREEN_STAINED_GLASS_PANE: Block = Blocks.GREEN_STAINED_GLASS_PANE
-    val RED_STAINED_GLASS_PANE: Block = Blocks.RED_STAINED_GLASS_PANE
-    val BLACK_STAINED_GLASS_PANE: Block = Blocks.BLACK_STAINED_GLASS_PANE
-
-    val WHITE_CARPET: Block = Blocks.WHITE_CARPET
-    val ORANGE_CARPET: Block = Blocks.ORANGE_CARPET
-    val MAGENTA_CARPET: Block = Blocks.MAGENTA_CARPET
-    val LIGHT_BLUE_CARPET: Block = Blocks.LIGHT_BLUE_CARPET
-    val YELLOW_CARPET: Block = Blocks.YELLOW_CARPET
-    val LIME_CARPET: Block = Blocks.LIME_CARPET
-    val PINK_CARPET: Block = Blocks.PINK_CARPET
-    val GRAY_CARPET: Block = Blocks.GRAY_CARPET
-    val LIGHT_GRAY_CARPET: Block = Blocks.LIGHT_GRAY_CARPET
-    val CYAN_CARPET: Block = Blocks.CYAN_CARPET
-    val PURPLE_CARPET: Block = Blocks.PURPLE_CARPET
-    val BLUE_CARPET: Block = Blocks.BLUE_CARPET
-    val BROWN_CARPET: Block = Blocks.BROWN_CARPET
-    val GREEN_CARPET: Block = Blocks.GREEN_CARPET
-    val RED_CARPET: Block = Blocks.RED_CARPET
-    val BLACK_CARPET: Block = Blocks.BLACK_CARPET
-
-    val WHITE_BED: Block = Blocks.WHITE_BED
-    val ORANGE_BED: Block = Blocks.ORANGE_BED
-    val MAGENTA_BED: Block = Blocks.MAGENTA_BED
-    val LIGHT_BLUE_BED: Block = Blocks.LIGHT_BLUE_BED
-    val YELLOW_BED: Block = Blocks.YELLOW_BED
-    val LIME_BED: Block = Blocks.LIME_BED
-    val PINK_BED: Block = Blocks.PINK_BED
-    val GRAY_BED: Block = Blocks.GRAY_BED
-    val LIGHT_GRAY_BED: Block = Blocks.LIGHT_GRAY_BED
-    val CYAN_BED: Block = Blocks.CYAN_BED
-    val PURPLE_BED: Block = Blocks.PURPLE_BED
-    val BLUE_BED: Block = Blocks.BLUE_BED
-    val BROWN_BED: Block = Blocks.BROWN_BED
-    val GREEN_BED: Block = Blocks.GREEN_BED
-    val RED_BED: Block = Blocks.RED_BED
-    val BLACK_BED: Block = Blocks.BLACK_BED
-
-    val WHITE_BANNER: Block = Blocks.WHITE_BANNER
-    val ORANGE_BANNER: Block = Blocks.ORANGE_BANNER
-    val MAGENTA_BANNER: Block = Blocks.MAGENTA_BANNER
-    val LIGHT_BLUE_BANNER: Block = Blocks.LIGHT_BLUE_BANNER
-    val YELLOW_BANNER: Block = Blocks.YELLOW_BANNER
-    val LIME_BANNER: Block = Blocks.LIME_BANNER
-    val PINK_BANNER: Block = Blocks.PINK_BANNER
-    val GRAY_BANNER: Block = Blocks.GRAY_BANNER
-    val LIGHT_GRAY_BANNER: Block = Blocks.LIGHT_GRAY_BANNER
-    val CYAN_BANNER: Block = Blocks.CYAN_BANNER
-    val PURPLE_BANNER: Block = Blocks.PURPLE_BANNER
-    val BLUE_BANNER: Block = Blocks.BLUE_BANNER
-    val BROWN_BANNER: Block = Blocks.BROWN_BANNER
-    val GREEN_BANNER: Block = Blocks.GREEN_BANNER
-    val RED_BANNER: Block = Blocks.RED_BANNER
-    val BLACK_BANNER: Block = Blocks.BLACK_BANNER
-
-    val WHITE_SHULKER_BOX: Block = Blocks.WHITE_SHULKER_BOX
-    val ORANGE_SHULKER_BOX: Block = Blocks.ORANGE_SHULKER_BOX
-    val MAGENTA_SHULKER_BOX: Block = Blocks.MAGENTA_SHULKER_BOX
-    val LIGHT_BLUE_SHULKER_BOX: Block = Blocks.LIGHT_BLUE_SHULKER_BOX
-    val YELLOW_SHULKER_BOX: Block = Blocks.YELLOW_SHULKER_BOX
-    val LIME_SHULKER_BOX: Block = Blocks.LIME_SHULKER_BOX
-    val PINK_SHULKER_BOX: Block = Blocks.PINK_SHULKER_BOX
-    val GRAY_SHULKER_BOX: Block = Blocks.GRAY_SHULKER_BOX
-    val LIGHT_GRAY_SHULKER_BOX: Block = Blocks.LIGHT_GRAY_SHULKER_BOX
-    val CYAN_SHULKER_BOX: Block = Blocks.CYAN_SHULKER_BOX
-    val PURPLE_SHULKER_BOX: Block = Blocks.PURPLE_SHULKER_BOX
-    val BLUE_SHULKER_BOX: Block = Blocks.BLUE_SHULKER_BOX
-    val BROWN_SHULKER_BOX: Block = Blocks.BROWN_SHULKER_BOX
-    val GREEN_SHULKER_BOX: Block = Blocks.GREEN_SHULKER_BOX
-    val RED_SHULKER_BOX: Block = Blocks.RED_SHULKER_BOX
-    val BLACK_SHULKER_BOX: Block = Blocks.BLACK_SHULKER_BOX
-    *///? }
 }
+*///?}

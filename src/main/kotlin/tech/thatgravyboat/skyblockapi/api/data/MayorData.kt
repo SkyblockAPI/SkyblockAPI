@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
 import net.minecraft.util.TriState
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.area.hub.ElectionAPI
 import tech.thatgravyboat.skyblockapi.api.data.stored.ElectionStorage
 import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
@@ -97,9 +96,8 @@ data class MayorPerk internal constructor(
     var description: String = "Not available",
     val perkpocalypse: Boolean = true,
 ) {
-    @RemoveNextVersion
-    @Deprecated("Use MayorPerk.perkpocalypse instead.", ReplaceWith("perkpocalypse"))
-    val perkapocalypse: Boolean get() = perkpocalypse
+    //? < 26.4
+    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Use MayorPerk.perkpocalypse instead.", ReplaceWith("perkpocalypse")) val perkapocalypse: Boolean get() = perkpocalypse
 
     internal var overrideState: TriState = DEFAULT
 
@@ -155,8 +153,6 @@ object MayorPerks {
     val MOLTEN_FORGE = register("Molten Forge")
 
     // Diana
-    //? < 26.2
-    //@RemoveNextVersion val LUCKY = register("Lucky!")
     val HUNTRESS_INTUITION = register("Huntress' Intuition")
     val MYTHOLOGICAL_RITUAL = register("Mythological Ritual")
     val PET_XP_BUFF = register("Pet XP Buff")
@@ -169,8 +165,6 @@ object MayorPerks {
     val LONG_TERM_INVESTMENT = register("Long Term Investment")
 
     // Finnegan
-    //? < 26.2
-    //@RemoveNextVersion val PELT_POCALYPSE = register("Pelt-pocalypse")
     val GRAND_FEAST = register("Grand Feast", perkpocalypse = false)
     val GOATED = register("GOATed", id = "GOATED")
     val BLOOMING_BUSINESS = register("Blooming Business")

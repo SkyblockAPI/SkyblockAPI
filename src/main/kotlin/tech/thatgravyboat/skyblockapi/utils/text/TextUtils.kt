@@ -109,11 +109,7 @@ object TextUtils {
         return sb.toString()
     }
 
-    //? if >= 26.2 {
     private val colorTable = ChatFormatting.entries.associateByNotNull { McTextColor.fromLegacyFormat(it)?.value }
-    //? } else {
-    //private val colorTable = ChatFormatting.entries.associateByNotNull { format -> format.color.takeIf { format.isColor } }
-    //? }
 
     private fun StringBuilder.appendStyle(style: Style) {
         style.color?.let { color ->

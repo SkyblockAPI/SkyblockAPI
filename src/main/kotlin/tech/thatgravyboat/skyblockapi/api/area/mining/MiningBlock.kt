@@ -24,7 +24,6 @@ import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.SPIDERS_DEN
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.THE_END
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
-import tech.thatgravyboat.skyblockapi.impl.ColoredBlocks
 import tech.thatgravyboat.skyblockapi.platform.drawString
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -137,19 +136,19 @@ enum class MiningBlock(
     // Hard Stone
     HARD_STONE_CRYSTAL_HOLLOWS(
         // There are probably more but mostly useless
-        listOf(Blocks.STONE, Blocks.CLAY, Blocks.COBBLESTONE, ColoredBlocks.GRAY_WOOL, ColoredBlocks.LIGHT_GRAY_WOOL, ColoredBlocks.CYAN_TERRACOTTA),
+        listOf(Blocks.STONE, Blocks.CLAY, Blocks.COBBLESTONE, Blocks.WOOL.gray, Blocks.WOOL.lightGray, Blocks.DYED_TERRACOTTA.cyan),
         CRYSTAL_HOLLOWS::inIsland,
         Type.BLOCK,
         Family.HARD_STONE,
     ),
     HARD_STONE_GLACITE_TUNNELS(
-        listOf(Blocks.INFESTED_STONE, ColoredBlocks.LIGHT_GRAY_WOOL),
+        listOf(Blocks.INFESTED_STONE, Blocks.WOOL.lightGray),
         GlaciteAPI::inGlaciteTunnels,
         Type.BLOCK,
         Family.HARD_STONE,
     ),
     HARD_STONE_MINESHAFT(
-        listOf(Blocks.STONE, ColoredBlocks.LIGHT_GRAY_WOOL),
+        listOf(Blocks.STONE, Blocks.WOOL.lightGray),
         MINESHAFT::inIsland,
         Type.BLOCK,
         Family.HARD_STONE,
@@ -157,7 +156,7 @@ enum class MiningBlock(
 
     // Mithril Family
     LOW_TIER_MITHRIL(
-        listOf(ColoredBlocks.GRAY_TERRACOTTA, ColoredBlocks.GRAY_WOOL, ColoredBlocks.GRAY_TERRACOTTA),
+        listOf(Blocks.DYED_TERRACOTTA.gray, Blocks.WOOL.gray),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         Type.DWARVEN_METAL,
         Family.MITHRIL,
@@ -169,7 +168,7 @@ enum class MiningBlock(
         Family.MITHRIL,
     ),
     HIGH_TIER_MITHRIL(
-        ColoredBlocks.LIGHT_BLUE_WOOL,
+        Blocks.WOOL.lightBlue,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT, CRYSTAL_HOLLOWS) },
         Type.DWARVEN_METAL,
         Family.MITHRIL,
@@ -183,73 +182,73 @@ enum class MiningBlock(
 
     // Gemstones
     RUBY(
-        listOf(ColoredBlocks.RED_STAINED_GLASS, ColoredBlocks.RED_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.red, Blocks.STAINED_GLASS_PANE.red),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     SAPPHIRE(
-        listOf(ColoredBlocks.LIGHT_BLUE_STAINED_GLASS, ColoredBlocks.LIGHT_BLUE_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.lightBlue, Blocks.STAINED_GLASS_PANE.lightBlue),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     JADE(
-        listOf(ColoredBlocks.LIME_STAINED_GLASS, ColoredBlocks.LIME_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.lime, Blocks.STAINED_GLASS_PANE.lime),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     AMBER(
-        listOf(ColoredBlocks.ORANGE_STAINED_GLASS, ColoredBlocks.ORANGE_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.orange, Blocks.STAINED_GLASS_PANE.orange),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     AMETHYST(
-        listOf(ColoredBlocks.PURPLE_STAINED_GLASS, ColoredBlocks.PURPLE_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.purple, Blocks.STAINED_GLASS_PANE.purple),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     TOPAZ(
-        listOf(ColoredBlocks.YELLOW_STAINED_GLASS, ColoredBlocks.YELLOW_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.yellow, Blocks.STAINED_GLASS_PANE.yellow),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     JASPER(
-        listOf(ColoredBlocks.BROWN_STAINED_GLASS, ColoredBlocks.BROWN_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.pink, Blocks.STAINED_GLASS_PANE.pink),
         { SkyBlockIsland.inAnyIsland(CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     OPAL(
-        listOf(ColoredBlocks.WHITE_STAINED_GLASS, ColoredBlocks.WHITE_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.white, Blocks.STAINED_GLASS_PANE.white),
         { SkyBlockIsland.inAnyIsland(CRIMSON_ISLE, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     PERIDOT(
-        listOf(ColoredBlocks.GREEN_STAINED_GLASS, ColoredBlocks.GREEN_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.green, Blocks.STAINED_GLASS_PANE.green),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     CITRINE(
-        listOf(ColoredBlocks.BROWN_STAINED_GLASS, ColoredBlocks.BROWN_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.brown, Blocks.STAINED_GLASS_PANE.brown),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     ONYX(
-        listOf(ColoredBlocks.BLACK_STAINED_GLASS, ColoredBlocks.BLACK_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.black, Blocks.STAINED_GLASS_PANE.black),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
     AQUAMARINE(
-        listOf(ColoredBlocks.BLUE_STAINED_GLASS, ColoredBlocks.BLUE_STAINED_GLASS_PANE),
+        listOf(Blocks.STAINED_GLASS.blue, Blocks.STAINED_GLASS_PANE.blue),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
@@ -307,7 +306,7 @@ enum class MiningBlock(
         Family.GLACITE,
     ),
     MID_TIER_UMBER(
-        ColoredBlocks.BROWN_TERRACOTTA,
+        Blocks.DYED_TERRACOTTA.brown,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         Type.ORE,
         Family.GLACITE,

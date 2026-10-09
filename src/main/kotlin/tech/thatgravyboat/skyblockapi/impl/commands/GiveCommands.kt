@@ -18,6 +18,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.component.ItemContainerContents
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -27,7 +28,6 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
-import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
@@ -224,22 +224,22 @@ object GiveCommands {
         val maxAmount = items.size
         items.chunked(28).mapIndexed { index, items ->
             when ((index + 10) % 16) {
-                0 -> ColoredItems.WHITE_SHULKER_BOX
-                1 -> ColoredItems.ORANGE_SHULKER_BOX
-                2 -> ColoredItems.MAGENTA_SHULKER_BOX
-                3 -> ColoredItems.LIGHT_BLUE_SHULKER_BOX
-                4 -> ColoredItems.YELLOW_SHULKER_BOX
-                5 -> ColoredItems.LIME_SHULKER_BOX
-                6 -> ColoredItems.PINK_SHULKER_BOX
-                7 -> ColoredItems.GRAY_SHULKER_BOX
-                8 -> ColoredItems.LIGHT_GRAY_SHULKER_BOX
-                9 -> ColoredItems.CYAN_SHULKER_BOX
-                10 -> ColoredItems.PURPLE_SHULKER_BOX
-                11 -> ColoredItems.BLUE_SHULKER_BOX
-                12 -> ColoredItems.BROWN_SHULKER_BOX
-                13 -> ColoredItems.GREEN_SHULKER_BOX
-                14 -> ColoredItems.RED_SHULKER_BOX
-                15 -> ColoredItems.BLACK_SHULKER_BOX
+                0 -> Items.DYED_SHULKER_BOX.white
+                1 -> Items.DYED_SHULKER_BOX.orange
+                2 -> Items.DYED_SHULKER_BOX.magenta
+                3 -> Items.DYED_SHULKER_BOX.lightBlue
+                4 -> Items.DYED_SHULKER_BOX.yellow
+                5 -> Items.DYED_SHULKER_BOX.lime
+                6 -> Items.DYED_SHULKER_BOX.pink
+                7 -> Items.DYED_SHULKER_BOX.gray
+                8 -> Items.DYED_SHULKER_BOX.lightGray
+                9 -> Items.DYED_SHULKER_BOX.cyan
+                10 -> Items.DYED_SHULKER_BOX.purple
+                11 -> Items.DYED_SHULKER_BOX.blue
+                12 -> Items.DYED_SHULKER_BOX.brown
+                13 -> Items.DYED_SHULKER_BOX.green
+                14 -> Items.DYED_SHULKER_BOX.red
+                15 -> Items.DYED_SHULKER_BOX.black
                 else -> TODO("no.")
             }.defaultInstance.apply {
                 set(DataComponents.CONTAINER, ItemContainerContents.fromItems(items))

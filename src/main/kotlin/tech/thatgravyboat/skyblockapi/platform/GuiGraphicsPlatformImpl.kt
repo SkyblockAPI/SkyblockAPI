@@ -7,8 +7,8 @@ import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState
 import org.joml.Matrix3x2f
 
-//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
-import com.mojang.renderpearl.api.pipeline.RenderPipeline
+//~ if = 26.3 'blaze3d' -> 'renderpearl.api'
+import com.mojang.blaze3d.pipeline.RenderPipeline
 
 internal class GradientGuiElement(
     val pose: Matrix3x2f,

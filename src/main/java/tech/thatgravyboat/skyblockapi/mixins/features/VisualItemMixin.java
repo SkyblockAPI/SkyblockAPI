@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.mixins.features;
 
-import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -15,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tech.thatgravyboat.skyblockapi.api.item.ClickConsumer;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
+import java.util.List;
 
 @Mixin(ItemStack.class)
 public abstract class VisualItemMixin implements VisualItemAccessor {

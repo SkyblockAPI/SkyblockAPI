@@ -74,8 +74,6 @@ class SkyBlockCategory private constructor(
         val ROD_PART = create("rod part") // in the api its called "FISHING_ROD_PART"
         val BAIT = create("bait")
 
-        //? < 26.2
-        //@Deprecated("Trophy Fish dont exist anymore, theyre just Trophy", ReplaceWith("Trophy")) val TROPHY_FISH = create("trophy fish")
         val FISHING_NET = create("fishing net")
 
         val DEPLOYABLE = create("deployable")

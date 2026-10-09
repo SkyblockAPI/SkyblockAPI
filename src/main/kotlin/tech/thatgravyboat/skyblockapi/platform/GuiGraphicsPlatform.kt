@@ -73,7 +73,8 @@ fun GuiGraphicsExtractor.drawTexture(
     val maxx = (x + width)
     val maxy = (y + height)
 
-    val setup: TextureSetup = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView, it.sampler) }
+    //~ if >= 26.4 'textureView' -> 'textureView()', 'sampler' -> 'sampler()'
+    val setup: TextureSetup = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView(), it.sampler()) }
 
     this.guiRenderState.addGuiElement(
         BlitRenderState(
