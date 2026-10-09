@@ -22,7 +22,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Module
-object LoreDataTypes {
+public object LoreDataTypes {
 
     internal val dataTypeGroup = Regexes.group("datatype")
 
@@ -36,9 +36,9 @@ object LoreDataTypes {
     private val selectedArrowRegex = dataTypeGroup.create("arrow", "^Selected: (?<type>.+)$")
     private val soulboundRegex = dataTypeGroup.create("soulbound", "\\* (?<coop>Co-op )?Soulbound \\*")
 
-    val RAW_LORE: DataType<List<String>> = DataType.of("raw_lore") { ctx, _ -> ctx[ResolutionContext.Resolver.RAW_LORE] }
+    public val RAW_LORE: DataType<List<String>> = DataType.of("raw_lore") { ctx, _ -> ctx[ResolutionContext.Resolver.RAW_LORE] }
 
-    val FUEL: DataType<Pair<Int, Int>> = DataType.of("fuel") { ctx, _ ->
+    public val FUEL: DataType<Pair<Int, Int>> = DataType.of("fuel") { ctx, _ ->
         var output: Pair<Int, Int>? = null
         fuelRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "fuel", "max") { (fuel, max) ->
             output = fuel.parseFormattedInt() to max.parseFormattedInt()
@@ -46,7 +46,7 @@ object LoreDataTypes {
         output
     }
 
-    val SNOWBALLS: DataType<Pair<Int, Int>> = DataType.of("snowballs") { ctx, _ ->
+    public val SNOWBALLS: DataType<Pair<Int, Int>> = DataType.of("snowballs") { ctx, _ ->
         var output: Pair<Int, Int>? = null
         snowballsRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "snowballs", "max") { (snowballs, max) ->
             output = snowballs.parseFormattedInt() to max.parseFormattedInt()
@@ -54,7 +54,7 @@ object LoreDataTypes {
         output
     }
 
-    val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = DataType.of("right_click_mana_ability") { ctx, _ ->
+    public val RIGHT_CLICK_MANA_ABILITY: DataType<Pair<String, Int>> = DataType.of("right_click_mana_ability") { ctx, _ ->
         var outputAbility: String? = null
         var outputMana: Int? = null
 
@@ -66,7 +66,7 @@ object LoreDataTypes {
         if (outputAbility != null && outputMana != null) outputAbility to outputMana else null
     }
 
-    val COOLDOWN_ABILITY: DataType<Pair<String, Duration>> = DataType.of("cooldown_ability") { ctx, _ ->
+    public val COOLDOWN_ABILITY: DataType<Pair<String, Duration>> = DataType.of("cooldown_ability") { ctx, _ ->
         var outputAbility: String? = null
         var outputDuration: Duration? = null
 
@@ -108,14 +108,14 @@ object LoreDataTypes {
         return null
     }
 
-    val RARITY: DataType<SkyBlockRarity> = DataType.of("rarity") { ctx, stack ->
+    public val RARITY: DataType<SkyBlockRarity> = DataType.of("rarity") { ctx, stack ->
         getRarityLine(stack, ctx)?.second
             ?: stack.get(DataComponents.TOOLTIP_STYLE)?.path?.let(SkyBlockRarity::fromNameOrNull)
             // pets inside inventories don't have the rarity/category line
             ?: ctx[ResolutionContext.Resolver.PET_DATA]?.rarity
     }
 
-    val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") { ctx, stack ->
+    public val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") { ctx, stack ->
         getRarityLine(stack, ctx)?.let { line ->
             line.first.removePrefix(line.second.displayName.uppercase()).trim().ifBlank { null }
         }?.let(SkyBlockCategory::create)
@@ -123,7 +123,7 @@ object LoreDataTypes {
             ?: if (ctx[ResolutionContext.Resolver.PET_DATA] != null) SkyBlockCategory.PET else null
     }
 
-    val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = DataType.of("dungeon_breaker_charges") { ctx, stack ->
+    public val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = DataType.of("dungeon_breaker_charges") { ctx, stack ->
         if (ctx[ResolutionContext.Resolver.ID] != "DUNGEONBREAKER") return@of null
 
         var output: Pair<Int, Int>? = null
@@ -133,7 +133,7 @@ object LoreDataTypes {
         output
     }
 
-    val WATER_LEVEL: DataType<Pair<Int, Int>> = DataType.of("water_level") { ctx, _ ->
+    public val WATER_LEVEL: DataType<Pair<Int, Int>> = DataType.of("water_level") { ctx, _ ->
         var output: Pair<Int, Int>? = null
         waterRegex.anyMatch(ctx[ResolutionContext.Resolver.RAW_LORE], "current", "max") { (current, max) ->
             output = current.parseFormattedInt() to max.parseFormattedInt()
@@ -141,7 +141,7 @@ object LoreDataTypes {
         output
     }
 
-    val SELECTED_ARROW: DataType<SkyBlockId> = DataType.of("selected_arrow") { ctx, _ ->
+    public val SELECTED_ARROW: DataType<SkyBlockId> = DataType.of("selected_arrow") { ctx, _ ->
         if (ctx[ResolutionContext.Resolver.ID] != "ARROW_SWAPPER") return@of null
 
         var output: SkyBlockId? = null
@@ -151,12 +151,12 @@ object LoreDataTypes {
         output
     }
 
-    val SOULBOUND: DataType<SoulboundType> = DataType.of("soulbound") { ctx, stack ->
+    public val SOULBOUND: DataType<SoulboundType> = DataType.of("soulbound") { ctx, stack ->
         val matches = ctx[ResolutionContext.Resolver.RAW_LORE].reversed().firstNotNullOfOrNull(soulboundRegex::matchEntire) ?: return@of null
         if (matches.groups["coop"] != null) SoulboundType.COOP else SoulboundType.SOLO
     }
 
-    enum class SoulboundType {
+    public enum class SoulboundType {
         SOLO,
         COOP;
     }

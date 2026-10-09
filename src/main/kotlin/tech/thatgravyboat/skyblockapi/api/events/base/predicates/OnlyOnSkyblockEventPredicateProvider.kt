@@ -8,9 +8,9 @@ import java.lang.reflect.Method
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlyOnSkyBlock
+public annotation class OnlyOnSkyBlock
 
-class OnlyOnSkyBlockEventPredicateProvider : EventPredicateProvider {
+public class OnlyOnSkyBlockEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         if (!method.hasAnnotation<OnlyOnSkyBlock>()) return null

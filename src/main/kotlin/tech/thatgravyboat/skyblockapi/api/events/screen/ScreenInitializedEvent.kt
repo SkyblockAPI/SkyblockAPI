@@ -5,7 +5,7 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.screens.Screen
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-class ScreenInitializedEvent(val screen: Screen) : SkyBlockEvent() {
+public data class ScreenInitializedEvent(val screen: Screen) : SkyBlockEvent() {
 
     val widgets: MutableList<AbstractWidget>
         get() = Screens.getWidgets(this.screen)

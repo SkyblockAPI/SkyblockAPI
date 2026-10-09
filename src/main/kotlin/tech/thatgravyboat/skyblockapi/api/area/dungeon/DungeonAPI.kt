@@ -31,7 +31,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import kotlin.time.Duration
 
 @Module
-object DungeonAPI {
+public object DungeonAPI {
 
     // <editor-fold desc="Regex">
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("dungeon")
@@ -90,55 +90,55 @@ object DungeonAPI {
     private val bloodDoorOpenRegex = chatGroup.create("opened.blood", "The BLOOD DOOR has been opened!")
     // </editor-fold>
 
-    var ownPlayer: DungeonPlayer? = null
+    public var ownPlayer: DungeonPlayer? = null
         private set
 
-    val dungeonClass: DungeonClass? get() = ownPlayer?.dungeonClass
+    public val dungeonClass: DungeonClass? get() = ownPlayer?.dungeonClass
 
-    val classLevel: Int get() = ownPlayer?.classLevel ?: 0
+    public val classLevel: Int get() = ownPlayer?.classLevel ?: 0
 
-    var dungeonFloor: DungeonFloor? = null
+    public var dungeonFloor: DungeonFloor? = null
         private set
 
-    var uniqueClass: Boolean = false
+    public var uniqueClass: Boolean = false
         private set
 
-    var started: Boolean = false
+    public var started: Boolean = false
         private set
 
-    var completed: Boolean = false
+    public var completed: Boolean = false
         private set
 
-    var inBoss: Boolean = false
+    public var inBoss: Boolean = false
         private set
 
-    var milestone: Int = 0
+    public var milestone: Int = 0
         private set
 
-    var partySize: Int = 0
+    public var partySize: Int = 0
         private set
 
-    var teammates: List<DungeonPlayer> = emptyList()
+    public var teammates: List<DungeonPlayer> = emptyList()
         private set
 
-    var time: Duration = Duration.ZERO
+    public var time: Duration = Duration.ZERO
         private set
 
-    var roomId: String? = null
+    public var roomId: String? = null
         private set
 
-    var witherKeys: Int = 0
+    public var witherKeys: Int = 0
         private set
 
-    var bloodKeys: Int = 0
+    public var bloodKeys: Int = 0
         private set
 
-    var bloodOpened: Boolean = false
+    public var bloodOpened: Boolean = false
         private set
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
-    fun onAreaChange(event: AreaChangeEvent) {
+    internal fun onAreaChange(event: AreaChangeEvent) {
         dungeonFloorRegex.find(event.new.name, "floor") { (floor) ->
             dungeonFloor = DungeonFloor.getByName(floor)
             val floor = dungeonFloor ?: return@find
@@ -148,7 +148,7 @@ object DungeonAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         for (line in event.added) {
             timeRegex.findThenNull(line, "time") { (time) ->
                 this.time = time.parseDuration() ?: return@findThenNull
@@ -161,7 +161,7 @@ object DungeonAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val message = event.text
         if (!started && startRegex.matches(message)) {
             started = true
@@ -200,7 +200,7 @@ object DungeonAPI {
         }
     }
 
-    fun handleGetKey(type: String) {
+    public fun handleGetKey(type: String) {
         val post = when {
             type.equals("wither", true) -> {
                 ++witherKeys
@@ -226,7 +226,7 @@ object DungeonAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
-    fun onTablistUpdate(event: TabListChangeEvent) {
+    internal fun onTablistUpdate(event: TabListChangeEvent) {
         // first column
         val firstColumn = event.new.firstOrNull() ?: return
         val first = firstColumn.firstOrNull() ?: return
@@ -279,7 +279,7 @@ object DungeonAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_CATACOMBS)
-    fun onPlayerHotbarUpdate(event: PlayerHotbarChangeEvent) {
+    internal fun onPlayerHotbarUpdate(event: PlayerHotbarChangeEvent) {
         if (event.slotIndex != 0) return
         val id = event.item.getData(DataTypes.ID)
         ownPlayer?.dead = id == "HAUNT_ABILITY"
@@ -303,7 +303,7 @@ object DungeonAPI {
     }
 
     @Subscription(IslandChangeEvent::class)
-    fun onIslandChange() = reset()
+    public fun onIslandChange(): Unit = reset()
 
     private fun milestoneCharToInt(char: Char): Int = if (char in '❶'..'❾') '❶'.code - char.code + 1 else 0
 

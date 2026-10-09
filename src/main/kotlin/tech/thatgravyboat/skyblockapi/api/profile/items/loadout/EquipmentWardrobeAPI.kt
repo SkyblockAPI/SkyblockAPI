@@ -33,7 +33,7 @@ private const val SELECT_START_INDEX = 36
 private const val WARDROBE_SLOTS_PER_PAGE = 9
 
 @Module
-object EquipmentWardrobeAPI {
+public object EquipmentWardrobeAPI {
     private val wardrobeGroup = RegexGroup.INVENTORY.group("wardrobe.equipment")
 
     private val inventoryNameRegex = wardrobeGroup.create(
@@ -48,17 +48,17 @@ object EquipmentWardrobeAPI {
 
     private val emptyEquipment = mutableListOf(ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY)
 
-    var inWardrobe = false
+    public var inWardrobe: Boolean = false
         private set
 
     /** 0 if not in wardrobe */
-    var currentPage = 0
+    public var currentPage: Int = 0
         private set
 
-    val slots get() = LoadoutStorage.equipment?.slots ?: emptyList()
-    val currentSlot: Int? get() = LoadoutStorage.equipment?.currentSlot
+    public val slots: List<WardrobeSlot> get() = LoadoutStorage.equipment?.slots ?: emptyList()
+    public val currentSlot: Int? get() = LoadoutStorage.equipment?.currentSlot
 
-    val currentSet: Map<EquipmentSlot, ItemStack>
+    public val currentSet: Map<EquipmentSlot, ItemStack>
         get() {
             val slots = slots.find { it.id == currentSlot }?.slots ?: return emptyMap()
             return mapOf(
@@ -81,6 +81,7 @@ object EquipmentWardrobeAPI {
             val id = WARDROBE_SLOTS_PER_PAGE * (currentPage - 1) + index + 1
             var locked = false
 
+            @Suppress("DEPRECATION")
             if (selectStack.item == ColoredItems.RED_DYE) {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
@@ -105,14 +106,14 @@ object EquipmentWardrobeAPI {
         }
     }
 
-    fun isCurrentSlotInCurrentPage(): Boolean {
+    public fun isCurrentSlotInCurrentPage(): Boolean {
         val slot = currentSlot ?: return false
         val first = (currentPage - 1) * WARDROBE_SLOTS_PER_PAGE + 1
         val last = first + WARDROBE_SLOTS_PER_PAGE - 1
         return slot in first..last
     }
 
-    fun clearPotentiallyDesyncedEquipment() {
+    public fun clearPotentiallyDesyncedEquipment() {
         val storedEquipmentUUIDs =
             EquipmentSlot.entries.associateWith { equipmentSlot -> EquipmentAPI.islandEquipment[equipmentSlot]?.getData(DataTypes.UUID) }
         val currentSetUUIDs =
@@ -126,27 +127,27 @@ object EquipmentWardrobeAPI {
     }
 
     @Subscription
-    fun onInventoryUpdate(event: InventoryChangeEvent) {
+    internal fun onInventoryUpdate(event: InventoryChangeEvent) {
         inWardrobe = inventoryNameRegex.matches(event.title)
 
         if (inWardrobe) processInventory(event.title, event.itemStacks)
     }
 
     @Subscription
-    fun onInventoryOpen(event: ContainerInitializedEvent) {
+    internal fun onInventoryOpen(event: ContainerInitializedEvent) {
         inWardrobe = inventoryNameRegex.matches(event.title)
 
         if (inWardrobe) processInventory(event.title, event.itemStacks)
     }
 
     @Subscription(ContainerCloseEvent::class)
-    fun onInventoryClose() {
+    internal fun onInventoryClose() {
         inWardrobe = false
         currentPage = 0
     }
 
     @Subscription(ProfileChangeEvent::class)
-    fun onProfileSwitch() {
+    internal fun onProfileSwitch() {
         val slotCount = max(
             slots.size.roundToNextMultipleOf(WARDROBE_SLOTS_PER_PAGE),
             WARDROBE_SLOTS_PER_PAGE * 3,
@@ -163,7 +164,7 @@ object EquipmentWardrobeAPI {
 
     @Subscription
     context(event: LoadoutChangeEvent)
-    fun onLoadoutSwitch() {
+    internal fun onLoadoutSwitch() {
         LoadoutStorage.equipment?.currentSlot = event.new?.equipment.value() ?: return
         if (currentSlot != -1) EquipmentStorage.setEquipment(LoadoutStorage.equipment?.slots[currentSlot!!])
         debugString(loadoutDebug) { "Setting equipment!" }

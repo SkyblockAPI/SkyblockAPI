@@ -1,16 +1,17 @@
 package tech.thatgravyboat.skyblockapi.api.profile.reputation
 
+import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class ReputationData(
+public data class ReputationData(
     var selectedFaction: Faction?,
     val reputation: MutableMap<Faction, Int> = mutableMapOf(),
 ) {
-    constructor() : this(null)
+    public constructor() : this(null)
 
-    companion object {
-        val CODEC = SkyblockAPICodecs.getCodec<ReputationData>()
+    public companion object {
+        public val CODEC: Codec<ReputationData> = SkyblockAPICodecs.getCodec<ReputationData>()
     }
 }

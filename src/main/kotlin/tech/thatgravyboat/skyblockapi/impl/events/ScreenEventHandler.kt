@@ -13,7 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.item.getVisualItem
 import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
 
 @Module
-object ScreenEventHandler {
+public object ScreenEventHandler {
 
     init {
         ScreenEvents.AFTER_INIT.register { _, screen, _, _ ->
@@ -22,6 +22,7 @@ object ScreenEventHandler {
     }
 
     @Subscription
+    internal
     fun preScreenClick(event: ScreenMouseClickEvent.Pre) {
         val screen = event.screen as? AbstractContainerScreen<*> ?: return
         val slot = screen.getHoveredSlot() ?: return
@@ -29,7 +30,7 @@ object ScreenEventHandler {
     }
 
     @Subscription(priority = Subscription.HIGHEST)
-    fun onSlotClick(event: SlotClickEvent) {
+    internal fun onSlotClick(event: SlotClickEvent) {
         val consumer = event.item.getVisualItem()?.getClickAction() ?: return
         if (consumer.accept(event.button) != null) event.cancel()
     }

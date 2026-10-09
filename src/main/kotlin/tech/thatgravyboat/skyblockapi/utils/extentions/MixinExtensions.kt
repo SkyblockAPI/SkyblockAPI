@@ -9,13 +9,13 @@ import tech.thatgravyboat.skyblockapi.mixins.accessors.AbstractContainerScreenAc
  */
 
 
-fun AbstractContainerScreen<*>.getHoveredSlot(): Slot? = (this as AbstractContainerScreenAccessor).hoveredSlot
+public fun AbstractContainerScreen<*>.getHoveredSlot(): Slot? = (this as AbstractContainerScreenAccessor).hoveredSlot
 
-val AbstractContainerScreen<*>.left: Int get() = (this as AbstractContainerScreenAccessor).leftPos
-val AbstractContainerScreen<*>.top: Int get() = (this as AbstractContainerScreenAccessor).topPos
+public val AbstractContainerScreen<*>.left: Int get() = (this as AbstractContainerScreenAccessor).leftPos
+public val AbstractContainerScreen<*>.top: Int get() = (this as AbstractContainerScreenAccessor).topPos
 
-val AbstractContainerScreen<*>.containerWidth: Int get() = (this as AbstractContainerScreenAccessor).containerWidth
-val AbstractContainerScreen<*>.containerHeight: Int get() = (this as AbstractContainerScreenAccessor).containerHeight
+public val AbstractContainerScreen<*>.containerWidth: Int get() = (this as AbstractContainerScreenAccessor).containerWidth
+public val AbstractContainerScreen<*>.containerHeight: Int get() = (this as AbstractContainerScreenAccessor).containerHeight
 
-val AbstractContainerScreen<*>.right: Int get() = left + containerWidth
-val AbstractContainerScreen<*>.bottom: Int get() = top + containerHeight
+public val AbstractContainerScreen<*>.right: Int get() = left + containerWidth
+public val AbstractContainerScreen<*>.bottom: Int get() = top + containerHeight

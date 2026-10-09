@@ -34,7 +34,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
 @Module
-object MiscEventHandler {
+public object MiscEventHandler {
 
     private val phase = Identifiers.of("skyblockapi", "phase")
 
@@ -155,13 +155,15 @@ object MiscEventHandler {
         if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.blocks) return true
         if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.blocks || old in MiningBlockFamily.VANILLA_BLOCKS.blocks)) return true
         if (new == Blocks.RED_SANDSTONE && old == Blocks.RED_SAND) return true
+        @Suppress("DEPRECATION")
         if (new == ColoredBlocks.GRAY_TERRACOTTA && old == Blocks.MYCELIUM) return true
 
         return false
     }
 
     @Subscription
-    fun onBlockChange(event: BlockChangeEvent) {
+    internal fun onBlockChange(event: BlockChangeEvent) {
+        @Suppress("SENSELESS_COMPARISON")
         if (
             (blocksClicked.getIfPresent(event.pos) != null || event.pos.distSqr(lastBlockClicked) < 25 /* maybe check if 5 block range is good enough */)
             && validMineChange(McLevel[event.pos].block, event.state.block)

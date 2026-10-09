@@ -19,9 +19,9 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 @Module
-object SkillExpAPI {
+public object SkillExpAPI {
 
-    val skills: Map<HypixelSkillAPI.Skill, Float> get() = SkillExpStorage.data?.exp ?: emptyMap()
+    public val skills: Map<HypixelSkillAPI.Skill, Float> get() = SkillExpStorage.data?.exp ?: emptyMap()
 
     private val group = RegexGroup.INVENTORY.group("skillexp")
     private val itemNameRegex = group.create("itemName", "(?<name>.*) (?<level>\\d+|[IVXLCDMivxlcdm]+)")
@@ -30,7 +30,7 @@ object SkillExpAPI {
     @Subscription
     @OnlyOnSkyBlock
     @InventoryTitle("Your Skills")
-    fun onInventory(event: InventoryChangeEvent) {
+    internal fun onInventory(event: InventoryChangeEvent) {
         if (!event.isInMainPart) return
         if (event.isSkyBlockFiller) return
 
@@ -53,7 +53,7 @@ object SkillExpAPI {
     }
 
     @Subscription
-    fun onActionbarLiteral(event: SkillXpLiteralActionBarWidgetChangeEvent) {
+    internal fun onActionbarLiteral(event: SkillXpLiteralActionBarWidgetChangeEvent) {
         val skill = event.skill ?: return
 
         // if needed is 0, they are at max level
@@ -67,7 +67,7 @@ object SkillExpAPI {
     }
 
     @Subscription
-    fun onActionbarPercent(event: SkillXpPercentActionBarWidgetChangeEvent) {
+    internal fun onActionbarPercent(event: SkillXpPercentActionBarWidgetChangeEvent) {
         val skill = event.skill ?: return
         val level = SkillExpStorage.getLevel(skill)
 

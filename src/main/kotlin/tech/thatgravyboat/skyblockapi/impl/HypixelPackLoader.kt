@@ -27,7 +27,7 @@ import kotlin.io.path.outputStream
 import kotlin.io.path.useDirectoryEntries
 
 @Module
-object HypixelPackLoader {
+public object HypixelPackLoader {
 
     private const val DOWNLOAD_URL = "https://github.com/meowdding/hypixel-pack/archive/refs/heads/"
     private const val PACK_FILE_NAME = "HypixelSkyBlockPack.zip"
@@ -41,9 +41,9 @@ object HypixelPackLoader {
         }
     }
 
-    fun downloadAndApplyStablePack() = downloadAndApplyPack("stable")
+    public fun downloadAndApplyStablePack(): Unit = downloadAndApplyPack("stable")
 
-    fun downloadAndApplyPack(path: String) {
+    public fun downloadAndApplyPack(path: String) {
         if (LocationAPI.isOnSkyBlock) {
             Text.of("Pack Downloading doesn't work on SkyBlock").sendWithPrefix()
             return

@@ -12,7 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 @Module
-object RepoReloadCommand {
+public object RepoReloadCommand {
 
     @Subscription
     private fun RegisterSkyblockApiCommandsEvent.onRegister() {

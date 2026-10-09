@@ -4,7 +4,7 @@ import net.hypixel.modapi.packet.impl.clientbound.ClientboundPartyInfoPacket.Par
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import java.util.UUID
 
-data class PartyInfoEvent(
+public data class PartyInfoEvent(
     val inParty: Boolean,
     val members: Map<UUID, PartyMember>
 ) : SkyBlockEvent()

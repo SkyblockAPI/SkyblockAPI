@@ -19,32 +19,32 @@ import kotlin.reflect.KProperty0
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
 
-abstract class AbstractModRegisterDebugEvent(val prefix: Component, val withDebug: Boolean = false, val base: AbstractModRegisterCommandsEvent) :
+public abstract class AbstractModRegisterDebugEvent(public val prefix: Component, public val withDebug: Boolean = false, public val base: AbstractModRegisterCommandsEvent) :
     SkyBlockEvent() {
 
-    open fun register(name: String, commandName: String = name.lowercase().replace(" ", "_"), init: DebugBuilder.() -> Unit) = register(Text.of(name), commandName, init)
-    open fun register(name: Component, commandName: String, init: DebugBuilder.() -> Unit) {
+    public open fun register(name: String, commandName: String = name.lowercase().replace(" ", "_"), init: DebugBuilder.() -> Unit): Unit = register(Text.of(name), commandName, init)
+    public open fun register(name: Component, commandName: String, init: DebugBuilder.() -> Unit) {
         base.registerWithCallback(name(commandName)) {
             DebugBuilder(prefix, name).apply(init).build().send()
         }
     }
 
-    open fun name(name: String) = if (withDebug) "debug $name" else name
+    public open fun name(name: String): String = if (withDebug) "debug $name" else name
 }
 
 internal class RegisterSkyblockApiDebugEvent(base: RegisterSkyblockApiCommandsEvent) :
     AbstractModRegisterDebugEvent(CommonText.PREFIX, false, base)
 
-open class DebugBuilder(val prefix: Component, val name: Component) {
-    val fields: MutableList<Component> = mutableListOf()
+public open class DebugBuilder(public val prefix: Component, public val name: Component) {
+    public val fields: MutableList<Component> = mutableListOf()
 
-    open fun fields(vararg fields: KProperty0<Any?>) = fields.forEach(::field)
+    public open fun fields(vararg fields: KProperty0<Any?>): Unit = fields.forEach(::field)
 
-    open fun <T> field(field: KProperty0<T>, description: Component? = null, copyValue: String? = null) {
+    public open fun <T> field(field: KProperty0<T>, description: Component? = null, copyValue: String? = null) {
         field(field.name, field.get(), description, copyValue)
     }
 
-    open fun <T> field(field: String, value: T?, description: Component? = null, copyValue: String? = null) {
+    public open fun <T> field(field: String, value: T?, description: Component? = null, copyValue: String? = null) {
         fields.add(
             Text.of {
                 append(field)
@@ -65,7 +65,7 @@ open class DebugBuilder(val prefix: Component, val name: Component) {
         return dateTimeFormatter.format(LocalDateTime.ofInstant(this.toJavaInstant(), zoneId))
     }
 
-    open fun <T> format(value: T?): Component = when (value) {
+    public open fun <T> format(value: T?): Component = when (value) {
         null -> Text.of("<null>", TextColor.DARK_GRAY)
         is Iterable<*> -> Text.join(value.map {
             format(it)
@@ -102,7 +102,7 @@ open class DebugBuilder(val prefix: Component, val name: Component) {
         else -> Text.of(value.toString(), TextColor.YELLOW)
     }
 
-    open fun build(): Component = Text.of {
+    public open fun build(): Component = Text.of {
         append(prefix)
         append(" ")
         append(name)

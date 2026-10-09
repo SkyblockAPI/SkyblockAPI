@@ -8,9 +8,9 @@ import tech.thatgravyboat.skyblockapi.impl.events.TabListEventHandler
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 
-typealias TabWidgetUpdateEvent = TabWidgetChangeEvent
+public typealias TabWidgetUpdateEvent = TabWidgetChangeEvent
 
-data class TabWidgetChangeEvent(
+public data class TabWidgetChangeEvent(
     val widget: TabWidget,
     val old: List<String>,
     val new: List<String>,
@@ -22,7 +22,7 @@ data class TabWidgetChangeEvent(
 }
 
 @Suppress("unused")
-enum class TabWidget(@Language("RegExp") regex: String) {
+public enum class TabWidget(@Language("RegExp") regex: String) {
     // General
     AREA("(?:Area|Dungeon): (?<area>.*)"),
     PROFILE("Profile: (?<profile>.*)"),
@@ -100,15 +100,15 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     ADVERTISEMENT("Advertisement:"),
     ;
 
-    val regex = RegexGroup.TABLIST_WIDGET.create(name.lowercase(), regex)
+    public val regex: Regex = RegexGroup.TABLIST_WIDGET.create(name.lowercase(), regex)
 
-    val currentLines: List<String>
+    public val currentLines: List<String>
         get() = TabListEventHandler.widgets[this].orEmpty()
 
-    val isActive: Boolean
+    public val isActive: Boolean
         get() = this in TabListEventHandler.widgets
 
     private val string = toFormattedName()
 
-    override fun toString() = string
+    override fun toString(): String = string
 }

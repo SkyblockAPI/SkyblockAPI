@@ -11,30 +11,30 @@ import tech.thatgravyboat.skyblockapi.impl.events.chat.setMessageId
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
-object Text {
+public object Text {
 
-    inline fun of(text: String, init: MutableComponent.() -> Unit = {}) = text.asComponent(init)
-    inline fun of(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.empty().also(init)
-    fun of(text: String, color: Int) = of(text) { this.color = color }
-    inline fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
+    public inline fun of(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = text.asComponent(init)
+    public inline fun of(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.empty().also(init)
+    public fun of(text: String, color: Int): MutableComponent = of(text) { this.color = color }
+    public inline fun translatable(text: String, init: MutableComponent.() -> Unit = {}): MutableComponent = Component.translatable(text).also(init)
 
-    fun player(profile: ResolvableProfile, hat: Boolean = true, init: MutableComponent.() -> Unit = {}): MutableComponent {
+    public fun player(profile: ResolvableProfile, hat: Boolean = true, init: MutableComponent.() -> Unit = {}): MutableComponent {
         val spriteObj = PlayerSprite(profile, hat)
         return Component.`object`(spriteObj).also(init)
     }
 
-    fun atlas(atlas: Identifier, sprite: Identifier, init: MutableComponent.() -> Unit = {}): MutableComponent {
+    public fun atlas(atlas: Identifier, sprite: Identifier, init: MutableComponent.() -> Unit = {}): MutableComponent {
         val spriteObj = AtlasSprite(atlas, sprite)
         return Component.`object`(spriteObj).also(init)
     }
 
-    inline fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
+    public inline fun String.asComponent(init: MutableComponent.() -> Unit = {}): MutableComponent = Component.literal(this).also(init)
 
     @JvmOverloads
-    fun multiline(vararg lines: Any?, init: MutableComponent.() -> Unit = {}) = join(*lines, separator = CommonText.NEWLINE, init = init)
+    public fun multiline(vararg lines: Any?, init: MutableComponent.() -> Unit = {}): MutableComponent = join(*lines, separator = CommonText.NEWLINE, init = init)
 
     @JvmOverloads
-    fun join(vararg components: Any?, separator: Component? = null, init: MutableComponent.() -> Unit = {}): MutableComponent {
+    public fun join(vararg components: Any?, separator: Component? = null, init: MutableComponent.() -> Unit = {}): MutableComponent {
         val result = Component.literal("")
         components.forEachIndexed { index, it ->
             when (it) {
@@ -61,19 +61,19 @@ object Text {
      *
      * @param n Amount of repetitions
      */
-    fun Component.repeat(n: Int): MutableComponent = join(List(n) { this })
-    fun Component.prefix(prefix: String): MutableComponent = join(prefix, this)
-    fun Component.suffix(suffix: String): MutableComponent = join(this, suffix)
-    fun Component.wrap(prefix: String, suffix: String) = this.prefix(prefix).suffix(suffix)
-    inline fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit) = this.prefix(prefix).suffix(suffix).apply(init)
+    public fun Component.repeat(n: Int): MutableComponent = join(List(n) { this })
+    public fun Component.prefix(prefix: String): MutableComponent = join(prefix, this)
+    public fun Component.suffix(suffix: String): MutableComponent = join(this, suffix)
+    public fun Component.wrap(prefix: String, suffix: String): MutableComponent = this.prefix(prefix).suffix(suffix)
+    public inline fun Component.wrap(prefix: String, suffix: String, init: MutableComponent.() -> Unit): MutableComponent = this.prefix(prefix).suffix(suffix).apply(init)
 
-    inline fun Component.copy(block: MutableComponent.() -> Unit = {}): MutableComponent = copy().apply(block)
+    public inline fun Component.copy(block: MutableComponent.() -> Unit = {}): MutableComponent = copy().apply(block)
 
-    fun Component.send() {
+    public fun Component.send() {
         McClient.chat.addClientSystemMessage(this)
     }
 
-    fun Component.send(id: String) = McClient.chat.setMessageId(id) {
+    public fun Component.send(id: String): Unit = McClient.chat.setMessageId(id) {
         this.send()
     }
 

@@ -11,7 +11,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import kotlin.time.Duration
 
 @Module
-object PrivateIslandAPI {
+public object PrivateIslandAPI {
 
     private val regexGroup = RegexGroup.SCOREBOARD.group("private_island")
 
@@ -20,12 +20,12 @@ object PrivateIslandAPI {
         "Flight Duration: (?<duration>[\\d:]+)"
     )
 
-    var flightDuration: Duration = Duration.ZERO
+    public var flightDuration: Duration = Duration.ZERO
         private set
 
     @Subscription
     @OnlyIn(SkyBlockIsland.PRIVATE_ISLAND, SkyBlockIsland.GARDEN)
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         flightDurationRegex.anyMatch(event.added, "duration") { (duration) ->
             flightDuration = duration.parseColonDuration() ?: Duration.ZERO
         }

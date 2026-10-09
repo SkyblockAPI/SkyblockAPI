@@ -12,7 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
 @Module
-object FarmhouseAPI {
+public object FarmhouseAPI {
 
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("farmhouse")
 
@@ -20,18 +20,18 @@ object FarmhouseAPI {
     private val silverMedalsRegex = scoreboardGroup.create("silver", "SILVER medals: (?i)(?<silver>[\\d,kmb]+)")
     private val bronzeMedalsRegex = scoreboardGroup.create("bronze", "BRONZE medals: (?i)(?<bronze>[\\d,kmb]+)")
 
-    var goldMedals: Int = 0
+    public var goldMedals: Int = 0
         private set
 
-    var silverMedals: Int = 0
+    public var silverMedals: Int = 0
         private set
 
-    var bronzeMedals: Int = 0
+    public var bronzeMedals: Int = 0
         private set
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB, SkyBlockIsland.GARDEN)
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         goldMedalsRegex.anyMatch(event.added, "gold") { (gold) -> goldMedals = gold.toIntValue() }
         silverMedalsRegex.anyMatch(event.added, "silver") { (silver) -> silverMedals = silver.toIntValue() }
         bronzeMedalsRegex.anyMatch(event.added, "bronze") { (bronze) -> bronzeMedals = bronze.toIntValue() }
@@ -44,5 +44,5 @@ object FarmhouseAPI {
     }
 
     @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
-    fun onServerChange() = reset()
+    private fun onServerChange() = reset()
 }

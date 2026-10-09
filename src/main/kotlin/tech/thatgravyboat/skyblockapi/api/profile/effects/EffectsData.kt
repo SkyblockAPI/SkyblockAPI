@@ -1,16 +1,17 @@
 package tech.thatgravyboat.skyblockapi.api.profile.effects
 
+import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import kotlin.time.Duration
 import kotlin.time.Instant
 
 @GenerateCodec
-data class EffectsData(
+public data class EffectsData(
     var boosterCookieExpireTime: Instant = Instant.DISTANT_PAST,
     var godPotionDuration: Duration = Duration.ZERO,
 ) {
-    companion object {
-        val CODEC = SkyblockAPICodecs.getCodec<EffectsData>()
+    public companion object {
+        public val CODEC: Codec<EffectsData> = SkyblockAPICodecs.getCodec<EffectsData>()
     }
 }

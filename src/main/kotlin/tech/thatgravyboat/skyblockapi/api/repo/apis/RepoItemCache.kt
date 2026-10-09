@@ -35,7 +35,7 @@ import java.util.concurrent.CompletableFuture
 import kotlin.math.max
 import kotlin.reflect.KMutableProperty1
 
-abstract class RepoItemCache<K>(private val name: String) {
+public abstract class RepoItemCache<K>(private val name: String) {
 
     private val cache: MutableMap<K, LazyItemStack?> = mutableMapOf()
 
@@ -51,12 +51,12 @@ abstract class RepoItemCache<K>(private val name: String) {
 
     protected abstract fun create(key: K): LazyItemStack?
 
-    fun getLazyItemStack(key: K): LazyItemStack? = ifInitialized {
+    public fun getLazyItemStack(key: K): LazyItemStack? = ifInitialized {
         cache.getOrPut(key) { create(key) }
     }
 
-    fun getItemStack(key: K): ItemStack? = getLazyItemStack(key)?.create()
-    fun getItemStackOrDefault(key: K): ItemStack = getLazyItemStack(key)?.create() ?: ItemStack(Items.BARRIER) {
+    public fun getItemStack(key: K): ItemStack? = getLazyItemStack(key)?.create()
+    public fun getItemStackOrDefault(key: K): ItemStack = getLazyItemStack(key)?.create() ?: ItemStack(Items.BARRIER) {
         this[DataComponents.ITEM_NAME] = Text.of("Could not find item for key '$key' in $name")
     }
 
@@ -70,7 +70,7 @@ abstract class RepoItemCache<K>(private val name: String) {
         cache.clear()
     }
 
-    companion object {
+    public companion object {
 
         private val repos: MutableSet<String> = mutableSetOf()
 
@@ -137,7 +137,7 @@ internal data object RepoQueryCommands {
                     this.argument<Set<SchemaFieldArgument<Query, *>>>("query").forEach {
                         addField(it)
                     }
-
+                    @Suppress("UNCHECKED_CAST")
                     fun <Type> addRequiredField(schemaField: SchemaField<Query, Type>) {
                         val value = getArgument(schemaField.name, Any::class.java) as Type
                         schemaField.setter(query, value)
@@ -200,12 +200,12 @@ internal data object RepoQueryCommands {
 }
 
 
-sealed interface SchemaEntry<Query, Type> {
-    val name: String
-    val setter: (Query, Type) -> Unit
+public sealed interface SchemaEntry<Query, Type> {
+    public val name: String
+    public val setter: (Query, Type) -> Unit
 }
 
-data class SchemaField<Query, Type>(
+public data class SchemaField<Query, Type>(
     override val name: String,
     val argument: ArgumentType<Type>,
     val optional: Boolean,
@@ -213,12 +213,12 @@ data class SchemaField<Query, Type>(
     val suggestionProvider: (SuggestionConsumer) -> Unit,
 ) : SchemaEntry<Query, Type>
 
-data class SchemaFlag<Query>(
+public data class SchemaFlag<Query>(
     override val name: String,
     override val setter: (Query, Boolean) -> Unit,
 ) : SchemaEntry<Query, Boolean>
 
-data class SchemaFieldArgument<Query, Type>(val field: SchemaEntry<Query, Type>, val value: Type)
+public data class SchemaFieldArgument<Query, Type>(val field: SchemaEntry<Query, Type>, val value: Type)
 
 private class SchemaArgument<Query>(val entries: List<SchemaEntry<Query, *>>) :
     ArgumentType<Set<SchemaFieldArgument<Query, *>>> {
@@ -344,24 +344,24 @@ private class SchemaArgument<Query>(val entries: List<SchemaEntry<Query, *>>) :
 }
 
 
-sealed class RepoItemCacheAsQuery<Query>(name: String, internal val factory: () -> Query, internal val createSchema: RepoItemQuerySchema<Query>.() -> Unit) :
+public sealed class RepoItemCacheAsQuery<Query>(name: String, internal val factory: () -> Query, internal val createSchema: RepoItemQuerySchema<Query>.() -> Unit) :
     RepoItemCache<Query>(name) {
     init {
         RepoQueryCommands.register(name, this)
     }
 
-    fun getLazyItemStack(query: Query.() -> Unit): LazyItemStack? = this.getLazyItemStack(this.factory().apply(query))
-    fun getItemStack(query: Query.() -> Unit): ItemStack? = getItemStack(this.factory().apply(query))
-    fun getItemStackOrDefault(query: Query.() -> Unit): ItemStack = getItemStackOrDefault(this.factory().apply(query))
+    public fun getLazyItemStack(query: Query.() -> Unit): LazyItemStack? = this.getLazyItemStack(this.factory().apply(query))
+    public fun getItemStack(query: Query.() -> Unit): ItemStack? = getItemStack(this.factory().apply(query))
+    public fun getItemStackOrDefault(query: Query.() -> Unit): ItemStack = getItemStackOrDefault(this.factory().apply(query))
 }
 
-fun interface SuggestionConsumer : ((String) -> Unit) {
-    fun suggest(name: String)
-    override operator fun invoke(name: String) = suggest(name)
+public fun interface SuggestionConsumer : ((String) -> Unit) {
+    public fun suggest(name: String)
+    override operator fun invoke(name: String): Unit = suggest(name)
 }
 
-sealed interface RepoItemQuerySchema<Query> {
-    fun <T> field(
+public sealed interface RepoItemQuerySchema<Query> {
+    public fun <T> field(
         name: String,
         argument: ArgumentType<T>,
         optional: Boolean,
@@ -369,32 +369,32 @@ sealed interface RepoItemQuerySchema<Query> {
         suggestionProvider: (SuggestionConsumer) -> Unit,
     ): RepoItemQuerySchema<Query>
 
-    fun <T> optionalField(
+    public fun <T> optionalField(
         name: String,
         argument: ArgumentType<T>,
         setter: (Query, T) -> Unit,
         suggestionProvider: (SuggestionConsumer) -> Unit,
     ): RepoItemQuerySchema<Query> = field(name, argument, true, setter, suggestionProvider)
 
-    fun <T> optionalField(name: String, argument: ArgumentType<T>, setter: (Query, T) -> Unit): RepoItemQuerySchema<Query> =
+    public fun <T> optionalField(name: String, argument: ArgumentType<T>, setter: (Query, T) -> Unit): RepoItemQuerySchema<Query> =
         field(name, argument, true, setter) {}
 
-    fun <T> optionalField(name: String, argument: ArgumentType<T>, setter: (Query, T) -> Unit, suggestions: Iterable<String>): RepoItemQuerySchema<Query> =
+    public fun <T> optionalField(name: String, argument: ArgumentType<T>, setter: (Query, T) -> Unit, suggestions: Iterable<String>): RepoItemQuerySchema<Query> =
         field(name, argument, true, setter) {
             suggestions.forEach(it::suggest)
         }
 
-    fun <T> optionalField(
+    public fun <T> optionalField(
         name: String,
         argument: ArgumentType<T>,
         setter: KMutableProperty1<Query, T>,
         suggestionProvider: (SuggestionConsumer) -> Unit,
     ): RepoItemQuerySchema<Query> = field(name, argument, true, setter::set, suggestionProvider)
 
-    fun <T> optionalField(name: String, argument: ArgumentType<T>, setter: KMutableProperty1<Query, T>): RepoItemQuerySchema<Query> =
+    public fun <T> optionalField(name: String, argument: ArgumentType<T>, setter: KMutableProperty1<Query, T>): RepoItemQuerySchema<Query> =
         field(name, argument, true, setter::set) {}
 
-    fun <T> optionalField(
+    public fun <T> optionalField(
         name: String,
         argument: ArgumentType<T>,
         setter: KMutableProperty1<Query, T>,
@@ -403,34 +403,34 @@ sealed interface RepoItemQuerySchema<Query> {
         suggestions.forEach(it::suggest)
     }
 
-    fun <T> field(
+    public fun <T> field(
         name: String,
         argument: ArgumentType<T>,
         setter: (Query, T) -> Unit,
         suggestionProvider: (SuggestionConsumer) -> Unit,
     ): RepoItemQuerySchema<Query> = field(name, argument, false, setter, suggestionProvider)
 
-    fun <T> field(name: String, argument: ArgumentType<T>, setter: (Query, T) -> Unit): RepoItemQuerySchema<Query> = field(name, argument, false, setter) {}
-    fun <T> field(name: String, argument: ArgumentType<T>, setter: (Query, T) -> Unit, suggestions: Iterable<String>): RepoItemQuerySchema<Query> =
+    public fun <T> field(name: String, argument: ArgumentType<T>, setter: (Query, T) -> Unit): RepoItemQuerySchema<Query> = field(name, argument, false, setter) {}
+    public fun <T> field(name: String, argument: ArgumentType<T>, setter: (Query, T) -> Unit, suggestions: Iterable<String>): RepoItemQuerySchema<Query> =
         field(name, argument, false, setter) {
             suggestions.forEach(it::suggest)
         }
 
-    fun <T> field(
+    public fun <T> field(
         name: String,
         argument: ArgumentType<T>,
         setter: KMutableProperty1<Query, T>,
         suggestionProvider: (SuggestionConsumer) -> Unit,
     ): RepoItemQuerySchema<Query> = field(name, argument, false, setter::set, suggestionProvider)
 
-    fun <T> field(name: String, argument: ArgumentType<T>, setter: KMutableProperty1<Query, T>): RepoItemQuerySchema<Query> =
+    public fun <T> field(name: String, argument: ArgumentType<T>, setter: KMutableProperty1<Query, T>): RepoItemQuerySchema<Query> =
         field(name, argument, false, setter::set) {}
 
-    fun <T> field(name: String, argument: ArgumentType<T>, setter: KMutableProperty1<Query, T>, suggestions: Iterable<String>): RepoItemQuerySchema<Query> =
+    public fun <T> field(name: String, argument: ArgumentType<T>, setter: KMutableProperty1<Query, T>, suggestions: Iterable<String>): RepoItemQuerySchema<Query> =
         field(name, argument, false, setter::set) {
             suggestions.forEach(it::suggest)
         }
 
-    fun flag(name: String, setter: (Query, Boolean) -> Unit): RepoItemQuerySchema<Query>
-    fun flag(name: String, setter: KMutableProperty1<Query, Boolean>): RepoItemQuerySchema<Query> = flag(name, setter::set)
+    public fun flag(name: String, setter: (Query, Boolean) -> Unit): RepoItemQuerySchema<Query>
+    public fun flag(name: String, setter: KMutableProperty1<Query, Boolean>): RepoItemQuerySchema<Query> = flag(name, setter::set)
 }

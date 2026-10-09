@@ -10,11 +10,11 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-class DataType<T> private constructor(
-    val id: String,
+public class DataType<T> private constructor(
+    public val id: String,
     autoRegister: Boolean,
     private val resolver: (ResolutionContext, ItemStack) -> T?,
-    val type: KType?,
+    public val type: KType?,
 ) {
 
     //? < 26.2
@@ -28,38 +28,38 @@ class DataType<T> private constructor(
 
     @get:Deprecated("Scheduled for removal in 26.3")
     @get:ApiStatus.ScheduledForRemoval
-    val factory: (ItemStack) -> T? get() = ::resolve
+    public val factory: (ItemStack) -> T? get() = ::resolve
 
     init {
         if (autoRegister) DataTypesRegistry.addDataType(this)
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun cast(value: Any?): T? = value as? T
+    public fun cast(value: Any?): T? = value as? T
 
-    fun resolve(stack: ItemStack, context: ResolutionContext = ResolutionContext(stack)): T? {
+    public fun resolve(stack: ItemStack, context: ResolutionContext = ResolutionContext(stack)): T? {
         return resolver.invoke(context, stack)
     }
 
-    companion object {
+    public companion object {
 
-        fun <T> of(id: String, type: KType, autoRegister: Boolean = true, resolver: (ResolutionContext, ItemStack) -> T?): DataType<T> {
+        public fun <T> of(id: String, type: KType, autoRegister: Boolean = true, resolver: (ResolutionContext, ItemStack) -> T?): DataType<T> {
             return DataType(id, autoRegister, resolver, type)
         }
 
-        inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline resolver: (ResolutionContext, ItemStack) -> T?): DataType<T> {
+        public inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline resolver: (ResolutionContext, ItemStack) -> T?): DataType<T> {
             return of(id, typeOf<T>(), autoRegister, resolver)
         }
 
-        fun <T> of(id: String, type: KType, autoRegister: Boolean = true, factory: (ItemStack) -> T?): DataType<T> {
+        public fun <T> of(id: String, type: KType, autoRegister: Boolean = true, factory: (ItemStack) -> T?): DataType<T> {
             return DataType(id, autoRegister, { _, stack -> factory(stack) }, type)
         }
 
-        inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline factory: (ItemStack) -> T?): DataType<T> {
+        public inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline factory: (ItemStack) -> T?): DataType<T> {
             return of(id, typeOf<T>(), autoRegister, factory)
         }
 
-        fun <T : Any> simple(id: String, type: KType, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
+        public fun <T : Any> simple(id: String, type: KType, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
             val function = getCompoundTagFunctionByType<T>(type)
             return of(id, type, autoRegister) { item -> item.unsafeTag?.let { function(it, tagName) } }
         }
@@ -69,7 +69,7 @@ class DataType<T> private constructor(
          *
          * See [getCompoundTagFunctionByType] for the allowed classes.
          */
-        inline fun <reified T : Any> simple(id: String, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
+        public inline fun <reified T : Any> simple(id: String, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
             return simple(id, typeOf<T>(), tagName, autoRegister)
         }
     }

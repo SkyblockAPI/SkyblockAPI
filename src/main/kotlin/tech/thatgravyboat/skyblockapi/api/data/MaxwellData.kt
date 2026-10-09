@@ -15,7 +15,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuningTemplate
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class MaxwellData(
+public data class MaxwellData(
     var power: MaxwellPower = MaxwellPowers.NO_POWER,
     @FieldNames("accessory_power", "magicalPower")
     var accessoryPower: Int = 0,
@@ -30,7 +30,7 @@ data class MaxwellData(
     @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN)
     var magicalPower: Int by ::accessoryPower
 
-    companion object {
-        val CODEC: Codec<MaxwellData> = SkyblockAPICodecs.getCodec<MaxwellData>()
+    public companion object {
+        public val CODEC: Codec<MaxwellData> = SkyblockAPICodecs.getCodec<MaxwellData>()
     }
 }

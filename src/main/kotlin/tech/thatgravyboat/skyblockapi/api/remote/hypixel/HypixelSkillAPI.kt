@@ -12,8 +12,8 @@ import tech.thatgravyboat.skyblockapi.utils.runCatchBlocking
 
 private const val API_URL = "https://api.hypixel.net/v2/resources/skyblock/skills"
 
-object HypixelSkillAPI {
-    enum class Skill(private val floatingCap: Boolean = false) : SkillType {
+public object HypixelSkillAPI {
+    public enum class Skill(private val floatingCap: Boolean = false) : SkillType {
         COMBAT,
         FORAGING(true),
         MINING,
@@ -30,12 +30,12 @@ object HypixelSkillAPI {
 
         private var internalSkillData: SkillData? = null
         override val data: SkillData get() = internalSkillData ?: SkillData.EMPTY
-        override fun hasFloatingLevelCap() = floatingCap
+        override fun hasFloatingLevelCap(): Boolean = floatingCap
 
         override val id: String = name
 
         @Module
-        companion object {
+        public companion object {
             init {
                 runCatchBlocking {
                     val skillsObject = Http.getResult<JsonObject>(url = API_URL).getOrNull()?.getAsJsonObject("skills") ?: return@runCatchBlocking
@@ -47,22 +47,22 @@ object HypixelSkillAPI {
                 }
             }
 
-            fun getByName(name: String) = Skill.entries.find {
+            public fun getByName(name: String): Skill? = Skill.entries.find {
                 it.name.equals(name, true) || it.skillApiId.equals(name, true) || it.data.name.equals(name, true)
             }
         }
     }
 
-    data class SkillData(
+    public data class SkillData(
         val name: String,
         val maxLevel: Int,
         val skillLevels: Map<Int, Long>,
     ) {
-        fun getTotalExpForLevel(level: Int): Long = skillLevels[level] ?: skillLevels.entries.lastOrNull()?.value ?: 0L
-        fun getXpForLevel(level: Int): Long = skillLevels[level]?.let { xpAtLevel -> xpAtLevel - (skillLevels[level - 1] ?: 0L) } ?: 0L
-        fun getLevelForExp(exp: Long): Int = skillLevels.entries.lastOrNull { exp >= it.value }?.key ?: 0
+        public fun getTotalExpForLevel(level: Int): Long = skillLevels[level] ?: skillLevels.entries.lastOrNull()?.value ?: 0L
+        public fun getXpForLevel(level: Int): Long = skillLevels[level]?.let { xpAtLevel -> xpAtLevel - (skillLevels[level - 1] ?: 0L) } ?: 0L
+        public fun getLevelForExp(exp: Long): Int = skillLevels.entries.lastOrNull { exp >= it.value }?.key ?: 0
 
-        companion object {
+        public companion object {
             internal val EMPTY = SkillData("", 0, emptyMap())
 
             internal fun JsonObject.toSkillData() = SkillData(
@@ -73,10 +73,10 @@ object HypixelSkillAPI {
         }
     }
 
-    interface SkillType {
-        val data: SkillData
-        val id: String
-        fun hasFloatingLevelCap(): Boolean = false
-        val skillApiId get() = "SKILL_$id"
+    public interface SkillType {
+        public val data: SkillData
+        public val id: String
+        public fun hasFloatingLevelCap(): Boolean = false
+        public val skillApiId: String get() = "SKILL_$id"
     }
 }

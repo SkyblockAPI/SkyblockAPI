@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.currency
 import me.owdding.ktcodecs.GenerateCodec
 
 @GenerateCodec
-data class CurrencyData(
+public data class CurrencyData(
     var purse: Double = 0.0,
     var purseType: PurseType = PurseType.UNKNOWN,
     var personalBank: Long = 0,

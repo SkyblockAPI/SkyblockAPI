@@ -11,27 +11,27 @@ import tech.thatgravyboat.skyblockapi.utils.runCatchBlocking
 
 private const val URL = ""
 
-object Regexes {
+public object Regexes {
 
     private val usedKeys = mutableSetOf<String>()
     private val regexes = mutableMapOf<String, Regex>()
     private val regexLists = mutableMapOf<String, List<Regex>>()
 
-    fun create(key: String, @Language("RegExp") regex: String): Regex {
+    public fun create(key: String, @Language("RegExp") regex: String): Regex {
         validateKey(key)
         return regexes.getOrPut(key) {
             Regex(regex)
         }
     }
 
-    fun createList(key: String, @Language("RegExp") vararg regex: String): List<Regex> {
+    public fun createList(key: String, @Language("RegExp") vararg regex: String): List<Regex> {
         validateKey(key)
         return regexLists.getOrPut(key) {
             regex.map(::Regex).toList()
         }
     }
 
-    fun group(prefix: String) = RegexGroup(prefix)
+    public fun group(prefix: String): RegexGroup = RegexGroup(prefix)
 
     private fun validateKey(key: String) {
         if (!McClient.isDev) return
@@ -41,7 +41,7 @@ object Regexes {
 
     @JvmStatic
     @ApiStatus.Internal
-    fun load() {
+    internal fun load() {
         if (McClient.isDev) return
         runCatchBlocking {
             val result = Http.getResult<JsonObject>(URL)

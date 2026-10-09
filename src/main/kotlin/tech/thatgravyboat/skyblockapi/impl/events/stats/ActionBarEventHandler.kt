@@ -16,14 +16,14 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-data class ActionBarWidgetType(
+public data class ActionBarWidgetType(
     val widget: ActionBarWidget,
     val regex: Regex,
     val factory: (String, Destructured) -> ActionBarWidgetChangeEvent,
     val removalFactory: (Destructured) -> ActionBarWidgetChangeEvent,
 ) {
 
-    constructor(
+    public constructor(
         widget: ActionBarWidget,
         @Language("RegExp") regex: String,
         removalFactory: (Destructured) -> ActionBarWidgetChangeEvent = { ActionBarWidgetChangeEvent(widget, it.string, "") },
@@ -37,7 +37,7 @@ data class ActionBarWidgetType(
 }
 
 @Module
-object ActionBarEventHandler {
+public object ActionBarEventHandler {
 
     private val types = listOf(
         // §c3,487/3,487
@@ -157,7 +157,7 @@ object ActionBarEventHandler {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onActionbarReceivedPre(event: ActionBarReceivedEvent.Pre) {
+    internal fun onActionbarReceivedPre(event: ActionBarReceivedEvent.Pre) {
         widgetsToHide.clear()
 
         val parts = event.coloredText.split("     ")
@@ -198,7 +198,7 @@ object ActionBarEventHandler {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onActionbarReceivedPost(event: ActionBarReceivedEvent.Post) {
+    internal fun onActionbarReceivedPost(event: ActionBarReceivedEvent.Post) {
         event.component = Text.of(
             event.coloredText.split("     ")
                 .map {

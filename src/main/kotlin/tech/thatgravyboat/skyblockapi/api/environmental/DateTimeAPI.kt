@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
 @Module
-object DateTimeAPI {
+public object DateTimeAPI {
 
     private val regexGroup = RegexGroup.SCOREBOARD
 
@@ -22,26 +22,26 @@ object DateTimeAPI {
         "^\\s*(?<hour>\\d{1,2}):(?<minute>\\d{1,2})(?<period>am|pm) (?<symbol>.)",
     )
 
-    var season: SkyBlockSeason? = null
+    public var season: SkyBlockSeason? = null
         private set
 
-    var day: Int = 0
+    public var day: Int = 0
         private set
 
-    var hour: Int = 0
+    public var hour: Int = 0
         private set
 
-    var minute: Int = 0
+    public var minute: Int = 0
         private set
 
-    val isDay: Boolean
+    public val isDay: Boolean
         get() = hour in 6..18
 
-    val isNight: Boolean
+    public val isNight: Boolean
         get() = !isDay
 
     @Subscription
-    fun onScoreboardChange(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         dateRegex.anyMatch(event.added, "season", "day") { (season, day) ->
             this.season = SkyBlockSeason.parse(season)
             this.day = day.toIntValue()

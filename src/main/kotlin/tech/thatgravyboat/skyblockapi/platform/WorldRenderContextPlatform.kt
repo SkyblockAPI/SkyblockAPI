@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.render.RenderWorldEvent
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-fun RenderWorldEvent.drawString(
+public fun RenderWorldEvent.drawString(
     text: String,
     x: Float,
     y: Float,
@@ -23,7 +23,7 @@ fun RenderWorldEvent.drawString(
     this.drawString(Text.of(text), x, y, color, dropShadow, displayMode, backgroundColor, light)
 }
 
-fun RenderWorldEvent.drawString(
+public fun RenderWorldEvent.drawString(
     text: Component,
     x: Float,
     y: Float,
@@ -37,7 +37,7 @@ fun RenderWorldEvent.drawString(
     drawString(text, x, y, color, dropShadow, displayMode, backgroundColor, light)
 }
 
-fun RenderWorldEvent.drawString(
+public fun RenderWorldEvent.drawString(
     text: FormattedCharSequence,
     x: Float,
     y: Float,

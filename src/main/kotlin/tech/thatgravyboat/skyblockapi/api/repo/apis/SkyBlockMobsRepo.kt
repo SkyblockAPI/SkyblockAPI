@@ -11,7 +11,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.compoundTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.toData
 import kotlin.jvm.optionals.getOrNull
 
-object SkyBlockMobsRepo : RepoItemCache<String>("Mobs") {
+public object SkyBlockMobsRepo : RepoItemCache<String>("Mobs") {
 
     private const val ID_KEY = "skyblock-api:id"
     private val repo get() = RepoAPI.mobs()
@@ -26,9 +26,9 @@ object SkyBlockMobsRepo : RepoItemCache<String>("Mobs") {
         }
     }
 
-    fun get(key: String): Mob? = this.repo.getMob(key)
-    fun getLootTables(key: String): List<LootTable> = get(key)?.lootTables ?: emptyList()
+    public fun get(key: String): Mob? = this.repo.getMob(key)
+    public fun getLootTables(key: String): List<LootTable> = get(key)?.lootTables ?: emptyList()
 
-    fun ItemStack.getMobId(): String? = this.get(DataComponents.CUSTOM_DATA)?.copyTag()?.getString(ID_KEY)?.getOrNull()
-    fun LazyItemStack.getMobId(): String? = this[DataComponents.CUSTOM_DATA]?.copyTag()?.getString(ID_KEY)?.getOrNull()
+    public fun ItemStack.getMobId(): String? = this.get(DataComponents.CUSTOM_DATA)?.copyTag()?.getString(ID_KEY)?.getOrNull()
+    public fun LazyItemStack.getMobId(): String? = this[DataComponents.CUSTOM_DATA]?.copyTag()?.getString(ID_KEY)?.getOrNull()
 }

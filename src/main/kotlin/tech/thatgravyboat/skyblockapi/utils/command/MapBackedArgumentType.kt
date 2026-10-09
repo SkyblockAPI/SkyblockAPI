@@ -12,7 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.util.concurrent.CompletableFuture
 
-class MapBackedArgumentType<Key, Value>(
+public class MapBackedArgumentType<Key, Value>(
     private val map: Map<Key, Value>,
     private val ignoreCase: Boolean = true,
     private val keyTransformer: (Key) -> String = { it.toString() },

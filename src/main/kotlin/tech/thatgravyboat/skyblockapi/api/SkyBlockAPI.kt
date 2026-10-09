@@ -33,14 +33,14 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import java.nio.file.Files
 
 @Module
-object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
+public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal val mod = FabricLoader.getInstance().getModContainer("skyblock-api").orElseThrow()
-    val MOD_ID: String get() = mod.metadata.id
-    const val NAMESPACE: String = "skyblockapi"
+    public val MOD_ID: String get() = mod.metadata.id
+    public const val NAMESPACE: String = "skyblockapi"
 
     @JvmStatic
-    val eventBus = EventBus()
+    public val eventBus: EventBus = EventBus()
 
     internal val logger: Logger = this
 
@@ -48,7 +48,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     @JvmStatic
     @ApiStatus.Internal
-    fun init() {
+    public fun init() {
         debug("Starting sbapi!")
         RepoLibLogger.setInstance(RepoLibLogging)
         SkyblockAPIModules.init { eventBus.register(it) }
@@ -67,7 +67,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     @JvmStatic
     @ApiStatus.Internal
-    fun postInit() {
+    public fun postInit() {
         DataTypesRegistry.load()
     }
 

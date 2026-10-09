@@ -10,19 +10,19 @@ import org.joml.Quaternionf
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.pushPop
 
-sealed class RenderWorldEvent(
-    val poseStack: PoseStack,
+public sealed class RenderWorldEvent(
+    public val poseStack: PoseStack,
     //? <= 26.1
-    //val buffer: MultiBufferSource,
-    val submitNodeCollector: SubmitNodeCollector,
-    val cameraPosition: Vec3,
-    var cameraRotation: Quaternionf,
-    val partialTicks: Float,
+    //public val buffer: MultiBufferSource,
+    public val submitNodeCollector: SubmitNodeCollector,
+    public val cameraPosition: Vec3,
+    public var cameraRotation: Quaternionf,
+    public val partialTicks: Float,
 ) : SkyBlockEvent() {
 
-    object Start : SkyBlockEvent()
+    public object Start : SkyBlockEvent()
 
-    class AfterEntities(
+    public class AfterEntities(
         poseStack: PoseStack,
         //? <= 26.1
         //buffer: MultiBufferSource,
@@ -40,7 +40,7 @@ sealed class RenderWorldEvent(
         partialTicks,
     )
 
-    class AfterTranslucent(
+    public class AfterTranslucent(
         poseStack: PoseStack,
         //? <= 26.1
         //buffer: MultiBufferSource,
@@ -58,7 +58,7 @@ sealed class RenderWorldEvent(
         partialTicks,
     )
 
-    class CollectSubmits(
+    public class CollectSubmits(
         poseStack: PoseStack,
         //? <= 26.1
         //buffer: MultiBufferSource,
@@ -75,8 +75,8 @@ sealed class RenderWorldEvent(
         0f,
     )
 
-    fun pushPop(action: PoseStack.() -> Unit) = this.poseStack.pushPop(action)
-    fun atCamera(action: PoseStack.() -> Unit) = pushPop {
+    public fun pushPop(action: PoseStack.() -> Unit): Unit = this.poseStack.pushPop(action)
+    public fun atCamera(action: PoseStack.() -> Unit): Unit = pushPop {
         translate(-cameraPosition.x, -cameraPosition.y, -cameraPosition.z)
         action()
     }

@@ -13,7 +13,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
 @Module
-object ReputationAPI {
+public object ReputationAPI {
     private val tabWidgetGroup = RegexGroup.TABLIST_WIDGET.group("reputation")
 
     private val reputationAmountRegex = tabWidgetGroup.create(
@@ -21,25 +21,25 @@ object ReputationAPI {
         " (?<amount>[\\d,]+)",
     )
 
-    var currentFaction: Faction?
+    public var currentFaction: Faction?
         get() = ReputationStorage.currentFaction
         private set(value) {
             ReputationStorage.updateFaction(value)
         }
 
-    var currentReputation: Int
+    public var currentReputation: Int
         get() = reputation[currentFaction] ?: 0
         private set(value) {
             ReputationStorage.updateReputation(currentFaction ?: return, value)
         }
 
-    val reputation: Map<Faction, Int>
+    public val reputation: Map<Faction, Int>
         get() = ReputationStorage.reputation
 
 
     @Subscription
     @OnlyWidget(TabWidget.REPUTATION)
-    fun onTabWidget(event: TabWidgetChangeEvent) {
+    internal fun onTabWidget(event: TabWidgetChangeEvent) {
         val matchResult = event.matchResult ?: return
         val type = Faction.byNameOrNull(matchResult.groupValues[1]) ?: return
 

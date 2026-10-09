@@ -30,23 +30,23 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 import tech.thatgravyboat.skyblockapi.utils.text.asComponent
 
-val BACKGROUND = Identifier.withDefaultNamespace("popup/background")
+public val BACKGROUND: Identifier? = Identifier.withDefaultNamespace("popup/background")
 
-class AbstractComponentViewer(val map: Map<ComponentViewerCategory, ComponentViewerData>) : Screen(CommonComponents.EMPTY) {
-    val categories = map.keys
-    var selectedCategory = map.keys.firstOrNull()
-    var scroll = 0
+public class AbstractComponentViewer(public val map: Map<ComponentViewerCategory, ComponentViewerData>) : Screen(CommonComponents.EMPTY) {
+    public val categories: Set<ComponentViewerCategory> = map.keys
+    public var selectedCategory: ComponentViewerCategory? = map.keys.firstOrNull()
+    public var scroll: Int = 0
 
     @Module
-    companion object {
+    public companion object {
         private val toggle by debugToggle("item_component_viewer", "Enables item component viewer Keybind, press \"C\".")
 
-        fun open(item: ComponentViewable) = McClient.setScreenAsync {
+        public fun open(item: ComponentViewable): Unit = McClient.setScreenAsync {
             create(item)
         }
 
         @Subscription
-        fun onKey(event: ScreenKeyPressedEvent) {
+        internal fun onKey(event: ScreenKeyPressedEvent) {
             if (!toggle) return
             val screen = event.screen as? AbstractContainerScreen<*> ?: return
             if (event.key != InputConstants.KEY_C) return
@@ -76,7 +76,7 @@ class AbstractComponentViewer(val map: Map<ComponentViewerCategory, ComponentVie
             }
         }
 
-        fun create(componentViewable: ComponentViewable): AbstractComponentViewer =
+        public fun create(componentViewable: ComponentViewable): AbstractComponentViewer =
             AbstractComponentViewer(componentViewable.`skyblockapi$getComponents`() ?: emptyMap())
     }
 
@@ -134,7 +134,7 @@ class AbstractComponentViewer(val map: Map<ComponentViewerCategory, ComponentVie
         super.extractRenderState(graphics, mouseX, mouseY, a)
     }
 
-    val widgetHeight get() = (height / 4) * 3
+    public val widgetHeight: Int get() = (height / 4) * 3
 
     override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
         super.extractBackground(graphics, mouseX, mouseY, a)
@@ -143,25 +143,25 @@ class AbstractComponentViewer(val map: Map<ComponentViewerCategory, ComponentVie
 }
 
 
-interface ComponentViewerData {
-    fun visualize(): Component
+public interface ComponentViewerData {
+    public fun visualize(): Component
 }
 
-data class JsonComponentData(val jsonData: JsonElement) : ComponentViewerData {
+public data class JsonComponentData(val jsonData: JsonElement) : ComponentViewerData {
     override fun visualize(): Component = jsonData.asComponent()
 }
 
-data class NbtComponentData(val nbtData: Tag) : ComponentViewerData {
+public data class NbtComponentData(val nbtData: Tag) : ComponentViewerData {
     override fun visualize(): Component = nbtData.asComponent()
 }
 
-data class TextComponentData(val text: Component) : ComponentViewerData {
-    constructor(components: Collection<Component>) : this(Text.multiline(components))
+public data class TextComponentData(val text: Component) : ComponentViewerData {
+    public constructor(components: Collection<Component>) : this(Text.multiline(components))
 
     override fun visualize(): Component = text
 }
 
-data class DataResultComponentData(val data: DataResult<ComponentViewerData>) : ComponentViewerData {
+public data class DataResultComponentData(val data: DataResult<ComponentViewerData>) : ComponentViewerData {
     override fun visualize(): Component {
         if (data.isError) {
             return Text.of {
@@ -174,23 +174,23 @@ data class DataResultComponentData(val data: DataResult<ComponentViewerData>) : 
     }
 }
 
-interface ComponentViewerCategory {
+public interface ComponentViewerCategory {
     override fun toString(): String
 }
 
-data object EntityDataCategory : ComponentViewerCategory
-data object ItemDataCategory : ComponentViewerCategory
-data object BlockDataCategory : ComponentViewerCategory
+public data object EntityDataCategory : ComponentViewerCategory
+public data object ItemDataCategory : ComponentViewerCategory
+public data object BlockDataCategory : ComponentViewerCategory
 
-interface ComponentViewable {
-    fun `skyblockapi$getComponents`(): Map<ComponentViewerCategory, ComponentViewerData>? = TODO("Implemented in mixin!")
+public interface ComponentViewable {
+    public fun `skyblockapi$getComponents`(): Map<ComponentViewerCategory, ComponentViewerData>? = TODO("Implemented in mixin!")
 }
 
-interface ComponentDataAttachable {
-    fun `skyblockapi$addComponent`(category: ComponentViewerCategory, entry: ComponentViewerData): Unit = TODO("Implemented in mixin!")
-    val `skyblockapi$getComponentMap`: Map<ComponentViewerCategory, ComponentViewerData>? get() = TODO("Implemented in mixin!")
+public interface ComponentDataAttachable {
+    public fun `skyblockapi$addComponent`(category: ComponentViewerCategory, entry: ComponentViewerData): Unit = TODO("Implemented in mixin!")
+    public val `skyblockapi$getComponentMap`: Map<ComponentViewerCategory, ComponentViewerData>? get() = TODO("Implemented in mixin!")
 }
 
-fun ComponentDataAttachable.addComponent(category: ComponentViewerCategory, entry: ComponentViewerData) {
+public fun ComponentDataAttachable.addComponent(category: ComponentViewerCategory, entry: ComponentViewerData) {
     this.`skyblockapi$addComponent`(category, entry)
 }
