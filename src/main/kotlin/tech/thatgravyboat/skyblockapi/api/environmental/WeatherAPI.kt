@@ -12,29 +12,35 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 @Module
 public object WeatherAPI {
 
-    private val dayOfYear: Int?
+    private const val DAYS_PER_YEAR = 372 // 12 Seasons * 31 days
+    private const val BASE_YEAR = 518
+
+    private val totalDaysSinceBase: Long?
         get() {
             val season = DateTimeAPI.season ?: return null
             val day = DateTimeAPI.day
             if (day <= 0) return null
-            return season.ordinal * 31 + (day - 1)
+            val year = SkyBlockInstant.now().year
+
+            val dayOfYear = season.ordinal * 31 + (day - 1)
+            return (year - BASE_YEAR).toLong() * DAYS_PER_YEAR + dayOfYear
         }
 
-    private val nextWeatherDayOfYear: Int?
-        get() = dayOfYear?.let { currentDay ->
-            val remainder = currentDay % 3
-            currentDay + if (remainder == 2) 3 else 2 - remainder
+    private val nextWeatherDayOffset: Long?
+        get() = totalDaysSinceBase?.let { currentDay ->
+            val remainder = (currentDay % 3).toInt()
+            currentDay + if (remainder == 2) 3 else (2 - remainder)
         }
 
-    private fun getIntensityForDay(day: Int): WeatherIntensity {
-        return if ((day / 3) % 3 == 1) WeatherIntensity.EXTREME else WeatherIntensity.MILD
+    private fun getIntensityForDay(day: Long): WeatherIntensity {
+        return if ((day / 3) % 3 == 1L) WeatherIntensity.EXTREME else WeatherIntensity.MILD
     }
 
     public val isActive: Boolean
         get() = this.currentIntensity != null
 
     public val currentIntensity: WeatherIntensity?
-        get() = dayOfYear?.takeIf { it % 3 == 2 }?.let(::getIntensityForDay)
+        get() = totalDaysSinceBase?.takeIf { it % 3 == 2L }?.let(::getIntensityForDay)
 
     public val currentEvent: WeatherEvent?
         get() {
@@ -44,12 +50,12 @@ public object WeatherAPI {
         }
 
     public val nextIntensity: WeatherIntensity?
-        get() = nextWeatherDayOfYear?.let(::getIntensityForDay)
+        get() = nextWeatherDayOffset?.let(::getIntensityForDay)
 
     public val nextWeatherAt: SkyBlockInstant?
         get() {
-            val currentDay = dayOfYear ?: return null
-            val nextDay = nextWeatherDayOfYear ?: return null
+            val currentDay = totalDaysSinceBase ?: return null
+            val nextDay = nextWeatherDayOffset ?: return null
             val season = DateTimeAPI.season ?: return null
             val day = DateTimeAPI.day
             if (day <= 0) return null
@@ -60,7 +66,7 @@ public object WeatherAPI {
                 day = day,
             )
 
-            return startOfDay + (nextDay - currentDay).skyblockDays
+            return startOfDay + (nextDay - currentDay).toInt().skyblockDays
         }
 
     @Subscription
