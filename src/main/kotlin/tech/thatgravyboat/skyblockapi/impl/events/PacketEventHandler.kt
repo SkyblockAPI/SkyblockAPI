@@ -3,7 +3,9 @@ package tech.thatgravyboat.skyblockapi.impl.events
 import com.google.common.cache.CacheBuilder
 import me.owdding.ktmodules.Module
 import net.minecraft.core.BlockPos
-import net.minecraft.network.protocol.game.*
+import net.minecraft.network.protocol.game.ClientboundContainerClosePacket
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket
 import net.minecraft.world.level.block.state.BlockState
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
@@ -12,7 +14,6 @@ import tech.thatgravyboat.skyblockapi.api.events.level.PacketSentEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration

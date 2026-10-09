@@ -16,7 +16,6 @@ import tech.thatgravyboat.skyblockapi.api.datetime.skyblockYears
 import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
-import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import kotlin.math.floor
 import kotlin.time.Instant
 

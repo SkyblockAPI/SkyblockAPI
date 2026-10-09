@@ -6,20 +6,29 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-//? < 26.2
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.asBoolean
+import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
+import tech.thatgravyboat.skyblockapi.utils.extentions.asString
+import tech.thatgravyboat.skyblockapi.utils.extentions.getIntOrNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.getLongOrNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.getObjectOrNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.getStringOrNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.getUuidOrNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
-import java.util.*
+import java.util.UUID
 import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
+
+//? < 26.2
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
 @Module
 object GenericDataTypes {

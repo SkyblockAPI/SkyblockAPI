@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
-import net.minecraft.commands.arguments.SlotArgument.slot
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.NbtUtils
 import net.minecraft.network.chat.Component
@@ -15,18 +14,22 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
 import tech.thatgravyboat.skyblockapi.api.item.calculator.getItemValue
-import tech.thatgravyboat.skyblockapi.api.item.getVisualItem
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.platform.drawString
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
+import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
+import tech.thatgravyboat.skyblockapi.utils.extentions.getTexture
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toNbt
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.appendLine
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor

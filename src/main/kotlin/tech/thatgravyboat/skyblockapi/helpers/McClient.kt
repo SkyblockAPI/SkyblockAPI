@@ -1,7 +1,5 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
-//? >= 26.3
-import com.mojang.blaze3d.Blaze3D
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
@@ -10,8 +8,6 @@ import net.minecraft.SharedConstants
 import net.minecraft.client.Minecraft
 import net.minecraft.client.Options
 import net.minecraft.client.gui.Gui
-//? >= 26.2
-import net.minecraft.client.gui.Hud
 import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.gui.screens.ChatScreen
@@ -26,8 +22,6 @@ import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
-//? < 26.3
-//import net.minecraft.util.Util
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 import tech.thatgravyboat.skyblockapi.utils.McVersion
@@ -36,6 +30,13 @@ import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
+
+//? >= 26.3
+import com.mojang.blaze3d.Blaze3D
+//? >= 26.2
+import net.minecraft.client.gui.Hud
+//? < 26.3
+//import net.minecraft.util.Util
 
 object McClient {
 

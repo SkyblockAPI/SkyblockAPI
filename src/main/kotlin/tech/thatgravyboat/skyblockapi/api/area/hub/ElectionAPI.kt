@@ -4,7 +4,12 @@ import me.owdding.ktmodules.Module
 import net.minecraft.network.chat.Component
 import net.minecraft.util.TriState
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.api.data.*
+import tech.thatgravyboat.skyblockapi.api.data.ElectionJson
+import tech.thatgravyboat.skyblockapi.api.data.MayorCandidate
+import tech.thatgravyboat.skyblockapi.api.data.MayorCandidates
+import tech.thatgravyboat.skyblockapi.api.data.MayorPerk
+import tech.thatgravyboat.skyblockapi.api.data.MayorPerks
+import tech.thatgravyboat.skyblockapi.api.data.PerkJson
 import tech.thatgravyboat.skyblockapi.api.data.stored.ElectionStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.PERKPOCALYPSE_CANDIDATE_DURATION
 import tech.thatgravyboat.skyblockapi.api.data.stored.StoredMayor

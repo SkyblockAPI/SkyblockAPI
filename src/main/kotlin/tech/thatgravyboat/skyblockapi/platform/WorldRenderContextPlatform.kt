@@ -1,13 +1,11 @@
 package tech.thatgravyboat.skyblockapi.platform
 
 import net.minecraft.client.gui.Font
-import net.minecraft.gizmos.Gizmos
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.LightCoordsUtil
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderWorldEvent
-import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 fun RenderWorldEvent.drawString(

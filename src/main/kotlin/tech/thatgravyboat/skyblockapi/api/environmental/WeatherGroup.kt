@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.environmental
 
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockStat
-import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
