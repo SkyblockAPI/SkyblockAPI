@@ -41,7 +41,7 @@ public object Regexes {
 
     @JvmStatic
     @ApiStatus.Internal
-    internal fun load() {
+    public fun load() {
         if (McClient.isDev) return
         runCatchBlocking {
             val result = Http.getResult<JsonObject>(URL)
