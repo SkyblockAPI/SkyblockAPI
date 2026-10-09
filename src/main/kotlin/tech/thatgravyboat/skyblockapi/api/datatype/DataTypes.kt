@@ -37,6 +37,7 @@ public object DataTypes {
 
     //? < 26.3 {
     /*@Deprecated("Removed DataType", ReplaceWith("GenericDataTypes.BOOSTER_TIERS"))
+    @Suppress("DEPRECATION")
     public val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS*///?}
     public val BOOSTER_TIERS: DataType<Map<String, Int>> = GenericDataTypes.BOOSTER_TIERS
     public val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK

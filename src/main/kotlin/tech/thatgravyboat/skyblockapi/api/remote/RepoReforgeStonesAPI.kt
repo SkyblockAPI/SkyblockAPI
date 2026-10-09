@@ -11,6 +11,6 @@ public object RepoReforgeStonesAPI {
     public fun getReforge(id: String): ReforgeData? = SkyBlockReforgeStonesRepo.get(id)
     public fun getReforgeByName(name: String): Pair<String, ReforgeData>? = SkyBlockReforgeStonesRepo.getByName(name)
 
-    public fun ReforgeData.getApplyCosts() = SkyBlockRarity.entries.associateWith { applyCost()[it.name] }.filter { it.value != null }
-    public fun ReforgeData.getApplyCost(rarity: SkyBlockRarity) = getApplyCosts()[rarity]
+    public fun ReforgeData.getApplyCosts(): Map<SkyBlockRarity, Long?> = SkyBlockRarity.entries.associateWith { applyCost()[it.name] }.filter { it.value != null }
+    public fun ReforgeData.getApplyCost(rarity: SkyBlockRarity): Long? = getApplyCosts()[rarity]
 }*///?}

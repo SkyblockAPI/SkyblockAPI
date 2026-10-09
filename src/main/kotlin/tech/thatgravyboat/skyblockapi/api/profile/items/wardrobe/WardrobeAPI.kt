@@ -4,6 +4,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe
 /*import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.ArmorWardrobeAPI as NewWardrobeAPI
 
 @Deprecated("Replace with ArmorWardrobeAPI", ReplaceWith("ech.thatgravyboat.skyblockapi.api.profile.items.loadout.ArmorWardrobeAPI"))
+@Suppress("DEPRECATION")
 public object WardrobeAPI {
     public val inWardrobe: Boolean get() = NewWardrobeAPI.inWardrobe
 
@@ -13,5 +14,5 @@ public object WardrobeAPI {
     public val slots: List<WardrobeSlot> get() = NewWardrobeAPI.slots.map { it.into() }
     public val currentSlot: Int? get() = NewWardrobeAPI.currentSlot
 
-    public fun isCurrentSlotInCurrentPage(): Unit = NewWardrobeAPI.isCurrentSlotInCurrentPage()
+    public fun isCurrentSlotInCurrentPage(): Boolean = NewWardrobeAPI.isCurrentSlotInCurrentPage()
 }*///?}

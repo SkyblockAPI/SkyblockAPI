@@ -20,7 +20,7 @@ private const val URL = "https://api.hypixel.net/v2/resources/skyblock/items"
 @Module
 public object ItemData {
     //? < 26.2
-    //@Deprecated("Use ItemData.data instead", ReplaceWith("data.values")) val itemData: List<HypixelApiItem> get() = data.values.toList()
+    //@Deprecated("Use ItemData.data instead", ReplaceWith("data.values")) public val itemData: List<HypixelApiItem> get() = data.values.toList()
 
     private val backupData: Map<String, HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
         ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())

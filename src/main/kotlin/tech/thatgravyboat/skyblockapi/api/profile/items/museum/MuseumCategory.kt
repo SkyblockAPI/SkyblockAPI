@@ -23,7 +23,7 @@ public enum class MuseumCategory(internal val deprecated: Boolean = false) {
     ;
 
     @RemoveNextVersion @Deprecated("This museum category doesn't exist anymore!", level = DeprecationLevel.ERROR)
-    inline val isArmor: Boolean get() = false
+    public inline val isArmor: Boolean get() = false
     *///?} else
     ;
 

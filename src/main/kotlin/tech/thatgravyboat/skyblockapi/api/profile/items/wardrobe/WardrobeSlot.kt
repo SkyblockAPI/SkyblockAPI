@@ -11,5 +11,6 @@ public data class WardrobeSlot(
     val locked: Boolean,
 )
 
+@Suppress("DEPRECATION")
 internal fun NewWardrobeSlot.into() = WardrobeSlot(id, slots, locked)
 *///?}

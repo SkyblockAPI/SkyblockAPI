@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockPetsRepo
 
 @Deprecated("")
+@Suppress("DEPRECATION")
 public object RepoPetsAPI {
 
     public fun getPetInfo(id: String): PetsAPI.Data? = SkyBlockPetsRepo.get(id)

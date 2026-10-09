@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockRunesRepo
 public object RepoRunesAPI {
 
     public fun getRuneById(id: String): List<Rune>? = SkyBlockRunesRepo.get(id)
-    public fun getRune(id: String, tier: Int) = SkyBlockRunesRepo.getTier(id, tier)
+    public fun getRune(id: String, tier: Int): Rune? = SkyBlockRunesRepo.getTier(id, tier)
 
     public fun getRune(string: String): Rune? {
         val split = string.split(":")
@@ -29,7 +29,7 @@ public object RepoRunesAPI {
         this.tier = tier
     }
 
-    public fun Rune.getId() = buildString {
+    public fun Rune.getId(): String = buildString {
         append("rune:")
         append(this@getId.id())
         append(":")

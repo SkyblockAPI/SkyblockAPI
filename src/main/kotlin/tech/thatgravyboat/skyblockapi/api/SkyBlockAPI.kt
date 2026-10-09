@@ -55,8 +55,10 @@ public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         SkyBlockApiDevUtils.init()
         if (McClient.isDev) SkyblockAPIDevModules.init(eventBus::register)
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
-            //? < 26.3
+            //? < 26.3 {
+            //@Suppress("DEPRECATION")
             //RepoStatusEvent(status).post()
+            //? }
             RepoEvent.Status(status).post()
             RepoEvent.Reload(status).post()
         }
