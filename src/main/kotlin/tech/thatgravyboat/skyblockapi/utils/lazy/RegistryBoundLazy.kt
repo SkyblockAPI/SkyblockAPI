@@ -3,9 +3,9 @@ package tech.thatgravyboat.skyblockapi.utils.lazy
 import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents
 
-fun <T : Any> registryBoundLazy(factory: () -> T): Lazy<T> = RegistryBoundLazy(factory)
+public fun <T : Any> registryBoundLazy(factory: () -> T): Lazy<T> = RegistryBoundLazy(factory)
 
-class RegistryBoundLazy<out T : Any>(private val factory: () -> T) : Lazy<T> {
+public class RegistryBoundLazy<out T : Any>(private val factory: () -> T) : Lazy<T> {
 
     private var cacheKey = -1
     private var _value: Any? = null

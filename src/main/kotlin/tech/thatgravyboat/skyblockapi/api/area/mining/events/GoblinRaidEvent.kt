@@ -8,11 +8,11 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
-class GoblinRaidEvent : MiningEvent {
+public class GoblinRaidEvent : MiningEvent {
 
-    var kills: Int = 0
+    public var kills: Int = 0
         private set
-    var remaining: Int = 0
+    public var remaining: Int = 0
         private set
 
     override val name: String = "Goblin Raid"
@@ -33,7 +33,7 @@ class GoblinRaidEvent : MiningEvent {
         )
 
         @Subscription
-        fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+        public fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
             val miningEvent = MiningEventsAPI.event as? GoblinRaidEvent ?: return
             killsRegex.anyMatch(event.added, "kills") { (kills) ->
                 miningEvent.kills = kills.toIntValue()

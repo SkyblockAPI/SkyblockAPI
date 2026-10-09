@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 
 @Module
-object VaultAPI {
+public object VaultAPI {
 
     @Subscription
     @MustBeContainer
@@ -19,5 +19,5 @@ object VaultAPI {
         VaultStorage.addItem(this.item)
     }
 
-    fun getItems(): List<ItemStack> = VaultStorage.getItems().toList()
+    public fun getItems(): List<ItemStack> = VaultStorage.getItems().toList()
 }

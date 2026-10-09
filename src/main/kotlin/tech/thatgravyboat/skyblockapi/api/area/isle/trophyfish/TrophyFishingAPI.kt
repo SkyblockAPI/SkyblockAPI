@@ -22,7 +22,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import kotlin.math.max
 
 @Module
-object TrophyFishingAPI {
+public object TrophyFishingAPI {
 
     private val chatGroup = RegexGroup.CHAT.group("trophy_api")
     private val inventoryGroup = RegexGroup.INVENTORY.group("trophy_api")
@@ -44,7 +44,7 @@ object TrophyFishingAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    public fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
         matchWhen(content) {
             case(singleTrophyFishCaughtRegex, "type", "tier") { (type, tier) ->
@@ -69,7 +69,7 @@ object TrophyFishingAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
-    fun onInventory(event: InventoryChangeEvent) {
+    public fun onInventory(event: InventoryChangeEvent) {
         if (event.title != "Trophy Fish") return
         if (event.isInPlayerInventory) return
         if (!event.isInMainPart) return
@@ -91,7 +91,7 @@ object TrophyFishingAPI {
     @OptIn(SkyBlockPvRequired::class)
     @Subscription
     @OnlyOnSkyBlock
-    fun onPv(event: SkyBlockPvOpenedEvent) {
+    public fun onPv(event: SkyBlockPvOpenedEvent) {
         val obtained = event.member["trophy_fish"].asMap { key, value ->
             if (!value.isJsonPrimitive) null to 0
             else key to value.asInt(0)
@@ -121,12 +121,12 @@ object TrophyFishingAPI {
     }
 
     @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
-    fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
+    public fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
         return TrophyFishStorage.getCaught(type).map { TrophyFishTier.valueOf(it.key.name) to it.value }.toMap()
     }
 
     @JvmName("getCaughtTiers")
-    fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
+    public fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
         return TrophyFishStorage.getCaught(type)
     }
 }

@@ -11,26 +11,26 @@ import tech.thatgravyboat.skyblockapi.mixins.accessors.ContainerScreenAccessor
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSkyblockFiller
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-class InventoryChangeEvent(
-    val item: ItemStack,
-    val slot: Slot,
-    val titleComponent: Component,
-    val inventory: List<Slot>,
-    val screen: AbstractContainerScreen<*>,
-    val previousItem: ItemStack,
+public class InventoryChangeEvent(
+    public val item: ItemStack,
+    public val slot: Slot,
+    public val titleComponent: Component,
+    public val inventory: List<Slot>,
+    public val screen: AbstractContainerScreen<*>,
+    public val previousItem: ItemStack,
 ) : SkyBlockEvent(), ItemDebugAttachable by item {
-    val isInPlayerInventory = slot.container is Inventory
-    val title = titleComponent.stripped
-    val itemStacks = inventory.map { it.item }
+    public val isInPlayerInventory = slot.container is Inventory
+    public val title = titleComponent.stripped
+    public val itemStacks = inventory.map { it.item }
 
-    val isSkyBlockFiller = item.isSkyblockFiller()
+    public val isSkyBlockFiller = item.isSkyblockFiller()
 
-    val isInTopRow = slot.index < 9
-    val isInBottomRow = (screen as? ContainerScreenAccessor)?.containerRows?.let { (slot.index) >= (it - 1) * 9 } ?: false
-    val isOnLeftColumn = slot.index % 9 == 0
-    val isOnRightColumn = slot.index % 9 == 8
+    public val isInTopRow = slot.index < 9
+    public val isInBottomRow = (screen as? ContainerScreenAccessor)?.containerRows?.let { (slot.index) >= (it - 1) * 9 } ?: false
+    public val isOnLeftColumn = slot.index % 9 == 0
+    public val isOnRightColumn = slot.index % 9 == 8
 
-    val isOnSides = isOnLeftColumn || isOnRightColumn
-    val isInTopRowOrBottomRow = isInTopRow || isInBottomRow
-    val isInMainPart = !isOnSides && !isInTopRowOrBottomRow
+    public val isOnSides = isOnLeftColumn || isOnRightColumn
+    public val isInTopRowOrBottomRow = isInTopRow || isInBottomRow
+    public val isInMainPart = !isOnSides && !isInTopRowOrBottomRow
 }

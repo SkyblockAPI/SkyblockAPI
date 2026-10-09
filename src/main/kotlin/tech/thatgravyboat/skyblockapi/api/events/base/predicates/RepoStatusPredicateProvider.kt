@@ -9,9 +9,9 @@ import tech.thatgravyboat.skyblockapi.api.events.repo.RepoEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import java.lang.reflect.Method
 
-annotation class OnRepoStatus(val repoStatus: RepoStatus)
+public annotation class OnRepoStatus(val repoStatus: RepoStatus)
 
-class RepoStatusPredicateProvider : EventPredicateProvider {
+public class RepoStatusPredicateProvider : EventPredicateProvider {
     override fun getPredicate(method: Method): EventPredicate? {
         val status = method.getAnnotation<OnRepoStatus>() ?: return null
         return { event, _ ->

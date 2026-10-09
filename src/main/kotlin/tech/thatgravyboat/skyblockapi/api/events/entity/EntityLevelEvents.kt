@@ -6,15 +6,15 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attribute
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-class EntityRemovedEvent(val entity: Entity) : SkyBlockEvent()
-class EntityAddedEvent(val entity: Entity) : SkyBlockEvent()
+public class EntityRemovedEvent(val entity: Entity) : SkyBlockEvent()
+public class EntityAddedEvent(val entity: Entity) : SkyBlockEvent()
 
 
-class EntityEquipmentUpdateEvent(val entity: LivingEntity) : SkyBlockEvent()
+public class EntityEquipmentUpdateEvent(val entity: LivingEntity) : SkyBlockEvent()
 
-class EntityAttributesUpdateEvent(
-    val entity: LivingEntity,
-    val changed: Map<Holder<Attribute>, ChangedAttribute>,
+public class EntityAttributesUpdateEvent(
+    public val entity: LivingEntity,
+    public val changed: Map<Holder<Attribute>, ChangedAttribute>,
 ) : SkyBlockEvent() {
-    data class ChangedAttribute(val old: Double, val new: Double)
+    public data class ChangedAttribute(val old: Double, val new: Double)
 }

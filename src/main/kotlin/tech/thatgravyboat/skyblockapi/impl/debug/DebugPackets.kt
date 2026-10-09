@@ -26,7 +26,7 @@ import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
 
 @Module
-object DebugPackets {
+public object DebugPackets {
 
     private data class StoredPacket(
         val packet: Packet<*>,
@@ -83,12 +83,12 @@ object DebugPackets {
     // We set the priority as the lowest possible, that way we can know for sure what packets are being cancelled
     // Also, since both packet received and packet sent events extend PacketEvent, we can simply just use this one
     @Subscription(priority = Int.MAX_VALUE, receiveCancelled = true)
-    fun onPacket(event: PacketEvent) {
+    public fun onPacket(event: PacketEvent) {
         if (!logPackets) return
         this.packets.add(StoredPacket(event.packet, event.isCancelled))
     }
 
-    data class PacketEntry(
+    public data class PacketEntry(
         val type: PacketType<*>,
         val content: Either<JsonElement, Throwable>,
         val cancelled: Boolean,

@@ -21,7 +21,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import kotlin.math.max
 
 @Module
-object DebugTooltips {
+public object DebugTooltips {
 
     private var lastItem = 0
     private var keys = mutableListOf<DataType<*>>()
@@ -32,7 +32,7 @@ object DebugTooltips {
     private val isEnabled: Boolean get() = McClient.isDev || toggle
 
     @Subscription
-    fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
+    public fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
         if (!isEnabled) return
         if (keys.isEmpty()) return
         if (!McScreen.isAltDown) return
@@ -46,7 +46,7 @@ object DebugTooltips {
     }
 
     @Subscription
-    fun onGetDebugTooltip(event: ItemDebugTooltipEvent) {
+    public fun onGetDebugTooltip(event: ItemDebugTooltipEvent) {
         if (!isEnabled) return
         val types = event.item.getDataTypes()
         if (types.isEmpty()) return

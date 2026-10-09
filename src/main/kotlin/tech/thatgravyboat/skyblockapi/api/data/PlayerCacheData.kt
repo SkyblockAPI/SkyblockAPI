@@ -5,16 +5,16 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import java.util.UUID
 
 @GenerateCodec
-data class PlayerCacheData(
+public data class PlayerCacheData(
     val players: MutableMap<UUID, CachedPlayer> = mutableMapOf()
 ) {
     companion object {
-        val CODEC = SkyblockAPICodecs.getCodec<PlayerCacheData>()
+        public val CODEC = SkyblockAPICodecs.getCodec<PlayerCacheData>()
     }
 }
 
 @GenerateCodec
-data class CachedPlayer(
+public data class CachedPlayer(
     var name: String,
     var time: Long = System.currentTimeMillis()
 )

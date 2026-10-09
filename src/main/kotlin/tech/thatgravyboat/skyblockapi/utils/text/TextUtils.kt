@@ -10,19 +10,19 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.*
 import net.minecraft.network.chat.TextColor as McTextColor
 
-object TextUtils {
+public object TextUtils {
 
-    fun Component.isEmpty(): Boolean = this.stripped.isEmpty()
-    fun Component.isBlank(): Boolean = this.stripped.isBlank()
+    public fun Component.isEmpty(): Boolean = this.stripped.isEmpty()
+    public fun Component.isBlank(): Boolean = this.stripped.isBlank()
 
     /** Returns a copy of the component where all the leading and trailing lines that are blank have been removed */
-    fun Component.trimLines(): Component {
+    public fun Component.trimLines(): Component {
         return Text.multiline(splitLines().dropWhile { it.isBlank() }.dropLastWhile { it.isBlank() })
     }
 
-    fun Component.splitLines(): List<Component> = split("\n")
+    public fun Component.splitLines(): List<Component> = split("\n")
 
-    fun Component.split(separator: String): List<Component> {
+    public fun Component.split(separator: String): List<Component> {
         val components = mutableListOf<Component>()
         var current = Component.empty()
 
@@ -72,21 +72,21 @@ object TextUtils {
         return output
     }
 
-    fun Component.splitToWidth(separator: String, maxWidth: Int): List<Component> = split(
+    public fun Component.splitToWidth(separator: String, maxWidth: Int): List<Component> = split(
         this.split(separator),
         maxWidth,
         McFont::width,
     ) { Text.join(*it.toTypedArray(), Text.of(separator)) }
 
-    fun String.splitToWidth(separator: String, maxWidth: Int): List<String> = split(
+    public fun String.splitToWidth(separator: String, maxWidth: Int): List<String> = split(
         this.split(separator),
         maxWidth,
         McFont::width,
     ) { it.joinToString(separator) }
 
-    fun Component.substring(startIndex: Int): Component = this.substring(startIndex, this.stripped.length)
-    fun Component.substring(startIndex: Int, endIndex: Int): Component = ComponentUtils.substring(this, startIndex, endIndex)
-    fun Component.substring(range: IntRange): Component = this.substring(range.first, range.last)
+    public fun Component.substring(startIndex: Int): Component = this.substring(startIndex, this.stripped.length)
+    public fun Component.substring(startIndex: Int, endIndex: Int): Component = ComponentUtils.substring(this, startIndex, endIndex)
+    public fun Component.substring(range: IntRange): Component = this.substring(range.first, range.last)
 
     // TODO: optimize color codes to only add the necessary ones
     internal fun Component.toStringWithFormattingCodes(): String {

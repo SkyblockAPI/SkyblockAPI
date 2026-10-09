@@ -5,9 +5,9 @@ import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.chunked
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-typealias TabListHeaderFooterUpdateEvent = TabListHeaderFooterChangeEvent
+public typealias TabListHeaderFooterUpdateEvent = TabListHeaderFooterChangeEvent
 
-data class TabListHeaderFooterChangeEvent(
+public data class TabListHeaderFooterChangeEvent(
     val oldFooter: Component,
     val oldHeader: Component,
     val newFooter: Component,

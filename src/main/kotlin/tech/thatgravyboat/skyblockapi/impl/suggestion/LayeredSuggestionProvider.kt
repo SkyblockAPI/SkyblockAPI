@@ -7,8 +7,8 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import java.util.concurrent.CompletableFuture
 
-data class LayeredSuggestionProvider(val providers: Iterable<SuggestionProvider<FabricClientCommandSource>>) : SuggestionProvider<FabricClientCommandSource> {
-    constructor(vararg providers: SuggestionProvider<FabricClientCommandSource>) : this(providers.toList())
+public data class LayeredSuggestionProvider(val providers: Iterable<SuggestionProvider<FabricClientCommandSource>>) : SuggestionProvider<FabricClientCommandSource> {
+    public constructor(vararg providers: SuggestionProvider<FabricClientCommandSource>) : this(providers.toList())
 
     override fun getSuggestions(
         context: CommandContext<FabricClientCommandSource>,

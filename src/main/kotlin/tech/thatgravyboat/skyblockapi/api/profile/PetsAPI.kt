@@ -21,7 +21,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @Module
-object PetsAPI {
+public object PetsAPI {
 
     private val petGroup = RegexGroup.TABLIST_WIDGET.group("pet")
 
@@ -46,27 +46,27 @@ object PetsAPI {
         " MAX LEVEL"
     )
 
-    var pet: String? = null
+    public var pet: String? = null
         private set
 
-    var rarity: SkyBlockRarity? = null
+    public var rarity: SkyBlockRarity? = null
         private set
 
-    var level: Int = 0
+    public var level: Int = 0
         private set
 
-    var isMaxLevel: Boolean = false
+    public var isMaxLevel: Boolean = false
         private set
 
-    var xp: Double = 0.0
+    public var xp: Double = 0.0
         private set
 
-    var xpToNextLevel: Double = 0.0
+    public var xpToNextLevel: Double = 0.0
         private set
 
     @Subscription
     @OnlyWidget(TabWidget.PET)
-    fun onTabWidgetChange(event: TabWidgetChangeEvent) {
+    public fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         this.reset()
         if (event.new.size < 2) return
         petRegex.anyMatch(event.newComponents, "level", "pet") { (level, pet) ->

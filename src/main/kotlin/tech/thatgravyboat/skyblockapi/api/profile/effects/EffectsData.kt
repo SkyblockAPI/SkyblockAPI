@@ -6,11 +6,11 @@ import kotlin.time.Duration
 import kotlin.time.Instant
 
 @GenerateCodec
-data class EffectsData(
+public data class EffectsData(
     var boosterCookieExpireTime: Instant = Instant.DISTANT_PAST,
     var godPotionDuration: Duration = Duration.ZERO,
 ) {
     companion object {
-        val CODEC = SkyblockAPICodecs.getCodec<EffectsData>()
+        public val CODEC = SkyblockAPICodecs.getCodec<EffectsData>()
     }
 }

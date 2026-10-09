@@ -11,7 +11,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.enumSetOf
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 @Module
-object DebugActionBar {
+public object DebugActionBar {
 
     private val widgetsToHide = enumSetOf<ActionBarWidget>()
 
@@ -32,7 +32,7 @@ object DebugActionBar {
     }
 
     @Subscription
-    fun onWidgetShow(event: RenderActionBarWidgetEvent) {
+    public fun onWidgetShow(event: RenderActionBarWidgetEvent) {
         if (event.widget in widgetsToHide) {
             event.cancel()
         }

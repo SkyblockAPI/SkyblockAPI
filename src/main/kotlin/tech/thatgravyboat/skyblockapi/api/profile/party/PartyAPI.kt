@@ -35,7 +35,7 @@ private val MINIMUM_PARTY_INFO_DELAY = 1.minutes
 internal typealias PartyRole = ClientboundPartyInfoPacket.PartyRole
 
 @Module
-object PartyAPI {
+public object PartyAPI {
 
     //region Regex
     private val chatGroup = RegexGroup.CHAT.group("party")
@@ -111,18 +111,18 @@ object PartyAPI {
     ).toComponentRegex()
     //endregion
 
-    var inParty: Boolean = false
+    public var inParty: Boolean = false
         private set
 
-    var leader: PartyMember? = null
+    public var leader: PartyMember? = null
         private set
 
-    var members: List<PartyMember> = emptyList()
+    public var members: List<PartyMember> = emptyList()
         private set
 
-    val size: Int get() = members.size
+    public val size: Int get() = members.size
 
-    var allInvite: Boolean = false
+    public var allInvite: Boolean = false
         private set
 
     private var requestedPartyInfo: Boolean = false
@@ -149,7 +149,7 @@ object PartyAPI {
     private val debug by debugToggle("party_api", "Allows you to see what messages get detected by PartyAPI, and what they modify.")
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    public fun onChat(event: ChatReceivedEvent.Pre) {
         val message = event.text
         ownJoinedRegex.findThenNull(message, "leader") { (leaderName) ->
             inParty = true
@@ -275,7 +275,7 @@ object PartyAPI {
     }
 
     @Subscription
-    fun onPartyInfo(event: PartyInfoEvent) {
+    public fun onPartyInfo(event: PartyInfoEvent) {
         debugMessage { "Updated from packet" }
         this.requestedPartyInfo = false
         if (!event.inParty) return reset()

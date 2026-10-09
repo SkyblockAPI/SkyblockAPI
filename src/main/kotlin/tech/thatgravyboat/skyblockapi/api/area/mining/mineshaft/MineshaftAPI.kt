@@ -19,7 +19,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
 
 @Module
-object MineshaftAPI {
+public object MineshaftAPI {
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("mineshaft")
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("mineshaft")
@@ -46,24 +46,24 @@ object MineshaftAPI {
         "WOW! You found a Glacite Mineshaft portal!",
     )
 
-    var mineshaftType: MineshaftType? = null
+    public var mineshaftType: MineshaftType? = null
         private set
 
-    var mineshaftVariant: MineshaftVariant? = null
+    public var mineshaftVariant: MineshaftVariant? = null
         private set
 
-    val isCrystal: Boolean
+    public val isCrystal: Boolean
         get() = mineshaftVariant == MineshaftVariant.CRYSTAL
 
-    var scrap: Int = 0
+    public var scrap: Int = 0
         private set
 
-    var corpses: List<Corpse> = listOf()
+    public var corpses: List<Corpse> = listOf()
         private set
 
     @Subscription
     @OnlyIn(SkyBlockIsland.MINESHAFT)
-    fun onWidgetUpdate(event: TabWidgetChangeEvent) {
+    public fun onWidgetUpdate(event: TabWidgetChangeEvent) {
         when (event.widget) {
             TabWidget.AREA -> {
                 scrapRegex.anyFound(event.new, "scrap") { (scrap) ->
@@ -92,7 +92,7 @@ object MineshaftAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.MINESHAFT)
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    public fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         mineshaftTypeRegex.anyFound(event.added, "type", "variant") { (type, variant) ->
             this.mineshaftType = MineshaftType.fromId(type)
             this.mineshaftVariant = MineshaftVariant.fromId(variant).takeUnless { _ -> this.mineshaftType == MineshaftType.LITTLE }
@@ -102,7 +102,7 @@ object MineshaftAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.DWARVEN_MINES)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    public fun onChat(event: ChatReceivedEvent.Pre) {
         if (mineshaftFoundRegex.matches(event.text)) {
             MineshaftFoundEvent.post()
         }
@@ -116,5 +116,5 @@ object MineshaftAPI {
     }
 
     @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
-    fun onWorldChange() = reset()
+    public fun onWorldChange() = reset()
 }

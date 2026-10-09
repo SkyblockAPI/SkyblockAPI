@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.hypixel
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.profile.friends.Friend
 
-sealed class FriendEvent(val friend: Friend) : SkyBlockEvent() {
-    class Join(friend: Friend) : FriendEvent(friend)
-    class Leave(friend: Friend) : FriendEvent(friend)
+public sealed class FriendEvent(val friend: Friend) : SkyBlockEvent() {
+    public class Join(friend: Friend) : FriendEvent(friend)
+    public class Leave(friend: Friend) : FriendEvent(friend)
 }

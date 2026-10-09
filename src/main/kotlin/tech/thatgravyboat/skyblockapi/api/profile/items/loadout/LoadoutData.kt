@@ -4,12 +4,12 @@ import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class LoadoutData(
+public data class LoadoutData(
     var armor: WardrobeData = WardrobeData(),
     var equipment: WardrobeData = WardrobeData(),
     var loadouts: Loadout = Loadout(),
 ) {
     companion object {
-        val CODEC = SkyblockAPICodecs.getCodec<LoadoutData>()
+        public val CODEC = SkyblockAPICodecs.getCodec<LoadoutData>()
     }
 }

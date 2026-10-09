@@ -18,7 +18,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
 @Module
-object PacketEventHandler {
+public object PacketEventHandler {
     private val lastBlockChanges = CacheBuilder.newBuilder()
         .maximumSize(15)
         .expireAfterWrite(1.seconds.toJavaDuration())
@@ -27,7 +27,7 @@ object PacketEventHandler {
     private var lastContainerCloseId: Int? = null
 
     @Subscription
-    fun onPacketSend(event: PacketSentEvent) {
+    public fun onPacketSend(event: PacketSentEvent) {
         when (event.packet) {
             is ServerboundContainerClosePacket -> {
                 lastContainerCloseId = event.packet.containerId
@@ -37,7 +37,7 @@ object PacketEventHandler {
     }
 
     @Subscription
-    fun onPacketReceived(event: PacketReceivedEvent) {
+    public fun onPacketReceived(event: PacketReceivedEvent) {
         when (val packet = event.packet) {
             is ClientboundContainerSetContentPacket -> {
                 McClient.runNextTick {

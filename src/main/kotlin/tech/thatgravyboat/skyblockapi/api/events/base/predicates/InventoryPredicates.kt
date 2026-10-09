@@ -12,19 +12,19 @@ import java.lang.reflect.Method
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class InventoryTitle(
+public annotation class InventoryTitle(
     @Language("RegExp") vararg val title: String,
 )
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class MustBeContainer
+public annotation class MustBeContainer
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class IgnoreFiller
+public annotation class IgnoreFiller
 
-class InventoryFillerPredicate : EventPredicateProvider {
+public class InventoryFillerPredicate : EventPredicateProvider {
     override fun getPredicate(method: Method): EventPredicate? {
         if (!method.hasAnnotation<IgnoreFiller>()) return null
 
@@ -35,7 +35,7 @@ class InventoryFillerPredicate : EventPredicateProvider {
     }
 }
 
-class InventoryPredicates : EventPredicateProvider {
+public class InventoryPredicates : EventPredicateProvider {
     override fun getPredicate(method: Method): EventPredicate? {
         val inventoryTitle = method.getAnnotation<InventoryTitle>()?.title?.map { Regex(it) }
         val disallowPlayerInventory = method.hasAnnotation<MustBeContainer>()

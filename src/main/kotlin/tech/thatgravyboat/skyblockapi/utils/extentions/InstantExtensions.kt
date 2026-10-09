@@ -6,17 +6,17 @@ import kotlin.time.Duration
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
 
-fun currentInstant(): Instant = Clock.System.now()
+public fun currentInstant(): Instant = Clock.System.now()
 
-fun Duration.fromNow(): Instant = currentInstant() + this
+public fun Duration.fromNow(): Instant = currentInstant() + this
 
-fun Duration.ago(): Instant = currentInstant() - this
+public fun Duration.ago(): Instant = currentInstant() - this
 
-fun Instant.since(): Duration = currentInstant() - this
+public fun Instant.since(): Duration = currentInstant() - this
 
-fun Instant.until(): Duration = this - currentInstant()
+public fun Instant.until(): Duration = this - currentInstant()
 
-fun Instant.isInPast(): Boolean = this < currentInstant()
-fun Instant.isInFuture(): Boolean = this > currentInstant()
+public fun Instant.isInPast(): Boolean = this < currentInstant()
+public fun Instant.isInFuture(): Boolean = this > currentInstant()
 
-fun DateTimeFormatter.format(instant: Instant): String = this.format(instant.toJavaInstant())
+public fun DateTimeFormatter.format(instant: Instant): String = this.format(instant.toJavaInstant())

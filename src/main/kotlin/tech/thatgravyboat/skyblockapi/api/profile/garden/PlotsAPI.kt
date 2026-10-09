@@ -41,7 +41,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import kotlin.math.floor
 
 @Module
-object PlotAPI {
+public object PlotAPI {
     //region Regex
     private val inventoryGroup = RegexGroup.INVENTORY.group("plots")
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("plots")
@@ -100,7 +100,7 @@ object PlotAPI {
 
     private var currentPlotSlot = 1
 
-    val plots = listOf(
+    public val plots = listOf(
         listOf(21, 13, 9, 14, 22),
         listOf(15, 5, 1, 6, 16),
         listOf(10, 2, 0, 3, 11),
@@ -118,18 +118,18 @@ object PlotAPI {
         }.also { currentPlotSlot += 4 }
     }
 
-    var currentPestAmount = 0
+    public var currentPestAmount = 0
         private set
-    var hasPestDebuff: Boolean = false
+    public var hasPestDebuff: Boolean = false
         private set
 
 
-    fun getPlot(id: Int): Plot? = plots.find { it.id == id }
-    fun getPlotByName(name: String): Plot? = plots.find { it.data?.name == name }
+    public fun getPlot(id: Int): Plot? = plots.find { it.id == id }
+    public fun getPlotByName(name: String): Plot? = plots.find { it.data?.name == name }
 
-    fun getPlot(pos: Vec3): Plot? = plots.find { pos in it.aabb }
-    fun getPlot(pos: BlockPos): Plot? = getPlot(Vec3(pos))
-    fun getCurrentPlot(): Plot? = McPlayer.position?.let(::getPlot)
+    public fun getPlot(pos: Vec3): Plot? = plots.find { pos in it.aabb }
+    public fun getPlot(pos: BlockPos): Plot? = getPlot(Vec3(pos))
+    public fun getCurrentPlot(): Plot? = McPlayer.position?.let(::getPlot)
 
 
     private fun clearPests() {
@@ -162,7 +162,7 @@ object PlotAPI {
     @Subscription
     @OnlyNonGuest
     @OnlyIn(SkyBlockIsland.GARDEN)
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    public fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (scoreboardNoPestsRegex.anyMatch(event.new)) {
             clearPests()
             return
@@ -219,7 +219,7 @@ object PlotAPI {
     @Subscription
     @OnlyNonGuest
     @OnlyIn(SkyBlockIsland.GARDEN)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    public fun onChat(event: ChatReceivedEvent.Pre) {
         val shouldSynch = matchWhen(event.text) {
             case(chatSingularSpawnRegex, "name") { (name) ->
                 val plot = getPlotByName(name) ?: return@case
@@ -257,7 +257,7 @@ object PlotAPI {
     @Subscription
     @OnlyNonGuest
     @OnlyWidget(TabWidget.PESTS)
-    fun onTabWidget(event: TabWidgetChangeEvent) {
+    public fun onTabWidget(event: TabWidgetChangeEvent) {
         val plots = mutableListOf<Int>()
         var alive = 0
 
@@ -320,7 +320,7 @@ object PlotAPI {
 
 }
 
-data class Plot(
+public data class Plot(
     val id: Int,
     val slot: Int,
     val aabb: AABB,
@@ -333,7 +333,7 @@ data class Plot(
 }
 
 @GenerateCodec
-data class PlotData(
+public data class PlotData(
     val id: Int,
     var name: String,
     var pest: Pest,
@@ -341,7 +341,7 @@ data class PlotData(
     var isGreenhouse: Boolean = false,
     var locked: Boolean = false,
 ) {
-    constructor(id: Int, pest: Pest, deskIcon: String? = null, locked: Boolean = false) : this(id, "$id", pest, deskIcon, locked)
+    public constructor(id: Int, pest: Pest, deskIcon: String? = null, locked: Boolean = false) : this(id, "$id", pest, deskIcon, locked)
 
     internal fun save() {
         PlotsStorage.setPlot(this)
@@ -349,7 +349,7 @@ data class PlotData(
 }
 
 @GenerateCodec
-data class Pest(
+public data class Pest(
     var pest: Int,
     var inaccurate: Boolean,
 )

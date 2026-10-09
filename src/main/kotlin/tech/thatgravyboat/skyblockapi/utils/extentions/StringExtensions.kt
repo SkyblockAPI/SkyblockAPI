@@ -29,24 +29,24 @@ private val romanNumerals = mapOf(
     'M' to 1000,
 )
 
-fun String?.toIntValue(): Int = runCatching {
+public fun String?.toIntValue(): Int = runCatching {
     this?.replace(",", "")?.toInt() ?: 0
 }.getOrDefault(0)
 
-fun String?.toLongValue(): Long = runCatching {
+public fun String?.toLongValue(): Long = runCatching {
     this?.replace(",", "")?.toLong() ?: 0
 }.getOrDefault(0)
 
-fun String?.toFloatValue(): Float = runCatching {
+public fun String?.toFloatValue(): Float = runCatching {
     this?.replace(",", "")?.toFloat() ?: 0f
 }.getOrDefault(0f)
 
-fun String?.parseFormattedLong(default: Long = 0L): Long = parseFormattedDouble(default.toDouble()).toLong()
+public fun String?.parseFormattedLong(default: Long = 0L): Long = parseFormattedDouble(default.toDouble()).toLong()
 
-fun String?.parseFormattedInt(default: Int = 0): Int = parseFormattedLong(default.toLong()).toInt()
+public fun String?.parseFormattedInt(default: Int = 0): Int = parseFormattedLong(default.toLong()).toInt()
 
 @JvmOverloads
-fun String?.parseFormattedDouble(default: Double = 0.0): Double = runCatching {
+public fun String?.parseFormattedDouble(default: Double = 0.0): Double = runCatching {
     val commaless = this?.lowercase()?.replace(",", "")
     val multiplier = formattedMultiplier.entries.firstOrNull { commaless?.endsWith(it.key, true) == true }?.value
     return@runCatching if (multiplier != null) {
@@ -56,11 +56,11 @@ fun String?.parseFormattedDouble(default: Double = 0.0): Double = runCatching {
     }
 }.getOrDefault(default)
 
-fun String?.parseFormattedFloat(): Float = parseFormattedDouble().toFloat()
+public fun String?.parseFormattedFloat(): Float = parseFormattedDouble().toFloat()
 
-fun String?.parseRomanOrArabic(): Int = parseRomanNumeral().takeIf { it != 0 } ?: toIntValue()
+public fun String?.parseRomanOrArabic(): Int = parseRomanNumeral().takeIf { it != 0 } ?: toIntValue()
 
-fun String?.parseDuration(): Duration? = this?.runCatching {
+public fun String?.parseDuration(): Duration? = this?.runCatching {
     var total = 0L
     var current = 0L
     this.forEach {
@@ -83,7 +83,7 @@ fun String?.parseDuration(): Duration? = this?.runCatching {
     return@runCatching total.milliseconds
 }?.getOrNull()
 
-fun String?.parseWordDuration(): Duration? = this?.runCatching {
+public fun String?.parseWordDuration(): Duration? = this?.runCatching {
     var total = 0L
     var current = ""
     this.split(" ", ", ", " and ").forEach {
@@ -107,7 +107,7 @@ fun String?.parseWordDuration(): Duration? = this?.runCatching {
     return@runCatching total.seconds
 }?.getOrNull()
 
-fun String?.parseColonDuration(): Duration? = this?.runCatching {
+public fun String?.parseColonDuration(): Duration? = this?.runCatching {
     val splits = split(":")
     var currentMultiplier = (60.0.pow(splits.size - 1)).toLong()
     var total = 0L
@@ -118,7 +118,7 @@ fun String?.parseColonDuration(): Duration? = this?.runCatching {
     return@runCatching total.seconds
 }?.getOrNull()
 
-fun String?.parseRomanNumeral(): Int = runCatching {
+public fun String?.parseRomanNumeral(): Int = runCatching {
     var total = 0
     this?.forEachIndexed { index, c ->
         val value = romanNumerals[c] ?: return@forEachIndexed
@@ -129,7 +129,7 @@ fun String?.parseRomanNumeral(): Int = runCatching {
 }.getOrDefault(0)
 
 // todo: move into enum extensions with 1.21.6
-fun <T : Enum<T>> Enum<T>.toFormattedName(): String = name.toTitleCase()
+public fun <T : Enum<T>> Enum<T>.toFormattedName(): String = name.toTitleCase()
 
 private val regexGroup = Regexes.group("string")
 
@@ -140,15 +140,15 @@ private val cleanPlayerNameRegex = regexGroup.create(
 
 private val formattingCodesRegex = Regex("§.")
 
-fun String.cleanPlayerName(): String {
+public fun String.cleanPlayerName(): String {
     return cleanPlayerNameRegex.findGroup(this, "name") ?: this
 }
 
-fun Number.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
-fun Int.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
-fun Long.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
-fun Float.toFormattedString(): String = DecimalFormat.getNumberInstance().format(this)
-fun Double.toFormattedString(): String = DecimalFormat.getNumberInstance().format(this)
+public fun Number.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
+public fun Int.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
+public fun Long.toFormattedString(): String = NumberFormat.getNumberInstance().format(this)
+public fun Float.toFormattedString(): String = DecimalFormat.getNumberInstance().format(this)
+public fun Double.toFormattedString(): String = DecimalFormat.getNumberInstance().format(this)
 
 private val thousandsPlace = listOf("", "M", "MM", "MMM")
 private val hundredsPlace = listOf("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
@@ -158,7 +158,7 @@ private val onesPlace = listOf("", "I", "II", "III", "IV", "V", "VI", "VII", "VI
 /**
  * @param subtractive This refers to if it should preform subtractions for numbers such as 4 if true it will be IV if false it will be IIII
  */
-fun Int.toRomanNumeral(subtractive: Boolean = false): String {
+public fun Int.toRomanNumeral(subtractive: Boolean = false): String {
     if (subtractive) {
         return thousandsPlace[this / 1000] + hundredsPlace[this % 1000 / 100] + tensPlace[this % 100 / 10] + onesPlace[this % 10]
     } else {
@@ -174,7 +174,7 @@ fun Int.toRomanNumeral(subtractive: Boolean = false): String {
     }
 }
 
-fun String.stripColor(): String {
+public fun String.stripColor(): String {
     val sb = StringBuilder(this.length)
     var i = 0
     while (i < this.length) {
@@ -189,49 +189,49 @@ fun String.stripColor(): String {
     return sb.toString()
 }
 
-fun String.capitalize() = lowercase().split(" ", "_").joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
-fun String.toTitleCase() = capitalize()
+public fun String.capitalize() = lowercase().split(" ", "_").joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
+public fun String.toTitleCase() = capitalize()
 
-fun pluralize(n: Int, singular: String, plural: String? = null): String {
+public fun pluralize(n: Int, singular: String, plural: String? = null): String {
     return if (n == 1 || n == -1) singular else plural ?: "${singular}s"
 }
-fun String.pluralize(n: Int, plural: String? = null): String = pluralize(n, singular = this, plural)
+public fun String.pluralize(n: Int, plural: String? = null): String = pluralize(n, singular = this, plural)
 
-fun <A, B, C, D> Pair<A, B>.map(first: (A) -> C, second: (B) -> D): Pair<C, D> {
+public fun <A, B, C, D> Pair<A, B>.map(first: (A) -> C, second: (B) -> D): Pair<C, D> {
     return first(this.first) to second(this.second)
 }
 
 /** Trims both strings in the pair */
-fun Pair<String, String>.trim() = map(first = String::trim, second = String::trim)
+public fun Pair<String, String>.trim() = map(first = String::trim, second = String::trim)
 
 /** Creates a pair of strings from before and after the specified [delimiter], or the entire string and an empty string if there are none. */
-fun String.splitOnLast(delimiter: String): Pair<String, String> {
+public fun String.splitOnLast(delimiter: String): Pair<String, String> {
     val index = lastIndexOf(delimiter)
     return if (index == -1) this to ""
     else substring(0, index) to substring(index + 1)
 }
 
-fun String.trimIgnoreColor(): String {
+public fun String.trimIgnoreColor(): String {
     val start = colorCodesStart.find(this)?.groups?.get("start")?.value ?: ""
     val end = colorCodesEnd.find(this.reversed())?.groups?.get("end")?.value?.reversed() ?: ""
     val trimmed = this.removePrefix(start).removeSuffix(end)
     return start.replace(" ", "") + trimmed + end.replace(" ", "")
 }
 
-fun UUID.toDashlessString(): String = toString().replace("-", "")
+public fun UUID.toDashlessString(): String = toString().replace("-", "")
 
 // https://stackoverflow.com/a/63055977
 private val screamingSnakeCaseRegex = Regex("[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")
 
-fun String.toSnakeCase(): String {
+public fun String.toSnakeCase(): String {
     return screamingSnakeCaseRegex.findAll(this).joinToString("_") { it.value.lowercase() }
 }
 
-fun String.toScreamingSnakeCase(): String {
+public fun String.toScreamingSnakeCase(): String {
     return screamingSnakeCaseRegex.findAll(this).joinToString("_") { it.value.uppercase() }
 }
 
-fun String.removeTrailingChar(target: Char): String = dropLastWhile {  it == target }
+public fun String.removeTrailingChar(target: Char): String = dropLastWhile {  it == target }
 
 private val validChars = listOf(' ', '_', '-', ':')
-fun String.sanitizeForCommandInput() = this.filter { it.isDigit() || it.isLetter() || it in validChars }.trim()
+public fun String.sanitizeForCommandInput() = this.filter { it.isDigit() || it.isLetter() || it in validChars }.trim()

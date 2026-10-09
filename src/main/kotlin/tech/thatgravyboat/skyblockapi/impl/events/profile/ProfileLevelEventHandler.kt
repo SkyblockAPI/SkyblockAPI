@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 @Module
-object ProfileLevelEventHandler {
+public object ProfileLevelEventHandler {
 
     private val regexGroup = RegexGroup.TABLIST_WIDGET.group("profile")
 
@@ -22,7 +22,7 @@ object ProfileLevelEventHandler {
     private var lastXp: Int = 0
 
     @Subscription
-    fun onTabWidgetChange(event: TabWidgetChangeEvent) {
+    public fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         if (event.widget != TabWidget.PROFILE) return
         val level = event.new.getOrNull(1) ?: return
         levelRegex.match(level, "level", "xp", "nextXp") { (level, xp, nextXp) ->

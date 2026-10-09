@@ -4,12 +4,12 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
-class RenderHudElementEvent(
-    val element: HudElement,
-    val graphics: GuiGraphicsExtractor?,
+public class RenderHudElementEvent(
+    public val element: HudElement,
+    public val graphics: GuiGraphicsExtractor?,
 ) : CancellableSkyBlockEvent()
 
-enum class HudElement {
+public enum class HudElement {
     HOTBAR,
     JUMP,
     EXPERIENCE,

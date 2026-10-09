@@ -4,15 +4,15 @@ import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 import tech.thatgravyboat.skyblockapi.api.area.isle.kuudra.KuudraTier
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-class DungeonPartyFinderQueueEvent(
-    val floor: DungeonFloor,
-    val groupNote: String,
-    val dungeonLevelRequirement: Int,
-    val classLevelRequirement: Int
+public class DungeonPartyFinderQueueEvent(
+    public val floor: DungeonFloor,
+    public val groupNote: String,
+    public val dungeonLevelRequirement: Int,
+    public val classLevelRequirement: Int
 ) : SkyBlockEvent()
 
-class KuudraPartyFinderQueueEvent(
-    val tier: KuudraTier,
-    val groupNote: String,
-    val combatLevelRequirement: Int
+public class KuudraPartyFinderQueueEvent(
+    public val tier: KuudraTier,
+    public val groupNote: String,
+    public val combatLevelRequirement: Int
 ) : SkyBlockEvent()

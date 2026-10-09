@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
-enum class CrystalType(val textColor: Int, skyblockId: String? = null) {
+public enum class CrystalType(val textColor: Int, skyblockId: String? = null) {
     JADE(TextColor.GREEN),
     AMBER(TextColor.GOLD),
     AMETHYST(TextColor.DARK_PURPLE),
@@ -21,27 +21,27 @@ enum class CrystalType(val textColor: Int, skyblockId: String? = null) {
     CITRINE(TextColor.DARK_RED),
     ;
 
-    val id = SkyBlockId.item(skyblockId ?: "${name.lowercase()}_crystal")
+    public val id = SkyBlockId.item(skyblockId ?: "${name.lowercase()}_crystal")
 
-    val displayName = Text.of("${toFormattedName()} Crystal") {
+    public val displayName = Text.of("${toFormattedName()} Crystal") {
         this.color = textColor
     }
 
     companion object {
-        fun byName(name: String): CrystalType? {
+        public fun byName(name: String): CrystalType? {
             return entries.find { it.name.equals(name, true) || "${it.name} Crystal".equals(name, true) }
         }
     }
 }
 
-enum class CrystalStatus {
+public enum class CrystalStatus {
     NOT_FOUND,
     FOUND,
     PLACED,
     ;
 
     companion object {
-        fun fromString(str: String): CrystalStatus? = when (str) {
+        public fun fromString(str: String): CrystalStatus? = when (str) {
             "Not Found", "✖ Not Found" -> NOT_FOUND
             "Found", "✔ Found" -> FOUND
             "Placed", "✔ Placed" -> PLACED

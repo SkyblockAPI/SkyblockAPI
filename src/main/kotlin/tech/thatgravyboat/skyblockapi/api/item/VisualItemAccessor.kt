@@ -37,12 +37,12 @@ internal fun ItemStack.asVisualItemAccessor(): VisualItemAccessor {
     return VisualItemAccessor.getVisualItemAccessor(this)
 }
 
-fun ItemStack.replaceVisually(builder: ItemBuilder.() -> Unit) = replaceVisually(ItemBuilder().apply { builder() }.build())
+public fun ItemStack.replaceVisually(builder: ItemBuilder.() -> Unit) = replaceVisually(ItemBuilder().apply { builder() }.build())
 
-fun ItemStack.replaceVisually(replacement: ItemStack?) {
+public fun ItemStack.replaceVisually(replacement: ItemStack?) {
     this.asVisualItemAccessor().`skyblockapi$setVisualItem`(replacement)
 }
 
 internal fun ItemStack.getClickAction() = this.asVisualItemAccessor().`skyblockapi$getOnClickAction`()
-fun ItemStack.getVisualItem() = this.asVisualItemAccessor().`skyblockapi$getVisualItem`()
+public fun ItemStack.getVisualItem() = this.asVisualItemAccessor().`skyblockapi$getVisualItem`()
 

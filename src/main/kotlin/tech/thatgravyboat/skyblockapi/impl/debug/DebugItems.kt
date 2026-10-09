@@ -34,17 +34,17 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 @Module
-object DebugItems {
+public object DebugItems {
 
-    val isEnabled: Boolean by debugToggle("item_debug_entries")
+    public val isEnabled: Boolean by debugToggle("item_debug_entries")
 
-    var selectedIndex = 0
-    var entriesSize = 0
-    var lastItem: ItemStack? = null
-    var lastSet: Instant = Instant.DISTANT_PAST
-    val toggledEntries = mutableSetOf<ItemDebugCategory>()
+    public var selectedIndex = 0
+    public var entriesSize = 0
+    public var lastItem: ItemStack? = null
+    public var lastSet: Instant = Instant.DISTANT_PAST
+    public val toggledEntries = mutableSetOf<ItemDebugCategory>()
 
-    fun updateItem(new: ItemStack?) {
+    public fun updateItem(new: ItemStack?) {
         val entries = new?.getEntries()
         val newEntriesCategories = entries?.keySet()?.toList().orEmpty()
         val lastItem = this.lastItem
@@ -72,7 +72,7 @@ object DebugItems {
     }
 
     @Subscription
-    fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
+    public fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
         if (!isEnabled) return
         if (!McScreen.isShiftDown) return
         val entries = lastItem?.getEntries() ?: return
@@ -100,7 +100,7 @@ object DebugItems {
     }
 
     @Subscription
-    fun onForegroundRender(event: RenderScreenForegroundEvent) {
+    public fun onForegroundRender(event: RenderScreenForegroundEvent) {
         if (!isEnabled) return
         if (!McScreen.isShiftDown) return
         lastItem ?: return
@@ -131,7 +131,7 @@ object DebugItems {
     }
 
     @Subscription
-    fun onGetDebugTooltip(event: ItemDebugTooltipEvent) {
+    public fun onGetDebugTooltip(event: ItemDebugTooltipEvent) {
         val item = event.item
         val entries = item.getEntries() ?: return
         if (lastItem != item || entriesSize != entries.asMap()?.keys?.size) {
@@ -193,11 +193,11 @@ object DebugItems {
 
 }
 
-fun ItemDebugAccessor.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
-fun ItemStack.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
+public fun ItemDebugAccessor.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
+public fun ItemStack.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
 
 @OptIn(ExperimentalContracts::class)
-inline fun ItemDebugAttachable.addDebug(category: ItemDebugCategory, entry: () -> Component) {
+public inline fun ItemDebugAttachable.addDebug(category: ItemDebugCategory, entry: () -> Component) {
     contract {
         callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
     }
@@ -226,7 +226,7 @@ inline fun ItemDebugAttachable.addDebugString(entry: () -> String) {
 }
 
 @OptIn(ExperimentalContracts::class)
-inline fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory, entry: () -> String) {
+public inline fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory, entry: () -> String) {
     contract {
         callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
     }
@@ -236,14 +236,14 @@ inline fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory, entry
 
 @JvmName("addDebug")
 @Deprecated(message = "Use interface method instead!")
-fun ItemStack.addDebug0(category: ItemDebugCategory, entry: () -> Component) {
+public fun ItemStack.addDebug0(category: ItemDebugCategory, entry: () -> Component) {
     if (!DebugItems.isEnabled) return
     this.`skyblockapi$addEntry`(category, entry())
 }
 
 @JvmName("addStringDebug")
 @Deprecated(message = "Use interface method instead!")
-fun ItemStack.addStringDebug0(category: ItemDebugCategory, entry: () -> String) = addDebug(category) { Component.literal(entry()) }
+public fun ItemStack.addStringDebug0(category: ItemDebugCategory, entry: () -> String) = addDebug(category) { Component.literal(entry()) }
 
 @JvmName("categoryAddDebug")
 @Deprecated(message = "Use interface method instead!")
@@ -254,23 +254,23 @@ context(category: ItemDebugCategory) fun ItemStack.addDebug0(entry: () -> Compon
 context(category: ItemDebugCategory) fun ItemStack.addDebugString0(entry: () -> String) = addStringDebug(category, entry)
 
 
-fun interface ItemDebugAttachable {
+public fun interface ItemDebugAttachable {
     @Suppress("FunctionName")
-    fun `skyblockapi$addEntry`(category: ItemDebugCategory, entry: Component)
+    public fun `skyblockapi$addEntry`(category: ItemDebugCategory, entry: Component)
 }
 
-fun interface ItemDebugCategory : ComponentViewerCategory {
+public fun interface ItemDebugCategory : ComponentViewerCategory {
     companion object {
-        val fork: BiFunction<ItemDebugCategory, String, ItemDebugCategory> = Util.memoize { parent, name ->
+        public val fork: BiFunction<ItemDebugCategory, String, ItemDebugCategory> = Util.memoize { parent, name ->
             return@memoize ItemDebugCategory { "$parent/$name" }
         }
     }
 
-    fun fork(name: String) = fork.apply(this, name)
+    public fun fork(name: String) = fork.apply(this, name)
 }
 
-interface ItemDebugAccessor : ItemDebugAttachable {
+public interface ItemDebugAccessor : ItemDebugAttachable {
     override fun `skyblockapi$addEntry`(category: ItemDebugCategory, entry: Component)
     @Suppress("FunctionName")
-    fun `skyblockapi$getEntries`(): Multimap<ItemDebugCategory, Component>?
+    public fun `skyblockapi$getEntries`(): Multimap<ItemDebugCategory, Component>?
 }

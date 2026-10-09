@@ -5,10 +5,10 @@ import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class TrophyFrogData(
+public data class TrophyFrogData(
     val data: MutableMap<TrophyFrogType, MutableMap<TrophyTier, Int>> = mutableMapOf(),
 ) {
     companion object {
-        val CODEC = SkyblockAPICodecs.getCodec<TrophyFrogData>()
+        public val CODEC = SkyblockAPICodecs.getCodec<TrophyFrogData>()
     }
 }

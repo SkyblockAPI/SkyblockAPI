@@ -5,14 +5,14 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.DynamicOps
 
-class EnumCodec<T> private constructor(private val codec: Codec<T>) : Codec<T> {
+public class EnumCodec<T> private constructor(private val codec: Codec<T>) : Codec<T> {
 
     override fun <T1 : Any?> encode(input: T, ops: DynamicOps<T1>?, prefix: T1): DataResult<T1> = codec.encode(input, ops, prefix)
     override fun <T1 : Any?> decode(ops: DynamicOps<T1>?, input: T1): DataResult<Pair<T, T1>> = codec.decode(ops, input)
 
     companion object {
 
-        fun <T : Enum<T>> of(constants: Array<T>): EnumCodec<T> =
+        public fun <T : Enum<T>> of(constants: Array<T>): EnumCodec<T> =
             EnumCodec(Codec.withAlternative(constantCodec(constants), intCodec(constants)))
 
         internal fun <T> forKCodec(constants: Array<T>): EnumCodec<T> =

@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 
 @Module
-object WeatherAPI {
+public object WeatherAPI {
 
     private val dayOfYear: Int?
         get() {
@@ -30,23 +30,23 @@ object WeatherAPI {
         return if ((day / 3) % 3 == 1) WeatherIntensity.EXTREME else WeatherIntensity.MILD
     }
 
-    val isActive: Boolean
+    public val isActive: Boolean
         get() = this.currentIntensity != null
 
-    val currentIntensity: WeatherIntensity?
+    public val currentIntensity: WeatherIntensity?
         get() = dayOfYear?.takeIf { it % 3 == 2 }?.let(::getIntensityForDay)
 
-    val currentEvent: WeatherEvent?
+    public val currentEvent: WeatherEvent?
         get() {
             val intensity = currentIntensity ?: return null
             val group = WeatherGroup.getCurrentGroup() ?: return null
             return if (intensity == WeatherIntensity.EXTREME) group.extreme else group.mild
         }
 
-    val nextIntensity: WeatherIntensity?
+    public val nextIntensity: WeatherIntensity?
         get() = nextWeatherDayOfYear?.let(::getIntensityForDay)
 
-    val nextWeatherAt: SkyBlockInstant?
+    public val nextWeatherAt: SkyBlockInstant?
         get() {
             val currentDay = dayOfYear ?: return null
             val nextDay = nextWeatherDayOfYear ?: return null

@@ -13,12 +13,12 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 
-abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Self : SkillTreeAPI<Data, Perk, Self>> internal constructor(
-    val name: String,
+public abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Self : SkillTreeAPI<Data, Perk, Self>> internal constructor(
+    public val name: String,
     private val perkItems: ItemTagKey,
     private val storage: SkillTreeStorage<Data, Perk>,
     identifier: String,
-    val type: SkillTreeType<Self>,
+    public val type: SkillTreeType<Self>,
 ) {
     protected val inventoryGroup = RegexGroup.INVENTORY.group(name)
 
@@ -30,21 +30,21 @@ abstract class SkillTreeAPI<Data : SkillTreeData<Perk>, Perk : SkillTreePerk, Se
     protected open val tierRegex = inventoryGroup.create("tier", "Tier (?<tier>\\d+)")
     protected open val tierUnlockedRegex = inventoryGroup.create("tier.unlocked", "UNLOCKED")
 
-    open val perks: Map<String, Perk>
+    public open val perks: Map<String, Perk>
         get() = storage.perks
-    val unlockedPerks: Map<String, Perk>
+    public val unlockedPerks: Map<String, Perk>
         get() = perks.filter { it.value.unlocked }
-    val activePerks: Map<String, Perk>
+    public val activePerks: Map<String, Perk>
         get() = perks.filter { it.value.unlocked && !it.value.disabled }
 
-    open val tokens: Int
+    public open val tokens: Int
         get() = storage.tokens
 
-    open val tier: Int
+    public open val tier: Int
         get() = storage.tier
 
     @Subscription(inherited = true)
-    open fun onInventoryChange(event: InventoryChangeEvent) {
+    public open fun onInventoryChange(event: InventoryChangeEvent) {
         if (!titleRegex.matches(event.title)) return
 
         val lore = event.item.getRawLore()

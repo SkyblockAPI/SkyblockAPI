@@ -10,30 +10,30 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 
 @Module
-object StatsAPI {
+public object StatsAPI {
 
-    var health: Int = 0
+    public var health: Int = 0
         private set
 
-    var maxHealth: Int = 100
+    public var maxHealth: Int = 100
         private set
 
-    var defense: Int = 0
+    public var defense: Int = 0
         private set
 
-    var mana: Int = 0
+    public var mana: Int = 0
         private set
 
-    var maxMana: Int = 100
+    public var maxMana: Int = 100
         private set
 
-    var overflowMana: Int = 0
+    public var overflowMana: Int = 0
         private set
 
-    var vitality: Int = 0
+    public var vitality: Int = 0
         private set
 
-    var maxVitality: Int = 100
+    public var maxVitality: Int = 100
         private set
 
     //? < 26.3 {
@@ -48,7 +48,7 @@ object StatsAPI {
     }
 
     @Subscription
-    fun onActionBarWidget(event: ActionBarWidgetChangeEvent) {
+    public fun onActionBarWidget(event: ActionBarWidgetChangeEvent) {
         when (event) {
             is HealthActionBarWidgetChangeEvent -> {
                 health = event.current

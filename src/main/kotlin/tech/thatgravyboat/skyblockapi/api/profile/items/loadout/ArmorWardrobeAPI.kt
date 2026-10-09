@@ -28,7 +28,7 @@ private const val SELECT_START_INDEX = 36
 private const val WARDROBE_SLOTS_PER_PAGE = 9
 
 @Module
-object ArmorWardrobeAPI {
+public object ArmorWardrobeAPI {
     private val wardrobeGroup = RegexGroup.INVENTORY.group("wardrobe.armor")
 
     private val inventoryNameRegex = wardrobeGroup.create(
@@ -43,15 +43,15 @@ object ArmorWardrobeAPI {
 
     private val emptyArmor = mutableListOf(ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY)
 
-    var inWardrobe = false
+    public var inWardrobe = false
         private set
 
     /** 0 if not in wardrobe */
-    var currentPage = 0
+    public var currentPage = 0
         private set
 
-    val slots get() = LoadoutStorage.armor?.slots ?: emptyList()
-    val currentSlot: Int? get() = LoadoutStorage.armor?.currentSlot
+    public val slots get() = LoadoutStorage.armor?.slots ?: emptyList()
+    public val currentSlot: Int? get() = LoadoutStorage.armor?.currentSlot
 
     private fun processInventory(title: String, items: List<ItemStack>) {
         inventoryNameRegex.match(title, "currentPage") { (currentPage) ->
@@ -87,7 +87,7 @@ object ArmorWardrobeAPI {
         }
     }
 
-    fun isCurrentSlotInCurrentPage(): Boolean {
+    public fun isCurrentSlotInCurrentPage(): Boolean {
         val slot = currentSlot ?: return false
         val first = (currentPage - 1) * WARDROBE_SLOTS_PER_PAGE + 1
         val last = first + WARDROBE_SLOTS_PER_PAGE - 1
@@ -95,27 +95,27 @@ object ArmorWardrobeAPI {
     }
 
     @Subscription
-    fun onInventoryUpdate(event: InventoryChangeEvent) {
+    public fun onInventoryUpdate(event: InventoryChangeEvent) {
         inWardrobe = inventoryNameRegex.matches(event.title)
 
         if (inWardrobe) processInventory(event.title, event.itemStacks)
     }
 
     @Subscription
-    fun onInventoryOpen(event: ContainerInitializedEvent) {
+    public fun onInventoryOpen(event: ContainerInitializedEvent) {
         inWardrobe = inventoryNameRegex.matches(event.title)
 
         if (inWardrobe) processInventory(event.title, event.itemStacks)
     }
 
     @Subscription(ContainerCloseEvent::class)
-    fun onInventoryClose() {
+    public fun onInventoryClose() {
         inWardrobe = false
         currentPage = 0
     }
 
     @Subscription(ProfileChangeEvent::class)
-    fun onProfileSwitch() {
+    public fun onProfileSwitch() {
         val slotCount = max(
             slots.size.roundToNextMultipleOf(WARDROBE_SLOTS_PER_PAGE),
             WARDROBE_SLOTS_PER_PAGE * 3,

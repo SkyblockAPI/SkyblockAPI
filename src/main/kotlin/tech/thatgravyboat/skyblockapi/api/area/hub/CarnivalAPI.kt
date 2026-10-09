@@ -14,7 +14,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import kotlin.time.Duration
 
 @Module
-object CarnivalAPI {
+public object CarnivalAPI {
 
     private val group = RegexGroup.SCOREBOARD.group("carnival")
 
@@ -28,15 +28,15 @@ object CarnivalAPI {
         "Carnival (?i)(?<duration>[\\d:]+)",
     )
 
-    var tokens: Int = 0
+    public var tokens: Int = 0
         private set
 
-    var duration: Duration = Duration.ZERO
+    public var duration: Duration = Duration.ZERO
         private set
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB)
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    public fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         carnivalTokensRegex.anyMatch(event.added, "tokens") { (tokens) ->
             this.tokens = tokens.parseFormattedInt()
         }
@@ -51,5 +51,5 @@ object CarnivalAPI {
     }
 
     @Subscription(ProfileChangeEvent::class, ServerDisconnectEvent::class)
-    fun onProfileChange() = reset()
+    public fun onProfileChange() = reset()
 }

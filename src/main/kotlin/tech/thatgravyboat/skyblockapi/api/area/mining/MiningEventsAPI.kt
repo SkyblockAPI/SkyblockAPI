@@ -9,15 +9,15 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
-object MiningEventsAPI {
+public object MiningEventsAPI {
 
     private val eventsRegex = RegexGroup.SCOREBOARD.create("mining.events", "Event: (?<event>.+)")
 
-    var event: MiningEvent? = null
+    public var event: MiningEvent? = null
         private set
 
     @Subscription
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    public fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (event.removed.any { eventsRegex.matches(it) }) {
             this.event = null
         } else if (this.event == null) {

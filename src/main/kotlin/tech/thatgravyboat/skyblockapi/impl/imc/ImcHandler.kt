@@ -10,7 +10,7 @@ import java.util.function.Consumer
 
 @Module
 @OptIn(SkyBlockPvRequired::class)
-object ImcHandler {
+public object ImcHandler {
 
     private val PV_PROFILE = registerChannel<JsonObject>("pv-profile")
 

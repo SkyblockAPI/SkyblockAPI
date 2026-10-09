@@ -18,7 +18,7 @@ private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
 }
 
 @Module
-object SkyBlockEnchantmentsRepo : RepoItemCacheAsQuery<Query>("Enchantments", ::Query, schema) {
+public object SkyBlockEnchantmentsRepo : RepoItemCacheAsQuery<Query>("Enchantments", ::Query, schema) {
 
     private val repo get() = RepoAPI.enchantments()
 
@@ -28,9 +28,9 @@ object SkyBlockEnchantmentsRepo : RepoItemCacheAsQuery<Query>("Enchantments", ::
         return enchantmentLevel.item.let(::LazyItemStack)
     }
 
-    fun get(id: String): EnchantsAPI.Enchant? = ifInitialized { this.repo.getEnchantment(id) }
+    public fun get(id: String): EnchantsAPI.Enchant? = ifInitialized { this.repo.getEnchantment(id) }
 
-    data class Query(
+    public data class Query(
         var id: String = "",
         var level: Int? = null,
     )

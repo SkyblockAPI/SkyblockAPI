@@ -12,35 +12,35 @@ import tech.thatgravyboat.skyblockapi.platform.identifier
 import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 import kotlin.jvm.optionals.getOrNull
 
-interface BaseTagKey<T : Any> {
-    val key: TagKey<T>
+public interface BaseTagKey<T : Any> {
+    public val key: TagKey<T>
 
     @Suppress("UNCHECKED_CAST")
     private val registry: Registry<T>? get() = BuiltInRegistries.REGISTRY
         .getOptional(key.registry().identifier)
         .getOrNull() as Registry<T>?
 
-    operator fun contains(element: T): Boolean = element
+    public operator fun contains(element: T): Boolean = element
         ?.let { registry?.getResourceKey(it) }
         ?.map { ClientTags.isInLocal(key, it) }
         ?.getOrNull()
         ?: false
 }
 
-interface BlockTagKey : BaseTagKey<Block> {
+public interface BlockTagKey : BaseTagKey<Block> {
     override val key: TagKey<Block>
 
     override operator fun contains(element: Block): Boolean = super.contains(element)
 }
 
-interface ItemTagKey : BaseTagKey<Item> {
+public interface ItemTagKey : BaseTagKey<Item> {
     override val key: TagKey<Item>
 
-    operator fun contains(stack: ItemStack): Boolean = stack.item in this
-    operator fun contains(element: ItemLike): Boolean = element.asItem() in this
+    public operator fun contains(stack: ItemStack): Boolean = stack.item in this
+    public operator fun contains(element: ItemLike): Boolean = element.asItem() in this
     override operator fun contains(element: Item): Boolean = super.contains(element)
 }
 
-interface ItemModelTagKey : ItemTagKey {
+public interface ItemModelTagKey : ItemTagKey {
     override operator fun contains(stack: ItemStack): Boolean = stack.getItemModel() in this
 }

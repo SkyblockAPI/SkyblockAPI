@@ -7,54 +7,54 @@ import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI.Skill
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import kotlin.time.Duration
 
-open class RenderActionBarWidgetEvent(val widget: ActionBarWidget) : CancellableSkyBlockEvent()
+public open class RenderActionBarWidgetEvent(val widget: ActionBarWidget) : CancellableSkyBlockEvent()
 
-open class ActionBarWidgetChangeEvent(
-    val widget: ActionBarWidget,
-    val old: String,
-    val new: String,
+public open class ActionBarWidgetChangeEvent(
+    public val widget: ActionBarWidget,
+    public val old: String,
+    public val new: String,
 ) : SkyBlockEvent()
 
-class HealthActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
+public class HealthActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.HEALTH, old, new)
 
-class DefenseActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
+public class DefenseActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.DEFENSE, old, new)
 
-class ManaActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
+public class ManaActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.MANA, old, new)
 
-class OverflowManaActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
+public class OverflowManaActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.OVERFLOW_MANA, old, new)
 
-class RiftTimeActionBarWidgetChangeEvent(val time: Duration?, old: String, new: String) :
+public class RiftTimeActionBarWidgetChangeEvent(val time: Duration?, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.RIFT_TIME, old, new)
 
-class ArmadilloActionBarWidgetChangeEvent(val current: Float, val max: Float, old: String, new: String) :
+public class ArmadilloActionBarWidgetChangeEvent(val current: Float, val max: Float, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.ARMADILLO, old, new)
 
-class ArmorStackActionBarWidgetChangeEvent(val current: Int, val type: ArmorStack?, old: String, new: String) :
+public class ArmorStackActionBarWidgetChangeEvent(val current: Int, val type: ArmorStack?, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.ARMOR_STACK, old, new)
 
-class SecretsActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
+public class SecretsActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.SECRETS, old, new)
 
-class DrillActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
+public class DrillActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.DRILL_FUEL, old, new)
 
-class PressureActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
+public class PressureActionBarWidgetChangeEvent(val current: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.PRESSURE, old, new)
 
-class SkillXpPercentActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val percent: Float, old: String, new: String) :
+public class SkillXpPercentActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val percent: Float, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP, old, new)
 
-class SkillXpLiteralActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val current: Long, val needed: Long, old: String, new: String) :
+public class SkillXpLiteralActionBarWidgetChangeEvent(val amount: Float, val skill: Skill?, val current: Long, val needed: Long, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.SKILL_XP_LITERAL, old, new)
 
-class VitalityActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
+public class VitalityActionBarWidgetChangeEvent(val current: Int, val max: Int, old: String, new: String) :
     ActionBarWidgetChangeEvent(ActionBarWidget.VITALITY, old, new)
 
-enum class ActionBarWidget {
+public enum class ActionBarWidget {
     HEALTH,
     DEFENSE,
     MANA,

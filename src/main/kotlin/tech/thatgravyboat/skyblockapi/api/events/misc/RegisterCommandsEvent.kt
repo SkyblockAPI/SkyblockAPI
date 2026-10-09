@@ -16,34 +16,34 @@ import tech.thatgravyboat.skyblockapi.utils.command.dsl.CommandBuilder0
 import tech.thatgravyboat.skyblockapi.utils.command.dsl.CommandClass
 import tech.thatgravyboat.skyblockapi.utils.command.dsl.command
 
-typealias LiteralCommandBuilder = CommandBuilder<LiteralArgumentBuilder<FabricClientCommandSource>>
-typealias ArgumentCommandBuilder<T> = CommandBuilder<RequiredArgumentBuilder<FabricClientCommandSource, T>>
+public typealias LiteralCommandBuilder = CommandBuilder<LiteralArgumentBuilder<FabricClientCommandSource>>
+public typealias ArgumentCommandBuilder<T> = CommandBuilder<RequiredArgumentBuilder<FabricClientCommandSource, T>>
 
 @CommandClass
-data class BuilderDsl<Consumer>(val consumer: (Consumer) -> Unit) {
-    infix fun executes(callback: Consumer) {
+public data class BuilderDsl<Consumer>(val consumer: (Consumer) -> Unit) {
+    public infix fun executes(callback: Consumer) {
         consumer(callback)
     }
 }
 
-class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClientCommandSource>, val buildContext: CommandBuildContext?) : SkyBlockEvent() {
+public class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClientCommandSource>, val buildContext: CommandBuildContext?) : SkyBlockEvent() {
 
     @Deprecated("Also provide build context")
-    constructor(dispatcher: CommandDispatcher<FabricClientCommandSource>) : this(dispatcher, null)
+    public constructor(dispatcher: CommandDispatcher<FabricClientCommandSource>) : this(dispatcher, null)
 
-    fun register(command: LiteralArgumentBuilder<FabricClientCommandSource>) {
+    public fun register(command: LiteralArgumentBuilder<FabricClientCommandSource>) {
         dispatcher.register(command)
     }
 
-    fun command(name: String, init: CommandBuilder0<FabricClientCommandSource>.() -> Unit): Unit {
+    public fun command(name: String, init: CommandBuilder0<FabricClientCommandSource>.() -> Unit): Unit {
         dispatcher.command(name, buildContext!!, init)
     }
 
-    fun command(name: String): CommandBuilder0<FabricClientCommandSource> {
+    public fun command(name: String): CommandBuilder0<FabricClientCommandSource> {
         return  dispatcher.command(name, buildContext!!) {}
     }
 
-    fun register(command: String, builder: LiteralCommandBuilder.() -> Unit) {
+    public fun register(command: String, builder: LiteralCommandBuilder.() -> Unit) {
         if (command.contains(' ')) {
             val (literal, subcommand) = command.split(' ', limit = 2)
             register(literal) {
@@ -57,29 +57,29 @@ class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClie
             .let(::register)
     }
 
-    fun registerWithCallback(command: String, callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
+    public fun registerWithCallback(command: String, callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
         register(command) {
             this.callback(callback)
         }
     }
 
     companion object {
-        inline fun <reified T> CommandContext<*>.argument(name: String): T = this.getArgument(name, T::class.java)
+        public inline fun <reified T> CommandContext<*>.argument(name: String): T = this.getArgument(name, T::class.java)
     }
 }
 
-open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
-    val builder: ArgumentBuilder<FabricClientCommandSource, B>,
+public open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
+    public val builder: ArgumentBuilder<FabricClientCommandSource, B>,
 ) {
 
-    open fun callback(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
+    public open fun callback(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
         this.builder.executes {
             callback(it)
             1
         }
     }
 
-    open fun then(vararg names: String, action: LiteralCommandBuilder.() -> Unit): CommandBuilder<B> {
+    public open fun then(vararg names: String, action: LiteralCommandBuilder.() -> Unit): CommandBuilder<B> {
         for (name in names) {
             if (name.contains(" ")) {
                 val builder = CommandBuilder(ClientCommands.literal(name.substringBefore(" ")))
@@ -94,7 +94,7 @@ open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
         return this
     }
 
-    open fun <T> then(
+    public open fun <T> then(
         name: String,
         argument: ArgumentType<T>,
         suggestions: Collection<String>,
@@ -106,7 +106,7 @@ open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
         action,
     )
 
-    open fun <T> then(
+    public open fun <T> then(
         name: String,
         argument: ArgumentType<T>,
         suggestions: SuggestionProvider<FabricClientCommandSource>? = null,
@@ -128,13 +128,13 @@ open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
         return this
     }
 
-    open fun thenCallback(vararg names: String, block: CommandContext<FabricClientCommandSource>.() -> Unit): CommandBuilder<B> {
+    public open fun thenCallback(vararg names: String, block: CommandContext<FabricClientCommandSource>.() -> Unit): CommandBuilder<B> {
         return then(*names) {
             this.callback(block)
         }
     }
 
-    open fun <T> thenCallback(
+    public open fun <T> thenCallback(
         name: String,
         argument: ArgumentType<T>,
         suggestions: Collection<String>,
@@ -144,7 +144,7 @@ open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, B>>(
     }
 
 
-    open fun <T> thenCallback(
+    public open fun <T> thenCallback(
         name: String,
         argument: ArgumentType<T>,
         suggestions: SuggestionProvider<FabricClientCommandSource>? = null,

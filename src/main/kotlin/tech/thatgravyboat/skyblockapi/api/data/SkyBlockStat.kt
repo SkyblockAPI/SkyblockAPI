@@ -7,9 +7,9 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
 @Suppress("unused")
-enum class SkyBlockStat(
-    val icon: Char,
-    val color: Int,
+public enum class SkyBlockStat(
+    public val icon: Char,
+    public val color: Int,
     name: String? = null,
 ) {
     // Combat stats
@@ -120,12 +120,12 @@ enum class SkyBlockStat(
 
     override fun toString(): String = displayName
 
-    val displayText: Component = Text.of("$icon $displayName") {
+    public val displayText: Component = Text.of("$icon $displayName") {
         this@of.color = this@SkyBlockStat.color
     }
 
     companion object {
-        fun fromName(name: String): SkyBlockStat? {
+        public fun fromName(name: String): SkyBlockStat? {
             return entries.find { it.displayName.equals(name, ignoreCase = true) }
         }
     }

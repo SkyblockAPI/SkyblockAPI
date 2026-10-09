@@ -10,8 +10,8 @@ import tech.thatgravyboat.skyblockapi.utils.lazy.registryBoundLazy
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-enum class TrophyFishType(
-    val displayName: Component,
+public enum class TrophyFishType(
+    public val displayName: Component,
     internalName: String = "",
 ) {
     SULPHUR_SKITTER(
@@ -108,15 +108,15 @@ enum class TrophyFishType(
         },
     );
 
-    val internalName: String = internalName.takeUnless { it.isEmpty() } ?: name
-    val strippedName = displayName.stripped
+    public val internalName: String = internalName.takeUnless { it.isEmpty() } ?: name
+    public val strippedName = displayName.stripped
 
-    val bronze by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_BRONZE") }
-    val silver by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_SILVER") }
-    val gold by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_GOLD") }
-    val diamond by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_DIAMOND") }
+    public val bronze by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_BRONZE") }
+    public val silver by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_SILVER") }
+    public val gold by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_GOLD") }
+    public val diamond by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault("${this.internalName}_DIAMOND") }
 
-    fun getItem(tier: TrophyTier): ItemStack {
+    public fun getItem(tier: TrophyTier): ItemStack {
         return when (tier) {
             TrophyTier.NONE -> bronze
             TrophyTier.BRONZE -> bronze
@@ -126,20 +126,20 @@ enum class TrophyFishType(
         }
     }
 
-    fun getItem(tier: TrophyFishTier): ItemStack = getItem(TrophyTier.valueOf(tier.name))
+    public fun getItem(tier: TrophyFishTier): ItemStack = getItem(TrophyTier.valueOf(tier.name))
 
-    fun getId(tier: TrophyTier, default: TrophyTier = TrophyTier.BRONZE): SkyBlockId =
+    public fun getId(tier: TrophyTier, default: TrophyTier = TrophyTier.BRONZE): SkyBlockId =
         SkyBlockId.item("${this.internalName}_${tier.takeUnless { it == TrophyTier.NONE } ?: default}")
 
-    fun getId(tier: TrophyFishTier, default: TrophyFishTier = TrophyFishTier.BRONZE): SkyBlockId =
+    public fun getId(tier: TrophyFishTier, default: TrophyFishTier = TrophyFishTier.BRONZE): SkyBlockId =
         getId(TrophyTier.valueOf(tier.name), TrophyTier.valueOf(default.name))
 
     companion object {
-        fun getByInternalName(internalName: String): TrophyFishType? {
+        public fun getByInternalName(internalName: String): TrophyFishType? {
             return entries.find { internalName.equals(it.internalName, ignoreCase = true) }
         }
 
-        fun getByDisplayName(name: String): TrophyFishType? {
+        public fun getByDisplayName(name: String): TrophyFishType? {
             return entries.find { name.equals(it.strippedName, ignoreCase = true) }
         }
     }

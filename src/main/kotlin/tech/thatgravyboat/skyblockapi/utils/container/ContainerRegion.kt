@@ -11,14 +11,14 @@ import tech.thatgravyboat.skyblockapi.impl.debug.addStringDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.containerWidth
 import java.util.function.BiFunction
 
-data class ContainerRegion(
+public data class ContainerRegion(
     val columns: IntRange,
     val rows: IntRange,
     @IntroducedAt("4.2.26")
     val pagesRange: IntRange = 1..Int.MAX_VALUE,
     val contentFlow: ContentFlow = ContentFlow.topLeft().rows()
 ) : Iterable<ContainerPosition> {
-    constructor(
+    public constructor(
         width: Int,
         height: Int,
         startRow: Int = 0,
@@ -45,7 +45,7 @@ data class ContainerRegion(
 
     val size = rowSpan * columnSpan
 
-    fun getId(slot: Slot, page: Int = 1, contentFlow: ContentFlow = this.contentFlow, category: ItemDebugCategory = ContainerRegion, attachable: ItemDebugAttachable = slot.item): Int? {
+    public fun getId(slot: Slot, page: Int = 1, contentFlow: ContentFlow = this.contentFlow, category: ItemDebugCategory = ContainerRegion, attachable: ItemDebugAttachable = slot.item): Int? {
         if (!contains(slot)) {
             attachable.addStringDebug(category) { "Not in region!" }
             return null
@@ -83,16 +83,16 @@ data class ContainerRegion(
         }
     }
 
-    operator fun contains(index: Int): Boolean {
+    public operator fun contains(index: Int): Boolean {
         val row = index / 9
         val column = index % 9
         return row in rows && column in columns
     }
 
-    operator fun contains(slot: Slot): Boolean = contains(slot.index)
+    public operator fun contains(slot: Slot): Boolean = contains(slot.index)
 
     override fun iterator(): Iterator<ContainerPosition> = this.contentFlow.iterator(this.rowSpan, this.columnSpan, rowStart, columnStart)
-    fun iterator(page: Int = 0) = iterator {
+    public fun iterator(page: Int = 0) = iterator {
         contentFlow.iterator(rowSpan, columnSpan, rowStart, columnStart).forEach {
             yield(it.apply {
                 this.page = page
@@ -103,18 +103,18 @@ data class ContainerRegion(
 
 }
 
-enum class Anchor(val invertColumns: Boolean, val invertRows: Boolean) {
+public enum class Anchor(val invertColumns: Boolean, val invertRows: Boolean) {
     TOP_LEFT(false, false),
     TOP_RIGHT(true, false),
     BOTTOM_LEFT(false, true),
     BOTTOM_RIGHT(true, true),
     ;
 
-    fun row(rows: Int, row: Int): Int = if (invertRows) rows - row - 1 else row
-    fun column(columns: Int, column: Int): Int = if (invertColumns) columns - column - 1 else column
+    public fun row(rows: Int, row: Int): Int = if (invertRows) rows - row - 1 else row
+    public fun column(columns: Int, column: Int): Int = if (invertColumns) columns - column - 1 else column
 }
 
-enum class ContentDirection {
+public enum class ContentDirection {
     Horizontal {
         override fun index(rows: Int, columns: Int, row: Int, column: Int, debugCollector: ((String) -> Unit)?) : Int {
             debugCollector?.invoke("row: $row, column: $column")
@@ -135,17 +135,17 @@ enum class ContentDirection {
     },
     ;
 
-    abstract fun row(index: Int, rows: Int, columns: Int): Int
-    abstract fun column(index: Int, rows: Int, columns: Int): Int
-    abstract fun index(rows: Int, columns: Int, row: Int, column: Int, debugCollector: ((String) -> Unit)? = null) : Int
+    public abstract fun row(index: Int, rows: Int, columns: Int): Int
+    public abstract fun column(index: Int, rows: Int, columns: Int): Int
+    public abstract fun index(rows: Int, columns: Int, row: Int, column: Int, debugCollector: ((String) -> Unit)? = null) : Int
 }
 
-data class ContainerPosition(
+public data class ContainerPosition(
     val row: Int,
     val column: Int
 ) {
     companion object {
-        fun of(row: Int, column: Int, index: Int): ContainerPosition {
+        public fun of(row: Int, column: Int, index: Int): ContainerPosition {
             val position = ContainerPosition(row, column)
             position.index = index
             return position
@@ -158,14 +158,14 @@ data class ContainerPosition(
     var page: Int = 0
         internal set
 
-    operator fun component3() = index
-    operator fun component4() = page
+    public operator fun component3() = index
+    public operator fun component4() = page
 }
 
 @ConsistentCopyVisibility
-data class ContentFlow private constructor(val anchor: Anchor, val direction: ContentDirection) {
+public data class ContentFlow private constructor(val anchor: Anchor, val direction: ContentDirection) {
 
-    fun index(rows: Int, columns: Int, row: Int, column: Int, debugCollector: ((String) -> Unit)? = null) : Int {
+    public fun index(rows: Int, columns: Int, row: Int, column: Int, debugCollector: ((String) -> Unit)? = null) : Int {
         debugCollector?.invoke("$row:$column / $rows:$columns")
         debugCollector?.invoke("$anchor:$direction".lowercase())
         val index = direction.index(rows, columns, anchor.row(rows, row), anchor.column(columns, column), debugCollector)
@@ -173,7 +173,7 @@ data class ContentFlow private constructor(val anchor: Anchor, val direction: Co
         return index
     }
 
-    fun iterator(rows: Int, columns: Int, rowStart: Int = 0, columnStart: Int = 0) : Iterator<ContainerPosition> {
+    public fun iterator(rows: Int, columns: Int, rowStart: Int = 0, columnStart: Int = 0) : Iterator<ContainerPosition> {
         return iterator {
             for (index in 0 until (rows * columns)) {
                 yield(ContainerPosition.of(
@@ -190,16 +190,16 @@ data class ContentFlow private constructor(val anchor: Anchor, val direction: Co
             ContentFlow(anchor, direction)
         }
 
-        fun interface FlowBuilder {
-            fun anchor(): Anchor
-            fun rows(): ContentFlow = cache.apply(anchor(), ContentDirection.Horizontal)
-            fun columns(): ContentFlow = cache.apply(anchor(), ContentDirection.Vertical)
+        public fun interface FlowBuilder {
+            public fun anchor(): Anchor
+            public fun rows(): ContentFlow = cache.apply(anchor(), ContentDirection.Horizontal)
+            public fun columns(): ContentFlow = cache.apply(anchor(), ContentDirection.Vertical)
         }
 
 
-        fun topLeft() : FlowBuilder = { Anchor.TOP_LEFT }
-        fun topRight() : FlowBuilder = { Anchor.TOP_RIGHT }
-        fun bottomLeft() : FlowBuilder = { Anchor.BOTTOM_LEFT }
-        fun bottomRight() : FlowBuilder = { Anchor.BOTTOM_RIGHT }
+        public fun topLeft() : FlowBuilder = { Anchor.TOP_LEFT }
+        public fun topRight() : FlowBuilder = { Anchor.TOP_RIGHT }
+        public fun bottomLeft() : FlowBuilder = { Anchor.BOTTOM_LEFT }
+        public fun bottomRight() : FlowBuilder = { Anchor.BOTTOM_RIGHT }
     }
 }

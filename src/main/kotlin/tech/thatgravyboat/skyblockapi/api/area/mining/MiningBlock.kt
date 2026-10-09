@@ -22,7 +22,7 @@ import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
-enum class MiningBlockFamily {
+public enum class MiningBlockFamily {
     VANILLA_BLOCKS,
     VANILLA_ORES,
     HARD_STONE,
@@ -33,10 +33,10 @@ enum class MiningBlockFamily {
     EXTRA_NETHER,
     ;
 
-    val blocks by lazy { MiningBlock.entries.filter { it.family == this }.flatMap { it.blocks } }
+    public val blocks by lazy { MiningBlock.entries.filter { it.family == this }.flatMap { it.blocks } }
 }
 
-enum class MiningFortuneType {
+public enum class MiningFortuneType {
     GEMSTONE,
     DWARVEN_METAL,
     ORE,
@@ -46,11 +46,11 @@ enum class MiningFortuneType {
 private typealias Type = MiningFortuneType
 private typealias Family = MiningBlockFamily
 
-enum class MiningBlock(
-    val blocks: List<Block>,
-    val validArea: () -> Boolean,
-    val category: MiningFortuneType,
-    val family: MiningBlockFamily,
+public enum class MiningBlock(
+    public val blocks: List<Block>,
+    public val validArea: () -> Boolean,
+    public val category: MiningFortuneType,
+    public val family: MiningBlockFamily,
 ) {
     // Vanilla blocks
     STONE(
@@ -351,21 +351,21 @@ enum class MiningBlock(
             CRIMSON_ISLE,
         )
 
-        var currentlyActiveBlocks = listOf<MiningBlock>()
+        public var currentlyActiveBlocks = listOf<MiningBlock>()
             private set
-        var lastBrokenBlock: Pair<BlockPos, MiningBlock>? = null
+        public var lastBrokenBlock: Pair<BlockPos, MiningBlock>? = null
             private set
 
         private val debug by debugToggle("mining_blocks", "Send messages when the player mines a MiningBlock.")
 
         @Subscription(AreaChangeEvent::class, IslandChangeEvent::class)
-        fun onAreaChange() {
+        public fun onAreaChange() {
             currentlyActiveBlocks = entries.filter { it.validArea() }
         }
 
         @Subscription
         @OnlyOnSkyBlock
-        fun onBlockMine(event: BlockMinedEvent) {
+        public fun onBlockMine(event: BlockMinedEvent) {
             if (!SkyBlockIsland.inAnyIsland(MINING_ISLANDS)) return
 
             val block = currentlyActiveBlocks.find { it.blocks.contains(event.state.block) } ?: return
@@ -381,7 +381,7 @@ enum class MiningBlock(
 
         @Subscription
         @OnlyOnSkyBlock
-        fun onRender(event: RenderHudEvent) {
+        public fun onRender(event: RenderHudEvent) {
             if (!debug) return
             val lookingAt = McClient.self.cameraEntity?.pick(20.0, 0f, false) as? BlockHitResult ?: return
             val block = McLevel[lookingAt.blockPos].block

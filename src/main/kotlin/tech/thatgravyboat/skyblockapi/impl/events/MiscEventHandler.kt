@@ -34,7 +34,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
 @Module
-object MiscEventHandler {
+public object MiscEventHandler {
 
     private val phase = Identifiers.of("skyblockapi", "phase")
 
@@ -161,7 +161,7 @@ object MiscEventHandler {
     }
 
     @Subscription
-    fun onBlockChange(event: BlockChangeEvent) {
+    public fun onBlockChange(event: BlockChangeEvent) {
         if (
             (blocksClicked.getIfPresent(event.pos) != null || event.pos.distSqr(lastBlockClicked) < 25 /* maybe check if 5 block range is good enough */)
             && validMineChange(McLevel[event.pos].block, event.state.block)

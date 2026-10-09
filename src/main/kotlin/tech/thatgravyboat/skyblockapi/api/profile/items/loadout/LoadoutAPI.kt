@@ -33,7 +33,7 @@ import kotlin.contracts.contract
 import kotlin.math.floor
 
 @Module
-data object LoadoutAPI : ItemDebugCategory {
+public data object LoadoutAPI : ItemDebugCategory {
 
     internal val loadoutDebug = debugToggle("loadout_debug_messages", "What the name says.")
 
@@ -184,5 +184,5 @@ data object LoadoutAPI : ItemDebugCategory {
     }
 }
 
-data class LoadoutChangeEvent(val old: LoadoutSlot?, val new: LoadoutSlot?) : SkyBlockEvent()
+public data class LoadoutChangeEvent(val old: LoadoutSlot?, val new: LoadoutSlot?) : SkyBlockEvent()
 

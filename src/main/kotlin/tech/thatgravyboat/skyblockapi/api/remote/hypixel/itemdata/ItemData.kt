@@ -18,7 +18,7 @@ import java.nio.file.Files
 private const val URL = "https://api.hypixel.net/v2/resources/skyblock/items"
 
 @Module
-object ItemData {
+public object ItemData {
     //? < 26.2
     //@Deprecated("Use ItemData.data instead", ReplaceWith("data.values")) val itemData: List<HypixelApiItem> get() = data.values.toList()
 
@@ -41,26 +41,26 @@ object ItemData {
         }
     }
 
-    val data: Map<String, HypixelApiItem> get() = hypixelData.takeUnless { it.isEmpty() } ?: backupData
+    public val data: Map<String, HypixelApiItem> get() = hypixelData.takeUnless { it.isEmpty() } ?: backupData
 
     @JvmName("getItemDataFromSkyBlockId")
-    fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.skyblockId)
+    public fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.skyblockId)
 
-    fun getItemData(id: String): HypixelApiItem? = data[id.uppercase()]
+    public fun getItemData(id: String): HypixelApiItem? = data[id.uppercase()]
 
     //? < 26.2 {
     /*@Deprecated("Use getNpcSellPrice instead", ReplaceWith("getNpcSellPrice(id)"), DeprecationLevel.ERROR)
     fun getNpcPrice(id: String): Int? = getItemData(id)?.npcSellPrice*///?}
-    fun getNpcSellPrice(id: String): Float? = getItemData(id)?.npcSellPriceFloat
+    public fun getNpcSellPrice(id: String): Float? = getItemData(id)?.npcSellPriceFloat
 
-    fun getMotesSellPrice(id: String): Float? = getItemData(id)?.motesSellPrice
+    public fun getMotesSellPrice(id: String): Float? = getItemData(id)?.motesSellPrice
 }
 
 @GenerateCodec
-data class HypixelItemsResponse(val items: List<HypixelApiItem>)
+public data class HypixelItemsResponse(val items: List<HypixelApiItem>)
 
 @GenerateCodec
-data class HypixelApiItem(
+public data class HypixelApiItem(
     val id: String,
     @param:FieldName("gemstone_slots") val gemstones: List<GemstoneCost> = emptyList(),
     @param:FieldName("upgrade_costs") val upgradeCost: List<List<Cost>> = emptyList(),
@@ -73,6 +73,6 @@ data class HypixelApiItem(
     val origin: ItemOrigin?,
 ) {
     companion object {
-        val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()
+        public val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()
     }
 }

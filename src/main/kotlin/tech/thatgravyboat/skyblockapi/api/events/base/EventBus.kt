@@ -9,12 +9,12 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.full.extensionReceiverParameter
 import kotlin.reflect.jvm.kotlinFunction
 
-class EventBus {
+public class EventBus {
 
     private val listeners: MutableMap<Class<*>, EventListeners> = ConcurrentHashMap()
     private val handlers: MutableMap<Class<*>, EventHandler<*>> = ConcurrentHashMap()
 
-    fun register(instance: Any) {
+    public fun register(instance: Any) {
         var clazz: Class<*>? = instance.javaClass
         while (clazz != null) {
             if (clazz == Any::class.java) break
@@ -24,16 +24,16 @@ class EventBus {
         }
     }
 
-    inline fun <reified T : SkyBlockEvent> register(priority: Int = 0, receiveCancelled: Boolean = false, noinline callback: (T) -> Unit) {
+    public inline fun <reified T : SkyBlockEvent> register(priority: Int = 0, receiveCancelled: Boolean = false, noinline callback: (T) -> Unit) {
         register(T::class.java, priority, receiveCancelled, callback = callback)
     }
 
-    fun <T : SkyBlockEvent> register(type: Class<T>, priority: Int = 0, receiveCancelled: Boolean = false, callback: (T) -> Unit) {
+    public fun <T : SkyBlockEvent> register(type: Class<T>, priority: Int = 0, receiveCancelled: Boolean = false, callback: (T) -> Unit) {
         unregisterHandler(type)
         listeners.getOrPut(type) { EventListeners() }.addListener(callback, priority, receiveCancelled)
     }
 
-    fun unregister(instance: Any) {
+    public fun unregister(instance: Any) {
         var clazz: Class<*>? = instance.javaClass
         while (clazz != null) {
             if (clazz == Any::class.java) break
@@ -42,16 +42,16 @@ class EventBus {
         }
     }
 
-    inline fun <reified T : SkyBlockEvent> unregister(noinline callback: (T) -> Unit) {
+    public inline fun <reified T : SkyBlockEvent> unregister(noinline callback: (T) -> Unit) {
         unregister(T::class.java, callback = callback)
     }
 
-    fun <T : SkyBlockEvent> unregister(type: Class<T>, callback: (T) -> Unit) {
+    public fun <T : SkyBlockEvent> unregister(type: Class<T>, callback: (T) -> Unit) {
         unregisterHandler(type)
         listeners.values.forEach { it.removeListener(callback) }
     }
 
-    fun post(
+    public fun post(
         event: SkyBlockEvent,
         context: Any? = null,
         onError: ((Throwable) -> Unit)? = null,
@@ -121,7 +121,7 @@ class EventBus {
         return method.parameterTypes.firstOrNull()?.let { EventData(options, listOf(it)) }
     }
 
-    data class EventData(
+    public data class EventData(
         val options: Subscription,
         val events: List<Class<*>>,
     )

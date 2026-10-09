@@ -30,4 +30,4 @@ private fun parseV0InventoryData(json: JsonObject): List<ItemStack> {
     } ?: emptyList()
 }
 
-fun Tag.legacyStack(): ItemStack = LegacyDataFixer.fromTag(this) ?: ItemStack.EMPTY
+public fun Tag.legacyStack(): ItemStack = LegacyDataFixer.fromTag(this) ?: ItemStack.EMPTY

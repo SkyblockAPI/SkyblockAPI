@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.platform.drawString
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 
 @Module
-object WorldRenderDebug {
+public object WorldRenderDebug {
 
     private val isEnabledEntities by debugToggle("render_debugs_entities")
     private val isEnabledTranslucent by debugToggle("render_debugs_translucent")

@@ -4,12 +4,12 @@ import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class WardrobeData(
+public data class WardrobeData(
     var currentSlot: Int = -1,
     var slots: MutableList<WardrobeSlot> = mutableListOf(),
 ) {
     companion object {
-        val CODEC = SkyblockAPICodecs.getCodec<WardrobeData>()
+        public val CODEC = SkyblockAPICodecs.getCodec<WardrobeData>()
     }
 }
 

@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
 import tech.thatgravyboat.skyblockapi.utils.lazy.registryBoundLazy
 
-enum class Vinyl {
+public enum class Vinyl {
     PRETTY_FLY,
     EARTHWORM_ENSEMBLE,
     CICADA_SYMPHONY,
@@ -21,8 +21,8 @@ enum class Vinyl {
     FIREFLY
     ;
 
-    val apiId: String = "VINYL_$name"
-    val skyblockId = SkyBlockId.item(apiId)
-    val itemStack by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault(apiId) }
-    val displayName: Component by lazy { itemStack.hoverName }
+    public val apiId: String = "VINYL_$name"
+    public val skyblockId = SkyBlockId.item(apiId)
+    public val itemStack by registryBoundLazy { SkyBlockItemsRepo.getItemStackOrDefault(apiId) }
+    public val displayName: Component by lazy { itemStack.hoverName }
 }

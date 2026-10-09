@@ -4,7 +4,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.extentions.valueOfOrNull
 
 @Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.SkyBlockSeason"))
-enum class SkyBlockSeason {
+public enum class SkyBlockSeason {
     EARLY_SPRING,
     SPRING,
     LATE_SPRING,
@@ -28,6 +28,6 @@ enum class SkyBlockSeason {
 
     companion object {
 
-        fun parse(value: String): SkyBlockSeason? = valueOfOrNull(value.replace(" ", "_").uppercase())
+        public fun parse(value: String): SkyBlockSeason? = valueOfOrNull(value.replace(" ", "_").uppercase())
     }
 }

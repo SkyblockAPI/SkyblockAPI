@@ -15,9 +15,9 @@ private const val HOUR_IN_MILLIS = 50000L
 private const val MINUTE_IN_MILLIS = 833L
 private const val SECOND_IN_MILLIS = 13L
 
-data class SkyBlockInstant(val instant: Instant) {
+public data class SkyBlockInstant(val instant: Instant) {
 
-    constructor(
+    public constructor(
         year: @Range(from = 0, to = Int.MAX_VALUE.toLong()) Int = 1,
         month: @Range(from = 1, to = 12) Int = 1,
         day: @Range(from = 1, to = 31) Int = 1,
@@ -54,14 +54,14 @@ data class SkyBlockInstant(val instant: Instant) {
     val second: Int
         get() = ((instant.toEpochMilliseconds() - EPOCH_DATE) % MINUTE_IN_MILLIS / SECOND_IN_MILLIS).toInt()
 
-    operator fun plus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.plus(duration))
-    operator fun minus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.minus(duration))
+    public operator fun plus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.plus(duration))
+    public operator fun minus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.minus(duration))
 
-    operator fun minus(other: SkyBlockInstant): Duration = instant.minus(other.instant)
+    public operator fun minus(other: SkyBlockInstant): Duration = instant.minus(other.instant)
 
-    fun getSeason(): SkyBlockSeason = SkyBlockSeason.entries[this.month - 1]
+    public fun getSeason(): SkyBlockSeason = SkyBlockSeason.entries[this.month - 1]
 
-    fun copy(
+    public fun copy(
         year: Int = this.year,
         month: Int = this.month,
         day: Int = this.day,
@@ -72,13 +72,13 @@ data class SkyBlockInstant(val instant: Instant) {
 
     companion object {
 
-        fun now(): SkyBlockInstant = SkyBlockInstant(currentInstant())
+        public fun now(): SkyBlockInstant = SkyBlockInstant(currentInstant())
     }
 }
 
-val Int.skyblockSeconds: Duration get() = (this * SECOND_IN_MILLIS).milliseconds
-val Int.skyblockMinutes: Duration get() = (this * MINUTE_IN_MILLIS).milliseconds
-val Int.skyblockHours: Duration get() = (this * HOUR_IN_MILLIS).milliseconds
-val Int.skyblockDays: Duration get() = (this * DAY_IN_MILLIS).milliseconds
-val Int.skyblockMonths: Duration get() = (this * MONTH_IN_MILLIS).milliseconds
-val Int.skyblockYears: Duration get() = (this * YEAR_IN_MILLIS).milliseconds
+public val Int.skyblockSeconds: Duration get() = (this * SECOND_IN_MILLIS).milliseconds
+public val Int.skyblockMinutes: Duration get() = (this * MINUTE_IN_MILLIS).milliseconds
+public val Int.skyblockHours: Duration get() = (this * HOUR_IN_MILLIS).milliseconds
+public val Int.skyblockDays: Duration get() = (this * DAY_IN_MILLIS).milliseconds
+public val Int.skyblockMonths: Duration get() = (this * MONTH_IN_MILLIS).milliseconds
+public val Int.skyblockYears: Duration get() = (this * YEAR_IN_MILLIS).milliseconds

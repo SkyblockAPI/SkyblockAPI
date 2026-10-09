@@ -42,7 +42,7 @@ private val tuningTemplatesRegion = ContainerRegion(width = 2, height = 4, start
 
 @Suppress("unused")
 @Module
-data object MaxwellAPI : ItemDebugCategory {
+public data object MaxwellAPI : ItemDebugCategory {
 
     val power: MaxwellPower
         get() = MaxwellStorage.power
@@ -159,7 +159,7 @@ data object MaxwellAPI : ItemDebugCategory {
 
     @OnlyOnSkyBlock
     @Subscription
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    public fun onChat(event: ChatReceivedEvent.Pre) {
         val message = event.text
         selectPowerRegex.findThenNull(message, "power") { (power) ->
             val newPower = MaxwellPowers.getByName(power) ?: return@findThenNull
@@ -170,7 +170,7 @@ data object MaxwellAPI : ItemDebugCategory {
     // These need to be on ContainerChangeEvent because you can interact with the GUI and update data
     @OnlyOnSkyBlock
     @Subscription
-    fun onInventoryUpdate(event: InventoryChangeEvent) {
+    public fun onInventoryUpdate(event: InventoryChangeEvent) {
         if (event.isInPlayerInventory) return
 
         if (handleThaumaturgyGui(event)) return
@@ -180,12 +180,12 @@ data object MaxwellAPI : ItemDebugCategory {
 
     @OnlyOnSkyBlock
     @Subscription
-    fun onInventoryFullyOpened(event: ContainerInitializedEvent) {
+    public fun onInventoryFullyOpened(event: ContainerInitializedEvent) {
         if (handleBagsGui(event)) return
     }
 
     @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
-    fun onServerChange() = MaxwellStorage.fixEmptyAccessories()
+    public fun onServerChange() = MaxwellStorage.fixEmptyAccessories()
 
     @Subscription(priority = Subscription.HIGHEST)
     context(event: LoadoutChangeEvent)

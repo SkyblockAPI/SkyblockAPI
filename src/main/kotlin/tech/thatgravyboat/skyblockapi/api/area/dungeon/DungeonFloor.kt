@@ -2,11 +2,11 @@ package tech.thatgravyboat.skyblockapi.api.area.dungeon
 
 import tech.thatgravyboat.skyblockapi.utils.extentions.valueOfOrNull
 
-enum class DungeonFloor(
-    val bossName: String,
-    val chatBossName: String = bossName,
-    val floorNumber: Int,
-    val longName: String,
+public enum class DungeonFloor(
+    public val bossName: String,
+    public val chatBossName: String = bossName,
+    public val floorNumber: Int,
+    public val longName: String,
 ) {
     E("The Watcher", 0, "The Catacombs Entrance"),
 
@@ -30,7 +30,7 @@ enum class DungeonFloor(
     constructor(bossName: String, floorNumber: Int, longName: String) : this(bossName, bossName, floorNumber, longName)
 
     companion object {
-        fun getByName(name: String) = valueOfOrNull<DungeonFloor>(name.uppercase())
-        fun getByLongName(name: String) = DungeonFloor.entries.firstOrNull { it.longName == name }
+        public fun getByName(name: String) = valueOfOrNull<DungeonFloor>(name.uppercase())
+        public fun getByLongName(name: String) = DungeonFloor.entries.firstOrNull { it.longName == name }
     }
 }

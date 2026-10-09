@@ -19,7 +19,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
 @Module
-object PartyFinderAPI {
+public object PartyFinderAPI {
     private val itemGroup = RegexGroup.Companion.INVENTORY.group("partyfinder")
     private val chatGroup = RegexGroup.Companion.CHAT.group("partyfinder")
 
@@ -103,17 +103,17 @@ object PartyFinderAPI {
         "Party Finder > Your group has been removed from the party finder because the leader went offline!"
     )
 
-    var queuedKuudraTier: KuudraTier? = null
+    public var queuedKuudraTier: KuudraTier? = null
         private set
-    var queuedDungeonFloor: DungeonFloor? = null
+    public var queuedDungeonFloor: DungeonFloor? = null
         private set
-    var groupNote: String = ""
+    public var groupNote: String = ""
         private set
-    var classLevelRequirement: Int = 0
+    public var classLevelRequirement: Int = 0
         private set
-    var dungeonLevelRequirement: Int = 0
+    public var dungeonLevelRequirement: Int = 0
         private set
-    var combatLevelRequirement: Int = 0
+    public var combatLevelRequirement: Int = 0
         private set
 
 
@@ -123,7 +123,7 @@ object PartyFinderAPI {
     @InventoryTitle("Group Builder")
     @MustBeContainer
     @IgnoreFiller
-    fun onInventoryChange(event: InventoryChangeEvent) {
+    public fun onInventoryChange(event: InventoryChangeEvent) {
         if (!event.isInMainPart) return
 
         val cleanedLore = event.item.getLore().map { component -> component.string }
@@ -180,7 +180,7 @@ object PartyFinderAPI {
     }
 
     @Subscription
-    fun onChatMessage(event: ChatReceivedEvent.Pre) {
+    public fun onChatMessage(event: ChatReceivedEvent.Pre) {
         matchWhen(event.text) {
             case(partyFinderQueueRegex) {
                 DungeonPartyFinderQueueEvent(

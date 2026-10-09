@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack
  * Splits a list into chunks based on a predicate.
  * The predicate will be true when a new chunk should be created, will include the element in the new chunk.
  */
-fun <T> List<T>.chunked(predicate: (T) -> Boolean): MutableList<MutableList<T>> {
+public fun <T> List<T>.chunked(predicate: (T) -> Boolean): MutableList<MutableList<T>> {
     val chunks = mutableListOf<MutableList<T>>()
     for (element in this) {
         val currentChunk = chunks.lastOrNull()
@@ -19,18 +19,18 @@ fun <T> List<T>.chunked(predicate: (T) -> Boolean): MutableList<MutableList<T>> 
     return chunks
 }
 
-fun <T> Iterable<T>.firstOrElseLast(predicate: (T) -> Boolean): T {
+public fun <T> Iterable<T>.firstOrElseLast(predicate: (T) -> Boolean): T {
     return this.firstOrNull(predicate) ?: this.last()
 }
 
-inline fun <T> List<T>.peek(crossinline block: (T) -> Unit): List<T> {
+public inline fun <T> List<T>.peek(crossinline block: (T) -> Unit): List<T> {
     for (element in this) {
         block(element)
     }
     return this
 }
 
-fun <T> MutableIterable<T>.clearAnd(action: (T) -> Unit) {
+public fun <T> MutableIterable<T>.clearAnd(action: (T) -> Unit) {
     val it = iterator()
     while (it.hasNext()) {
         action(it.next())
@@ -38,7 +38,7 @@ fun <T> MutableIterable<T>.clearAnd(action: (T) -> Unit) {
     }
 }
 
-fun <T> List<T>.asReversedIterator(): Iterator<T> {
+public fun <T> List<T>.asReversedIterator(): Iterator<T> {
     val list = this
     return object : Iterator<T> {
 
@@ -60,20 +60,20 @@ fun <T> List<T>.asReversedIterator(): Iterator<T> {
     }
 }
 
-fun <T, C : MutableCollection<T>> C.replaceWith(collection: Collection<T>): C = apply {
+public fun <T, C : MutableCollection<T>> C.replaceWith(collection: Collection<T>): C = apply {
     clear()
     addAll(collection)
 }
 
-fun <T : Any> MutableCollection<T>.addIfNotNull(element: T?): Boolean = element?.let { add(it) } ?: false
+public fun <T : Any> MutableCollection<T>.addIfNotNull(element: T?): Boolean = element?.let { add(it) } ?: false
 
-fun Collection<ItemStack>.filterNotAir() = filterNot { it.isEmpty }
+public fun Collection<ItemStack>.filterNotAir() = filterNot { it.isEmpty }
 
-inline fun <T, K> Iterable<T>.associateByNotNull(keySelector: (T) -> K?): Map<K, T> = buildMap {
+public inline fun <T, K> Iterable<T>.associateByNotNull(keySelector: (T) -> K?): Map<K, T> = buildMap {
     for (element in this@associateByNotNull) put(keySelector(element) ?: continue, element)
 }
 
-inline fun <T> List<T>.sublistAfter(predicate: (T) -> Boolean): List<T> {
+public inline fun <T> List<T>.sublistAfter(predicate: (T) -> Boolean): List<T> {
     val index = this.indexOfFirst(predicate)
     return if (index == -1) emptyList() else this.subList(index + 1, this.size)
 }
@@ -82,7 +82,7 @@ inline fun <T> List<T>.sublistAfter(predicate: (T) -> Boolean): List<T> {
  * Returns a sublist of the list between the first line that returns true on [beforePredicate], and the first line after that one to match [untilPredicate].
  * Not inclusive.
  */
-inline fun <T> List<T>.sublistAfterUntil(beforePredicate: (T) -> Boolean, untilPredicate: (T) -> Boolean): List<T> {
+public inline fun <T> List<T>.sublistAfterUntil(beforePredicate: (T) -> Boolean, untilPredicate: (T) -> Boolean): List<T> {
     val startIndex = this.indexOfFirst(beforePredicate)
     if (startIndex == -1) return emptyList()
 
@@ -95,22 +95,22 @@ inline fun <T> List<T>.sublistAfterUntil(beforePredicate: (T) -> Boolean, untilP
     return emptyList()
 }
 
-fun <K> MutableMap<K, Int>.addOrPut(key: K, number: Int): Int = merge(key, number, Int::plus)!!
-fun <K> MutableMap<K, Double>.addOrPut(key: K, number: Double): Double = merge(key, number, Double::plus)!!
-fun <K> MutableMap<K, Float>.addOrPut(key: K, number: Float): Float = merge(key, number, Float::plus)!!
-fun <K> MutableMap<K, Long>.addOrPut(key: K, number: Long): Long = merge(key, number, Long::plus)!!
+public fun <K> MutableMap<K, Int>.addOrPut(key: K, number: Int): Int = merge(key, number, Int::plus)!!
+public fun <K> MutableMap<K, Double>.addOrPut(key: K, number: Double): Double = merge(key, number, Double::plus)!!
+public fun <K> MutableMap<K, Float>.addOrPut(key: K, number: Float): Float = merge(key, number, Float::plus)!!
+public fun <K> MutableMap<K, Long>.addOrPut(key: K, number: Long): Long = merge(key, number, Long::plus)!!
 
-fun <K, V, R : Any> Map<K, V>.mapValuesNotNull(transform: (Map.Entry<K, V>) -> R?): Map<K, R> {
+public fun <K, V, R : Any> Map<K, V>.mapValuesNotNull(transform: (Map.Entry<K, V>) -> R?): Map<K, R> {
     return this.mapNotNull { transform(it)?.let { value -> it.key to value } }.toMap()
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <K, V : Any> Map<K, V?>.filterValuesNotNull(): Map<K, V> = this.filterValues { it != null } as Map<K, V>
+public fun <K, V : Any> Map<K, V?>.filterValuesNotNull(): Map<K, V> = this.filterValues { it != null } as Map<K, V>
 
 @Suppress("UNCHECKED_CAST")
-fun <K : Any, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null } as Map<K, V>
+public fun <K : Any, V> Map<K?, V>.filterKeysNotNull(): Map<K, V> = this.filterKeys { it != null } as Map<K, V>
 
-inline fun <Key> MutableMap<Key, *>.removeAll(crossinline predicate: (Key) -> Boolean) {
+public inline fun <Key> MutableMap<Key, *>.removeAll(crossinline predicate: (Key) -> Boolean) {
     for (key in this.keys.toSet()) {
         if (predicate(key)) {
             this.remove(key)

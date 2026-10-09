@@ -12,7 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.util.concurrent.CompletableFuture
 
-class EnumArgument<E : Enum<E>> private constructor(
+public class EnumArgument<E : Enum<E>> private constructor(
     clazz: Class<E>,
 ) : ArgumentType<E> {
     private val entries: Array<E> = clazz.enumConstants
@@ -46,9 +46,9 @@ class EnumArgument<E : Enum<E>> private constructor(
     override fun getExamples(): Collection<String> = entries.map { it.name }
 
     companion object {
-        fun <E : Enum<E>> create(clazz: Class<E>): EnumArgument<E> = EnumArgument(clazz)
+        public fun <E : Enum<E>> create(clazz: Class<E>): EnumArgument<E> = EnumArgument(clazz)
 
-        inline operator fun <reified E : Enum<E>> invoke(): EnumArgument<E> {
+        public inline operator fun <reified E : Enum<E>> invoke(): EnumArgument<E> {
             return create(E::class.java)
         }
     }

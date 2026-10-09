@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.utils
 
-data class DiscoverableValue<T>(var discover: () -> T?): Lazy<T?> {
+public data class DiscoverableValue<T>(var discover: () -> T?): Lazy<T?> {
     private var _value: T? = null
 
     override val value: T?

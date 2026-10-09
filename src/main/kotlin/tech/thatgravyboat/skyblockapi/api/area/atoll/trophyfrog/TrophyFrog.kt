@@ -5,7 +5,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-data class TrophyFrog(val type: TrophyFrogType, val tier: TrophyTier) {
+public data class TrophyFrog(val type: TrophyFrogType, val tier: TrophyTier) {
     val item: ItemStack by lazy { type.getItem(tier) }
     val displayName: Component by lazy {
         if (tier == TrophyTier.NONE) {
@@ -24,7 +24,7 @@ data class TrophyFrog(val type: TrophyFrogType, val tier: TrophyTier) {
     }
 
     companion object {
-        fun fromString(fish: String): TrophyFrog? {
+        public fun fromString(fish: String): TrophyFrog? {
             if (fish.contains("/")) {
                 return fish.split("/").let {
                     TrophyFrog(

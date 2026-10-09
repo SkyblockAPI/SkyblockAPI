@@ -7,7 +7,7 @@ import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import java.util.concurrent.CompletableFuture
 
-data class ArgumentTypeSuggestionProvider<Type>(val argumentType: ArgumentType<*>) : SuggestionProvider<Type> {
+public data class ArgumentTypeSuggestionProvider<Type>(val argumentType: ArgumentType<*>) : SuggestionProvider<Type> {
     override fun getSuggestions(
         context: CommandContext<Type>,
         builder: SuggestionsBuilder,

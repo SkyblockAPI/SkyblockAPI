@@ -7,17 +7,17 @@ import me.owdding.ktcodecs.NamedCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class Loadout(
+public data class Loadout(
     var currentSlot: Int = -1,
     @NamedCodec("loadout_slots") var slots: MutableMap<Int, LoadoutSlot> = mutableMapOf(),
 ) {
     companion object {
         @IncludedCodec(named = "loadout_slots")
-        val slotCodec: Codec<MutableMap<Int, LoadoutSlot>> = SkyblockAPICodecs.getCodec<LoadoutSlot>().listOf().xmap(
+        public val slotCodec: Codec<MutableMap<Int, LoadoutSlot>> = SkyblockAPICodecs.getCodec<LoadoutSlot>().listOf().xmap(
             { it.associateByTo(mutableMapOf(), LoadoutSlot::id) },
             { it.values.toList() }
         )
 
-        val CODEC = SkyblockAPICodecs.getCodec<Loadout>()
+        public val CODEC = SkyblockAPICodecs.getCodec<Loadout>()
     }
 }

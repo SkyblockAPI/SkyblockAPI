@@ -17,6 +17,7 @@ plugins {
 }
 
 kotlin {
+    explicitApi()
     compilerOptions {
         freeCompilerArgs.add("-Xrender-internal-diagnostic-names")
     }
@@ -25,7 +26,7 @@ kotlin {
         filters {
             exclude {
                 byNames.addAll(
-                    "tech.thatgrabyboat.skyblockapi.impl.**",
+                    "tech.thatgravyboat.skyblockapi.impl.**",
                     "tech.thatgravyboat.skyblockapi.mixins.**"
                 )
             }

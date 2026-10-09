@@ -10,13 +10,13 @@ internal interface ItemValueItemStack {
     fun `skyblockapi$getItemValueResult`(): ItemValueResult?
 }
 
-fun ItemStack.getItemValue(): ItemValueResult = (this as? ItemValueItemStack)?.`skyblockapi$getItemValueResult`() ?: ItemValueResult.EMPTY
+public fun ItemStack.getItemValue(): ItemValueResult = (this as? ItemValueItemStack)?.`skyblockapi$getItemValueResult`() ?: ItemValueResult.EMPTY
 
-object ItemValueCalculator {
+public object ItemValueCalculator {
     /** Use [tech.thatgravyboat.skyblockapi.api.item.calculator.getItemValue] to get the item value. */
     @JvmStatic
     @ApiStatus.Internal
-    fun calculateItemValue(stack: ItemStack): ItemValueResult {
+    public fun calculateItemValue(stack: ItemStack): ItemValueResult {
         val id = stack.getSkyBlockId() ?: return ItemValueResult.EMPTY
         return ItemValueSource.calculate(Pricing.getPrice(id), stack)
     }

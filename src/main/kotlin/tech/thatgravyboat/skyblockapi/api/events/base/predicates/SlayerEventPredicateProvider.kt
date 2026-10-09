@@ -14,7 +14,7 @@ import java.lang.reflect.Method
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerType(
+public annotation class OnlySlayerType(
     vararg val value: SlayerType,
     val acceptMiniBosses: Boolean = false,
     val acceptDemons: Boolean = false,
@@ -22,35 +22,35 @@ annotation class OnlySlayerType(
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerMiniBoss(
+public annotation class OnlySlayerMiniBoss(
     vararg val value: SlayerMiniBoss,
 )
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerDemon(
+public annotation class OnlySlayerDemon(
     vararg val value: SlayerDemon,
 )
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerDemons
+public annotation class OnlySlayerDemons
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerMiniBosses(
+public annotation class OnlySlayerMiniBosses(
     val bigBoys: TriState = TriState.DEFAULT,
 )
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerBosses
+public annotation class OnlySlayerBosses
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class MustBeOwnedByPlayer
+public annotation class MustBeOwnedByPlayer
 
-class SlayerEventPredicateProvider : EventPredicateProvider {
+public class SlayerEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         val validTypes = mutableListOf<SlayerMob>()

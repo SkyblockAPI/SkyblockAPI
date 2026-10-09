@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.api.RepoLibLogger
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 
-object RepoLibLogging : RepoLibLogger, Logger by LoggerFactory.getLogger("Repo-Lib") {
-    val enableDebugLogging by debugToggle("repo_lib_debug_logging")
+public object RepoLibLogging : RepoLibLogger, Logger by LoggerFactory.getLogger("Repo-Lib") {
+    public val enableDebugLogging by debugToggle("repo_lib_debug_logging")
 
     private inline fun updateLogLevel(value: String, runnable: (String) -> Unit, debugLogger: (String) -> Unit = ::info) {
         if (enableDebugLogging) {

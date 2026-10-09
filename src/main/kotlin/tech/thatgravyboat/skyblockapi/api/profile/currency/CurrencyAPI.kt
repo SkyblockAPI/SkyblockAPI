@@ -25,7 +25,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.reflect.KMutableProperty0
 
-enum class PurseType(scoreboardName: String? = null) {
+public enum class PurseType(scoreboardName: String? = null) {
     NORMAL("PURSE"),
     PIGGY,
     UNKNOWN,
@@ -34,7 +34,7 @@ enum class PurseType(scoreboardName: String? = null) {
     private val scoreboardName: String = scoreboardName ?: name
 
     companion object {
-        fun fromName(name: String): PurseType = entries.find { it.scoreboardName.equals(name, true) } ?: UNKNOWN
+        public fun fromName(name: String): PurseType = entries.find { it.scoreboardName.equals(name, true) } ?: UNKNOWN
     }
 }
 
@@ -42,7 +42,7 @@ private typealias CurrencyEvent = CurrencyUpdateEvent<*>
 
 @Module
 @Suppress("MemberVisibilityCanBePrivate")
-object CurrencyAPI {
+public object CurrencyAPI {
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("currency")
     private val bankSingleRegex = widgetGroup.create("profile.bank.single", "(?i) Bank: (?<bank>(?i)[\\d,.kmb]+)")
@@ -68,48 +68,48 @@ object CurrencyAPI {
     private val inventoryKernelsRegex = inventoryGroup.create("kernels", "^Your Kernels: (?<kernels>(?i)[\\d,.kmb]+)")
     private val inventoryGemsRegex = inventoryGroup.create("gems", "^Gems: (?<gems>(?i)[\\d,.kmb]+)")
 
-    var purse: Double by CurrencyStorage::purse
+    public var purse: Double by CurrencyStorage::purse
         private set
 
-    var purseType: PurseType by CurrencyStorage::purseType
+    public var purseType: PurseType by CurrencyStorage::purseType
         private set
 
-    var personalBank: Long by CurrencyStorage::personalBank
+    public var personalBank: Long by CurrencyStorage::personalBank
         private set
 
-    var coopBank: Long by CurrencyStorage::coopBank
+    public var coopBank: Long by CurrencyStorage::coopBank
         private set
 
-    val bank get() = personalBank + coopBank
+    public val bank get() = personalBank + coopBank
 
-    var motes: Long by CurrencyStorage::motes
+    public var motes: Long by CurrencyStorage::motes
         private set
 
-    var bits: Long by CurrencyStorage::bits
+    public var bits: Long by CurrencyStorage::bits
         private set
 
-    var copper: Long by CurrencyStorage::copper
+    public var copper: Long by CurrencyStorage::copper
         private set
 
-    var sowdust: Long by CurrencyStorage::sowdust
+    public var sowdust: Long by CurrencyStorage::sowdust
         private set
 
-    var kernels: Long by CurrencyStorage::kernels
+    public var kernels: Long by CurrencyStorage::kernels
         private set
 
-    var northStars: Long by CurrencyStorage::northStars
+    public var northStars: Long by CurrencyStorage::northStars
         private set
 
-    var gems: Long by CommunityCenterStorage::gems
+    public var gems: Long by CommunityCenterStorage::gems
         private set
 
     // TODO: move somewhere else, since soulflow isn't really a currency
-    var soulflow: Long by CurrencyStorage::soulflow
+    public var soulflow: Long by CurrencyStorage::soulflow
         private set
 
     @Subscription
     @OnlyWidget(TabWidget.PROFILE, TabWidget.AREA)
-    fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
+    public fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
         when (event.widget) {
             TabWidget.PROFILE -> {
                 bankSingleRegex.anyMatch(event.new, "bank") { (bank) ->
@@ -137,7 +137,7 @@ object CurrencyAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onScoreboardChange(event: ScoreboardUpdateEvent) {
+    public fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         if (SkyBlockIsland.THE_RIFT.inIsland()) {
             // Has a decimal place if obtained via mcgrubber burgers
             motesRegex.findCurrency(event.added, "motes", ::motes, CurrencyEvent::Motes)
@@ -159,7 +159,7 @@ object CurrencyAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onInventoryUpdate(event: InventoryChangeEvent) {
+    public fun onInventoryUpdate(event: InventoryChangeEvent) {
         when (event.title) {
             "Grand Bakery" if (event.item.cleanName == "Grand Bakery") -> {
                 inventoryKernelsRegex.findCurrencyChecked(event.item.getRawLore(), "kernels", ::kernels, CurrencyEvent::Kernels)

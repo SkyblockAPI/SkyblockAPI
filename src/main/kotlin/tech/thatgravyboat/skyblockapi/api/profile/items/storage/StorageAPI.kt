@@ -21,7 +21,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 @Module
-object StorageAPI {
+public object StorageAPI {
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("storage")
 
@@ -33,20 +33,20 @@ object StorageAPI {
     /**
      * Note: The index of the storage are stored in the PlayerStorageInstance and the index in the list is not representative of the page.
      */
-    val enderchests get(): List<PlayerStorageInstance> = PlayerStorageStorage.enderchests
+    public val enderchests get(): List<PlayerStorageInstance> = PlayerStorageStorage.enderchests
 
     /**
      * Note: The index of the storage are stored in the PlayerStorageInstance and the index in the list is not representative of the page.
      */
-    val backpacks get(): List<PlayerStorageInstance> = PlayerStorageStorage.backpacks
+    public val backpacks get(): List<PlayerStorageInstance> = PlayerStorageStorage.backpacks
 
     /**
      * Note: The index of the storage are stored in the PlayerStorageInstance and the index in the list is not representative of the page.
      */
-    val riftStorage get(): List<PlayerStorageInstance> = PlayerStorageStorage.riftStorage
+    public val riftStorage get(): List<PlayerStorageInstance> = PlayerStorageStorage.riftStorage
 
     @Subscription
-    fun onInventoryLoad(event: ContainerInitializedEvent) {
+    public fun onInventoryLoad(event: ContainerInitializedEvent) {
         val size = McScreen.asMenu?.menu?.slots?.size?.let { it - 36 } ?: return
         enderchestRegex.match(event.title, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
@@ -69,7 +69,7 @@ object StorageAPI {
     }
 
     @Subscription
-    fun onInventoryChange(event: InventoryChangeEvent) {
+    public fun onInventoryChange(event: InventoryChangeEvent) {
         if (event.isInPlayerInventory) return
         if (event.isInTopRow) return
         val index = event.slot.index

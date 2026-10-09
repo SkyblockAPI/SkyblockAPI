@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.area.farming
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.extentions.valueOfOrNull
 
-enum class TrapperAnimalType {
+public enum class TrapperAnimalType {
     TRACKABLE,
     UNTRACKABLE,
     UNDETECTED,
@@ -16,6 +16,6 @@ enum class TrapperAnimalType {
     override fun toString(): String = string
 
     companion object {
-        fun fromString(string: String): TrapperAnimalType = valueOfOrNull(string.uppercase()) ?: UNKNOWN
+        public fun fromString(string: String): TrapperAnimalType = valueOfOrNull(string.uppercase()) ?: UNKNOWN
     }
 }

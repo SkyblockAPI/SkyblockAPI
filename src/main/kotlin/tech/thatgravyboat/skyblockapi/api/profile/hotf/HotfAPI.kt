@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemModelTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 
 @Module
-object HotfAPI : SkillTreeAPI<HotfData, HotfPerk, HotfAPI>(
+public object HotfAPI : SkillTreeAPI<HotfData, HotfPerk, HotfAPI>(
     name = "hotf",
     perkItems = ItemModelTag.HOTF_PERK_ITEMS,
     storage = HotfStorage,

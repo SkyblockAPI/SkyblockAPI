@@ -9,14 +9,14 @@ import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @Module
-object RepoSlayerData {
+public object RepoSlayerData {
 
-    val data: Map<SlayerType, RepoSlayerData> = SkyBlockAPI.getRepo("slayer", Codec.unboundedMap(SkyblockAPICodecs.getCodec<SlayerType>(), RepoSlayerData.CODEC))
+    public val data: Map<SlayerType, RepoSlayerData> = SkyBlockAPI.getRepo("slayer", Codec.unboundedMap(SkyblockAPICodecs.getCodec<SlayerType>(), RepoSlayerData.CODEC))
 
-    fun getData(type: SlayerType) = data[type] ?: error("No slayer data found for $type")
+    public fun getData(type: SlayerType) = data[type] ?: error("No slayer data found for $type")
 
     @GenerateCodec
-    data class RepoSlayerData(
+    public data class RepoSlayerData(
         val name: String,
         val id: String,
         val leveling: List<Long>,
@@ -25,10 +25,10 @@ object RepoSlayerData {
         val maxBossTier = bossXp.size
         val maxLevel = leveling.size
 
-        fun getLevel(xp: Long) = leveling.indexOfLast { it <= xp } + 1
+        public fun getLevel(xp: Long) = leveling.indexOfLast { it <= xp } + 1
 
         companion object {
-            val CODEC: Codec<RepoSlayerData> = SkyblockAPICodecs.getCodec<RepoSlayerData>()
+            public val CODEC: Codec<RepoSlayerData> = SkyblockAPICodecs.getCodec<RepoSlayerData>()
         }
     }
 }

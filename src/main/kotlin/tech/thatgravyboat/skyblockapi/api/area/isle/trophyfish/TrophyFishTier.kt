@@ -5,7 +5,7 @@ import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 @Deprecated("Use TrophyTier instead")
-enum class TrophyFishTier(val nameSuffix: Component, val displayName: String) {
+public enum class TrophyFishTier(val nameSuffix: Component, val displayName: String) {
     NONE(
         nameSuffix = Component.empty(),
         displayName = "Total",
@@ -36,7 +36,7 @@ enum class TrophyFishTier(val nameSuffix: Component, val displayName: String) {
     );
 
     companion object {
-        fun getByName(name: String): TrophyFishTier {
+        public fun getByName(name: String): TrophyFishTier {
             return entries.find { it.name.equals(name, ignoreCase = true) } ?: NONE
         }
     }

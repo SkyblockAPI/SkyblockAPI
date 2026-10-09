@@ -20,26 +20,26 @@ private const val BASE_COOKIE_BITS = 4800
 
 @Module
 @Suppress("MemberVisibilityCanBePrivate")
-object CommunityCenterAPI {
+public object CommunityCenterAPI {
 
     internal val cookieAteRegex = RegexGroup.CHAT.create("communitycenter.cookie.ate", "^You consumed a Booster Cookie!")
     private val bitsAvailableRegex = RegexGroup.INVENTORY.create("communitycenter.bits.available", "Bits Available: (?<bits>[\\d,kmb]+).*")
     private val fameRankRegex = RegexGroup.INVENTORY.create("communitycenter.fame.rank", "Your rank: (?<rank>.*)")
-    var bitsAvailable: Long
+    public var bitsAvailable: Long
         get() = CommunityCenterStorage.bitsAvailable
         private set(value) {
             CommunityCenterStorage.bitsAvailable = value
         }
 
-    var fameRank: FameRank?
+    public var fameRank: FameRank?
         get() = CommunityCenterStorage.rank
         private set(value) {
             CommunityCenterStorage.rank = value
         }
 
-    val gems: Long by CurrencyAPI::gems
+    public val gems: Long by CurrencyAPI::gems
 
-    val bitsPerCookie: Int
+    public val bitsPerCookie: Int
         get() {
             val museumBonus = 1 + MuseumAPI.milestone * 0.01 // 1% per level
             return (BASE_COOKIE_BITS * museumBonus * (fameRank?.multiplier ?: 1.0)).toInt()
@@ -47,21 +47,21 @@ object CommunityCenterAPI {
 
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    public fun onChat(event: ChatReceivedEvent.Pre) {
         if (cookieAteRegex.contains(event.text)) {
             bitsAvailable += bitsPerCookie
         }
     }
 
     @Subscription
-    fun onBitsUpdate(event: CurrencyUpdateEvent.Bits) {
+    public fun onBitsUpdate(event: CurrencyUpdateEvent.Bits) {
         val diff = event.diff
         if (diff < 0) return // You have spent bits, not gained
         bitsAvailable = (bitsAvailable - diff).coerceAtLeast(0)
     }
 
     @Subscription
-    fun onInventoryFullyLoaded(event: ContainerInitializedEvent) {
+    public fun onInventoryFullyLoaded(event: ContainerInitializedEvent) {
         when (event.title) {
             "SkyBlock Menu" -> handleSkyBlockMenu(event)
             "Booster Cookie" -> handleBoosterCookieMenu(event)

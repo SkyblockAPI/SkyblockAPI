@@ -9,5 +9,5 @@ internal interface DataTypeItemStack {
     fun `skyblockapi$getTypes`(): Map<DataType<*>, *>
 }
 
-fun ItemStack.getDataTypes(): Map<DataType<*>, *> = (this as? DataTypeItemStack)?.`skyblockapi$getTypes`() ?: mapOf<DataType<*>, Any>()
-fun <T> ItemStack.getData(type: DataType<T>): T? = (this as? DataTypeItemStack)?.`skyblockapi$getType`(type)
+public fun ItemStack.getDataTypes(): Map<DataType<*>, *> = (this as? DataTypeItemStack)?.`skyblockapi$getTypes`() ?: mapOf<DataType<*>, Any>()
+public fun <T> ItemStack.getData(type: DataType<T>): T? = (this as? DataTypeItemStack)?.`skyblockapi$getType`(type)

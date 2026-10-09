@@ -12,19 +12,19 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import kotlin.reflect.KClass
 
 @GenerateDispatchCodec(Cost::class)
-enum class CostTypes(override val type: KClass<out Cost>) : DispatchHelper<Cost> {
+public enum class CostTypes(override val type: KClass<out Cost>) : DispatchHelper<Cost> {
     COINS(CoinCost::class),
     ITEM(ItemCost::class),
     ESSENCE(EssenceCost::class),
     ;
 
     companion object {
-        fun getType(id: String) = entries.first { it.id.equals(id, true) }
+        public fun getType(id: String) = entries.first { it.id.equals(id, true) }
     }
 }
 
 @GenerateCodec
-data class EssenceCost(
+public data class EssenceCost(
     @FieldName("essence_type") val essenceType: Essence,
     val amount: Int,
 ) : Cost(CostTypes.ESSENCE) {
@@ -34,7 +34,7 @@ data class EssenceCost(
 }
 
 @GenerateCodec
-data class ItemCost(
+public data class ItemCost(
     @FieldName("item_id") val itemId: String,
     val amount: Int,
 ) : Cost(CostTypes.ITEM) {
@@ -44,7 +44,7 @@ data class ItemCost(
 }
 
 @GenerateCodec
-data class CoinCost(
+public data class CoinCost(
     @FieldName("coins") val amount: Int,
 ) : Cost(CostTypes.COINS) {
     companion object {
@@ -52,11 +52,11 @@ data class CoinCost(
     }
 }
 
-abstract class Cost(val type: CostTypes) {
+public abstract class Cost(val type: CostTypes) {
     companion object {
         internal val CODEC: Codec<Cost> = SkyblockAPICodecs.CostCodec.codec()
 
-        fun calculateCost(cost: Cost) = when (cost) {
+        public fun calculateCost(cost: Cost) = when (cost) {
             is CoinCost -> cost.amount.toLong()
             is ItemCost -> cost.amount * Pricing.getPrice(cost.itemId)
             is EssenceCost -> cost.amount * Pricing.getPrice(cost.essenceType.bazaarId)

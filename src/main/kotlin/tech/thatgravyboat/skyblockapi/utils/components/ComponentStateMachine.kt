@@ -7,7 +7,7 @@ import net.minecraft.util.StringDecomposer
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-enum class StateResult(val match: Boolean, val continuation: Boolean) {
+public enum class StateResult(val match: Boolean, val continuation: Boolean) {
     // Mismatch, break
     BREAK(false, false),
 
@@ -19,8 +19,8 @@ enum class StateResult(val match: Boolean, val continuation: Boolean) {
     ;
 }
 
-interface ComponentStateMachinePart<State> {
-    fun createState(): State
+public interface ComponentStateMachinePart<State> {
+    public fun createState(): State
 
     context(state: State, _: GroupSink)
     fun tryConsumeState(index: Int, char: Char, style: Style): StateResult
@@ -30,7 +30,7 @@ interface ComponentStateMachinePart<State> {
     }
 }
 
-interface ComponentStatelessMachinePart : ComponentStateMachinePart<Unit> {
+public interface ComponentStatelessMachinePart : ComponentStateMachinePart<Unit> {
     override fun createState() = Unit
 
     context(_: GroupSink)
@@ -42,20 +42,20 @@ interface ComponentStatelessMachinePart : ComponentStateMachinePart<Unit> {
     context(state: Unit)
     override fun endState(groupSink: GroupSink) = end(groupSink)
 
-    fun end(groupSink: GroupSink) {
+    public fun end(groupSink: GroupSink) {
     }
 }
 
-interface GroupSink {
-    fun group(name: String, group: FormattedCharSequence)
-    fun flush()
+public interface GroupSink {
+    public fun group(name: String, group: FormattedCharSequence)
+    public fun flush()
 }
 
-fun interface CharSink {
-    fun tryConsume(char: Char): Boolean
+public fun interface CharSink {
+    public fun tryConsume(char: Char): Boolean
 }
 
-data class LiteralComponentPart(val literal: String) : ComponentStatelessMachinePart {
+public data class LiteralComponentPart(val literal: String) : ComponentStatelessMachinePart {
     context(_: GroupSink)
     override fun tryConsume(index: Int, char: Char, style: Style): StateResult {
         if (index < literal.length) {
@@ -70,7 +70,7 @@ data class LiteralComponentPart(val literal: String) : ComponentStatelessMachine
     }
 }
 
-data class WildcardComponentPart(val sink: CharSink, val maxLength: Int = 10000) : ComponentStatelessMachinePart {
+public data class WildcardComponentPart(val sink: CharSink, val maxLength: Int = 10000) : ComponentStatelessMachinePart {
     context(_: GroupSink)
     override fun tryConsume(index: Int, char: Char, style: Style): StateResult {
         if (index <= maxLength && sink.tryConsume(char)) {
@@ -81,10 +81,10 @@ data class WildcardComponentPart(val sink: CharSink, val maxLength: Int = 10000)
     }
 }
 
-data class CompositeComponentPart(
+public data class CompositeComponentPart(
     val children: List<ComponentStateMachinePart<*>>,
 ) : ComponentStateMachinePart<CompositeComponentPart.State> {
-    data class State(
+    public data class State(
         var current: StateMachinePosition<*>,
         val part: Iterator<ComponentStateMachinePart<*>>,
     )
@@ -125,13 +125,13 @@ data class CompositeComponentPart(
     }
 }
 
-data class RepeatPart(
+public data class RepeatPart(
     val children: ComponentStateMachinePart<*>,
     val delimiter: ComponentStateMachinePart<*>,
 ) : ComponentStateMachinePart<RepeatPart.State> {
     override fun createState(): State = State(StateMachinePosition(children))
 
-    data class State(
+    public data class State(
         var current: StateMachinePosition<*>,
         var isDelimiter: Boolean = false,
     )
@@ -174,14 +174,14 @@ data class RepeatPart(
     }
 }
 
-data class ForkPart(
+public data class ForkPart(
     val forks: List<ComponentStateMachinePart<*>>,
     val marker: Unit = Unit,
 ) : ComponentStateMachinePart<ForkPart.State> {
     @Deprecated("Only for binary compat", level = DeprecationLevel.HIDDEN)
-    constructor(forks: List<StateMachinePosition<*>>) : this(forks.map { it.part }, Unit)
+    public constructor(forks: List<StateMachinePosition<*>>) : this(forks.map { it.part }, Unit)
 
-    data class State(
+    public data class State(
         var state: StateMachinePosition<*>? = null,
     )
 
@@ -206,12 +206,12 @@ data class ForkPart(
     }
 }
 
-data class OptionalPart(
+public data class OptionalPart(
     //? <= 26.3
     @get:JvmName("newPart")
     val part: ComponentStateMachinePart<*>,
 ) : ComponentStateMachinePart<StateMachinePosition<*>> {
-    constructor(part: StateMachinePosition<*>) : this(part.part)
+    public constructor(part: StateMachinePosition<*>) : this(part.part)
 
     //? <= 26.3
     @get:JvmName("part") val _part get() = StateMachinePosition(part)
@@ -238,11 +238,11 @@ data class OptionalPart(
 
 }
 
-data class CapturingComponentPart(
+public data class CapturingComponentPart(
     val children: ComponentStateMachinePart<*>,
     val name: String,
 ) : ComponentStateMachinePart<CapturingComponentPart.State> {
-    data class State(
+    public data class State(
         var current: StateMachinePosition<*>,
         val result: MutableList<Pair<Char, Style>> = ArrayList(),
     )
@@ -285,9 +285,9 @@ data class CapturingComponentPart(
     }
 }
 
-class ForkBuilder() : StateMachineBuilder() {
+public class ForkBuilder() : StateMachineBuilder() {
 
-    fun branch(builder: StateMachineBuilder.() -> Unit) = add {
+    public fun branch(builder: StateMachineBuilder.() -> Unit) = add {
         StateMachineBuilder().apply(builder).toPart()
     }
 
@@ -296,62 +296,62 @@ class ForkBuilder() : StateMachineBuilder() {
     }
 }
 
-open class StateMachineBuilder(
-    val parts: MutableList<ComponentStateMachinePart<*>> = mutableListOf(),
+public open class StateMachineBuilder(
+    public val parts: MutableList<ComponentStateMachinePart<*>> = mutableListOf(),
 ) {
 
-    fun repeat(delimiter: String, builder: StateMachineBuilder.() -> Unit) = add {
+    public fun repeat(delimiter: String, builder: StateMachineBuilder.() -> Unit) = add {
         RepeatPart(
             StateMachineBuilder().apply(builder).toPart(),
             LiteralComponentPart(delimiter),
         )
     }
 
-    fun literal(string: String) = add {
+    public fun literal(string: String) = add {
         LiteralComponentPart(string)
     }
 
-    fun wildcard(char: CharSink, maxLength: Int = 10000) = add {
+    public fun wildcard(char: CharSink, maxLength: Int = 10000) = add {
         WildcardComponentPart(char, maxLength)
     }
 
-    fun char(char: Char) = literal(char.toString())
+    public fun char(char: Char) = literal(char.toString())
 
-    fun chars(vararg char: Iterable<Char>, maxLength: Int = 10000) = add {
+    public fun chars(vararg char: Iterable<Char>, maxLength: Int = 10000) = add {
         val chars = char.flatMapTo(mutableSetOf()) { it.toList() }
         WildcardComponentPart({ it in chars }, maxLength)
     }
 
-    fun capture(name: String, builder: StateMachineBuilder.() -> Unit) = add {
+    public fun capture(name: String, builder: StateMachineBuilder.() -> Unit) = add {
         CapturingComponentPart(StateMachineBuilder().apply(builder).toPart(), name)
     }
 
-    fun optional(builder: StateMachineBuilder.() -> Unit) = add {
+    public fun optional(builder: StateMachineBuilder.() -> Unit) = add {
         OptionalPart(StateMachineBuilder().apply(builder).toPart())
     }
 
-    fun fork(builder: ForkBuilder.() -> Unit) = add {
+    public fun fork(builder: ForkBuilder.() -> Unit) = add {
         ForkBuilder().apply(builder).toPart()
     }
 
-    inline fun add(supplier: () -> ComponentStateMachinePart<*>) {
+    public inline fun add(supplier: () -> ComponentStateMachinePart<*>) {
         parts.add(supplier.invoke())
     }
 
-    open fun toPart() = CompositeComponentPart(parts)
+    public open fun toPart() = CompositeComponentPart(parts)
 }
 
-class StateMachinePosition<Type>(
-    val part: ComponentStateMachinePart<Type>,
-    val state: Type = part.createState(),
-    var index: Int = 0,
+public class StateMachinePosition<Type>(
+    public val part: ComponentStateMachinePart<Type>,
+    public val state: Type = part.createState(),
+    public var index: Int = 0,
 ) {
     context(groupSink: GroupSink)
     fun tryConsume(char: Char, style: Style): StateResult = context(state) {
         part.tryConsumeState(index++, char, style)
     }
 
-    fun endState(groupSink: GroupSink) = context(groupSink) {
+    public fun endState(groupSink: GroupSink) = context(groupSink) {
         end()
     }
 
@@ -361,16 +361,16 @@ class StateMachinePosition<Type>(
     }
 }
 
-class ComponentStateMachine(
-    val parts: ComponentStateMachinePart<*>,
+public class ComponentStateMachine(
+    public val parts: ComponentStateMachinePart<*>,
 ) {
     companion object {
-        fun build(builder: StateMachineBuilder.() -> Unit): ComponentStateMachine = ComponentStateMachine(StateMachineBuilder().apply(builder).toPart())
+        public fun build(builder: StateMachineBuilder.() -> Unit): ComponentStateMachine = ComponentStateMachine(StateMachineBuilder().apply(builder).toPart())
     }
 
-    constructor(parts: List<ComponentStateMachinePart<*>>) : this(CompositeComponentPart(parts))
+    public constructor(parts: List<ComponentStateMachinePart<*>>) : this(CompositeComponentPart(parts))
 
-    fun decompose(component: Component, consumer: (Map<String, FormattedCharSequence>) -> Unit): Boolean {
+    public fun decompose(component: Component, consumer: (Map<String, FormattedCharSequence>) -> Unit): Boolean {
         val current = StateMachinePosition(parts)
 
         val groups = mutableMapOf<String, FormattedCharSequence>()
@@ -406,7 +406,7 @@ class ComponentStateMachine(
         }
     }
 
-    fun match(component: Component, consumer: (Map<String, FormattedCharSequence>) -> Unit): Boolean {
+    public fun match(component: Component, consumer: (Map<String, FormattedCharSequence>) -> Unit): Boolean {
         val groups = mutableMapOf<String, FormattedCharSequence>()
 
         val current = StateMachinePosition(parts)

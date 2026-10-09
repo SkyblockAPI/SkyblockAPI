@@ -37,14 +37,14 @@ import kotlin.io.path.reader
 import kotlin.io.path.writer
 import kotlin.reflect.KProperty
 
-sealed interface DebugEntry {
-    val location: Identifier
-    val description: String
+public sealed interface DebugEntry {
+    public val location: Identifier
+    public val description: String
 
-    val devUtils: DevUtils
+    public val devUtils: DevUtils
 
-    fun canSetDefault(): Boolean = devUtils.supportsChangingDefault
-    fun hasDescription(): Boolean {
+    public fun canSetDefault(): Boolean = devUtils.supportsChangingDefault
+    public fun hasDescription(): Boolean {
         return description.isNotBlank() && description != location.toString() && description != location.path
     }
 }
@@ -53,31 +53,31 @@ internal fun debugToggle(path: String, description: String = path, prefix: Strin
     return DebugToggle(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils, prefix)
 }
 
-open class DebugToggle @JvmOverloads constructor(
+public open class DebugToggle @JvmOverloads constructor(
     override val location: Identifier,
     override val description: String,
     override val devUtils: DevUtils,
     prefix: String = location.toString()
 ) : DebugEntry {
-    open val prefix = Text.of(prefix, TextColor.DARK_PURPLE)
-    var state: Boolean = true
+    public open val prefix = Text.of(prefix, TextColor.DARK_PURPLE)
+    public var state: Boolean = true
 
     init {
         devUtils.register(this)
     }
 
-    fun get() = state
-    fun set(value: Boolean) = devUtils.setToggle(location, value)
+    public fun get() = state
+    public fun set(value: Boolean) = devUtils.setToggle(location, value)
 
-    fun toggle() = devUtils.toggle(location)
-    fun update() { state = devUtils.isOn(location) }
+    public fun toggle() = devUtils.toggle(location)
+    public fun update() { state = devUtils.isOn(location) }
 
-    fun getDefault() = devUtils.getDefaultToggle(location)
-    fun toggleDefault() = devUtils.setToggleDefault(location, !getDefault())
+    public fun getDefault() = devUtils.getDefaultToggle(location)
+    public fun toggleDefault() = devUtils.setToggleDefault(location, !getDefault())
 
-    operator fun getValue(any: Nothing?, property: KProperty<*>): Boolean = get()
+    public operator fun getValue(any: Nothing?, property: KProperty<*>): Boolean = get()
 
-    operator fun getValue(any: Any?, property: KProperty<*>): Boolean = get()
+    public operator fun getValue(any: Any?, property: KProperty<*>): Boolean = get()
 
 }
 
@@ -97,7 +97,7 @@ internal inline fun <reified T : Enum<T>> debugSelect(
     initialState: T? = null,
 ): DebugSelect<T> = debugSelect(path, description, initialState, T::class.java.enumConstants.toList())
 
-open class DebugSelect<T : Any>(
+public open class DebugSelect<T : Any>(
     override val location: Identifier,
     override val description: String,
     override val devUtils: DevUtils,
@@ -109,35 +109,35 @@ open class DebugSelect<T : Any>(
         devUtils.register(this)
     }
 
-    fun get(): T? = state
-    fun set(value: T?) {
+    public fun get(): T? = state
+    public fun set(value: T?) {
         this.state = value
         update()
     }
-    fun hasState(): Boolean = this.state != null
+    public fun hasState(): Boolean = this.state != null
 
-    fun getByName(name: String?) = states.find { toString(it) == name }
-    fun setByName(name: String?) = set(getByName(name))
+    public fun getByName(name: String?) = states.find { toString(it) == name }
+    public fun setByName(name: String?) = set(getByName(name))
 
-    fun states(): List<String> = states.map(toString)
+    public fun states(): List<String> = states.map(toString)
 
-    fun stateName() = this.state?.let { toString(it) }
-    fun update() { devUtils.selectStates[location] = stateName() }
+    public fun stateName() = this.state?.let { toString(it) }
+    public fun update() { devUtils.selectStates[location] = stateName() }
 
-    fun getDefault(): String? {
+    public fun getDefault(): String? {
         if (!canSetDefault()) return null
         return devUtils.getDefaultSelect(location)
     }
 
-    fun setDefault(value: String?) {
+    public fun setDefault(value: String?) {
         if (!canSetDefault()) return
         devUtils.setSelectDefault(location, value)
     }
 
-    fun hasDefault(): Boolean = getDefault() != null
+    public fun hasDefault(): Boolean = getDefault() != null
 
-    operator fun getValue(any: Nothing?, property: KProperty<*>): T? = get()
-    operator fun getValue(any: Any?, property: KProperty<*>): T? = get()
+    public operator fun getValue(any: Nothing?, property: KProperty<*>): T? = get()
+    public operator fun getValue(any: Any?, property: KProperty<*>): T? = get()
 }
 
 @Module
@@ -248,63 +248,63 @@ internal object SkyBlockApiDevUtils : DevUtils() {
 @Suppress("UNCHECKED_CAST")
 private fun <V> Any.unsafe(): V = this as V
 
-abstract class DevUtils {
-    val states = mutableMapOf<Identifier, Boolean>()
-    val selectStates = mutableMapOf<Identifier, String?>()
+public abstract class DevUtils {
+    public val states = mutableMapOf<Identifier, Boolean>()
+    public val selectStates = mutableMapOf<Identifier, String?>()
 
-    val toggles = mutableListOf<DebugToggle>()
-    val select = mutableMapOf<Identifier, DebugSelect<Any>>()
+    public val toggles = mutableListOf<DebugToggle>()
+    public val select = mutableMapOf<Identifier, DebugSelect<Any>>()
 
-    val allDebugEntries: List<DebugEntry> get() = buildList {
+    public val allDebugEntries: List<DebugEntry> get() = buildList {
         addAll(toggles)
         addAll(select.values)
     }
 
     /** whether this dev utils supports changing debug entries' default states when launching */
-    open val supportsChangingDefault: Boolean = false
-    open val namespace: String = SkyBlockAPI.NAMESPACE
+    public open val supportsChangingDefault: Boolean = false
+    public open val namespace: String = SkyBlockAPI.NAMESPACE
 
-    fun <T : Any> register(debugSelect: DebugSelect<T>) {
+    public fun <T : Any> register(debugSelect: DebugSelect<T>) {
         select[debugSelect.location] = debugSelect.unsafe()
         if (supportsChangingDefault) debugSelect.setByName(selectStates[debugSelect.location])
     }
 
-    fun register(debugToggle: DebugToggle) {
+    public fun register(debugToggle: DebugToggle) {
         states.putIfAbsent(debugToggle.location, false)
         toggles += debugToggle
         debugToggle.state = states[debugToggle.location] == true
     }
 
-    fun toggle(location: Identifier) {
+    public fun toggle(location: Identifier) {
         states[location] = states[location]?.not() == true
         toggles.find { it.location == location }?.update()
     }
 
-    fun isOn(location: Identifier) = states.getOrDefault(location, false)
+    public fun isOn(location: Identifier) = states.getOrDefault(location, false)
 
-    fun setToggle(location: Identifier, newValue: Boolean) {
+    public fun setToggle(location: Identifier, newValue: Boolean) {
         states[location] = newValue
         toggles.find { it.location == location }?.update()
     }
-    fun setSelect(location: Identifier, newValue: String?) {
+    public fun setSelect(location: Identifier, newValue: String?) {
         val select = select[location] ?: return
         select.setByName(newValue)
     }
 
     /** If [supportsChangingDefault] is `true`, these should be implemented` */
     //region Default Management Functions
-    open fun setToggleDefault(location: Identifier, newDefaultValue: Boolean) {
+    public open fun setToggleDefault(location: Identifier, newDefaultValue: Boolean) {
         //setToggle(location, newDefaultValue)
     }
-    open fun getDefaultToggle(location: Identifier): Boolean = false
+    public open fun getDefaultToggle(location: Identifier): Boolean = false
 
-    open fun setSelectDefault(location: Identifier, newDefaultValue: String?) {
+    public open fun setSelectDefault(location: Identifier, newDefaultValue: String?) {
         //setSelect(location, newDefaultValue)
     }
-    open fun getDefaultSelect(location: Identifier): String? = null
+    public open fun getDefaultSelect(location: Identifier): String? = null
     //endregion
 
-    fun onCommandRegister(event: RegisterCommandsEvent) {
+    public fun onCommandRegister(event: RegisterCommandsEvent) {
         event.register(commandName) {
             then(
                 "toggle",
@@ -373,12 +373,12 @@ abstract class DevUtils {
         }
     }
 
-    abstract val commandName: String
-    abstract fun send(component: MutableComponent)
+    public abstract val commandName: String
+    public abstract fun send(component: MutableComponent)
 
     @JvmName("debugMessageString")
     @OptIn(ExperimentalContracts::class)
-    inline fun <T : DebugToggle> debugString(toggle: T, provider: () -> String) {
+    public inline fun <T : DebugToggle> debugString(toggle: T, provider: () -> String) {
         contract {
             callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
         }
@@ -387,7 +387,7 @@ abstract class DevUtils {
 
     @JvmName("debugMessageComponent")
     @OptIn(ExperimentalContracts::class)
-    inline fun <T : DebugToggle> debugComponent(toggle: T, provider: () -> Component) {
+    public inline fun <T : DebugToggle> debugComponent(toggle: T, provider: () -> Component) {
         contract {
             callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
         }
@@ -395,7 +395,7 @@ abstract class DevUtils {
     }
 
     @OptIn(ExperimentalContracts::class)
-    inline fun <T : DebugToggle> debugMessage(toggle: T, provider: () -> MutableComponent) {
+    public inline fun <T : DebugToggle> debugMessage(toggle: T, provider: () -> MutableComponent) {
         contract {
             callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
         }
@@ -409,7 +409,7 @@ abstract class DevUtils {
     }
 
     companion object {
-        val allDevUtils = mutableListOf<DevUtils>()
+        public val allDevUtils = mutableListOf<DevUtils>()
     }
 }
 

@@ -6,10 +6,10 @@ import tech.thatgravyboat.skyblockapi.api.profile.friends.Friend
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class FriendData(
+public data class FriendData(
     val friends: MutableList<Friend> = mutableListOf()
 ) {
     companion object {
-        val CODEC: Codec<FriendData> = SkyblockAPICodecs.getCodec<FriendData>()
+        public val CODEC: Codec<FriendData> = SkyblockAPICodecs.getCodec<FriendData>()
     }
 }

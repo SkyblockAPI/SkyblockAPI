@@ -4,7 +4,7 @@ import kotlin.reflect.KClass
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class Subscription(
+public annotation class Subscription(
     /**
      * The event that will be received, only is required if there are no parameters.
      */
@@ -27,9 +27,9 @@ annotation class Subscription(
 ) {
 
     companion object {
-        const val HIGHEST = -2000000
-        const val HIGH = -100000
-        const val LOW = 100000
-        const val LOWEST = 2000000
+        public const val HIGHEST = -2000000
+        public const val HIGH = -100000
+        public const val LOW = 100000
+        public const val LOWEST = 2000000
     }
 }

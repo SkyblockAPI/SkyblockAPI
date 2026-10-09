@@ -14,7 +14,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 
 @Module
-object HotmAPI : SkillTreeAPI<HotmData, HotmPerk, HotmAPI>(
+public object HotmAPI : SkillTreeAPI<HotmData, HotmPerk, HotmAPI>(
     name = "hotm",
     perkItems = ItemTag.HOTM_PERK_ITEMS,
     storage = HotmStorage,
@@ -24,7 +24,7 @@ object HotmAPI : SkillTreeAPI<HotmData, HotmPerk, HotmAPI>(
     private var holdingBlueOmelette = false
 
     @Subscription
-    fun onInventoryOpen(event: ContainerInitializedEvent) {
+    public fun onInventoryOpen(event: ContainerInitializedEvent) {
         holdingBlueOmelette = McPlayer.self?.mainHandItem?.getData(DataTypes.UPGRADE_MODULE).equals("GOBLIN_OMELETTE_BLUE_CHEESE", true)
     }
 

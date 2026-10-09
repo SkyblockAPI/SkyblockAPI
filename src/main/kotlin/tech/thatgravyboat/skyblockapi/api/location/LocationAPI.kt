@@ -36,7 +36,7 @@ import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
 
 @Module
-object LocationAPI {
+public object LocationAPI {
 
     private val unknownAreas = mutableMapOf<String, SkyBlockIsland?>()
     private var sendUnknownAreaChatMessage = false
@@ -63,11 +63,11 @@ object LocationAPI {
         "^.>>\\s+Achievement Unlocked: Achievement Get! Hypixel Server!"
     )
 
-    val forceOnSkyblock by debugToggle("location/force_skyblock", "Always returns true for SkyBlock checks")
-    val forceIsland by debugSelect<SkyBlockIsland>("location/force_island", "Force a specific island to be returned")
-    val forceOnAlpha by debugToggle("location/force_alpha", "Always returns true when checking for onAlpha")
+    public val forceOnSkyblock by debugToggle("location/force_skyblock", "Always returns true for SkyBlock checks")
+    public val forceIsland by debugSelect<SkyBlockIsland>("location/force_island", "Force a specific island to be returned")
+    public val forceOnAlpha by debugToggle("location/force_alpha", "Always returns true when checking for onAlpha")
 
-    var isOnSkyBlock: Boolean = false
+    public var isOnSkyBlock: Boolean = false
         get() = field || forceOnSkyblock
         private set(value) {
             if (field != value) {
@@ -76,34 +76,34 @@ object LocationAPI {
             }
         }
 
-    var island: SkyBlockIsland? = null
+    public var island: SkyBlockIsland? = null
         get() = forceIsland ?: field
         private set
 
-    var area: SkyBlockArea = SkyBlockAreas.NONE
+    public var area: SkyBlockArea = SkyBlockAreas.NONE
         private set
 
-    var biome: SkyBlockBiome? = null
+    public var biome: SkyBlockBiome? = null
         private set
 
-    var serverId: String? = null
+    public var serverId: String? = null
         private set
 
-    var isGuest: Boolean = false
+    public var isGuest: Boolean = false
         private set
 
-    var onHypixel: Boolean = false
+    public var onHypixel: Boolean = false
         private set
 
-    var onAlpha: Boolean = false
+    public var onAlpha: Boolean = false
         get() = field || forceOnAlpha
         private set
 
-    var playerCount: Int = 0
+    public var playerCount: Int = 0
         get() = field.coerceAtLeast(McClient.players.size)
         private set
 
-    val maxPlayercount: Int?
+    public val maxPlayercount: Int?
         get() = when {
             serverId?.startsWith("mega") == true -> 60
             else -> when (island) {
@@ -119,11 +119,11 @@ object LocationAPI {
             }
         }
 
-    var lastServerChange: Instant = Instant.DISTANT_PAST
+    public var lastServerChange: Instant = Instant.DISTANT_PAST
         private set
 
     @Subscription
-    fun onServerChange(event: ServerChangeEvent) {
+    public fun onServerChange(event: ServerChangeEvent) {
         lastServerChange = currentInstant()
         isOnSkyBlock = event.type == GameType.SKYBLOCK
         val old = island
@@ -138,27 +138,27 @@ object LocationAPI {
     }
 
     @Subscription
-    fun onHypixelJoin(event: HypixelJoinEvent) {
+    public fun onHypixelJoin(event: HypixelJoinEvent) {
         onHypixel = true
         onAlpha = event.onAlpha
     }
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onTabListUpdate(event: TabListChangeEvent) {
+    public fun onTabListUpdate(event: TabListChangeEvent) {
         val component = event.new.firstOrNull()?.firstOrNull() ?: return
         playerCount = playerCountRegex.findGroup(component.stripped.lowercase(), "count")?.toIntOrNull() ?: 0
     }
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
+    public fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
         isGuest = event.new.contains("guest", ignoreCase = true)
     }
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onScoreboardChange(event: ScoreboardUpdateEvent) {
+    public fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         locationRegex.anyMatch(event.added, "location") { (location) ->
             val old = area
             area = SkyBlockArea(location)
@@ -179,7 +179,7 @@ object LocationAPI {
     }
 
     @Subscription
-    fun onChatReceivedPre(event: ChatReceivedEvent.Pre) {
+    public fun onChatReceivedPre(event: ChatReceivedEvent.Pre) {
         if (!newAlphaRegex.contains(event.text)) return
         FreshHypixelAlphaDetectedEvent.post()
     }
@@ -187,7 +187,7 @@ object LocationAPI {
 
     @OnlyOnSkyBlock
     @Subscription(TickEvent::class)
-    fun onTick() {
+    public fun onTick() {
         val pos = McPlayer.self?.blockPosition() ?: return
         val biome = McLevel.selfOrNull?.getBiome(pos)?.unwrapKey()?.getOrNull()?.identifier ?: run {
             LocationAPI.biome = null
@@ -229,7 +229,7 @@ object LocationAPI {
     }
 
     @Subscription(ServerDisconnectEvent::class)
-    fun onServerDisconnect() = reset()
+    public fun onServerDisconnect() = reset()
 
     @Subscription
     internal fun onCommand(event: RegisterSkyblockApiCommandsEvent) {

@@ -17,7 +17,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @Module
-object SpookyFestivalAPI {
+public object SpookyFestivalAPI {
 
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("spooky_festival")
     private val tablistGroup = RegexGroup.TABLIST.group("spooky_festival")
@@ -32,23 +32,23 @@ object SpookyFestivalAPI {
         "Your Candy: (?<green>[\\d,]+) Green, (?<purple>[\\d,]+) Purple \\((?<points>[\\d,]+) pts.\\)",
     )
 
-    var onGoing: Boolean = false
+    public var onGoing: Boolean = false
         private set
 
-    var duration: Duration = Duration.ZERO
+    public var duration: Duration = Duration.ZERO
         private set
 
-    var greenCandy: Int = 0
+    public var greenCandy: Int = 0
         private set
 
-    var purpleCandy: Int = 0
+    public var purpleCandy: Int = 0
         private set
 
-    var points: Int = 0
+    public var points: Int = 0
         private set
 
     @Subscription
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    public fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         durationRegex.anyMatch(event.added) { match ->
             val hours = match["hour"]?.takeUnless { it.isBlank() }?.toIntValue() ?: 0
             val minutes = match["min"]?.toIntValue() ?: 0
@@ -59,7 +59,7 @@ object SpookyFestivalAPI {
     }
 
     @Subscription
-    fun onTabListFooterUpdate(event: TabListHeaderFooterChangeEvent) {
+    public fun onTabListFooterUpdate(event: TabListHeaderFooterChangeEvent) {
         candyRegex.findOrNull(event.newFooter.stripped, "green", "purple", "points") { (green, purple, points) ->
             greenCandy = green.toIntValue()
             purpleCandy = purple.toIntValue()
@@ -69,7 +69,7 @@ object SpookyFestivalAPI {
     }
 
     @Subscription(ProfileChangeEvent::class, ServerDisconnectEvent::class)
-    fun onProfileChange() = reset()
+    public fun onProfileChange() = reset()
 
     private fun reset() {
         onGoing = false

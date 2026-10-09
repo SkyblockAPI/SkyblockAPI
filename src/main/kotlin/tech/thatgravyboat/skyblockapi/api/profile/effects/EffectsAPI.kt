@@ -23,7 +23,7 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Instant
 
 @Module
-object EffectsAPI {
+public object EffectsAPI {
 
     private val cookieTabWidgetRegex = RegexGroup.TABLIST_WIDGET.create(
         "effects.cookie",
@@ -47,21 +47,21 @@ object EffectsAPI {
     )
 
 
-    val boosterCookieExpireTime get() = EffectsStorage.boosterCookieExpireTime
-    val godPotionDuration get() = EffectsStorage.godPotionDuration
+    public val boosterCookieExpireTime get() = EffectsStorage.boosterCookieExpireTime
+    public val godPotionDuration get() = EffectsStorage.godPotionDuration
 
-    val isBoosterCookieActive get() = EffectsStorage.boosterCookieExpireTime.until().isPositive()
-    val isGodPotionActive get() = EffectsStorage.godPotionDuration.isPositive()
+    public val isBoosterCookieActive get() = EffectsStorage.boosterCookieExpireTime.until().isPositive()
+    public val isGodPotionActive get() = EffectsStorage.godPotionDuration.isPositive()
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    public fun onChat(event: ChatReceivedEvent.Pre) {
         if (cookieAteRegex.contains(event.text)) {
             updateBoosterCookieExpireTime(boosterCookieExpireTime.until() + 4.days)
         }
     }
 
     @Subscription
-    fun onInventoryFullyLoaded(event: ContainerInitializedEvent) {
+    public fun onInventoryFullyLoaded(event: ContainerInitializedEvent) {
         if (event.title == "SkyBlock Menu") {
             val cookieLore = event.itemStacks.find { it.cleanName == "Booster Cookie" }?.getRawLore() ?: return
             cookieInventoryRegex.anyMatch(cookieLore, "duration") { (duration) ->
@@ -75,7 +75,7 @@ object EffectsAPI {
     }
 
     @Subscription
-    fun onTabFooterUpdate(event: TabListHeaderFooterChangeEvent) {
+    public fun onTabFooterUpdate(event: TabListHeaderFooterChangeEvent) {
         val cookieBuffChunk = event.newFooterChunked.find { "Cookie Buff" in it }
         cookieBuffChunk?.last()?.let {
             val parsedDuration = it.parseWordDuration() ?: return@let
@@ -90,7 +90,7 @@ object EffectsAPI {
 
     @Subscription
     @OnlyWidget(TabWidget.ACTIVE_EFFECTS)
-    fun onTabWidgetUpdate(event: TabWidgetChangeEvent) {
+    public fun onTabWidgetUpdate(event: TabWidgetChangeEvent) {
         cookieTabWidgetRegex.anyMatch(event.new, "duration") { (duration) ->
             val parsedDuration = duration.parseDuration() ?: return@anyMatch
             updateBoosterCookieExpireTime(parsedDuration)

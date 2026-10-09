@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStackTemplate
 import tech.thatgravyboat.skyblockapi.utils.extentions.holder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-class LazyItemStack {
+public class LazyItemStack {
 
     private val item: Item
     private val count: Int
@@ -32,13 +32,13 @@ class LazyItemStack {
         builder.build()
     )
 
-    constructor(item: Item, count: Int = 1, builder: DataComponentPatch.Builder.() -> Unit) : this(
+    public constructor(item: Item, count: Int = 1, builder: DataComponentPatch.Builder.() -> Unit) : this(
         item,
         count,
         DataComponentPatch.builder().apply(builder)
     )
 
-    fun withComponents(builder: DataComponentPatch.Builder.() -> Unit): LazyItemStack {
+    public fun withComponents(builder: DataComponentPatch.Builder.() -> Unit): LazyItemStack {
         val components = DataComponentPatch.builder()
 
         val patch = this.components.split()
@@ -52,29 +52,29 @@ class LazyItemStack {
         return LazyItemStack(item, count, components.apply(builder))
     }
 
-    operator fun <T : Any> get(component: DataComponentType<T>): T? {
+    public operator fun <T : Any> get(component: DataComponentType<T>): T? {
          return components.get(net.minecraft.core.component.DataComponentMap.EMPTY, component)
     }
-    fun <T : Any> getOrDefault(component: DataComponentType<T>, default: T): T = get(component) ?: default
+    public fun <T : Any> getOrDefault(component: DataComponentType<T>, default: T): T = get(component) ?: default
 
-    fun getDisplayName(): Component {
+    public fun getDisplayName(): Component {
         return this[DataComponents.CUSTOM_NAME] ?: this[DataComponents.ITEM_NAME] ?: Text.translatable(this.item.descriptionId)
     }
 
-    fun create(): ItemStack {
+    public fun create(): ItemStack {
         if (this.cached == null) {
             this.cached = ItemStack(item.holder, count, components)
         }
         return this.cached!!
     }
 
-    fun invalidate() {
+    public fun invalidate() {
         this.cached = null
     }
 
     companion object {
 
-        val CODEC: Codec<LazyItemStack> = ItemStackTemplate.MAP_CODEC.codec().xmap(
+        public val CODEC: Codec<LazyItemStack> = ItemStackTemplate.MAP_CODEC.codec().xmap(
             { template ->
                 LazyItemStack(template.item.value(), template.count, template.components)
             },
@@ -83,7 +83,7 @@ class LazyItemStack {
             },
         )
 
-        fun ItemStack.toLazy(): LazyItemStack = LazyItemStack(this.item, this.count) {
+        public fun ItemStack.toLazy(): LazyItemStack = LazyItemStack(this.item, this.count) {
             val patch = this@toLazy.componentsPatch.split()
             patch.added().forEach { typesComponent ->
                 this.set(typesComponent.type as DataComponentType<Any>, typesComponent.value)

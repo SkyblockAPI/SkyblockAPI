@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.data.item
 
-enum class ArmorStack(val char: Char) {
+public enum class ArmorStack(val char: Char) {
     AURORA('Ѫ'),
     TERROR('⁑'),
     HOLLOW('⚶'),
@@ -9,7 +9,7 @@ enum class ArmorStack(val char: Char) {
     ;
 
     companion object {
-        fun fromString(string: String?): ArmorStack? {
+        public fun fromString(string: String?): ArmorStack? {
             val char = string?.firstOrNull() ?: return null
             return entries.find { it.char == char }
         }
