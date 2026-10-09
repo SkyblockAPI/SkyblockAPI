@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
     breaking-change-check:
-
+        if: ${{ !github.event.pull_request.draft }}
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v5
@@ -28,7 +28,7 @@ jobs:
                 if: ${{ github.event.pull_request.head.repo.owner.login != 'SkyblockAPI' && github.event.pull_request.head.repo.owner.login != 'j10a1n15' }}
                 run: |
                     git fetch origin ${{ github.event.pull_request.base.sha }}
-                    if git diff --name-only ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -E ".*gradle.*|buildSrc/,*"; then
+                    if git diff --name-only ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -E ".*gradle.*|buildSrc/.*|.*main.kts"; then
                         echo "Unable to check for breaking changes!" >> comment
                         echo "Build file modifications have been detected, please revert them to run checks!" >> comment
                         gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment

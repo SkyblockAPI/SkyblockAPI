@@ -18,7 +18,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.component.ItemContainerContents
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -31,6 +30,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.createSkull
 import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.sanitizeForCommandInput
@@ -62,6 +62,12 @@ object GiveCommands {
 
     @Subscription
     private fun RegisterSkyblockApiCommandsEvent.onRegister() {
+        command("dev give") {
+            "skull" executes {
+                tryGive(createSkull(McClient.clipboard))
+            }
+        }
+
         register("dev give item") {
             callback {
                 val item = McClient.clipboard.readJson<JsonElement>().toData(ItemStack.CODEC)

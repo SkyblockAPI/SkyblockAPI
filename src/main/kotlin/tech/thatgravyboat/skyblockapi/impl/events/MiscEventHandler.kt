@@ -9,7 +9,11 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents
 import net.fabricmc.fabric.api.event.Event
-import net.fabricmc.fabric.api.event.player.*
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback
+import net.fabricmc.fabric.api.event.player.UseBlockCallback
+import net.fabricmc.fabric.api.event.player.UseEntityCallback
+import net.fabricmc.fabric.api.event.player.UseItemCallback
 import net.minecraft.core.BlockPos
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.level.block.Block
@@ -19,7 +23,13 @@ import tech.thatgravyboat.skyblockapi.api.area.mining.MiningBlockFamily
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.level.*
+import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.BlockMinedEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.LeftClickBlockEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.LeftClickEntityEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.RightClickBlockEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.RightClickEntityEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.RightClickItemEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderWorldEvent

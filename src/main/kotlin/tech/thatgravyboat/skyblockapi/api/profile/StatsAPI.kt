@@ -2,7 +2,13 @@ package tech.thatgravyboat.skyblockapi.api.profile
 
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.info.*
+import tech.thatgravyboat.skyblockapi.api.events.info.ActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ArmadilloActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.DefenseActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.HealthActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ManaActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.OverflowManaActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.VitalityActionBarWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland

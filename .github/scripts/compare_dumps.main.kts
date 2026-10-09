@@ -23,7 +23,7 @@ __FILE__.toPath().toAbsolutePath().parent.parent.parent.resolve("versions").list
 
     val additions = lines.filter { it.startsWith("+") }
     val removals = lines.filter { it.startsWith("-") }
-    failed.addAll(removals.filterNot { it.startsWith("-\tprivate") }.filterNot { additions.contains(it.replace("-\tprivate", "+\tpublic")) })
+    failed.addAll(removals.filterNot { it.startsWith("-\tprivate") }.filterNot { additions.contains(it.replaceFirst('-', '+')) })
 }
 
 if (failed.isNotEmpty()) {

@@ -13,7 +13,15 @@ import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
-import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.*
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.CRIMSON_ISLE
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.CRYSTAL_HOLLOWS
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.DEEP_CAVERNS
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.DWARVEN_MINES
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.GOLD_MINES
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.HUB
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.MINESHAFT
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.SPIDERS_DEN
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland.THE_END
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.platform.drawString
