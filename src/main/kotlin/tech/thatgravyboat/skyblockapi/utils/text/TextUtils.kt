@@ -57,7 +57,9 @@ object TextUtils {
         for (split in splits) {
             val splitWidth = calc.invoke(split)
             if (currentLength + splitWidth > maxWidth) {
-                output.add(joiner.invoke(current))
+                if (current.isNotEmpty()) {
+                    output.add(joiner.invoke(current))
+                }
                 current.clear()
                 currentLength = 0
             }
@@ -86,7 +88,7 @@ object TextUtils {
 
     fun Component.substring(startIndex: Int): Component = this.substring(startIndex, this.stripped.length)
     fun Component.substring(startIndex: Int, endIndex: Int): Component = ComponentUtils.substring(this, startIndex, endIndex)
-    fun Component.substring(range: IntRange): Component = this.substring(range.first, range.last)
+    fun Component.substring(range: IntRange): Component = this.substring(range.first, range.last + 1)
 
     // TODO: optimize color codes to only add the necessary ones
     internal fun Component.toStringWithFormattingCodes(): String {
@@ -123,9 +125,8 @@ object TextUtils {
         if (style.isBold) append(ChatFormatting.BOLD)
         if (style.isItalic) append(ChatFormatting.ITALIC)
         if (style.isUnderlined) append(ChatFormatting.UNDERLINE)
-        if (style.isStrikethrough) append(ChatFormatting.OBFUSCATED)
+        if (style.isStrikethrough) append(ChatFormatting.STRIKETHROUGH)
         if (style.isObfuscated) append(ChatFormatting.OBFUSCATED)
     }
 
 }
-
