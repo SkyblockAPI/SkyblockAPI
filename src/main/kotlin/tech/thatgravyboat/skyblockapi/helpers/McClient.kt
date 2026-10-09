@@ -26,13 +26,13 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
 import tech.thatgravyboat.skyblockapi.utils.McVersion
-//? < 26.4
-//import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
 
+//? < 26.4
+//import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 //? >= 26.3
 import com.mojang.blaze3d.Blaze3D
 //? else

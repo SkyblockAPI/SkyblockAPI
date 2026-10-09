@@ -4,9 +4,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import java.util.EnumMap;
-import java.util.Objects;
-import java.util.function.BiFunction;
 import net.minecraft.world.entity.EntityEquipment;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerEquipmentChangeEvent;
 import tech.thatgravyboat.skyblockapi.mixins.accessors.PlayerEquipmentAccessor;
+import java.util.EnumMap;
+import java.util.Objects;
+import java.util.function.BiFunction;
 
 @Mixin(EntityEquipment.class)
 public class EntityEquipmentMixin {

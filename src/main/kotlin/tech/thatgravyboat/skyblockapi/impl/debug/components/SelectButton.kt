@@ -13,7 +13,6 @@ import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.util.CommonColors
-import net.minecraft.util.Mth
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.platform.drawFilledBox
 import tech.thatgravyboat.skyblockapi.platform.drawOutline

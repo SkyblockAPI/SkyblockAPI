@@ -8,8 +8,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.TrophyCaughtEvent
-//? < 26.4
-//import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
@@ -25,6 +23,9 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import kotlin.math.max
+
+//? < 26.4
+//import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
 
 @Module
 object TrophyFishingAPI {
