@@ -167,7 +167,7 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
 }
 
 fun createCommandFile(maxArguments: Int) = buildString {
-    """
+    $$"""
         import com.mojang.brigadier.Command
         import com.mojang.brigadier.CommandDispatcher
         import com.mojang.brigadier.arguments.ArgumentType
@@ -183,9 +183,9 @@ fun createCommandFile(maxArguments: Int) = buildString {
         import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 
         internal fun reportCommandFailure(context: CommandContext<*>, throwable: Throwable): Int {
-            SkyBlockAPI.error("Error executing command: ${'$'}{context.input}", throwable)
+            SkyBlockAPI.error("Error executing command: ${context.input}", throwable)
             val error = throwable.message?.takeIf { it.isNotBlank() } ?: throwable::class.simpleName ?: "Unknown error"
-            Text.of("Failed to execute command - ${'$'}error", TextColor.RED)
+            Text.of("Failed to execute command  - $error", TextColor.RED)
                 .sendWithPrefix()
             return 0
         }
