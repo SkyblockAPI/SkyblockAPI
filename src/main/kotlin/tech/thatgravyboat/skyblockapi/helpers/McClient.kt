@@ -38,7 +38,7 @@ import com.mojang.blaze3d.Blaze3D
 //? else
 //import net.minecraft.util.Util
 
-object McClient {
+public object McClient {
 
     private val tabListComparator: Comparator<PlayerInfo> = compareBy(
         { it.gameMode == GameType.SPECTATOR },
@@ -46,48 +46,49 @@ object McClient {
         { it.profile.name.lowercase() },
     )
 
-    val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
-    val config: Path = FabricLoader.getInstance().configDir
+    public val isDev: Boolean = FabricLoader.getInstance().isDevelopmentEnvironment
+    public val config: Path = FabricLoader.getInstance().configDir
 
     @Deprecated("Use mcVersion instead")
-    val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
-    val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
+    @Suppress("DEPRECATION")
+    public val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
+    public val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
 
-    val version: String = SharedConstants.getCurrentVersion().name()
+    public val version: String = SharedConstants.getCurrentVersion().name()
 
     //~ if >= 26.3 'MinecraftSessionService' -> 'SessionService'
-    val sessionService: com.mojang.authlib.minecraft.SessionService
+    public val sessionService: com.mojang.authlib.minecraft.SessionService
         get() = self.services().sessionService()
 
-    val self: Minecraft get() = Minecraft.getInstance()
-    val connection: ClientPacketListener? get() = self.connection
+    public val self: Minecraft get() = Minecraft.getInstance()
+    public val connection: ClientPacketListener? get() = self.connection
 
-    val window: Window by self::window
-    val windowHandle: Long
+    public val window: Window by self::window
+    public val windowHandle: Long
         get() = window.handle()
 
-    var clipboard: String
+    public var clipboard: String
         get() = self.keyboardHandler.clipboard
         set(value) {
             self.keyboardHandler.clipboard = value
         }
 
-    val mouse: Pair<Double, Double>
+    public val mouse: Pair<Double, Double>
         get() = Pair(
             self.mouseHandler.xpos() * (window.guiScaledWidth / window.screenWidth.coerceAtLeast(1).toDouble()),
             self.mouseHandler.ypos() * (window.guiScaledHeight / window.screenHeight.coerceAtLeast(1).toDouble()),
         )
 
-    val tablist: List<PlayerInfo>
+    public val tablist: List<PlayerInfo>
         get() = connection
             ?.listedOnlinePlayers
             ?.sortedWith(tabListComparator)
             ?: emptyList()
 
-    val players: List<PlayerInfo>
+    public val players: List<PlayerInfo>
         get() = tablist.filter { it.profile.id.version() == 4 }
 
-    val scoreboard: Collection<Component>
+    public val scoreboard: Collection<Component>
         get() {
             val scoreboard = self.level?.scoreboard ?: return emptyList()
             val objective = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return emptyList()
@@ -108,29 +109,29 @@ object McClient {
                 }
         }
 
-    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
-    val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
+    public val scoreboardTitle: Component? get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
+    public val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
 
-    val toasts: ToastManager get() =/*? if >= 26.2 {*/gui.toastManager()/*? } else *///self.toastManager
-    val gui: Gui get() = self.gui
+    public val toasts: ToastManager get() =/*? if >= 26.2 {*/gui.toastManager()/*? } else *///self.toastManager
+    public val gui: Gui get() = self.gui
 
     //? >= 26.2
-    val hud: Hud get() = self.gui.hud
+    public val hud: Hud get() = self.gui.hud
     //~ if >= 26.2 'gui' -> 'hud'
-    val chat: ChatComponent get() = hud.chat
-    val options: Options get() = self.options
+    public val chat: ChatComponent get() = hud.chat
+    public val options: Options get() = self.options
 
-    val isSingleplayer: Boolean get() = /*? if >= 26.2 {*/!self.isMultiplayerServer/*? } else*///self.isSingleplayer
+    public val isSingleplayer: Boolean get() = /*? if >= 26.2 {*/!self.isMultiplayerServer/*? } else*///self.isSingleplayer
 
-    fun openUri(uri: String): Boolean = runCatching {
+    public fun openUri(uri: String): Boolean = runCatching {
         openUri(URI.create(uri))
     }.isSuccess
 
-    fun reloadResourcePacks() {
+    public fun reloadResourcePacks() {
         self.reloadResourcePacks()
     }
 
-    fun openUri(uri: URI) {
+    public fun openUri(uri: URI) {
         //? >= 26.3 {
         Blaze3D.openUri(uri)
         //? } else
@@ -140,7 +141,7 @@ object McClient {
     /**
      * Runs the next render tick.
      */
-    fun runNextTick(action: () -> Unit) {
+    public fun runNextTick(action: () -> Unit) {
         self.schedule(action)
     }
 
@@ -148,15 +149,15 @@ object McClient {
      * Runs either on the current or next render tick
      * depending on if it's executed from the render thread.
      */
-    fun runOrNextTick(action: () -> Unit) {
+    public fun runOrNextTick(action: () -> Unit) {
         self.executeIfPossible(action)
     }
 
-    fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f) {
+    public fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f) {
         McPlayer.self?.playSound(sound, volume, pitch)
     }
 
-    fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f) {
+    public fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f) {
         //~ if >= 26.2 'gui.' -> 'hud.' {
         hud.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
         hud.setSubtitle(subtitle ?: CommonText.EMPTY)
@@ -164,7 +165,7 @@ object McClient {
         //~ }
     }
 
-    fun setScreenAsync(screen: () -> Screen?) = runNextTick {
+    public fun setScreenAsync(screen: () -> Screen?): Unit = runNextTick {
         val next = screen()
         (McScreen.self as? AbstractContainerScreen<*>)?.onClose()
         //~ if >= 26.2 'self' -> 'gui'
@@ -173,12 +174,12 @@ object McClient {
 
     //? < 26.2 {
     /*@Deprecated("Use setScreenAsync to avoid creating screens off the main thread")
-    fun setScreenAsync(screen: Screen?) = runNextTick {
+    public fun setScreenAsync(screen: Screen?): Unit = runNextTick {
         (self.screen as? AbstractContainerScreen<*>)?.onClose()
         self.setScreen(screen)
     }*///? }
 
-    fun setScreen(screen: Screen?) {
+    public fun setScreen(screen: Screen?) {
         if (McScreen.self is ChatScreen) {
             setScreenAsync { screen }
         } else {
@@ -187,20 +188,20 @@ object McClient {
         }
     }
 
-    fun sendCommand(command: String) {
+    public fun sendCommand(command: String) {
         connection?.send(ServerboundChatCommandPacket(command.removePrefix("/")))
     }
 
     /** Sends a command that first goes through client side commands, and then server commands */
-    fun sendClientCommand(command: String) {
+    public fun sendClientCommand(command: String) {
         connection?.sendCommand(command.removePrefix("/"))
     }
 
-    fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
+    public fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
         ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(id, listener)
     }
 
-    fun anyModInstalled(modIds: Collection<String>): Boolean = modIds.any { FabricLoader.getInstance().isModLoaded(it) }
-    fun anyModInstalled(vararg modIds: String): Boolean = anyModInstalled(modIds.asList())
+    public fun anyModInstalled(modIds: Collection<String>): Boolean = modIds.any { FabricLoader.getInstance().isModLoaded(it) }
+    public fun anyModInstalled(vararg modIds: String): Boolean = anyModInstalled(modIds.asList())
 }
 

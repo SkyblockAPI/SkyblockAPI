@@ -8,17 +8,17 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
-class RaffleMiningEvent : MiningEvent {
+public class RaffleMiningEvent : MiningEvent {
 
-    var tickets: Int = 0
+    public var tickets: Int = 0
         private set
-    var pool: Int = 0
+    public var pool: Int = 0
         private set
 
     override val name: String = "Raffle"
 
     @Module
-    companion object {
+    public companion object {
 
         private val patternGroup = RegexGroup.SCOREBOARD.group("mining.events.raffle")
 
@@ -32,7 +32,7 @@ class RaffleMiningEvent : MiningEvent {
         )
 
         @Subscription
-        fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+        internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
             val miningEvent = MiningEventsAPI.event as? RaffleMiningEvent ?: return
             ticketsRegex.anyMatch(event.added, "tickets") { (tickets) ->
                 miningEvent.tickets = tickets.toIntValue()

@@ -8,9 +8,9 @@ import com.google.gson.JsonPrimitive
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 
-fun JsonElement.asComponent(): Component = JsonVisualizer().visualize(this)
+public fun JsonElement.asComponent(): Component = JsonVisualizer().visualize(this)
 
-class JsonVisualizer : AbstractDataVisualizer<JsonElement, JsonVisualizer.Token> {
+public class JsonVisualizer : AbstractDataVisualizer<JsonElement, JsonVisualizer.Token> {
 
     override val component: MutableComponent = Text.of()
     override var indentCount: Int = 0
@@ -40,13 +40,13 @@ class JsonVisualizer : AbstractDataVisualizer<JsonElement, JsonVisualizer.Token>
         else -> TextColor.WHITE
     }
 
-    fun visitPrimitive(element: JsonPrimitive) = when {
+    public fun visitPrimitive(element: JsonPrimitive): AbstractDataVisualizer<JsonElement, Token> = when {
         element.isBoolean -> appendToken(if (element.asBoolean) Token.TRUE else Token.FALSE)
         element.isNumber -> append(element.asNumber.toString(), Token.NUMBER)
         else -> appendToken(Token.STRING_QUOTE).append(element.asString, Token.STRING).appendToken(Token.STRING_QUOTE)
     }
 
-    fun visitArray(element: JsonArray) {
+    public fun visitArray(element: JsonArray) {
         appendToken(Token.OPEN_ARRAY).line()
         indentCount += 1
         val iterator = element.iterator()
@@ -61,7 +61,7 @@ class JsonVisualizer : AbstractDataVisualizer<JsonElement, JsonVisualizer.Token>
         spaces().appendToken(Token.CLOSE_ARRAY)
     }
 
-    fun visitObject(element: JsonObject) {
+    public fun visitObject(element: JsonObject) {
         appendToken(Token.OPEN_OBJECT).line()
         indentCount += 1
         val iterator = element.entrySet().iterator()
@@ -79,7 +79,7 @@ class JsonVisualizer : AbstractDataVisualizer<JsonElement, JsonVisualizer.Token>
         spaces().appendToken(Token.CLOSE_OBJECT)
     }
 
-    enum class Token(override val token: String?) : AbstractDataVisualizer.VisualizerToken {
+    public enum class Token(override val token: String?) : AbstractDataVisualizer.VisualizerToken {
         OPEN_OBJECT("{"),
         CLOSE_OBJECT("}"),
         OPEN_ARRAY("["),

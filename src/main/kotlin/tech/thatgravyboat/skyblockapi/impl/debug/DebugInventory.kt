@@ -43,7 +43,7 @@ internal object DebugInventory {
     val enabled by debugToggle("inventory", "Lets you copy information from items in inventories.")
 
     @Subscription
-    fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
+    private fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
         if (!enabled) return
         val slot = McScreen.asMenu?.getHoveredSlot() ?: return
         val cancel = CopyType.entries.find { it.key == event.key }?.initCopy(slot) ?: false
@@ -52,7 +52,7 @@ internal object DebugInventory {
     }
 
     @Subscription
-    fun onForegroundRender(event: RenderScreenForegroundEvent) {
+    private fun onForegroundRender(event: RenderScreenForegroundEvent) {
         if (!enabled) return
         val slot = McScreen.asMenu?.getHoveredSlot() ?: return
 

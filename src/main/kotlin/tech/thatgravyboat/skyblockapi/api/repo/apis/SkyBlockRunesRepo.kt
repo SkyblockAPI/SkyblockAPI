@@ -18,7 +18,7 @@ private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
 
 
 @Module
-object SkyBlockRunesRepo : RepoItemCacheAsQuery<Query>("Runes", ::Query, schema) {
+public object SkyBlockRunesRepo : RepoItemCacheAsQuery<Query>("Runes", ::Query, schema) {
 
     private val repo get() = RepoAPI.runes()
 
@@ -27,10 +27,10 @@ object SkyBlockRunesRepo : RepoItemCacheAsQuery<Query>("Runes", ::Query, schema)
         return rune.item.let(::LazyItemStack)
     }
 
-    fun get(id: String): List<Rune>? = ifInitialized { this.repo.getRunes(id) }
-    fun getTier(id: String, tier: Int): Rune? = get(id)?.find { it.tier() == tier }
+    public fun get(id: String): List<Rune>? = ifInitialized { this.repo.getRunes(id) }
+    public fun getTier(id: String, tier: Int): Rune? = get(id)?.find { it.tier() == tier }
 
-    data class Query(
+    public data class Query(
         var id: String = "",
         var tier: Int? = null,
     )

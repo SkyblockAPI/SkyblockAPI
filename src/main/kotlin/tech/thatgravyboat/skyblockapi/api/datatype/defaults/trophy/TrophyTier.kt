@@ -4,7 +4,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-enum class TrophyTier(val nameSuffix: Component, val displayName: String) {
+public enum class TrophyTier(public val nameSuffix: Component, public val displayName: String) {
     NONE(
         nameSuffix = Component.empty(),
         displayName = "Total",
@@ -34,8 +34,8 @@ enum class TrophyTier(val nameSuffix: Component, val displayName: String) {
         displayName = "§bDiamond",
     );
 
-    companion object {
-        fun getByName(name: String): TrophyTier {
+    public companion object {
+        public fun getByName(name: String): TrophyTier {
             return entries.find { it.name.equals(name, ignoreCase = true) } ?: NONE
         }
     }

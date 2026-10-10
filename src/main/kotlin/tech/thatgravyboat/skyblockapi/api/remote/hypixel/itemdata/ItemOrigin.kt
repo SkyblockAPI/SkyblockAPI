@@ -4,14 +4,14 @@ import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
 import tech.thatgravyboat.skyblockapi.generated.EnumCodec
 
-enum class ItemOrigin {
+public enum class ItemOrigin {
     RIFT,
     BINGO,
     UNKNOWN,
     ;
 
-    companion object {
+    public companion object {
         @IncludedCodec
-        val CODEC: Codec<ItemOrigin> = EnumCodec.forKCodec(entries.toTypedArray()).orElse(UNKNOWN)
+        public val CODEC: Codec<ItemOrigin> = EnumCodec.forKCodec(entries.toTypedArray()).orElse(UNKNOWN)
     }
 }

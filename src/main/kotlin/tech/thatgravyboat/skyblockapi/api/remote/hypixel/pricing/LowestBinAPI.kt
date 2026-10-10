@@ -13,13 +13,13 @@ import kotlin.time.Duration.Companion.seconds
 private const val URL = "https://skyblock-pv.thatgravyboat.tech/auctions"
 
 @Module
-object LowestBinAPI {
+public object LowestBinAPI {
     /** Hypixel Item Id to Prices */
-    var items = mapOf<String, AuctionItem>()
+    public var items: Map<String, AuctionItem> = mapOf<String, AuctionItem>()
         private set
 
-    fun getPrice(id: String?): AuctionItem? = items.entries.find { it.key.equals(id, ignoreCase = true) }?.value
-    fun getLowestPrice(id: String?): Long? = getPrice(id)?.lowest
+    public fun getPrice(id: String?): AuctionItem? = items.entries.find { it.key.equals(id, ignoreCase = true) }?.value
+    public fun getLowestPrice(id: String?): Long? = getPrice(id)?.lowest
 
     init {
         Scheduling.schedule(0.seconds, 2.hours) {
@@ -38,7 +38,7 @@ object LowestBinAPI {
         }
     }
 
-    data class AuctionItem(
+    public data class AuctionItem(
         val lowest: Long,
         val highest: Long,
         val median: Long,

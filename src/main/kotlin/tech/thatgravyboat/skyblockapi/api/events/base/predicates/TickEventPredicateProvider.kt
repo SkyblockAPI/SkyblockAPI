@@ -8,7 +8,7 @@ import java.lang.reflect.Method
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class TimePassed(
+public annotation class TimePassed(
 
     /**
      * Duration formatted in the 2m 5s format
@@ -17,7 +17,7 @@ annotation class TimePassed(
 )
 
 
-class TickEventPredicateProvider : EventPredicateProvider {
+public class TickEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         val timePassed = method.getAnnotation<TimePassed>() ?: return null

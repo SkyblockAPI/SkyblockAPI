@@ -1,13 +1,13 @@
 package tech.thatgravyboat.skyblockapi.api.profile.skilltree
 
-interface SkillTreeData<Perk : SkillTreePerk> {
-    var perks: MutableMap<String, Perk>
-    var tokens: Int
-    var tier: Int
+public interface SkillTreeData<Perk : SkillTreePerk> {
+    public var perks: MutableMap<String, Perk>
+    public var tokens: Int
+    public var tier: Int
 }
 
-interface SkillTreePerk {
-    val level: Int
-    val unlocked: Boolean
-    val disabled: Boolean
+public interface SkillTreePerk {
+    public val level: Int
+    public val unlocked: Boolean
+    public val disabled: Boolean
 }

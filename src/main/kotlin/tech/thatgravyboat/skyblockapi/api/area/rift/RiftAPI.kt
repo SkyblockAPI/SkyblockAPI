@@ -20,7 +20,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import kotlin.time.Duration
 
 @Module
-object RiftAPI {
+public object RiftAPI {
 
     private val regexGroup = RegexGroup.TABLIST_WIDGET.group("good_to_know")
 
@@ -49,28 +49,28 @@ object RiftAPI {
         "^Effigies: (?<e1>⧯)(?<e2>⧯)(?<e3>⧯)(?<e4>⧯)(?<e5>⧯)(?<e6>⧯)"
     ).toComponentRegex()
 
-    var time: Duration? = null
+    public var time: Duration? = null
         private set
 
-    val motes: Long
+    public val motes: Long
         get() = CurrencyAPI.motes
 
-    var timesVisted: Int = 0
+    public var timesVisted: Int = 0
         private set
 
-    var lifetimeMotes: Long = 0
+    public var lifetimeMotes: Long = 0
         private set
 
-    var timecharms: Pair<Int, Int> = Pair(0, 0)
+    public var timecharms: Pair<Int, Int> = Pair(0, 0)
         private set
 
-    var enigmaSouls: Pair<Int, Int> = Pair(0, 0)
+    public var enigmaSouls: Pair<Int, Int> = Pair(0, 0)
         private set
 
-    var monetezuma: Pair<Int, Int> = Pair(0, 0)
+    public var monetezuma: Pair<Int, Int> = Pair(0, 0)
         private set
 
-    val effieges: List<Effigy> = listOf(
+    public val effieges: List<Effigy> = listOf(
         Effigy(150, 73, 95),
         Effigy(193, 87, 119),
         Effigy(235, 104, 147),
@@ -81,13 +81,13 @@ object RiftAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_RIFT)
-    fun onActionBarWidgetChange(event: RiftTimeActionBarWidgetChangeEvent) {
+    internal fun onActionBarWidgetChange(event: RiftTimeActionBarWidgetChangeEvent) {
         time = event.time
     }
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_RIFT)
-    fun onScoreboardChange(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         effigiesRegex.anyMatch(event.newComponents, "e1", "e2", "e3", "e4", "e5", "e6") { (one, two, three, four, five, six) ->
             effieges[0].enabled = one.style.color?.value == TextColor.RED
             effieges[1].enabled = two.style.color?.value == TextColor.RED
@@ -101,7 +101,7 @@ object RiftAPI {
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_RIFT)
     @OnlyWidget(TabWidget.GOOD_TO_KNOW)
-    fun onTabWidgetChange(event: TabWidgetChangeEvent) {
+    internal fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         visitedRiftRegex.anyFound(event.new, "visited") { (visited) ->
             timesVisted = visited.toIntValue()
         }

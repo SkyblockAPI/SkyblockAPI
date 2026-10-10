@@ -207,7 +207,7 @@ internal class StoredData<T : Any>(
 
         // we load data asynchronously on hypixel join
         @Subscription(HypixelJoinEvent::class)
-        fun onHypixelJoin() {
+        private fun onHypixelJoin() {
             if (firstJoin) return
             firstJoin = true
             Scheduling.async {
@@ -216,11 +216,11 @@ internal class StoredData<T : Any>(
         }
 
         @Subscription(FreshHypixelAlphaDetectedEvent::class)
-        fun onFreshAlpha() = allStoredDatas.forEach(StoredData<*>::deleteAlpha)
+        private fun onFreshAlpha() = allStoredDatas.forEach(StoredData<*>::deleteAlpha)
 
         @TimePassed("10s")
         @Subscription(TickEvent::class)
-        fun onTick() {
+        private fun onTick() {
             clearAndRun(requiresSave, StoredData<*>::saveToSystem)
             clearAndRun(requiresAlphaSave, StoredData<*>::saveAlphaToSystem)
         }

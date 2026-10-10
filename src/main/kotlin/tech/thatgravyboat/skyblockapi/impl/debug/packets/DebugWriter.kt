@@ -41,7 +41,7 @@ import java.lang.reflect.Type
 import java.util.Optional
 import java.util.UUID
 
-object DebugWriter {
+public object DebugWriter {
 
     private val gson = GsonBuilder()
         .disableHtmlEscaping()
@@ -66,7 +66,7 @@ object DebugWriter {
         .registerTypeAdapter<Holder<*>> { holder, context -> holder.unwrap().map({ context.serialize(it.identifier) }, { context.serialize(it) }) }
         .create()
 
-    fun Packet<*>.toJson(): JsonElement = gson.toJsonTree(this)
+    public fun Packet<*>.toJson(): JsonElement = gson.toJsonTree(this)
 }
 
 private object SkipMixinUniqueFields : ExclusionStrategy {

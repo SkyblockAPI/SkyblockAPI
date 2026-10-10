@@ -15,13 +15,14 @@ import net.minecraft.nbt.LongTag
 import net.minecraft.nbt.ShortTag
 import net.minecraft.nbt.StringTag
 import net.minecraft.nbt.Tag
+import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 
-fun Tag.asComponent() = NbtVisualizer().visualize(this)
+public fun Tag.asComponent(): Component = NbtVisualizer().visualize(this)
 
-class NbtVisualizer : AbstractDataVisualizer<Tag, NbtVisualizer.Token> {
+public class NbtVisualizer : AbstractDataVisualizer<Tag, NbtVisualizer.Token> {
 
-    var ignoreSuffix: Boolean = false
+    public var ignoreSuffix: Boolean = false
     override val component: MutableComponent = Text.of()
     override var indentCount: Int = 0
     override fun visit(data: Tag): Unit = when (data) {
@@ -41,7 +42,7 @@ class NbtVisualizer : AbstractDataVisualizer<Tag, NbtVisualizer.Token> {
     }
 
 
-    fun visitArray(collectionTag: CollectionTag, type: Token?) {
+    public fun visitArray(collectionTag: CollectionTag, type: Token?) {
         appendToken(Token.LIST_OPEN)
         if (type != null) {
             appendToken(type).appendToken(Token.LIST_TYPE_SEPARATOR)
@@ -63,40 +64,40 @@ class NbtVisualizer : AbstractDataVisualizer<Tag, NbtVisualizer.Token> {
         spaces().appendToken(Token.LIST_CLOSE)
     }
 
-    fun visitByte(byteTag: ByteTag) {
+    public fun visitByte(byteTag: ByteTag) {
         append(byteTag.value.toString(), Token.NUMBER)
         if (!ignoreSuffix) appendToken(Token.BYTE_SUFFIX)
     }
 
-    fun visitDouble(doubleTag: DoubleTag) {
+    public fun visitDouble(doubleTag: DoubleTag) {
         append(doubleTag.value.toString(), Token.NUMBER)
         if (!ignoreSuffix) appendToken(Token.DOUBLE_SUFFIX)
     }
 
-    fun visitFloat(floatTag: FloatTag) {
+    public fun visitFloat(floatTag: FloatTag) {
         append(floatTag.value.toString(), Token.NUMBER)
         if (!ignoreSuffix) appendToken(Token.FLOAT_SUFFIX)
     }
 
-    fun visitInt(intTag: IntTag) {
+    public fun visitInt(intTag: IntTag) {
         append(intTag.value.toString(), Token.NUMBER)
     }
 
-    fun visitLong(longTag: LongTag) {
+    public fun visitLong(longTag: LongTag) {
         append(longTag.value.toString(), Token.NUMBER)
         if (!ignoreSuffix) appendToken(Token.LONG_SUFFIX)
     }
 
-    fun visitShort(shortTag: ShortTag) {
+    public fun visitShort(shortTag: ShortTag) {
         append(shortTag.value.toString(), Token.NUMBER)
         if (!ignoreSuffix) appendToken(Token.SHORT_SUFFIX)
     }
 
-    fun visitString(stringTag: StringTag) {
+    public fun visitString(stringTag: StringTag) {
         appendToken(Token.STRING_QUOTE).append(stringTag.value, Token.STRING).appendToken(Token.STRING_QUOTE)
     }
 
-    fun visitCompound(compoundTag: CompoundTag) {
+    public fun visitCompound(compoundTag: CompoundTag) {
         appendToken(Token.STRUCT_OPEN).line()
         indentCount += 1
         val iterator = compoundTag.entrySet().iterator()
@@ -124,7 +125,7 @@ class NbtVisualizer : AbstractDataVisualizer<Tag, NbtVisualizer.Token> {
         else -> TextColor.WHITE
     }
 
-    enum class Token(override val token: String?) : AbstractDataVisualizer.VisualizerToken {
+    public enum class Token(override val token: String?) : AbstractDataVisualizer.VisualizerToken {
         ELEMENT_SEPARATOR(","),
         LIST_CLOSE("]"),
         LIST_OPEN("["),

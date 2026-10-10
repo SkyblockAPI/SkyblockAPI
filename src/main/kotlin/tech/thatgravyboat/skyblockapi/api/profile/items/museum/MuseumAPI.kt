@@ -50,7 +50,7 @@ import java.util.concurrent.CompletableFuture
 
 /** Currently doesn't support special items. */
 @Module
-object MuseumAPI {
+public object MuseumAPI {
 
     //region Regex
     private val inventoryGroup = RegexGroup.INVENTORY.group("museum")
@@ -90,23 +90,23 @@ object MuseumAPI {
 
     //endregion
 
-    val milestone: Int get() = MuseumStorage.milestone
+    public val milestone: Int get() = MuseumStorage.milestone
 
-    fun getAllItems(): List<ItemStack> = MuseumStorage.getAllItems()
-    fun getItemsOnCategory(category: MuseumCategory): List<ItemStack> = MuseumStorage.getItemsOnCategory(category)
-    fun getItemsWithCategory(): Map<MuseumCategory, List<ItemStack>> = MuseumStorage.getItemsWithCategory()
+    public fun getAllItems(): List<ItemStack> = MuseumStorage.getAllItems()
+    public fun getItemsOnCategory(category: MuseumCategory): List<ItemStack> = MuseumStorage.getItemsOnCategory(category)
+    public fun getItemsWithCategory(): Map<MuseumCategory, List<ItemStack>> = MuseumStorage.getItemsWithCategory()
 
     /** Returns `true` if the item can be donated to museum. Ignores special items. */
-    fun isMuseumItem(id: SkyBlockId): Boolean = MuseumData.isMuseumItem(id)
+    public fun isMuseumItem(id: SkyBlockId): Boolean = MuseumData.isMuseumItem(id)
 
     /** Returns `true` if the item has been donated to museum. Ignores special items. */
-    fun isDonated(id: SkyBlockId): Boolean = internalIsDonated(id, mutableSetOf())
+    public fun isDonated(id: SkyBlockId): Boolean = internalIsDonated(id, mutableSetOf())
 
     /** Returns `true` if the item has been donated to museum and is stored in it. Ignores special items. */
-    fun isStoredInMuseum(id: SkyBlockId): Boolean = MuseumStorage.isItemStored(id)
+    public fun isStoredInMuseum(id: SkyBlockId): Boolean = MuseumStorage.isItemStored(id)
 
     /** Returns the item with id [id] stored in the museum, or null if it's not stored. */
-    fun getItemInMuseum(id: SkyBlockId): ItemStack? = MuseumStorage.getItemStored(id)
+    public fun getItemInMuseum(id: SkyBlockId): ItemStack? = MuseumStorage.getItemStored(id)
 
     private fun internalIsDonated(id: SkyBlockId, checkedIds: MutableSet<SkyBlockId>): Boolean {
         if (!checkedIds.add(id)) return false
@@ -133,15 +133,18 @@ object MuseumAPI {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun ItemStack.isNotDonated(): Boolean = this in ColoredItems.GRAY_DYE
+    @Suppress("DEPRECATION")
     private fun ItemStack.isNotStored(): Boolean = this in ColoredItems.LIME_DYE
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB)
-    fun onSlotClick(event: SlotClickEvent) {
+    internal fun onSlotClick(event: SlotClickEvent) {
         if (event.isInPlayerInventory) return
         if (!donateTitleRegex.match(event.title)) return
         val item = event.item
+        @Suppress("DEPRECATION")
         if (item !in ColoredItems.LIME_TERRACOTTA) return
         if (!confirmDonateItem.match(item.cleanName)) return
         val lastIndex = event.slot.index - 1
@@ -161,7 +164,7 @@ object MuseumAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB)
-    fun onInventoryOpen(event: ContainerInitializedEvent) {
+    internal fun onInventoryOpen(event: ContainerInitializedEvent) {
         val items = event.containerItems
         if (!inventoryTitleRegex.contains(event.title)) return
         val filtered = items.filterNot { it.isSkyblockFiller() }
@@ -225,7 +228,7 @@ object MuseumAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB)
-    fun onInventoryUpdate(event: InventoryChangeEvent) {
+    internal fun onInventoryUpdate(event: InventoryChangeEvent) {
         if (!mainMuseumTitleRegex.match(event.title)) return
         if (!museumRewardsItem.match(event.item.cleanName)) return
 
@@ -236,7 +239,7 @@ object MuseumAPI {
 
     @OptIn(SkyBlockPvRequired::class)
     @Subscription
-    fun onPvOpen(event: SkyBlockPvMuseumOpenedEvent) {
+    internal fun onPvOpen(event: SkyBlockPvMuseumOpenedEvent) {
         CompletableFuture.runAsync {
             MuseumStorage.reset()
             PvLoadingHelper.markLoaded(LoadedData.MUSEUM)

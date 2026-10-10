@@ -8,18 +8,18 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
 
 @GenerateCodec
-data class MuseumStorageData(
+public data class MuseumStorageData(
     var milestone: Int = 0,
     val categories: MutableMap<MuseumCategory, MutableMap<SkyBlockId, MuseumItemData>> = enumMapOf(),
     val specialItems: MutableList<ItemStack> = mutableListOf(),
 ) {
-    companion object {
-        val CODEC: Codec<MuseumStorageData> = SkyblockAPICodecs.getCodec()
+    public companion object {
+        public val CODEC: Codec<MuseumStorageData> = SkyblockAPICodecs.getCodec()
     }
 }
 
 @GenerateCodec
-data class MuseumItemData(
+public data class MuseumItemData(
     var item: ItemStack?,
 ) {
     inline val inMuseum: Boolean get() = item != null

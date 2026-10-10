@@ -11,15 +11,15 @@ import java.lang.reflect.Method
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlyIn(
+public annotation class OnlyIn(
     vararg val islands: SkyBlockIsland,
 )
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlyNonGuest
+public annotation class OnlyNonGuest
 
-class OnlyInEventPredicateProvider : EventPredicateProvider {
+public class OnlyInEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         val onlyIn = method.getAnnotation<OnlyIn>()

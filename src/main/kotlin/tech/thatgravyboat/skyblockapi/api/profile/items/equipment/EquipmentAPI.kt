@@ -21,7 +21,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
 
 @Module
-object EquipmentAPI {
+public object EquipmentAPI {
 
     private val inventoryNameRegex = RegexGroup.INVENTORY.group("equipment").create(
         "title",
@@ -35,17 +35,17 @@ object EquipmentAPI {
 
     private var lastClickedEquipment: Pair<ItemStack, EquipmentSlot>? = null
 
-    val normalEquipment: MutableMap<EquipmentSlot, ItemStack> get() = EquipmentStorage.normalEquipment
-    fun getNormalEquipment(slot: EquipmentSlot): ItemStack = normalEquipment[slot] ?: ItemStack.EMPTY
+    public val normalEquipment: MutableMap<EquipmentSlot, ItemStack> get() = EquipmentStorage.normalEquipment
+    public fun getNormalEquipment(slot: EquipmentSlot): ItemStack = normalEquipment[slot] ?: ItemStack.EMPTY
 
-    val riftEquipment: MutableMap<EquipmentSlot, ItemStack> get() = EquipmentStorage.riftEquipment
-    fun getRiftEquipment(slot: EquipmentSlot): ItemStack = riftEquipment[slot] ?: ItemStack.EMPTY
+    public val riftEquipment: MutableMap<EquipmentSlot, ItemStack> get() = EquipmentStorage.riftEquipment
+    public fun getRiftEquipment(slot: EquipmentSlot): ItemStack = riftEquipment[slot] ?: ItemStack.EMPTY
 
-    val islandEquipment: Map<EquipmentSlot, ItemStack> get() = if (SkyBlockIsland.THE_RIFT.inIsland()) riftEquipment else normalEquipment
-    fun getIslandEquipment(slot: EquipmentSlot): ItemStack = islandEquipment[slot] ?: ItemStack.EMPTY
+    public val islandEquipment: Map<EquipmentSlot, ItemStack> get() = if (SkyBlockIsland.THE_RIFT.inIsland()) riftEquipment else normalEquipment
+    public fun getIslandEquipment(slot: EquipmentSlot): ItemStack = islandEquipment[slot] ?: ItemStack.EMPTY
 
     @Subscription
-    fun onInventoryFullyLoad(event: ContainerInitializedEvent) {
+    internal fun onInventoryFullyLoad(event: ContainerInitializedEvent) {
         if (!inventoryNameRegex.matches(event.title)) return
         EquipmentSlot.entries.forEach {
             handleInventoryItem(it, event.containerItems[it.slot])
@@ -53,7 +53,7 @@ object EquipmentAPI {
     }
 
     @Subscription
-    fun onInventoryChange(event: InventoryChangeEvent) {
+    internal fun onInventoryChange(event: InventoryChangeEvent) {
         if (!inventoryNameRegex.matches(event.title)) return
         if (event.isInPlayerInventory) return
         val slot = EquipmentSlot.entries.find { it.slot == event.slot.index } ?: return
@@ -61,6 +61,7 @@ object EquipmentAPI {
     }
 
     private fun handleInventoryItem(slot: EquipmentSlot, itemStack: ItemStack) {
+        @Suppress("DEPRECATION")
         val item = if (itemStack.item == ColoredItems.LIGHT_GRAY_STAINED_GLASS_PANE) ItemStack.EMPTY
         else {
             val category = itemStack.getData(DataTypes.CATEGORY) ?: return
@@ -73,14 +74,14 @@ object EquipmentAPI {
     }
 
     @Subscription
-    fun onRightClick(event: RightClickEvent) {
+    internal fun onRightClick(event: RightClickEvent) {
         val category = event.stack.getData(DataTypes.CATEGORY) ?: return
         val slot = EquipmentSlot.entries.find { category in it.categories } ?: return
         lastClickedEquipment = event.stack to slot
     }
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val (item, slot) = lastClickedEquipment ?: return
         chatEquipRegex.find(event.text, "item") { (itemName) ->
             if (item.cleanName != itemName) return@find

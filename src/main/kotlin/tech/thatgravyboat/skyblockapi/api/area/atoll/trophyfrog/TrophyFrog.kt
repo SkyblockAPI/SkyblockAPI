@@ -5,9 +5,9 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-data class TrophyFrog(val type: TrophyFrogType, val tier: TrophyTier) {
-    val item: ItemStack by lazy { type.getItem(tier) }
-    val displayName: Component by lazy {
+public data class TrophyFrog(val type: TrophyFrogType, val tier: TrophyTier) {
+    public val item: ItemStack by lazy { type.getItem(tier) }
+    public val displayName: Component by lazy {
         if (tier == TrophyTier.NONE) {
             return@lazy type.displayName.copy()
         }
@@ -15,7 +15,7 @@ data class TrophyFrog(val type: TrophyFrogType, val tier: TrophyTier) {
         Text.join(type.displayName, " ", tier.nameSuffix)
     }
 
-    val apiName by lazy {
+    public val apiName: String by lazy {
         if (tier == TrophyTier.NONE) {
             return@lazy type.internalName.lowercase()
         }
@@ -23,8 +23,8 @@ data class TrophyFrog(val type: TrophyFrogType, val tier: TrophyTier) {
         "${type.internalName.lowercase()}_${tier.name.lowercase()}"
     }
 
-    companion object {
-        fun fromString(fish: String): TrophyFrog? {
+    public companion object {
+        public fun fromString(fish: String): TrophyFrog? {
             if (fish.contains("/")) {
                 return fish.split("/").let {
                     TrophyFrog(

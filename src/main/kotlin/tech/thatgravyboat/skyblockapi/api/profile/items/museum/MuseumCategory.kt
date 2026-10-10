@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 //? < 26.2
 //import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
-enum class MuseumCategory(internal val deprecated: Boolean = false) {
+public enum class MuseumCategory(internal val deprecated: Boolean = false) {
     COMBAT,
     FARMING,
     MINING,
@@ -24,15 +24,15 @@ enum class MuseumCategory(internal val deprecated: Boolean = false) {
     ;
 
     @RemoveNextVersion @Deprecated("This museum category doesn't exist anymore!", level = DeprecationLevel.ERROR)
-    inline val isArmor: Boolean get() = false
+    public inline val isArmor: Boolean get() = false
     *///?} else
     ;
 
-    inline val isSpecial: Boolean get() = this == SPECIAL_ITEMS
+    public inline val isSpecial: Boolean get() = this == SPECIAL_ITEMS
     private val displayName = toFormattedName()
     override fun toString(): String = displayName
 
-    companion object {
-        fun fromName(name: String): MuseumCategory? = entries.find { !it.deprecated && it.displayName.equals(name, ignoreCase = true) }
+    public companion object {
+        public fun fromName(name: String): MuseumCategory? = entries.find { !it.deprecated && it.displayName.equals(name, ignoreCase = true) }
     }
 }

@@ -5,11 +5,12 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeSlot as NewWardrobeSlot
 
 @Deprecated("Replace with WardrobeAPI", ReplaceWith("tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeSlot"))
-data class WardrobeSlot(
+public data class WardrobeSlot(
     val id: Int,
     val armor: MutableList<ItemStack>,
     val locked: Boolean,
 )
 
+@Suppress("DEPRECATION")
 internal fun NewWardrobeSlot.into() = WardrobeSlot(id, slots, locked)
 *///?}

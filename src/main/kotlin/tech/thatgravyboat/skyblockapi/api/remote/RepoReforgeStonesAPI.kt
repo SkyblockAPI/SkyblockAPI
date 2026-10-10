@@ -6,11 +6,11 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockReforgeStonesRepo
 
 @Deprecated("Use SkyBlockReforgeStonesRepo instead", ReplaceWith("tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockReforgeStonesRepo"))
-object RepoReforgeStonesAPI {
+public object RepoReforgeStonesAPI {
 
-    fun getReforge(id: String): ReforgeData? = SkyBlockReforgeStonesRepo.get(id)
-    fun getReforgeByName(name: String): Pair<String, ReforgeData>? = SkyBlockReforgeStonesRepo.getByName(name)
+    public fun getReforge(id: String): ReforgeData? = SkyBlockReforgeStonesRepo.get(id)
+    public fun getReforgeByName(name: String): Pair<String, ReforgeData>? = SkyBlockReforgeStonesRepo.getByName(name)
 
-    fun ReforgeData.getApplyCosts() = SkyBlockRarity.entries.associateWith { applyCost()[it.name] }.filter { it.value != null }
-    fun ReforgeData.getApplyCost(rarity: SkyBlockRarity) = getApplyCosts()[rarity]
+    public fun ReforgeData.getApplyCosts(): Map<SkyBlockRarity, Long?> = SkyBlockRarity.entries.associateWith { applyCost()[it.name] }.filter { it.value != null }
+    public fun ReforgeData.getApplyCost(rarity: SkyBlockRarity): Long? = getApplyCosts()[rarity]
 }*///?}

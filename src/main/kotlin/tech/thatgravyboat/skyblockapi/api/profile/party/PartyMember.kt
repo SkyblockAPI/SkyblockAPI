@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.party
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerCacheStorage
 import java.util.UUID
 
-class PartyMember internal constructor(uuid: UUID?, role: PartyRole = PartyRole.MEMBER, online: Boolean = true) {
+public class PartyMember internal constructor(uuid: UUID?, role: PartyRole = PartyRole.MEMBER, online: Boolean = true) {
 
     internal constructor(name: String, role: PartyRole = PartyRole.MEMBER, online: Boolean = true) : this(null, role, online) {
         this.name = name
@@ -13,16 +13,16 @@ class PartyMember internal constructor(uuid: UUID?, role: PartyRole = PartyRole.
         this.name = name
     }
 
-    var uuid: UUID? = uuid
+    public var uuid: UUID? = uuid
         internal set
 
-    var role: PartyRole = role
+    public var role: PartyRole = role
         internal set
 
-    var name: String? = if (uuid != null) PlayerCacheStorage.getPlayerName(uuid) else null
+    public var name: String? = if (uuid != null) PlayerCacheStorage.getPlayerName(uuid) else null
         internal set
 
-    var isOnline: Boolean = online
+    public var isOnline: Boolean = online
         internal set
 
     internal fun missingData(): Boolean = name != null

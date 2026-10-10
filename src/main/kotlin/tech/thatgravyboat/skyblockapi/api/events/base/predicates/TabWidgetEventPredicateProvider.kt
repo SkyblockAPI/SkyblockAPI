@@ -9,11 +9,11 @@ import java.lang.reflect.Method
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlyWidget(
+public annotation class OnlyWidget(
     vararg val widgets: TabWidget
 )
 
-class TabWidgetEventPredicateProvider : EventPredicateProvider {
+public class TabWidgetEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         val onlyIn = method.getAnnotation<OnlyWidget>() ?: return null

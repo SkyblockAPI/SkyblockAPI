@@ -76,11 +76,10 @@ tasks.withType<KotlinCompile>().configureEach {
         "kotlin.time.ExperimentalTime",
         "kotlin.contracts.ExperimentalContracts",
     )
+    compilerOptions.allWarningsAsErrors = true
     compilerOptions.freeCompilerArgs.addAll(
-        "-Xcontext-parameters",
         "-Xcontext-sensitive-resolution",
         "-Xnullability-annotations=@org.jspecify.annotations:ignore",
-        "-Xcontext-parameters",
     )
 }
 
@@ -177,6 +176,7 @@ compactingResources {
 
 kotlin {
     jvmToolchain(25)
+    explicitApi()
 }
 
 java {

@@ -7,7 +7,7 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.storage.TagValueOutput
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 
-fun Entity.save(): CompoundTag {
+public fun Entity.save(): CompoundTag {
     val collector = ProblemReporter.ScopedCollector(SkyBlockAPI)
     val valueOutput = TagValueOutput.createWithoutContext(collector)
     valueOutput.putString("id", EntityType.getKey(this.type).toString())

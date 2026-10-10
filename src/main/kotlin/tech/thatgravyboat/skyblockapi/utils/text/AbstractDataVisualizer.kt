@@ -3,37 +3,37 @@ package tech.thatgravyboat.skyblockapi.utils.text
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 
-interface AbstractDataVisualizer<Data, Token : AbstractDataVisualizer.VisualizerToken> {
+public interface AbstractDataVisualizer<Data, Token : AbstractDataVisualizer.VisualizerToken> {
 
-    val component: MutableComponent
-    var indentCount: Int
+    public val component: MutableComponent
+    public var indentCount: Int
 
-    fun visualize(data: Data): Component {
+    public fun visualize(data: Data): Component {
         visit(data)
         return component
     }
 
-    fun visit(data: Data)
+    public fun visit(data: Data)
 
-    fun VisualizerToken.color(): Int
+    public fun VisualizerToken.color(): Int
 
-    fun append(text: String, color: Int) = apply {
+    public fun append(text: String, color: Int): AbstractDataVisualizer<Data, Token> = apply {
         this.component.append(Text.of(text, color))
     }
 
-    fun line() = apply {
+    public fun line(): AbstractDataVisualizer<Data, Token> = apply {
         component.append("\n")
     }
 
-    fun spaces() = apply {
+    public fun spaces(): AbstractDataVisualizer<Data, Token> = apply {
         component.append("  ".repeat(indentCount))
     }
-    fun appendToken(token: Token) = append(token.token ?: "?", token)
-    fun append(content: String, token: Token) = apply {
+    public fun appendToken(token: Token): AbstractDataVisualizer<Data, Token> = append(token.token ?: "?", token)
+    public fun append(content: String, token: Token): AbstractDataVisualizer<Data, Token> = apply {
         component.append(Text.of(content, token.color()))
     }
 
-    interface VisualizerToken {
-        val token: String?
+    public interface VisualizerToken {
+        public val token: String?
     }
 }

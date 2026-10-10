@@ -7,26 +7,26 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import kotlin.time.Instant
 
 @GenerateCodec
-data class StorageData(
+public data class StorageData(
     val normal: PlayerStorageData = PlayerStorageData(),
     val rift: MutableList<PlayerStorageInstance> = mutableListOf(),
 ) {
-    companion object {
+    public companion object {
         internal val CODEC = SkyblockAPICodecs.getCodec<StorageData>()
     }
 }
 
 @GenerateCodec
-data class PlayerStorageData(
+public data class PlayerStorageData(
     val enderchests: MutableList<PlayerStorageInstance> = mutableListOf(),
     val backpacks: MutableList<PlayerStorageInstance> = mutableListOf(),
 )
 
 @GenerateCodec
-data class PlayerStorageInstance(
+public data class PlayerStorageInstance(
     val index: Int = 0,
     val items: MutableList<ItemStack> = mutableListOf(),
     internal var lastUpdate: Instant = currentInstant(),
 ) {
-    val lastUpdated get() = lastUpdate
+    public val lastUpdated: Instant get() = lastUpdate
 }

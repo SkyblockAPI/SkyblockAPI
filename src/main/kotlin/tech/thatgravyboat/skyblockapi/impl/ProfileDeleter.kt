@@ -78,7 +78,7 @@ internal object ProfileDeleter {
     
 
     @Subscription(receiveCancelled = true)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    private fun onChat(event: ChatReceivedEvent.Pre) {
         matchWhen(event.text) {
             case(deleteRegex, "name", action = ::handleDelete)
             case(wipeRegex, "name", action = ::handleDelete)
@@ -93,7 +93,7 @@ internal object ProfileDeleter {
     }
 
     @Subscription
-    fun onCommand(event: RegisterSkyblockApiCommandsEvent) {
+    private fun onCommand(event: RegisterSkyblockApiCommandsEvent) {
         event.register("profile delete") {
             val allProfiles = ProfileStorage.getAllProfileNames()
 

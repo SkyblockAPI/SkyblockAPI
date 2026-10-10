@@ -25,16 +25,16 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
 @Module
-object CrystalAPI {
+public object CrystalAPI {
 
-    val crystals: Map<CrystalType, CrystalStatus> get() = CrystalStorage.crystalData.toMap()
+    public val crystals: Map<CrystalType, CrystalStatus> get() = CrystalStorage.crystalData.toMap()
 
-    fun getCrystalStatus(type: CrystalType): CrystalStatus = CrystalStorage.crystalData[type] ?: CrystalStatus.NOT_FOUND
+    public fun getCrystalStatus(type: CrystalType): CrystalStatus = CrystalStorage.crystalData[type] ?: CrystalStatus.NOT_FOUND
 
-    fun isFound(type: CrystalType): Boolean = getCrystalStatus(type) == CrystalStatus.FOUND
-    fun isPlaced(type: CrystalType): Boolean = getCrystalStatus(type) == CrystalStatus.PLACED
+    public fun isFound(type: CrystalType): Boolean = getCrystalStatus(type) == CrystalStatus.FOUND
+    public fun isPlaced(type: CrystalType): Boolean = getCrystalStatus(type) == CrystalStatus.PLACED
 
-    fun getCrystalsByStatus(status: CrystalStatus): List<CrystalType> = CrystalStorage.crystalData.filter { it.value == status }.map { it.key }
+    public fun getCrystalsByStatus(status: CrystalStatus): List<CrystalType> = CrystalStorage.crystalData.filter { it.value == status }.map { it.key }
 
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("crystal")
@@ -54,7 +54,7 @@ object CrystalAPI {
 
     @Subscription
     @InventoryTitle("Heart of the Mountain")
-    fun onInventoryChange(event: InventoryChangeEvent) {
+    internal fun onInventoryChange(event: InventoryChangeEvent) {
         if (!itemRegex.matches(event.item.cleanName)) return
 
         val lore = event.item.getRawLore()
@@ -68,7 +68,7 @@ object CrystalAPI {
     }
 
     @Subscription
-    fun onChatReceived(event: ChatReceivedEvent.Pre) {
+    internal fun onChatReceived(event: ChatReceivedEvent.Pre) {
         val match = matchWhen(event.text) {
             case(crystalFoundRegex, "name") { (name) ->
                 CrystalStorage.setCrystalStatusByName(name, CrystalStatus.FOUND)
@@ -95,7 +95,7 @@ object CrystalAPI {
 
     @Subscription
     @OnlyWidget(TabWidget.CRYSTALS)
-    fun onTabWidget(event: TabWidgetChangeEvent) {
+    internal fun onTabWidget(event: TabWidgetChangeEvent) {
         crystalLoreRegex.forEachMatch(event.new, "name", "status") { (name, status) ->
             if (CrystalStorage.setCrystalStatusByName(name, CrystalStatus.fromString(status) ?: return@forEachMatch)) {
                 Logger.info("Updated $name to $status based on inventory.")
@@ -106,8 +106,9 @@ object CrystalAPI {
     }
 
     @Subscription
-    fun onContainerClick(event: SlotClickEvent) {
+    internal fun onContainerClick(event: SlotClickEvent) {
         if (event.title != "Confirm Process") return
+        @Suppress("DEPRECATION")
         if (event.item.cleanName != "Confirm" || !event.item.`is`(ColoredItems.GREEN_TERRACOTTA)) return
 
         val forgeOutput = event.menuSlots.find { it.index == 16 }?.item?.getSkyBlockId() ?: return

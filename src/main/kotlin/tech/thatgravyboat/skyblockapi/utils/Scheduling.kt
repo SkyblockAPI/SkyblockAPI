@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
-object Scheduling {
+public object Scheduling {
 
     private val counter = AtomicInteger(0)
     private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(10) { target: Runnable? ->
@@ -18,20 +18,20 @@ object Scheduling {
         }
     }
 
-    fun schedule(time: Duration, runnable: suspend () -> Unit): ScheduledFuture<*> = scheduler.schedule(
+    public fun schedule(time: Duration, runnable: suspend () -> Unit): ScheduledFuture<*> = scheduler.schedule(
         { runCatchBlocking { runnable() } },
         time.toLong(DurationUnit.MILLISECONDS),
         TimeUnit.MILLISECONDS,
     )
 
-    fun schedule(initalDelay: Duration, delay: Duration, runnable: suspend () -> Unit): ScheduledFuture<*> = scheduler.scheduleAtFixedRate(
+    public fun schedule(initalDelay: Duration, delay: Duration, runnable: suspend () -> Unit): ScheduledFuture<*> = scheduler.scheduleAtFixedRate(
         { runCatchBlocking { runnable() } },
         initalDelay.toLong(DurationUnit.MILLISECONDS),
         delay.toLong(DurationUnit.MILLISECONDS),
         TimeUnit.MILLISECONDS,
     )
 
-    fun async(runnable: suspend () -> Unit) {
+    public fun async(runnable: suspend () -> Unit) {
         CompletableFuture.runAsync {
             runCatchBlocking { runnable() }
         }

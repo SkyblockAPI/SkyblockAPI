@@ -5,22 +5,22 @@ import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
-object VaultStorage {
+public object VaultStorage {
     private val ACCESSORY_BAG = StoredProfileData(
         { mutableListOf() },
         CodecUtils.mutableList(SkyblockAPICodecs.getCodec<ItemStack>()),
         "vault.json",
     )
 
-    fun invalidate() {
+    public fun invalidate() {
         ACCESSORY_BAG.get()?.clear()
         ACCESSORY_BAG.save()
     }
 
-    fun addItem(item: ItemStack) {
+    public fun addItem(item: ItemStack) {
         ACCESSORY_BAG.get()?.add(item)
         ACCESSORY_BAG.save()
     }
 
-    fun getItems(): List<ItemStack> = ACCESSORY_BAG.get() ?: emptyList()
+    public fun getItems(): List<ItemStack> = ACCESSORY_BAG.get() ?: emptyList()
 }

@@ -36,30 +36,30 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
     }
 
     appendLine("@CommandClass")
-    appendLine("class $SelfWithGenerics(")
+    appendLine("public class $SelfWithGenerics(")
 
-    indent(1).appendLine("val name: String,")
-    indent(1).appendLine("val context: CommandBuildContext,")
+    indent(1).appendLine("public val name: String,")
+    indent(1).appendLine("public val context: CommandBuildContext,")
     forArguments {
-        indent(1).appendLine("val ${it}ArgumentBinding: CommandArgumentBinding<${it.uppercase()}>,")
+        indent(1).appendLine("public val ${it}ArgumentBinding: CommandArgumentBinding<${it.uppercase()}>,")
     }
     if (parameters != 0) {
-        indent(1).appendLine("override val builder: ArgumentBuilder<CommandSender, *> = LiteralArgumentBuilder.literal(name)")
+        indent(1).appendLine("public override val builder: ArgumentBuilder<CommandSender, *> = LiteralArgumentBuilder.literal(name)")
     }
     appendLine(") : CommandBuilder<CommandSender> {")
     if (parameters == 0) {
-        indent(1).appendLine("override val builder: LiteralArgumentBuilder<CommandSender> = LiteralArgumentBuilder.literal(name)")
+        indent(1).appendLine("public override val builder: LiteralArgumentBuilder<CommandSender> = LiteralArgumentBuilder.literal(name)")
     }
 
     indent(1).appendLine("private val deferred: MutableList<CommandBuilder<CommandSender>> = mutableListOf()")
 
     appendLine()
 
-    indent(1).appendLine("fun then(vararg name: String, builder: $SelfWithGenerics.() -> Unit) = name.forEach { it(builder) }")
+    indent(1).appendLine("public fun then(vararg name: String, builder: $SelfWithGenerics.() -> Unit): Unit = name.forEach { it(builder) }")
 
     appendLine()
 
-    indent(1).appendLine("operator fun String.invoke(builder: $SelfWithGenerics.() -> Unit): $SelfWithGenerics = this@$Self.literal(this) {")
+    indent(1).appendLine("public operator fun String.invoke(builder: $SelfWithGenerics.() -> Unit): $SelfWithGenerics = this@$Self.literal(this) {")
     indent(2).append("$Self(this, context")
     forArguments {
         append(", ${it}ArgumentBinding")
@@ -70,17 +70,17 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
     appendLine()
 
     if (isLast) {
-        indent(1).append("inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, crossinline builder: CommandBuilder0<CommandSender>.(CommandBuildContext) -> Unit)")
+        indent(1).append("public inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, crossinline builder: CommandBuilder0<CommandSender>.(CommandBuildContext) -> Unit)")
         appendLine(": Nothing = TODO(\"Max depth reached!\")")
     } else {
         indent(1).appendLine("@JvmOverloads")
-        indent(1).appendLine("inline fun <reified Argument> then(vararg name: String, argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null, crossinline builder: CommandBuilder${parameters + 1}<CommandSender$Generics, Argument>.(CommandBuildContext) -> Unit) = name.forEach { it(argument, suggestionProvider, builder) }")
+        indent(1).appendLine("public inline fun <reified Argument> then(vararg name: String, argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null, crossinline builder: CommandBuilder${parameters + 1}<CommandSender$Generics, Argument>.(CommandBuildContext) -> Unit): Unit = name.forEach { it(argument, suggestionProvider, builder) }")
 
         appendLine()
         indent(1).appendLine("@JvmOverloads")
-        indent(1).appendLine("inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null) = this(argument, suggestionProvider) {}")
+        indent(1).appendLine("public inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null): CommandBuilder${parameters + 1}<CommandSender$Generics, Argument> = this(argument, suggestionProvider) {}")
         indent(1).appendLine("@JvmOverloads")
-        indent(1).append("inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null, crossinline builder: CommandBuilder${parameters + 1}<CommandSender$Generics, Argument>.(CommandBuildContext) -> Unit)")
+        indent(1).append("public inline operator fun <reified Argument> String.invoke(argument: ArgumentType<Argument>, suggestionProvider: SuggestionProvider<CommandSender>? = null, crossinline builder: CommandBuilder${parameters + 1}<CommandSender$Generics, Argument>.(CommandBuildContext) -> Unit): CommandBuilder${parameters + 1}<CommandSender$Generics, Argument> ")
 
         appendLine("= this@$Self.argument(this, factory = {")
         indent(2).append("$Self(this, context")
@@ -104,12 +104,12 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
     }
 
     appendLine()
-    indent(1).append("infix fun String.executes(callback: (${Generics.drop(2)}) -> Unit) = this { execute(callback) }")
+    indent(1).append("public infix fun String.executes(callback: (${Generics.drop(2)}) -> Unit): $SelfWithGenerics = this { execute(callback) }")
     appendLine()
-    indent(1).append("infix fun executes(callback: (${Generics.drop(2)}) -> Unit) { execute(callback) }")
+    indent(1).append("public infix fun executes(callback: (${Generics.drop(2)}) -> Unit) { execute(callback) }")
     appendLine()
 
-    indent(1).appendLine("fun execute(callback: (${Generics.drop(2)}) -> Unit) {")
+    indent(1).appendLine("public fun execute(callback: (${Generics.drop(2)}) -> Unit) {")
     indent(2).appendLine("builder.executes {")
 
 
@@ -133,7 +133,7 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
 
 
     if (parameters == 0) {
-        indent(1).appendLine("fun register(dispatcher: CommandDispatcher<CommandSender>) {")
+        indent(1).appendLine("public fun register(dispatcher: CommandDispatcher<CommandSender>) {")
         indent(1).appendLine("    deferred.forEach {")
         indent(1).appendLine("        builder.then(it.build())")
         indent(1).appendLine("    }")
@@ -142,7 +142,7 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
         appendLine()
     }
 
-    indent(1).appendLine("override fun build(): ArgumentBuilder<CommandSender, *> {")
+    indent(1).appendLine("public override fun build(): ArgumentBuilder<CommandSender, *> {")
     indent(1).appendLine("    builder.arguments.clear()")
     indent(1).appendLine("    deferred.forEach {")
     indent(1).appendLine("        builder.then(it.build())")
@@ -151,7 +151,7 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
     indent(1).appendLine("}")
     appendLine()
 
-    indent(1).appendLine("override fun deferChild(node: CommandBuilder<CommandSender>) {")
+    indent(1).appendLine("public override fun deferChild(node: CommandBuilder<CommandSender>) {")
     indent(1).appendLine("    deferred.add(node)")
     indent(1).appendLine("}")
     appendLine()
@@ -175,18 +175,18 @@ fun createCommandFile(maxArguments: Int) = buildString {
         import net.minecraft.commands.CommandBuildContext
 
         @DslMarker
-        annotation class CommandClass
+        public annotation class CommandClass
 
-        interface CommandBuilder<CommandSender> {
-            val builder: ArgumentBuilder<CommandSender, *>
-            fun add(parent: CommandBuilder<CommandSender>) {
+        public interface CommandBuilder<CommandSender> {
+            public val builder: ArgumentBuilder<CommandSender, *>
+            public fun add(parent: CommandBuilder<CommandSender>) {
                 parent.deferChild(this)
             }
-            fun deferChild(node: CommandBuilder<CommandSender>)
+            public fun deferChild(node: CommandBuilder<CommandSender>)
 
-            fun build(): ArgumentBuilder<CommandSender, *>
+            public fun build(): ArgumentBuilder<CommandSender, *>
 
-            fun <Type : CommandBuilder<CommandSender>> Type.literal(name: String, factory: String.() -> Type): Type {
+            public fun <Type : CommandBuilder<CommandSender>> Type.literal(name: String, factory: String.() -> Type): Type {
                 var result = this
                 for (string in name.split(" ")) {
                     val previous = result
@@ -196,7 +196,7 @@ fun createCommandFile(maxArguments: Int) = buildString {
                 return result
             }
 
-            fun <Type : CommandBuilder<CommandSender>, ArgumentType : CommandBuilder<CommandSender>> Type.argument(name: String, factory: String.() -> Type, argumentFactory: String.() -> ArgumentType): ArgumentType {
+            public fun <Type : CommandBuilder<CommandSender>, ArgumentType : CommandBuilder<CommandSender>> Type.argument(name: String, factory: String.() -> Type, argumentFactory: String.() -> ArgumentType): ArgumentType {
                 var result = this
                 val splitName = name.split(" ")
                 for (string in splitName.dropLast(1)) {
@@ -211,9 +211,9 @@ fun createCommandFile(maxArguments: Int) = buildString {
             }
         }
 
-        data class CommandArgumentBinding<ArgumentType>(val name: String, val argument: Class<ArgumentType>)
+        public data class CommandArgumentBinding<ArgumentType>(val name: String, val argument: Class<ArgumentType>)
 
-        fun <CommandSender> CommandDispatcher<CommandSender>.command(name: String, buildContext: CommandBuildContext, init: CommandBuilder0<CommandSender>.() -> Unit): CommandBuilder0<CommandSender> {
+        public fun <CommandSender> CommandDispatcher<CommandSender>.command(name: String, buildContext: CommandBuildContext, init: CommandBuilder0<CommandSender>.() -> Unit): CommandBuilder0<CommandSender> {
             val builder = CommandBuilder0<CommandSender>(name.substringBefore(' '), buildContext)
             val split = name.substringAfter(' ')
             if (split.isNotEmpty()) {

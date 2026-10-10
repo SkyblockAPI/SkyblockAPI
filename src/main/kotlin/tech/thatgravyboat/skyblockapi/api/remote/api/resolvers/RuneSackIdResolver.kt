@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 
 private val idLookup = RepoAPI.runes().runes().map { (id, runes) ->
+    @Suppress("DEPRECATION")
     runes.firstOrNull()?.name?.stripColor()?.substringBeforeLast(" ") to SkyBlockId.rune(id, 0)
 }.toMap()
 

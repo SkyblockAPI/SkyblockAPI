@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.helpers.getStrippedAttachedLines
 import tech.thatgravyboat.skyblockapi.utils.DiscoverableValue
 
-data class SlayerInfo(val entity: Entity) {
+public data class SlayerInfo(val entity: Entity) {
     private fun discoverTypeIfNeeded(): SlayerMob? {
         return SLAYER_MOBS.find { mob ->
             val inGameNames = mob.inGameNames
@@ -19,9 +19,9 @@ data class SlayerInfo(val entity: Entity) {
             ?.substringAfterLast(":")?.trim()
     }
 
-    val owner by DiscoverableValue(::discoverOwner)
+    val owner: String? by DiscoverableValue(::discoverOwner)
     val isOwnedByPlayer: Boolean get() = owner == McPlayer.name
-    val type by DiscoverableValue(::discoverTypeIfNeeded)
+    val type: SlayerMob? by DiscoverableValue(::discoverTypeIfNeeded)
 
     override fun toString(): String {
         return "SlayerInfo(owner=$owner, isOwnedByPlayer=$isOwnedByPlayer, type=$type)"

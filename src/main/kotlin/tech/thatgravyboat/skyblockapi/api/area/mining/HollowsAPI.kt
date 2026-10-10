@@ -9,20 +9,20 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
 @Module
-object HollowsAPI {
+public object HollowsAPI {
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("mining.hollows")
 
     // Heat: IMMUNE
     // Heat: 24♨
     private val heatPattern = scoreboardGroup.create("heat", "Heat: (?<heat>\\d+|IMMUNE)♨?")
 
-    var heat: Int? = 0
+    public var heat: Int? = 0
         private set
 
-    val immuneToHeat: Boolean get() = heat == null
+    public val immuneToHeat: Boolean get() = heat == null
 
     @Subscription
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (!SkyBlockIsland.CRYSTAL_HOLLOWS.inIsland()) return
 
         val heatFound = heatPattern.anyMatch(event.added, "heat") { (heat) ->
@@ -39,5 +39,5 @@ object HollowsAPI {
     }
 
     @Subscription
-    fun onServerChange(event: ServerChangeEvent) = reset()
+    private fun onServerChange(event: ServerChangeEvent) = reset()
 }

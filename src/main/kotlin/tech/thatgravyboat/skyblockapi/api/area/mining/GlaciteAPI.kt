@@ -15,7 +15,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
 @Module
-object GlaciteAPI {
+public object GlaciteAPI {
 
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("mining.glacite")
 
@@ -24,15 +24,15 @@ object GlaciteAPI {
         "Cold: -(?<cold>\\d+)❄"
     )
 
-    var cold: Int = 0
+    public var cold: Int = 0
         private set
 
-    fun inColdArea() = when {
+    public fun inColdArea(): Boolean = when {
         SkyBlockIsland.SAFARI.inIsland() -> SkyBlockBiome.inAnyBiome(SkyBlockBiomes.ICY, SkyBlockBiomes.ICY_CAVES)
         else -> inGlaciteTunnels()
     }
 
-    fun inGlaciteTunnels() = when {
+    public fun inGlaciteTunnels(): Boolean = when {
         SkyBlockIsland.MINESHAFT.inIsland() -> true
         SkyBlockIsland.DWARVEN_MINES.inIsland() -> SkyBlockArea.inAnyArea(
             SkyBlockAreas.GLACITE_TUNNELS,
@@ -44,7 +44,7 @@ object GlaciteAPI {
     }
 
     @Subscription
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         val coldFound = coldRegex.anyMatch(event.added, "cold") { (cold) ->
             this.cold = cold.toIntValue()
         }
@@ -59,5 +59,5 @@ object GlaciteAPI {
     }
 
     @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
-    fun onServerChange() = reset()
+    private fun onServerChange() = reset()
 }

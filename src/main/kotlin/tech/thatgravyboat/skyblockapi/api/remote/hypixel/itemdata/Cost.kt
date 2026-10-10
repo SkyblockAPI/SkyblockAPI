@@ -12,51 +12,51 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import kotlin.reflect.KClass
 
 @GenerateDispatchCodec(Cost::class)
-enum class CostTypes(override val type: KClass<out Cost>) : DispatchHelper<Cost> {
+public enum class CostTypes(override val type: KClass<out Cost>) : DispatchHelper<Cost> {
     COINS(CoinCost::class),
     ITEM(ItemCost::class),
     ESSENCE(EssenceCost::class),
     ;
 
-    companion object {
-        fun getType(id: String) = entries.first { it.id.equals(id, true) }
+    public companion object {
+        public fun getType(id: String): CostTypes = entries.first { it.id.equals(id, true) }
     }
 }
 
 @GenerateCodec
-data class EssenceCost(
+public data class EssenceCost(
     @FieldName("essence_type") val essenceType: Essence,
     val amount: Int,
 ) : Cost(CostTypes.ESSENCE) {
-    companion object {
+    public companion object {
         internal val CODEC: MapCodec<EssenceCost> = SkyblockAPICodecs.EssenceCostCodec
     }
 }
 
 @GenerateCodec
-data class ItemCost(
+public data class ItemCost(
     @FieldName("item_id") val itemId: String,
     val amount: Int,
 ) : Cost(CostTypes.ITEM) {
-    companion object {
+    public companion object {
         internal val CODEC: MapCodec<ItemCost> = SkyblockAPICodecs.ItemCostCodec
     }
 }
 
 @GenerateCodec
-data class CoinCost(
+public data class CoinCost(
     @FieldName("coins") val amount: Int,
 ) : Cost(CostTypes.COINS) {
-    companion object {
+    public companion object {
         internal val CODEC: MapCodec<CoinCost> = SkyblockAPICodecs.CoinCostCodec
     }
 }
 
-abstract class Cost(val type: CostTypes) {
-    companion object {
+public abstract class Cost(public val type: CostTypes) {
+    public companion object {
         internal val CODEC: Codec<Cost> = SkyblockAPICodecs.CostCodec.codec()
 
-        fun calculateCost(cost: Cost) = when (cost) {
+        public fun calculateCost(cost: Cost): Long = when (cost) {
             is CoinCost -> cost.amount.toLong()
             is ItemCost -> cost.amount * Pricing.getPrice(cost.itemId)
             is EssenceCost -> cost.amount * Pricing.getPrice(cost.essenceType.bazaarId)

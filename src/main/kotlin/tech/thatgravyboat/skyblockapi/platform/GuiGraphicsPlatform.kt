@@ -23,21 +23,21 @@ private inline fun adjustColor(color: Int): Int {
     return if ((color and 0xfc000000.toInt()) == 0) ARGB.opaque(color) else color
 }
 
-inline fun GuiGraphicsExtractor.pushPop(block: () -> Unit) {
+public inline fun GuiGraphicsExtractor.pushPop(block: () -> Unit) {
     this.pose().pushMatrix()
     block()
     this.pose().popMatrix()
 }
 
-fun GuiGraphicsExtractor.translate(x: Number, y: Number) {
+public fun GuiGraphicsExtractor.translate(x: Number, y: Number) {
     pose().translate(x.toFloat(), y.toFloat())
 }
 
-fun GuiGraphicsExtractor.scale(x: Number, y: Number) {
+public fun GuiGraphicsExtractor.scale(x: Number, y: Number) {
     pose().scale(x.toFloat(), y.toFloat())
 }
 
-fun GuiGraphicsExtractor.rotate(angle: Number, x: Number = 0f, y: Number = 0f) {
+public fun GuiGraphicsExtractor.rotate(angle: Number, x: Number = 0f, y: Number = 0f) {
     if (x.toFloat() == 0f && y.toFloat() == 0f) {
         this.pose().rotate(angle.toFloat() * Mth.DEG_TO_RAD)
     } else {
@@ -46,24 +46,24 @@ fun GuiGraphicsExtractor.rotate(angle: Number, x: Number = 0f, y: Number = 0f) {
 }
 
 
-fun GuiGraphicsExtractor.drawString(text: String, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
+public fun GuiGraphicsExtractor.drawString(text: String, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
     this.text(McFont.self, text, x, y, adjustColor(color), shadow)
 }
 
-fun GuiGraphicsExtractor.drawString(text: FormattedText, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
+public fun GuiGraphicsExtractor.drawString(text: FormattedText, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
     this.text(McFont.self, Language.getInstance().getVisualOrder(text), x, y, adjustColor(color), shadow)
 }
 
-fun GuiGraphicsExtractor.drawString(text: FormattedCharSequence, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
+public fun GuiGraphicsExtractor.drawString(text: FormattedCharSequence, x: Int, y: Int, color: Int = -1, shadow: Boolean = false) {
     this.text(McFont.self, text, x, y, adjustColor(color), shadow)
 }
 
 
-fun GuiGraphicsExtractor.drawSprite(texture: Identifier, x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
+public fun GuiGraphicsExtractor.drawSprite(texture: Identifier, x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
     this.blitSprite(RenderPipelines.GUI_TEXTURED, texture, x, y, width, height, color)
 }
 
-fun GuiGraphicsExtractor.drawTexture(
+public fun GuiGraphicsExtractor.drawTexture(
     texture: Identifier, x: Int, y: Int, width: Int, height: Int,
     u0: Float = 0f, v0: Float = 0f, u1: Float = 1f, v1: Float = 1f,
     color: Int = -1,
@@ -84,7 +84,7 @@ fun GuiGraphicsExtractor.drawTexture(
     )
 }
 
-fun GuiGraphicsExtractor.drawGradient(
+public fun GuiGraphicsExtractor.drawGradient(
     x: Int, y: Int, width: Int, height: Int,
     col1: Int, col2: Int, col3: Int, col4: Int,
 ) {
@@ -101,34 +101,34 @@ fun GuiGraphicsExtractor.drawGradient(
     )
 }
 
-fun GuiGraphicsExtractor.drawFilledBox(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
+public fun GuiGraphicsExtractor.drawFilledBox(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
     this.fill(x, y, x + width, y + height, color)
 }
 
-fun GuiGraphicsExtractor.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
+public fun GuiGraphicsExtractor.drawOutline(x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
     this.fill(x, y, x + width, y + 1, color)
     this.fill(x, y + height - 1, x + width, y + height, color)
     this.fill(x, y + 1, x + 1, y + height - 1, color)
     this.fill(x + width - 1, y + 1, x + width, y + height - 1, color)
 }
 
-fun GuiGraphicsExtractor.showTooltip(text: Component, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {
+public fun GuiGraphicsExtractor.showTooltip(text: Component, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {
     val (x, y) = McClient.mouse
     this.setTooltipForNextFrame(McFont.self, McFont.split(text, maxWidth), DefaultTooltipPositioner.INSTANCE, x.toInt(), y.toInt(), false)
 }
 
-fun GuiGraphicsExtractor.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {
+public fun GuiGraphicsExtractor.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {
     this.setTooltipForNextFrame(McFont.self, McFont.split(text, maxWidth), DefaultTooltipPositioner.INSTANCE, x, y, false)
 }
 
-fun GuiGraphicsExtractor.getTranslation(): Vector2f {
+public fun GuiGraphicsExtractor.getTranslation(): Vector2f {
     return Vector2f(this.pose().m20(), this.pose().m21())
 }
 
-fun GuiGraphicsExtractor.getScale(): Vector2f {
+public fun GuiGraphicsExtractor.getScale(): Vector2f {
     return Vector2f(this.pose().m00(), this.pose().m11())
 }
 
-fun GuiGraphicsExtractor.applyBackgroundBlur() {
+public fun GuiGraphicsExtractor.applyBackgroundBlur() {
     this.blurBeforeThisStratum()
 }

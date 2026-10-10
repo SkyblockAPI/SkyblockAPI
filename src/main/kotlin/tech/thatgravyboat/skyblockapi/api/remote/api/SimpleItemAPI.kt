@@ -34,7 +34,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toReadableTime
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
 
 @Module
-object SimpleItemAPI {
+public object SimpleItemAPI {
 
     internal val unobtainableIds = SkyBlockAPI.getRepo("skyblockid/unobtainable_ids", SkyBlockId.CODEC.listOf())
     private val cache = object : RepoItemCache<SkyBlockId>("Items") {
@@ -118,38 +118,38 @@ object SimpleItemAPI {
         if (RepoAPI.isInitialized()) setupCache()
     }
 
-    fun findIdByName(name: String) = names[name.lowercase().stripColor()]
+    public fun findIdByName(name: String): SkyBlockId? = names[name.lowercase().stripColor()]
 
-    fun getLazyItemStackForItem(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::item))
-    fun getItemByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForItem(id)?.create()
-    fun getItemById(id: SkyBlockId): ItemStack = getItemByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown item: $id") }
+    public fun getLazyItemStackForItem(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::item))
+    public fun getItemByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForItem(id)?.create()
+    public fun getItemById(id: SkyBlockId): ItemStack = getItemByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown item: $id") }
 
-    fun getLazyItemStackForPet(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::pet))
-    fun getPetByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForPet(id)?.create()
-    fun getPetById(id: SkyBlockId): ItemStack = getPetByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown pet: $id") }
+    public fun getLazyItemStackForPet(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::pet))
+    public fun getPetByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForPet(id)?.create()
+    public fun getPetById(id: SkyBlockId): ItemStack = getPetByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown pet: $id") }
 
-    fun getLazyItemStackForRune(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::rune))
-    fun getRuneByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForRune(id)?.create()
-    fun getRuneById(id: SkyBlockId) = getRuneByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown rune: $id") }
+    public fun getLazyItemStackForRune(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::rune))
+    public fun getRuneByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForRune(id)?.create()
+    public fun getRuneById(id: SkyBlockId): ItemStack = getRuneByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown rune: $id") }
 
-    fun getLazyItemStackForEnchantment(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::enchantment))
-    fun getEnchantmentByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForEnchantment(id)?.create()
-    fun getEnchantmentById(id: SkyBlockId): ItemStack = getEnchantmentByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown enchantment: $id") }
+    public fun getLazyItemStackForEnchantment(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::enchantment))
+    public fun getEnchantmentByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForEnchantment(id)?.create()
+    public fun getEnchantmentById(id: SkyBlockId): ItemStack = getEnchantmentByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown enchantment: $id") }
 
-    fun getLazyItemStackForAttribute(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::attribute))
-    fun getAttributeByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForAttribute(id)?.create()
-    fun getAttributeById(id: SkyBlockId): ItemStack = getAttributeByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown attribute: $id") }
+    public fun getLazyItemStackForAttribute(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::attribute))
+    public fun getAttributeByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForAttribute(id)?.create()
+    public fun getAttributeById(id: SkyBlockId): ItemStack = getAttributeByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown attribute: $id") }
 
-    fun getLazyItemStackForPotion(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::potion))
-    fun getPotionByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForPotion(id)?.create()
-    fun getPotionById(id: SkyBlockId): ItemStack = getPotionByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown potion: $id") }
+    public fun getLazyItemStackForPotion(id: SkyBlockId): LazyItemStack? = cache.getLazyItemStack(id.trySafe(::potion))
+    public fun getPotionByIdOrNull(id: SkyBlockId): ItemStack? = getLazyItemStackForPotion(id)?.create()
+    public fun getPotionById(id: SkyBlockId): ItemStack = getPotionByIdOrNull(id) ?: ItemBuilder(Items.BARRIER) { name("Unknown potion: $id") }
 
-    fun getAllIds(): List<SkyBlockId> = ids
-    fun getAllNames(): Set<String> = names.keys
+    public fun getAllIds(): List<SkyBlockId> = ids
+    public fun getAllNames(): Set<String> = names.keys
 
     @Subscription(RepoEvent.Reload::class)
     @OnRepoStatus(RepoStatus.SUCCESS)
-    fun onRepoStatus() {
+    internal fun onRepoStatus() {
         setupCache()
     }
 
@@ -166,6 +166,7 @@ object SimpleItemAPI {
 
         RepoAPI.runes().runes().entries.flatMap { (id, data) ->
             data.mapNotNull { rune ->
+                @Suppress("DEPRECATION")
                 rune.name().stripColor() to rune("$id", rune.tier())
             }
         }.applyFiltered()

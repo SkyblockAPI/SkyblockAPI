@@ -15,7 +15,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 @Module
-object TrophyFrogAPI {
+public object TrophyFrogAPI {
 
     private val chatGroup = RegexGroup.CHAT.group("trophy_api")
     private val inventoryGroup = RegexGroup.INVENTORY.group("trophy_api")
@@ -32,7 +32,7 @@ object TrophyFrogAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.LOTUS_ATOLL)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
         trophyFrogCaughtRegex.match(content, "type", "tier") { (type, tier) ->
             val frogTier = TrophyTier.valueOf(tier)
@@ -45,7 +45,7 @@ object TrophyFrogAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.LOTUS_ATOLL)
-    fun onInventory(event: InventoryChangeEvent) {
+    internal fun onInventory(event: InventoryChangeEvent) {
         if (event.title != "Trophy Frogs") return
         if (event.isInPlayerInventory) return
         if (!event.isInMainPart) return
@@ -64,7 +64,7 @@ object TrophyFrogAPI {
         TrophyFrogStorage.setAmounts(byName, caught)
     }
 
-    fun getCaught(type: TrophyFrogType): Map<TrophyTier, Int> {
+    public fun getCaught(type: TrophyFrogType): Map<TrophyTier, Int> {
         return TrophyFrogStorage.getCaught(type)
     }
 
