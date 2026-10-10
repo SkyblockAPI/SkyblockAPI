@@ -3,7 +3,6 @@ package tech.thatgravyboat.skyblockapi.utils.regex
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import org.intellij.lang.annotations.Language
-import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.http.Http
 import tech.thatgravyboat.skyblockapi.utils.json.Json.isString
@@ -39,9 +38,7 @@ public object Regexes {
         usedKeys += key
     }
 
-    @JvmStatic
-    @ApiStatus.Internal
-    public fun load() {
+    internal fun load() {
         if (McClient.isDev) return
         runCatchBlocking {
             val result = Http.getResult<JsonObject>(URL)
