@@ -12,7 +12,7 @@ rootProject.name = "skyblock-api"
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-    id("dev.kikugie.stonecutter") version "0.10-alpha.10"
+    id("dev.kikugie.stonecutter") version "0.10-alpha.12"
 }
 
 val versions = listOf("26.3", "26.2", "26.1")
