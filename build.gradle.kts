@@ -25,7 +25,7 @@ kotlin {
         filters {
             exclude {
                 byNames.addAll(
-                    "tech.thatgrabyboat.skyblockapi.impl.**",
+                    "tech.thatgravyboat.skyblockapi.impl.**",
                     "tech.thatgravyboat.skyblockapi.mixins.**"
                 )
             }
@@ -217,9 +217,9 @@ val mcVersion = stonecutter.current.version.replace(".", "")
 
 loom {
     runConfigs["client"].apply {
-        ideConfigGenerated(true)
-        runDir = "../../run"
-        vmArg("-Dfabric.modsFolder=\"${mcVersion}Mods\"")
+        generateRunConfig = true
+        runDirectory = project.file("../../run")
+        jvmArguments.add("-Dfabric.modsFolder=\"${mcVersion}Mods\"")
     }
 
     if (accessWidenerFile.exists()) {
