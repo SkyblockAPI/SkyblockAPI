@@ -177,7 +177,18 @@ fun createCommandFile(maxArguments: Int) = buildString {
         import com.mojang.brigadier.context.CommandContext
         import com.mojang.brigadier.suggestion.SuggestionProvider
         import net.minecraft.commands.CommandBuildContext
-        import tech.thatgravyboat.skyblockapi.api.events.misc.reportCommandFailure
+        import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+        import tech.thatgravyboat.skyblockapi.utils.text.Text
+        import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+        import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
+
+        internal fun reportCommandFailure(context: CommandContext<*>, throwable: Throwable): Int {
+            SkyBlockAPI.error("Error executing command: ${'$'}{context.input}", throwable)
+            val error = throwable.message?.takeIf { it.isNotBlank() } ?: throwable::class.simpleName ?: "Unknown error"
+            Text.of("Couldn't complete that command - ${'$'}error", TextColor.RED)
+                .sendWithPrefix()
+            return 0
+        }
 
         @DslMarker
         public annotation class CommandClass
