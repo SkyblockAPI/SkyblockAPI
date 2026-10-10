@@ -200,8 +200,7 @@ dependencies {
     }
 
     api(versionedCatalog["hypixel.modapi"])
-    api(versionedCatalog["hypixel.modapi.fabric"])
-    include(versionedCatalog["hypixel.modapi.fabric"])
+    implementation(versionedCatalog["hypixel.modapi.fabric"])
 
     api(versionedCatalog["skyblockapi.repolib"])
     include(versionedCatalog["skyblockapi.repolib"])
