@@ -13,7 +13,7 @@
         "main": [
             {
                 "adapter": "kotlin",
-                "value": "tech.thatgravyboat.skyblockapi.api.SkyBlockAPI::postInit"
+                "value": "tech.thatgravyboat.skyblockapi.api.SkyblockAPIModLoader"
             }
         ]
     },
