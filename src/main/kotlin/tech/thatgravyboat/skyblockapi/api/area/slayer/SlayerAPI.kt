@@ -48,7 +48,7 @@ public object SlayerAPI {
     )
     private val questStarted = chatSlayerGroup.create("started", "\\s+SLAYER QUEST STARTED!")
     private val questCompleted = chatSlayerGroup.create("completed", "\\s+SLAYER QUEST COMPLETE!")
-    private val nametagRegex = nameTagGroup.create("nametag", "\\[Lv\\d+] \uE078 .*?(?:Hits |[❤\uE010])(?: |[✯\uE01A])?")
+    private val nametagRegex = nameTagGroup.create("nametag", "\\[Lv\\d+] . .*?(?:Hits |[❤\uE010])(?: |[✯\uE01A])?")
 
     public var type: SlayerType? = null
         private set
