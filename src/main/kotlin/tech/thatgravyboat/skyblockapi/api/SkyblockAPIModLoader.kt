@@ -4,7 +4,7 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
 
-public class SkyblockAPIModLoader : ModInitializer {
+internal class SkyblockAPIModLoader : ModInitializer {
     override fun onInitialize() {
         Regexes.load()
         SkyBlockAPI.init()
