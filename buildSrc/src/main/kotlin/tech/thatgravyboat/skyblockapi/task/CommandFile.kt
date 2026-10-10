@@ -116,7 +116,8 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
     forArguments {
         indent(3).appendLine("val $it = it.getArgument(${it}ArgumentBinding.name, ${it}ArgumentBinding.argument)")
     }
-    indent(3).append("callback(")
+    indent(3).appendLine("try {")
+    indent(4).append("callback(")
     forArguments {
         if (it != "a") {
             append(", ")
@@ -125,7 +126,10 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
     }
     appendLine(")")
 
-    indent(3).appendLine("Command.SINGLE_SUCCESS")
+    indent(4).appendLine("Command.SINGLE_SUCCESS")
+    indent(3).appendLine("} catch (throwable: Throwable) {")
+    indent(4).appendLine("reportCommandFailure(it, throwable)")
+    indent(3).appendLine("}")
     indent(2).appendLine("}")
     indent(1).appendLine("}")
 
@@ -173,6 +177,7 @@ fun createCommandFile(maxArguments: Int) = buildString {
         import com.mojang.brigadier.context.CommandContext
         import com.mojang.brigadier.suggestion.SuggestionProvider
         import net.minecraft.commands.CommandBuildContext
+        import tech.thatgravyboat.skyblockapi.api.events.misc.reportCommandFailure
 
         @DslMarker
         public annotation class CommandClass

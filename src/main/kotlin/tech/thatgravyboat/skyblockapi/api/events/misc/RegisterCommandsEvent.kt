@@ -11,10 +11,14 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommands
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.SharedSuggestionProvider
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.command.dsl.CommandBuilder0
 import tech.thatgravyboat.skyblockapi.utils.command.dsl.CommandClass
 import tech.thatgravyboat.skyblockapi.utils.command.dsl.command
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 
 public typealias LiteralCommandBuilder = CommandBuilder<LiteralArgumentBuilder<FabricClientCommandSource>>
 public typealias ArgumentCommandBuilder<T> = CommandBuilder<RequiredArgumentBuilder<FabricClientCommandSource, T>>
@@ -24,6 +28,14 @@ public data class BuilderDsl<Consumer>(val consumer: (Consumer) -> Unit) {
     public infix fun executes(callback: Consumer) {
         consumer(callback)
     }
+}
+
+internal fun reportCommandFailure(context: CommandContext<*>, throwable: Throwable): Int {
+    SkyBlockAPI.error("Error executing command: ${context.input}", throwable)
+    val error = throwable.message?.takeIf { it.isNotBlank() } ?: throwable::class.simpleName ?: "Unknown error"
+    Text.of("Couldn't complete that command - $error", TextColor.RED)
+        .sendWithPrefix()
+    return 0
 }
 
 public class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClientCommandSource>, public val buildContext: CommandBuildContext?) : SkyBlockEvent() {
@@ -74,8 +86,12 @@ public open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, 
 
     public open fun callback(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
         this.builder.executes {
-            callback(it)
-            1
+            try {
+                callback(it)
+                1
+            } catch (throwable: Throwable) {
+                reportCommandFailure(it, throwable)
+            }
         }
     }
 
