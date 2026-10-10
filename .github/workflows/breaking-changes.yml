@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
     breaking-change-check:
-        if: ${{ !github.event.pull_request.draft }}
+        if: ${{ !github.event.pull_request.draft && !contains(github.event.pull_request.labels.*.name, 'Ignore Breaking') }}
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v5
