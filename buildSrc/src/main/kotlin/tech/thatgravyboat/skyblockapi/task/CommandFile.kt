@@ -116,7 +116,8 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
     forArguments {
         indent(3).appendLine("val $it = it.getArgument(${it}ArgumentBinding.name, ${it}ArgumentBinding.argument)")
     }
-    indent(3).append("callback(")
+    indent(3).appendLine("try {")
+    indent(4).append("callback(")
     forArguments {
         if (it != "a") {
             append(", ")
@@ -125,7 +126,10 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
     }
     appendLine(")")
 
-    indent(3).appendLine("Command.SINGLE_SUCCESS")
+    indent(4).appendLine("Command.SINGLE_SUCCESS")
+    indent(3).appendLine("} catch (throwable: Throwable) {")
+    indent(4).appendLine("reportCommandFailure(it, throwable)")
+    indent(3).appendLine("}")
     indent(2).appendLine("}")
     indent(1).appendLine("}")
 
@@ -163,7 +167,7 @@ fun createCommandClass(parameters: Int, maxParameters: Int, isLast: Boolean): St
 }
 
 fun createCommandFile(maxArguments: Int) = buildString {
-    """
+    $$"""
         import com.mojang.brigadier.Command
         import com.mojang.brigadier.CommandDispatcher
         import com.mojang.brigadier.arguments.ArgumentType
@@ -173,6 +177,18 @@ fun createCommandFile(maxArguments: Int) = buildString {
         import com.mojang.brigadier.context.CommandContext
         import com.mojang.brigadier.suggestion.SuggestionProvider
         import net.minecraft.commands.CommandBuildContext
+        import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+        import tech.thatgravyboat.skyblockapi.utils.text.Text
+        import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+        import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
+
+        internal fun reportCommandFailure(context: CommandContext<*>, throwable: Throwable): Int {
+            SkyBlockAPI.error("Error executing command: ${context.input}", throwable)
+            val error = throwable.message?.takeIf { it.isNotBlank() } ?: throwable::class.simpleName ?: "Unknown error"
+            Text.of("Failed to execute command  - $error", TextColor.RED)
+                .sendWithPrefix()
+            return 0
+        }
 
         @DslMarker
         public annotation class CommandClass
