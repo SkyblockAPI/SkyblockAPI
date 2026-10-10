@@ -185,7 +185,7 @@ fun createCommandFile(maxArguments: Int) = buildString {
         internal fun reportCommandFailure(context: CommandContext<*>, throwable: Throwable): Int {
             SkyBlockAPI.error("Error executing command: ${'$'}{context.input}", throwable)
             val error = throwable.message?.takeIf { it.isNotBlank() } ?: throwable::class.simpleName ?: "Unknown error"
-            Text.of("Couldn't complete that command - ${'$'}error", TextColor.RED)
+            Text.of("Failed to execute command - ${'$'}error", TextColor.RED)
                 .sendWithPrefix()
             return 0
         }
