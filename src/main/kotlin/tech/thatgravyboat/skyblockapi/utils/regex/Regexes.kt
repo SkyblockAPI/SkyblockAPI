@@ -39,9 +39,7 @@ public object Regexes {
         usedKeys += key
     }
 
-    @JvmStatic
-    @ApiStatus.Internal
-    public fun load() {
+    internal fun load() {
         if (McClient.isDev) return
         runCatchBlocking {
             val result = Http.getResult<JsonObject>(URL)

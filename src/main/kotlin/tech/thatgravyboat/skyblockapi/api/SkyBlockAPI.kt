@@ -47,9 +47,7 @@ public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal val isDebug get() = System.getProperty("skyblockapi.debug")?.lowercase() == "true"
 
-    @JvmStatic
-    @ApiStatus.Internal
-    public fun init() {
+    internal fun init() {
         debug("Starting sbapi!")
         RepoLibLogger.setInstance(RepoLibLogging)
         SkyblockAPIModules.init { eventBus.register(it) }
@@ -68,9 +66,7 @@ public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         //org.spongepowered.asm.mixin.MixinEnvironment.getCurrentEnvironment().audit()
     }
 
-    @JvmStatic
-    @ApiStatus.Internal
-    public fun postInit() {
+    internal fun postInit() {
         DataTypesRegistry.load()
     }
 
