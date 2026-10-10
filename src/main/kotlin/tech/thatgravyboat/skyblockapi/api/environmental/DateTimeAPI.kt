@@ -19,7 +19,7 @@ public object DateTimeAPI {
 
     private val timeRegex = regexGroup.create(
         "time",
-        "^\\s*(?<hour>\\d{1,2}):(?<minute>\\d{1,2})(?<period>am|pm) (?<symbol>.)",
+        "^\\s*(?<hour>\\d{1,2}):(?<minute>\\d{1,2})(?<period>am|pm)(?<symbol> .)?",
     )
 
     public var season: SkyBlockSeason? = null
