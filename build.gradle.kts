@@ -25,7 +25,6 @@ kotlin {
         filters {
             exclude {
                 byNames.addAll(
-                    "tech.thatgravyboat.skyblockapi.impl.**",
                     "tech.thatgravyboat.skyblockapi.mixins.**"
                 )
             }
