@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec
 import me.owdding.dfu.item.MeowddingItemDfu
 import me.owdding.ktmodules.Module
 import net.fabricmc.loader.api.FabricLoader
-import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.api.RepoAPI
