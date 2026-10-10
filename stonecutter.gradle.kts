@@ -9,7 +9,6 @@ repositories {
 
 plugins {
     kotlin("jvm") apply false
-    id("net.fabricmc.fabric-loom-remap") version "1.18-SNAPSHOT" apply false
     id("net.fabricmc.fabric-loom") version "1.18-SNAPSHOT" apply false
     `maven-publish`
 }
