@@ -12,8 +12,10 @@ import kotlin.time.Instant
 
 @Module
 internal object SacksStorage {
+    private val IGNORED_ITEMS = listOf("COMMON_HOOK") // Items that Hypixel shows in the Sack but don't go in there.
+
     private val SACKS = StoredProfileData(
-        2,
+        3,
         ::SacksData,
         "sacks.json",
     ) { version ->
@@ -29,6 +31,14 @@ internal object SacksStorage {
             2 -> RecordCodecBuilder.create { it.group(
                 SkyblockAPICodecs.SackEntryCodec.codec().listOf().optionalFieldOf("items", listOf()).forGetter(SacksData::asSackEntries),
             ).apply(it, ::SacksData) }
+            3 -> RecordCodecBuilder.create {
+                it.group(
+                    SkyblockAPICodecs.SackEntryCodec.codec().listOf().xmap(
+                        { list -> list.filterNot { entry -> entry.id.isIgnoredItem() } },
+                        { list -> list.filterNot { entry -> entry.id.isIgnoredItem() } },
+                    ).optionalFieldOf("items", listOf()).forGetter(SacksData::asSackEntries),
+                ).apply(it, ::SacksData)
+            }
             else -> CodecUtils.unit { SacksData() }
         }
     }
@@ -38,6 +48,7 @@ internal object SacksStorage {
 
     // Returns the old value
     fun updateItem(item: String, amount: Int): Int {
+        if (item.isIgnoredItem()) return 0
         val oldValue = this.counts[item]
         if (oldValue == amount) return oldValue
         SACKS.get()?.add(item, amount)
@@ -46,6 +57,7 @@ internal object SacksStorage {
     }
 
     fun updateItemValue(item: String, diff: Int) {
+        if (item.isIgnoredItem()) return
         val prevAmount = this.counts[item] ?: 0
         val newAmount = (prevAmount + diff).coerceAtLeast(0)
         updateItem(item, newAmount)
@@ -56,5 +68,6 @@ internal object SacksStorage {
         SACKS.save()
     }
 
-}
+    private fun String.isIgnoredItem(): Boolean = IGNORED_ITEMS.any { it.equals(this, ignoreCase = true) }
 
+}
