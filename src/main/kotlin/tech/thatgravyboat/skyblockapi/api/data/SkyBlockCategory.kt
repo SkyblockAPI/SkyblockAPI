@@ -73,7 +73,7 @@ public class SkyBlockCategory private constructor(
         public val FISHING_ROD: SkyBlockCategory = create("fishing rod")
         public val ROD_PART: SkyBlockCategory = create("rod part") // in the api its called "FISHING_ROD_PART"
         public val BAIT: SkyBlockCategory = create("bait")
-        public val FISHING_NET = create("fishing net")
+        public val FISHING_NET: SkyBlockCategory = create("fishing net")
 
         public val DEPLOYABLE: SkyBlockCategory = create("deployable")
         public val VACUUM: SkyBlockCategory = create("vacuum")

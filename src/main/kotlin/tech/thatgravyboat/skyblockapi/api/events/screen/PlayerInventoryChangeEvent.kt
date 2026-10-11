@@ -16,7 +16,7 @@ public data class PlayerInventoryChangeEvent(
     @Deprecated("Should pass previousItem as well")
     public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
 
-    public val slotIndex get() = inventorySlot.index
+    public val slotIndex: Int get() = inventorySlot.index
 }
 
 public data class PlayerHotbarChangeEvent(
@@ -26,9 +26,9 @@ public data class PlayerHotbarChangeEvent(
 ) : SkyBlockEvent() {
     @RemoveNextVersion
     @Deprecated("Should pass previousItem as well")
-    constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
+    public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
 
-    public val slotIndex get() = inventorySlot.index - FIRST_HOTBAR_SLOT
+    public val slotIndex: Int get() = inventorySlot.index - FIRST_HOTBAR_SLOT
 
     public companion object {
         internal const val FIRST_HOTBAR_SLOT = 36

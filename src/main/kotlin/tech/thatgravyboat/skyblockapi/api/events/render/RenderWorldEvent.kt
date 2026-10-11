@@ -7,12 +7,12 @@ import org.joml.Quaternionf
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.pushPop
 
-sealed class RenderWorldEvent(
-    val poseStack: PoseStack,
-    val submitNodeCollector: SubmitNodeCollector,
-    val cameraPosition: Vec3,
-    var cameraRotation: Quaternionf,
-    val partialTicks: Float,
+public sealed class RenderWorldEvent(
+    public val poseStack: PoseStack,
+    public val submitNodeCollector: SubmitNodeCollector,
+    public val cameraPosition: Vec3,
+    public var cameraRotation: Quaternionf,
+    public val partialTicks: Float,
 ) : SkyBlockEvent() {
 
     public object Start : SkyBlockEvent()

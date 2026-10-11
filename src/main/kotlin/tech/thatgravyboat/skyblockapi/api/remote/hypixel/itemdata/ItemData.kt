@@ -18,7 +18,7 @@ import java.nio.file.Files
 private const val URL = "https://api.hypixel.net/v2/resources/skyblock/items"
 
 @Module
-object ItemData {
+public object ItemData {
 
     private val backupData: Map<String, HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
         ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
@@ -46,7 +46,7 @@ object ItemData {
 
     public fun getItemData(id: String): HypixelApiItem? = data[id.uppercase()]
 
-    fun getNpcSellPrice(id: String): Float? = getItemData(id)?.npcSellPriceFloat
+    public fun getNpcSellPrice(id: String): Float? = getItemData(id)?.npcSellPriceFloat
 
     public fun getMotesSellPrice(id: String): Float? = getItemData(id)?.motesSellPrice
 }
