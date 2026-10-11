@@ -18,15 +18,6 @@ public class DataType<T> private constructor(
     public val type: KType?,
 ) {
 
-    //? < 26.2
-    //@RemoveNextVersion public constructor(id: String, autoRegister: Boolean, factory: (ItemStack) -> T?, type: KType?) : this(id, autoRegister, { _, stack -> factory(stack) }, type)
-
-    //? < 26.2
-    //@RemoveNextVersion public constructor(id: String, autoRegister: Boolean, factory: (ItemStack) -> T?) : this(id, autoRegister, factory, null)
-
-    //? < 26.2
-    //@RemoveNextVersion public constructor(id: String, factory: (ItemStack) -> T?) : this(id, true, factory)
-
     @get:Deprecated("Scheduled for removal in 26.3")
     @get:ApiStatus.ScheduledForRemoval
     public val factory: (ItemStack) -> T? get() = ::resolve

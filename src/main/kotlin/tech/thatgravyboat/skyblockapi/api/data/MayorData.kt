@@ -155,8 +155,6 @@ public object MayorPerks {
     public val MOLTEN_FORGE: MayorPerk = register("Molten Forge")
 
     // Diana
-    //? < 26.2
-    //@RemoveNextVersion public val LUCKY: MayorPerk = register("Lucky!")
     public val HUNTRESS_INTUITION: MayorPerk = register("Huntress' Intuition")
     public val MYTHOLOGICAL_RITUAL: MayorPerk = register("Mythological Ritual")
     public val PET_XP_BUFF: MayorPerk = register("Pet XP Buff")
@@ -169,8 +167,6 @@ public object MayorPerks {
     public val LONG_TERM_INVESTMENT: MayorPerk = register("Long Term Investment")
 
     // Finnegan
-    //? < 26.2
-    //@RemoveNextVersion public val PELT_POCALYPSE: MayorPerk = register("Pelt-pocalypse")
     public val GRAND_FEAST: MayorPerk = register("Grand Feast", perkpocalypse = false)
     public val GOATED: MayorPerk = register("GOATed", id = "GOATED")
     public val BLOOMING_BUSINESS: MayorPerk = register("Blooming Business")
