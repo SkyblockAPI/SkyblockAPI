@@ -39,7 +39,6 @@ public final class tech/thatgravyboat/skyblockapi/api/SkyBlockAPI : org/slf4j/Lo
 	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
 	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;[Ljava/lang/Object;)V
-	public static final fun init ()V
 	public fun isDebugEnabled ()Z
 	public fun isDebugEnabled (Lorg/slf4j/Marker;)Z
 	public fun isErrorEnabled ()Z
@@ -50,7 +49,6 @@ public final class tech/thatgravyboat/skyblockapi/api/SkyBlockAPI : org/slf4j/Lo
 	public fun isTraceEnabled (Lorg/slf4j/Marker;)Z
 	public fun isWarnEnabled ()Z
 	public fun isWarnEnabled (Lorg/slf4j/Marker;)Z
-	public static final fun postInit ()V
 	public fun trace (Ljava/lang/String;)V
 	public fun trace (Ljava/lang/String;Ljava/lang/Object;)V
 	public fun trace (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
@@ -9847,7 +9845,6 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/Regexes {
 	public final fun create (Ljava/lang/String;Ljava/lang/String;)Lkotlin/text/Regex;
 	public final fun createList (Ljava/lang/String;[Ljava/lang/String;)Ljava/util/List;
 	public final fun group (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/regex/RegexGroup;
-	public static final fun load ()V
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/regex/component/ComponentMatchResult {
