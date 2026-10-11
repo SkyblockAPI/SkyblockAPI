@@ -2,8 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.museum
 
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
-enum class MuseumCategory(internal val deprecated: Boolean = false) {
-public enum class MuseumCategory(internal val deprecated: Boolean = false) {
+public enum class MuseumCategory {
     COMBAT,
     FARMING,
     MINING,
@@ -19,6 +18,6 @@ public enum class MuseumCategory(internal val deprecated: Boolean = false) {
     override fun toString(): String = displayName
 
     public companion object {
-        public fun fromName(name: String): MuseumCategory? = entries.find { !it.deprecated && it.displayName.equals(name, ignoreCase = true) }
+        public fun fromName(name: String): MuseumCategory? = entries.find { it.displayName.equals(name, ignoreCase = true) }
     }
 }
