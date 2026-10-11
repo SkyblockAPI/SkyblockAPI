@@ -7834,16 +7834,22 @@ public abstract class tech/thatgravyboat/skyblockapi/utils/DevUtils {
 	public abstract fun getCommandName ()Ljava/lang/String;
 	public fun getDefaultSelect (Lnet/minecraft/resources/Identifier;)Ljava/lang/String;
 	public fun getDefaultToggle (Lnet/minecraft/resources/Identifier;)Z
+	protected final fun getName ()Ljava/lang/String;
 	public fun getNamespace ()Ljava/lang/String;
+	protected fun getPath ()Ljava/nio/file/Path;
+	protected final fun getPropertiesInstance ()Ljava/util/Properties;
 	public final fun getSelect ()Ljava/util/Map;
 	public final fun getSelectStates ()Ljava/util/Map;
 	public final fun getStates ()Ljava/util/Map;
 	public fun getSupportsChangingDefault ()Z
 	public final fun getToggles ()Ljava/util/List;
 	public final fun isOn (Lnet/minecraft/resources/Identifier;)Z
+	protected fun loadFromProperties (Ljava/nio/file/Path;)Ljava/util/Map;
 	public final fun onCommandRegister (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	protected fun propertyKey (Lnet/minecraft/resources/Identifier;)Ljava/lang/String;
 	public final fun register (Ltech/thatgravyboat/skyblockapi/utils/DebugSelect;)V
 	public final fun register (Ltech/thatgravyboat/skyblockapi/utils/DebugToggle;)V
+	protected fun saveProperties (Lnet/minecraft/resources/Identifier;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public abstract fun send (Lnet/minecraft/network/chat/MutableComponent;)V
 	public final fun setSelect (Lnet/minecraft/resources/Identifier;Ljava/lang/String;)V
 	public fun setSelectDefault (Lnet/minecraft/resources/Identifier;Ljava/lang/String;)V
