@@ -15,6 +15,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.command.dsl.CommandBuilder0
 import tech.thatgravyboat.skyblockapi.utils.command.dsl.CommandClass
 import tech.thatgravyboat.skyblockapi.utils.command.dsl.command
+import tech.thatgravyboat.skyblockapi.utils.command.dsl.reportCommandFailure
 
 public typealias LiteralCommandBuilder = CommandBuilder<LiteralArgumentBuilder<FabricClientCommandSource>>
 public typealias ArgumentCommandBuilder<T> = CommandBuilder<RequiredArgumentBuilder<FabricClientCommandSource, T>>
@@ -74,8 +75,12 @@ public open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, 
 
     public open fun callback(callback: CommandContext<FabricClientCommandSource>.() -> Unit) {
         this.builder.executes {
-            callback(it)
-            1
+            try {
+                callback(it)
+                1
+            } catch (throwable: Throwable) {
+                reportCommandFailure(it, throwable)
+            }
         }
     }
 
