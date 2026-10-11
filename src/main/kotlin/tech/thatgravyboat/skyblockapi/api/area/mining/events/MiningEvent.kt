@@ -1,8 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.area.mining.events
 
-interface MiningEvent {
+public interface MiningEvent {
 
-    val name: String
+    public val name: String
 }
 
-data class UnknownMiningEvent(override val name: String) : MiningEvent
+public data class UnknownMiningEvent(override val name: String) : MiningEvent

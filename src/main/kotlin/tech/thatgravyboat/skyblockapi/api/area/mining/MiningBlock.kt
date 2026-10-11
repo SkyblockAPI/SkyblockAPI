@@ -29,7 +29,7 @@ import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
-enum class MiningBlockFamily {
+public enum class MiningBlockFamily {
     VANILLA_BLOCKS,
     VANILLA_ORES,
     HARD_STONE,
@@ -40,10 +40,10 @@ enum class MiningBlockFamily {
     EXTRA_NETHER,
     ;
 
-    val blocks by lazy { MiningBlock.entries.filter { it.family == this }.flatMap { it.blocks } }
+    public val blocks: List<Block> by lazy { MiningBlock.entries.filter { it.family == this }.flatMap { it.blocks } }
 }
 
-enum class MiningFortuneType {
+public enum class MiningFortuneType {
     GEMSTONE,
     DWARVEN_METAL,
     ORE,
@@ -53,11 +53,11 @@ enum class MiningFortuneType {
 private typealias Type = MiningFortuneType
 private typealias Family = MiningBlockFamily
 
-enum class MiningBlock(
-    val blocks: List<Block>,
-    val validArea: () -> Boolean,
-    val category: MiningFortuneType,
-    val family: MiningBlockFamily,
+public enum class MiningBlock(
+    public val blocks: List<Block>,
+    public val validArea: () -> Boolean,
+    public val category: MiningFortuneType,
+    public val family: MiningBlockFamily,
 ) {
     // Vanilla blocks
     STONE(
@@ -134,6 +134,7 @@ enum class MiningBlock(
     ),
 
     // Hard Stone
+    @Suppress("DEPRECATION")
     HARD_STONE_CRYSTAL_HOLLOWS(
         // There are probably more but mostly useless
         listOf(Blocks.STONE, Blocks.CLAY, Blocks.COBBLESTONE, Blocks.WOOL.gray, Blocks.WOOL.lightGray, Blocks.DYED_TERRACOTTA.cyan),
@@ -141,12 +142,14 @@ enum class MiningBlock(
         Type.BLOCK,
         Family.HARD_STONE,
     ),
+    @Suppress("DEPRECATION")
     HARD_STONE_GLACITE_TUNNELS(
         listOf(Blocks.INFESTED_STONE, Blocks.WOOL.lightGray),
         GlaciteAPI::inGlaciteTunnels,
         Type.BLOCK,
         Family.HARD_STONE,
     ),
+    @Suppress("DEPRECATION")
     HARD_STONE_MINESHAFT(
         listOf(Blocks.STONE, Blocks.WOOL.lightGray),
         MINESHAFT::inIsland,
@@ -155,6 +158,7 @@ enum class MiningBlock(
     ),
 
     // Mithril Family
+    @Suppress("DEPRECATION")
     LOW_TIER_MITHRIL(
         listOf(Blocks.DYED_TERRACOTTA.gray, Blocks.WOOL.gray),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
@@ -167,6 +171,7 @@ enum class MiningBlock(
         Type.DWARVEN_METAL,
         Family.MITHRIL,
     ),
+    @Suppress("DEPRECATION")
     HIGH_TIER_MITHRIL(
         Blocks.WOOL.lightBlue,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT, CRYSTAL_HOLLOWS) },
@@ -181,72 +186,84 @@ enum class MiningBlock(
     ),
 
     // Gemstones
+    @Suppress("DEPRECATION")
     RUBY(
         listOf(Blocks.STAINED_GLASS.red, Blocks.STAINED_GLASS_PANE.red),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     SAPPHIRE(
         listOf(Blocks.STAINED_GLASS.lightBlue, Blocks.STAINED_GLASS_PANE.lightBlue),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     JADE(
         listOf(Blocks.STAINED_GLASS.lime, Blocks.STAINED_GLASS_PANE.lime),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     AMBER(
         listOf(Blocks.STAINED_GLASS.orange, Blocks.STAINED_GLASS_PANE.orange),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     AMETHYST(
         listOf(Blocks.STAINED_GLASS.purple, Blocks.STAINED_GLASS_PANE.purple),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     TOPAZ(
         listOf(Blocks.STAINED_GLASS.yellow, Blocks.STAINED_GLASS_PANE.yellow),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     JASPER(
         listOf(Blocks.STAINED_GLASS.pink, Blocks.STAINED_GLASS_PANE.pink),
         { SkyBlockIsland.inAnyIsland(CRYSTAL_HOLLOWS, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     OPAL(
         listOf(Blocks.STAINED_GLASS.white, Blocks.STAINED_GLASS_PANE.white),
         { SkyBlockIsland.inAnyIsland(CRIMSON_ISLE, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     PERIDOT(
         listOf(Blocks.STAINED_GLASS.green, Blocks.STAINED_GLASS_PANE.green),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     CITRINE(
         listOf(Blocks.STAINED_GLASS.brown, Blocks.STAINED_GLASS_PANE.brown),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     ONYX(
         listOf(Blocks.STAINED_GLASS.black, Blocks.STAINED_GLASS_PANE.black),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+    @Suppress("DEPRECATION")
     AQUAMARINE(
         listOf(Blocks.STAINED_GLASS.blue, Blocks.STAINED_GLASS_PANE.blue),
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
@@ -305,6 +322,7 @@ enum class MiningBlock(
         Type.ORE,
         Family.GLACITE,
     ),
+    @Suppress("DEPRECATION")
     MID_TIER_UMBER(
         Blocks.DYED_TERRACOTTA.brown,
         { SkyBlockIsland.inAnyIsland(DWARVEN_MINES, MINESHAFT) },
@@ -345,7 +363,7 @@ enum class MiningBlock(
     )
 
     @Module
-    companion object {
+    public companion object {
         private val MINING_ISLANDS = setOf(
             HUB,
             GOLD_MINES,
@@ -358,21 +376,21 @@ enum class MiningBlock(
             CRIMSON_ISLE,
         )
 
-        var currentlyActiveBlocks = listOf<MiningBlock>()
+        public var currentlyActiveBlocks: List<MiningBlock> = listOf<MiningBlock>()
             private set
-        var lastBrokenBlock: Pair<BlockPos, MiningBlock>? = null
+        public var lastBrokenBlock: Pair<BlockPos, MiningBlock>? = null
             private set
 
         private val debug by debugToggle("mining_blocks", "Send messages when the player mines a MiningBlock.")
 
         @Subscription(AreaChangeEvent::class, IslandChangeEvent::class)
-        fun onAreaChange() {
+        internal fun onAreaChange() {
             currentlyActiveBlocks = entries.filter { it.validArea() }
         }
 
         @Subscription
         @OnlyOnSkyBlock
-        fun onBlockMine(event: BlockMinedEvent) {
+        internal fun onBlockMine(event: BlockMinedEvent) {
             if (!SkyBlockIsland.inAnyIsland(MINING_ISLANDS)) return
 
             val block = currentlyActiveBlocks.find { it.blocks.contains(event.state.block) } ?: return
@@ -388,7 +406,7 @@ enum class MiningBlock(
 
         @Subscription
         @OnlyOnSkyBlock
-        fun onRender(event: RenderHudEvent) {
+        internal fun onRender(event: RenderHudEvent) {
             if (!debug) return
             val lookingAt = McClient.self.cameraEntity?.pick(20.0, 0f, false) as? BlockHitResult ?: return
             val block = McLevel[lookingAt.blockPos].block

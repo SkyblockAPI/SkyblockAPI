@@ -13,7 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.data.PerkJson
 import tech.thatgravyboat.skyblockapi.api.data.stored.ElectionStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.PERKPOCALYPSE_CANDIDATE_DURATION
 import tech.thatgravyboat.skyblockapi.api.data.stored.StoredMayor
-import tech.thatgravyboat.skyblockapi.api.datetime.SkyBlockInstant
+import tech.thatgravyboat.skyblockapi.api.environmental.SkyBlockInstant
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
@@ -62,7 +62,7 @@ private const val ELECTION_MONTH = 3 // Late spring
 private const val ELECTION_DAY = 27
 
 @Module
-object ElectionAPI {
+public object ElectionAPI {
 
     private val disableElectionStorage by debugToggle("disable_election_storage", "Disables loading the Election Storage when starting the game.")
 
@@ -74,27 +74,27 @@ object ElectionAPI {
 
     private var lastEvaluatedExtraJerry: Instant = currentInstant()
     private var scheduler: ScheduledFuture<*>? = null
-    var rawData: ElectionJson? = null
+    public var rawData: ElectionJson? = null
         private set
 
-    var mayor: MayorCandidate? = null
+    public var mayor: MayorCandidate? = null
         private set
-    var minister: MayorCandidate? = null
+    public var minister: MayorCandidate? = null
         private set
-    var nextElection: Instant? = null
+    public var nextElection: Instant? = null
         private set
 
-    var currentJerryCandidate: Pair<MayorCandidate, Instant>? = null
+    public var currentJerryCandidate: Pair<MayorCandidate, Instant>? = null
         private set
 
     // The keys are the numbers from 0-5, specifying which "index" in the rotation the mayors are
-    val jerryPerkpocalypseRotation: Map<Int, MayorCandidate>
+    public val jerryPerkpocalypseRotation: Map<Int, MayorCandidate>
         get() = ElectionStorage.jerryPerkpocalypseRotation.mapValues { it.value.getCandidate() }.filterValuesNotNull()
 
     // What index of the jerry perkpocalypse rotation a certain instant is.
-    fun getPerkpocalypseIndex(instant: Instant): Int? = ElectionStorage.indexOfPerkpocalypse(instant)
+    public fun getPerkpocalypseIndex(instant: Instant): Int? = ElectionStorage.indexOfPerkpocalypse(instant)
 
-    val perkpocalypseRotationDuration: Duration
+    public val perkpocalypseRotationDuration: Duration
         get() = PERKPOCALYPSE_CANDIDATE_DURATION
 
 
@@ -168,7 +168,7 @@ object ElectionAPI {
     private fun updateScheduler(
         time: Duration,
         updateSchedulerTo: Duration? = null,
-        initialDelay: Duration = 0.seconds
+        initialDelay: Duration = 0.seconds,
     ) {
         scheduler?.cancel(false)
         scheduler = Scheduling.schedule(initialDelay, time) {
@@ -247,7 +247,7 @@ object ElectionAPI {
 
     @TimePassed("1s")
     @Subscription(TickEvent::class)
-    fun onTick() {
+    internal fun onTick() {
         if (!MayorPerks.PERKPOCALYPSE.active) return
         val jerryInfo = currentJerryCandidate
         if (jerryInfo != null) {
@@ -290,7 +290,7 @@ object ElectionAPI {
     }
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         if (electionOverRegex.matches(event.text)) {
             // When the Election is over, schedule a check every minute until a new mayor is found, then schedule every 20 minutes
             updateScheduler(1.minutes, 20.minutes)
@@ -378,7 +378,7 @@ object ElectionAPI {
                 info("candidateName", candidateName),
                 info("perks", perks.asString()),
                 info("isSpecial", isSpecial),
-                separator = CommonText.NEWLINE
+                separator = CommonText.NEWLINE,
             )
         }
 

@@ -6,11 +6,11 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 private typealias RegexSwitchCase = Triple<Regex, List<String>, (Destructured) -> Unit>
 
-class RegexSwitch {
+public class RegexSwitch {
 
     private val cases = mutableListOf<RegexSwitchCase>()
 
-    fun case(regex: Regex, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}) {
+    public fun case(regex: Regex, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}) {
         cases.add(RegexSwitchCase(regex, groups.toList(), action))
     }
 
@@ -24,14 +24,14 @@ class RegexSwitch {
     }
 }
 
-fun matchWhen(input: String, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).check(input) { regex, input, groups, action ->
+public fun matchWhen(input: String, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).check(input) { regex, input, groups, action ->
     regex.match(input = input, groups = groups, action = action)
 }
 
-fun anyMatchWhen(input: List<String>, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).check(input) { regex, input, groups, action ->
+public fun anyMatchWhen(input: List<String>, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).check(input) { regex, input, groups, action ->
     regex.anyMatch(input = input, groups = groups, action = action)
 }
 
-fun findWhen(input: String, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).check(input) { regex, input, groups, action ->
+public fun findWhen(input: String, init: RegexSwitch.() -> Unit): Boolean = RegexSwitch().apply(init).check(input) { regex, input, groups, action ->
     regex.find(input = input, groups = groups, action = action)
 }

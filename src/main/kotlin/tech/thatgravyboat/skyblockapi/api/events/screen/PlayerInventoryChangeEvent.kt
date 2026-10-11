@@ -6,33 +6,32 @@ import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-data class PlayerInventoryChangeEvent(
+public data class PlayerInventoryChangeEvent(
     val inventorySlot: Slot,
     val item: ItemStack,
     val previousItem: ItemStack,
 ) : SkyBlockEvent() {
     //? < 26.4
-    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Should pass previousItem as well") constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
+    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Should pass previousItem as well")public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
 
-    val slotIndex get() = inventorySlot.index
+    public val slotIndex: Int get() = inventorySlot.index
 }
 
-data class PlayerHotbarChangeEvent(
+public data class PlayerHotbarChangeEvent(
     val inventorySlot: Slot,
     val item: ItemStack,
     val previousItem: ItemStack,
 ) : SkyBlockEvent() {
     //? < 26.4
-    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Should pass previousItem as well") constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
+    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Should pass previousItem as well")public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
 
-    
-    val slotIndex get() = inventorySlot.index - FIRST_HOTBAR_SLOT
+    public val slotIndex: Int get() = inventorySlot.index - FIRST_HOTBAR_SLOT
 
-    companion object {
+    public companion object {
         internal const val FIRST_HOTBAR_SLOT = 36
     }
 }
 
-data class PlayerEquipmentChangeEvent(val entity: Player, val slot: EquipmentSlot, val previous: ItemStack, val current: ItemStack) : SkyBlockEvent() {
-    val item get() = current
+public data class PlayerEquipmentChangeEvent(val entity: Player, val slot: EquipmentSlot, val previous: ItemStack, val current: ItemStack) : SkyBlockEvent() {
+    public val item: ItemStack get() = current
 }

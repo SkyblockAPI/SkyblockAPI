@@ -8,9 +8,7 @@ repositories {
 
 plugins {
     kotlin("jvm") apply false
-    id("dev.kikugie.stonecutter")
-    id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT" apply false
-    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT" apply false
+    id("net.fabricmc.fabric-loom") version "1.18-SNAPSHOT" apply false
     `maven-publish`
 }
 
@@ -19,8 +17,6 @@ stonecutter active "26.4"
 stonecutter parameters {
     swaps["mod_version"] = "\"" + property("version") + "\";"
     swaps["minecraft"] = "\"" + node.metadata.version + "\";"
-
-    filters.include("**/*.fsh", "**/*.vsh")
 }
 
 

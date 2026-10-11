@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemModelTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 
 @Module
-object HotfAPI : SkillTreeAPI<HotfData, HotfPerk, HotfAPI>(
+public object HotfAPI : SkillTreeAPI<HotfData, HotfPerk, HotfAPI>(
     name = "hotf",
     perkItems = ItemModelTag.HOTF_PERK_ITEMS,
     storage = HotfStorage,
@@ -21,5 +21,5 @@ object HotfAPI : SkillTreeAPI<HotfData, HotfPerk, HotfAPI>(
         return item.getItemModel().let { it != Items.MANGROVE_ROOTS && it != Items.PALE_OAK_SAPLING && it != Items.PALE_OAK_BUTTON }
     }
 
-    override fun createPerk(level: Int, unlocked: Boolean, disabled: Boolean) = HotfPerk(level, unlocked, disabled)
+    override fun createPerk(level: Int, unlocked: Boolean, disabled: Boolean): HotfPerk = HotfPerk(level, unlocked, disabled)
 }

@@ -28,14 +28,14 @@ import kotlin.time.Instant
 
 // TODO: add indication of cancelled and modified messages
 @Module
-object DebugChat {
+public object DebugChat {
 
     private val chatToastId = SystemToast.SystemToastId(1500)
     private val maxMessages = SkyBlockApiDevUtils.getInt("debug_chat_max_size", if (McClient.isDev) 10_000 else 500)
     private val messages = mutableListOf<Pair<Instant, Component>>()
 
     @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
-    fun onMessage(event: ChatReceivedEvent.Pre) {
+    internal fun onMessage(event: ChatReceivedEvent.Pre) {
         messages.add(Clock.System.now() to event.component)
         while (messages.size > maxMessages) messages.removeFirst()
     }

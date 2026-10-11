@@ -11,7 +11,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 @Module
-object AccessoryBagAPI {
+public object AccessoryBagAPI {
     private val group = RegexGroup.INVENTORY.group("accessory_bag")
     private val titleRegex = group.create(
         "title",
@@ -21,7 +21,7 @@ object AccessoryBagAPI {
     @Subscription
     @MustBeContainer
     @IgnoreFiller
-    fun onInventory(event: InventoryChangeEvent) {
+    internal fun onInventory(event: InventoryChangeEvent) {
         if (event.isInBottomRow) return
         titleRegex.match(event.title) { destructured ->
             val currentPage = destructured["currentPage"]?.toIntValue() ?: 1
@@ -30,5 +30,5 @@ object AccessoryBagAPI {
         }
     }
 
-    fun getItems(): List<AccessoryBagItem> = AccessoryBagStorage.getItems()
+    public fun getItems(): List<AccessoryBagItem> = AccessoryBagStorage.getItems()
 }

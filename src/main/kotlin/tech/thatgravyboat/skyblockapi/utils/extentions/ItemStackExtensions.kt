@@ -25,9 +25,10 @@ import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @Suppress("DEPRECATION")
-val ItemStack.tag: CompoundTag? get() = this[DataComponents.CUSTOM_DATA]?.copyTag()
-val ItemStack.unsafeTag: CompoundTag? get() = (this[DataComponents.CUSTOM_DATA] as? CustomDataAccessor)?.`skyblockapi$getTag`()
-fun ItemStack.getTag(key: String): Tag? = this.tag?.get(key)
+public val ItemStack.tag: CompoundTag? get() = this[DataComponents.CUSTOM_DATA]?.copyTag()
+@Suppress("CAST_NEVER_SUCCEEDS")
+public val ItemStack.unsafeTag: CompoundTag? get() = (this[DataComponents.CUSTOM_DATA] as? CustomDataAccessor)?.`skyblockapi$getTag`()
+public fun ItemStack.getTag(key: String): Tag? = this.tag?.get(key)
 
 internal fun ItemStack.computeRawLore(): List<String> {
     val lore = this[DataComponents.LORE] ?: return emptyList()
@@ -35,53 +36,54 @@ internal fun ItemStack.computeRawLore(): List<String> {
 }
 
 // TODO: make this less strict, some items in GUIs are actually glass panes
-fun ItemStack.isSkyblockFiller(): Boolean = isEmpty || this in ItemTag.GLASS_PANES
+public fun ItemStack.isSkyblockFiller(): Boolean = isEmpty || this in ItemTag.GLASS_PANES
 
-fun ItemStack.getLore(): List<Component> = this[DataComponents.LORE]?.lines() ?: emptyList()
+public fun ItemStack.getLore(): List<Component> = this[DataComponents.LORE]?.lines() ?: emptyList()
 
-fun ItemStack.getRawLore(): List<String> = this.getData(DataTypes.RAW_LORE) ?: this.computeRawLore()
-val ItemStack.cleanName: String get() = this.getData(DataTypes.CLEAN_NAME) ?: this.hoverName.stripped
+public fun ItemStack.getRawLore(): List<String> = this.getData(DataTypes.RAW_LORE) ?: this.computeRawLore()
+public val ItemStack.cleanName: String get() = this.getData(DataTypes.CLEAN_NAME) ?: this.hoverName.stripped
 
-fun ItemStack.isSameItem(other: ItemStack?): Boolean {
+public fun ItemStack.isSameItem(other: ItemStack?): Boolean {
     if (other == null) return false
     return this == other || ItemStack.isSameItemSameComponents(this, other)
 }
 
-fun ItemStack.getRarityLineIndex(): Int {
+public fun ItemStack.getRarityLineIndex(): Int {
     val rarity = this.getData(DataTypes.RARITY) ?: return -1
     val rarityName = rarity.displayName.uppercase()
     val lore = getRawLore()
     return lore.indexOfLast { it.contains(rarityName) }
 }
 
-fun ItemStack.getTexture(): String? {
+public fun ItemStack.getTexture(): String? {
     val skin = this.get(DataComponents.PROFILE) ?: return null
     return skin.properties.get("textures").firstOrNull()?.value()
 }
 
-fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
+public fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
     val stack = ItemStack(item)
     stack.builder()
     return stack
 }
 
-operator fun Item.contains(item: ItemStack): Boolean = item.item == this
+public operator fun Item.contains(item: ItemStack): Boolean = item.item == this
 
-operator fun <T : Any> ItemBuilder.set(type: DataComponentType<T>, value: T) = this.set(type, value)
-operator fun <T : Any> ItemStack.get(type: DataComponentType<T>): T? = this.get(type)
-operator fun <T : Any> ItemStack.set(type: DataComponentType<T>, value: T): T? = this.set(type, value)
-operator fun <T> ItemStack.get(type: DataType<T>) = this.getData(type)
+public operator fun <T : Any> ItemBuilder.set(type: DataComponentType<T>, value: T): Unit = this.set(type, value)
+public operator fun <T : Any> ItemStack.get(type: DataComponentType<T>): T? = this.get(type)
+public operator fun <T : Any> ItemStack.set(type: DataComponentType<T>, value: T): T? = this.set(type, value)
+public operator fun <T> ItemStack.get(type: DataType<T>) : T? = this.getData(type)
 
-fun ItemStack.getSkyBlockId() = getData(DataTypes.ID)
-fun ItemStack.getApiId() = getData(DataTypes.API_ID)
-fun ItemStack.getItemModel(): Item = getData(DataTypes.VISIBLE_ITEM) ?: item
+public fun ItemStack.getSkyBlockId(): String? = getData(DataTypes.ID)
+public fun ItemStack.getApiId(): String? = getData(DataTypes.API_ID)
+public fun ItemStack.getItemModel(): Item = getData(DataTypes.VISIBLE_ITEM) ?: item
 
-val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
+@Suppress("DEPRECATION")
+public val Item.holder: Holder<Item> get() = this.builtInRegistryHolder()
 
-fun List<Slot>.filterContainerSlots() = this.filterNot { it.container is Inventory }
-fun List<Slot>.filterContainerItems() = this.filterContainerSlots().map { it.item }
+public fun List<Slot>.filterContainerSlots(): List<Slot> = this.filterNot { it.container is Inventory }
+public fun List<Slot>.filterContainerItems(): List<ItemStack> = this.filterContainerSlots().map { it.item }
 
-fun createSkull(textureBase64: String): ItemStack {
+public fun createSkull(textureBase64: String): ItemStack {
     return createSkull(
         GameProfile {
             put("textures", Property("textures", textureBase64))
@@ -89,7 +91,7 @@ fun createSkull(textureBase64: String): ItemStack {
     )
 }
 
-fun createSkull(profile: GameProfile): ItemStack {
+public fun createSkull(profile: GameProfile): ItemStack {
     val stack = ItemStack(Items.PLAYER_HEAD)
     stack.set(DataComponents.PROFILE, profile.toResolvableProfile())
     return stack

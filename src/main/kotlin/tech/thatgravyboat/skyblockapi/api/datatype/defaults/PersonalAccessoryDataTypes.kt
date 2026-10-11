@@ -12,7 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
  * Data types for things like personal compactor and deletor
  */
 @Module
-object PersonalAccessoryDataTypes {
+public object PersonalAccessoryDataTypes {
 
     private fun ResolutionContext.getMaxItems(type: String) = when (this[ResolutionContext.Resolver.ID]) {
         "PERSONAL_${type}_7000" -> 12
@@ -27,7 +27,7 @@ object PersonalAccessoryDataTypes {
         "Enabled: (?<state>On|Off)\nRight-click to toggle!",
     )
 
-    val PERSONAL_COMPACTOR_ITEMS: DataType<List<String?>> = DataType.of("personal_compactor") { ctx, item ->
+    public val PERSONAL_COMPACTOR_ITEMS: DataType<List<String?>> = DataType.of("personal_compactor") { ctx, item ->
         val maxItems = ctx.getMaxItems("COMPACTOR") ?: return@of null
         buildList {
             for (i in 0 until maxItems) {
@@ -36,7 +36,7 @@ object PersonalAccessoryDataTypes {
         }
     }
 
-    val PERSONAL_DELETOR_ITEMS: DataType<List<String?>> = DataType.of("personal_deletor") { ctx, item ->
+    public val PERSONAL_DELETOR_ITEMS: DataType<List<String?>> = DataType.of("personal_deletor") { ctx, item ->
         val maxItems = ctx.getMaxItems("DELETOR") ?: return@of null
         buildList {
             for (i in 0 until maxItems) {
@@ -45,7 +45,7 @@ object PersonalAccessoryDataTypes {
         }
     }
 
-    val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType.of("personal_accessory_active") { ctx, stack ->
+    public val PERSONAL_ACCESSORY_ACTIVE: DataType<Boolean> = DataType.of("personal_accessory_active") { ctx, stack ->
         stack.unsafeTag?.getIntOrNull("PERSONAL_DELETOR_ACTIVE")?.let { active -> active == 1 } ?: run {
             personalAccessoryActiveRegex.findOrNull(ctx[ResolutionContext.Resolver.RAW_LORE].joinToString("\n"), "state") { (state) ->
                 when (state) {

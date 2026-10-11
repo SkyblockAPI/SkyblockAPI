@@ -29,6 +29,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
+import tech.thatgravyboat.skyblockapi.utils.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugComponent
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.codecs.IncludedCodecs
@@ -58,9 +59,9 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
 @Module
-data object AttributeAPI : ItemDebugCategory {
+public data object AttributeAPI : ItemDebugCategory {
 
-    val debugToggle = debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
+    public val debugToggle: DebugToggle = debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
     private val isDebugEnabled by debugToggle
 
     private val attributeRarities = SkyBlockRarity.COMMON.rangeTo(SkyBlockRarity.LEGENDARY)
@@ -75,11 +76,11 @@ data object AttributeAPI : ItemDebugCategory {
     private val inventoryGroup = RegexGroup.INVENTORY.group("attribute")
 
     private val attributeMenuGroup = inventoryGroup.group("attribute_menu")
-    val attributeMenuRegex = attributeMenuGroup.create("title", "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Attribute Menu$")
+    public val attributeMenuRegex: Regex = attributeMenuGroup.create("title", "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Attribute Menu$")
     private val syphonMoreRegex = attributeMenuGroup.create("more", "^Syphon (\\d+) more to level up!")
 
     private val huntingBoxGroup = inventoryGroup.group("hunting_box")
-    val huntingBoxMenuRegex = huntingBoxGroup.create("title", "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Hunting Box$")
+    public val huntingBoxMenuRegex: Regex = huntingBoxGroup.create("title", "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Hunting Box$")
     private val ownedRegex = huntingBoxGroup.create("owned", "^Owned: (?<amount>[\\d,.]+) Shards?$")
     private val attributeMaxedRegex = huntingBoxGroup.create("maxed", "^Attribute Maxed!$")
     private val levelRegex = huntingBoxGroup.create("level", "[IXV0-9]+")
@@ -137,7 +138,7 @@ data object AttributeAPI : ItemDebugCategory {
     @Subscription
     @MustBeContainer
     @OnlyOnSkyBlock
-    fun attributeMenu(event: InventoryChangeEvent) {
+    internal fun attributeMenu(event: InventoryChangeEvent) {
         if (!event.title.matches(attributeMenuRegex)) return
         if (event.isOnSides) return
 
@@ -165,7 +166,7 @@ data object AttributeAPI : ItemDebugCategory {
     @Subscription
     @MustBeContainer
     @OnlyOnSkyBlock
-    fun huntingBox(event: InventoryChangeEvent) {
+    internal fun huntingBox(event: InventoryChangeEvent) {
         if (!event.title.matches(huntingBoxMenuRegex)) return
         if (!event.isInMainPart) return
 
@@ -201,7 +202,7 @@ data object AttributeAPI : ItemDebugCategory {
     @Subscription
     @MustBeContainer
     @OnlyOnSkyBlock
-    fun fusionMenu(event: InventoryChangeEvent) {
+    internal fun fusionMenu(event: InventoryChangeEvent) {
         if (!event.title.matches(confirmFusionRegex)) return
         if (event.isOnSides) return
         if (event.slot.index !in anyFusionSlot) return
@@ -227,7 +228,7 @@ data object AttributeAPI : ItemDebugCategory {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun fusionComplete(event: ChatReceivedEvent.Pre) {
+    internal fun fusionComplete(event: ChatReceivedEvent.Pre) {
         if (!event.text.matches(fusionObtainedRegex)) return
         if (!deferredFusion.isComplete()) return
         deferredFusion.submit()
@@ -236,7 +237,7 @@ data object AttributeAPI : ItemDebugCategory {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun syphoned(event: ChatReceivedEvent.Pre) {
+    internal fun syphoned(event: ChatReceivedEvent.Pre) {
         syphonedRegex.match(event.text, "amount", "name") { (amount, name) ->
             val id = SkyBlockId.fromName(name) ?: return@match
             val amount = amount.toIntValue()
@@ -250,7 +251,7 @@ data object AttributeAPI : ItemDebugCategory {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun chatShardGain(event: ChatReceivedEvent.Pre) {
+    internal fun chatShardGain(event: ChatReceivedEvent.Pre) {
         matchWhen(event.text) {
             case(foundShardRegex, "amount", "name") { (amount, name) ->
                 val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
@@ -451,7 +452,7 @@ data object AttributeAPI : ItemDebugCategory {
     @OnlyOnSkyBlock
     @OptIn(SkyBlockPvRequired::class)
     context(event: SkyBlockPvOpenedEvent)
-    fun udpateAttributes() {
+    internal fun udpateAttributes() {
         var hasLoadedAny = false
 
         val owned = this._attributeMap.keys
@@ -541,13 +542,13 @@ private data class DeferredFusion(
 }
 
 @GenerateCodec
-data class AttributeData(
+public data class AttributeData(
     var owned: Int = 0,
     var syphoned: Int = 0,
     var rarity: SkyBlockRarity?,
     var lastUpdated: Instant = Instant.DISTANT_PAST,
 ) {
-    fun updated() {
+    public fun updated() {
         lastUpdated = currentInstant()
     }
 

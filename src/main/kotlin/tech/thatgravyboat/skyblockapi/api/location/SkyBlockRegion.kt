@@ -5,18 +5,18 @@ import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class SkyBlockRegion(
+public data class SkyBlockRegion(
     val areas: Set<SkyBlockArea> = emptySet(),
     val islands: Set<SkyBlockIsland> = emptySet(),
     val biomes: Set<SkyBlockBiome> = emptySet(),
 ) {
-    fun inArea() = SkyBlockArea.inAnyArea(areas)
-    fun inIsland() = SkyBlockIsland.inAnyIsland(islands)
-    fun inBiome() = SkyBlockBiome.inAnyBiome(biomes)
+    public fun inArea(): Boolean = SkyBlockArea.inAnyArea(areas)
+    public fun inIsland(): Boolean = SkyBlockIsland.inAnyIsland(islands)
+    public fun inBiome(): Boolean = SkyBlockBiome.inAnyBiome(biomes)
 
-    fun inAnyRegion() = inArea() || inIsland() || inBiome()
+    public fun inAnyRegion(): Boolean = inArea() || inIsland() || inBiome()
 
-    companion object {
-        val CODEC: Codec<SkyBlockRegion> = SkyblockAPICodecs.getCodec<SkyBlockRegion>()
+    public companion object {
+        public val CODEC: Codec<SkyBlockRegion> = SkyblockAPICodecs.getCodec<SkyBlockRegion>()
     }
 }

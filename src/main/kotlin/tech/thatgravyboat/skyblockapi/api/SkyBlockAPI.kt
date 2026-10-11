@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec
 import me.owdding.dfu.item.MeowddingItemDfu
 import me.owdding.ktmodules.Module
 import net.fabricmc.loader.api.FabricLoader
-import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.api.RepoAPI
@@ -34,30 +33,30 @@ import java.nio.file.Files
 //import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 
 @Module
-object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
+public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal val mod = FabricLoader.getInstance().getModContainer("skyblock-api").orElseThrow()
-    val MOD_ID: String get() = mod.metadata.id
-    const val NAMESPACE: String = "skyblockapi"
+    public val MOD_ID: String get() = mod.metadata.id
+    public const val NAMESPACE: String = "skyblockapi"
 
     @JvmStatic
-    val eventBus = EventBus()
+    public val eventBus: EventBus = EventBus()
 
     internal val logger: Logger = this
 
     internal val isDebug get() = System.getProperty("skyblockapi.debug")?.lowercase() == "true"
 
-    @JvmStatic
-    @ApiStatus.Internal
-    fun init() {
+    internal fun init() {
         debug("Starting sbapi!")
         RepoLibLogger.setInstance(RepoLibLogging)
         SkyblockAPIModules.init { eventBus.register(it) }
         SkyBlockApiDevUtils.init()
         if (McClient.isDev) SkyblockAPIDevModules.init(eventBus::register)
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
-            //? < 26.3
+            //? < 26.3 {
+            //@Suppress("DEPRECATION")
             //RepoStatusEvent(status).post()
+            //? }
             RepoEvent.Status(status).post()
             RepoEvent.Reload(status).post()
         }
@@ -66,9 +65,7 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         //org.spongepowered.asm.mixin.MixinEnvironment.getCurrentEnvironment().audit()
     }
 
-    @JvmStatic
-    @ApiStatus.Internal
-    fun postInit() {
+    internal fun postInit() {
         DataTypesRegistry.load()
     }
 

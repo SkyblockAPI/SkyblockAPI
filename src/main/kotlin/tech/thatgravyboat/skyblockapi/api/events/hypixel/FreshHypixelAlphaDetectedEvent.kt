@@ -2,4 +2,4 @@ package tech.thatgravyboat.skyblockapi.api.events.hypixel
 
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-object FreshHypixelAlphaDetectedEvent : SkyBlockEvent()
+public object FreshHypixelAlphaDetectedEvent : SkyBlockEvent()

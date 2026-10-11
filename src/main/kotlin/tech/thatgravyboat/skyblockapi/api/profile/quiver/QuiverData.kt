@@ -1,16 +1,17 @@
 package tech.thatgravyboat.skyblockapi.api.profile.quiver
 
+import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class QuiverData(
+public data class QuiverData(
     var current: String?,
     val arrows: MutableMap<String, Int> = mutableMapOf()
 ) {
-    constructor() : this(null)
+    public constructor() : this(null)
 
-    companion object {
-        val CODEC = SkyblockAPICodecs.getCodec<QuiverData>()
+    public companion object {
+        public val CODEC: Codec<QuiverData> = SkyblockAPICodecs.getCodec<QuiverData>()
     }
 }

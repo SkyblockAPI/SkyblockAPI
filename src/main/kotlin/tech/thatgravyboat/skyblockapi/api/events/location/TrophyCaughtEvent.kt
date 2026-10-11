@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishType
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-sealed class TrophyCaughtEvent : SkyBlockEvent() {
-    data class Fish(val type: TrophyFishType, val tier: TrophyTier, val amount: Int = 1) : TrophyCaughtEvent()
-    data class Frog(val type: TrophyFrogType, val tier: TrophyTier, val amount: Int = 1) : TrophyCaughtEvent()
+public sealed class TrophyCaughtEvent : SkyBlockEvent() {
+    public data class Fish(val type: TrophyFishType, val tier: TrophyTier, val amount: Int = 1) : TrophyCaughtEvent()
+    public data class Frog(val type: TrophyFrogType, val tier: TrophyTier, val amount: Int = 1) : TrophyCaughtEvent()
 }

@@ -16,25 +16,25 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
-data class Commission(val name: String, val area: CommissionArea, var progress: Float)
+public data class Commission(val name: String, val area: CommissionArea, var progress: Float)
 
-enum class CommissionArea(val area: String, val areaCheck: () -> Boolean) {
+public enum class CommissionArea(public val area: String, public val areaCheck: () -> Boolean) {
     DWARVEN_MINES("Dwarven Mines", { SkyBlockIsland.DWARVEN_MINES.inIsland() && !GlaciteAPI.inGlaciteTunnels() }),
     CRYSTAL_HOLLOWS("Crystal Hollows", { SkyBlockIsland.CRYSTAL_HOLLOWS.inIsland() }),
     GLACITE_TUNNELS("Glacite Tunnels", { GlaciteAPI.inGlaciteTunnels() }),
     ;
 
-    companion object {
+    public companion object {
 
-        val currentArea: CommissionArea?
+        public val currentArea: CommissionArea?
             get() = entries.find { it.areaCheck() }
 
-        fun byName(area: String?): CommissionArea? = entries.find { it.area == area }
+        public fun byName(area: String?): CommissionArea? = entries.find { it.area == area }
     }
 }
 
 @Module
-object CommissionsAPI {
+public object CommissionsAPI {
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("commissions")
 
@@ -47,11 +47,11 @@ object CommissionsAPI {
 
     private val commissionTablistRegex = tablistGroup.create("commission", " (?<commission>.*): (?<progress>[\\d,.]+%|DONE)")
 
-    var commissions: List<Commission> = emptyList()
+    public var commissions: List<Commission> = emptyList()
         private set
 
     @Subscription
-    fun onInventoryUpdate(event: InventoryChangeEvent) {
+    internal fun onInventoryUpdate(event: InventoryChangeEvent) {
         val commissionAreaStack = event.itemStacks.find { it.cleanName == "Filter" } ?: return
         val commissionArea = commissionAreaRegex.run {
             var matchedArea: String? = null
@@ -79,7 +79,7 @@ object CommissionsAPI {
 
     @Subscription
     @OnlyWidget(TabWidget.COMMISSIONS)
-    fun onTabWidgetUpdate(event: TabWidgetChangeEvent) {
+    internal fun onTabWidgetUpdate(event: TabWidgetChangeEvent) {
         val area = CommissionArea.currentArea
         this.commissions = this.commissions.filter { it.area != area }
 
@@ -97,6 +97,6 @@ object CommissionsAPI {
     }
 
     @Subscription(ProfileChangeEvent::class, ServerDisconnectEvent::class)
-    fun onProfileChange() = reset()
+    private fun onProfileChange() = reset()
 }
 

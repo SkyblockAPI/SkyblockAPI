@@ -28,19 +28,19 @@ import kotlin.math.max
 //import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
 
 @Module
-object TrophyFishingAPI {
+public object TrophyFishingAPI {
 
     private val chatGroup = RegexGroup.CHAT.group("trophy_api")
     private val inventoryGroup = RegexGroup.INVENTORY.group("trophy_api")
 
     private val singleTrophyFishCaughtRegex = chatGroup.create(
         "fish_singleCaught",
-        ". TROPHY FISH! You caught an? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })})!",
+        ". TROPHY FISH! You caught(?: an?)? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })})!",
     )
 
     private val multiTrophyFishCaughtRegex = chatGroup.create(
         "fish_multiCaught",
-        ". TROPHY FISH! You caught (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })}) x(?<amount>\\d+)!",
+        ". TROPHY FISH! You caught(?: an?)? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })}) x(?<amount>\\d+)!",
     )
 
     private val trophyFishDescription = inventoryGroup.create(
@@ -50,7 +50,7 @@ object TrophyFishingAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
         matchWhen(content) {
             case(singleTrophyFishCaughtRegex, "type", "tier") { (type, tier) ->
@@ -59,7 +59,7 @@ object TrophyFishingAPI {
 
                 TrophyFishStorage.addCaught(type, fishTier)
                 //? < 26.4
-                //TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name)).post()
+                //@Suppress("DEPRECATION") TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name)).post()
                 TrophyCaughtEvent.Fish(type, fishTier).post()
             }
             case(multiTrophyFishCaughtRegex, "type", "tier", "amount") { (type, tier, amount) ->
@@ -69,7 +69,7 @@ object TrophyFishingAPI {
 
                 TrophyFishStorage.addCaught(type, fishTier)
                 //? < 26.4
-                //TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name), amount).post()
+                //@Suppress("DEPRECATION") TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name), amount).post()
                 TrophyCaughtEvent.Fish(type, fishTier, amount).post()
             }
         }
@@ -77,7 +77,7 @@ object TrophyFishingAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
-    fun onInventory(event: InventoryChangeEvent) {
+    internal fun onInventory(event: InventoryChangeEvent) {
         if (event.title != "Trophy Fish") return
         if (event.isInPlayerInventory) return
         if (!event.isInMainPart) return
@@ -99,7 +99,7 @@ object TrophyFishingAPI {
     @OptIn(SkyBlockPvRequired::class)
     @Subscription
     @OnlyOnSkyBlock
-    fun onPv(event: SkyBlockPvOpenedEvent) {
+    internal fun onPv(event: SkyBlockPvOpenedEvent) {
         val obtained = event.member["trophy_fish"].asMap { key, value ->
             if (!value.isJsonPrimitive) null to 0
             else key to value.asInt(0)
@@ -130,12 +130,13 @@ object TrophyFishingAPI {
 
     //? < 26.4 {
     /*@Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
-    fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
+    @Suppress("DEPRECATION")
+    public fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
         return TrophyFishStorage.getCaught(type).map { TrophyFishTier.valueOf(it.key.name) to it.value }.toMap()
     }
 
     @JvmName("getCaughtTiers")*///?}
-    fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
+    public fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
         return TrophyFishStorage.getCaught(type)
     }
 }

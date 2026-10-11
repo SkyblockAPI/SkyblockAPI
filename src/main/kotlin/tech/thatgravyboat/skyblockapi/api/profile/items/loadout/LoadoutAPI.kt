@@ -26,7 +26,7 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 @Module
-data object LoadoutAPI : ItemDebugCategory {
+public data object LoadoutAPI : ItemDebugCategory {
 
     internal val loadoutDebug = debugToggle("loadout_debug_messages", "What the name says.")
 
@@ -61,6 +61,7 @@ data object LoadoutAPI : ItemDebugCategory {
                 event.item.addDebugString { "Slot: $slot" }
 
                 val name = event.item.cleanName
+                @Suppress("DEPRECATION")
                 val locked = event.item.`is`(Items.DYE.red)
                 event.item.addDebugString { "Locked: $locked" }
 
@@ -188,5 +189,5 @@ data object LoadoutAPI : ItemDebugCategory {
     }
 }
 
-data class LoadoutChangeEvent(val old: LoadoutSlot?, val new: LoadoutSlot?) : SkyBlockEvent()
+public data class LoadoutChangeEvent(val old: LoadoutSlot?, val new: LoadoutSlot?) : SkyBlockEvent()
 

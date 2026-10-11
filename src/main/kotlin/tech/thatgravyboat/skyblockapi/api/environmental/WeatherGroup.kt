@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.environmental
 
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockStat
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
@@ -11,15 +12,15 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
-enum class WeatherIntensity(val color: Int, val displayName: String) {
+public enum class WeatherIntensity(public val color: Int, public val displayName: String) {
     MILD(TextColor.YELLOW, "Mild"),
     EXTREME(TextColor.RED, "EXTREME"),
     ;
 
-    val component = Text.of(displayName, color)
+    public val component: MutableComponent = Text.of(displayName, color)
 }
 
-enum class WeatherType(val icon: Char, val color: Int, weatherName: String? = null) {
+public enum class WeatherType(public val icon: Char, public val color: Int, weatherName: String? = null) {
     RAIN('\uE09A', TextColor.AQUA),
     THUNDERSTORM('\uE000', TextColor.YELLOW),
     SMOG('\uE09D', TextColor.GRAY),
@@ -39,24 +40,24 @@ enum class WeatherType(val icon: Char, val color: Int, weatherName: String? = nu
     BLIZZARD('\uE092', TextColor.WHITE),
     ;
 
-    val weatherName = weatherName ?: toFormattedName()
-    val component = Text.of("$icon ${this.weatherName}", color)
-    val iconComponent = Text.of(icon.toString(), color)
+    public val weatherName: String = weatherName ?: toFormattedName()
+    public val component: MutableComponent = Text.of("$icon ${this.weatherName}", color)
+    public val iconComponent: MutableComponent = Text.of(icon.toString(), color)
 }
 
-data class WeatherEvent(
+public data class WeatherEvent(
     val type: WeatherType,
     val intensity: WeatherIntensity,
     val bonuses: Map<SkyBlockStat, Double>,
     val specialEffect: Component? = null,
 )
 
-enum class WeatherGroup(
-    val island: SkyBlockIsland,
-    val areas: List<SkyBlockArea> = emptyList(),
+public enum class WeatherGroup(
+    public val island: SkyBlockIsland,
+    public val areas: List<SkyBlockArea> = emptyList(),
     nameOverride: String? = null,
-    val mild: WeatherEvent,
-    val extreme: WeatherEvent,
+    public val mild: WeatherEvent,
+    public val extreme: WeatherEvent,
 ) {
     DWARVEN_MINES(
         island = SkyBlockIsland.DWARVEN_MINES,
@@ -389,16 +390,16 @@ enum class WeatherGroup(
         ),
     );
 
-    val formattedName = nameOverride ?: toFormattedName()
+    public val formattedName: String = nameOverride ?: toFormattedName()
     override fun toString(): String = formattedName
 
-    fun inLocation(): Boolean = island.inIsland() && (areas.isEmpty() || SkyBlockArea.inAnyArea(areas))
+    public fun inLocation(): Boolean = island.inIsland() && (areas.isEmpty() || SkyBlockArea.inAnyArea(areas))
 
-    companion object {
-        fun getGroupsFor(island: SkyBlockIsland): List<WeatherGroup> = entries.filter { it.island == island }
-        fun getGroupFor(island: SkyBlockIsland, area: SkyBlockArea?): WeatherGroup? = entries.find { it.island == island && (area == null || area in it.areas) }
+    public companion object {
+        public fun getGroupsFor(island: SkyBlockIsland): List<WeatherGroup> = entries.filter { it.island == island }
+        public fun getGroupFor(island: SkyBlockIsland, area: SkyBlockArea?): WeatherGroup? = entries.find { it.island == island && (area == null || area in it.areas) }
 
-        fun getCurrentGroup(): WeatherGroup? {
+        public fun getCurrentGroup(): WeatherGroup? {
             val activeGroups = entries.filter { it.inLocation() }
             // If multiple matches, pick the group that's more specific
             return activeGroups.find { it.areas.isNotEmpty() } ?: activeGroups.firstOrNull()

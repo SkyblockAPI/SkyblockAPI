@@ -90,6 +90,7 @@ internal class EventListeners {
         try {
             val lookup = MethodHandles.privateLookupIn(method.declaringClass, MethodHandles.lookup())
             val handle = lookup.unreflect(method)
+            @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
             return LambdaMetafactory.metafactory(
                 lookup,
                 "accept",

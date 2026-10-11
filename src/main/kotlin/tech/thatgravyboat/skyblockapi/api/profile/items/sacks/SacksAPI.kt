@@ -32,6 +32,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
+import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.regex.component.match
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -42,19 +43,19 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
 @Module
-object SacksAPI {
+public object SacksAPI {
     // [Sacks] +14 items. (Last 5s.)
     // [Sacks] -38 items. (Last 5s.)
     // [Sacks] +38 items, -1 item. (Last 8s.)
-    val sackMessageRegex = RegexGroup.CHAT.create(
+    public val sackMessageRegex: ComponentRegex = RegexGroup.CHAT.create(
         "sackapi.message",
         "\\[Sacks] (?:(?<gained>\\+[\\d.,]+) items?,?)?\\s*(?:(?<lost>-[\\d.,]+) items?)?\\.\\s*\\(.*",
     ).toComponentRegex()
-    val addedItemsRegex = RegexGroup.CHAT.create("sackapi.changed", " {2}(?<amount>[+-][\\d.,]+) (?<item>.+) \\(")
-    val sackTitleRegex = RegexGroup.INVENTORY.create("sackapi.title", ".* Sack")
-    val sackAmountRegex = RegexGroup.INVENTORY.create("sackapi.amount", "Stored: (?<amount>[\\d,.]+)/.*")
+    public val addedItemsRegex: Regex = RegexGroup.CHAT.create("sackapi.changed", " {2}(?<amount>[+-][\\d.,]+) (?<item>.+) \\(")
+    public val sackTitleRegex: Regex = RegexGroup.INVENTORY.create("sackapi.title", ".* Sack")
+    public val sackAmountRegex: Regex = RegexGroup.INVENTORY.create("sackapi.amount", "Stored: (?<amount>[\\d,.]+)/.*")
 
-    val sackItems: Map<String, Int> get() = SacksStorage.counts
+    public val sackItems: Map<String, Int> get() = SacksStorage.counts
 
     // Diff of updates gotten from recent sacks inventory
     private val recentUpdates: Cache<String, Int> = CacheBuilder.newBuilder()
@@ -63,7 +64,7 @@ object SacksAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         sackMessageRegex.match(event.component) {
             val gainedHoverComponents = it["gained"]?.hover?.splitLines().orEmpty()
             val lostHoverComponents = it["lost"]?.hover?.splitLines().orEmpty()
@@ -92,11 +93,11 @@ object SacksAPI {
     }
 
     @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
-    fun onServerChange() = recentUpdates.invalidateAll()
+    private fun onServerChange() = recentUpdates.invalidateAll()
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onInventoryUpdate(event: InventoryChangeEvent) {
+    internal fun onInventoryUpdate(event: InventoryChangeEvent) {
         if (event.isInPlayerInventory) return
         if (!sackTitleRegex.matches(event.title)) return
         val item = event.item

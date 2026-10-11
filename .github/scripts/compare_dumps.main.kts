@@ -23,7 +23,9 @@ __FILE__.toPath().toAbsolutePath().parent.parent.parent.resolve("versions").list
 
     val additions = lines.filter { it.startsWith("+") }
     val removals = lines.filter { it.startsWith("-") }
-    failed.addAll(removals.filterNot { it.startsWith("-\tprivate") }.filterNot { additions.contains(it.replaceFirst('-', '+')) })
+    failed.addAll(removals.filterNot { it.startsWith("-\tprivate") }.filterNot {
+        additions.contains(it.replaceFirst('-', '+')) || additions.contains(it.replace(Regex("-\t(.*?) (fun|field)"), "+\t$1 synthetic $2"))
+    })
 }
 
 if (failed.isNotEmpty()) {

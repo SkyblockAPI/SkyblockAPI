@@ -17,9 +17,9 @@ import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.typeOf
 
-object Json {
+public object Json {
 
-    val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
+    public val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
 
     private val vanillaRegistry by lazy {
         //~ if >= 26.3 'createLookup' -> 'createWorldLookup'
@@ -33,34 +33,34 @@ object Json {
     internal val nbtOps: DynamicOps<Tag>
         get() = RegistryOps.create(NbtOps.INSTANCE, LenientHolderLookupAdapter(registry))
 
-    inline fun <reified T : Any> InputStream.readJson(): T =
+    public inline fun <reified T : Any> InputStream.readJson(): T =
         gson.fromJson(bufferedReader(), typeOf<T>().javaType)
 
-    inline fun <reified T : Any> String.readJson(): T =
+    public inline fun <reified T : Any> String.readJson(): T =
         gson.fromJson(this, typeOf<T>().javaType)
 
-    val JsonElement.isString get() = isJsonPrimitive && asJsonPrimitive.isString
+    public val JsonElement.isString: Boolean get() = isJsonPrimitive && asJsonPrimitive.isString
 
-    fun <T : Any> T.toJson(codec: Codec<T>): JsonElement? {
+    public fun <T : Any> T.toJson(codec: Codec<T>): JsonElement? {
         return codec.encodeStart(ops, this).result().getOrNull()
     }
 
-    fun <T : Any> T.toNbt(codec: Codec<T>): Tag? {
+    public fun <T : Any> T.toNbt(codec: Codec<T>): Tag? {
         return codec.encodeStart(nbtOps, this).result().getOrNull()
     }
 
-    fun <T : Any> T.toJsonOrThrow(codec: Codec<T>): JsonElement {
+    public fun <T : Any> T.toJsonOrThrow(codec: Codec<T>): JsonElement {
         return codec.encodeStart(ops, this).getOrThrow()
     }
 
-    fun <T : Any> JsonElement?.toData(codec: Codec<T>): T? {
+    public fun <T : Any> JsonElement?.toData(codec: Codec<T>): T? {
         return codec.parse(ops, this).result().getOrNull()
     }
 
-    fun <T : Any> JsonElement?.toDataOrThrow(codec: Codec<T>): T {
+    public fun <T : Any> JsonElement?.toDataOrThrow(codec: Codec<T>): T {
         return codec.parse(ops, this).getOrThrow()
     }
 
-    fun JsonElement?.toPrettyString(): String = gson.toJson(this)
-    fun JsonElement?.toComponent(spaces: Int = 4, newLines: Boolean = true): Component = JsonWriter.write(this, 0, spaces, newLines)
+    public fun JsonElement?.toPrettyString(): String = gson.toJson(this)
+    public fun JsonElement?.toComponent(spaces: Int = 4, newLines: Boolean = true): Component = JsonWriter.write(this, 0, spaces, newLines)
 }

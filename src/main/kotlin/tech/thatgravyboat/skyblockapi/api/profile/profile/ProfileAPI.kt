@@ -33,7 +33,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.UUID
 
 @Module
-object ProfileAPI {
+public object ProfileAPI {
 
     private val tablistGroup = RegexGroup.TABLIST.group("profile")
 
@@ -89,45 +89,45 @@ object ProfileAPI {
 
     private var lastWorldSwap = 0L
 
-    var profileName: String? = null
+    public var profileName: String? = null
         private set
 
-    var profileUuid: UUID?
+    public var profileUuid: UUID?
         private set(value) {
             ProfileStorage.profileId = value
         }
         get() = ProfileStorage.profileId
 
-    val profileId: UUID? get() = profileUuid
+    public val profileId: UUID? get() = profileUuid
 
-    var isLoaded: Boolean = false
+    public var isLoaded: Boolean = false
         private set
 
-    val profileType: ProfileType get() = ProfileStorage.getProfileType()
+    public val profileType: ProfileType get() = ProfileStorage.getProfileType()
 
-    val sbLevel: Int get() = ProfileStorage.getSkyBlockLevel()
+    public val sbLevel: Int get() = ProfileStorage.getSkyBlockLevel()
 
-    val sbLevelProgress: Int get() = ProfileStorage.getSkyBlockLevelProgress()
+    public val sbLevelProgress: Int get() = ProfileStorage.getSkyBlockLevelProgress()
 
-    val coop: Boolean get() = ProfileStorage.isCoop()
+    public val coop: Boolean get() = ProfileStorage.isCoop()
 
-    val bingoRank: SkyBlockRarity? get() = ProfileStorage.getBingoRank()
+    public val bingoRank: SkyBlockRarity? get() = ProfileStorage.getBingoRank()
 
 
-    fun getLevelColor(): Int = getLevelColor(sbLevel)
+    public fun getLevelColor(): Int = getLevelColor(sbLevel)
 
-    fun getLevelColor(level: Int): Int = levelColors.entries.firstOrNull { level in it.key }?.value ?: TextColor.BLACK
+    public fun getLevelColor(level: Int): Int = levelColors.entries.firstOrNull { level in it.key }?.value ?: TextColor.BLACK
 
 
     @Subscription
-    fun onServerChange(event: ServerChangeEvent) {
+    internal fun onServerChange(event: ServerChangeEvent) {
         this.isLoaded = false
         this.lastWorldSwap = System.currentTimeMillis()
     }
 
     @OnlyWidget(TabWidget.PROFILE)
     @Subscription(priority = Int.MIN_VALUE)
-    fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
+    internal fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
         profileRegex.anyMatch(event.new, "name") { (name) ->
             val oldName = this.profileName
             when (name.last()) {
@@ -177,7 +177,7 @@ object ProfileAPI {
     @Subscription
     @OnlyIn(SkyBlockIsland.PRIVATE_ISLAND)
     @OnlyNonGuest
-    fun onTablistUpdate(event: TabListChangeEvent) {
+    internal fun onTablistUpdate(event: TabListChangeEvent) {
         val line = event.new.firstOrNull()?.firstOrNull()?.stripped ?: return
         coopRegex.match(line) {
             ProfileStorage.setCoop(true)
@@ -185,7 +185,7 @@ object ProfileAPI {
     }
 
     @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
-    fun onChatMessage(event: ChatReceivedEvent.Pre) {
+    internal fun onChatMessage(event: ChatReceivedEvent.Pre) {
         profileChatRegex.match(event.text) { groups ->
             val name = groups["name"] ?: return@match
             if (name != this.profileName) {
@@ -207,14 +207,14 @@ object ProfileAPI {
     @Subscription
     @OnlyOnSkyBlock
     @TimePassed("5s")
-    fun onTick(event: TickEvent) {
+    internal fun onTick(event: TickEvent) {
         if (lastWorldSwap + 2500 < System.currentTimeMillis() && !this.isLoaded && !LocationAPI.forceOnSkyblock) {
             SkyBlockAPI.logger.error("Could not find way to determine profile name.")
         }
     }
 
     @Subscription
-    fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
+    internal fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
         ProfileStorage.setSkyBlockLevel(event.level)
     }
 
@@ -228,7 +228,7 @@ object ProfileAPI {
     }
 }
 
-enum class ProfileType {
+public enum class ProfileType {
     NORMAL,
     BINGO,
     IRONMAN,

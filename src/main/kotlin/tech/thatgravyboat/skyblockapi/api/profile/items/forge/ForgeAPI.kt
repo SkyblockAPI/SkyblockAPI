@@ -18,14 +18,14 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 @Module
-object ForgeAPI {
+public object ForgeAPI {
 
     private val durationRegex = RegexGroup.INVENTORY.group("forge").create("duration", "Time Remaining: (?<duration>.*)")
 
     @Subscription
     @IgnoreFiller
     @InventoryTitle("The Forge")
-    fun onInvUpdate(event: InventoryChangeEvent) {
+    internal fun onInvUpdate(event: InventoryChangeEvent) {
         if (!event.isInMainPart) return
 
         val index = event.slot.index - 9
@@ -49,10 +49,10 @@ object ForgeAPI {
         }
     }
 
-    fun getForgeSlots(): Map<Int, ForgeSlot> = ForgeStorage.data.toMap()
-    fun getForgeSlot(slot: Int): ForgeSlot? = ForgeStorage.data[slot]
+    public fun getForgeSlots(): Map<Int, ForgeSlot> = ForgeStorage.data.toMap()
+    public fun getForgeSlot(slot: Int): ForgeSlot? = ForgeStorage.data[slot]
 
-    operator fun get(slot: Int): ForgeSlot? = getForgeSlot(slot)
+    public operator fun get(slot: Int): ForgeSlot? = getForgeSlot(slot)
 
     @Subscription
     private fun onCommand(event: RegisterSkyblockApiCommandsEvent) {

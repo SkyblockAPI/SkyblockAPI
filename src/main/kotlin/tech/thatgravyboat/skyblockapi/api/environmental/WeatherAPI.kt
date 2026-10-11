@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 
 @Module
-object WeatherAPI {
+public object WeatherAPI {
 
     private const val DAYS_PER_YEAR = 372 // 12 Seasons * 31 days
     private const val BASE_YEAR = 518
@@ -36,23 +36,23 @@ object WeatherAPI {
         return if ((day / 3) % 3 == 1L) WeatherIntensity.EXTREME else WeatherIntensity.MILD
     }
 
-    val isActive: Boolean
+    public val isActive: Boolean
         get() = this.currentIntensity != null
 
-    val currentIntensity: WeatherIntensity?
+    public val currentIntensity: WeatherIntensity?
         get() = totalDaysSinceBase?.takeIf { it % 3 == 2L }?.let(::getIntensityForDay)
 
-    val currentEvent: WeatherEvent?
+    public val currentEvent: WeatherEvent?
         get() {
             val intensity = currentIntensity ?: return null
             val group = WeatherGroup.getCurrentGroup() ?: return null
             return if (intensity == WeatherIntensity.EXTREME) group.extreme else group.mild
         }
 
-    val nextIntensity: WeatherIntensity?
+    public val nextIntensity: WeatherIntensity?
         get() = nextWeatherDayOffset?.let(::getIntensityForDay)
 
-    val nextWeatherAt: SkyBlockInstant?
+    public val nextWeatherAt: SkyBlockInstant?
         get() {
             val currentDay = totalDaysSinceBase ?: return null
             val nextDay = nextWeatherDayOffset ?: return null

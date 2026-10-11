@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-object SkyBlockItemsRepo : RepoItemCache<String>("Items") {
+public object SkyBlockItemsRepo : RepoItemCache<String>("Items") {
 
     private val repo get() = RepoAPI.items().items()
     private val names by lazy {
@@ -26,9 +26,9 @@ object SkyBlockItemsRepo : RepoItemCache<String>("Items") {
         return RepoAPI.items().getItem(id)?.let(::LazyItemStack)
     }
 
-    fun get(id: String): JsonObject? = ifInitialized { this.repo[id] }
+    public fun get(id: String): JsonObject? = ifInitialized { this.repo[id] }
 
-    fun getIdByName(name: String): String? = ifInitialized {
+    public fun getIdByName(name: String): String? = ifInitialized {
         val lowercase = name.lowercase()
         names[lowercase]?.let { return it }
         val noStars = lowercase.removeTrailingChar('✪').trim()

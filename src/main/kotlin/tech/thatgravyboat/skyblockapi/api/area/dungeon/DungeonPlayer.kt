@@ -5,27 +5,27 @@ import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.isRealPlayer
 
-class DungeonPlayer(
-    val name: String,
+public class DungeonPlayer(
+    public val name: String,
     dungeonClass: DungeonClass?,
-    classLevel: Int?
+    classLevel: Int?,
 ) {
-    var dead: Boolean = false
+    public var dead: Boolean = false
         internal set
 
-    var dungeonClass: DungeonClass? = dungeonClass
+    public var dungeonClass: DungeonClass? = dungeonClass
         internal set
-    var classLevel: Int? = classLevel
+    public var classLevel: Int? = classLevel
         internal set
 
     /**
      * The index of the order at which they appear in tablist.
      * Will be -1 if the player is dead, and dead players will not be counted for the index.
      */
-    var index: Int = -1
+    public var index: Int = -1
         internal set
 
-    val realPlayer: Player?
+    public val realPlayer: Player?
         get() = McLevel.players.find { it.isRealPlayer() && it.cleanName == name }
 
     internal fun missingData(): Boolean = dungeonClass == null || classLevel == null

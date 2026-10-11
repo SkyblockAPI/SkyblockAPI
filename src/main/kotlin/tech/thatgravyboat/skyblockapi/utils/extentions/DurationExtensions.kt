@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.utils.extentions
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
-fun Duration.toReadableTime(biggestUnit: DurationUnit = DurationUnit.DAYS, maxUnits: Int = 2, allowMs: Boolean = false): String {
+public fun Duration.toReadableTime(biggestUnit: DurationUnit = DurationUnit.DAYS, maxUnits: Int = 2, allowMs: Boolean = false): String {
     val units = listOfNotNull(
         DurationUnit.DAYS to this.inWholeDays,
         DurationUnit.HOURS to this.inWholeHours % 24,

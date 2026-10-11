@@ -12,19 +12,19 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.lang.ref.WeakReference
 
 @Module
-object SkyBlockEntity {
-    val mobLevelRegex = RegexGroup.ENTITY.create("mob_level", ".*(\\[Lv\\d+]).*")
+public object SkyBlockEntity {
+    public val mobLevelRegex: Regex = RegexGroup.ENTITY.create("mob_level", ".*(\\[Lv\\d+]).*")
 
     @OnlyOnSkyBlock
     @Subscription
-    fun event(event: NameChangedEvent) {
+    internal fun event(event: NameChangedEvent) {
         event.infoLineEntity.asAccessor().`skyblockapi$attachToClosest`()
     }
 
     @JvmStatic
-    fun getAttachedLines(entity: Entity): List<Component> = entity.getAttachedLines()
+    public fun getAttachedLines(entity: Entity): List<Component> = entity.getAttachedLines()
     @JvmStatic
-    fun getAttachedEntities(entity: Entity): List<WeakReference<Entity>> = entity.asAccessor().`skyblockapi$getAttachments`()
+    public fun getAttachedEntities(entity: Entity): List<WeakReference<Entity>> = entity.asAccessor().`skyblockapi$getAttachments`()
 }
 
 internal interface EntityAttachmentAccessor {
@@ -41,12 +41,12 @@ internal interface EntityAttachmentAccessor {
 
 }
 
-fun Entity.getMobLevel(): Int? {
+public fun Entity.getMobLevel(): Int? {
     return this.getAttachedLines().mapNotNull {
         it.string.replace(SkyBlockEntity.mobLevelRegex, "$1").takeIf(String::isNotBlank)
     }.map { it.filter { it.isDigit() } }.map { it.toInt() }.firstOrNull()
 }
-fun Entity.getAttachedEntities(): List<Entity> = this.asAccessor().`skyblockapi$getAttachments`().mapNotNull { it.get() }
-fun Entity.getAttachedTo(): Entity? = this.asAccessor().`skyblockapi$getAttachedTo`()
-fun Entity.getStrippedAttachedLines(): List<String> = this.getAttachedLines().map { it.stripped }
-fun Entity.getAttachedLines(): List<Component> = getAttachedEntities().mapNotNull { it.customName }
+public fun Entity.getAttachedEntities(): List<Entity> = this.asAccessor().`skyblockapi$getAttachments`().mapNotNull { it.get() }
+public fun Entity.getAttachedTo(): Entity? = this.asAccessor().`skyblockapi$getAttachedTo`()
+public fun Entity.getStrippedAttachedLines(): List<String> = this.getAttachedLines().map { it.stripped }
+public fun Entity.getAttachedLines(): List<Component> = getAttachedEntities().mapNotNull { it.customName }
