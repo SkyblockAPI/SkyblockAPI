@@ -234,7 +234,8 @@ public inline fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory
 }
 
 
-@JvmName("addDebug")
+//? < 26.4 {
+/*@JvmName("addDebug")
 @Deprecated(message = "Use interface method instead!")
 public fun ItemStack.addDebug0(category: ItemDebugCategory, entry: () -> Component) {
     if (!DebugItems.isEnabled) return
@@ -252,7 +253,7 @@ context(category: ItemDebugCategory) public fun ItemStack.addDebug0(entry: () ->
 @Deprecated(message = "Use interface method instead!")
 @JvmName("categoryAddDebugString")
 context(category: ItemDebugCategory) public fun ItemStack.addDebugString0(entry: () -> String): Unit = addStringDebug(category, entry)
-
+*///?}
 
 public fun interface ItemDebugAttachable {
     @Suppress("FunctionName")

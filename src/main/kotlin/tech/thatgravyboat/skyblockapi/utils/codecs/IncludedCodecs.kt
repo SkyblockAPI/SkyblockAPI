@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.utils.codecs
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
+import net.minecraft.advancements.predicates.BlockPredicate
 import net.minecraft.core.BlockPos
 import net.minecraft.core.GlobalPos
 import net.minecraft.core.Vec3i
@@ -14,7 +15,10 @@ import net.minecraft.resources.Identifier
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.IdentifierPattern
 import net.minecraft.util.Unit
-import net.minecraft.util.valueproviders.*
+import net.minecraft.util.valueproviders.FloatProvider
+import net.minecraft.util.valueproviders.FloatProviders
+import net.minecraft.util.valueproviders.IntProvider
+import net.minecraft.util.valueproviders.IntProviders
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import org.joml.Vector3f
@@ -22,9 +26,6 @@ import org.joml.Vector4f
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Instant
-
-//~ if >= 26.2 'criterion' -> 'predicates'
-import net.minecraft.advancements.predicates.BlockPredicate
 
 internal object IncludedCodecs {
     @IncludedCodec

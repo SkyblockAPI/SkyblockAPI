@@ -19,8 +19,6 @@ private const val URL = "https://api.hypixel.net/v2/resources/skyblock/items"
 
 @Module
 public object ItemData {
-    //? < 26.2
-    //@Deprecated("Use ItemData.data instead", ReplaceWith("data.values")) public val itemData: List<HypixelApiItem> get() = data.values.toList()
 
     private val backupData: Map<String, HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
         ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
@@ -48,9 +46,6 @@ public object ItemData {
 
     public fun getItemData(id: String): HypixelApiItem? = data[id.uppercase()]
 
-    //? < 26.2 {
-    /*@Deprecated("Use getNpcSellPrice instead", ReplaceWith("getNpcSellPrice(id)"), DeprecationLevel.ERROR)
-    public fun getNpcPrice(id: String): Int? = getItemData(id)?.npcSellPrice*///?}
     public fun getNpcSellPrice(id: String): Float? = getItemData(id)?.npcSellPriceFloat
 
     public fun getMotesSellPrice(id: String): Float? = getItemData(id)?.motesSellPrice
