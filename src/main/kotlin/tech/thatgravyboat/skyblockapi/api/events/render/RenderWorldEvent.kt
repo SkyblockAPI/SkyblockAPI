@@ -15,9 +15,9 @@ sealed class RenderWorldEvent(
     val partialTicks: Float,
 ) : SkyBlockEvent() {
 
-    object Start : SkyBlockEvent()
+    public object Start : SkyBlockEvent()
 
-    class AfterEntities(
+    public class AfterEntities(
         poseStack: PoseStack,
         submitNodeCollector: SubmitNodeCollector,
         cameraPosition: Vec3,
@@ -31,7 +31,7 @@ sealed class RenderWorldEvent(
         partialTicks,
     )
 
-    class AfterTranslucent(
+    public class AfterTranslucent(
         poseStack: PoseStack,
         submitNodeCollector: SubmitNodeCollector,
         cameraPosition: Vec3,
@@ -45,7 +45,7 @@ sealed class RenderWorldEvent(
         partialTicks,
     )
 
-    class CollectSubmits(
+    public class CollectSubmits(
         poseStack: PoseStack,
         submitNodeCollector: SubmitNodeCollector,
         cameraPosition: Vec3,
@@ -58,8 +58,8 @@ sealed class RenderWorldEvent(
         0f,
     )
 
-    fun pushPop(action: PoseStack.() -> Unit) = this.poseStack.pushPop(action)
-    fun atCamera(action: PoseStack.() -> Unit) = pushPop {
+    public fun pushPop(action: PoseStack.() -> Unit): Unit = this.poseStack.pushPop(action)
+    public fun atCamera(action: PoseStack.() -> Unit): Unit = pushPop {
         translate(-cameraPosition.x, -cameraPosition.y, -cameraPosition.z)
         action()
     }

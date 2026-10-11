@@ -45,24 +45,24 @@ private fun Component.strikethrough(): Boolean = this.style.isStrikethrough
 
 private fun Component.obfuscated(): Boolean = this.style.isObfuscated
 
-object TextStyle {
+public object TextStyle {
 
-    fun MutableComponent.style(init: Style.() -> Style): MutableComponent {
+    public fun MutableComponent.style(init: Style.() -> Style): MutableComponent {
         this.withStyle { init.invoke(style) }
         return this
     }
 
-    fun MutableComponent.hoverEvent(init: () -> HoverEvent?): MutableComponent {
+    public fun MutableComponent.hoverEvent(init: () -> HoverEvent?): MutableComponent {
         this.style { withHoverEvent(init.invoke()) }
         return this
     }
 
-    fun MutableComponent.clickEvent(init: () -> ClickEvent?): MutableComponent {
+    public fun MutableComponent.clickEvent(init: () -> ClickEvent?): MutableComponent {
         this.style { withClickEvent(init.invoke()) }
         return this
     }
 
-    fun MutableComponent.onClick(runnable: () -> Unit): MutableComponent = this.style {
+    public fun MutableComponent.onClick(runnable: () -> Unit): MutableComponent = this.style {
         val event = ClickEvent.SuggestCommand("SkyBlockAPI OnClick Action")
         @Suppress("KotlinConstantConditions")
         ((event as Any) as? RunnableClickEventHook)?.`skyblockapi$setRunnable` { runnable() }
@@ -70,150 +70,150 @@ object TextStyle {
     }
 
 
-    val Component.font: Identifier?
+    public val Component.font: Identifier?
         get() = font()
 
-    var MutableComponent.font: Identifier?
+    public var MutableComponent.font: Identifier?
         get() = font()
         set(value) {
             this.withFont(value)
         }
 
 
-    val Component.hover: Component?
+    public val Component.hover: Component?
         get() = hover()
 
-    var MutableComponent.hover: Component?
+    public var MutableComponent.hover: Component?
         get() = hover()
         set(value) {
             this.hoverEvent { value?.let { HoverEvent.ShowText(it) } }
         }
 
 
-    val Component.clipboard: String?
+    public val Component.clipboard: String?
         get() = clipboard()
 
-    var MutableComponent.clipboard: String?
+    public var MutableComponent.clipboard: String?
         get() = clipboard()
         set(value) {
             this.clickEvent { value?.let { ClickEvent.CopyToClipboard(it) } }
         }
 
 
-    val Component.command: String?
+    public val Component.command: String?
         get() = command()
 
-    var MutableComponent.command: String?
+    public var MutableComponent.command: String?
         get() = command()
         set(value) {
             this.clickEvent { value?.let { ClickEvent.RunCommand(it) } }
         }
 
 
-    val Component.suggest: String?
+    public val Component.suggest: String?
         get() = suggest()
 
-    var MutableComponent.suggest: String?
+    public var MutableComponent.suggest: String?
         get() = suggest()
         set(value) {
             this.clickEvent { value?.let { ClickEvent.SuggestCommand(it) } }
         }
 
 
-    val Component.customPayloadClick: ClickEvent.Custom?
+    public val Component.customPayloadClick: ClickEvent.Custom?
         get() = customPayloadClick()
 
-    var MutableComponent.customPayloadClick: ClickEvent.Custom?
+    public var MutableComponent.customPayloadClick: ClickEvent.Custom?
         get() = customPayloadClick()
         set(value) {
             this.clickEvent { value }
         }
 
 
-    val Component.uri: URI?
+    public val Component.uri: URI?
         get() = uri()
 
-    var MutableComponent.uri: URI?
+    public var MutableComponent.uri: URI?
         get() = uri()
         set(value) {
             this.clickEvent { value?.let { ClickEvent.OpenUrl(it) } }
         }
 
 
-    val Component.url: String?
+    public val Component.url: String?
         get() = url()
 
-    var MutableComponent.url: String?
+    public var MutableComponent.url: String?
         get() = url()
         set(value) {
             this.uri = value?.let(URI::create)
         }
 
 
-    val Component.color: Int
+    public val Component.color: Int
         get() = color()
 
-    var MutableComponent.color: Int
+    public var MutableComponent.color: Int
         get() = color()
         set(value) {
             this.style { withColor(value) }
         }
 
 
-    val Component.shadowColor: Int?
+    public val Component.shadowColor: Int?
         get() = shadowColor()
 
-    var MutableComponent.shadowColor: Int?
+    public var MutableComponent.shadowColor: Int?
         get() = shadowColor()
         set(value) {
             this.style { this.withShadowColor(value ?: 0) }
         }
 
 
-    val Component.bold: Boolean
+    public val Component.bold: Boolean
         get() = bold()
 
-    var MutableComponent.bold: Boolean
+    public var MutableComponent.bold: Boolean
         get() = bold()
         set(value) {
             this.style { withBold(value) }
         }
 
 
-    val Component.italic: Boolean
+    public val Component.italic: Boolean
         get() = italic()
 
-    var MutableComponent.italic: Boolean
+    public var MutableComponent.italic: Boolean
         get() = italic()
         set(value) {
             this.style { withItalic(value) }
         }
 
 
-    val Component.underlined: Boolean
+    public val Component.underlined: Boolean
         get() = underlined()
 
-    var MutableComponent.underlined: Boolean
+    public var MutableComponent.underlined: Boolean
         get() = underlined()
         set(value) {
             this.style { withUnderlined(value) }
         }
 
 
-    val Component.strikethrough: Boolean
+    public val Component.strikethrough: Boolean
         get() = strikethrough()
 
-    var MutableComponent.strikethrough: Boolean
+    public var MutableComponent.strikethrough: Boolean
         get() = strikethrough()
         set(value) {
             this.style { withStrikethrough(value) }
         }
 
 
-    val Component.obfuscated: Boolean
+    public val Component.obfuscated: Boolean
         get() = obfuscated()
 
-    var MutableComponent.obfuscated: Boolean
+    public var MutableComponent.obfuscated: Boolean
         get() = obfuscated()
         set(value) {
             this.style { withObfuscated(value) }

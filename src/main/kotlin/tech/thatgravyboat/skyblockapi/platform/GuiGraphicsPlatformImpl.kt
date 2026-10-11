@@ -1,13 +1,14 @@
 package tech.thatgravyboat.skyblockapi.platform
 
 import com.mojang.blaze3d.vertex.VertexConsumer
-//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
-import com.mojang.renderpearl.api.pipeline.RenderPipeline
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState
 import org.joml.Matrix3x2f
+
+//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
+import com.mojang.renderpearl.api.pipeline.RenderPipeline
 
 internal class GradientGuiElement(
     val pose: Matrix3x2f,

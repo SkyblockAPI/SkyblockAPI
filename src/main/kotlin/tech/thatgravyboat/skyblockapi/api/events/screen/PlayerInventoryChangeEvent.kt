@@ -7,19 +7,19 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-data class PlayerInventoryChangeEvent(
+public data class PlayerInventoryChangeEvent(
     val inventorySlot: Slot,
     val item: ItemStack,
     val previousItem: ItemStack,
 ) : SkyBlockEvent() {
     @RemoveNextVersion
     @Deprecated("Should pass previousItem as well")
-    constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
+    public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
 
-    val slotIndex get() = inventorySlot.index
+    public val slotIndex get() = inventorySlot.index
 }
 
-data class PlayerHotbarChangeEvent(
+public data class PlayerHotbarChangeEvent(
     val inventorySlot: Slot,
     val item: ItemStack,
     val previousItem: ItemStack,
@@ -27,13 +27,14 @@ data class PlayerHotbarChangeEvent(
     @RemoveNextVersion
     @Deprecated("Should pass previousItem as well")
     constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
-    val slotIndex get() = inventorySlot.index - FIRST_HOTBAR_SLOT
 
-    companion object {
+    public val slotIndex get() = inventorySlot.index - FIRST_HOTBAR_SLOT
+
+    public companion object {
         internal const val FIRST_HOTBAR_SLOT = 36
     }
 }
 
-data class PlayerEquipmentChangeEvent(val entity: Player, val slot: EquipmentSlot, val previous: ItemStack, val current: ItemStack) : SkyBlockEvent() {
-    val item get() = current
+public data class PlayerEquipmentChangeEvent(val entity: Player, val slot: EquipmentSlot, val previous: ItemStack, val current: ItemStack) : SkyBlockEvent() {
+    public val item: ItemStack get() = current
 }

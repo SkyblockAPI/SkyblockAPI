@@ -22,7 +22,7 @@ internal object DebugTabWidgets {
     private val loggedWidgets = enumSetOf<TabWidget>()
 
     @Subscription
-    fun onTabWidgetChange(event: TabWidgetChangeEvent) {
+    private fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         if (!logWidgets) return
         if (event.widget !in loggedWidgets) return
         Text.sendDebug("Tab widget changed: ") {

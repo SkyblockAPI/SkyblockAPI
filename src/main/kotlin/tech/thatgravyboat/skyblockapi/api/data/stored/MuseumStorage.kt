@@ -19,7 +19,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRarityLineIndex
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 import tech.thatgravyboat.skyblockapi.utils.extentions.withoutGetter
-import kotlin.collections.MutableMap
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 

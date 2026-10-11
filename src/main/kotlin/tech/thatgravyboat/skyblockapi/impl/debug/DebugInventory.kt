@@ -19,12 +19,17 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.platform.drawString
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
+import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
+import tech.thatgravyboat.skyblockapi.utils.extentions.getTexture
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toNbt
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.appendLine
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
@@ -38,7 +43,7 @@ internal object DebugInventory {
     val enabled by debugToggle("inventory", "Lets you copy information from items in inventories.")
 
     @Subscription
-    fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
+    private fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
         if (!enabled) return
         val slot = McScreen.asMenu?.getHoveredSlot() ?: return
         val cancel = CopyType.entries.find { it.key == event.key }?.initCopy(slot) ?: false
@@ -47,7 +52,7 @@ internal object DebugInventory {
     }
 
     @Subscription
-    fun onForegroundRender(event: RenderScreenForegroundEvent) {
+    private fun onForegroundRender(event: RenderScreenForegroundEvent) {
         if (!enabled) return
         val slot = McScreen.asMenu?.getHoveredSlot() ?: return
 
@@ -113,6 +118,10 @@ internal object DebugInventory {
                 }
             },
             "Hold Shift for components",
+        ),
+        ITEM_MODEL(
+            InputConstants.KEY_M,
+            { it.item.get(DataComponents.ITEM_MODEL).toString() },
         ),
         DATA_TYPES(
             InputConstants.KEY_C,

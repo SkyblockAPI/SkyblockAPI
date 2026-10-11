@@ -24,16 +24,13 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.mc.displayName
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
-import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
 import kotlin.io.path.createDirectories
 
 @Module
-object DebugCommands {
+public object DebugCommands {
 
     private var actionbar: String = ""
     private var tabListFooter: Component = Component.empty()
@@ -46,12 +43,12 @@ object DebugCommands {
     private fun Component?.toPrettyJson(): String = this?.toJson(ComponentSerialization.CODEC).toPrettyString()
 
     @Subscription(receiveCancelled = true)
-    fun onActionBar(event: ActionBarReceivedEvent.Pre) {
+    internal fun onActionBar(event: ActionBarReceivedEvent.Pre) {
         actionbar = event.coloredText
     }
 
     @Subscription(priority = Int.MIN_VALUE)
-    fun onHeaderFooter(event: TabListHeaderFooterChangeEvent) {
+    internal fun onHeaderFooter(event: TabListHeaderFooterChangeEvent) {
         tabListFooter = event.newFooter
         tabListHeader = event.newHeader
     }

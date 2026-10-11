@@ -2,7 +2,13 @@ package tech.thatgravyboat.skyblockapi.api.profile
 
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.info.*
+import tech.thatgravyboat.skyblockapi.api.events.info.ActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ArmadilloActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.DefenseActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.HealthActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ManaActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.OverflowManaActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.VitalityActionBarWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
@@ -10,37 +16,37 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 
 @Module
-object StatsAPI {
+public object StatsAPI {
 
-    var health: Int = 0
+    public var health: Int = 0
         private set
 
-    var maxHealth: Int = 100
+    public var maxHealth: Int = 100
         private set
 
-    var defense: Int = 0
+    public var defense: Int = 0
         private set
 
-    var mana: Int = 0
+    public var mana: Int = 0
         private set
 
-    var maxMana: Int = 100
+    public var maxMana: Int = 100
         private set
 
-    var overflowMana: Int = 0
+    public var overflowMana: Int = 0
         private set
 
-    var vitality: Int = 0
+    public var vitality: Int = 0
         private set
 
-    var maxVitality: Int = 100
+    public var maxVitality: Int = 100
         private set
 
     //? < 26.3 {
     /*@Deprecated("Use vitality instead", ReplaceWith("vitality"))
-    val vitaliy: Int get() = vitality
+    public val vitaliy: Int get() = vitality
     @Deprecated("Use maxVitality instead", ReplaceWith("maxVitality"))
-    val maxVitaliy: Int get() = maxVitality*///?}
+    public val maxVitaliy: Int get() = maxVitality*///?}
 
     @ApiDebug("Stats")
     internal fun debug(builder: DebugBuilder) = with(builder) {
@@ -48,7 +54,7 @@ object StatsAPI {
     }
 
     @Subscription
-    fun onActionBarWidget(event: ActionBarWidgetChangeEvent) {
+    internal fun onActionBarWidget(event: ActionBarWidgetChangeEvent) {
         when (event) {
             is HealthActionBarWidgetChangeEvent -> {
                 health = event.current

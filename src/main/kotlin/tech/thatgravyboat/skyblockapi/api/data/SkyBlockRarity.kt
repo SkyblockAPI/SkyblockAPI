@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
-enum class SkyBlockRarity(val color: Int, val skyBlockColor: Int, vararg val alternativeNames: String) {
+public enum class SkyBlockRarity(public val color: Int, public val skyBlockColor: Int, public vararg val alternativeNames: String) {
     COMMON(TextColor.WHITE, SkyBlockColor.WHITE),
     UNCOMMON(TextColor.GREEN, SkyBlockColor.GREEN),
     RARE(TextColor.BLUE, SkyBlockColor.BLUE),
@@ -21,15 +21,15 @@ enum class SkyBlockRarity(val color: Int, val skyBlockColor: Int, vararg val alt
     ADMIN(TextColor.RED, SkyBlockColor.RED, "UNOBTAINABLE"),
     ;
 
-    val displayName: String = toFormattedName()
-    val uppercaseDisplayName: String = displayName.uppercase()
-    val displayText: Component = Text.of(displayName) { this.color = this@SkyBlockRarity.color }
+    public val displayName: String = toFormattedName()
+    public val uppercaseDisplayName: String = displayName.uppercase()
+    public val displayText: Component = Text.of(displayName) { this.color = this@SkyBlockRarity.color }
 
     override fun toString(): String = displayName
 
-    companion object {
-        fun fromNameOrNull(name: String) = entries.find { r -> r.name.equals(name, true) || r.alternativeNames.any { name.equals(it, true) } }
-        fun fromName(name: String) = fromNameOrNull(name) ?: COMMON
+    public companion object {
+        public fun fromNameOrNull(name: String): SkyBlockRarity? = entries.find { r -> r.name.equals(name, true) || r.alternativeNames.any { name.equals(it, true) } }
+        public fun fromName(name: String): SkyBlockRarity = fromNameOrNull(name) ?: COMMON
 
         internal fun fromColorOrNull(colorCode: Int): SkyBlockRarity? {
             return entries.find { it.color == colorCode || it.skyBlockColor == colorCode }

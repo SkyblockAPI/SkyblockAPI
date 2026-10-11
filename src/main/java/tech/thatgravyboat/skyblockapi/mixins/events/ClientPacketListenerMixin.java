@@ -19,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityAttributesUpdateEvent;
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityEquipmentUpdateEvent;
-
 import java.util.HashMap;
 import java.util.Map;
 

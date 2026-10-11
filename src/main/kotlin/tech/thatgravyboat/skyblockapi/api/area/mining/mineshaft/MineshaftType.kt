@@ -2,7 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.area.mining.mineshaft
 
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
-enum class MineshaftType(val id: String) {
+public enum class MineshaftType(public val id: String) {
     TOPAZ("TOPA"),
     SAPPHIRE("SAPP"),
     AMETHYST("AMET"),
@@ -23,19 +23,19 @@ enum class MineshaftType(val id: String) {
     ;
 
     private val string = toFormattedName()
-    override fun toString() = string
+    override fun toString(): String = string
 
-    companion object {
-        fun fromId(id: String): MineshaftType? = entries.find { it.id.equals(id, true) }
+    public companion object {
+        public fun fromId(id: String): MineshaftType? = entries.find { it.id.equals(id, true) }
     }
 }
 
-enum class MineshaftVariant(val id: String) {
+public enum class MineshaftVariant(public val id: String) {
     ONE("1"),
     TWO("2"),
     CRYSTAL("C");
 
-    companion object {
-        fun fromId(id: String): MineshaftVariant = entries.find { it.id.equals(id, true) } ?: ONE
+    public companion object {
+        public fun fromId(id: String): MineshaftVariant = entries.find { it.id.equals(id, true) } ?: ONE
     }
 }

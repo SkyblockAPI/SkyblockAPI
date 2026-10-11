@@ -15,9 +15,9 @@ private const val MINUTE_IN_MILLIS = 833L
 private const val SECOND_IN_MILLIS = 13L
 
 @Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.SkyBlockInstant"))
-data class SkyBlockInstant(val instant: Instant) {
+public data class SkyBlockInstant(val instant: Instant) {
 
-    constructor(
+    public constructor(
         year: @Range(from = 0, to = Int.MAX_VALUE.toLong()) Int = 1,
         month: @Range(from = 1, to = 12) Int = 1,
         day: @Range(from = 1, to = 31) Int = 1,
@@ -54,14 +54,19 @@ data class SkyBlockInstant(val instant: Instant) {
     val second: Int
         get() = ((instant.toEpochMilliseconds() - EPOCH_DATE) % MINUTE_IN_MILLIS / SECOND_IN_MILLIS).toInt()
 
-    operator fun plus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.plus(duration))
-    operator fun minus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.minus(duration))
+    @Suppress("DEPRECATION")
+    public operator fun plus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.plus(duration))
+    @Suppress("DEPRECATION")
+    public operator fun minus(duration: Duration): SkyBlockInstant = SkyBlockInstant(instant.minus(duration))
 
-    operator fun minus(other: SkyBlockInstant): Duration = instant.minus(other.instant)
+    @Suppress("DEPRECATION")
+    public operator fun minus(other: SkyBlockInstant): Duration = instant.minus(other.instant)
 
-    fun getSeason(): SkyBlockSeason = SkyBlockSeason.entries[this.month - 1]
+    @Suppress("DEPRECATION")
+    public fun getSeason(): SkyBlockSeason = SkyBlockSeason.entries[this.month - 1]
 
-    fun copy(
+    @Suppress("DEPRECATION")
+    public fun copy(
         year: Int = this.year,
         month: Int = this.month,
         day: Int = this.day,
@@ -70,26 +75,27 @@ data class SkyBlockInstant(val instant: Instant) {
         second: Int = this.second,
     ): SkyBlockInstant = SkyBlockInstant(year, month, day, hour, minute, second)
 
-    companion object {
+    public companion object {
 
-        fun now(): SkyBlockInstant = SkyBlockInstant(Clock.System.now())
+        @Suppress("DEPRECATION")
+        public fun now(): SkyBlockInstant = SkyBlockInstant(Clock.System.now())
     }
 }
 
 @Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockSeconds"))
-val Int.skyblockSeconds: Duration get() = (this * SECOND_IN_MILLIS).milliseconds
+public val Int.skyblockSeconds: Duration get() = (this * SECOND_IN_MILLIS).milliseconds
 
 @Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockMinutes"))
-val Int.skyblockMinutes: Duration get() = (this * MINUTE_IN_MILLIS).milliseconds
+public val Int.skyblockMinutes: Duration get() = (this * MINUTE_IN_MILLIS).milliseconds
 
 @Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockHours"))
-val Int.skyblockHours: Duration get() = (this * HOUR_IN_MILLIS).milliseconds
+public val Int.skyblockHours: Duration get() = (this * HOUR_IN_MILLIS).milliseconds
 
 @Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockDays"))
-val Int.skyblockDays: Duration get() = (this * DAY_IN_MILLIS).milliseconds
+public val Int.skyblockDays: Duration get() = (this * DAY_IN_MILLIS).milliseconds
 
 @Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockMonths"))
-val Int.skyblockMonths: Duration get() = (this * MONTH_IN_MILLIS).milliseconds
+public val Int.skyblockMonths: Duration get() = (this * MONTH_IN_MILLIS).milliseconds
 
 @Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockYears"))
-val Int.skyblockYears: Duration get() = (this * YEAR_IN_MILLIS).milliseconds
+public val Int.skyblockYears: Duration get() = (this * YEAR_IN_MILLIS).milliseconds

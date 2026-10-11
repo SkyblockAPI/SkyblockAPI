@@ -1,20 +1,15 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.debug.DebugEvents
 import java.lang.reflect.Method
-import java.lang.reflect.Modifier
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.reflect.full.extensionReceiverParameter
-import kotlin.reflect.jvm.kotlinFunction
 
-class EventBus {
+public class EventBus {
 
     private val listeners: MutableMap<Class<*>, EventListeners> = ConcurrentHashMap()
     private val handlers: MutableMap<Class<*>, EventHandler<*>> = ConcurrentHashMap()
 
-    fun register(instance: Any) {
+    public fun register(instance: Any) {
         var clazz: Class<*>? = instance.javaClass
         while (clazz != null) {
             if (clazz == Any::class.java) break
@@ -24,16 +19,16 @@ class EventBus {
         }
     }
 
-    inline fun <reified T : SkyBlockEvent> register(priority: Int = 0, receiveCancelled: Boolean = false, noinline callback: (T) -> Unit) {
+    public inline fun <reified T : SkyBlockEvent> register(priority: Int = 0, receiveCancelled: Boolean = false, noinline callback: (T) -> Unit) {
         register(T::class.java, priority, receiveCancelled, callback = callback)
     }
 
-    fun <T : SkyBlockEvent> register(type: Class<T>, priority: Int = 0, receiveCancelled: Boolean = false, callback: (T) -> Unit) {
+    public fun <T : SkyBlockEvent> register(type: Class<T>, priority: Int = 0, receiveCancelled: Boolean = false, callback: (T) -> Unit) {
         unregisterHandler(type)
         listeners.getOrPut(type) { EventListeners() }.addListener(callback, priority, receiveCancelled)
     }
 
-    fun unregister(instance: Any) {
+    public fun unregister(instance: Any) {
         var clazz: Class<*>? = instance.javaClass
         while (clazz != null) {
             if (clazz == Any::class.java) break
@@ -42,16 +37,16 @@ class EventBus {
         }
     }
 
-    inline fun <reified T : SkyBlockEvent> unregister(noinline callback: (T) -> Unit) {
+    public inline fun <reified T : SkyBlockEvent> unregister(noinline callback: (T) -> Unit) {
         unregister(T::class.java, callback = callback)
     }
 
-    fun <T : SkyBlockEvent> unregister(type: Class<T>, callback: (T) -> Unit) {
+    public fun <T : SkyBlockEvent> unregister(type: Class<T>, callback: (T) -> Unit) {
         unregisterHandler(type)
         listeners.values.forEach { it.removeListener(callback) }
     }
 
-    fun post(
+    public fun post(
         event: SkyBlockEvent,
         context: Any? = null,
         onError: ((Throwable) -> Unit)? = null,
@@ -82,18 +77,7 @@ class EventBus {
     private fun registerMethod(method: Method, instance: Any) {
         val (options, events) = getEventData(method) ?: return
         if (!options.inherited && method.declaringClass != instance.javaClass) return
-
-        val kotlin = method.kotlinFunction
-        if (kotlin?.extensionReceiverParameter != null && McClient.isDev && Modifier.isPublic(method.modifiers)) {
-            if (!DebugEvents.hasWarned) DebugEvents.methodsToWarn.add(method)
-            SkyBlockAPI.logger.warn("""
-            
-            Public extension functions for events are unrecommended as they will populate the auto complete for the subscribed events.
-            You can make extensions be private for subscriptions.
-            
-            The method ${method.name} in class ${method.declaringClass.name} is public and has an extension receiver.
-            """.trimIndent())
-        }
+        DebugEvents.tryWarn(method)
 
         events.forEach {
             registerMethodInternal(method, instance, it, options)
@@ -121,7 +105,7 @@ class EventBus {
         return method.parameterTypes.firstOrNull()?.let { EventData(options, listOf(it)) }
     }
 
-    data class EventData(
+    public data class EventData(
         val options: Subscription,
         val events: List<Class<*>>,
     )

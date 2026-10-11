@@ -39,23 +39,23 @@ object ItemData {
         }
     }
 
-    val data: Map<String, HypixelApiItem> get() = hypixelData.takeUnless { it.isEmpty() } ?: backupData
+    public val data: Map<String, HypixelApiItem> get() = hypixelData.takeUnless { it.isEmpty() } ?: backupData
 
     @JvmName("getItemDataFromSkyBlockId")
-    fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.skyblockId)
+    public fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.skyblockId)
 
-    fun getItemData(id: String): HypixelApiItem? = data[id.uppercase()]
+    public fun getItemData(id: String): HypixelApiItem? = data[id.uppercase()]
 
     fun getNpcSellPrice(id: String): Float? = getItemData(id)?.npcSellPriceFloat
 
-    fun getMotesSellPrice(id: String): Float? = getItemData(id)?.motesSellPrice
+    public fun getMotesSellPrice(id: String): Float? = getItemData(id)?.motesSellPrice
 }
 
 @GenerateCodec
-data class HypixelItemsResponse(val items: List<HypixelApiItem>)
+public data class HypixelItemsResponse(val items: List<HypixelApiItem>)
 
 @GenerateCodec
-data class HypixelApiItem(
+public data class HypixelApiItem(
     val id: String,
     @param:FieldName("gemstone_slots") val gemstones: List<GemstoneCost> = emptyList(),
     @param:FieldName("upgrade_costs") val upgradeCost: List<List<Cost>> = emptyList(),
@@ -67,7 +67,7 @@ data class HypixelApiItem(
     @param:FieldName("rift_transferrable") val riftTransferable: Boolean = false,
     val origin: ItemOrigin?,
 ) {
-    companion object {
-        val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()
+    public companion object {
+        public val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()
     }
 }

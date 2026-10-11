@@ -19,7 +19,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 @Module
-object TrapperAPI {
+public object TrapperAPI {
 
     private val peltsRegex = RegexGroup.SCOREBOARD.create("trapper.pelts", "Pelts: (?<pelts>[\\d,kmb]+)")
     private val peltsTabListRegex = RegexGroup.TABLIST_WIDGET.create("trapper.pelts", " Pelts: (?<pelts>[\\d,kmb]+)")
@@ -28,18 +28,18 @@ object TrapperAPI {
         "\\[NPC] Trevor: You can find your (?<type>\\w+) animal near the (?<location>.*).",
     )
 
-    var pelts: Int = 0
+    public var pelts: Int = 0
         private set
 
-    var trackedType: TrapperAnimalType = TrapperAnimalType.UNKNOWN
+    public var trackedType: TrapperAnimalType = TrapperAnimalType.UNKNOWN
         private set
 
-    var trackedLocation: SkyBlockArea = SkyBlockAreas.NONE
+    public var trackedLocation: SkyBlockArea = SkyBlockAreas.NONE
         private set
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_BARN)
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         peltsRegex.anyMatch(event.added, "pelts") { (pelts) ->
             this.pelts = pelts.parseFormattedInt()
         }
@@ -48,7 +48,7 @@ object TrapperAPI {
     @Subscription
     @OnlyWidget(TabWidget.TRAPPER)
     @OnlyIn(SkyBlockIsland.THE_BARN)
-    fun onTabListWidgetUpdate(event: TabWidgetChangeEvent) {
+    internal fun onTabListWidgetUpdate(event: TabWidgetChangeEvent) {
         peltsTabListRegex.anyMatch(event.new, "pelts") { (pelts) ->
             this.pelts = pelts.parseFormattedInt()
         }
@@ -56,7 +56,7 @@ object TrapperAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.THE_BARN)
-    fun onChatMessage(event: ChatReceivedEvent.Pre) {
+    internal fun onChatMessage(event: ChatReceivedEvent.Pre) {
         animalRegex.match(event.text, "type", "location") { (type, location) ->
             trackedType = TrapperAnimalType.fromString(type)
             trackedLocation = SkyBlockArea(location)
@@ -70,6 +70,6 @@ object TrapperAPI {
     }
 
     @Subscription(ProfileChangeEvent::class, ServerDisconnectEvent::class)
-    fun onProfileChange() = reset()
+    internal fun onProfileChange(): Unit = reset()
 }
 

@@ -3,12 +3,15 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
-typealias ScoreboardChangeEvent = ScoreboardUpdateEvent
+//? < 26.2
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+
+public typealias ScoreboardChangeEvent = ScoreboardUpdateEvent
 
 /**
  * Fired when the scoreboard changes in SkyBlock.
  */
-data class ScoreboardUpdateEvent(
+public data class ScoreboardUpdateEvent(
     val old: List<String>,
     val new: List<String>,
     val oldComponents: List<Component>,

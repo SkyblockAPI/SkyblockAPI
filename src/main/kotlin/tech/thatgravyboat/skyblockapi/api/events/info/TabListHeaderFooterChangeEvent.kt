@@ -5,18 +5,18 @@ import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.chunked
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-typealias TabListHeaderFooterUpdateEvent = TabListHeaderFooterChangeEvent
+public typealias TabListHeaderFooterUpdateEvent = TabListHeaderFooterChangeEvent
 
-data class TabListHeaderFooterChangeEvent(
+public data class TabListHeaderFooterChangeEvent(
     val oldFooter: Component,
     val oldHeader: Component,
     val newFooter: Component,
     val newHeader: Component,
 ) : SkyBlockEvent() {
-    val newFooterChunked by lazy { newFooter.chunk() }
-    val newHeaderChunked by lazy { newHeader.chunk() }
-    val oldFooterChunked by lazy { oldFooter.chunk() }
-    val oldHeaderChunked by lazy { oldHeader.chunk() }
+    public val newFooterChunked: List<List<String>> by lazy { newFooter.chunk() }
+    public val newHeaderChunked: List<List<String>> by lazy { newHeader.chunk() }
+    public val oldFooterChunked: List<List<String>> by lazy { oldFooter.chunk() }
+    public val oldHeaderChunked: List<List<String>> by lazy { oldHeader.chunk() }
 
     private fun Component.chunk() = stripped.split("\n")
         .chunked(CharSequence::isBlank)

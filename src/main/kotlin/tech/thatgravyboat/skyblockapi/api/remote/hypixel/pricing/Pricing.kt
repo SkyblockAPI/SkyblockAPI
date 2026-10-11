@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing
 
-object Pricing {
-    fun getPrice(id: String?): Long {
+public object Pricing {
+    public fun getPrice(id: String?): Long {
         val product = BazaarAPI.getProduct(id)
         if (product != null) {
             return product.sellPrice.toLong()

@@ -18,7 +18,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.component.ItemContainerContents
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -31,6 +30,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.createSkull
 import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.sanitizeForCommandInput
@@ -50,18 +50,24 @@ import kotlin.math.max
 import kotlin.math.min
 
 @Module
-object GiveCommands {
+public object GiveCommands {
 
-    const val red = 0xf38ba8
-    const val darkRed = 0xe78284
-    const val peach = 0xfab387
-    const val yellow = 0xe5c890
-    const val green = 0xa6e3a1
-    const val text = 0xc6d0f5
-    const val pink = 0xf5bde6
+    public const val red: Int = 0xf38ba8
+    public const val darkRed: Int = 0xe78284
+    public const val peach: Int = 0xfab387
+    public const val yellow: Int = 0xe5c890
+    public const val green: Int = 0xa6e3a1
+    public const val text: Int = 0xc6d0f5
+    public const val pink: Int = 0xf5bde6
 
     @Subscription
     private fun RegisterSkyblockApiCommandsEvent.onRegister() {
+        command("dev give") {
+            "skull" executes {
+                tryGive(createSkull(McClient.clipboard))
+            }
+        }
+
         register("dev give item") {
             callback {
                 val item = McClient.clipboard.readJson<JsonElement>().toData(ItemStack.CODEC)
@@ -126,7 +132,7 @@ object GiveCommands {
         }
     }
 
-    fun findBy(flags: Map<FindFlag, Any>, search: String, converter: (SkyBlockId) -> String) {
+    public fun findBy(flags: Map<FindFlag, Any>, search: String, converter: (SkyBlockId) -> String) {
         val caseInsensitive = !flags.containsKey(FindFlag.MATCH_CASE)
         val give = flags.containsKey(FindFlag.GIVE)
         val tag = flags[FindFlag.CUSTOM_DATA] as? Tag
@@ -213,9 +219,10 @@ object GiveCommands {
         }
     }
 
-    fun fillAndGiveShulkers(items: List<ItemStack>) {
+    public fun fillAndGiveShulkers(items: List<ItemStack>) {
         val maxAmount = items.size
         items.chunked(28).mapIndexed { index, items ->
+            @Suppress("DEPRECATION")
             when ((index + 10) % 16) {
                 0 -> Items.DYED_SHULKER_BOX.white
                 1 -> Items.DYED_SHULKER_BOX.orange
@@ -249,7 +256,7 @@ object GiveCommands {
     private const val OPERATOR_GROUP = "operator"
     private const val LIMIT_GROUP = "limits"
 
-    enum class FindFlag(
+    public enum class FindFlag(
         override val shortName: Char,
         longName: String?,
         override val flagType: ArgumentType<*>?,
@@ -266,12 +273,12 @@ object GiveCommands {
         CUSTOM_DATA('d', NbtTagArgument.nbtTag(), group = null)
         ;
 
-        override val longName = (longName ?: name).lowercase()
+        override val longName: String = (longName ?: name).lowercase()
 
         constructor(shortName: Char, argumentType: ArgumentType<*>? = null, group: String? = OPERATOR_GROUP) : this(shortName, null, argumentType, group)
     }
 
-    fun tryGive(itemStack: ItemStack) {
+    public fun tryGive(itemStack: ItemStack) {
         val item = itemStack.copyWithCount(1)
         if (McPlayer.self?.gameMode()?.isCreative != true || !McClient.isSingleplayer || McPlayer.self?.hasInfiniteMaterials() != true) {
             Text.of("Not in singleplayer and creative!", red).sendWithPrefix("sbapi-dev-give-singleplayer")

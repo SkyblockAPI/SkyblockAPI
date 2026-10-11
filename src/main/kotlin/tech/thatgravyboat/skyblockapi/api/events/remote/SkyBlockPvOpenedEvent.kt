@@ -30,7 +30,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.getPath
  * It will only return the JsonObject of the selected profile.
  */
 @SkyBlockPvRequired
-data class SkyBlockPvOpenedEvent(val profileData: JsonObject) : SkyBlockEvent() {
+public data class SkyBlockPvOpenedEvent(val profileData: JsonObject) : SkyBlockEvent() {
     /** member data of the McPlayer in the currently selected profile */
     val member: JsonObject = profileData.getPath("members.${McPlayer.uuid.toDashlessString()}")?.asJsonObject!!
 }
@@ -44,4 +44,4 @@ data class SkyBlockPvOpenedEvent(val profileData: JsonObject) : SkyBlockEvent() 
 )
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.CLASS)
-annotation class SkyBlockPvRequired
+public annotation class SkyBlockPvRequired
