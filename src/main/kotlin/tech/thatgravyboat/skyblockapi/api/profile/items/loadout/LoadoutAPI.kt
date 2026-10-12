@@ -5,8 +5,8 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
@@ -33,9 +33,7 @@ public data object LoadoutAPI : ItemDebugCategory {
     private inline val storage get() = LoadoutStorage.loadout
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("loadout")
-    private val chatGroup = RegexGroup.CHAT.group("loadout")
     private val titleRegex = inventoryGroup.create("title", "\\((?<current>\\d+)/(?<max>\\d+)\\) Loadouts")
-    private val loadoutEquipped = chatGroup.create("equipped", "You equipped (?<name>.+)!")
     private val armorTypes = listOf("Helmet", "Chestplate", "Leggings", "Boots")
     private val equipmentTypes = listOf("Necklace", "Cloak", "Belt", "Gloves/Bracelet")
     private val containerRegion = ContainerRegion(width = 3, height = 4, startRow = 1, startColumn = 5)
@@ -169,11 +167,15 @@ public data object LoadoutAPI : ItemDebugCategory {
     }
 
     @Subscription
-    context(event: ChatReceivedEvent.Pre)
-    private fun onChat() {
-        loadoutEquipped.match(event.text, "name") { (loadout) ->
-            val loadout = storage?.slots?.values?.find { it.name == loadout } ?: return@match
-            swapLoadout(loadout)
+    context(event: SlotClickEvent)
+    private fun onClick() {
+        titleRegex.match(event.title, "current") { (current) ->
+            context(DataSource.OVERVIEW) {
+                val currentPage = current.toIntValue()
+                val slotId = containerRegion.getId(event.slot, currentPage) ?: return@match
+                val loadout = storage?.slots?.values?.find { it.id == slotId && !it.locked } ?: return@match
+                swapLoadout(loadout)
+            }
         }
     }
 }
