@@ -2,6 +2,12 @@ package tech.thatgravyboat.skyblockapi.api.events.base
 
 import java.lang.reflect.Method
 import java.util.ServiceLoader
+import kotlin.reflect.KClass
+
+/** Annotation added to event predicate annotations to indicate which classes it can be used on. */
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.ANNOTATION_CLASS)
+public annotation class PredicateForEvents(vararg val event: KClass<out SkyBlockEvent>)
 
 public typealias EventPredicate = (event: SkyBlockEvent, context: Any?) -> Boolean
 
