@@ -59,6 +59,7 @@ public data object LoadoutAPI : ItemDebugCategory {
                 event.item.addDebugString { "Slot: $slot" }
 
                 val name = event.item.cleanName
+
                 @Suppress("DEPRECATION")
                 val locked = event.item.`is`(ColoredItems.RED_DYE)
                 event.item.addDebugString { "Locked: $locked" }
@@ -115,7 +116,12 @@ public data object LoadoutAPI : ItemDebugCategory {
                     val armorNotNull = armorNames.indexOfFirst { it != null }
 
                     addArmorOrEquipment(ArmorWardrobeAPI.slots, armorNames, uuid, armorNotNull) { "armor" }
-                    addArmorOrEquipment(EquipmentWardrobeAPI.slots, equipmentNames, uuid, if (armorNotNull != -1) -1 else equipmentNames.indexOfFirst { it != null }) { "equipment" }
+                    addArmorOrEquipment(
+                        EquipmentWardrobeAPI.slots,
+                        equipmentNames,
+                        uuid,
+                        if (armorNotNull != -1) -1 else equipmentNames.indexOfFirst { it != null },
+                    ) { "equipment" }
 
                     this.equipment = value(
                         EquipmentWardrobeAPI.slots.indexOfFirst {
@@ -137,7 +143,13 @@ public data object LoadoutAPI : ItemDebugCategory {
     }
 
     context(_: DataSource, event: InventoryChangeEvent)
-    private inline fun LoadoutSlot.addArmorOrEquipment(slots: List<WardrobeSlot>, names: MutableList<String?>, uuid: UUID?, firstNotNull: Int, type: () -> String) {
+    private inline fun LoadoutSlot.addArmorOrEquipment(
+        slots: List<WardrobeSlot>,
+        names: MutableList<String?>,
+        uuid: UUID?,
+        firstNotNull: Int,
+        type: () -> String,
+    ) {
         if (uuid != null && firstNotNull != -1) {
             val result = slots.indexOfFirst { it.slots[firstNotNull][DataTypes.UUID] == uuid }
             if (result != -1) {
@@ -169,12 +181,14 @@ public data object LoadoutAPI : ItemDebugCategory {
     @Subscription
     context(event: SlotClickEvent)
     private fun onClick() {
-        titleRegex.match(event.title, "current") { (current) ->
-            context(DataSource.OVERVIEW) {
-                val currentPage = current.toIntValue()
-                val slotId = containerRegion.getId(event.slot, currentPage) ?: return@match
-                val loadout = storage?.slots?.values?.find { it.id == slotId && !it.locked } ?: return@match
-                swapLoadout(loadout)
+        if (event.button == 1) {
+            titleRegex.match(event.title, "current") { (current) ->
+                context(DataSource.OVERVIEW) {
+                    val currentPage = current.toIntValue()
+                    val slotId = containerRegion.getId(event.slot, currentPage) ?: return@match
+                    val loadout = storage?.slots?.values?.find { it.id == slotId && !it.locked } ?: return@match
+                    swapLoadout(loadout)
+                }
             }
         }
     }
