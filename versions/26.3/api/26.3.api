@@ -2282,6 +2282,10 @@ public abstract interface class tech/thatgravyboat/skyblockapi/api/events/base/E
 public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/base/OffThreadEvent : java/lang/annotation/Annotation {
 }
 
+public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/base/PredicateForEvents : java/lang/annotation/Annotation {
+	public abstract fun event ()[Ljava/lang/Class;
+}
+
 public abstract class tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	protected fun <init> ()V
 	public final fun isCancelled ()Z
