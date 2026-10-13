@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.loadout
 
+import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
@@ -181,7 +182,7 @@ public data object LoadoutAPI : ItemDebugCategory {
     @Subscription
     context(event: SlotClickEvent)
     private fun onClick() {
-        if (event.button == 1) {
+        if (event.button == InputConstants.MOUSE_BUTTON_LEFT) {
             titleRegex.match(event.title, "current") { (current) ->
                 context(DataSource.OVERVIEW) {
                     val currentPage = current.toIntValue()
