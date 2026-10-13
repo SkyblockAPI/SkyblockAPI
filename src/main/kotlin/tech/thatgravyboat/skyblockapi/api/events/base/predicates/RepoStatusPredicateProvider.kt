@@ -14,7 +14,7 @@ import java.lang.reflect.Method
 @PredicateForEvents(
     RepoEvent::class,
     //? < 26.3
-    //RepoStatusEvent::class
+    //@Suppress("DEPRECATION") RepoStatusEvent::class
 )
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
