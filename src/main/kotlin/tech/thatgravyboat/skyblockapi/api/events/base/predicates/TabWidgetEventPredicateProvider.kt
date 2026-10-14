@@ -2,18 +2,21 @@ package tech.thatgravyboat.skyblockapi.api.events.base.predicates
 
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
+import tech.thatgravyboat.skyblockapi.api.events.base.PredicateForEvents
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
+import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import tech.thatgravyboat.skyblockapi.utils.extentions.toEnumSet
 import java.lang.reflect.Method
 
+@PredicateForEvents(TabWidgetChangeEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlyWidget(
+public annotation class OnlyWidget(
     vararg val widgets: TabWidget
 )
 
-class TabWidgetEventPredicateProvider : EventPredicateProvider {
+public class TabWidgetEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         val onlyIn = method.getAnnotation<OnlyWidget>() ?: return null

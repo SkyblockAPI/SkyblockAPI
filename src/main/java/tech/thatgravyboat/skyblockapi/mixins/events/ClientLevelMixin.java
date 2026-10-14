@@ -25,7 +25,7 @@ public abstract class ClientLevelMixin extends Level {
     private void onBlockUpdate(BlockPos pos, BlockState blockState, int updateFlag, Operation<Void> original) {
         BlockState oldBlockState = getBlockState(pos);
         original.call(pos, blockState, updateFlag);
-        PacketEventHandler.INSTANCE.postBlockChange$skyblock_api(pos.immutable(), oldBlockState, blockState);
+        PacketEventHandler.INSTANCE.postBlockChange$tech_thatgravyboat_skyblock_api(pos.immutable(), oldBlockState, blockState);
     }
 
 }

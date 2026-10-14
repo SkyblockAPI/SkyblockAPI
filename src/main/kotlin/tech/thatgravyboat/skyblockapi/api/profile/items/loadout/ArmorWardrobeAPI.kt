@@ -18,17 +18,14 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.roundToNextMultipleOf
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
-import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import kotlin.math.max
 
 private const val SELECT_START_INDEX = 36
 private const val WARDROBE_SLOTS_PER_PAGE = 9
 
 @Module
-object ArmorWardrobeAPI {
+public object ArmorWardrobeAPI {
     private val wardrobeGroup = RegexGroup.INVENTORY.group("wardrobe.armor")
 
     private val inventoryNameRegex = wardrobeGroup.create(
@@ -43,15 +40,15 @@ object ArmorWardrobeAPI {
 
     private val emptyArmor = mutableListOf(ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY)
 
-    var inWardrobe = false
+    public var inWardrobe: Boolean = false
         private set
 
     /** 0 if not in wardrobe */
-    var currentPage = 0
+    public var currentPage: Int = 0
         private set
 
-    val slots get() = LoadoutStorage.armor?.slots ?: emptyList()
-    val currentSlot: Int? get() = LoadoutStorage.armor?.currentSlot
+    public val slots: List<WardrobeSlot> get() = LoadoutStorage.armor?.slots ?: emptyList()
+    public val currentSlot: Int? get() = LoadoutStorage.armor?.currentSlot
 
     private fun processInventory(title: String, items: List<ItemStack>) {
         inventoryNameRegex.match(title, "currentPage") { (currentPage) ->
@@ -65,6 +62,7 @@ object ArmorWardrobeAPI {
             val id = WARDROBE_SLOTS_PER_PAGE * (currentPage - 1) + index + 1
             var locked = false
 
+            @Suppress("DEPRECATION")
             if (selectStack.item == ColoredItems.RED_DYE) {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
@@ -87,7 +85,7 @@ object ArmorWardrobeAPI {
         }
     }
 
-    fun isCurrentSlotInCurrentPage(): Boolean {
+    public fun isCurrentSlotInCurrentPage(): Boolean {
         val slot = currentSlot ?: return false
         val first = (currentPage - 1) * WARDROBE_SLOTS_PER_PAGE + 1
         val last = first + WARDROBE_SLOTS_PER_PAGE - 1
@@ -95,27 +93,27 @@ object ArmorWardrobeAPI {
     }
 
     @Subscription
-    fun onInventoryUpdate(event: InventoryChangeEvent) {
+    internal fun onInventoryUpdate(event: InventoryChangeEvent) {
         inWardrobe = inventoryNameRegex.matches(event.title)
 
         if (inWardrobe) processInventory(event.title, event.itemStacks)
     }
 
     @Subscription
-    fun onInventoryOpen(event: ContainerInitializedEvent) {
+    internal fun onInventoryOpen(event: ContainerInitializedEvent) {
         inWardrobe = inventoryNameRegex.matches(event.title)
 
         if (inWardrobe) processInventory(event.title, event.itemStacks)
     }
 
     @Subscription(ContainerCloseEvent::class)
-    fun onInventoryClose() {
+    internal fun onInventoryClose() {
         inWardrobe = false
         currentPage = 0
     }
 
     @Subscription(ProfileChangeEvent::class)
-    fun onProfileSwitch() {
+    internal fun onProfileSwitch() {
         val slotCount = max(
             slots.size.roundToNextMultipleOf(WARDROBE_SLOTS_PER_PAGE),
             WARDROBE_SLOTS_PER_PAGE * 3,
@@ -132,7 +130,7 @@ object ArmorWardrobeAPI {
 
     @Subscription
     context(event: LoadoutChangeEvent)
-    fun onLoadoutSwitch() {
+    internal fun onLoadoutSwitch() {
         LoadoutStorage.armor?.currentSlot = event.new?.armor.value() ?: return
         debugString(loadoutDebug) { "Setting wardrobe!" }
     }

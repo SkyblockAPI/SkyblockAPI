@@ -2,13 +2,16 @@ package tech.thatgravyboat.skyblockapi.api.events.base.predicates
 
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
+import tech.thatgravyboat.skyblockapi.api.events.base.PredicateForEvents
+import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
 import java.lang.reflect.Method
 
+@PredicateForEvents(TickEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class TimePassed(
+public annotation class TimePassed(
 
     /**
      * Duration formatted in the 2m 5s format
@@ -17,7 +20,7 @@ annotation class TimePassed(
 )
 
 
-class TickEventPredicateProvider : EventPredicateProvider {
+public class TickEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         val timePassed = method.getAnnotation<TimePassed>() ?: return null

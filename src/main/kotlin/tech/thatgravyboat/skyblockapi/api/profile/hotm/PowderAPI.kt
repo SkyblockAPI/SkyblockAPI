@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 
 @Suppress("unused")
 @Module
-object PowderAPI : SkillTreeCurrencyAPI<PowderType, PowderAPI>(
+public object PowderAPI : SkillTreeCurrencyAPI<PowderType, PowderAPI>(
     "powder",
     PowderStorage,
     PowderType::class,
@@ -18,13 +18,13 @@ object PowderAPI : SkillTreeCurrencyAPI<PowderType, PowderAPI>(
     TabWidget.POWDERS
 ) {
 
-    val mithril: Long get() = getCurrent(PowderType.MITHRIL)
-    val gemstone: Long get() = getCurrent(PowderType.GEMSTONE)
-    val glacite: Long get() = getCurrent(PowderType.GLACITE)
+    public val mithril: Long get() = getCurrent(PowderType.MITHRIL)
+    public val gemstone: Long get() = getCurrent(PowderType.GEMSTONE)
+    public val glacite: Long get() = getCurrent(PowderType.GLACITE)
 
-    val mithrilTotal: Long get() = getTotal(PowderType.MITHRIL)
-    val gemstoneTotal: Long get() = getTotal(PowderType.GEMSTONE)
-    val glaciteTotal: Long get() = getTotal(PowderType.GLACITE)
+    public val mithrilTotal: Long get() = getTotal(PowderType.MITHRIL)
+    public val gemstoneTotal: Long get() = getTotal(PowderType.GEMSTONE)
+    public val glaciteTotal: Long get() = getTotal(PowderType.GLACITE)
 
     override fun LoadoutSlot.getLoadoutMatch(): StringMatch? = hotm
 

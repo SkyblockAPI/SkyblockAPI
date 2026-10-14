@@ -17,20 +17,20 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.asComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
 
-class ItemBuilder {
-    lateinit var item: Item
-    var count: Int = 1
+public class ItemBuilder {
+    public lateinit var item: Item
+    public var count: Int = 1
     private var components = DataComponentPatch.builder()
     private var clickAction: ClickConsumer? = null
-    var customSlotText: String? = null
-    var customSlotComponent: Component? = null
-    var backgroundItem: ItemStack? = null
-    var backgroundColor: Int = 0
-    var foregroundColor: Int = 0
-    var borderColor: Int = 0
+    public var customSlotText: String? = null
+    public var customSlotComponent: Component? = null
+    public var backgroundItem: ItemStack? = null
+    public var backgroundColor: Int = 0
+    public var foregroundColor: Int = 0
+    public var borderColor: Int = 0
 
-    companion object {
-        operator fun invoke(item: ItemLike, init: ItemBuilder.() -> Unit): ItemStack {
+    public companion object {
+        public operator fun invoke(item: ItemLike, init: ItemBuilder.() -> Unit): ItemStack {
             return ItemBuilder().apply {
                 this.item = item.asItem()
                 init()
@@ -41,7 +41,7 @@ class ItemBuilder {
     /**
      * Copies the state of the stack to this builder. Replacing existing components, item, and count.
      */
-    fun copyFrom(data: ItemStack) = apply {
+    public fun copyFrom(data: ItemStack): ItemBuilder = apply {
         this.components = DataComponentPatch.builder()
         this.applyFrom(data)
     }
@@ -49,7 +49,7 @@ class ItemBuilder {
     /**
      * Applies the state of the stack to this builder. Keeping existing components if already set but replacing item and count.
      */
-    fun applyFrom(stack: ItemStack) = apply {
+    public fun applyFrom(stack: ItemStack): ItemBuilder = apply {
         this.item = stack.item
         this.count = stack.count
 
@@ -65,34 +65,34 @@ class ItemBuilder {
     private val customItemName: Component?
         get() = components.build().get(DataComponentMap.EMPTY, DataComponents.CUSTOM_NAME)
 
-    fun namePrefix(prefix: String) = namePrefix(Component.literal(prefix))
-    fun namePrefix(prefix: Component) = name(Text.join(prefix, customItemName))
+    public fun namePrefix(prefix: String): ItemBuilder = namePrefix(Component.literal(prefix))
+    public fun namePrefix(prefix: Component): ItemBuilder = name(Text.join(prefix, customItemName))
 
-    fun name(name: String) = name(Component.literal(name))
-    fun name(name: Component) = apply {
+    public fun name(name: String): ItemBuilder = name(Component.literal(name))
+    public fun name(name: Component): ItemBuilder = apply {
         components.set(
             DataComponents.CUSTOM_NAME,
             name.copy().setItalic(),
         )
     }
 
-    fun nameSuffix(suffix: String) = nameSuffix(Component.literal(suffix))
-    fun nameSuffix(suffix: Component) = name(Text.join(customItemName, suffix))
+    public fun nameSuffix(suffix: String): ItemBuilder = nameSuffix(Component.literal(suffix))
+    public fun nameSuffix(suffix: Component): ItemBuilder = name(Text.join(customItemName, suffix))
 
     private fun MutableComponent.setItalic() = style { this.withItalic(this@setItalic.style.isItalic) }
 
-    fun tooltip(init: TooltipBuilder.() -> Unit) = apply {
+    public fun tooltip(init: TooltipBuilder.() -> Unit): ItemBuilder = apply {
         val builder = TooltipBuilder()
         builder.init()
         components.set(DataComponents.LORE, ItemLore(builder.lines(), builder.lines()))
     }
 
     /** If [clickAction] returns null, it won't cancel the original click. */
-    fun onClick(clickAction: ((Int) -> Unit?)?) {
+    public fun onClick(clickAction: ((Int) -> Unit?)?) {
         this.clickAction = clickAction?.let(::ClickConsumer)
     }
 
-    fun <T : Any> set(type: DataComponentType<T>, value: T?) {
+    public fun <T : Any> set(type: DataComponentType<T>, value: T?) {
         if (value != null) {
             components.set(type, value)
         } else {
@@ -100,7 +100,7 @@ class ItemBuilder {
         }
     }
 
-    fun build(): ItemStack {
+    public fun build(): ItemStack {
         return ItemStack(item.holder, count, components.build()).apply {
             this.asVisualItemAccessor().let {
                 it.`skyblockapi$setSlotText`(customSlotText?.asComponent() ?: customSlotComponent)

@@ -10,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentViewerData;
 import tech.thatgravyboat.skyblockapi.impl.debug.components.EntityDataCategory;
 import tech.thatgravyboat.skyblockapi.impl.debug.components.NbtComponentData;
 import tech.thatgravyboat.skyblockapi.platform.EntityPlatformKt;
-
 import java.util.HashMap;
 import java.util.Map;
 

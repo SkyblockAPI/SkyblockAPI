@@ -17,38 +17,38 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 
-abstract class SkillTreeAPI<
+public abstract class SkillTreeAPI<
     Perk : SkillTreePerk,
     Self : SkillTreeAPI<Perk, Self>
 > internal constructor(
-    val name: String,
+    public val name: String,
     private val perkItems: ItemTagKey,
     private val storage: SkillTreeStorage<Perk, out SkillTreeData<Perk>>,
     identifier: String,
-    val type: SkillTreeType<SkillTreeAPI<Perk, Self>>,
+    public val type: SkillTreeType<SkillTreeAPI<Perk, Self>>,
 ) {
-    protected val inventoryGroup = RegexGroup.INVENTORY.group(name)
+    protected val inventoryGroup: RegexGroup = RegexGroup.INVENTORY.group(name)
 
     internal open val titleRegex = inventoryGroup.create("title", "Heart of the $identifier")
-    protected open val levelRegex = inventoryGroup.create("level", "Level (?<level>\\d+)(?:/\\d+)?")
-    protected open val disabledRegex = inventoryGroup.create("disabled", "DISABLED|Click to select!")
-    protected open val tokensRegex = inventoryGroup.create("tokens", "Tokens? of the $identifier: (?<tokens>\\d+)")
-    protected open val spentTokensRegex = inventoryGroup.create("tokens.spent", "\\s*-\\s*(?<tokens>[\\d,.]+) Tokens? of the $identifier")
-    protected open val tierRegex = inventoryGroup.create("tier", "Tier (?<tier>\\d+)")
-    protected open val tierUnlockedRegex = inventoryGroup.create("tier.unlocked", "UNLOCKED")
-    protected open val currentPresetRegex = inventoryGroup.create("preset.current", "Current: (?<preset>.+)")
+    protected open val levelRegex: Regex = inventoryGroup.create("level", "Level (?<level>\\d+)(?:/\\d+)?")
+    protected open val disabledRegex: Regex = inventoryGroup.create("disabled", "DISABLED|Click to select!")
+    protected open val tokensRegex: Regex = inventoryGroup.create("tokens", "Tokens? of the $identifier: (?<tokens>\\d+)")
+    protected open val spentTokensRegex: Regex = inventoryGroup.create("tokens.spent", "\\s*-\\s*(?<tokens>[\\d,.]+) Tokens? of the $identifier")
+    protected open val tierRegex: Regex = inventoryGroup.create("tier", "Tier (?<tier>\\d+)")
+    protected open val tierUnlockedRegex: Regex = inventoryGroup.create("tier.unlocked", "UNLOCKED")
+    protected open val currentPresetRegex: Regex = inventoryGroup.create("preset.current", "Current: (?<preset>.+)")
 
-    open val perks: Map<String, Perk>
+    public open val perks: Map<String, Perk>
         get() = storage.perks
-    val unlockedPerks: Map<String, Perk>
+    public val unlockedPerks: Map<String, Perk>
         get() = perks.filter { it.value.unlocked }
-    val activePerks: Map<String, Perk>
+    public val activePerks: Map<String, Perk>
         get() = perks.filter { it.value.unlocked && !it.value.disabled }
 
-    open val tokens: Int
+    public open val tokens: Int
         get() = storage.tokens
 
-    open val tier: Int
+    public open val tier: Int
         get() = storage.tier
 
     internal open fun getCurrentPreset(lore: List<String>): String? {

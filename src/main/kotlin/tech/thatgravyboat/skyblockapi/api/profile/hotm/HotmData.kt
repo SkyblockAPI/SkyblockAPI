@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeLoadout
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreePerk
 
 @GenerateCodec
-data class HotmData(
+public data class HotmData(
     @OptionalNullable
     override var currentLoadoutName: String? = null,
     @Compact
@@ -18,7 +18,7 @@ data class HotmData(
 ) : SkillTreeData<HotmPerk>
 
 @GenerateCodec
-data class HotmPerk(
+public data class HotmPerk(
     override val level: Int,
     override val unlocked: Boolean,
     override val disabled: Boolean,

@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 
 @Suppress("unused")
 @Module
-object WhispersAPI : SkillTreeCurrencyAPI<WhisperType, WhispersAPI>(
+public object WhispersAPI : SkillTreeCurrencyAPI<WhisperType, WhispersAPI>(
     "whispers",
     WhisperStorage,
     WhisperType::class,
@@ -18,14 +18,14 @@ object WhispersAPI : SkillTreeCurrencyAPI<WhisperType, WhispersAPI>(
     TabWidget.FOREST_WHISPERS, TabWidget.DESERT_WHISPERS
 ) {
 
-    val forest: Long
+    public val forest: Long
         get() = getCurrent(WhisperType.FOREST)
-    val forestTotal: Long
+    public val forestTotal: Long
         get() = getTotal(WhisperType.FOREST)
 
-    val desert: Long
+    public val desert: Long
         get() = getCurrent(WhisperType.DESERT)
-    val desertTotal: Long
+    public val desertTotal: Long
         get() = getTotal(WhisperType.DESERT)
 
     override fun LoadoutSlot.getLoadoutMatch(): StringMatch? = hotm

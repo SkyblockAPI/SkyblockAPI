@@ -13,11 +13,11 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockPetsRepo.Query
 import tech.thatgravyboat.skyblockapi.utils.command.EnumArgument
+import tech.thatgravyboat.skyblockapi.utils.extentions.nextCycling
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
 import java.text.DecimalFormat
-
 
 private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
     field("id", StringArgumentType.string(), Query::id) { suggestions ->
@@ -37,7 +37,7 @@ private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
 }
 
 @Module
-object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
+public object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
 
     private val repo get() = RepoAPI.pets()
     private val loreFormatter = DecimalFormat("0.####")
@@ -45,7 +45,8 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
 
     override fun create(key: Query): LazyItemStack? {
         val data = repo.getPet(key.id) ?: return null
-        val pet = data.tiers()[key.rarity.name] ?: return null
+        val rarity = if (key.heldItem == "PET_ITEM_TIER_BOOST") key.rarity.nextCycling() else key.rarity
+        val pet = data.tiers()[rarity.name] ?: return null
 
         val itemString = pet.item.toString().replace(variablePattern) { match ->
             val variable = match.groupValues[1]
@@ -89,9 +90,9 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
         return baseItem
     }
 
-    fun get(id: String): PetsAPI.Data? = ifInitialized { this.repo.getPet(id) }
+    public fun get(id: String): PetsAPI.Data? = ifInitialized { this.repo.getPet(id) }
 
-    data class Query(
+    public data class Query(
         var id: String = "",
         var rarity: SkyBlockRarity = SkyBlockRarity.COMMON,
         var level: Int = 100,
@@ -99,6 +100,6 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
         var heldItem: String? = null,
         var showStatBounds: Boolean = false,
     ) {
-        constructor(id: String = "", rarity: SkyBlockRarity = SkyBlockRarity.COMMON, level: Int = 100, skin: String? = null, heldItem: String? = null): this(id, rarity, level, skin, heldItem, false)
+        public constructor(id: String = "", rarity: SkyBlockRarity = SkyBlockRarity.COMMON, level: Int = 100, skin: String? = null, heldItem: String? = null): this(id, rarity, level, skin, heldItem, false)
     }
 }

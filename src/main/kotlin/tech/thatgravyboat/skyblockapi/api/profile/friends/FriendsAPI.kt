@@ -22,7 +22,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.find
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
@@ -32,7 +31,7 @@ import java.util.UUID
 
 @Suppress("unused")
 @Module
-object FriendsAPI {
+public object FriendsAPI {
 
     //region Regex
     private val regexGroup = RegexGroup.CHAT.group("friend")
@@ -75,18 +74,18 @@ object FriendsAPI {
     )
     //endregion
 
-    val friends: List<Friend>
+    public val friends: List<Friend>
         get() = FriendStorage.friends
 
-    fun isFriend(name: String): Boolean = FriendStorage.getFriend(name) != null
+    public fun isFriend(name: String): Boolean = FriendStorage.getFriend(name) != null
 
-    fun isFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid) != null
+    public fun isFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid) != null
 
-    fun isBestFriend(name: String): Boolean = FriendStorage.getFriend(name)?.bestFriend ?: false
+    public fun isBestFriend(name: String): Boolean = FriendStorage.getFriend(name)?.bestFriend ?: false
 
-    fun isBestFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid)?.bestFriend ?: false
+    public fun isBestFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid)?.bestFriend ?: false
 
-    fun getFriend(name: String): Friend? = FriendStorage.getFriend(name)
+    public fun getFriend(name: String): Friend? = FriendStorage.getFriend(name)
 
     // Dealing with friends list
     private var currentPage: Int = 0
@@ -95,7 +94,7 @@ object FriendsAPI {
     private val foundFriends: MutableSet<String> = mutableSetOf()
 
     @Subscription(priority = Int.MIN_VALUE)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val components = event.component.splitLines()
         if (components.size == 1) {
             handleSingleLine(components.first())
@@ -267,6 +266,6 @@ object FriendsAPI {
     }
 
     @Subscription(ServerDisconnectEvent::class)
-    fun onDisconnect() = resetListSearch()
+    private fun onDisconnect() = resetListSearch()
 
 }

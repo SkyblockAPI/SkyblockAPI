@@ -10,13 +10,8 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
-import tech.thatgravyboat.skyblockapi.impl.debug.addStringDebug
-import tech.thatgravyboat.skyblockapi.utils.DevUtils
-import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils
-import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugMessage
 import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.container.ContainerRegion
-import tech.thatgravyboat.skyblockapi.utils.container.ContentFlow
 import tech.thatgravyboat.skyblockapi.utils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
@@ -26,14 +21,12 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import java.util.UUID
-import java.util.function.Function
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import kotlin.math.floor
 
 @Module
-data object LoadoutAPI : ItemDebugCategory {
+public data object LoadoutAPI : ItemDebugCategory {
 
     internal val loadoutDebug = debugToggle("loadout_debug_messages", "What the name says.")
 
@@ -68,6 +61,7 @@ data object LoadoutAPI : ItemDebugCategory {
                 event.item.addDebugString { "Slot: $slot" }
 
                 val name = event.item.cleanName
+                @Suppress("DEPRECATION")
                 val locked = event.item.`is`(ColoredItems.RED_DYE)
                 event.item.addDebugString { "Locked: $locked" }
 
@@ -184,5 +178,5 @@ data object LoadoutAPI : ItemDebugCategory {
     }
 }
 
-data class LoadoutChangeEvent(val old: LoadoutSlot?, val new: LoadoutSlot?) : SkyBlockEvent()
+public data class LoadoutChangeEvent(val old: LoadoutSlot?, val new: LoadoutSlot?) : SkyBlockEvent()
 

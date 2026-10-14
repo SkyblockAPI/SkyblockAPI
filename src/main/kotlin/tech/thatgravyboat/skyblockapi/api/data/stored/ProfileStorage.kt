@@ -18,6 +18,7 @@ internal object ProfileStorage {
 
     private inline val data get(): ProfileData = PROFILE.get()
 
+    fun getProfileTypes(): Map<String, ProfileType> = data.profileType
     fun getProfileType(): ProfileType = data.profileType[ProfileAPI.profileName] ?: ProfileType.UNKNOWN
 
     fun setProfileType(profileType: ProfileType) {
@@ -69,12 +70,35 @@ internal object ProfileStorage {
         PROFILE.save()
     }
 
+    fun getAllProfileNames(): Set<String> = buildSet {
+        fun add(map: Map<String, Any>) = this.addAll(map.keys)
+        with (data) {
+            add(profileType)
+            add(sbLevel)
+            add(sbLevelProgress)
+            add(coop)
+            add(profileId)
+        }
+    }
+
+    fun removeProfile(profileName: String) {
+        fun MutableMap<String, out Any>.remove() = remove(profileName)
+        data.apply {
+            profileType.remove()
+            sbLevel.remove()
+            sbLevelProgress.remove()
+            coop.remove()
+            profileId.remove()
+        }
+        PROFILE.save()
+    }
+
     var profileId: UUID?
+        get() = data.profileId[ProfileAPI.profileName]
         set(value) {
             if (value == profileId || value == null) return
             val profileName = ProfileAPI.profileName ?: return
             data.profileId[profileName] = value
             PROFILE.save()
         }
-        get() = data.profileId[ProfileAPI.profileName]
 }

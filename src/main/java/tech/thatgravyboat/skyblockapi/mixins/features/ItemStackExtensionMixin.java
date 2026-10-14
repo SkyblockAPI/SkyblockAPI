@@ -21,7 +21,6 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueCalculator;
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueItemStack;
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemValueResult;
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry;
-
 import java.util.Map;
 import java.util.Objects;
 

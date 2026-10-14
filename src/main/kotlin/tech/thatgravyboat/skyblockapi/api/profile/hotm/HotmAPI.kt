@@ -17,7 +17,7 @@ import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 
 @Module
-object HotmAPI : SkillTreeAPI<HotmPerk, HotmAPI>(
+public object HotmAPI : SkillTreeAPI<HotmPerk, HotmAPI>(
     name = "hotm",
     perkItems = ItemTag.HOTM_PERK_ITEMS,
     storage = HotmStorage,
@@ -27,7 +27,7 @@ object HotmAPI : SkillTreeAPI<HotmPerk, HotmAPI>(
     private var holdingBlueOmelette = false
 
     @Subscription(ContainerInitializedEvent::class)
-    fun onInventoryOpen() {
+    private fun onInventoryOpen() {
         holdingBlueOmelette = McPlayer.heldItem.getData(DataTypes.UPGRADE_MODULE).equals("GOBLIN_OMELETTE_BLUE_CHEESE", true)
     }
 
@@ -37,5 +37,5 @@ object HotmAPI : SkillTreeAPI<HotmPerk, HotmAPI>(
     override fun isUnlocked(item: ItemStack): Boolean {
         return item.getItemModel().let { it != Items.COAL && it != Items.COAL_BLOCK }
     }
-    override fun createPerk(level: Int, unlocked: Boolean, disabled: Boolean) = HotmPerk(level, unlocked, disabled)
+    override fun createPerk(level: Int, unlocked: Boolean, disabled: Boolean): HotmPerk = HotmPerk(level, unlocked, disabled)
 }

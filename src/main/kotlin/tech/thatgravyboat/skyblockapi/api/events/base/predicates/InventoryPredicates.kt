@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.base.predicates
 import org.intellij.lang.annotations.Language
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
+import tech.thatgravyboat.skyblockapi.api.events.base.PredicateForEvents
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
@@ -10,21 +11,24 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.hasAnnotation
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import java.lang.reflect.Method
 
+@PredicateForEvents(InventoryChangeEvent::class, ContainerInitializedEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class InventoryTitle(
+public annotation class InventoryTitle(
     @Language("RegExp") vararg val title: String,
 )
 
+// TODO: this annotation doesnt do anything right now???
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class MustBeContainer
+public annotation class MustBeContainer
 
+@PredicateForEvents(InventoryChangeEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class IgnoreFiller
+public annotation class IgnoreFiller
 
-class InventoryFillerPredicate : EventPredicateProvider {
+public class InventoryFillerPredicate : EventPredicateProvider {
     override fun getPredicate(method: Method): EventPredicate? {
         if (!method.hasAnnotation<IgnoreFiller>()) return null
 
@@ -35,7 +39,7 @@ class InventoryFillerPredicate : EventPredicateProvider {
     }
 }
 
-class InventoryPredicates : EventPredicateProvider {
+public class InventoryPredicates : EventPredicateProvider {
     override fun getPredicate(method: Method): EventPredicate? {
         val inventoryTitle = method.getAnnotation<InventoryTitle>()?.title?.map { Regex(it) }
         val disallowPlayerInventory = method.hasAnnotation<MustBeContainer>()

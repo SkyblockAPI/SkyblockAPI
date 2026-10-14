@@ -5,24 +5,32 @@ import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.entity.*
+import tech.thatgravyboat.skyblockapi.api.events.entity.ComponentAttachEvent
+import tech.thatgravyboat.skyblockapi.api.events.entity.EntityRemovedEvent
+import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent
+import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineAttachEvent
+import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerInfoLineChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
+import tech.thatgravyboat.skyblockapi.utils.extentions.since
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
-import java.util.*
+import java.util.WeakHashMap
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Instant
 
 @Module
-object SlayerAPI {
+public object SlayerAPI {
 
     private val slayerBosses: WeakHashMap<Entity, SlayerInfo> = WeakHashMap()
     private val slayerGroup = RegexGroup.SCOREBOARD.group("slayer")
@@ -40,29 +48,29 @@ object SlayerAPI {
     )
     private val questStarted = chatSlayerGroup.create("started", "\\s+SLAYER QUEST STARTED!")
     private val questCompleted = chatSlayerGroup.create("completed", "\\s+SLAYER QUEST COMPLETE!")
-    private val nametagEndRegex = nameTagGroup.create("end", ".*[❤\uE010] [✯\uE01A]")
+    private val nametagRegex = nameTagGroup.create("nametag", "\\[Lv\\d+] . .*?(?:Hits |[❤\uE010])(?: |[✯\uE01A])?")
 
-    var type: SlayerType? = null
+    public var type: SlayerType? = null
         private set
-    var level: Int = 0
-        private set
-
-    var text: String? = null
+    public var level: Int = 0
         private set
 
-    var progress: SlayerProgress? = null
+    public var text: String? = null
         private set
 
-    var lastType: SlayerType? = null
-        private set
-    var lastLevel: Int = 0
+    public var progress: SlayerProgress? = null
         private set
 
-    var questFinished: Instant = Instant.DISTANT_PAST
+    public var lastType: SlayerType? = null
+        private set
+    public var lastLevel: Int = 0
+        private set
+
+    public var questFinished: Instant = Instant.DISTANT_PAST
         private set
 
     @Subscription
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (event.removed.any { slayerQuestRegex.matches(it) }) {
             reset()
         } else if (type == null && level == 0) {
@@ -90,7 +98,7 @@ object SlayerAPI {
     }
 
     @Subscription
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         matchWhen(event.text) {
             case(questStarted) {
                 if (questFinished.since() < 50.milliseconds) { // we can safely assume that this is auto slayer since it's so fast.
@@ -116,7 +124,7 @@ object SlayerAPI {
 
 
     @Subscription
-    fun onSlayerBarUpdate(event: ComponentAttachEvent) {
+    internal fun onSlayerBarUpdate(event: ComponentAttachEvent) {
         val slayerInfo: SlayerInfo = if (!isSlayerLine(event.literalComponent)) {
             slayerBosses[event.attachedTo] ?: return
         } else {
@@ -128,14 +136,14 @@ object SlayerAPI {
     }
 
     @Subscription
-    fun onNameChangeEvent(event: NameChangedEvent) {
+    internal fun onNameChangeEvent(event: NameChangedEvent) {
         event.attachedTo?.let { slayerBosses[it] }?.let {
             event.cancel()
             SlayerInfoLineChangeEvent(event.component, event.infoLineEntity, it).post(SkyBlockAPI.eventBus)
         }
     }
 
-    private fun isSlayerLine(line: String) = line.startsWith("☠") || nametagEndRegex.match(line)
+    private fun isSlayerLine(line: String) = nametagRegex.match(line)
 
     @ApiDebug("Slayer")
     internal fun debug(builder: DebugBuilder) = with(builder) {
@@ -151,32 +159,32 @@ object SlayerAPI {
     }
 
     @Subscription
-    fun onEntityRemoved(event: EntityRemovedEvent) {
+    internal fun onEntityRemoved(event: EntityRemovedEvent) {
         slayerBosses.remove(event.entity)
     }
 
     @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
-    fun onWorldChange() {
+    internal fun onWorldChange() {
         slayerBosses.clear()
     }
 }
 
-interface SlayerMob {
-    val displayName: String
-    val inGameNames: List<String> get() = listOf(displayName)
+public interface SlayerMob {
+    public val displayName: String
+    public val inGameNames: List<String> get() = listOf(displayName)
 }
 
-val SLAYER_MOBS: List<SlayerMob> = listOf(
+public val SLAYER_MOBS: List<SlayerMob> = listOf(
     SlayerMiniBoss.entries,
     SlayerDemon.entries,
     SlayerType.entries,
 ).flatMap { listOf(*it.toTypedArray<SlayerMob>()) }
 
-enum class SlayerMiniBoss(
+public enum class SlayerMiniBoss(
     override val displayName: String,
-    val tier: Int,
-    val slayerType: SlayerType,
-    val isBigBoy: Boolean = false,
+    public val tier: Int,
+    public val slayerType: SlayerType,
+    public val isBigBoy: Boolean = false,
 ) : SlayerMob {
     REVENANT_SYCOPHANT("Revenant Sycophant", 3, SlayerType.REVENANT_HORROR),
     REVENANT_CHAMPION("Revenant Champion", 4, SlayerType.REVENANT_HORROR),
@@ -203,12 +211,12 @@ enum class SlayerMiniBoss(
     BURNINGSOUL_DEMON("Burningsoul Demon", 4, SlayerType.INFERNO_DEMONLORD, true),
 }
 
-enum class SlayerDemon(override val displayName: String, val slayerType: SlayerType) : SlayerMob {
+public enum class SlayerDemon(override val displayName: String, public val slayerType: SlayerType) : SlayerMob {
     QUAZII("ⓆⓊⒶⓏⒾⒾ", SlayerType.INFERNO_DEMONLORD),
     TYPHOEUS("ⓉⓎⓅⒽⓄⒺⓊⓈ", SlayerType.INFERNO_DEMONLORD)
 }
 
-enum class SlayerType(override val displayName: String, val otherName: String) : SlayerMob {
+public enum class SlayerType(override val displayName: String, public val otherName: String) : SlayerMob {
     REVENANT_HORROR("Revenant Horror", "Zombie") {
         override val inGameNames = listOf("Revenant Horror", "Atoned Horror")
     },
@@ -223,13 +231,13 @@ enum class SlayerType(override val displayName: String, val otherName: String) :
     INFERNO_DEMONLORD("Inferno Demonlord", "Blaze"),
     ;
 
-    val apiName = otherName.lowercase()
+    public val apiName: String = otherName.lowercase()
 
-    companion object {
-        fun fromDisplayName(displayName: String): SlayerType? = entries.find {
+    public companion object {
+        public fun fromDisplayName(displayName: String): SlayerType? = entries.find {
             it.displayName.equals(displayName, ignoreCase = true)
         }
 
-        fun fromName(name: String): SlayerType? = entries.find { it.otherName.equals(name, ignoreCase = true) } ?: fromDisplayName(name)
+        public fun fromName(name: String): SlayerType? = entries.find { it.otherName.equals(name, ignoreCase = true) } ?: fromDisplayName(name)
     }
 }

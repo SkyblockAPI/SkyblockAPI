@@ -13,16 +13,22 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
 @Module
-object TrophyFrogAPI {
+public object TrophyFrogAPI {
 
     private val chatGroup = RegexGroup.CHAT.group("trophy_api")
     private val inventoryGroup = RegexGroup.INVENTORY.group("trophy_api")
 
-    private val trophyFrogCaughtRegex = chatGroup.create(
-        "frog_caught",
-        "\uE02A TROPHY FROG! You caught an? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })})!",
+    private val singleTrophyFrogCaughtRegex = chatGroup.create(
+        "frog_caught_single",
+        "\uE02A TROPHY FROG! You caught(?: an?)? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })})!",
+    )
+
+    private val multiTrophyFrogCaughtRegex = chatGroup.create(
+        "frog_caught_multi",
+        "\uE02A TROPHY FROG! You caught(?: an?)? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })})!",
     )
 
     private val trophyFrogDescription = inventoryGroup.create(
@@ -32,20 +38,30 @@ object TrophyFrogAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.LOTUS_ATOLL)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
-        trophyFrogCaughtRegex.match(content, "type", "tier") { (type, tier) ->
-            val frogTier = TrophyTier.valueOf(tier)
-            val type = TrophyFrogType.getByDisplayName(type) ?: return@match
+        matchWhen(content) {
+            case(singleTrophyFrogCaughtRegex, "type", "tier") { (type, tier) ->
+                val fishTier = TrophyTier.valueOf(tier)
+                val type = TrophyFrogType.getByDisplayName(type) ?: return@case
 
-            TrophyFrogStorage.addCaught(type, frogTier)
-            TrophyCaughtEvent.Frog(type, frogTier).post()
+                TrophyFrogStorage.addCaught(type, fishTier)
+                TrophyCaughtEvent.Frog(type, fishTier).post()
+            }
+            case(multiTrophyFrogCaughtRegex, "type", "tier", "amount") { (type, tier, amount) ->
+                val fishTier = TrophyTier.valueOf(tier)
+                val type = TrophyFrogType.getByDisplayName(type) ?: return@case
+                val amount = amount.toIntOrNull() ?: return@case
+
+                TrophyFrogStorage.addCaught(type, fishTier)
+                TrophyCaughtEvent.Frog(type, fishTier, amount).post()
+            }
         }
     }
 
     @Subscription
     @OnlyIn(SkyBlockIsland.LOTUS_ATOLL)
-    fun onInventory(event: InventoryChangeEvent) {
+    internal fun onInventory(event: InventoryChangeEvent) {
         if (event.title != "Trophy Frogs") return
         if (event.isInPlayerInventory) return
         if (!event.isInMainPart) return
@@ -64,9 +80,9 @@ object TrophyFrogAPI {
         TrophyFrogStorage.setAmounts(byName, caught)
     }
 
-    fun getCaught(type: TrophyFrogType): Map<TrophyTier, Int> {
+    public fun getCaught(type: TrophyFrogType): Map<TrophyTier, Int> {
         return TrophyFrogStorage.getCaught(type)
     }
 
-    // TODO: If possible, load from pv too
+    // TODO: When possible, load from pv too
 }

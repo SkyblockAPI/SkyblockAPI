@@ -18,7 +18,7 @@ private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
 }
 
 @Module
-object SkyBlockPotionsRepo : RepoItemCacheAsQuery<Query>("Potions", ::Query, schema) {
+public object SkyBlockPotionsRepo : RepoItemCacheAsQuery<Query>("Potions", ::Query, schema) {
 
     private val repo get() = RepoAPI.potions()
 
@@ -31,14 +31,14 @@ object SkyBlockPotionsRepo : RepoItemCacheAsQuery<Query>("Potions", ::Query, sch
         return level.item.let(::LazyItemStack)
     }
 
-    fun get(id: String): PotionsAPI.Potion? = ifInitialized {
+    public fun get(id: String): PotionsAPI.Potion? = ifInitialized {
         if (id.lowercase() == "water") {
             return repo.potions().values.find { it.type == null }
         }
         return repo.getPotion(id)
     }
 
-    data class Query(
+    public data class Query(
         var id: String = "",
         var level: Int? = null,
     )

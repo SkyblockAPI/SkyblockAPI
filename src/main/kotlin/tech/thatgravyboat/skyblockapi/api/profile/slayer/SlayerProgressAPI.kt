@@ -16,7 +16,12 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.repo.RepoSlayerData
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
+import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
@@ -26,7 +31,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 private const val NOT_AVAILABLE = "N/A"
 
 @Module
-object SlayerProgressAPI {
+public object SlayerProgressAPI {
 
     private var lastType: SlayerType? = null
     private val chatGroup = RegexGroup.CHAT.group("slayer")
@@ -40,11 +45,11 @@ object SlayerProgressAPI {
     private val inventoryRngNonSelected = inventoryGroup.create("rngNonSelected", "Stored Slayer XP: (?<stored>[\\d,]+)")
     private val inventoryLeaderBoardXp = inventoryGroup.create("leaderboardXp", "(?<type>.*?): (?<xp>[\\d,]+|$NOT_AVAILABLE).*")
 
-    val slayerData: Map<SlayerType, SlayerEntry> get() = SlayerStorage.data
+    public val slayerData: Map<SlayerType, SlayerEntry> get() = SlayerStorage.data
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val found = matchWhen(event.text) {
             case(chatXpRegex, "type", "level", "xp") { (type, level, xp) ->
                 lastType = SlayerType.fromName(type)
@@ -75,7 +80,7 @@ object SlayerProgressAPI {
     @Subscription
     @OnlyOnSkyBlock
     @MustBeContainer
-    fun onInventory(event: InventoryChangeEvent) {
+    internal fun onInventory(event: InventoryChangeEvent) {
         if (!SlayerType.entries.map { it.displayName }.contains(event.title)) return
         val slayerType = SlayerType.entries.find { it.displayName == event.title } ?: return
 
@@ -107,7 +112,7 @@ object SlayerProgressAPI {
     @OnlyOnSkyBlock
     @MustBeContainer
     @InventoryTitle("Slayer")
-    fun onSlayerInventory(event: InventoryChangeEvent) {
+    internal fun onSlayerInventory(event: InventoryChangeEvent) {
         if (event.slot.index != 29) return
         if (event.slot.item.cleanName != "Slayer Leaderboards") return
         inventoryLeaderBoardXp.findAll(event.getLoreLines(), "type", "xp") { (type, xp) ->
@@ -123,7 +128,7 @@ object SlayerProgressAPI {
     @Subscription
     @OnlyOnSkyBlock
     @OptIn(SkyBlockPvRequired::class)
-    fun onPv(event: SkyBlockPvOpenedEvent) {
+    internal fun onPv(event: SkyBlockPvOpenedEvent) {
         event.member.getPath("slayer.slayer_bosses").asMap { k, v ->
             SlayerType.fromName(k) to v.asJsonObject["xp"].asLong(0)
         }.filter { (key, xp) -> key != null && xp > SlayerStorage.getXp(key) }.mapKeys { it.key!! }.apply {

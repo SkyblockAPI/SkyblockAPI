@@ -12,7 +12,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getColumn
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSkyblockFiller
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-class InventoryChangeEvent(
+public data class InventoryChangeEvent(
     val item: ItemStack,
     val slot: Slot,
     val titleComponent: Component,
@@ -22,18 +22,18 @@ class InventoryChangeEvent(
 ) : SkyBlockEvent(), ItemDebugAttachable by item {
     fun columnItems(column: Int): List<ItemStack> = screen.getColumn(column)
 
-    val isInPlayerInventory = slot.container is Inventory
-    val title = titleComponent.stripped
-    val itemStacks = inventory.map { it.item }
+    val isInPlayerInventory: Boolean = slot.container is Inventory
+    val title: String = titleComponent.stripped
+    val itemStacks: List<ItemStack> = inventory.map { it.item }
 
-    val isSkyBlockFiller = item.isSkyblockFiller()
+    val isSkyBlockFiller: Boolean = item.isSkyblockFiller()
 
-    val isInTopRow = slot.index < 9
-    val isInBottomRow = (screen as? ContainerScreenAccessor)?.containerRows?.let { (slot.index) >= (it - 1) * 9 } ?: false
-    val isOnLeftColumn = slot.index % 9 == 0
-    val isOnRightColumn = slot.index % 9 == 8
+    val isInTopRow: Boolean = slot.index < 9
+    val isInBottomRow: Boolean = (screen as? ContainerScreenAccessor)?.containerRows?.let { (slot.index) >= (it - 1) * 9 } ?: false
+    val isOnLeftColumn: Boolean = slot.index % 9 == 0
+    val isOnRightColumn: Boolean = slot.index % 9 == 8
 
-    val isOnSides = isOnLeftColumn || isOnRightColumn
-    val isInTopRowOrBottomRow = isInTopRow || isInBottomRow
-    val isInMainPart = !isOnSides && !isInTopRowOrBottomRow
+    val isOnSides: Boolean = isOnLeftColumn || isOnRightColumn
+    val isInTopRowOrBottomRow: Boolean = isInTopRow || isInBottomRow
+    val isInMainPart: Boolean = !isOnSides && !isInTopRowOrBottomRow
 }

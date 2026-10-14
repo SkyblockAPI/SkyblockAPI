@@ -14,7 +14,7 @@ import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import kotlin.jvm.optionals.getOrNull
 
 @Module
-object HypixelEventHandler {
+public object HypixelEventHandler {
 
     init {
         HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket::class.java)

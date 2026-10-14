@@ -33,11 +33,10 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonArray
 import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import kotlin.jvm.optionals.getOrNull
 
 @Module
-object DebugEntities {
+public object DebugEntities {
 
     private val suggestions = SuggestionProvider<FabricClientCommandSource> { _, builder ->
         builder.suggest("*") // Suggest all entities

@@ -6,9 +6,9 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.SharedSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.extentions.sanitizeForCommandInput
 
-interface SkyBlockAPISuggestionProvider : SuggestionProvider<FabricClientCommandSource> {
+public interface SkyBlockAPISuggestionProvider : SuggestionProvider<FabricClientCommandSource> {
 
-    fun suggest(builder: SuggestionsBuilder, name: String) {
+    public fun suggest(builder: SuggestionsBuilder, name: String) {
         val filtered = name.sanitizeForCommandInput()
         if (SharedSuggestionProvider.matchesSubStr(builder.remaining.lowercase(), filtered.lowercase())) {
             builder.suggest(filtered)
@@ -17,7 +17,7 @@ interface SkyBlockAPISuggestionProvider : SuggestionProvider<FabricClientCommand
 
 }
 
-abstract class SkyBlockAPICommandSuggestionProvider : SuggestionProvider<FabricClientCommandSource> {
+public abstract class SkyBlockAPICommandSuggestionProvider : SuggestionProvider<FabricClientCommandSource> {
 
     private var sanitizeInput = true
 
@@ -28,7 +28,7 @@ abstract class SkyBlockAPICommandSuggestionProvider : SuggestionProvider<FabricC
         }
     }
 
-    fun withoutSanitization() : SkyBlockAPICommandSuggestionProvider {
+    public fun withoutSanitization() : SkyBlockAPICommandSuggestionProvider {
         this.sanitizeInput = false
         return this
     }

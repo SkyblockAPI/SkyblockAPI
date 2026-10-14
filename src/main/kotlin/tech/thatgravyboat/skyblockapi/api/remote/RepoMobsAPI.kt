@@ -4,11 +4,10 @@ import me.owdding.ktmodules.Module
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.mobs.Mob
 
-@Module
 @Deprecated("Use SkyBlockMobsRepo instead")
-object RepoMobsAPI {
+public object RepoMobsAPI {
 
-    fun getMobOrNull(id: String): Mob? {
+    public fun getMobOrNull(id: String): Mob? {
         if (!RepoAPI.isInitialized()) return null
         return RepoAPI.mobs().getMob(id)
     }

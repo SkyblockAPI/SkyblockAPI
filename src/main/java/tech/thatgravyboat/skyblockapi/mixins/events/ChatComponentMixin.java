@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatComponentExtension;
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatIdHolder;
-
 import java.util.List;
 import java.util.Objects;
 

@@ -21,27 +21,27 @@ private const val MAIN_SLOT = SkillTreeAPI.MAIN_SLOT
 private const val PRESET_SLOT = SkillTreeAPI.PRESET_SLOT
 private const val RESET_SLOT = SkillTreeAPI.RESET_SLOT
 
-abstract class SkillTreeCurrencyAPI<
+public abstract class SkillTreeCurrencyAPI<
     Currency,
     Self : SkillTreeCurrencyAPI<Currency, Self>
 > internal constructor(
-    val name: String,
+    public val name: String,
     private val storage: SkillTreeCurrencyStorage<Currency>,
     currencyClass: KClass<Currency>,
-    val type: SkillTreeType<*>,
+    public val type: SkillTreeType<*>,
     vararg tabWidgets: TabWidget,
 ) where Currency : SkillTreeCurrency, Currency : Enum<Currency> {
     private val tabWidgets: List<TabWidget> = tabWidgets.toList()
-    val currencies: Map<Currency, SkillTreeCurrencyData>
+    public val currencies: Map<Currency, SkillTreeCurrencyData>
         get() = storage.currencies
 
-    fun getData(currency: Currency): SkillTreeCurrencyData = storage.getOrEmpty(currency)
-    fun getCurrent(currency: Currency): Long = storage.getCurrent(currency)
-    fun getTotal(currency: Currency): Long = storage.getTotal(currency)
+    public fun getData(currency: Currency): SkillTreeCurrencyData = storage.getOrEmpty(currency)
+    public fun getCurrent(currency: Currency): Long = storage.getCurrent(currency)
+    public fun getTotal(currency: Currency): Long = storage.getTotal(currency)
 
     private val skillTreeApi get() = type.api
-    protected open val titleRegex get() = skillTreeApi.titleRegex
-    val allCurrencies: List<Currency> = currencyClass.java.enumConstants.toList()
+    protected open val titleRegex: Regex get() = skillTreeApi.titleRegex
+    public val allCurrencies: List<Currency> = currencyClass.java.enumConstants.toList()
 
     private val widgetCurrencyRegex = RegexGroup.TABLIST_WIDGET.create(
         "skilltree.$name",
@@ -65,7 +65,7 @@ abstract class SkillTreeCurrencyAPI<
 
 
     @Subscription(inherited = true)
-    fun onTabWidgetChange(event: TabWidgetChangeEvent) {
+    internal fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         if (event.widget !in tabWidgets) return
         widgetCurrencyRegex.matchAll(event.new, "currency", "amount") { (currency, amount) ->
             val currency = fromWidgetName(currency) ?: return@matchAll
@@ -78,7 +78,7 @@ abstract class SkillTreeCurrencyAPI<
 
     @Subscription(inherited = true)
     @OnlyOnSkyBlock
-    fun onInventoryChange(event: InventoryChangeEvent) {
+    internal fun onInventoryChange(event: InventoryChangeEvent) {
         if (!titleRegex.matches(event.title)) return
         val mainItem = event.itemStacks.getOrNull(MAIN_SLOT).takeUnlessEmpty() ?: return
         val presetItem = event.itemStacks.getOrNull(PRESET_SLOT).takeUnlessEmpty() ?: return

@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreePerk
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class HotfData(
+public data class HotfData(
     @OptionalNullable
     override var currentLoadoutName: String? = null,
     @Compact
@@ -23,7 +23,7 @@ data class HotfData(
 }
 
 @GenerateCodec
-data class HotfPerk(
+public data class HotfPerk(
     override val level: Int,
     override val unlocked: Boolean,
     override val disabled: Boolean,
