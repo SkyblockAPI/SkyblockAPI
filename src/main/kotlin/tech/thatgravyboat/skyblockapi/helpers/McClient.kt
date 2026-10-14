@@ -50,8 +50,7 @@ public object McClient {
     public val config: Path = FabricLoader.getInstance().configDir
 
     //? < 26.4
-    //@Deprecated("Use mcVersion instead")@Suppress("DEPRECATION")
-    public val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
+    //@Deprecated("Use mcVersion instead")@Suppress("DEPRECATION") public val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
     public val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
 
     public val version: String = SharedConstants.getCurrentVersion().name()
