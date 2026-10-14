@@ -17,7 +17,7 @@ import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 
 @Module
-public object HotmAPI : SkillTreeAPI<HotmPerk, HotmAPI>(
+public data object HotmAPI : SkillTreeAPI<HotmPerk, HotmAPI>(
     name = "hotm",
     perkItems = ItemTag.HOTM_PERK_ITEMS,
     storage = HotmStorage,

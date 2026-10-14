@@ -8,14 +8,17 @@ import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutChangeEve
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutSlot
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.StringMatch
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.value
+import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTagKey
+import tech.thatgravyboat.skyblockapi.utils.container.ContainerRegion
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
 public abstract class SkillTreeAPI<
     Perk : SkillTreePerk,
@@ -26,17 +29,23 @@ public abstract class SkillTreeAPI<
     private val storage: SkillTreeStorage<Perk, out SkillTreeData<Perk>>,
     identifier: String,
     public val type: SkillTreeType<SkillTreeAPI<Perk, Self>>,
-) {
+) : ItemDebugCategory {
     protected val inventoryGroup: RegexGroup = RegexGroup.INVENTORY.group(name)
+    protected val presetGroup: RegexGroup = inventoryGroup.group("preset")
 
-    internal open val titleRegex = inventoryGroup.create("title", "Heart of the $identifier")
+    internal open val titleRegex: Regex = inventoryGroup.create("title", "Heart of the $identifier")
     protected open val levelRegex: Regex = inventoryGroup.create("level", "Level (?<level>\\d+)(?:/\\d+)?")
     protected open val disabledRegex: Regex = inventoryGroup.create("disabled", "DISABLED|Click to select!")
     protected open val tokensRegex: Regex = inventoryGroup.create("tokens", "Tokens? of the $identifier: (?<tokens>\\d+)")
     protected open val spentTokensRegex: Regex = inventoryGroup.create("tokens.spent", "\\s*-\\s*(?<tokens>[\\d,.]+) Tokens? of the $identifier")
     protected open val tierRegex: Regex = inventoryGroup.create("tier", "Tier (?<tier>\\d+)")
     protected open val tierUnlockedRegex: Regex = inventoryGroup.create("tier.unlocked", "UNLOCKED")
-    protected open val currentPresetRegex: Regex = inventoryGroup.create("preset.current", "Current: (?<preset>.+)")
+
+    protected open val currentPresetRegex: Regex = presetGroup.create("current", "Current: (?<preset>.+)")
+    internal open val presetsTitleRegex: Regex = presetGroup.create("title", "Heart of the $identifier Slot")
+    protected open val lockedLoadoutRegex: Regex = presetGroup.create("loadout", "LOCKED")
+
+    protected open val presetsRegion: ContainerRegion = ContainerRegion(width = 5, height = 1, startRow = 1, startColumn = 2)
 
     public open val perks: Map<String, Perk>
         get() = storage.perks
@@ -62,10 +71,8 @@ public abstract class SkillTreeAPI<
         return true
     }
 
-    @Subscription(inherited = true)
     context(event: InventoryChangeEvent)
-    protected open fun onInventoryChange() {
-        if (!titleRegex.matches(event.title)) return
+    protected open fun onMainInventory() {
         val itemStacks = event.itemStacks
         if (itemStacks.last().isEmpty) return // inventory not fully loaded
 
@@ -114,6 +121,34 @@ public abstract class SkillTreeAPI<
         }
     }
 
+    internal open fun getLoadoutIdAndName(event: InventoryChangeEvent, debugCategory: ItemDebugCategory): Pair<Int, String>? {
+        if (event.isSkyBlockFiller || !event.isInMainPart) return null
+        val id = presetsRegion.getId(event.slot, category = debugCategory, attachable = event) ?: return null
+        val isLocked = lockedLoadoutRegex.anyMatch(event.item.getRawLore())
+        if (isLocked) return null
+        val loadoutName = event.item.cleanName
+        return id to loadoutName
+    }
+
+    context(event: InventoryChangeEvent)
+    protected open fun onPresetsInventory() {
+        val (id, loadoutName) = getLoadoutIdAndName(event, this.fork("Presets Region")) ?: return
+        storage.updateLoadout(id, loadoutName)
+    }
+
+    @Subscription(inherited = true)
+    context(event: InventoryChangeEvent)
+    protected open fun onInventoryChange() {
+        matchWhen(event.title) {
+            case(titleRegex) {
+                onMainInventory()
+            }
+            case(presetsTitleRegex) {
+                onPresetsInventory()
+            }
+        }
+    }
+
     @Subscription(inherited = true)
     context(event: LoadoutChangeEvent)
     private fun onLoadoutChange() {
@@ -126,7 +161,7 @@ public abstract class SkillTreeAPI<
     protected abstract fun isUnlocked(item: ItemStack): Boolean
     protected abstract fun createPerk(level: Int, unlocked: Boolean, disabled: Boolean): Perk
 
-    companion object {
+    internal companion object {
         internal const val MAIN_SLOT = 49
         internal const val PRESET_SLOT = 47
         internal const val RESET_SLOT = 52

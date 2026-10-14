@@ -11,9 +11,16 @@ import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutChangeEve
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutSlot
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.StringMatch
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.value
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
+import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
+import tech.thatgravyboat.skyblockapi.utils.extentions.takeUnlessEmpty
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
+import tech.thatgravyboat.skyblockapi.utils.extentions.toLongValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.matchAll
+import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import kotlin.reflect.KClass
 
@@ -30,7 +37,8 @@ public abstract class SkillTreeCurrencyAPI<
     currencyClass: KClass<Currency>,
     public val type: SkillTreeType<*>,
     vararg tabWidgets: TabWidget,
-) where Currency : SkillTreeCurrency, Currency : Enum<Currency> {
+) : ItemDebugCategory where Currency : SkillTreeCurrency, Currency : Enum<Currency> {
+
     private val tabWidgets: List<TabWidget> = tabWidgets.toList()
     public val currencies: Map<Currency, SkillTreeCurrencyData>
         get() = storage.currencies
@@ -41,6 +49,7 @@ public abstract class SkillTreeCurrencyAPI<
 
     private val skillTreeApi get() = type.api
     protected open val titleRegex: Regex get() = skillTreeApi.titleRegex
+    protected open val presetsTitleRegex: Regex get() = skillTreeApi.presetsTitleRegex
     public val allCurrencies: List<Currency> = currencyClass.java.enumConstants.toList()
 
     private val widgetCurrencyRegex = RegexGroup.TABLIST_WIDGET.create(
@@ -51,14 +60,14 @@ public abstract class SkillTreeCurrencyAPI<
     private fun fromWidgetName(name: String) = allCurrencies.find { it.widgetName == name }
     private fun fromInventoryName(name: String) = allCurrencies.find { it.inventoryName == name }
 
-    protected val inventoryGroup = RegexGroup.INVENTORY.group("skilltree.$name")
+    internal val inventoryGroup = RegexGroup.INVENTORY.group("skilltree.$name")
 
-    protected open val spentCurrencyRegex = inventoryGroup.create(
+    protected open val spentCurrencyRegex: Regex = inventoryGroup.create(
         "spent",
         "\\s*-\\s*(?<amount>[\\d,.]+) (?<currency>.+)",
     )
 
-    protected open val currentCurrencyRegex = inventoryGroup.create(
+    protected open val currentCurrencyRegex: Regex = inventoryGroup.create(
         "current",
         "(?<currency>.+): (?<amount>[\\dkmb,.]+)",
     )
@@ -76,10 +85,8 @@ public abstract class SkillTreeCurrencyAPI<
         }
     }
 
-    @Subscription(inherited = true)
-    @OnlyOnSkyBlock
-    internal fun onInventoryChange(event: InventoryChangeEvent) {
-        if (!titleRegex.matches(event.title)) return
+    context(event: InventoryChangeEvent)
+    protected open fun onMainInventory() {
         val mainItem = event.itemStacks.getOrNull(MAIN_SLOT).takeUnlessEmpty() ?: return
         val presetItem = event.itemStacks.getOrNull(PRESET_SLOT).takeUnlessEmpty() ?: return
         val resetItem = event.itemStacks.getOrNull(RESET_SLOT).takeUnlessEmpty() ?: return
@@ -108,6 +115,26 @@ public abstract class SkillTreeCurrencyAPI<
 
         total.forEach { (currency, total) ->
             storage.setTotal(currency, total)
+        }
+    }
+
+    context(event: InventoryChangeEvent)
+    protected open fun onPresetsInventory() {
+        val (id, loadoutName) = skillTreeApi.getLoadoutIdAndName(event, this.fork("Presets Region")) ?: return
+        storage.updateLoadout(id, loadoutName)
+    }
+
+    @Subscription(inherited = true)
+    @OnlyOnSkyBlock
+    context(event: InventoryChangeEvent)
+    internal fun onInventoryChange() {
+        matchWhen(event.title) {
+            case(titleRegex) {
+                onMainInventory()
+            }
+            case(presetsTitleRegex) {
+                onPresetsInventory()
+            }
         }
     }
 

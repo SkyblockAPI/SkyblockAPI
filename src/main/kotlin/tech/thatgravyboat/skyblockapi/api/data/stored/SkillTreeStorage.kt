@@ -25,6 +25,25 @@ internal abstract class SkillTreeStorage<
         return new
     }
 
+    // This one is used when we know both the name AND the index
+    fun updateLoadout(index: Int, name: String) {
+        val data = storage.get() ?: return
+
+        val anySameIndex = data.loadouts.find { it.index == index }
+        if (anySameIndex != null) {
+            anySameIndex.name = name
+            return
+        }
+        val byName = data.loadouts.find { it.name == name }
+        if (byName != null) {
+            byName.index = index
+            return
+        }
+        val new = SkillTreeLoadout<Perk>(name, index)
+        data.loadouts.add(new)
+        save()
+    }
+
     val currentLoadout: SkillTreeLoadout<Perk>?
         get() = getLoadoutByName(currentPreset)
 

@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.skilltree
 
 import me.owdding.ktcodecs.GenerateCodec
+import me.owdding.ktcodecs.OptionalInt
 import me.owdding.ktcodecs.OptionalNullable
 
 public interface SkillTreeCurrency {
@@ -10,10 +11,10 @@ public interface SkillTreeCurrency {
     public val data: SkillTreeCurrencyData
     public val current: Long get() = data.current
     public val total: Long get() = data.total
-    val spent: Long get() = data.spent
+    public val spent: Long get() = data.spent
 }
 
-data class SkillTreeCurrencyData(
+public data class SkillTreeCurrencyData(
     val current: Long = 0,
     val total: Long = 0,
 ) {
@@ -21,7 +22,7 @@ data class SkillTreeCurrencyData(
 }
 
 @GenerateCodec
-data class SkillCurrencyData<Currency : SkillTreeCurrency>(
+public data class SkillCurrencyData<Currency : SkillTreeCurrency>(
     @OptionalNullable
     var currentLoadoutName: String? = null,
     val loadouts: MutableList<SkillTreeCurrencyLoadout<Currency>> = mutableListOf(),
@@ -29,7 +30,9 @@ data class SkillCurrencyData<Currency : SkillTreeCurrency>(
 )
 
 @GenerateCodec
-data class SkillTreeCurrencyLoadout<Currency : SkillTreeCurrency>(
+public data class SkillTreeCurrencyLoadout<Currency : SkillTreeCurrency>(
     var name: String,
+    @OptionalInt(-1)
+    var index: Int = -1,
     val currencySpent: MutableMap<Currency, Long> = mutableMapOf(),
 )

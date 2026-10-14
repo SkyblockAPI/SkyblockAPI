@@ -37,6 +37,25 @@ internal abstract class SkillTreeCurrencyStorage<Currency>(
         return new
     }
 
+    // This one is used when we know both the name AND the index
+    fun updateLoadout(index: Int, name: String) {
+        val data = storage.get() ?: return
+
+        val anySameIndex = data.loadouts.find { it.index == index }
+        if (anySameIndex != null) {
+            anySameIndex.name = name
+            return
+        }
+        val byName = data.loadouts.find { it.name == name }
+        if (byName != null) {
+            byName.index = index
+            return
+        }
+        val new = SkillTreeCurrencyLoadout<Currency>(name, index)
+        data.loadouts.add(new)
+        save()
+    }
+
     val currentLoadout: SkillTreeCurrencyLoadout<Currency>?
         get() = getLoadoutByName(currentPreset)
 

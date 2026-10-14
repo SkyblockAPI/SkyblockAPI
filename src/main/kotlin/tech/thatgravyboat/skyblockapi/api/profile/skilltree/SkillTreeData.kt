@@ -1,23 +1,25 @@
 package tech.thatgravyboat.skyblockapi.api.profile.skilltree
 
 import me.owdding.ktcodecs.GenerateCodec
+import me.owdding.ktcodecs.OptionalInt
 
-interface SkillTreeData<Perk : SkillTreePerk> {
-    var currentLoadoutName: String?
-    val loadouts: MutableList<SkillTreeLoadout<Perk>>
-    var maxTokens: Int
-    var tier: Int
+public interface SkillTreeData<Perk : SkillTreePerk> {
+    public var currentLoadoutName: String?
+    public val loadouts: MutableList<SkillTreeLoadout<Perk>>
+    public var maxTokens: Int
+    public var tier: Int
 }
 
 @GenerateCodec
-data class SkillTreeLoadout<Perk : SkillTreePerk>(
+public data class SkillTreeLoadout<Perk : SkillTreePerk>(
     var name: String,
+    @OptionalInt(-1) var index: Int = -1, // -1 means we don't know the index
     val perks: MutableMap<String, Perk> = mutableMapOf(),
     var tokensSpent: Int = 0,
 )
 
-interface SkillTreePerk {
-    val level: Int
-    val unlocked: Boolean
-    val disabled: Boolean
+public interface SkillTreePerk {
+    public val level: Int
+    public val unlocked: Boolean
+    public val disabled: Boolean
 }

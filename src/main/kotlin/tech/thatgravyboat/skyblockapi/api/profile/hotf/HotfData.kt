@@ -17,7 +17,7 @@ public data class HotfData(
     override var maxTokens: Int = 1,
     override var tier: Int = 0,
 ) : SkillTreeData<HotfPerk> {
-    companion object {
+    internal companion object {
         val CODEC = SkyblockAPICodecs.getCodec<HotfData>()
     }
 }

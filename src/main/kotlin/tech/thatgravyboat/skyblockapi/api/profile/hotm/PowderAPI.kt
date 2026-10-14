@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 
 @Suppress("unused")
 @Module
-public object PowderAPI : SkillTreeCurrencyAPI<PowderType, PowderAPI>(
+public data object PowderAPI : SkillTreeCurrencyAPI<PowderType, PowderAPI>(
     "powder",
     PowderStorage,
     PowderType::class,

@@ -20,7 +20,7 @@ public data class InventoryChangeEvent(
     val screen: AbstractContainerScreen<*>,
     val previousItem: ItemStack,
 ) : SkyBlockEvent(), ItemDebugAttachable by item {
-    fun columnItems(column: Int): List<ItemStack> = screen.getColumn(column)
+    public fun columnItems(column: Int): List<ItemStack> = screen.getColumn(column)
 
     val isInPlayerInventory: Boolean = slot.container is Inventory
     val title: String = titleComponent.stripped

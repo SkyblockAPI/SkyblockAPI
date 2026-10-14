@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 
 @Suppress("unused")
 @Module
-public object WhispersAPI : SkillTreeCurrencyAPI<WhisperType, WhispersAPI>(
+public data object WhispersAPI : SkillTreeCurrencyAPI<WhisperType, WhispersAPI>(
     "whispers",
     WhisperStorage,
     WhisperType::class,
