@@ -2,10 +2,12 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.loadout
 
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.impl.ColoredItems
@@ -34,10 +36,14 @@ public data object LoadoutAPI : ItemDebugCategory {
     private inline val storage get() = LoadoutStorage.loadout
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("loadout")
+    private val chatGroup = RegexGroup.CHAT.group("loadout")
     private val titleRegex = inventoryGroup.create("title", "\\((?<current>\\d+)/(?<max>\\d+)\\) Loadouts")
+    private val loadoutEquipped = chatGroup.create("equipped", "You equipped (?<name>.+)!")
     private val armorTypes = listOf("Helmet", "Chestplate", "Leggings", "Boots")
     private val equipmentTypes = listOf("Necklace", "Cloak", "Belt", "Gloves/Bracelet")
     private val containerRegion = ContainerRegion(width = 3, height = 4, startRow = 1, startColumn = 5)
+
+    private var lastClickedLoadout: Pair<ItemStack, LoadoutSlot>? = null
 
     @OptIn(ExperimentalContracts::class)
     private inline fun editLoadout(id: Int, modifier: LoadoutSlot.() -> Unit) {
@@ -182,15 +188,27 @@ public data object LoadoutAPI : ItemDebugCategory {
     @Subscription
     context(event: SlotClickEvent)
     private fun onClick() {
-        if (event.button == InputConstants.MOUSE_BUTTON_LEFT) {
-            titleRegex.match(event.title, "current") { (current) ->
-                context(DataSource.OVERVIEW) {
-                    val currentPage = current.toIntValue()
-                    val slotId = containerRegion.getId(event.slot, currentPage) ?: return@match
-                    val loadout = storage?.slots?.values?.find { it.id == slotId && !it.locked } ?: return@match
-                    swapLoadout(loadout)
-                }
+        if (event.button != InputConstants.MOUSE_BUTTON_LEFT) return
+        titleRegex.match(event.title, "current") { (current) ->
+            context(DataSource.OVERVIEW) {
+                val currentPage = current.toIntValue()
+                val slotId = containerRegion.getId(event.slot, currentPage) ?: return@match
+                val slot = storage?.slots?.values?.find { !it.locked && it.id == slotId && storage?.currentSlot != slotId } ?: return@match
+                lastClickedLoadout = (event.item to slot)
             }
+        }
+    }
+
+    @Subscription
+    context(event: ChatReceivedEvent.Pre)
+    private fun onChat() {
+        val (item, slot) = lastClickedLoadout ?: return
+        loadoutEquipped.match(event.text, "name") { (loadoutName) ->
+            if (item.cleanName != loadoutName) return@match
+
+            swapLoadout(slot)
+
+            lastClickedLoadout = null
         }
     }
 }
