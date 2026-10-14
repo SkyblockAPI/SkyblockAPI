@@ -5,14 +5,16 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-data class TrophyFish(val type: TrophyFishType, @get:JvmName("getTrophyTier") val tier: TrophyTier) {
+public data class TrophyFish(val type: TrophyFishType, @get:JvmName("getTrophyTier") val tier: TrophyTier) {
 
     @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
-    constructor(type: TrophyFishType, tier: TrophyFishTier) : this(type, TrophyTier.valueOf(tier.name))
+    @Suppress("DEPRECATION")
+    public constructor(type: TrophyFishType, tier: TrophyFishTier) : this(type, TrophyTier.valueOf(tier.name))
 
     @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
+    @Suppress("DEPRECATION")
     @JvmName("getTier")
-    fun getOldTier(): TrophyFishTier = TrophyFishTier.valueOf(tier.name)
+    public fun getOldTier(): TrophyFishTier = TrophyFishTier.valueOf(tier.name)
 
     val item: ItemStack by lazy { type.getItem(tier) }
     val displayName: Component by lazy {
@@ -23,7 +25,7 @@ data class TrophyFish(val type: TrophyFishType, @get:JvmName("getTrophyTier") va
         Text.join(type.displayName, " ", tier.nameSuffix)
     }
 
-    val apiName by lazy {
+    public val apiName: String by lazy {
         if (tier == TrophyTier.NONE) {
             return@lazy type.internalName.lowercase()
         }
@@ -31,8 +33,8 @@ data class TrophyFish(val type: TrophyFishType, @get:JvmName("getTrophyTier") va
         "${type.internalName.lowercase()}_${tier.name.lowercase()}"
     }
 
-    companion object {
-        fun fromString(fish: String): TrophyFish? {
+    public companion object {
+        public fun fromString(fish: String): TrophyFish? {
             if (fish.contains("/")) {
                 return fish.split("/").let {
                     TrophyFish(

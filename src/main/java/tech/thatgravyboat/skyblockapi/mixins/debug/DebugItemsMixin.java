@@ -13,9 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentDataAttachable;
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugAccessor;
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory;
+import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentDataAttachable;
 
 @Mixin(ItemStack.class)
 public abstract class DebugItemsMixin implements ItemDebugAccessor, ComponentDataAttachable {

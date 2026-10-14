@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.hotf.HotfPerk
 import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs.getCodec
-import java.util.*
+import java.util.Optional
 
 internal object HotfStorage : SkillTreeStorage<HotfData, HotfPerk>() {
 

@@ -13,9 +13,9 @@ import java.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
-typealias StreamResponse = java.net.http.HttpResponse<InputStream>
+public typealias StreamResponse = java.net.http.HttpResponse<InputStream>
 
-object Http {
+public object Http {
 
     private val client = HttpClient.newBuilder()
         .version(HttpClient.Version.HTTP_2)
@@ -52,7 +52,7 @@ object Http {
         )
     }
 
-    suspend fun <T : Any> head(
+    public suspend fun <T : Any> head(
         url: String,
         timeout: Int = 10000,
         queries: Map<String, Any> = mapOf(),
@@ -75,7 +75,7 @@ object Http {
      * @param handler: The handler to process the response
      * @return: The data returned by the handler
      */
-    suspend fun <T : Any> get(
+    public suspend fun <T : Any> get(
         url: String,
         queries: Map<String, Any> = mapOf(),
         timeout: Int = 10000,
@@ -99,7 +99,7 @@ object Http {
      * @param headers: The headers to send with the request
      * @return: The data returned by the handler
      */
-    suspend inline fun <reified T : Any> getResult(
+    public suspend inline fun <reified T : Any> getResult(
         url: String,
         gson: Gson = Json.gson,
         crossinline errorFactory: ((String) -> Exception) = ::RuntimeException,
@@ -129,7 +129,7 @@ object Http {
      * @param headers: The headers to send with the request
      * @return: The data returned by the handler
      */
-    suspend inline fun <reified T : Any> getResult(
+    public suspend inline fun <reified T : Any> getResult(
         url: String,
         codec: Codec<T>,
         crossinline errorFactory: ((String) -> Exception) = ::RuntimeException,
@@ -158,7 +158,7 @@ object Http {
      * @param body: The body to send with the request
      * @param handler: The handler to process the response
      */
-    suspend fun <T : Any> post(
+    public suspend fun <T : Any> post(
         url: String,
         timeout: Int = 10000,
         queries: Map<String, Any> = mapOf(),
@@ -186,7 +186,7 @@ object Http {
      * @param handler: The handler to process the response
      * @return: The data returned by the handler
      */
-    suspend fun <T : Any> post(
+    public suspend fun <T : Any> post(
         url: String,
         timeout: Int = 10000,
         queries: Map<String, Any> = mapOf(),

@@ -11,12 +11,12 @@ import kotlin.io.path.absolutePathString
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.writeText
 
-object Regexes {
+public object Regexes {
     private val usedKeys = mutableSetOf<String>()
     internal val regexes = mutableMapOf<String, Regex>()
     internal val regexLists = mutableMapOf<String, List<Regex>>()
 
-    fun create(key: String, @Language("RegExp") regex: String): Regex {
+    public fun create(key: String, @Language("RegExp") regex: String): Regex {
         validateKey(key)
 
         val storedRegex = regexes[key]
@@ -35,7 +35,7 @@ object Regexes {
         return newRegex
     }
 
-    fun createList(key: String, @Language("RegExp") vararg regex: String): List<Regex> {
+    public fun createList(key: String, @Language("RegExp") vararg regex: String): List<Regex> {
         validateKey(key)
         val regexList = regexLists[key]
         if (regexList != null) return regexList
@@ -53,7 +53,7 @@ object Regexes {
         return newRegexes
     }
 
-    fun group(prefix: String) = RegexGroup(prefix)
+    public fun group(prefix: String): RegexGroup = RegexGroup(prefix)
 
     // TODO: maybe remove uppercase letters from allowed chars in keys?
     private fun isValidChar(char: Char): Boolean {
@@ -69,9 +69,7 @@ object Regexes {
         usedKeys += key
     }
 
-    @JvmStatic
-    @ApiStatus.Internal
-    fun dumpRegexes(path: Path) {
+    internal fun dumpRegexes(path: Path) {
         SkyBlockAPI.info("Dumping ${regexes.size} regexes and ${regexLists.size} regex lists into ${path.absolutePathString()}")
         val json = context(regexes, regexLists) { RegexData.createJson() }
         path.createParentDirectories()

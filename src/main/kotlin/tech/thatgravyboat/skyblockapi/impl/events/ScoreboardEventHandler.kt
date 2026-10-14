@@ -15,7 +15,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @Module
-object ScoreboardEventHandler {
+public object ScoreboardEventHandler {
 
     private var lastStrippedScoreboard = listOf<String>()
     private var lastScoreboard = listOf<Component>()
@@ -24,7 +24,7 @@ object ScoreboardEventHandler {
     @OnlyOnSkyBlock
     @TimePassed("1s")
     @Subscription(TickEvent::class)
-    fun onTick() {
+    internal fun onTick() {
         if (!ProfileAPI.isLoaded) return
 
         handleScoreboard(McClient.scoreboard.toList())
@@ -32,7 +32,7 @@ object ScoreboardEventHandler {
     }
 
     @Subscription(ServerChangeEvent::class)
-    fun onServerSwitch() = handleScoreboard(emptyList())
+    internal fun onServerSwitch() = handleScoreboard(emptyList())
 
     private fun handleScoreboard(new: List<Component>) {
         val newStripped = new.map { it.stripped }

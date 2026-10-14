@@ -7,50 +7,58 @@ import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerMob
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
+import tech.thatgravyboat.skyblockapi.api.events.base.PredicateForEvents
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import tech.thatgravyboat.skyblockapi.utils.extentions.hasAnnotation
 import java.lang.reflect.Method
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerType(
+public annotation class OnlySlayerType(
     vararg val value: SlayerType,
     val acceptMiniBosses: Boolean = false,
     val acceptDemons: Boolean = false,
 )
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerMiniBoss(
+public annotation class OnlySlayerMiniBoss(
     vararg val value: SlayerMiniBoss,
 )
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerDemon(
+public annotation class OnlySlayerDemon(
     vararg val value: SlayerDemon,
 )
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerDemons
+public annotation class OnlySlayerDemons
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerMiniBosses(
+public annotation class OnlySlayerMiniBosses(
     val bigBoys: TriState = TriState.DEFAULT,
 )
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlySlayerBosses
+public annotation class OnlySlayerBosses
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class MustBeOwnedByPlayer
+public annotation class MustBeOwnedByPlayer
 
-class SlayerEventPredicateProvider : EventPredicateProvider {
+public class SlayerEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         val validTypes = mutableListOf<SlayerMob>()

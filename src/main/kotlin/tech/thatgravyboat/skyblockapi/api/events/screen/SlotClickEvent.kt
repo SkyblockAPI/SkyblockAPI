@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 // TODO: create inventory event abstract class? (maybe even interface for slot events?)
-class SlotClickEvent(
+public data class SlotClickEvent(
     val item: ItemStack,
     val slot: Slot,
     val button: Int,
@@ -19,5 +19,5 @@ class SlotClickEvent(
     val title: String = titleComponent.stripped
     val slots: List<Slot> = screen.menu.slots
     val menuSlots: List<Slot> = screen.menu.slots.filter { it.container !is Inventory }
-    val isInPlayerInventory = slot.container is Inventory
+    val isInPlayerInventory: Boolean = slot.container is Inventory
 }

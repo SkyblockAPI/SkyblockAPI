@@ -6,7 +6,7 @@ import net.minecraft.world.item.Item
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 
 
-enum class ItemModelTag(path: String) : ItemModelTagKey {
+public enum class ItemModelTag(path: String) : ItemModelTagKey {
     HOTF_PERK_ITEMS("hotf_perk_items"),
     ;
 

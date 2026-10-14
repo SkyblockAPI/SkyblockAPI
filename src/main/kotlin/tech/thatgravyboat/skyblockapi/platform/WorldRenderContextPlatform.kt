@@ -1,16 +1,14 @@
 package tech.thatgravyboat.skyblockapi.platform
 
 import net.minecraft.client.gui.Font
-import net.minecraft.gizmos.Gizmos
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.LightCoordsUtil
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderWorldEvent
-import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-fun RenderWorldEvent.drawString(
+public fun RenderWorldEvent.drawString(
     text: String,
     x: Float,
     y: Float,
@@ -23,7 +21,7 @@ fun RenderWorldEvent.drawString(
     this.drawString(Text.of(text), x, y, color, dropShadow, displayMode, backgroundColor, light)
 }
 
-fun RenderWorldEvent.drawString(
+public fun RenderWorldEvent.drawString(
     text: Component,
     x: Float,
     y: Float,
@@ -37,7 +35,7 @@ fun RenderWorldEvent.drawString(
     drawString(text, x, y, color, dropShadow, displayMode, backgroundColor, light)
 }
 
-fun RenderWorldEvent.drawString(
+public fun RenderWorldEvent.drawString(
     text: FormattedCharSequence,
     x: Float,
     y: Float,

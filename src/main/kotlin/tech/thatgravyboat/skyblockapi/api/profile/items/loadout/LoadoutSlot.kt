@@ -8,7 +8,7 @@ import kotlin.contracts.contract
 import kotlin.time.Instant
 
 @GenerateCodec
-data class LoadoutSlot(
+public data class LoadoutSlot(
     val id: Int,
     var name: String?,
     var armor: NumberMatch?,
@@ -20,15 +20,15 @@ data class LoadoutSlot(
     var hotf: StringMatch?,
     var locked: Boolean = true,
 ) {
-    constructor(id: Int) : this(id, null,null,null,null,null,null,null,null)
+    public constructor(id: Int) : this(id, null,null,null,null,null,null,null,null)
 
     context(source: DataSource)
-    fun value(value: Int?) = NumberMatch(value, source, currentInstant())
+    public fun value(value: Int?): NumberMatch = NumberMatch(value, source, currentInstant())
     context(source: DataSource)
-    fun value(value: String?) = StringMatch(value, source, currentInstant())
+    public fun value(value: String?): StringMatch = StringMatch(value, source, currentInstant())
 }
 
-enum class DataSource(val multiplier: Double) {
+public enum class DataSource(public val multiplier: Double) {
     API(0.5),
     OVERVIEW(0.5),
     EDIT(1.0),
@@ -36,7 +36,7 @@ enum class DataSource(val multiplier: Double) {
 }
 
 @OptIn(ExperimentalContracts::class, ExperimentalExtendedContracts::class)
-fun NumberMatch?.value(default: Int? = null): Int? {
+public fun NumberMatch?.value(default: Int? = null): Int? {
     contract {
         (default != null) implies returnsNotNull()
     }
@@ -45,7 +45,7 @@ fun NumberMatch?.value(default: Int? = null): Int? {
 
 
 @OptIn(ExperimentalContracts::class, ExperimentalExtendedContracts::class)
-operator fun NumberMatch?.invoke(default: Int? = null): Int? {
+public operator fun NumberMatch?.invoke(default: Int? = null): Int? {
     contract {
         (default != null) implies returnsNotNull()
     }
@@ -53,7 +53,7 @@ operator fun NumberMatch?.invoke(default: Int? = null): Int? {
 }
 
 @OptIn(ExperimentalContracts::class, ExperimentalExtendedContracts::class)
-fun StringMatch?.value(default: String? = null): String? {
+public fun StringMatch?.value(default: String? = null): String? {
     contract {
         (default != null) implies returnsNotNull()
     }
@@ -62,7 +62,7 @@ fun StringMatch?.value(default: String? = null): String? {
 
 
 @OptIn(ExperimentalContracts::class, ExperimentalExtendedContracts::class)
-operator fun StringMatch?.invoke(default: String? = null): String? {
+public operator fun StringMatch?.invoke(default: String? = null): String? {
     contract {
         (default != null) implies returnsNotNull()
     }
@@ -70,14 +70,14 @@ operator fun StringMatch?.invoke(default: String? = null): String? {
 }
 
 @GenerateCodec
-data class NumberMatch(
+public data class NumberMatch(
     val value: Int?,
     val source: DataSource,
     val time: Instant,
 )
 
 @GenerateCodec
-data class StringMatch(
+public data class StringMatch(
     val value: String?,
     val source: DataSource,
     val time: Instant,

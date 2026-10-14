@@ -26,7 +26,6 @@ kotlin {
         filters {
             exclude {
                 byNames.addAll(
-                    "tech.thatgrabyboat.skyblockapi.impl.**",
                     "tech.thatgravyboat.skyblockapi.mixins.**"
                 )
             }
@@ -80,11 +79,10 @@ tasks.withType<KotlinCompile>().configureEach {
         "kotlin.time.ExperimentalTime",
         "kotlin.contracts.ExperimentalContracts",
     )
+    compilerOptions.allWarningsAsErrors = true
     compilerOptions.freeCompilerArgs.addAll(
-        "-Xcontext-parameters",
         "-Xcontext-sensitive-resolution",
         "-Xnullability-annotations=@org.jspecify.annotations:ignore",
-        "-Xcontext-parameters",
     )
 }
 
@@ -181,6 +179,7 @@ compactingResources {
 
 kotlin {
     jvmToolchain(25)
+    explicitApi()
 }
 
 java {
@@ -226,15 +225,16 @@ val datagenOutput = project.layout.buildDirectory.file("generated/skyblock-api/d
 
 loom {
     runConfigs["client"].apply {
-        ideConfigGenerated(true)
-        runDir = "../../run"
-        vmArgs.add("-Dfabric.modsFolder=\"${mcVersion}Mods\"")
-        //ideConfigFolder.set(stonecutter.current.version)
+        generateRunConfig = true
+        runDirectory = project.file("../../run")
+        jvmArguments.add("-Dfabric.modsFolder=\"${mcVersion}Mods\"")
     }
     if (accessWidenerFile.exists()) {
         accessWidenerPath.set(accessWidenerFile)
     }
 }
+
+tasks.named("checkKotlinAbi") { enabled = false }
 
 
 fabricApi {

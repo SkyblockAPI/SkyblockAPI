@@ -11,19 +11,6 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerInventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.bank
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.bits
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.coopBank
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.copper
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.gems
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.kernels
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.motes
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.northStars
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.personalBank
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.purse
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.purseType
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.soulflow
-import tech.thatgravyboat.skyblockapi.api.profile.currency.CurrencyAPI.sowdust
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
@@ -35,7 +22,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 
 @Module
-object QuiverAPI {
+public object QuiverAPI {
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("quiver")
 
@@ -48,26 +35,26 @@ object QuiverAPI {
         "^Quiver$"
     )
 
-    var currentArrow: String?
+    public var currentArrow: String?
         get() = QuiverStorage.currentArrow
         private set(value) {
             QuiverStorage.updateCurrent(value ?: return)
         }
 
-    var currentAmount: Int?
+    public var currentAmount: Int?
         get() = arrows[currentArrow]
         private set(value) {
             QuiverStorage.updateArrow(currentArrow ?: return, value ?: return)
         }
 
-    val arrows: Map<String, Int>
+    public val arrows: Map<String, Int>
         get() = mutableArrows
 
     private inline val mutableArrows: MutableMap<String, Int>
         get() = QuiverStorage.arrows
 
     @Subscription
-    fun onPlayerInventoryChange(event: PlayerInventoryChangeEvent) {
+    internal fun onPlayerInventoryChange(event: PlayerInventoryChangeEvent) {
         val item = event.item
         if (item.getData(DataTypes.QUIVER_ARROW) != true) return
         arrowCountRegex.anyFound(item.getRawLore(), "amount") { (amount) ->
@@ -78,12 +65,12 @@ object QuiverAPI {
     }
 
     @Subscription
-    fun onInventoryInitialized(event: ContainerInitializedEvent) {
+    internal fun onInventoryInitialized(event: ContainerInitializedEvent) {
         handleQuiverInventory(event.title, event.itemStacks)
     }
 
     @Subscription
-    fun onInventoryChange(event: InventoryChangeEvent) {
+    internal fun onInventoryChange(event: InventoryChangeEvent) {
         handleQuiverInventory(event.title, event.itemStacks)
     }
 

@@ -6,12 +6,12 @@ import tech.thatgravyboat.repolib.api.RunesAPI.Rune
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockRunesRepo
 
 @Deprecated("Use SkyBlockRunesRepo instead", ReplaceWith("tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockRunesRepo"))
-object RepoRunesAPI {
+public object RepoRunesAPI {
 
-    fun getRuneById(id: String): List<Rune>? = SkyBlockRunesRepo.get(id)
-    fun getRune(id: String, tier: Int) = SkyBlockRunesRepo.getTier(id, tier)
+    public fun getRuneById(id: String): List<Rune>? = SkyBlockRunesRepo.get(id)
+    public fun getRune(id: String, tier: Int): Rune? = SkyBlockRunesRepo.getTier(id, tier)
 
-    fun getRune(string: String): Rune? {
+    public fun getRune(string: String): Rune? {
         val split = string.split(":")
         if (split.size != 3) return null
         if (split[0] != "rune") return null
@@ -20,21 +20,21 @@ object RepoRunesAPI {
         return SkyBlockRunesRepo.getTier(id, tier)
     }
 
-    fun getRuneAsItemOrNull(id: String, tier: Int? = null): ItemStack? = SkyBlockRunesRepo.getItemStack {
+    public fun getRuneAsItemOrNull(id: String, tier: Int? = null): ItemStack? = SkyBlockRunesRepo.getItemStack {
         this.id = id
         this.tier = tier
     }
-    fun getRuneAsItem(id: String, tier: Int): ItemStack = SkyBlockRunesRepo.getItemStackOrDefault {
+    public fun getRuneAsItem(id: String, tier: Int): ItemStack = SkyBlockRunesRepo.getItemStackOrDefault {
         this.id = id
         this.tier = tier
     }
 
-    fun Rune.getId() = buildString {
+    public fun Rune.getId(): String = buildString {
         append("rune:")
         append(this@getId.id())
         append(":")
         append(this@getId.tier())
     }
 
-    fun Rune.getItem(): ItemStack? = getRuneAsItem(this.id(), this.tier())
+    public fun Rune.getItem(): ItemStack? = getRuneAsItem(this.id(), this.tier())
 }*///?}

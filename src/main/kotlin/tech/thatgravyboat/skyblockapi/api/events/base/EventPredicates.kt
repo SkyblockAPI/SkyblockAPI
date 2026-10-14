@@ -2,8 +2,14 @@ package tech.thatgravyboat.skyblockapi.api.events.base
 
 import java.lang.reflect.Method
 import java.util.ServiceLoader
+import kotlin.reflect.KClass
 
-typealias EventPredicate = (event: SkyBlockEvent, context: Any?) -> Boolean
+/** Annotation added to event predicate annotations to indicate which classes it can be used on. */
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.ANNOTATION_CLASS)
+public annotation class PredicateForEvents(vararg val event: KClass<out SkyBlockEvent>)
+
+public typealias EventPredicate = (event: SkyBlockEvent, context: Any?) -> Boolean
 
 private val providers = ServiceLoader.load(EventPredicateProvider::class.java).toList()
 
@@ -15,8 +21,8 @@ internal class EventPredicates(private val predicates: List<EventPredicate>) {
         predicates.all { it(event, context) }
 }
 
-interface EventPredicateProvider {
-    fun getPredicate(method: Method): EventPredicate?
+public interface EventPredicateProvider {
+    public fun getPredicate(method: Method): EventPredicate?
 }
 
 

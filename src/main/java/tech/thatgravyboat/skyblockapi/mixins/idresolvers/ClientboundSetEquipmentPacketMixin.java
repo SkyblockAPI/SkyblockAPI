@@ -9,10 +9,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId;
 import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiFunction;
-
 @Mixin(ClientboundSetEquipmentPacket.class)
 public class ClientboundSetEquipmentPacketMixin {
 

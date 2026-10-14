@@ -12,7 +12,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
@@ -24,7 +23,13 @@ import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.container.ContainerRegion
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.addIfNotNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.sublistAfterUntil
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
@@ -35,7 +40,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 private const val THAUMATURGY_MP_SLOT = 48
 private const val THAUMATURGY_STATS_TUNING_SLOT = 51
-private const val BAGS_ACCESSORY_BAG_SLOT = 24
+private const val BAGS_ACCESSORY_BAG_SLOT = 23
 
 private val thaumaturgyPowerStonesRegion = ContainerRegion(width = 7, height = 5, startRow = 1, startColumn = 1)
 private val tuningGuiRegion = ContainerRegion(width = 4, height = 2, startRow = 2, startColumn = 1)
@@ -43,7 +48,7 @@ private val tuningTemplatesRegion = ContainerRegion(width = 2, height = 4, start
 
 @Suppress("unused")
 @Module
-data object MaxwellAPI : ItemDebugCategory {
+public data object MaxwellAPI : ItemDebugCategory {
 
     val power: MaxwellPower
         get() = MaxwellStorage.power
@@ -160,7 +165,7 @@ data object MaxwellAPI : ItemDebugCategory {
 
     @OnlyOnSkyBlock
     @Subscription
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val message = event.text
         selectPowerRegex.findThenNull(message, "power") { (power) ->
             val newPower = MaxwellPowers.getByName(power) ?: return@findThenNull
@@ -171,7 +176,7 @@ data object MaxwellAPI : ItemDebugCategory {
     // These need to be on ContainerChangeEvent because you can interact with the GUI and update data
     @OnlyOnSkyBlock
     @Subscription
-    fun onInventoryUpdate(event: InventoryChangeEvent) {
+    internal fun onInventoryUpdate(event: InventoryChangeEvent) {
         if (event.isInPlayerInventory) return
 
         if (handleThaumaturgyGui(event)) return
@@ -181,12 +186,12 @@ data object MaxwellAPI : ItemDebugCategory {
 
     @OnlyOnSkyBlock
     @Subscription
-    fun onInventoryFullyOpened(event: ContainerInitializedEvent) {
+    internal fun onInventoryFullyOpened(event: ContainerInitializedEvent) {
         if (handleBagsGui(event)) return
     }
 
     @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
-    fun onServerChange() = MaxwellStorage.fixEmptyAccessories()
+    private fun onServerChange() = MaxwellStorage.fixEmptyAccessories()
 
     @Subscription(priority = Subscription.HIGHEST)
     context(event: LoadoutChangeEvent)

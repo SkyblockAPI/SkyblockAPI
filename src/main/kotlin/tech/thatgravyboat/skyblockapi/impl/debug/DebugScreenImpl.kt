@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
+import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.EditBox
@@ -105,7 +106,7 @@ internal class DebugScreenImpl<T>(
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClicked: Boolean): Boolean {
-        if (event.y > 20 && event.button() == 0) {
+        if (event.y > 20 && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             val index = (event.y.toInt() - 20) / 10 + scroll
             if (index in filteredMessages.indices) {
                 val (_, message) = filteredMessages[index]

@@ -1,8 +1,10 @@
 package tech.thatgravyboat.skyblockapi.api.datetime
 
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.valueOfOrNull
 
-enum class SkyBlockSeason {
+@Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.SkyBlockSeason"))
+public enum class SkyBlockSeason {
     EARLY_SPRING,
     SPRING,
     LATE_SPRING,
@@ -22,12 +24,10 @@ enum class SkyBlockSeason {
 
     private val string = toFormattedName()
 
-    override fun toString() = string
+    override fun toString(): String = string
 
-    companion object {
-
-        fun parse(value: String): SkyBlockSeason? = runCatching {
-            valueOf(value.replace(" ", "_").uppercase())
-        }.getOrNull()
+    public companion object {
+        @Suppress("DEPRECATION")
+        public fun parse(value: String): SkyBlockSeason? = valueOfOrNull(value.replace(" ", "_").uppercase())
     }
 }

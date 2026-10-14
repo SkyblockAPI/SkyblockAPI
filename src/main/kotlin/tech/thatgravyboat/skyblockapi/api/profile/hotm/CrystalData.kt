@@ -7,10 +7,10 @@ import tech.thatgravyboat.skyblockapi.api.data.CrystalType
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
-data class CrystalData(
+public data class CrystalData(
     var crystals: MutableMap<CrystalType, CrystalStatus> = mutableMapOf(),
 ) {
-    companion object {
-        val CODEC: Codec<CrystalData> = SkyblockAPICodecs.getCodec<CrystalData>()
+    public companion object {
+        public val CODEC: Codec<CrystalData> = SkyblockAPICodecs.getCodec<CrystalData>()
     }
 }

@@ -11,7 +11,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.enumSetOf
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 @Module
-object DebugHudElement {
+public object DebugHudElement {
 
     private val elementsToHide = enumSetOf<HudElement>()
 
@@ -34,7 +34,7 @@ object DebugHudElement {
     }
 
     @Subscription
-    fun onWidgetShow(event: RenderHudElementEvent) {
+    internal fun onWidgetShow(event: RenderHudElementEvent) {
         if (event.element in elementsToHide) {
             event.cancel()
         }

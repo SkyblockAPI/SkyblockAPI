@@ -3,18 +3,28 @@ package tech.thatgravyboat.skyblockapi.api.events.base.predicates
 import tech.thatgravyboat.repolib.api.RepoStatus
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
-//? < 26.3
-//import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
+import tech.thatgravyboat.skyblockapi.api.events.base.PredicateForEvents
 import tech.thatgravyboat.skyblockapi.api.events.repo.RepoEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import java.lang.reflect.Method
 
-annotation class OnRepoStatus(val repoStatus: RepoStatus)
+//? < 26.3
+//import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 
-class RepoStatusPredicateProvider : EventPredicateProvider {
+@PredicateForEvents(
+    RepoEvent::class,
+    //? < 26.3
+    //@Suppress("DEPRECATION") RepoStatusEvent::class
+)
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION)
+public annotation class OnRepoStatus(val repoStatus: RepoStatus)
+
+public class RepoStatusPredicateProvider : EventPredicateProvider {
     override fun getPredicate(method: Method): EventPredicate? {
         val status = method.getAnnotation<OnRepoStatus>() ?: return null
         return { event, _ ->
+            @Suppress("DEPRECATION")
             when (event) {
                 //? < 26.3
                 //is RepoStatusEvent -> event.status == status.repoStatus

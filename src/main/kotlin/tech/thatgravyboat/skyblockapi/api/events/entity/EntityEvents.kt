@@ -22,18 +22,18 @@ internal interface ListenForNameChange {
 
 // TODO: actually implement the debug for this? no clue what its even supposed to do
 @Module
-object EntityEvents {
-    val debug by debugToggle("mob_attachments", "Note: does nothing right now")
+public object EntityEvents {
+    public val debug: Boolean by debugToggle("mob_attachments", "Note: does nothing right now")
     @JvmField
-    var remainingPerTick: Long = 40
+    public var remainingPerTick: Long = 40
 
     @Subscription
     context(_: TickEvent)
-    fun tick() {
+    internal fun tick() {
         remainingPerTick = 40
     }
     @Subscription(priority = Subscription.HIGHEST)
-    fun onNameAttach(event: ComponentAttachEvent) {
+    internal fun onNameAttach(event: ComponentAttachEvent) {
         if (event.literalComponent.trim().startsWith("[Lv")) {
             event.cancel()
             EntityInfoLineAttachEvent(event.component, event.infoLineEntity).post(SkyBlockAPI.eventBus)
@@ -43,25 +43,25 @@ object EntityEvents {
 
 }
 
-open class EntityInfoLineEvent(
-    val component: Component,
-    val infoLineEntity: Entity,
+public open class EntityInfoLineEvent(
+    public val component: Component,
+    public val infoLineEntity: Entity,
 ) : CancellableSkyBlockEvent() {
-    val attachedTo: Entity? get() = infoLineEntity.getAttachedTo()
-    val literalComponent = component.stripped
+    public val attachedTo: Entity? get() = infoLineEntity.getAttachedTo()
+    public val literalComponent: String = component.stripped
 }
 
-class EntityInfoLineAttachEvent(
+public class EntityInfoLineAttachEvent(
     component: Component,
     infoLineEntity: Entity,
 ) : EntityInfoLineEvent(component, infoLineEntity)
 
-class NameChangedEvent(
+public class NameChangedEvent(
     component: Component,
     infoLineEntity: Entity,
 ) : EntityInfoLineEvent(component, infoLineEntity)
 
-class ComponentAttachEvent(
+public class ComponentAttachEvent(
     component: Component,
     infoLineEntity: Entity,
 ) : EntityInfoLineEvent(component, infoLineEntity)

@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
 import tech.thatgravyboat.skyblockapi.generated.EnumCodec
 
-enum class Essence(val canBeSold: Boolean = true) {
+public enum class Essence(public val canBeSold: Boolean = true) {
     WITHER,
     UNDEAD,
     DRAGON,
@@ -19,12 +19,12 @@ enum class Essence(val canBeSold: Boolean = true) {
     UNKNOWN(false),
     ;
 
-    val bazaarId: String? = "ESSENCE_${this.name}".takeIf { canBeSold }
+    public val bazaarId: String? = "ESSENCE_${this.name}".takeIf { canBeSold }
 
-    companion object {
-        val actualEntries = entries.filterNot { it == UNKNOWN }
+    public companion object {
+        public val actualEntries: List<Essence> = entries.filterNot { it == UNKNOWN }
 
         @IncludedCodec
-        val CODEC: Codec<Essence> = EnumCodec.forKCodec(entries.toTypedArray()).orElse(UNKNOWN)
+        public val CODEC: Codec<Essence> = EnumCodec.forKCodec(entries.toTypedArray()).orElse(UNKNOWN)
     }
 }

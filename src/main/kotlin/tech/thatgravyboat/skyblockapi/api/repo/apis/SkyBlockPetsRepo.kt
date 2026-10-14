@@ -37,7 +37,7 @@ private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
 }
 
 @Module
-object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
+public object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
 
     private val repo get() = RepoAPI.pets()
     private val loreFormatter = DecimalFormat("0.####")
@@ -90,9 +90,9 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
         return baseItem
     }
 
-    fun get(id: String): PetsAPI.Data? = ifInitialized { this.repo.getPet(id) }
+    public fun get(id: String): PetsAPI.Data? = ifInitialized { this.repo.getPet(id) }
 
-    data class Query(
+    public data class Query(
         var id: String = "",
         var rarity: SkyBlockRarity = SkyBlockRarity.COMMON,
         var level: Int = 100,
@@ -100,6 +100,6 @@ object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, schema) {
         var heldItem: String? = null,
         var showStatBounds: Boolean = false,
     ) {
-        constructor(id: String = "", rarity: SkyBlockRarity = SkyBlockRarity.COMMON, level: Int = 100, skin: String? = null, heldItem: String? = null): this(id, rarity, level, skin, heldItem, false)
+        public constructor(id: String = "", rarity: SkyBlockRarity = SkyBlockRarity.COMMON, level: Int = 100, skin: String? = null, heldItem: String? = null): this(id, rarity, level, skin, heldItem, false)
     }
 }

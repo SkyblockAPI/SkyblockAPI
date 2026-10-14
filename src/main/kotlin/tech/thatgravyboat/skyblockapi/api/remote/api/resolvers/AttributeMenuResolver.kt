@@ -21,6 +21,7 @@ internal data object AttributeMenuResolver : InventoryIdResolver {
     context(menu: AbstractContainerScreen<*>, title: String, context: ResolutionContext, resolverKind: IdResolverKind)
     override fun ItemStack.resolveId(): SkyBlockId? {
         val itemName = this.cleanName
+        @Suppress("DEPRECATION")
         if (this in ColoredItems.GRAY_DYE) {
             return SimpleItemAPI.findIdByName(itemName)
         }
