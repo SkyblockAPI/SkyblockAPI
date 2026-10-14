@@ -33,9 +33,6 @@ kotlin {
     }
 }
 
-// mona said to disable this for now
-tasks.named("checkKotlinAbi") { enabled = false }
-
 repositories {
     fun scopedMaven(url: String, vararg paths: String) = maven(url) { content { paths.forEach(::includeGroupAndSubgroups) } }
 
@@ -217,6 +214,7 @@ dependencies {
 }
 
 val mcVersion = stonecutter.current.version.replace(".", "")
+
 val regexDumpFile = project.layout.buildDirectory.file("regexes/regexes.json")
 
 val datagenOutput = project.layout.buildDirectory.file("generated/skyblock-api/data").apply {
@@ -239,10 +237,10 @@ tasks.named("checkKotlinAbi") { enabled = false }
 
 fabricApi {
     configureDataGeneration {
-        client = true
-        modId = "skyblock-api-datagen"
-        createSourceSet = true
-        createRunConfiguration = true
+        client.set(true)
+        modId.set("skyblock-api-datagen")
+        createSourceSet.set(true)
+        createRunConfiguration.set(true)
         outputDirectory.set(datagenOutput)
     }
 }
@@ -253,22 +251,25 @@ tasks.named<JavaExec>("runDatagen") {
 
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }
 
+
 afterEvaluate {
     loom {
         runs {
             named("datagen") {
                 ideConfigFolder.set("Datagen")
             }
+
             // This creates a gradle task called "runDumpRegexes"
             create("dumpRegexes") {
                 inherit(getByName("datagen"))
-                name = "Regex Dumping"
+                displayName = "Regex Dumping"
                 description = "Dumps the regexes into a file located in 'build/regexes/regexes.json'"
 
-                ideConfigGenerated(false)
+                generateRunConfig.set(false)
 
-                vmArgs.add("-Dskyblockapi.regexes.dumpEnabled=true")
-                vmArgs.add("-Dskyblockapi.regexes.dumpPath=${regexDumpFile.get().asFile.absolutePath}")
+
+                jvmArguments.add("-Dskyblockapi.regexes.dumpEnabled=true")
+                jvmArguments.add("-Dskyblockapi.regexes.dumpPath=${regexDumpFile.get().asFile.absolutePath}")
             }
         }
     }
