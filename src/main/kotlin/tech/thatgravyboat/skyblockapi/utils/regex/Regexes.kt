@@ -6,7 +6,6 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import java.nio.file.Path
-import kotlin.collections.mutableMapOf
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.writeText
@@ -69,7 +68,8 @@ public object Regexes {
         usedKeys += key
     }
 
-    internal fun dumpRegexes(path: Path) {
+    @ApiStatus.Internal
+    public fun dumpRegexes(path: Path) {
         SkyBlockAPI.info("Dumping ${regexes.size} regexes and ${regexLists.size} regex lists into ${path.absolutePathString()}")
         val json = context(regexes, regexLists) { RegexData.createJson() }
         path.createParentDirectories()

@@ -5,7 +5,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import me.owdding.ktmodules.Module
-import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
@@ -22,8 +21,6 @@ import tech.thatgravyboat.skyblockapi.utils.runCatchBlocking
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
-import kotlin.collections.mapNotNull
-import kotlin.collections.set
 import kotlin.io.path.isRegularFile
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
@@ -112,9 +109,7 @@ internal object RegexData {
     }
 
     // TODO: implement this
-    @JvmStatic
-    @ApiStatus.Internal
-    fun load() {
+    internal fun load() {
         if (McClient.isDev || isCreatingJson || URL.isBlank()) return
         runCatchBlocking {
             val result = Http.getResult<JsonObject>(URL)
