@@ -1,0 +1,116 @@
+name: Breaking Changes Commenter
+
+on:
+    workflow_run:
+        workflows: [ "Breaking Changes Checker" ]
+        types: [ completed ]
+
+permissions:
+    actions: read
+    contents: read
+    pull-requests: write
+
+concurrency:
+    group: >-
+        breaking-changes-comment-${{ github.event.workflow_run.head_repository.id }}-${{
+        github.event.workflow_run.head_branch }}
+    cancel-in-progress: true
+
+jobs:
+    comment:
+        if: >-
+            github.event.workflow_run.event == 'pull_request'
+            && github.event.workflow_run.conclusion != 'cancelled'
+            && github.event.workflow_run.conclusion != 'skipped'
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Download breaking-change report
+                uses: actions/download-artifact@v5
+                with:
+                    github-token: ${{ github.token }}
+                    run-id: ${{ github.event.workflow_run.id }}
+                    name: breaking-change-report
+                    path: report
+                    merge-multiple: true
+                    if-no-artifact-found: ignore
+
+            -   name: Download pull request number
+                uses: actions/download-artifact@v5
+                with:
+                    github-token: ${{ github.token }}
+                    run-id: ${{ github.event.workflow_run.id }}
+                    name: breaking-change-pr-number
+                    path: report
+                    if-no-artifact-found: ignore
+
+            -   name: Resolve pull request
+                id: pr
+                env:
+                    GH_TOKEN: ${{ github.token }}
+                    HEAD_REPO: ${{ github.event.workflow_run.head_repository.full_name }}
+                    HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+                run: |
+                    if [ -s report/pr-number ]; then
+                        PR_NUMBER=$(cat report/pr-number)
+                    else
+                        PR_NUMBER=$(gh api --paginate "repos/${{ github.repository }}/pulls?state=open" \
+                            | jq -s --arg repo "$HEAD_REPO" --arg branch "$HEAD_BRANCH" \
+                            'add | map(select(.head.repo.full_name == $repo and .head.ref == $branch)) | .[0].number // empty')
+                    fi
+                    echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+
+            -   name: Check whether run is current
+                id: current
+                if: steps.pr.outputs.number != ''
+                env:
+                    GH_TOKEN: ${{ github.token }}
+                run: |
+                    CURRENT_SHA=$(gh api \
+                        "repos/${{ github.repository }}/pulls/${{ steps.pr.outputs.number }}" \
+                        --jq '.head.sha' 2>/dev/null || echo "")
+                    if [ "$CURRENT_SHA" = "${{ github.event.workflow_run.head_sha }}" ]; then
+                        echo "value=true" >> "$GITHUB_OUTPUT"
+                    else
+                        echo "value=false" >> "$GITHUB_OUTPUT"
+                    fi
+
+            -   name: Find failed check job
+                id: job
+                if: steps.pr.outputs.number != '' && steps.current.outputs.value == 'true'
+                env:
+                    GH_TOKEN: ${{ github.token }}
+                run: |
+                    JOB_ID=$(gh api --paginate \
+                        "repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/jobs" \
+                        | jq -s '[.[].jobs[]] | map(select(.name == "breaking-change-check")) | .[0].id // empty')
+                    echo "id=$JOB_ID" >> "$GITHUB_OUTPUT"
+
+            -   name: Comment on pull request
+                if: steps.pr.outputs.number != '' && steps.current.outputs.value == 'true'
+                env:
+                    GH_TOKEN: ${{ github.token }}
+                    PR_NUMBER: ${{ steps.pr.outputs.number }}
+                    RUN_URL: ${{ github.event.workflow_run.html_url }}
+                    RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+                    JOB_ID: ${{ steps.job.outputs.id }}
+                run: |
+                    if [ -s report/comment ]; then
+                        gh pr comment "$PR_NUMBER" \
+                            --repo "${{ github.repository }}" \
+                            --body-file report/comment
+                        gh pr edit "$PR_NUMBER" \
+                            --repo "${{ github.repository }}" \
+                            --add-label "breaking change"
+                    elif [ "${{ github.event.workflow_run.conclusion }}" = "failure" ]; then
+                        BODY="Breaking-change verification failed. Check the [workflow summary](${RUN_URL}/attempts/${RUN_ATTEMPT}/) or [job log](${RUN_URL}/job/${JOB_ID}) for details."
+                        gh pr comment "$PR_NUMBER" \
+                            --repo "${{ github.repository }}" \
+                            --body "$BODY"
+                        gh pr edit "$PR_NUMBER" \
+                            --repo "${{ github.repository }}" \
+                            --remove-label "breaking change"
+                    else
+                        gh pr edit "$PR_NUMBER" \
+                            --repo "${{ github.repository }}" \
+                            --remove-label "breaking change"
+                    fi

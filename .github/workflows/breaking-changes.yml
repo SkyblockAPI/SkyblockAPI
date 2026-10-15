@@ -1,41 +1,31 @@
 name: Breaking Changes Checker
 
 on:
-    pull_request_target:
+    pull_request:
         branches: [ "4.0" ]
+        types: [ opened, synchronize, ready_for_review, converted_to_draft ]
 
 permissions:
     contents: read
-    pull-requests: write
 
 # should hopefully cancel current actions when a newer one happens
 concurrency:
-    group: breaking-changes-${{ github.event.pull_request.id }}
+    group: breaking-changes-${{ github.event.pull_request.number }}
     cancel-in-progress: true
 
 
 jobs:
     breaking-change-check:
-        if: ${{ !github.event.pull_request.draft && !contains(github.event.pull_request.labels.*.name, 'Ignore Breaking') }}
+        if: >-
+            github.event.pull_request.state == 'open'
+            && !github.event.pull_request.draft
+            && !contains(github.event.pull_request.labels.*.name, 'Ignore Breaking')
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v5
                 with:
-                    allow-unsafe-pr-checkout: 'true' # we won't execute any code if any *.gradle file was changes
+                    repository: ${{ github.event.pull_request.head.repo.full_name }}
                     ref: ${{ github.event.pull_request.head.sha }}
-
-            -   name: Fail if build files are changed
-                if: ${{ github.event.pull_request.head.repo.owner.login != 'SkyblockAPI' && github.event.pull_request.head.repo.owner.login != 'j10a1n15' && !contains(github.event.pull_request.labels.*.name, 'Trusted Gradle Changes') }}
-                env:
-                    GH_TOKEN: ${{ github.token }}
-                run: |
-                    git fetch origin ${{ github.event.pull_request.base.sha }}
-                    if git diff --name-only ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -E ".*gradle.*|buildSrc/.*|.*main.kts"; then
-                        echo "Unable to check for breaking changes!" >> comment
-                        echo "Build file modifications have been detected, please revert them to run checks!" >> comment
-                        gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
-                        exit 1
-                    fi
 
             -   name: Setup JDK 25
                 uses: actions/setup-java@v5
@@ -57,8 +47,6 @@ jobs:
                 run: ./.github/scripts/compare_dumps.main.kts >> api.removed
 
             -   name: Check for breaking changes
-                env:
-                    GH_TOKEN: ${{ github.token }}
                 run: |
                     if grep -q '[^[:space:]]' < api.removed
                     then
@@ -67,9 +55,36 @@ jobs:
                         echo "\`\`\`diff" >> comment
                         cat api.removed >> comment
                         echo "\`\`\`" >> comment
-                        gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
-                        gh pr edit ${{ github.event.number }} --repo ${{ github.repository }} --add-label "breaking change"
                         exit 1
-                    else
-                        gh pr edit ${{ github.event.number }} --repo ${{ github.repository }} --remove-label "breaking change"
                     fi
+
+            -   name: Upload breaking-change report
+                if: always()
+                uses: actions/upload-artifact@v4
+                with:
+                    name: breaking-change-report
+                    path: comment
+                    if-no-files-found: ignore
+
+    state-cleanup:
+        if: >-
+            github.event.action == 'converted_to_draft'
+            || contains(github.event.pull_request.labels.*.name, 'Ignore Breaking')
+        runs-on: ubuntu-latest
+        steps:
+            -   run: echo "Breaking-change check is not applicable; the commenter workflow will clear its state."
+
+    save-pr:
+        needs: breaking-change-check
+        if: ${{ failure() && github.event_name == 'pull_request' }}
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Save pull request number
+                run: echo "$PR_NUMBER" > "$RUNNER_TEMP/pr-number"
+                env:
+                    PR_NUMBER: ${{ github.event.pull_request.number }}
+            -   name: Upload pull request number
+                uses: actions/upload-artifact@v4
+                with:
+                    name: breaking-change-pr-number
+                    path: ${{ runner.temp }}/pr-number
