@@ -56,20 +56,8 @@ jobs:
             -   name: Generate API Diffs
                 run: ./.github/scripts/compare_dumps.main.kts >> api.removed
 
-            -   name: Check for breaking changes
-                env:
-                    GH_TOKEN: ${{ github.token }}
-                run: |
-                    if grep -q '[^[:space:]]' < api.removed
-                    then
-                        echo "Breaking changes detected, please make sure not to break APIs between MC versions." >> comment
-                        echo "Please check the following diff:" >> comment
-                        echo "\`\`\`diff" >> comment
-                        cat api.removed >> comment
-                        echo "\`\`\`" >> comment
-                        gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
-                        gh pr edit ${{ github.event.number }} --repo ${{ github.repository }} --add-label "breaking change"
-                        exit 1
-                    else
-                        gh pr edit ${{ github.event.number }} --repo ${{ github.repository }} --remove-label "breaking change"
-                    fi
+            -   name: Upload breaking changes
+                uses: actions/upload-artifact@v4.0.0
+                with:
+                    name: api.removed
+                    path: api.removed
