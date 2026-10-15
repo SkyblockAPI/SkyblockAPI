@@ -33,5 +33,7 @@ public object SkyBlockEnchantmentsRepo : RepoItemCacheAsQuery<Query>("Enchantmen
     public data class Query(
         var id: String = "",
         var level: Int? = null,
-    )
+    ) {
+        public fun create(): LazyItemStack? = create(this)
+    }
 }

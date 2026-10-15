@@ -22,6 +22,8 @@ import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.since
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
@@ -31,6 +33,8 @@ import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.UUID
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 @Module
 public object ProfileAPI {
@@ -87,7 +91,7 @@ public object ProfileAPI {
         480..Int.MAX_VALUE to TextColor.DARK_RED,
     )
 
-    private var lastWorldSwap = 0L
+    private var lastWorldSwap = Instant.DISTANT_PAST
 
     public var profileName: String? = null
         private set
@@ -122,7 +126,7 @@ public object ProfileAPI {
     @Subscription
     internal fun onServerChange(event: ServerChangeEvent) {
         this.isLoaded = false
-        this.lastWorldSwap = System.currentTimeMillis()
+        this.lastWorldSwap = currentInstant()
     }
 
     @OnlyWidget(TabWidget.PROFILE)
@@ -130,37 +134,31 @@ public object ProfileAPI {
     internal fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
         profileRegex.anyMatch(event.new, "name") { (name) ->
             val oldName = this.profileName
-            var newName: String
-            when (name.last()) {
-                '♲' -> {
-                    newName = name.trim(' ', '♲')
-                    ProfileStorage.setProfileType(ProfileType.IRONMAN)
-                }
+            val profileType = ProfileType.fromIcon(name.last())
 
-                'Ⓑ' -> {
-                    newName = name.trim(' ', 'Ⓑ')
-                    ProfileStorage.setProfileType(ProfileType.BINGO)
-                }
+            var profileName = name.trim(' ')
+            if (profileType.icon != null) profileName = profileName.trim(profileType.icon)
 
-                '☀' -> {
-                    newName = name.trim(' ', '☀')
-                    ProfileStorage.setProfileType(ProfileType.STRANDED)
-                }
-
-                else -> {
-                    newName = name
-                    ProfileStorage.setProfileType(ProfileType.NORMAL)
-                }
-            }
             if (SkyBlockIsland.THE_RIFT.inIsland()) {
-                newName = newName.reversed()
+                profileName = profileName.reversed()
+            }
+            val first = profileName.firstOrNull()
+            val last = profileName.lastOrNull()
+
+            // we reverse the profile name if we detect that its reversed, as a fallback in case the profile name is
+            // reversed and we are not in the rift
+            if (first?.isLowerCase() == true && last?.isUpperCase() == true) {
+                profileName = profileName.reversed()
             }
 
-            if (newName != oldName) {
-                this.profileName = newName
-                ProfileChangeEvent(newName).post()
-            }
             this.isLoaded = true
+            this.profileName = profileName
+            // we need to call setProfileType AFTER doing all the transformations to profileName and after setting it
+            // to the variable in the object
+            ProfileStorage.setProfileType(profileType)
+
+            if (oldName == profileName) return@anyMatch
+            ProfileChangeEvent(profileName).post()
         }
 
         skyBlockXPRegex.anyMatch(event.new, "level", "xp") { (level, progress) ->
@@ -210,7 +208,7 @@ public object ProfileAPI {
     @OnlyOnSkyBlock
     @TimePassed("5s")
     internal fun onTick(event: TickEvent) {
-        if (lastWorldSwap + 2500 < System.currentTimeMillis() && !this.isLoaded && !LocationAPI.forceOnSkyblock) {
+        if (lastWorldSwap.since() > 2.5.seconds && !this.isLoaded && !LocationAPI.forceOnSkyblock) {
             SkyBlockAPI.logger.error("Could not find way to determine profile name.")
         }
     }
@@ -230,15 +228,19 @@ public object ProfileAPI {
     }
 }
 
-public enum class ProfileType {
+public enum class ProfileType(internal val icon: Char? = null) {
     NORMAL,
-    BINGO,
-    IRONMAN,
-    STRANDED,
+    BINGO('Ⓑ'),
+    IRONMAN('♲'),
+    STRANDED('☀'),
     UNKNOWN,
     ;
 
     private val string = toFormattedName()
 
     override fun toString(): String = string
+
+    internal companion object {
+        internal fun fromIcon(char: Char) = entries.find { it.icon == char } ?: NORMAL
+    }
 }

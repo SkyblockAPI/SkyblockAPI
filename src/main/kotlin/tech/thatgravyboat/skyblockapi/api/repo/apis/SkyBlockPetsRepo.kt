@@ -101,5 +101,7 @@ public object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, sc
         var showStatBounds: Boolean = false,
     ) {
         public constructor(id: String = "", rarity: SkyBlockRarity = SkyBlockRarity.COMMON, level: Int = 100, skin: String? = null, heldItem: String? = null): this(id, rarity, level, skin, heldItem, false)
+
+        public fun create(): LazyItemStack? = create(this)
     }
 }

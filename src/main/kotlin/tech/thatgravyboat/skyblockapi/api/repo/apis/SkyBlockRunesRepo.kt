@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.repo.apis
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import me.owdding.ktmodules.Module
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RunesAPI.Rune
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
@@ -33,5 +34,13 @@ public object SkyBlockRunesRepo : RepoItemCacheAsQuery<Query>("Runes", ::Query, 
     public data class Query(
         var id: String = "",
         var tier: Int? = null,
-    )
+    ) {
+        public constructor(rune: Rune) : this(rune.id, rune.tier)
+
+        public fun create(): LazyItemStack? = create(this)
+    }
+
+    public fun Rune.getLazyItemStack(): LazyItemStack? = getLazyItemStack(Query(this))
+    public fun Rune.getItemStack(): ItemStack? = getItemStack(Query(this))
+    public fun Rune.getItemStackOrDefault(): ItemStack = getItemStackOrDefault(Query(this))
 }
