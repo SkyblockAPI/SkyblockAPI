@@ -1,0 +1,55 @@
+name: Breaking Changes Checker Comments
+
+on:
+  workflow_run:
+    workflows: [ "Breaking Changes Checker" ]
+    types: [ completed ]
+
+permissions: 
+  pull-requests: write
+
+jobs:
+  comment:
+    name: Post breaking change checker comment
+    runs-on: ubuntu-latest
+
+    if: >-
+      github.event.workflow_run.event == 'pull_request'
+      && github.event.workflow_run.conclusion != 'cancelled'
+      && github.event.workflow_run.conclusion != 'skipped'
+    steps:
+      - name: Download comment
+        id: download
+        uses: actions/download-artifact@v8
+        with:
+          name: api.removed
+          path: /${{ runner.temp }}
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pr Number
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_REPO: ${{ github.event.workflow_run.head_repository.full_name }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          TARGET_REPO: ${{ github.repository }}
+        run: |
+          PR_NUMBER=$(gh api --paginate "repos/$TARGET_REPO/pulls?state=open" \
+          | jq -s --arg repo "$HEAD_REPO" --arg branch "$HEAD_BRANCH" \
+          'add | map(select(.head.repo.full_name == $repo and .head.ref == $branch)) | .[0].number // empty')
+          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+      - name: Post comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if grep -q '[^[:space:]]' < /api.removed
+          then
+              echo "Breaking changes detected, please make sure not to break APIs between MC versions." >> comment
+              echo "Please check the following diff:" >> comment
+              echo "\`\`\`diff" >> comment
+              cat /${{ runner.temp }}/api.removed >> comment
+              echo "\`\`\`" >> comment
+              gh pr comment ${{ steps.pr.outputs.PR_NUMBER }} --repo ${{ github.repository }} --body-file comment
+              gh pr edit ${{ steps.pr.outputs.PR_NUMBER }} --repo ${{ github.repository }} --add-label "breaking change"
+              exit 1
+          fi

@@ -1,8 +1,9 @@
 name: Breaking Changes Checker
 
 on:
-    pull_request_target:
+    pull_request:
         branches: [ "4.0" ]
+        types: [ ready_for_review, synchronize ]
 
 permissions:
     contents: read
@@ -20,22 +21,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v5
-                with:
-                    allow-unsafe-pr-checkout: 'true' # we won't execute any code if any *.gradle file was changes
-                    ref: ${{ github.event.pull_request.head.sha }}
-
-            -   name: Fail if build files are changed
-                if: ${{ github.event.pull_request.head.repo.owner.login != 'SkyblockAPI' && github.event.pull_request.head.repo.owner.login != 'j10a1n15' && !contains(github.event.pull_request.labels.*.name, 'Trusted Gradle Changes') }}
-                env:
-                    GH_TOKEN: ${{ github.token }}
-                run: |
-                    git fetch origin ${{ github.event.pull_request.base.sha }}
-                    if git diff --name-only ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} | grep -E ".*gradle.*|buildSrc/.*|.*main.kts"; then
-                        echo "Unable to check for breaking changes!" >> comment
-                        echo "Build file modifications have been detected, please revert them to run checks!" >> comment
-                        gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
-                        exit 1
-                    fi
+            -   env:
+                  GH_TOKEN: ${{ github.token }}
+                run: gh pr edit ${{ github.event.number }} --repo ${{ github.repository }} --remove-label "breaking change"
 
             -   name: Setup JDK 25
                 uses: actions/setup-java@v5
@@ -56,20 +44,8 @@ jobs:
             -   name: Generate API Diffs
                 run: ./.github/scripts/compare_dumps.main.kts >> api.removed
 
-            -   name: Check for breaking changes
-                env:
-                    GH_TOKEN: ${{ github.token }}
-                run: |
-                    if grep -q '[^[:space:]]' < api.removed
-                    then
-                        echo "Breaking changes detected, please make sure not to break APIs between MC versions." >> comment
-                        echo "Please check the following diff:" >> comment
-                        echo "\`\`\`diff" >> comment
-                        cat api.removed >> comment
-                        echo "\`\`\`" >> comment
-                        gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} --body-file comment
-                        gh pr edit ${{ github.event.number }} --repo ${{ github.repository }} --add-label "breaking change"
-                        exit 1
-                    else
-                        gh pr edit ${{ github.event.number }} --repo ${{ github.repository }} --remove-label "breaking change"
-                    fi
+            -   name: Upload breaking changes
+                uses: actions/upload-artifact@v4.0.0
+                with:
+                    name: api.removed
+                    path: api.removed
