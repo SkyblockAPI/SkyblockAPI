@@ -103,7 +103,7 @@ internal object TabListEventHandler {
             if (stripped.isBlank()) continue
 
             val match = widgetRegexes.entries.firstNotNullOfOrNull { (widget, regex) ->
-                regex.find(stripped)?.let { widget to it }
+                regex.matchEntire(stripped)?.let { widget to it }
             }
 
             if (match == null) {
