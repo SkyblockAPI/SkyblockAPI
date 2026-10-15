@@ -47,6 +47,9 @@ jobs:
                 uses: gradle/actions/setup-gradle@v5
             -   run: chmod +x gradlew
 
+            -   name: Backup current versions
+                run: find versions -name *.api -exec sh -c 'cp $1 $1.old' _ '{}' \;
+
             -   name: Update API baseline
                 run: ./gradlew updateKotlinAbi || true
 
