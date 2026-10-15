@@ -103,7 +103,7 @@ internal object TabListEventHandler {
             if (stripped.isBlank()) continue
 
             val match = widgetRegexes.entries.firstNotNullOfOrNull { (widget, regex) ->
-                regex.find(stripped)?.let { widget to it }
+                regex.matchEntire(stripped)?.let { widget to it }
             }
 
             if (match == null) {
@@ -141,6 +141,7 @@ internal object TabListEventHandler {
     // Add exceptions to widget lines that don't start with a space here
     private fun couldBeUnknownWidgetStart(currentWidget: TabWidget? = null, string: String): Boolean {
         if (string.startsWith(" ")) return false
+        println("current widget: $currentWidget, string: $string")
         return when (currentWidget) {
             TabWidget.JACOBS_CONTEST -> string != "ACTIVE"
             TabWidget.MINING_EVENT -> !string.startsWith("Ends in: ")
