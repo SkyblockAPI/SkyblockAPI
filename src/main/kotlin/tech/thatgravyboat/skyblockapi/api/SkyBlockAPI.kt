@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec
 import me.owdding.dfu.item.MeowddingItemDfu
 import me.owdding.ktmodules.Module
 import net.fabricmc.loader.api.FabricLoader
-import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.api.RepoAPI
@@ -47,9 +46,7 @@ public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal val isDebug get() = System.getProperty("skyblockapi.debug")?.lowercase() == "true"
 
-    @JvmStatic
-    @ApiStatus.Internal
-    public fun init() {
+    internal fun init() {
         debug("Starting sbapi!")
         RepoLibLogger.setInstance(RepoLibLogging)
         SkyblockAPIModules.init { eventBus.register(it) }
@@ -68,9 +65,7 @@ public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         //org.spongepowered.asm.mixin.MixinEnvironment.getCurrentEnvironment().audit()
     }
 
-    @JvmStatic
-    @ApiStatus.Internal
-    public fun postInit() {
+    internal fun postInit() {
         DataTypesRegistry.load()
     }
 

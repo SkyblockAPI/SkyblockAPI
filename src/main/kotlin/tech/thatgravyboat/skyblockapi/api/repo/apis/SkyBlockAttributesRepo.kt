@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.repo.apis
 
 import me.owdding.ktmodules.Module
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.AttributesAPI
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.RepoStatus
@@ -24,10 +25,18 @@ public object SkyBlockAttributesRepo : RepoItemCache<String>("Attributes") {
     @Subscription(RepoEvent.Reload::class)
     @OnRepoStatus(RepoStatus.SUCCESS)
     internal fun onRepoReady() {
-        this.attributes.putAll(this.repo.attributes().values.flatMap { listOf(it.attributeId().lowercase() to it, it.id().lowercase() to it, it.shardId().lowercase() to it) }.toMap())
+        this.attributes.putAll(
+            this.repo.attributes().values.flatMap {
+                listOf(it.attributeId().lowercase() to it, it.id().lowercase() to it, it.shardId().lowercase() to it)
+            }.toMap(),
+        )
     }
 
     public fun get(id: String): AttributesAPI.Attribute? = ifInitialized {
         this.attributes[id.lowercase()] ?: this.repo.getAttribute(id)
     }
+
+    public fun AttributesAPI.Attribute.getLazyItemStack(): LazyItemStack? = getLazyItemStack(this.id)
+    public fun AttributesAPI.Attribute.getItemStack(): ItemStack? = getItemStack(this.id)
+    public fun AttributesAPI.Attribute.getItemStackOrDefault(): ItemStack = getItemStackOrDefault(this.id)
 }

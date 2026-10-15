@@ -39,7 +39,6 @@ public final class tech/thatgravyboat/skyblockapi/api/SkyBlockAPI : org/slf4j/Lo
 	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
 	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public fun info (Lorg/slf4j/Marker;Ljava/lang/String;[Ljava/lang/Object;)V
-	public static final fun init ()V
 	public fun isDebugEnabled ()Z
 	public fun isDebugEnabled (Lorg/slf4j/Marker;)Z
 	public fun isErrorEnabled ()Z
@@ -50,7 +49,6 @@ public final class tech/thatgravyboat/skyblockapi/api/SkyBlockAPI : org/slf4j/Lo
 	public fun isTraceEnabled (Lorg/slf4j/Marker;)Z
 	public fun isWarnEnabled ()Z
 	public fun isWarnEnabled (Lorg/slf4j/Marker;)Z
-	public static final fun postInit ()V
 	public fun trace (Ljava/lang/String;)V
 	public fun trace (Ljava/lang/String;Ljava/lang/Object;)V
 	public fun trace (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
@@ -2294,6 +2292,10 @@ public abstract interface class tech/thatgravyboat/skyblockapi/api/events/base/E
 }
 
 public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/base/OffThreadEvent : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class tech/thatgravyboat/skyblockapi/api/events/base/PredicateForEvents : java/lang/annotation/Annotation {
+	public abstract fun event ()[Ljava/lang/Class;
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -6700,6 +6702,9 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockAttribut
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockAttributesRepo;
 	public synthetic fun create (Ljava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public final fun get (Ljava/lang/String;)Ltech/thatgravyboat/repolib/api/AttributesAPI$Attribute;
+	public final fun getItemStack (Ltech/thatgravyboat/repolib/api/AttributesAPI$Attribute;)Lnet/minecraft/world/item/ItemStack;
+	public final fun getItemStackOrDefault (Ltech/thatgravyboat/repolib/api/AttributesAPI$Attribute;)Lnet/minecraft/world/item/ItemStack;
+	public final fun getLazyItemStack (Ltech/thatgravyboat/repolib/api/AttributesAPI$Attribute;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockEnchantmentsRepo : tech/thatgravyboat/skyblockapi/api/repo/apis/RepoItemCacheAsQuery {
@@ -6716,6 +6721,7 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockEnchantm
 	public final fun component2 ()Ljava/lang/Integer;
 	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockEnchantmentsRepo$Query;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockEnchantmentsRepo$Query;Ljava/lang/String;Ljava/lang/Integer;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockEnchantmentsRepo$Query;
+	public final fun create ()Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getId ()Ljava/lang/String;
 	public final fun getLevel ()Ljava/lang/Integer;
@@ -6761,6 +6767,7 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo
 	public final fun component6 ()Z
 	public final fun copy (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;Z)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query;Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockRarity;ILjava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPetsRepo$Query;
+	public final fun create ()Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getHeldItem ()Ljava/lang/String;
 	public final fun getId ()Ljava/lang/String;
@@ -6792,6 +6799,7 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPotionsR
 	public final fun component2 ()Ljava/lang/Integer;
 	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPotionsRepo$Query;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPotionsRepo$Query;Ljava/lang/String;Ljava/lang/Integer;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockPotionsRepo$Query;
+	public final fun create ()Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getId ()Ljava/lang/String;
 	public final fun getLevel ()Ljava/lang/Integer;
@@ -6813,6 +6821,9 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockRunesRep
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockRunesRepo;
 	public synthetic fun create (Ljava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public final fun get (Ljava/lang/String;)Ljava/util/List;
+	public final fun getItemStack (Ltech/thatgravyboat/repolib/api/RunesAPI$Rune;)Lnet/minecraft/world/item/ItemStack;
+	public final fun getItemStackOrDefault (Ltech/thatgravyboat/repolib/api/RunesAPI$Rune;)Lnet/minecraft/world/item/ItemStack;
+	public final fun getLazyItemStack (Ltech/thatgravyboat/repolib/api/RunesAPI$Rune;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public final fun getTier (Ljava/lang/String;I)Ltech/thatgravyboat/repolib/api/RunesAPI$Rune;
 }
 
@@ -6820,10 +6831,12 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockRunesRep
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ltech/thatgravyboat/repolib/api/RunesAPI$Rune;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/Integer;
 	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockRunesRepo$Query;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockRunesRepo$Query;Ljava/lang/String;Ljava/lang/Integer;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockRunesRepo$Query;
+	public final fun create ()Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getId ()Ljava/lang/String;
 	public final fun getTier ()Ljava/lang/Integer;
@@ -7989,16 +8002,22 @@ public abstract class tech/thatgravyboat/skyblockapi/utils/DevUtils {
 	public abstract fun getCommandName ()Ljava/lang/String;
 	public fun getDefaultSelect (Lnet/minecraft/resources/Identifier;)Ljava/lang/String;
 	public fun getDefaultToggle (Lnet/minecraft/resources/Identifier;)Z
+	protected final fun getName ()Ljava/lang/String;
 	public fun getNamespace ()Ljava/lang/String;
+	protected fun getPath ()Ljava/nio/file/Path;
+	protected final fun getPropertiesInstance ()Ljava/util/Properties;
 	public final fun getSelect ()Ljava/util/Map;
 	public final fun getSelectStates ()Ljava/util/Map;
 	public final fun getStates ()Ljava/util/Map;
 	public fun getSupportsChangingDefault ()Z
 	public final fun getToggles ()Ljava/util/List;
 	public final fun isOn (Lnet/minecraft/resources/Identifier;)Z
+	protected fun loadFromProperties (Ljava/nio/file/Path;)Ljava/util/Map;
 	public final fun onCommandRegister (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
+	protected fun propertyKey (Lnet/minecraft/resources/Identifier;)Ljava/lang/String;
 	public final fun register (Ltech/thatgravyboat/skyblockapi/utils/DebugSelect;)V
 	public final fun register (Ltech/thatgravyboat/skyblockapi/utils/DebugToggle;)V
+	protected fun saveProperties (Lnet/minecraft/resources/Identifier;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public abstract fun send (Lnet/minecraft/network/chat/MutableComponent;)V
 	public final fun setSelect (Lnet/minecraft/resources/Identifier;Ljava/lang/String;)V
 	public fun setSelectDefault (Lnet/minecraft/resources/Identifier;Ljava/lang/String;)V
@@ -9943,7 +9962,6 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/Regexes {
 	public final fun create (Ljava/lang/String;Ljava/lang/String;)Lkotlin/text/Regex;
 	public final fun createList (Ljava/lang/String;[Ljava/lang/String;)Ljava/util/List;
 	public final fun group (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/regex/RegexGroup;
-	public static final fun load ()V
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/regex/component/ComponentMatchResult {

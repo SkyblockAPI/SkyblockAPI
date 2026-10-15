@@ -144,11 +144,11 @@ public open class DebugSelect<T : Any>(
 internal object SkyBlockApiDevUtils : DevUtils() {
     override val commandName: String = "sbapi toggle"
     override fun send(component: MutableComponent) = component.sendWithPrefix()
-    private val path: Path = loadPath()
-    private lateinit var propertiesInstance: Properties
-    val properties: Map<String, String> = loadFromProperties()
 
     override val supportsChangingDefault: Boolean = true
+    override val path: Path = loadPath()
+    val properties: Map<String, String> = loadFromProperties(path)
+
     override val namespace: String = SkyBlockAPI.NAMESPACE
 
     fun init() {
@@ -161,84 +161,15 @@ internal object SkyBlockApiDevUtils : DevUtils() {
         }
     }
 
-    private fun propertyKey(location: Identifier): String {
-        return "${location.namespace}@${location.path}"
-    }
-
-    private fun saveProperties(location: Identifier, newDefault: String?, shouldRemove: (newDefault: String?) -> Boolean) {
-        val properties = this.propertiesInstance
-        val key = propertyKey(location)
-        val currentValue = properties.getProperty(key)
-
-        if (currentValue == newDefault) return
-        if (shouldRemove(newDefault)) properties.remove(key)
-        else properties.setProperty(key, newDefault)
-
-        path.createParentDirectories()
-        path.writer().use {
-            properties.store(it, null)
-        }
-        SkyBlockAPI.info("Changed properties file to set '$location' as '$newDefault'")
-    }
-
-    override fun getDefaultToggle(location: Identifier): Boolean {
-        val key = propertyKey(location)
-        return this.propertiesInstance.getProperty(key) == "true"
-    }
-
-
-    override fun setToggleDefault(location: Identifier, newDefaultValue: Boolean) {
-        super.setToggleDefault(location, newDefaultValue)
-
-        saveProperties(location, newDefaultValue.toString()) { newDefault -> newDefault != "true" }
-    }
-
-    override fun setSelectDefault(location: Identifier, newDefaultValue: String?) {
-        super.setSelectDefault(location, newDefaultValue)
-
-        saveProperties(location, newDefaultValue) { newDefault -> newDefault == null }
-    }
-
-    override fun getDefaultSelect(location: Identifier): String? {
-        val debugSelect = select[location] ?: return null
-        val key = propertyKey(location)
-        val currentValue = this.propertiesInstance.getProperty(key) ?: return null
-        if (currentValue !in debugSelect.states()) return null
-        return currentValue
-    }
+    // TODO: add debug int thing maybe?
     fun getInt(key: String, default: Int = 0): Int {
         return properties[key].parseFormattedInt(default)
-    }
-
-    fun getBoolean(key: String): Boolean {
-        return properties[key] == "true"
     }
 
     private fun loadPath(): Path {
         val specifiedPath = System.getenv("tech_thatgravyboat_sbapi_debug_property_path") ?: System.getProperty("sbapi.property_path")
         return if (specifiedPath != null) Path(specifiedPath)
         else McClient.config.resolve("sbapi.properties")
-    }
-
-    private fun loadFromProperties(): Map<String, String> {
-        val properties = Properties()
-        if (path.notExists()) return emptyMap()
-        path.reader(Charsets.UTF_8).use {
-            properties.load(it)
-        }
-        this.propertiesInstance = properties
-        val map = mutableMapOf<String, String>()
-        properties.forEach { (key, value) ->
-            val identifier = Identifiers.parseWithSeparator(key.toString(), '@') ?: return@forEach
-            val string = value.toString()
-            when (string) {
-                "true" -> states[identifier] = true
-                "false" -> states[identifier] = false
-            }
-            selectStates[identifier] = string
-            map[key.toString()] = string
-        }
-        return map
     }
 
     @Subscription
@@ -249,11 +180,12 @@ internal object SkyBlockApiDevUtils : DevUtils() {
 private fun <V> Any.unsafe(): V = this as V
 
 public abstract class DevUtils {
-    public val states: MutableMap<Identifier, Boolean> = mutableMapOf<Identifier, Boolean>()
-    public val selectStates: MutableMap<Identifier, String?> = mutableMapOf<Identifier, String?>()
+    protected val name: String = this::class.simpleName ?: "Unknown"
+    public val states: MutableMap<Identifier, Boolean> = mutableMapOf()
+    public val selectStates: MutableMap<Identifier, String?> = mutableMapOf()
 
-    public val toggles: MutableList<DebugToggle> = mutableListOf<DebugToggle>()
-    public val select: MutableMap<Identifier, DebugSelect<Any>> = mutableMapOf<Identifier, DebugSelect<Any>>()
+    public val toggles: MutableList<DebugToggle> = mutableListOf()
+    public val select: MutableMap<Identifier, DebugSelect<Any>> = mutableMapOf()
 
     public val allDebugEntries: List<DebugEntry> get() = buildList {
         addAll(toggles)
@@ -262,6 +194,12 @@ public abstract class DevUtils {
 
     /** whether this dev utils supports changing debug entries' default states when launching */
     public open val supportsChangingDefault: Boolean = false
+    /** if [supportsChangingDefault] is `true`, this path should be set */
+    protected open val path: Path? = null
+
+    protected val propertiesInstance: Properties = Properties()
+    protected open fun propertyKey(location: Identifier): String = "${location.namespace}@${location.path}"
+
     public open val namespace: String = SkyBlockAPI.NAMESPACE
 
     public fun <T : Any> register(debugSelect: DebugSelect<T>) {
@@ -291,17 +229,62 @@ public abstract class DevUtils {
         select.setByName(newValue)
     }
 
-    /** If [supportsChangingDefault] is `true`, these should be implemented` */
     //region Default Management Functions
     public open fun setToggleDefault(location: Identifier, newDefaultValue: Boolean) {
-        //setToggle(location, newDefaultValue)
+        saveProperties(location, newDefaultValue.toString()) { newDefault -> newDefault != "true" }
     }
-    public open fun getDefaultToggle(location: Identifier): Boolean = false
+    public open fun getDefaultToggle(location: Identifier): Boolean {
+        val key = propertyKey(location)
+        return this.propertiesInstance.getProperty(key) == "true"
+    }
 
     public open fun setSelectDefault(location: Identifier, newDefaultValue: String?) {
-        //setSelect(location, newDefaultValue)
+        saveProperties(location, newDefaultValue) { newDefault -> newDefault == null }
     }
-    public open fun getDefaultSelect(location: Identifier): String? = null
+    public open fun getDefaultSelect(location: Identifier): String? {
+        val debugSelect = select[location] ?: return null
+        val key = propertyKey(location)
+        val currentValue = this.propertiesInstance.getProperty(key) ?: return null
+        if (currentValue !in debugSelect.states()) return null
+        return currentValue
+    }
+
+    protected open fun saveProperties(location: Identifier, newDefault: String?, shouldRemove: (newDefault: String?) -> Boolean) {
+        val path = path ?: return SkyBlockAPI.info("Couldn't save $name properties because theres no path set")
+        val properties = this.propertiesInstance
+        val key = propertyKey(location)
+        val currentValue = properties.getProperty(key)
+
+        if (currentValue == newDefault) return
+        if (shouldRemove(newDefault)) properties.remove(key)
+        else properties.setProperty(key, newDefault)
+
+        path.createParentDirectories()
+        path.writer().use {
+            properties.store(it, null)
+        }
+        SkyBlockAPI.info("Changed properties file $name to set '$location' as '$newDefault'")
+    }
+
+    protected open fun loadFromProperties(path: Path): Map<String, String> {
+        val properties = this.propertiesInstance
+        if (path.notExists()) return emptyMap()
+        path.reader(Charsets.UTF_8).use {
+            properties.load(it)
+        }
+        val map = mutableMapOf<String, String>()
+        properties.forEach { (key, value) ->
+            val identifier = Identifiers.parseWithSeparator(key.toString(), '@') ?: return@forEach
+            val string = value.toString()
+            when (string) {
+                "true" -> states[identifier] = true
+                "false" -> states[identifier] = false
+            }
+            selectStates[identifier] = string
+            map[key.toString()] = string
+        }
+        return map
+    }
     //endregion
 
     public fun onCommandRegister(event: RegisterCommandsEvent) {
@@ -409,7 +392,7 @@ public abstract class DevUtils {
     }
 
     public companion object {
-        public val allDevUtils: MutableList<DevUtils> = mutableListOf<DevUtils>()
+        public val allDevUtils: MutableList<DevUtils> = mutableListOf()
     }
 }
 
