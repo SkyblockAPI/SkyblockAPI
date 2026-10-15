@@ -326,7 +326,7 @@ val inAll = mutableSetOf<String>()
 val keys = versioned.keys
 
 versioned.values.flatten().distinct().forEach {
-    if (keys.all { versioned[it]?.contains(it) == true }) {
+    if (keys.all { key -> versioned[key]?.contains(it) == true }) {
         inAll.add(it)
     }
 }
