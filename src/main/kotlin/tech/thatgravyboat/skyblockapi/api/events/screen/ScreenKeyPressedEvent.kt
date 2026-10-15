@@ -8,6 +8,20 @@ public sealed class ScreenKeyPressedEvent(
     public val screen: Screen,
     public val event: KeyEvent,
 ) : CancellableSkyBlockEvent() {
+    protected constructor(
+        screen: Screen,
+        key: Int,
+        //? < 26.3
+        //scanCode: Int,
+        modifiers: Int,
+    ) : this(screen, KeyEvent(key,
+        //? < 26.3
+        //scanCode,
+        //? else
+        0,
+        modifiers)
+    )
+
     public val key: Int = event.key
 
     //~ if > 26.2 'scancode' -> 'keycode'
