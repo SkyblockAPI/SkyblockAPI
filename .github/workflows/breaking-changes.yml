@@ -5,10 +5,6 @@ on:
         branches: [ "4.0" ]
         types: [ ready_for_review, synchronize ]
 
-permissions:
-    contents: read
-    pull-requests: write
-
 # should hopefully cancel current actions when a newer one happens
 concurrency:
     group: breaking-changes-${{ github.event.pull_request.id }}
