@@ -1176,19 +1176,25 @@ public final class tech/thatgravyboat/skyblockapi/api/data/FriendData$Companion 
 public final class tech/thatgravyboat/skyblockapi/api/data/MaxwellData {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData$Companion;
 	public fun <init> ()V
-	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)V
 	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;Z)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun component2 ()I
 	public final fun component3 ()Ljava/util/List;
 	public final fun component4 ()Ljava/util/Set;
 	public final fun component5 ()Ljava/util/Set;
 	public final fun component6 ()Ljava/util/List;
-	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
+	public final fun component7 ()Z
+	public final synthetic fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;Z)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAccessories ()Ljava/util/List;
 	public final fun getAccessoryPower ()I
+	public final fun getConsumedRiftPrism ()Z
 	public final synthetic fun getMagicalPower ()I
 	public final fun getPower ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getTuningTemplates ()Ljava/util/List;
@@ -1196,6 +1202,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/MaxwellData {
 	public final fun getUnlockedPowers ()Ljava/util/Set;
 	public fun hashCode ()I
 	public final fun setAccessoryPower (I)V
+	public final fun setConsumedRiftPrism (Z)V
 	public final synthetic fun setMagicalPower (I)V
 	public final fun setPower (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;)V
 	public final fun setTuningTemplates (Ljava/util/List;)V
@@ -3490,6 +3497,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOp
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getMember ()Lcom/google/gson/JsonObject;
 	public final fun getProfileData ()Lcom/google/gson/JsonObject;
+	public final fun getProfilePath (Ljava/lang/String;)Lcom/google/gson/JsonElement;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -5580,6 +5588,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI
 	public fun fork (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;
 	public final fun getAccessories ()Ljava/util/List;
 	public final fun getAccessoryPower ()I
+	public final fun getConsumedRiftPrism ()Z
 	public final fun getPower ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getTuningTemplates ()Ljava/util/Collection;
 	public final fun getTunings ()Ljava/util/List;
