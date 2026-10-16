@@ -5,6 +5,7 @@ import me.owdding.ktcodecs.Compact
 import me.owdding.ktcodecs.FieldName
 import me.owdding.ktcodecs.FieldNames
 import me.owdding.ktcodecs.GenerateCodec
+import me.owdding.ktcodecs.OptionalBoolean
 import me.owdding.ktcodecs.OptionalIfEmpty
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
@@ -25,6 +26,8 @@ public data class MaxwellData(
     var tunings: MutableSet<MaxwellTuning> = mutableSetOf(),
     @FieldName("tuning_templates") @OptionalIfEmpty @Compact
     var tuningTemplates: MutableList<MaxwellTuningTemplate> = mutableListOf(),
+    @FieldName("consumed_rift_prism") @OptionalBoolean(false) @IntroducedAt("4.2.40")
+    var consumedRiftPrism: Boolean = false,
 ) {
     @RemoveNextVersion
     @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN)
