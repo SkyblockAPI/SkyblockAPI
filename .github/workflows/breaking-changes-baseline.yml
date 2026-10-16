@@ -1,4 +1,4 @@
-name: Breaking Changes Baseline
+name: API Baseline Updater
 
 on:
     push:
