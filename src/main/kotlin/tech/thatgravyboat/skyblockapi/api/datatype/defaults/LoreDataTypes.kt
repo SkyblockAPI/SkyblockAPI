@@ -122,7 +122,7 @@ public object LoreDataTypes {
             ?: if (ctx[ResolutionContext.Resolver.PET_DATA] != null) SkyBlockCategory.PET else null
     }
 
-    public val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = DataType.of("dungeon_breaker_charges") { ctx, stack ->
+    public val DUNGEONBREAKER_CHARGES: DataType<Pair<Int, Int>> = DataType.of("dungeon_breaker_charges") { ctx, _ ->
         if (ctx[ResolutionContext.Resolver.ID] != "DUNGEONBREAKER") return@of null
 
         var output: Pair<Int, Int>? = null
@@ -150,7 +150,7 @@ public object LoreDataTypes {
         output
     }
 
-    public val SOULBOUND: DataType<SoulboundType> = DataType.of("soulbound") { ctx, stack ->
+    public val SOULBOUND: DataType<SoulboundType> = DataType.of("soulbound") { ctx, _ ->
         val matches = ctx[ResolutionContext.Resolver.RAW_LORE].reversed().firstNotNullOfOrNull(soulboundRegex::matchEntire) ?: return@of null
         if (matches.groups["coop"] != null) SoulboundType.COOP else SoulboundType.SOLO
     }
