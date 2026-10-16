@@ -218,7 +218,7 @@ loom {
     runConfigs["client"].apply {
         generateRunConfig = true
         runDirectory = project.file("../../run")
-        jvmArguments.add("-Dfabric.modsFolder=\"${mcVersion}Mods\"")
+        jvmArguments.add("-Dfabric.modsFolder=${mcVersion}Mods")
     }
 
     if (accessWidenerFile.exists()) {
