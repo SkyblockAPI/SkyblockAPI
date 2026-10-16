@@ -443,15 +443,6 @@ public data object MaxwellAPI : ItemDebugCategory {
                     }
                 }
             }
-            thenCallback("rift_prism set consumed", BoolArgumentType.bool()) {
-                val consumed = argument<Boolean>("consumed")
-                MaxwellStorage.consumedRiftPrism = consumed
-                Text.sendDebug("Manually set rift prism as ") {
-                    if (consumed) append("consumed", TextColor.GREEN)
-                    else append("not consumed", TextColor.RED)
-                    append(".")
-                }
-            }
             then("tunings") {
                 thenCallback("templates") {
                     McClient.clipboard = tuningTemplates.joinToString("\n") { (index, locked, tunings) ->
