@@ -29,6 +29,7 @@ public final class tech/thatgravyboat/skyblockapi/api/SkyBlockAPI : org/slf4j/Lo
 	public static final fun getEventBus ()Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;
 	public final fun getMOD_ID ()Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
+	public final fun getVERSION ()Ljava/lang/String;
 	public fun info (Ljava/lang/String;)V
 	public fun info (Ljava/lang/String;Ljava/lang/Object;)V
 	public fun info (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
@@ -2260,6 +2261,8 @@ public final class tech/thatgravyboat/skyblockapi/api/events/base/EventBus {
 	public static synthetic fun register$default (Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;Ljava/lang/Class;IZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public final fun unregister (Ljava/lang/Class;Lkotlin/jvm/functions/Function1;)V
 	public final fun unregister (Ljava/lang/Object;)V
+	public final fun unregisterMethod (Ljava/lang/reflect/Method;)V
+	public final fun unregisterMethod (Lkotlin/reflect/KFunction;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/base/EventBus$EventData {
@@ -6763,6 +6766,7 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McClient {
 	public final fun setScreenAsync (Lkotlin/jvm/functions/Function0;)V
 	public final fun setTitle (Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;FFF)V
 	public static synthetic fun setTitle$default (Ltech/thatgravyboat/skyblockapi/helpers/McClient;Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;FFFILjava/lang/Object;)V
+	public final fun throwInDev (Ljava/lang/String;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/helpers/McFont {
@@ -9487,6 +9491,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/EntityExtensi
 	public static final fun getServerHealth (Lnet/minecraft/world/entity/LivingEntity;)F
 	public static final fun getServerMaxHealth (Lnet/minecraft/world/entity/LivingEntity;)F
 	public static final fun getServerValue (Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;)F
+	public static final fun isRealPlayer (Ljava/util/UUID;)Z
 	public static final fun isRealPlayer (Lnet/minecraft/world/entity/player/Player;)Z
 }
 
