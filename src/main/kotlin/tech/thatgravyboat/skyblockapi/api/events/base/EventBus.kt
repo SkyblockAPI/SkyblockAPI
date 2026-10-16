@@ -1,8 +1,11 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.debug.DebugEvents
 import java.lang.reflect.Method
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.reflect.KFunction
+import kotlin.reflect.jvm.javaMethod
 
 public class EventBus {
 
@@ -45,6 +48,20 @@ public class EventBus {
         unregisterHandler(type)
         listeners.values.forEach { it.removeListener(callback) }
     }
+
+    // We don't provide an `instance` of the class here, so it doesn't check if the method passed is part of a super class
+    public fun unregisterMethod(kFunction: KFunction<*>) {
+        unregisterMethod(kFunction.javaMethod ?: return)
+    }
+
+    // We don't provide an `instance` of the class here, so it doesn't check if the method passed is part of a super class
+    public fun unregisterMethod(method: Method) {
+        val (_, event) = getEventData(method) ?: return
+        event.forEach {
+            unregisterMethodInternal(method, it)
+        }
+    }
+
 
     public fun post(
         event: SkyBlockEvent,
@@ -92,7 +109,7 @@ public class EventBus {
         when (method.parameterCount) {
             1 -> listeners.addListener(method, instance, options)
             0 -> listeners.addNoArgListener(method, instance, options)
-            else -> throw IllegalStateException("Expected method with zero or one parameters got %s".format(method.parameterCount))
+            else -> McClient.throwInDev("Expected method with zero or one parameters got %s".format(method.parameterCount))
         }
     }
 
@@ -101,8 +118,12 @@ public class EventBus {
         if (method.parameterCount == 0 && options.event.isNotEmpty()) {
             return EventData(options, options.event.toList().map { it.java })
         }
-        if (method.parameterTypes.size != 1) return null
-        return method.parameterTypes.firstOrNull()?.let { EventData(options, listOf(it)) }
+        val singleEvent = method.parameterTypes.singleOrNull()
+        if (singleEvent == null) {
+            McClient.throwInDev("Expected exactly one parameter type in function ${method.name} in class ${method.declaringClass.name}")
+            return null
+        }
+        return EventData(options, listOf(singleEvent))
     }
 
     public data class EventData(

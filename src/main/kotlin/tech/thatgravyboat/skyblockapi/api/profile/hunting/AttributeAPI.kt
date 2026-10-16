@@ -381,7 +381,7 @@ public data object AttributeAPI : ItemDebugCategory {
 
     @Subscription
     internal fun onCommandRegister(event: RegisterSkyblockApiCommandsEvent) {
-        event.command("sbapi attributes") {
+        event.command("attributes") {
             "reset *" {
                 "owned" executes {
                     resetOwnedAttributeAmounts()
