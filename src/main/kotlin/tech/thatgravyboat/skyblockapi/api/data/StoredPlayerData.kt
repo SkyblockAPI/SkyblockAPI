@@ -6,6 +6,8 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import java.util.UUID
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.reflect.KClass
 
 internal class StoredPlayerData<T : Any>(
@@ -39,6 +41,14 @@ internal class StoredPlayerData<T : Any>(
 
     fun set(value: T) {
         storedData.get()[McPlayer.uuid] = value
+        save()
+    }
+
+    inline fun edit(edit: T.() -> Unit) {
+        contract {
+            callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
+        }
+        edit(get())
         save()
     }
 

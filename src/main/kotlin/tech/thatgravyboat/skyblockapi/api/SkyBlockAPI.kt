@@ -27,6 +27,7 @@ import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
+import tech.thatgravyboat.skyblockapi.utils.text.Text
 import java.nio.file.Files
 
 //? < 26.3
@@ -37,6 +38,7 @@ public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal val mod = FabricLoader.getInstance().getModContainer("skyblock-api").orElseThrow()
     public val MOD_ID: String get() = mod.metadata.id
+    public val VERSION: String get() = mod.metadata.version.friendlyString
     public const val NAMESPACE: String = "skyblockapi"
 
     @JvmStatic
@@ -77,6 +79,9 @@ public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
     private fun RegisterCommandsEvent.registerSkyblockApiCommands() {
         val event = RegisterSkyblockApiCommandsEvent(this)
         event.post()
+        event.registerWithCallback("version") {
+            Text.sendDebug("Current version is: $VERSION")
+        }
         RegisterSkyblockApiDebugEvent(event).post()
     }
 

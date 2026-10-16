@@ -24,6 +24,7 @@ import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.level.GameType
 import net.minecraft.world.scores.DisplaySlot
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.utils.McVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
@@ -203,5 +204,10 @@ public object McClient {
 
     public fun anyModInstalled(modIds: Collection<String>): Boolean = modIds.any { FabricLoader.getInstance().isModLoaded(it) }
     public fun anyModInstalled(vararg modIds: String): Boolean = anyModInstalled(modIds.asList())
+
+    public fun throwInDev(message: String) {
+        if (isDev) throw IllegalStateException("Error while in development environment: $message")
+        else SkyBlockAPI.error("Error while not in development environment: $message")
+    }
 }
 

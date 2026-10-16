@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.hooks.DataItemHook
 import tech.thatgravyboat.skyblockapi.mixins.accessors.LivingEntityAccessor
 import tech.thatgravyboat.skyblockapi.mixins.accessors.SynchedEntityDataAccessor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import java.util.UUID
 
 public val Entity.cleanName: String get() = name.stripped
 
@@ -20,7 +21,8 @@ public fun LivingEntity.getChestplate(): ItemStack = getItemBySlot(EquipmentSlot
 public fun LivingEntity.getLeggings(): ItemStack = getItemBySlot(EquipmentSlot.LEGS)
 public fun LivingEntity.getBoots(): ItemStack = getItemBySlot(EquipmentSlot.FEET)
 
-public fun Player.isRealPlayer(): Boolean = uuid.version() == 4
+public fun UUID.isRealPlayer(): Boolean = version() == 4
+public fun Player.isRealPlayer(): Boolean = uuid.isRealPlayer()
 
 public fun LivingEntity.getArmor(): List<ItemStack> = listOf(getHelmet(), getChestplate(), getLeggings(), getBoots())
 
