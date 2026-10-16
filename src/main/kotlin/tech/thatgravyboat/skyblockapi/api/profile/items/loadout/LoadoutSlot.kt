@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.loadout
 
 import me.owdding.ktcodecs.GenerateCodec
+import me.owdding.ktcodecs.OptionalNullable
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import kotlin.contracts.ExperimentalContracts
@@ -19,25 +20,10 @@ public data class LoadoutSlot(
     var tunings: NumberMatch?,
     var hotm: StringMatch?,
     var hotf: StringMatch?,
-    var favoredBait: SkyBlockIdMatch?,
     var locked: Boolean = true,
+    @IntroducedAt("4.2.41") @OptionalNullable var favoredBait: SkyBlockIdMatch? = null,
 ) {
-    //? < 26.4 {
-    @Deprecated("Supply favoredBait")
-    public constructor(
-        id: Int,
-        name: String?,
-        armor: NumberMatch?,
-        equipment: NumberMatch?,
-        pet: StringMatch?,
-        powerstone: StringMatch?,
-        tunings: NumberMatch?,
-        hotm: StringMatch?,
-        hotf: StringMatch?,
-        locked: Boolean = true,
-    ) : this(id, name, armor, equipment, pet, powerstone, tunings, hotm, hotf, null, locked)//?}
-
-    public constructor(id: Int) : this(id, null, null, null, null, null, null, null, null, null)
+    public constructor(id: Int) : this(id, null, null, null, null, null, null, null, null, favoredBait = null)
 
     context(source: DataSource)
     public fun value(value: Int?): NumberMatch = NumberMatch(value, source, currentInstant())
