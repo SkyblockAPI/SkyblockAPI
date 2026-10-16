@@ -3,18 +3,12 @@ name: Breaking Changes Checker
 on:
     pull_request:
         branches: [ "4.0" ]
-        types:
-            - opened
-            - synchronize
-            - reopened
-            - ready_for_review
-            - converted_to_draft
-            - labeled
-            - unlabeled
+        types: [ opened, reopened, synchronize, ready_for_review, converted_to_draft ]
 
 permissions:
     contents: read
 
+# Workflow level on purpose: converting a PR to a draft has to cancel a running check.
 concurrency:
     group: breaking-changes-${{ github.event.pull_request.number }}
     cancel-in-progress: true
@@ -26,6 +20,7 @@ jobs:
             && !github.event.pull_request.draft
             && !contains(github.event.pull_request.labels.*.name, 'Ignore Breaking')
         runs-on: ubuntu-latest
+        timeout-minutes: 30
         steps:
             -   uses: actions/checkout@v5
                 with:
@@ -36,8 +31,8 @@ jobs:
             -   name: Setup JDK 25
                 uses: actions/setup-java@v5
                 with:
-                    java-version: '25'
                     distribution: 'temurin'
+                    java-version: '25'
 
             -   name: Setup gradle
                 uses: gradle/actions/setup-gradle@v5
@@ -57,26 +52,24 @@ jobs:
                 run: |
                     if grep -q '[^[:space:]]' < api.removed
                     then
-                        echo "Breaking changes detected, please make sure not to break APIs between MC versions." >> comment
-                        echo "Please check the following diff:" >> comment
-                        echo "\`\`\`diff" >> comment
-                        cat api.removed >> comment
-                        echo "\`\`\`" >> comment
+                        cat api.removed
                         exit 1
                     fi
 
             -   name: Upload breaking-change report
-                if: always()
+                if: failure()
                 uses: actions/upload-artifact@v4
                 with:
-                    name: breaking-change-report
-                    path: comment
+                    name: breaking-change-report-${{ github.run_attempt }}
+                    path: api.removed
                     if-no-files-found: ignore
 
-    # Forces workflow conclusion to "success" when check is skipped (drafts, ignored breaking)
-    state-cleanup:
-        needs: breaking-change-check
-        if: always()
+    # When this check is skipped the run concludes "skipped", which the commenter ignores, so an old comment and
+    # label would stay forever. One successful job makes the run conclude "success" and the commenter cleans up.
+    draft-cleanup:
+        if: >-
+            github.event.action == 'converted_to_draft'
+            || contains(github.event.pull_request.labels.*.name, 'Ignore Breaking')
         runs-on: ubuntu-latest
         steps:
-            -   run: echo "Checker completed or skipped; commenter workflow will synchronize PR state."
+            -   run: echo "Check skipped, finishing as success so the commenter clears the PR state."
