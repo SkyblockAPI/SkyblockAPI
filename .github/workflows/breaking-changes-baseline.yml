@@ -8,16 +8,13 @@ permissions:
     contents: write
     pull-requests: write
 
-# should hopefully cancel current actions when a newer one happens
 concurrency:
     group: breaking-changes-baseline-${{ github.ref_name }}
     cancel-in-progress: true
 
 jobs:
     baseline-updater:
-
         runs-on: ubuntu-latest
-
         steps:
             -   uses: actions/checkout@v5
                 with:
@@ -33,17 +30,18 @@ jobs:
                 uses: gradle/actions/setup-gradle@v5
 
             -   run: chmod +x gradlew
+
             -   name: Build
                 run: ./gradlew build
 
-            -   name: Build with Gradle
+            -   name: Update Legacy ABI
                 run: ./gradlew updateLegacyAbi || true
 
-            -   name: Check for breaking changes
+            -   name: Check and Push Updates
                 env:
                     GH_TOKEN: ${{ secrets.BOT_TOKEN }}
                 run: |
-                    if ! $(git diff --exit-code versions/26.1/api/26.1.api) || ! $(git diff --exit-code versions/26.2/api/26.2.api) || ! $(git diff --exit-code versions/26.3/api/26.3.api);
+                    if ! git diff --exit-code versions/26.1/api/26.1.api || ! git diff --exit-code versions/26.2/api/26.2.api || ! git diff --exit-code versions/26.3/api/26.3.api;
                     then
                         git config --global user.email "meowtomation@users.noreply.github.com"
                         git config --global user.name "meowtomation"

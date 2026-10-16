@@ -8,11 +8,9 @@ on:
 permissions:
     contents: read
 
-# should hopefully cancel current actions when a newer one happens
 concurrency:
     group: breaking-changes-${{ github.event.pull_request.number }}
     cancel-in-progress: true
-
 
 jobs:
     breaking-change-check:
@@ -26,6 +24,7 @@ jobs:
                 with:
                     repository: ${{ github.event.pull_request.head.repo.full_name }}
                     ref: ${{ github.event.pull_request.head.sha }}
+                    persist-credentials: false
 
             -   name: Setup JDK 25
                 uses: actions/setup-java@v5
@@ -35,10 +34,11 @@ jobs:
 
             -   name: Setup gradle
                 uses: gradle/actions/setup-gradle@v5
+
             -   run: chmod +x gradlew
 
             -   name: Backup current versions
-                run: find versions -name *.api -exec sh -c 'cp $1 $1.old' _ '{}' \;
+                run: find versions -name "*.api" -exec sh -c 'cp "$1" "$1.old"' _ '{}' \;
 
             -   name: Update API baseline
                 run: ./gradlew updateKotlinAbi || true
