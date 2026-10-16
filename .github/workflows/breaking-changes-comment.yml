@@ -21,7 +21,6 @@ jobs:
         if: >-
             github.event.workflow_run.event == 'pull_request'
             && github.event.workflow_run.conclusion != 'cancelled'
-            && github.event.workflow_run.conclusion != 'skipped'
         runs-on: ubuntu-latest
         steps:
             -   name: Download breaking-change report
@@ -34,25 +33,18 @@ jobs:
                     merge-multiple: true
                     if-no-artifact-found: ignore
 
-            -   name: Download pull request number
-                uses: actions/download-artifact@v5
-                with:
-                    github-token: ${{ github.token }}
-                    run-id: ${{ github.event.workflow_run.id }}
-                    name: breaking-change-pr-number
-                    path: report
-                    if-no-artifact-found: ignore
-
-            -   name: Resolve pull request
+            -   name: Resolve pull request securely from trusted metadata
                 id: pr
                 env:
                     GH_TOKEN: ${{ github.token }}
                     HEAD_REPO: ${{ github.event.workflow_run.head_repository.full_name }}
                     HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
                 run: |
-                    if [ -s report/pr-number ]; then
-                        PR_NUMBER=$(cat report/pr-number)
-                    else
+                    # Extract PR number directly from trusted workflow_run payload if present
+                    PR_NUMBER="${{ github.event.workflow_run.pull_requests[0].number }}"
+                    
+                    if [ -z "$PR_NUMBER" ] || [ "$PR_NUMBER" = "null" ]; then
+                        # Fallback to querying GitHub API using trusted head repository and branch metadata
                         PR_NUMBER=$(gh api --paginate "repos/${{ github.repository }}/pulls?state=open" \
                             | jq -s --arg repo "$HEAD_REPO" --arg branch "$HEAD_BRANCH" \
                             'add | map(select(.head.repo.full_name == $repo and .head.ref == $branch)) | .[0].number // empty')
@@ -119,8 +111,9 @@ jobs:
                         fi
                         gh pr edit "$PR_NUMBER" --repo "${{ github.repository }}" --add-label "breaking change"
                     else
+                        # Success, draft, or Ignore Breaking: clean up comment and label
                         if [ -n "$EXISTING_COMMENT_ID" ] && [ "$EXISTING_COMMENT_ID" != "null" ]; then
-                            gh api -X DELETE "repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT_ID" || true
+                            gh api -X DELETE "repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT_ID" 2>/dev/null || true
                         fi
-                        gh pr edit "$PR_NUMBER" --repo "${{ github.repository }}" --remove-label "breaking change" || true
+                        gh pr edit "$PR_NUMBER" --repo "${{ github.repository }}" --remove-label "breaking change" 2>/dev/null || true
                     fi

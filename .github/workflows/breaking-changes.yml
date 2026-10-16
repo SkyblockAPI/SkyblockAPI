@@ -73,25 +73,10 @@ jobs:
                     path: comment
                     if-no-files-found: ignore
 
+    # Forces workflow conclusion to "success" when check is skipped (drafts, ignored breaking)
     state-cleanup:
-        if: >-
-            github.event.action == 'converted_to_draft'
-            || contains(github.event.pull_request.labels.*.name, 'Ignore Breaking')
-        runs-on: ubuntu-latest
-        steps:
-            -   run: echo "Breaking-change check skipped or not applicable; state will be cleaned up by the commenter workflow."
-
-    save-pr:
         needs: breaking-change-check
-        if: ${{ failure() && github.event_name == 'pull_request' }}
+        if: always()
         runs-on: ubuntu-latest
         steps:
-            -   name: Save pull request number
-                run: echo "$PR_NUMBER" > "$RUNNER_TEMP/pr-number"
-                env:
-                    PR_NUMBER: ${{ github.event.pull_request.number }}
-            -   name: Upload pull request number
-                uses: actions/upload-artifact@v4
-                with:
-                    name: breaking-change-pr-number
-                    path: ${{ runner.temp }}/pr-number
+            -   run: echo "Checker completed or skipped; commenter workflow will synchronize PR state."
