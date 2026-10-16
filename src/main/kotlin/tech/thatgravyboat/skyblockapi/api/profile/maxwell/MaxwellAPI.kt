@@ -90,7 +90,6 @@ public data object MaxwellAPI : ItemDebugCategory {
         "select",
         "^(?:Your selected power was set to |You selected the )(?<power>.+?)(?:!|(?: power)? for your Accessory Bag!)",
     )
-    // TODO: test
     private val imbuedRiftPrismRegex = chatGroup.create(
         "rift_prism.imbued",
         """^(?:Erihann imbued your Rift Prism right into your spirit!|\[NPC] Erihann: You are imbued with the power of the Rift Prism\.)"""
