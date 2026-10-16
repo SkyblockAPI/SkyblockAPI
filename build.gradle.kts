@@ -81,7 +81,7 @@ tasks.withType<KotlinCompile>().configureEach {
         freeCompilerArgs.addAll(
             "-Xcontext-sensitive-resolution",
             "-Xnullability-annotations=@org.jspecify.annotations:ignore",
-            // Protected constructors should be allowed + public methods inside internal classes should be allowed
+            // Protected constructors + public methods inside internal classes
             "-Xwarning-level=REDUNDANT_VISIBILITY_MODIFIER:disabled",
         )
     }
