@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.impl.ColoredItems
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
@@ -83,6 +84,7 @@ public data object LoadoutAPI : ItemDebugCategory {
                     var hotf: String? = null
                     var powerStone: String? = null
                     var tuningTemplate: Int? = null
+                    var favoredBait: SkyBlockId? = null
 
                     event.item.getRawLore().forEach {
                         if (armorTypes.any { type -> it.startsWith("$type: ") }) {
@@ -118,6 +120,12 @@ public data object LoadoutAPI : ItemDebugCategory {
                             event.item.addDebugString { "Tuning Template Slot -> $value" }
                             tuningTemplate = value
                         }
+                        if (it.startsWith("Favored Bait: ")) {
+                            val name = it.substringAfter(':').trim()
+                            val id = SkyBlockId.fromName(name)
+                            event.item.addDebugString { "Favored Bait -> $id" }
+                            favoredBait = id
+                        }
                     }
 
                     val armorNotNull = armorNames.indexOfFirst { it != null }
@@ -143,7 +151,8 @@ public data object LoadoutAPI : ItemDebugCategory {
                     this.hotf = value(hotf)
                     this.powerstone = value(powerStone)
                     this.tunings = value(tuningTemplate)
-                    event.item.addDebugString { "$this" }
+
+                    this.favoredBait = value(favoredBait)
                 }
             }
         }
@@ -167,8 +176,8 @@ public data object LoadoutAPI : ItemDebugCategory {
         }
 
         this.armor = value(
-            slots.indexOfFirst {
-                it.slots.mapIndexed { index, stack ->
+            slots.indexOfFirst { slot ->
+                slot.slots.mapIndexed { index, stack ->
                     val name = names[index] ?: return@mapIndexed stack.isEmpty
                     stack.cleanName == name || stack.cleanName.stripColor() == name.stripColor()
                 }.all { it }
