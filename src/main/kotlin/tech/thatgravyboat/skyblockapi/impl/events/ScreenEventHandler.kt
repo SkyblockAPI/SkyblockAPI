@@ -22,8 +22,7 @@ public object ScreenEventHandler {
     }
 
     @Subscription
-    internal
-    fun preScreenClick(event: ScreenMouseClickEvent.Pre) {
+    internal fun preScreenClick(event: ScreenMouseClickEvent.Pre) {
         val screen = event.screen as? AbstractContainerScreen<*> ?: return
         val slot = screen.getHoveredSlot() ?: return
         if (SlotClickEvent(slot.item, slot, event.button, screen).post()) event.cancel()
