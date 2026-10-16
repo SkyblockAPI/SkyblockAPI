@@ -425,6 +425,24 @@ public data object MaxwellAPI : ItemDebugCategory {
                 MaxwellStorage.reset()
                 Text.sendDebug("Reset Maxwell Data!")
             }
+            then("rift_prism") {
+                thenCallback("get") {
+                    Text.sendDebug("Rift prism is ") {
+                        if (consumedRiftPrism) append("consumed", TextColor.GREEN)
+                        else append("not consumed", TextColor.RED)
+                        append(".")
+                    }
+                }
+                thenCallback("set consumed", BoolArgumentType.bool()) {
+                    val consumed = argument<Boolean>("consumed")
+                    MaxwellStorage.consumedRiftPrism = consumed
+                    Text.sendDebug("Manually set rift prism as ") {
+                        if (consumed) append("consumed", TextColor.GREEN)
+                        else append("not consumed", TextColor.RED)
+                        append(".")
+                    }
+                }
+            }
             thenCallback("rift_prism set consumed", BoolArgumentType.bool()) {
                 val consumed = argument<Boolean>("consumed")
                 MaxwellStorage.consumedRiftPrism = consumed
