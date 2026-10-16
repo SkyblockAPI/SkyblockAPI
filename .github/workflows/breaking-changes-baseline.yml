@@ -47,5 +47,5 @@ jobs:
                         git config --global user.name "meowtomation"
                         git add .
                         git commit -m "update api dump"
-                        git push
+                        git push origin HEAD:${{ github.ref_name }}
                     fi
