@@ -85,7 +85,7 @@ jobs:
                         | jq -s '[.[].jobs[]] | map(select(.name == "breaking-change-check")) | .[0].id // empty')
                     echo "id=$JOB_ID" >> "$GITHUB_OUTPUT"
 
-            -   name: Comment on pull request
+            -   name: Manage pull request comment and label
                 if: steps.pr.outputs.number != '' && steps.current.outputs.value == 'true'
                 env:
                     GH_TOKEN: ${{ github.token }}
@@ -94,23 +94,33 @@ jobs:
                     RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
                     JOB_ID: ${{ steps.job.outputs.id }}
                 run: |
+                    MARKER="<!-- breaking-changes-report -->"
+                    
                     if [ -s report/comment ]; then
-                        gh pr comment "$PR_NUMBER" \
-                            --repo "${{ github.repository }}" \
-                            --body-file report/comment
-                        gh pr edit "$PR_NUMBER" \
-                            --repo "${{ github.repository }}" \
-                            --add-label "breaking change"
+                        COMMENT_BODY="$MARKER"$'\n'$(cat report/comment)
+                        HAS_ISSUE=true
                     elif [ "${{ github.event.workflow_run.conclusion }}" = "failure" ]; then
-                        BODY="Breaking-change verification failed. Check the [workflow summary](${RUN_URL}/attempts/${RUN_ATTEMPT}/) or [job log](${RUN_URL}/job/${JOB_ID}) for details."
-                        gh pr comment "$PR_NUMBER" \
-                            --repo "${{ github.repository }}" \
-                            --body "$BODY"
-                        gh pr edit "$PR_NUMBER" \
-                            --repo "${{ github.repository }}" \
-                            --remove-label "breaking change"
+                        JOB_LINK_REF="${JOB_ID:+/job/${JOB_ID}}"
+                        COMMENT_BODY="$MARKER"$'\n'"Breaking-change verification failed. Check the [workflow summary](${RUN_URL}/attempts/${RUN_ATTEMPT}/)${JOB_LINK_REF:+ or [job log](${RUN_URL}${JOB_LINK_REF})} for details."
+                        HAS_ISSUE=true
                     else
-                        gh pr edit "$PR_NUMBER" \
-                            --repo "${{ github.repository }}" \
-                            --remove-label "breaking change"
+                        HAS_ISSUE=false
+                    fi
+
+                    EXISTING_COMMENT_ID=$(gh api "repos/${{ github.repository }}/issues/$PR_NUMBER/comments" --paginate \
+                        | jq -r --arg marker "$MARKER" '.[] | select(.body | contains($marker)) | .id' | head -n 1)
+
+                    if [ "$HAS_ISSUE" = "true" ]; then
+                        if [ -n "$EXISTING_COMMENT_ID" ] && [ "$EXISTING_COMMENT_ID" != "null" ]; then
+                            gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT_ID" \
+                                -f body="$COMMENT_BODY"
+                        else
+                            gh pr comment "$PR_NUMBER" --repo "${{ github.repository }}" --body "$COMMENT_BODY"
+                        fi
+                        gh pr edit "$PR_NUMBER" --repo "${{ github.repository }}" --add-label "breaking change"
+                    else
+                        if [ -n "$EXISTING_COMMENT_ID" ] && [ "$EXISTING_COMMENT_ID" != "null" ]; then
+                            gh api -X DELETE "repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT_ID" || true
+                        fi
+                        gh pr edit "$PR_NUMBER" --repo "${{ github.repository }}" --remove-label "breaking change" || true
                     fi

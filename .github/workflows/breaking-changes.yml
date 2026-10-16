@@ -3,7 +3,14 @@ name: Breaking Changes Checker
 on:
     pull_request:
         branches: [ "4.0" ]
-        types: [ opened, synchronize, ready_for_review, converted_to_draft ]
+        types:
+            - opened
+            - synchronize
+            - reopened
+            - ready_for_review
+            - converted_to_draft
+            - labeled
+            - unlabeled
 
 permissions:
     contents: read
@@ -41,7 +48,7 @@ jobs:
                 run: find versions -name "*.api" -exec sh -c 'cp "$1" "$1.old"' _ '{}' \;
 
             -   name: Update API baseline
-                run: ./gradlew updateKotlinAbi || true
+                run: ./gradlew updateKotlinAbi
 
             -   name: Generate API Diffs
                 run: ./.github/scripts/compare_dumps.main.kts >> api.removed
@@ -72,7 +79,7 @@ jobs:
             || contains(github.event.pull_request.labels.*.name, 'Ignore Breaking')
         runs-on: ubuntu-latest
         steps:
-            -   run: echo "Breaking-change check is not applicable; the commenter workflow will clear its state."
+            -   run: echo "Breaking-change check skipped or not applicable; state will be cleaned up by the commenter workflow."
 
     save-pr:
         needs: breaking-change-check

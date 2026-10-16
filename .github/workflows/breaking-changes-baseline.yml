@@ -35,7 +35,7 @@ jobs:
                 run: ./gradlew build
 
             -   name: Update Legacy ABI
-                run: ./gradlew updateLegacyAbi || true
+                run: ./gradlew updateLegacyAbi
 
             -   name: Check and Push Updates
                 env:
@@ -45,7 +45,7 @@ jobs:
                     then
                         git config --global user.email "meowtomation@users.noreply.github.com"
                         git config --global user.name "meowtomation"
-                        git add .
+                        git add versions/26.1/api/26.1.api versions/26.2/api/26.2.api versions/26.3/api/26.3.api
                         git commit -m "update api dump"
                         git push origin HEAD:${{ github.ref_name }}
                     fi
