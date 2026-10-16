@@ -106,7 +106,7 @@ public object GiveCommands {
                 tryGive(id.toItem())
             }
         }
-        register("sbapi dev") {
+        register("dev") {
             then("find names") {
                 val nameCallback: CommandContext<FabricClientCommandSource>.() -> Unit = {
                     val flags = runCatching { argument<Map<FindFlag, Any>>("flags") }.getOrDefault(emptyMap())

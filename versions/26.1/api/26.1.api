@@ -29,6 +29,7 @@ public final class tech/thatgravyboat/skyblockapi/api/SkyBlockAPI : org/slf4j/Lo
 	public static final fun getEventBus ()Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;
 	public final fun getMOD_ID ()Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
+	public final fun getVERSION ()Ljava/lang/String;
 	public fun info (Ljava/lang/String;)V
 	public fun info (Ljava/lang/String;Ljava/lang/Object;)V
 	public fun info (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
@@ -2272,6 +2273,8 @@ public final class tech/thatgravyboat/skyblockapi/api/events/base/EventBus {
 	public static synthetic fun register$default (Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;Ljava/lang/Class;IZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public final fun unregister (Ljava/lang/Class;Lkotlin/jvm/functions/Function1;)V
 	public final fun unregister (Ljava/lang/Object;)V
+	public final fun unregisterMethod (Ljava/lang/reflect/Method;)V
+	public final fun unregisterMethod (Lkotlin/reflect/KFunction;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/base/EventBus$EventData {
@@ -3849,66 +3852,84 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenInitia
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getEvent ()Lnet/minecraft/client/input/KeyEvent;
 	public final fun getKey ()I
 	public final fun getModifiers ()I
 	public final fun getScanCode ()I
+	public final fun getScancode ()I
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/Screen;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;)V
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getEvent ()Lnet/minecraft/client/input/KeyEvent;
 	public final fun getKey ()I
 	public final fun getModifiers ()I
 	public final fun getScanCode ()I
+	public final fun getScancode ()I
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/Screen;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;)V
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getButton ()I
+	public final fun getEvent ()Lnet/minecraft/client/input/MouseButtonEvent;
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/Screen;
 	public final fun getX ()D
 	public final fun getY ()D
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent$Post : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;)V
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getButton ()I
+	public final fun getEvent ()Lnet/minecraft/client/input/MouseButtonEvent;
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/Screen;
 	public final fun getX ()D
 	public final fun getY ()D
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/SlotClickEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
@@ -6898,6 +6919,7 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McClient {
 	public final fun setScreenAsync (Lnet/minecraft/client/gui/screens/Screen;)V
 	public final fun setTitle (Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;FFF)V
 	public static synthetic fun setTitle$default (Ltech/thatgravyboat/skyblockapi/helpers/McClient;Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;FFFILjava/lang/Object;)V
+	public final fun throwInDev (Ljava/lang/String;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/helpers/McFont {
@@ -7954,6 +7976,8 @@ public class tech/thatgravyboat/skyblockapi/utils/DebugSelect : tech/thatgravybo
 	public final fun get ()Ljava/lang/Object;
 	public final fun getByName (Ljava/lang/String;)Ljava/lang/Object;
 	public final fun getDefault ()Ljava/lang/String;
+	public final fun getDefaultState ()Ljava/lang/Object;
+	public final fun getDefaultStateName ()Ljava/lang/String;
 	public fun getDescription ()Ljava/lang/String;
 	public fun getDevUtils ()Ltech/thatgravyboat/skyblockapi/utils/DevUtils;
 	public fun getLocation ()Lnet/minecraft/resources/Identifier;
@@ -7962,6 +7986,9 @@ public class tech/thatgravyboat/skyblockapi/utils/DebugSelect : tech/thatgravybo
 	public final fun hasDefault ()Z
 	public fun hasDescription ()Z
 	public final fun hasState ()Z
+	public final fun isDefaultState ()Z
+	public final fun isNullable ()Z
+	public final fun reset ()V
 	public final fun set (Ljava/lang/Object;)V
 	public final fun setByName (Ljava/lang/String;)V
 	public final fun setDefault (Ljava/lang/String;)V
@@ -9622,6 +9649,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/EntityExtensi
 	public static final fun getServerHealth (Lnet/minecraft/world/entity/LivingEntity;)F
 	public static final fun getServerMaxHealth (Lnet/minecraft/world/entity/LivingEntity;)F
 	public static final fun getServerValue (Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;)F
+	public static final fun isRealPlayer (Ljava/util/UUID;)Z
 	public static final fun isRealPlayer (Lnet/minecraft/world/entity/player/Player;)Z
 }
 

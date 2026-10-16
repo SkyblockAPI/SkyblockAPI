@@ -11,7 +11,6 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent;
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyReleasedEvent;
 
-//~ if >= 26.3 'key(), keyEvent.scancode(), keyEvent.modifiers())' -> 'key(), keyEvent.modifiers())' {
 @Mixin(KeyboardHandler.class)
 public class KeyboardHandlerMixin {
 
@@ -20,9 +19,9 @@ public class KeyboardHandlerMixin {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;keyPressed(Lnet/minecraft/client/input/KeyEvent;)Z")
     )
     private boolean keyPressed(Screen screen, KeyEvent keyEvent, Operation<Boolean> original) {
-        var pre = new ScreenKeyPressedEvent.Pre(screen, keyEvent.key(), keyEvent.modifiers());
+        var pre = new ScreenKeyPressedEvent.Pre(screen, keyEvent);
         var result = pre.post(SkyBlockAPI.getEventBus()) || original.call(screen, keyEvent);
-        var post = new ScreenKeyPressedEvent.Post(screen, keyEvent.key(), keyEvent.modifiers());
+        var post = new ScreenKeyPressedEvent.Post(screen, keyEvent);
         if (result) {
             post.cancel();
         }
@@ -34,15 +33,12 @@ public class KeyboardHandlerMixin {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;keyReleased(Lnet/minecraft/client/input/KeyEvent;)Z")
     )
     private boolean keyReleased(Screen screen, KeyEvent keyEvent, Operation<Boolean> original) {
-        var pre = new ScreenKeyReleasedEvent.Pre(screen, keyEvent.key(), keyEvent.modifiers());
+        var pre = new ScreenKeyReleasedEvent.Pre(screen, keyEvent);
         var result = pre.post(SkyBlockAPI.getEventBus()) || original.call(screen, keyEvent);
-        var post = new ScreenKeyReleasedEvent.Post(screen, keyEvent.key(), keyEvent.modifiers());
+        var post = new ScreenKeyReleasedEvent.Post(screen, keyEvent);
         if (result) {
             post.cancel();
         }
         return post.post(SkyBlockAPI.getEventBus()) || result;
     }
-
-
 }
-//~}
