@@ -244,14 +244,18 @@ internal class StoredData<T : Any>(
                     StringArgumentType.string(),
                     allStoredDatas.filter { !readable || it.path.exists() }.map { it.fileName }
                 ) {
-                    val name = argument<String>("storage")
-                    allStoredDatas.find { it.fileName == name }?.block()
+                    val fileName = argument<String>("storage")
+                    val storage = allStoredDatas.find { it.fileName == fileName } ?: run {
+                        Text.of("No storage found for $fileName").sendWithPrefix()
+                        return@thenCallback
+                    }
+                    storage.block()
                 }
             }
 
         @Subscription
         private fun registerCommands(event: RegisterSkyblockApiCommandsEvent) {
-            event.register("storage") {
+            event.register("dev storage") {
                 storageAction("reset") {
                     delete()
                 }
