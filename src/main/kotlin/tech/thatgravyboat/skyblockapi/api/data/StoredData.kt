@@ -27,6 +27,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import kotlin.contracts.InvocationKind
@@ -248,7 +249,7 @@ internal class StoredData<T : Any>(
                 ) {
                     val fileName = argument<String>("storage")
                     val storage = allStoredDatas.find { it.fileName == fileName } ?: run {
-                        Text.of("No storage found for $fileName").sendWithPrefix()
+                        Text.of("No storage found for $fileName", TextColor.RED).sendWithPrefix()
                         return@thenCallback
                     }
                     storage.block()
@@ -263,7 +264,7 @@ internal class StoredData<T : Any>(
                 }
                 storageAction("copy") {
                     val text = getText() ?: run {
-                        Text.of("No data found for $fileName").sendWithPrefix()
+                        Text.of("No data found for $fileName", TextColor.RED).sendWithPrefix()
                         return@storageAction
                     }
                     McClient.clipboard = text
@@ -271,7 +272,7 @@ internal class StoredData<T : Any>(
                 }
                 storageAction("paste", readable = false) {
                     val text = McClient.clipboard.takeIf { it.isNotBlank() } ?: run {
-                        Text.of("No data in clipboard").sendWithPrefix()
+                        Text.of("No data in clipboard", TextColor.RED).sendWithPrefix()
                         return@storageAction
                     }
                     setText(text)
