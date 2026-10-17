@@ -122,13 +122,13 @@ internal object ProfileDeleter {
             thenCallback("profileName", StringArgumentType.string(), allProfiles) {
                 val profileName = argument<String>("profileName")
                 if (profileName !in allProfiles) {
-                    Text.sendDebug("There is no profile named $profileName!")
+                    Text.sendDebug("There is no profile named \"$profileName\"!")
                     return@thenCallback
                 }
                 handleDelete(profileName)
-                Text.sendDebug("Deleted all profile data for ") {
+                Text.sendDebug("Deleted all profile data for \"") {
                     append(profileName, TextColor.GOLD)
-                    append("!")
+                    append("\"!")
                 }
             }
         }
@@ -139,7 +139,7 @@ internal object ProfileDeleter {
     }
 
     private fun handleDelete(profileName: String) {
-        SkyBlockAPI.info("Deleting all profile data for profile $profileName")
+        SkyBlockAPI.info("Deleting all profile data for profile \"$profileName\"")
         ProfileStorage.removeProfile(profileName)
         StoredProfileData.allProfileData.forEach { it.removeProfile(profileName) }
         ProfileDeleteDataEvent(profileName).post()
