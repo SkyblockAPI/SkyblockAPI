@@ -140,12 +140,12 @@ internal class StoredData<T : Any>(
     }
 
     private fun loadData(path: Path, default: () -> T): T {
-        if (!path.exists()) {
+        val text = getText() ?: run {
             path.createParentDirectories()
             return default()
         }
         return try {
-            loadData(path.readText())
+            loadData(text)
         } catch (e: Exception) {
             Logger.error("Failed to load data from {}", path.relativeTo(defaultPath))
             e.printStackTrace()
@@ -153,7 +153,9 @@ internal class StoredData<T : Any>(
         }
     }
 
-    private fun setJson(content: String) {
+    private fun getText(): String? = if (path.exists()) path.readText() else null
+
+    private fun setText(content: String) {
         val data = loadData(content)
         set(data)
     }
@@ -260,11 +262,11 @@ internal class StoredData<T : Any>(
                     delete()
                 }
                 storageAction("copy") {
-                    if (!path.exists()) {
+                    val text = getText() ?: run {
                         Text.of("No data found for $fileName").sendWithPrefix()
                         return@storageAction
                     }
-                    McClient.clipboard = path.readText()
+                    McClient.clipboard = text
                     Text.of("Copied $fileName to clipboard").sendWithPrefix()
                 }
                 storageAction("paste", readable = false) {
@@ -272,7 +274,7 @@ internal class StoredData<T : Any>(
                         Text.of("No data in clipboard").sendWithPrefix()
                         return@storageAction
                     }
-                    setJson(text)
+                    setText(text)
                     Text.of("Pasted clipboard to $fileName").sendWithPrefix()
                 }
             }
