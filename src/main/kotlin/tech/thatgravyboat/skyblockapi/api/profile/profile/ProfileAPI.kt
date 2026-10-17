@@ -97,10 +97,10 @@ public object ProfileAPI {
         private set
 
     public var profileUuid: UUID?
+        get() = ProfileStorage.profileId
         private set(value) {
             ProfileStorage.profileId = value
         }
-        get() = ProfileStorage.profileId
 
     public val profileId: UUID? get() = profileUuid
 

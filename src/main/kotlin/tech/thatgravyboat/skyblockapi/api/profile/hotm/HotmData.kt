@@ -1,21 +1,21 @@
 package tech.thatgravyboat.skyblockapi.api.profile.hotm
 
-import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.Compact
 import me.owdding.ktcodecs.GenerateCodec
+import me.owdding.ktcodecs.OptionalNullable
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeData
+import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeLoadout
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreePerk
-import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 public data class HotmData(
-    override var perks: MutableMap<String, HotmPerk> = mutableMapOf(),
-    override var tokens: Int = 0,
+    @OptionalNullable
+    override var currentLoadoutName: String? = null,
+    @Compact
+    override val loadouts: MutableList<SkillTreeLoadout<HotmPerk>> = mutableListOf(),
+    override var maxTokens: Int = 1,
     override var tier: Int = 0,
-) : SkillTreeData<HotmPerk> {
-    public companion object {
-        public val CODEC: Codec<HotmData> = SkyblockAPICodecs.getCodec<HotmData>()
-    }
-}
+) : SkillTreeData<HotmPerk>
 
 @GenerateCodec
 public data class HotmPerk(
