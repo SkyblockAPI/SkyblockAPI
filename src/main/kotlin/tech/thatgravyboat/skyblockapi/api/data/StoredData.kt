@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.data
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.serialization.Codec
 import me.owdding.ktmodules.Module
 import org.apache.commons.io.FileUtils
@@ -10,6 +11,9 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.FreshHypixelAlphaDetectedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.HypixelJoinEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.LiteralCommandBuilder
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
@@ -21,6 +25,8 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJsonOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import kotlin.contracts.InvocationKind
@@ -122,29 +128,35 @@ internal class StoredData<T : Any>(
         return alphaData
     }
 
+    private fun loadData(content: String): T {
+        val json = JsonParser.parseString(content) as? JsonObject
+        return if (json != null && json.has("@skyblockapi:version")) {
+            val version = json.get("@skyblockapi:version").asInt
+            val dataElement = json.getAsJsonObject("@skyblockapi:data")
+            dataElement.toDataOrThrow(this.codec(version))
+        } else {
+            json.toDataOrThrow(this.codec(0))
+        }
+    }
+
     private fun loadData(path: Path, default: () -> T): T {
         if (!path.exists()) {
             path.createParentDirectories()
             return default()
-        } else {
-            try {
-                val json = JsonParser.parseString(path.readText()) as? JsonObject
-                if (json != null && json.has("@skyblockapi:version") && json.has("@skyblockapi:version")) {
-                    val version = json.get("@skyblockapi:version").asInt
-                    val dataElement = json.getAsJsonObject("@skyblockapi:data")
-
-                    return dataElement.toDataOrThrow(this.codec(version))
-                } else {
-                    return json.toDataOrThrow(this.codec(0))
-                }
-            } catch (e: Exception) {
-                Logger.error("Failed to load data from {}", path.relativeTo(defaultPath))
-                e.printStackTrace()
-                return default()
-            }
+        }
+        return try {
+            loadData(path.readText())
+        } catch (e: Exception) {
+            Logger.error("Failed to load data from {}", path.relativeTo(defaultPath))
+            e.printStackTrace()
+            default()
         }
     }
 
+    private fun setText(content: String) {
+        val data = loadData(content)
+        set(data)
+    }
 
     private val currentCodec = codec(version)
 
@@ -181,6 +193,7 @@ internal class StoredData<T : Any>(
             e.printStackTrace()
         }
     }
+
     private fun saveAlphaToSystem() {
         val alphaData = alphaData ?: return
         savePath(alphaData, alphaPath)
@@ -222,6 +235,43 @@ internal class StoredData<T : Any>(
         private fun onTick() {
             clearAndRun(requiresSave, StoredData<*>::saveToSystem)
             clearAndRun(requiresAlphaSave, StoredData<*>::saveAlphaToSystem)
+        }
+
+        private fun LiteralCommandBuilder.storageAction(action: String, readable: Boolean = true, block: StoredData<*>.() -> Unit) =
+            then(action) {
+                thenCallback(
+                    "storage",
+                    StringArgumentType.string(),
+                    allStoredDatas.filter { !readable || it.path.exists() }.map { it.fileName }
+                ) {
+                    val name = argument<String>("storage")
+                    allStoredDatas.find { it.fileName == name }?.block()
+                }
+            }
+
+        @Subscription
+        private fun registerCommands(event: RegisterSkyblockApiCommandsEvent) {
+            event.register("storage") {
+                storageAction("reset") {
+                    delete()
+                }
+                storageAction("copy") {
+                    if (!path.exists()) {
+                        Text.of("No data found for $fileName").sendWithPrefix()
+                        return@storageAction
+                    }
+                    McClient.clipboard = path.readText()
+                    Text.of("Copied $fileName to clipboard").sendWithPrefix()
+                }
+                storageAction("paste", readable = false) {
+                    val text = McClient.clipboard.takeIf { it.isNotBlank() } ?: run {
+                        Text.of("No data in clipboard").sendWithPrefix()
+                        return@storageAction
+                    }
+                    setText(text)
+                    Text.of("Pasted clipboard to $fileName").sendWithPrefix()
+                }
+            }
         }
 
         //region Stored Data Creation
