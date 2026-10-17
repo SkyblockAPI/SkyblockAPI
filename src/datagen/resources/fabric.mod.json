@@ -1,0 +1,16 @@
+{
+    "schemaVersion": 1,
+    "id": "skyblock-api-datagen",
+    "version": "${version}",
+    "name": "skyblock-api-datagen",
+    "license": "MIT",
+    "icon": "assets/skyblockapi/icon.png",
+    "entrypoints": {
+        "fabric-datagen": [
+            {
+                "value": "tech.thatgravyboat.skyblockapi.datagen.SkyBlockAPIDatagen",
+                "adapter": "kotlin"
+            }
+        ]
+    }
+}

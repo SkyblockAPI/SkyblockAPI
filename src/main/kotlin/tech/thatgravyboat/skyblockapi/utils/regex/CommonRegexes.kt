@@ -16,6 +16,12 @@ internal object CommonRegexes {
         "^/viewprofile (?<uuid>.+)"
     )
 
+    val cleanPlayerNameRegex = Regexes.group("string").create(
+        "clean.playername",
+        "(?:(?<rank>\\[.+]) ?)?(?<name>[a-zA-Z0-9_]+)",
+    )
+
+
     fun getUuidFromViewProfile(component: Component): UUID? {
         val clickEvent = component.style.clickEvent ?: return null
         if (clickEvent !is ClickEvent.RunCommand) return null

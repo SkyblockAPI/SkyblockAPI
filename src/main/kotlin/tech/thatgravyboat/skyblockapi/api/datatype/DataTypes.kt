@@ -28,7 +28,8 @@ public object DataTypes {
     public val VISIBLE_ITEM: DataType<Item> = GenericDataTypes.VISIBLE_ITEM
     public val CLEAN_NAME: DataType<String> = GenericDataTypes.CLEAN_NAME
     public val RAW_LORE: DataType<List<String>> = LoreDataTypes.RAW_LORE
-    public val ORIGIN_TAG: DataType<String> = GenericDataTypes.ORIGIN_TAG
+    public val RAW_LORE: DataType<List<String>> = LoreDataTypes.RAW_LORE
+    val ORIGIN_TAG: DataType<String> = GenericDataTypes.ORIGIN_TAG
 
     // Item Modifiers
     public val MODIFIER: DataType<String> = GenericDataTypes.MODIFIER
