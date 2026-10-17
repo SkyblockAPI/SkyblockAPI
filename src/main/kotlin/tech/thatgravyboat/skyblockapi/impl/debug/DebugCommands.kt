@@ -18,6 +18,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
+import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.platform.identifier
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
@@ -64,7 +65,7 @@ public object DebugCommands {
             }
         }
         register("itemdata") {
-            thenCallback("id", StringArgumentType.greedyString()) {
+            thenCallback("id id", StringArgumentType.greedyString(), IterableSuggestionProvider(ItemData.data.keys)) {
                 val id = argument<String>("id")
                 val itemData = ItemData.getItemData(id) ?: run {
                     Text.sendDebug("ItemData for $id not found.")
