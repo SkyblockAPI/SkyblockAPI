@@ -69,17 +69,22 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions.optIn.addAll(
-        "kotlin.time.ExperimentalTime",
-        "kotlin.ExperimentalVersionOverloading",
-        "kotlin.time.ExperimentalTime",
-        "kotlin.contracts.ExperimentalContracts",
-    )
-    compilerOptions.allWarningsAsErrors = true
-    compilerOptions.freeCompilerArgs.addAll(
-        "-Xcontext-sensitive-resolution",
-        "-Xnullability-annotations=@org.jspecify.annotations:ignore",
-    )
+    compilerOptions {
+        optIn.addAll(
+            "kotlin.time.ExperimentalTime",
+            "kotlin.ExperimentalVersionOverloading",
+            "kotlin.time.ExperimentalTime",
+            "kotlin.contracts.ExperimentalContracts",
+        )
+        allWarningsAsErrors = true
+        extraWarnings = true
+        freeCompilerArgs.addAll(
+            "-Xcontext-sensitive-resolution",
+            "-Xnullability-annotations=@org.jspecify.annotations:ignore",
+            // Protected constructors + public methods inside internal classes
+            "-Xwarning-level=REDUNDANT_VISIBILITY_MODIFIER:disabled",
+        )
+    }
 }
 
 val accessWidenerFile = rootProject.file("src/sbapi.classtweaker")
