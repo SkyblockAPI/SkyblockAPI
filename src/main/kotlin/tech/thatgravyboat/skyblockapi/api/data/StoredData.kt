@@ -153,7 +153,7 @@ internal class StoredData<T : Any>(
         }
     }
 
-    private fun setText(content: String) {
+    private fun setJson(content: String) {
         val data = loadData(content)
         set(data)
     }
@@ -272,7 +272,7 @@ internal class StoredData<T : Any>(
                         Text.of("No data in clipboard").sendWithPrefix()
                         return@storageAction
                     }
-                    setText(text)
+                    setJson(text)
                     Text.of("Pasted clipboard to $fileName").sendWithPrefix()
                 }
             }
