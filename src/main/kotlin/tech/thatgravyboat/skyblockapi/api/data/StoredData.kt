@@ -270,7 +270,7 @@ internal class StoredData<T : Any>(
             event.register("dev storage") {
                 storageAction("reset") {
                     delete()
-                    Text.sendDebug("Successfully reset $fileName)
+                    Text.sendDebug("Successfully reset $fileName")
                 }
                 storageAction("copy") {
                     val text = getText() ?: run {
