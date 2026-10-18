@@ -271,7 +271,7 @@ internal class StoredData<T : Any>(
                     Text.of("Copied $fileName to clipboard").sendWithPrefix()
                 }
                 storageAction("paste", readable = false) {
-                    val text = McClient.clipboard.takeIf { it.isNotBlank() } ?: run {
+                    val text = McClient.clipboard.ifBlank {
                         Text.of("No data in clipboard", TextColor.RED).sendWithPrefix()
                         return@storageAction
                     }
