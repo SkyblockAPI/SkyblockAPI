@@ -141,7 +141,7 @@ internal class StoredData<T : Any>(
     }
 
     private fun loadData(path: Path, default: () -> T): T {
-        val text = getText() ?: run {
+        val text = getText(path) ?: run {
             path.createParentDirectories()
             return default()
         }
@@ -154,8 +154,17 @@ internal class StoredData<T : Any>(
         }
     }
 
-    private fun getText(): String? = if (path.exists()) path.readText() else null
+    private fun getText(path: Path): String? = if (path.exists()) path.readText() else null
 
+    private fun getText() {
+        val path = if (shouldUseAlphaData() && alphaPath.exists()) {
+            alphaPath
+        } else {
+            path
+        }
+        return getText(path)
+    }
+    
     private fun setText(content: String) {
         val data = loadData(content)
         set(data)
