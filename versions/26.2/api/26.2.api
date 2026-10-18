@@ -29,6 +29,7 @@ public final class tech/thatgravyboat/skyblockapi/api/SkyBlockAPI : org/slf4j/Lo
 	public static final fun getEventBus ()Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;
 	public final fun getMOD_ID ()Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
+	public final fun getVERSION ()Ljava/lang/String;
 	public fun info (Ljava/lang/String;)V
 	public fun info (Ljava/lang/String;Ljava/lang/Object;)V
 	public fun info (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
@@ -1175,19 +1176,25 @@ public final class tech/thatgravyboat/skyblockapi/api/data/FriendData$Companion 
 public final class tech/thatgravyboat/skyblockapi/api/data/MaxwellData {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData$Companion;
 	public fun <init> ()V
-	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)V
 	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;Z)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun component2 ()I
 	public final fun component3 ()Ljava/util/List;
 	public final fun component4 ()Ljava/util/Set;
 	public final fun component5 ()Ljava/util/Set;
 	public final fun component6 ()Ljava/util/List;
-	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
+	public final fun component7 ()Z
+	public final synthetic fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;Z)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAccessories ()Ljava/util/List;
 	public final fun getAccessoryPower ()I
+	public final fun getConsumedRiftPrism ()Z
 	public final synthetic fun getMagicalPower ()I
 	public final fun getPower ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getTuningTemplates ()Ljava/util/List;
@@ -1195,6 +1202,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/MaxwellData {
 	public final fun getUnlockedPowers ()Ljava/util/Set;
 	public fun hashCode ()I
 	public final fun setAccessoryPower (I)V
+	public final fun setConsumedRiftPrism (Z)V
 	public final synthetic fun setMagicalPower (I)V
 	public final fun setPower (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;)V
 	public final fun setTuningTemplates (Ljava/util/List;)V
@@ -2265,6 +2273,8 @@ public final class tech/thatgravyboat/skyblockapi/api/events/base/EventBus {
 	public static synthetic fun register$default (Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;Ljava/lang/Class;IZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public final fun unregister (Ljava/lang/Class;Lkotlin/jvm/functions/Function1;)V
 	public final fun unregister (Ljava/lang/Object;)V
+	public final fun unregisterMethod (Ljava/lang/reflect/Method;)V
+	public final fun unregisterMethod (Lkotlin/reflect/KFunction;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/base/EventBus$EventData {
@@ -3503,6 +3513,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOp
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getMember ()Lcom/google/gson/JsonObject;
 	public final fun getProfileData ()Lcom/google/gson/JsonObject;
+	public final fun getProfilePath (Ljava/lang/String;)Lcom/google/gson/JsonElement;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -3838,66 +3849,84 @@ public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenInitia
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getEvent ()Lnet/minecraft/client/input/KeyEvent;
 	public final fun getKey ()I
 	public final fun getModifiers ()I
 	public final fun getScanCode ()I
+	public final fun getScancode ()I
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/Screen;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyPressedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;)V
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getEvent ()Lnet/minecraft/client/input/KeyEvent;
 	public final fun getKey ()I
 	public final fun getModifiers ()I
 	public final fun getScanCode ()I
+	public final fun getScancode ()I
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/Screen;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenKeyReleasedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;III)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/KeyEvent;)V
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getButton ()I
+	public final fun getEvent ()Lnet/minecraft/client/input/MouseButtonEvent;
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/Screen;
 	public final fun getX ()D
 	public final fun getY ()D
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent$Post : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseClickEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;)V
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
 	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getButton ()I
+	public final fun getEvent ()Lnet/minecraft/client/input/MouseButtonEvent;
 	public final fun getScreen ()Lnet/minecraft/client/gui/screens/Screen;
 	public final fun getX ()D
 	public final fun getY ()D
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/screen/ScreenMouseReleasedEvent {
-	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public synthetic fun <init> (Lnet/minecraft/client/gui/screens/Screen;DDI)V
+	public fun <init> (Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/input/MouseButtonEvent;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/screen/SlotClickEvent : tech/thatgravyboat/skyblockapi/api/events/base/CancellableSkyBlockEvent {
@@ -5315,10 +5344,13 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/Load
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutSlot {
 	public fun <init> (I)V
-	public fun <init> (ILjava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Z)V
+	public synthetic fun <init> (ILjava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Z)V
 	public synthetic fun <init> (ILjava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ILjava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;ZLtech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;)V
+	public synthetic fun <init> (ILjava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;ZLtech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
 	public final fun component10 ()Z
+	public final fun component11 ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;
 	public final fun component4 ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;
@@ -5327,11 +5359,14 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/Load
 	public final fun component7 ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;
 	public final fun component8 ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;
 	public final fun component9 ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;
-	public final fun copy (ILjava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Z)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutSlot;
+	public final synthetic fun copy (ILjava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Z)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutSlot;
+	public final fun copy (ILjava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;ZLtech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutSlot;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutSlot;ILjava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;ZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutSlot;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutSlot;ILjava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;ZLtech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutSlot;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getArmor ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;
 	public final fun getEquipment ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;
+	public final fun getFavoredBait ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;
 	public final fun getHotf ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;
 	public final fun getHotm ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;
 	public final fun getId ()I
@@ -5343,6 +5378,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/Load
 	public fun hashCode ()I
 	public final fun setArmor (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;)V
 	public final fun setEquipment (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;)V
+	public final fun setFavoredBait (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;)V
 	public final fun setHotf (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;)V
 	public final fun setHotm (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;)V
 	public final fun setLocked (Z)V
@@ -5353,6 +5389,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/Load
 	public fun toString ()Ljava/lang/String;
 	public final fun value (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/DataSource;Ljava/lang/Integer;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/NumberMatch;
 	public final fun value (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/DataSource;Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/StringMatch;
+	public final fun value-gqR-Axc (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/DataSource;Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/LoadoutSlotKt {
@@ -5377,6 +5414,21 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/Numb
 	public final fun getSource ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/DataSource;
 	public final fun getTime ()Lkotlin/time/Instant;
 	public final fun getValue ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch {
+	public synthetic fun <init> (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/DataSource;Lkotlin/time/Instant;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-W95Wflg ()Ljava/lang/String;
+	public final fun component2 ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/DataSource;
+	public final fun component3 ()Lkotlin/time/Instant;
+	public final fun copy-hvkjchs (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/DataSource;Lkotlin/time/Instant;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;
+	public static synthetic fun copy-hvkjchs$default (Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/DataSource;Lkotlin/time/Instant;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/SkyBlockIdMatch;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSource ()Ltech/thatgravyboat/skyblockapi/api/profile/items/loadout/DataSource;
+	public final fun getTime ()Lkotlin/time/Instant;
+	public final fun getValue-W95Wflg ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -5620,6 +5672,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI
 	public fun fork (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;
 	public final fun getAccessories ()Ljava/util/List;
 	public final fun getAccessoryPower ()I
+	public final fun getConsumedRiftPrism ()Z
 	public final fun getMagicalPower ()I
 	public final fun getPower ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getTuningTemplates ()Ljava/util/Collection;
@@ -6807,6 +6860,7 @@ public final class tech/thatgravyboat/skyblockapi/helpers/McClient {
 	public final fun setScreenAsync (Lkotlin/jvm/functions/Function0;)V
 	public final fun setTitle (Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;FFF)V
 	public static synthetic fun setTitle$default (Ltech/thatgravyboat/skyblockapi/helpers/McClient;Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;FFFILjava/lang/Object;)V
+	public final fun throwInDev (Ljava/lang/String;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/helpers/McFont {
@@ -7863,6 +7917,8 @@ public class tech/thatgravyboat/skyblockapi/utils/DebugSelect : tech/thatgravybo
 	public final fun get ()Ljava/lang/Object;
 	public final fun getByName (Ljava/lang/String;)Ljava/lang/Object;
 	public final fun getDefault ()Ljava/lang/String;
+	public final fun getDefaultState ()Ljava/lang/Object;
+	public final fun getDefaultStateName ()Ljava/lang/String;
 	public fun getDescription ()Ljava/lang/String;
 	public fun getDevUtils ()Ltech/thatgravyboat/skyblockapi/utils/DevUtils;
 	public fun getLocation ()Lnet/minecraft/resources/Identifier;
@@ -7871,6 +7927,9 @@ public class tech/thatgravyboat/skyblockapi/utils/DebugSelect : tech/thatgravybo
 	public final fun hasDefault ()Z
 	public fun hasDescription ()Z
 	public final fun hasState ()Z
+	public final fun isDefaultState ()Z
+	public final fun isNullable ()Z
+	public final fun reset ()V
 	public final fun set (Ljava/lang/Object;)V
 	public final fun setByName (Ljava/lang/String;)V
 	public final fun setDefault (Ljava/lang/String;)V
@@ -9526,6 +9585,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/EntityExtensi
 	public static final fun getServerHealth (Lnet/minecraft/world/entity/LivingEntity;)F
 	public static final fun getServerMaxHealth (Lnet/minecraft/world/entity/LivingEntity;)F
 	public static final fun getServerValue (Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;)F
+	public static final fun isRealPlayer (Ljava/util/UUID;)Z
 	public static final fun isRealPlayer (Lnet/minecraft/world/entity/player/Player;)Z
 }
 

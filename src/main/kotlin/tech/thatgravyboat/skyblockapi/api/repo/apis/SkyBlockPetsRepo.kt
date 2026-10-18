@@ -51,11 +51,11 @@ public object SkyBlockPetsRepo : RepoItemCacheAsQuery<Query>("Pets", ::Query, sc
         val itemString = pet.item.toString().replace(variablePattern) { match ->
             val variable = match.groupValues[1]
             if (variable == "LVL") {
-                if (key.showStatBounds) "1➡${key.level}"
+                if (key.showStatBounds) "${1 + pet.variablesOffset}➡${key.level}"
                 else key.level.toString()
             } else if (pet.variables.containsKey(variable)) {
                 if (key.showStatBounds) {
-                    val levelOneStat = pet.getStat(variable, 1, key.heldItem)
+                    val levelOneStat = pet.getStat(variable, 1 + pet.variablesOffset, key.heldItem)
                     val maxLevelStat = pet.getStat(variable, key.level, key.heldItem)
                     "${loreFormatter.format(levelOneStat)}➡${loreFormatter.format(maxLevelStat)}"
                 } else {

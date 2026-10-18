@@ -122,7 +122,7 @@ public object EffectsAPI {
 
     @Subscription
     internal fun onCommandsRegistration(event: RegisterSkyblockApiCommandsEvent) {
-        event.registerWithCallback("sbapi effects reset") {
+        event.registerWithCallback("effects reset") {
             EffectsStorage.boosterCookieExpireTime = Instant.DISTANT_PAST
             EffectsStorage.godPotionDuration = Duration.ZERO
             Text.sendDebug("Reset Effects Data.")

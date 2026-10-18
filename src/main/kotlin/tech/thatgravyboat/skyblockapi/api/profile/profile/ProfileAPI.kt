@@ -137,7 +137,7 @@ public object ProfileAPI {
             val profileType = ProfileType.fromIcon(name.last())
 
             var profileName = name.trim(' ')
-            if (profileType.icon != null) profileName = profileName.trim(profileType.icon)
+            if (profileType.icon != null) profileName = profileName.trim(profileType.icon, ' ')
 
             if (SkyBlockIsland.THE_RIFT.inIsland()) {
                 profileName = profileName.reversed()

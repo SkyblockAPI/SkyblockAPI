@@ -36,7 +36,7 @@ public class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<Fab
         dispatcher.register(command)
     }
 
-    public fun command(name: String, init: CommandBuilder0<FabricClientCommandSource>.() -> Unit): Unit {
+    public fun command(name: String, init: CommandBuilder0<FabricClientCommandSource>.() -> Unit) {
         dispatcher.command(name, buildContext!!, init)
     }
 
