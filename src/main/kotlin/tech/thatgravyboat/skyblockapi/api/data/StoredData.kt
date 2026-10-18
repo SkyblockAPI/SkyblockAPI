@@ -270,6 +270,7 @@ internal class StoredData<T : Any>(
             event.register("dev storage") {
                 storageAction("reset") {
                     delete()
+                    Text.sendDebug("Successfully reset $fileName)
                 }
                 storageAction("copy") {
                     val text = getText() ?: run {
@@ -277,7 +278,7 @@ internal class StoredData<T : Any>(
                         return@storageAction
                     }
                     McClient.clipboard = text
-                    Text.of("Copied $fileName to clipboard").sendWithPrefix()
+                    Text.sendDebug("Copied $fileName to clipboard")
                 }
                 storageAction("paste", readable = false) {
                     val text = McClient.clipboard.ifBlank {
@@ -285,7 +286,7 @@ internal class StoredData<T : Any>(
                         return@storageAction
                     }
                     setText(text)
-                    Text.of("Pasted clipboard to $fileName").sendWithPrefix()
+                    Text.sendDebug("Pasted clipboard to $fileName")
                 }
             }
         }
