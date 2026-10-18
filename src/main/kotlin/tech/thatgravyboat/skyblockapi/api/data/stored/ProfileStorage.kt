@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileType
+import tech.thatgravyboat.skyblockapi.utils.extentions.putIfDifferent
 import java.util.UUID
 
 internal object ProfileStorage {
@@ -21,7 +22,7 @@ internal object ProfileStorage {
     fun getProfileTypes(): Map<String, ProfileType> = data.profileType
     fun getProfileType(): ProfileType = data.profileType[ProfileAPI.profileName] ?: ProfileType.UNKNOWN
 
-    fun setProfileType(profileType: ProfileType) {
+    fun setProfileType(profileName: String, profileType: ProfileType) {
         if (SkyBlockIsland.inAnyIsland(SkyBlockIsland.THE_CATACOMBS, SkyBlockIsland.KUUDRA)) {
             // Don't allow changing profile type in dungeons or kuudra
             // The Tablist is different and doesn't contain the profile type
@@ -29,45 +30,54 @@ internal object ProfileStorage {
             return
         }
 
-        if (profileType == getProfileType()) return
-        val profileName = ProfileAPI.profileName ?: return
-        data.profileType[profileName] = profileType
-        PROFILE.save()
+        PROFILE.edit {
+            this.profileType.putIfDifferent(profileName, profileType)
+        }
+    }
+
+    fun getProfileId(): UUID? = data.profileId[ProfileAPI.profileName]
+
+    fun setProfileId(profileName: String, id: UUID) {
+        PROFILE.edit {
+            this.profileId.putIfDifferent(profileName, id)
+        }
+    }
+
+    fun getProfileById(id: UUID): String? {
+        return data.profileId.entries.find { it.value == id }?.key
     }
 
     fun getSkyBlockLevel(): Int = data.sbLevel[ProfileAPI.profileName] ?: 0
 
-    fun setSkyBlockLevel(level: Int) {
-        if (level == getSkyBlockLevel()) return
-        val profileName = ProfileAPI.profileName ?: return
-        data.sbLevel[profileName] = level
-        PROFILE.save()
+    fun setSkyBlockLevel(profileName: String, level: Int) {
+        PROFILE.edit {
+            this.sbLevel.putIfDifferent(profileName, level)
+        }
     }
 
     fun getSkyBlockLevelProgress(): Int = data.sbLevelProgress[ProfileAPI.profileName] ?: 0
 
-    fun setSkyBlockLevelProgress(level: Int) {
-        if (level == getSkyBlockLevelProgress()) return
-        val profileName = ProfileAPI.profileName ?: return
-        data.sbLevelProgress[profileName] = level
-        PROFILE.save()
+    fun setSkyBlockLevelProgress(profileName: String, levelProgress: Int) {
+        PROFILE.edit {
+            this.sbLevelProgress.putIfDifferent(profileName, levelProgress)
+        }
     }
 
     fun isCoop(): Boolean = data.coop[ProfileAPI.profileName] == true
 
-    fun setCoop(coop: Boolean) {
-        if (coop == isCoop()) return
-        val profileName = ProfileAPI.profileName ?: return
-        data.coop[profileName] = coop
-        PROFILE.save()
+    fun setCoop(profileName: String, isCoop: Boolean) {
+        PROFILE.edit {
+            this.coop.putIfDifferent(profileName, isCoop)
+        }
     }
 
     fun getBingoRank(): SkyBlockRarity? = data.bingoRank
 
     fun setBingoRank(bingoRank: SkyBlockRarity?) {
-        if (bingoRank == getBingoRank()) return
-        data.bingoRank = bingoRank
-        PROFILE.save()
+        PROFILE.edit {
+            if (this.bingoRank == bingoRank) return
+            this.bingoRank = bingoRank
+        }
     }
 
     fun getAllProfileNames(): Set<String> = buildSet {
@@ -93,12 +103,4 @@ internal object ProfileStorage {
         PROFILE.save()
     }
 
-    var profileId: UUID?
-        get() = data.profileId[ProfileAPI.profileName]
-        set(value) {
-            if (value == profileId || value == null) return
-            val profileName = ProfileAPI.profileName ?: return
-            data.profileId[profileName] = value
-            PROFILE.save()
-        }
 }

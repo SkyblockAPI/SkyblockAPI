@@ -27,6 +27,7 @@ import net.minecraft.world.scores.DisplaySlot
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.utils.McVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
+import tech.thatgravyboat.skyblockapi.utils.extentions.isRealPlayer
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
@@ -87,7 +88,7 @@ public object McClient {
             ?: emptyList()
 
     public val players: List<PlayerInfo>
-        get() = tablist.filter { it.profile.id.version() == 4 }
+        get() = tablist.filter { it.profile.id.isRealPlayer() }
 
     public val scoreboard: Collection<Component>
         get() {

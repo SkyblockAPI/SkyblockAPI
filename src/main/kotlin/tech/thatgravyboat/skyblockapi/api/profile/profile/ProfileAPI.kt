@@ -13,8 +13,9 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.SkyBlockLocationEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileLevelChangeEvent
@@ -30,6 +31,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
+import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.UUID
@@ -96,11 +98,8 @@ public object ProfileAPI {
     public var profileName: String? = null
         private set
 
-    public var profileUuid: UUID?
-        private set(value) {
-            ProfileStorage.profileId = value
-        }
-        get() = ProfileStorage.profileId
+    public val profileUuid: UUID?
+        get() = ProfileStorage.getProfileId()
 
     public val profileId: UUID? get() = profileUuid
 
@@ -122,18 +121,25 @@ public object ProfileAPI {
 
     public fun getLevelColor(level: Int): Int = levelColors.entries.firstOrNull { level in it.key }?.value ?: TextColor.BLACK
 
+    private var profileLoadSource: ProfileLoadSource? = null
 
-    @Subscription
-    internal fun onServerChange(event: ServerChangeEvent) {
+    @Subscription(ServerDisconnectEvent::class, SkyBlockLocationEvent.Leave::class)
+    private fun onDisconnect() {
+        this.profileName = null
         this.isLoaded = false
         this.lastWorldSwap = currentInstant()
     }
 
-    @OnlyWidget(TabWidget.PROFILE)
+    @Subscription(ServerChangeEvent::class)
+    internal fun onServerChange() {
+        this.isLoaded = false
+        this.lastWorldSwap = currentInstant()
+    }
+
+    @OnlyWidget(PROFILE)
     @Subscription(priority = Int.MIN_VALUE)
     internal fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
         profileRegex.anyMatch(event.new, "name") { (name) ->
-            val oldName = this.profileName
             val profileType = ProfileType.fromIcon(name.last())
 
             var profileName = name.trim(' ')
@@ -145,25 +151,20 @@ public object ProfileAPI {
             val first = profileName.firstOrNull()
             val last = profileName.lastOrNull()
 
-            // we reverse the profile name if we detect that its reversed, as a fallback in case the profile name is
-            // reversed and we are not in the rift
+            // we reverse the profile name if we detect that its reversed, as a fallback in case the
+            // profile name is reversed, and we are not in the rift
             if (first?.isLowerCase() == true && last?.isUpperCase() == true) {
                 profileName = profileName.reversed()
             }
+            ProfileStorage.setProfileType(profileName, profileType)
 
-            this.isLoaded = true
-            this.profileName = profileName
-            // we need to call setProfileType AFTER doing all the transformations to profileName and after setting it
-            // to the variable in the object
-            ProfileStorage.setProfileType(profileType)
-
-            if (oldName == profileName) return@anyMatch
-            ProfileChangeEvent(profileName).post()
+            changeProfile(profileName, TABLIST)
         }
 
         skyBlockXPRegex.anyMatch(event.new, "level", "xp") { (level, progress) ->
-            ProfileStorage.setSkyBlockLevelProgress(progress.toInt())
-            ProfileStorage.setSkyBlockLevel(level.toInt())
+            val profileName = this.profileName ?: return@anyMatch
+            ProfileStorage.setSkyBlockLevelProgress(profileName, progress.toInt())
+            ProfileStorage.setSkyBlockLevel(profileName, level.toInt())
         }
 
         if (profileType == ProfileType.BINGO) {
@@ -174,48 +175,80 @@ public object ProfileAPI {
         }
     }
 
-    @Subscription
-    @OnlyIn(SkyBlockIsland.PRIVATE_ISLAND)
     @OnlyNonGuest
+    @OnlyIn(PRIVATE_ISLAND)
+    @Subscription
     internal fun onTablistUpdate(event: TabListChangeEvent) {
         val line = event.new.firstOrNull()?.firstOrNull()?.stripped ?: return
         coopRegex.match(line) {
-            ProfileStorage.setCoop(true)
+            val profileName = this.profileName ?: return@match
+            ProfileStorage.setCoop(profileName, true)
         }
     }
 
     @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
     internal fun onChatMessage(event: ChatReceivedEvent.Pre) {
-        profileChatRegex.match(event.text) { groups ->
-            val name = groups["name"] ?: return@match
-            if (name != this.profileName) {
-                this.profileName = name
-                ProfileChangeEvent(this.profileName!!).post()
+        matchWhen(event.text) {
+            case(profileChatRegex) { groups ->
+                val profileName = groups["name"] ?: return@case
+                ProfileStorage.setCoop(profileName, groups["coop"] != null)
+                changeProfile(profileName, CHAT_NAME)
             }
-            this.isLoaded = true
-            ProfileStorage.setCoop(groups["coop"] != null)
-        }
-        profileIdRegex.match(event.text, "id") { (id) ->
-            try {
-                ProfileStorage.profileId = UUID.fromString(id)
-            } catch (exception: IllegalStateException) {
-                SkyBlockAPI.warn("(ProfileApi) Failed to parse profile id $id", exception)
+            case(profileIdRegex, "id") { (id) ->
+                val uuid = runCatching {
+                    UUID.fromString(id)
+                }.getOrElse {
+                    SkyBlockAPI.warn("(ProfileAPI) Failed to parse profile id $id", it)
+                    return@case
+                }
+                val profileName = profileName
+                // if isLoaded is true, it means we already know the profile name
+                if (isLoaded && profileName != null) {
+                    ProfileStorage.setProfileId(profileName, uuid)
+                    return@case
+                }
+                // fallback profile detection for when the `/profileid` command is sent
+                val profileById = ProfileStorage.getProfileById(uuid)
+                if (profileById == null) {
+                    SkyBlockAPI.logger.error("Profile id '$id' didn't match any stored profiles")
+                    return@case
+                }
+                changeProfile(profileById, CHAT_ID)
             }
         }
     }
 
-    @Subscription
+    private fun changeProfile(newProfile: String, source: ProfileLoadSource) {
+        if (!this.isLoaded) {
+            // we only set this if it's not loaded, because that means
+            // this is the first source since the server changed
+            this.profileLoadSource = source
+        }
+        this.isLoaded = true
+
+        if (this.profileName == newProfile) return
+        this.profileName = newProfile
+        ProfileChangeEvent(newProfile).post()
+    }
+
     @OnlyOnSkyBlock
     @TimePassed("5s")
-    internal fun onTick(event: TickEvent) {
-        if (lastWorldSwap.since() > 2.5.seconds && !this.isLoaded && !LocationAPI.forceOnSkyblock) {
-            SkyBlockAPI.logger.error("Could not find way to determine profile name.")
-        }
+    @Subscription(TickEvent::class)
+    internal fun onTick() {
+        if (this.isLoaded) return
+        // we ignore if force on skyblock, as this likely means we aren't on skyblock and don't have profile data during development
+        if (LocationAPI.forceOnSkyblock) return
+        // we use a higher warning delay if the last place we got the profile name from was the `/profileid` message
+        val warningDelay = if (this.profileLoadSource == CHAT_ID) 10.seconds else 2.5.seconds
+        if (this.lastWorldSwap.since() < warningDelay) return
+
+        SkyBlockAPI.logger.error("Could not find way to determine profile name.")
     }
 
     @Subscription
     internal fun onProfileLevelChange(event: ProfileLevelChangeEvent) {
-        ProfileStorage.setSkyBlockLevel(event.level)
+        val profileName = this.profileName ?: return
+        ProfileStorage.setSkyBlockLevel(profileName, event.level)
     }
 
     @ApiDebug("Profile")
@@ -225,7 +258,15 @@ public object ProfileAPI {
         field("Type", profileType)
         field("Level", sbLevel)
         field("Is Coop", coop)
+        field("Load Source", profileLoadSource)
+        field("Bingo Rank", bingoRank)
     }
+}
+
+private enum class ProfileLoadSource {
+    TABLIST,
+    CHAT_NAME,
+    CHAT_ID,
 }
 
 public enum class ProfileType(internal val icon: Char? = null) {
