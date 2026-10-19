@@ -15,7 +15,9 @@ import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuningTemplate
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
+// TODO: move somewhere else once its internal in all versions
 @GenerateCodec
+//~ if >= 26.4 'public' -> 'internal'
 public data class MaxwellData(
     var power: MaxwellPower = MaxwellPowers.NO_POWER,
     @FieldNames("accessory_power", "magicalPower")

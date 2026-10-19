@@ -2175,6 +2175,7 @@ public final class tech/thatgravyboat/skyblockapi/api/environmental/WeatherAPI {
 	public final fun getCurrentIntensity ()Ltech/thatgravyboat/skyblockapi/api/environmental/WeatherIntensity;
 	public final fun getNextIntensity ()Ltech/thatgravyboat/skyblockapi/api/environmental/WeatherIntensity;
 	public final fun getNextWeatherAt ()Ltech/thatgravyboat/skyblockapi/api/environmental/SkyBlockInstant;
+	public final fun getUpcomingWeatherEvents (I)Ljava/util/List;
 	public final fun isActive ()Z
 }
 

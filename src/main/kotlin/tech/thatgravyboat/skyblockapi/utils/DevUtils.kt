@@ -118,8 +118,10 @@ public open class DebugSelect<T : Any>(
         update()
     }
 
+    //? if < 26.4 {
     @Deprecated("Use isDefaultState instead", ReplaceWith("isDefaultState()"))
     public fun hasState(): Boolean = isDefaultState()
+    //?}
 
     public fun getByName(name: String?): T? = states.find { toString(it) == name }
     public fun setByName(name: String?): Unit = set(getByName(name))

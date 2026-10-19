@@ -19,11 +19,8 @@ import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.resources.Identifier
-import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.world.level.GameType
-import net.minecraft.world.scores.DisplaySlot
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.utils.McVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
@@ -42,7 +39,7 @@ import com.mojang.blaze3d.Blaze3D
 public object McClient {
 
     private val tabListComparator: Comparator<PlayerInfo> = compareBy(
-        { it.gameMode == GameType.SPECTATOR },
+        { it.gameMode == SPECTATOR },
         { it.team?.name ?: "" },
         { it.profile.name.lowercase() },
     )
@@ -50,9 +47,11 @@ public object McClient {
     public val isDev: Boolean = FabricLoader.getInstance().isDevelopmentEnvironment
     public val config: Path = FabricLoader.getInstance().configDir
 
+    //? if < 26.4 {
     @Deprecated("Use mcVersion instead")
     @Suppress("DEPRECATION")
     public val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
+    //?}
     public val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
 
     public val version: String = SharedConstants.getCurrentVersion().name()
@@ -92,7 +91,7 @@ public object McClient {
     public val scoreboard: Collection<Component>
         get() {
             val scoreboard = self.level?.scoreboard ?: return emptyList()
-            val objective = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return emptyList()
+            val objective = scoreboard.getDisplayObjective(SIDEBAR) ?: return emptyList()
             return scoreboard.listPlayerScores(objective)
                 .sortedBy { -it.value() }
                 .map {
@@ -110,7 +109,7 @@ public object McClient {
                 }
         }
 
-    public val scoreboardTitle: Component? get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
+    public val scoreboardTitle: Component? get() = self.level?.scoreboard?.getDisplayObjective(SIDEBAR)?.displayName
     public val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
 
     public val toasts: ToastManager get() =/*? if >= 26.2 {*/gui.toastManager()/*? } else *///self.toastManager
@@ -199,7 +198,7 @@ public object McClient {
     }
 
     public fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
-        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(id, listener)
+        ResourceLoader.get(CLIENT_RESOURCES).registerReloadListener(id, listener)
     }
 
     public fun anyModInstalled(modIds: Collection<String>): Boolean = modIds.any { FabricLoader.getInstance().isModLoaded(it) }
