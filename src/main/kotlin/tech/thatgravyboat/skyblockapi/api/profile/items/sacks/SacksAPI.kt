@@ -168,6 +168,11 @@ public object SacksAPI {
                 }
                 Text.sendDebug("You have $amount of item $id")
             }
+            thenCallback("remove id", StringArgumentType.string(), IterableSuggestionProvider(sackItems.keys)) {
+                val id = argument<String>("id")
+                SacksStorage.updateItem(id, 0)
+                Text.sendDebug("Reset $id to 0.")
+            }
             thenCallback("clear") {
                 SacksStorage.clear()
                 Text.sendDebug("Cleared all sack items.")
