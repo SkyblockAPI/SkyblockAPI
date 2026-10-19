@@ -132,7 +132,6 @@ public object TrophyFishingAPI {
     public fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
         return TrophyFishStorage.getCaught(type).map { TrophyFishTier.valueOf(it.key.name) to it.value }.toMap()
     }
-    //?}
 
     @JvmName("getCaughtTiers")*///?}
     public fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
