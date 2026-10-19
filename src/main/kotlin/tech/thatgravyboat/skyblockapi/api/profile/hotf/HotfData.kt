@@ -9,6 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreePerk
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
+//~ if >= 26.4 'public' -> 'internal'
 public data class HotfData(
     @OptionalNullable
     override var currentLoadoutName: String? = null,
