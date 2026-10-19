@@ -43,6 +43,13 @@ internal object MaxwellStorage {
     val tuningTemplates: MutableList<MaxwellTuningTemplate>
         get() = data?.tuningTemplates ?: mutableListOf()
 
+    var consumedRiftPrism: Boolean
+        get() = data?.consumedRiftPrism ?: false
+        set(value) = DATA.edit {
+            if (consumedRiftPrism == value) return
+            consumedRiftPrism = value
+        }
+
     fun updatePower(newPower: MaxwellPower) {
         if (power == newPower) return
         power = newPower

@@ -41,5 +41,7 @@ public object SkyBlockPotionsRepo : RepoItemCacheAsQuery<Query>("Potions", ::Que
     public data class Query(
         var id: String = "",
         var level: Int? = null,
-    )
+    ) {
+        public fun create(): LazyItemStack? = create(this)
+    }
 }

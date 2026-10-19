@@ -18,9 +18,11 @@ public class DataType<T> private constructor(
     public val type: KType?,
 ) {
 
+    //? if < 26.4 {
     @get:Deprecated("Scheduled for removal in 26.3")
     @get:ApiStatus.ScheduledForRemoval
     public val factory: (ItemStack) -> T? get() = ::resolve
+    //?}
 
     init {
         if (autoRegister) DataTypesRegistry.addDataType(this)

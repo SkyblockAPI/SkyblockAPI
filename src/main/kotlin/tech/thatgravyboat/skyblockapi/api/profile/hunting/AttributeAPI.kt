@@ -381,7 +381,7 @@ public data object AttributeAPI : ItemDebugCategory {
 
     @Subscription
     internal fun onCommandRegister(event: RegisterSkyblockApiCommandsEvent) {
-        event.command("sbapi attributes") {
+        event.command("attributes") {
             "reset *" {
                 "owned" executes {
                     resetOwnedAttributeAmounts()
@@ -548,6 +548,7 @@ public data class AttributeData(
     var rarity: SkyBlockRarity?,
     var lastUpdated: Instant = Instant.DISTANT_PAST,
 ) {
+    //~ if >= 26.4 'public' -> 'internal'
     public fun updated() {
         lastUpdated = currentInstant()
     }

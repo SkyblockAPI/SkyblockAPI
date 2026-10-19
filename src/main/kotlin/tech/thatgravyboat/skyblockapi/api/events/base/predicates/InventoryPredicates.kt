@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.events.base.predicates
 import org.intellij.lang.annotations.Language
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
+import tech.thatgravyboat.skyblockapi.api.events.base.PredicateForEvents
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
@@ -10,16 +11,19 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.hasAnnotation
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import java.lang.reflect.Method
 
+@PredicateForEvents(InventoryChangeEvent::class, ContainerInitializedEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class InventoryTitle(
     @Language("RegExp") vararg val title: String,
 )
 
+// TODO: this annotation doesnt do anything right now???
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class MustBeContainer
 
+@PredicateForEvents(InventoryChangeEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class IgnoreFiller

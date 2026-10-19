@@ -59,21 +59,21 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                 val supportsChangingDefault = selectedEntry.canSetDefault()
                 return buildList {
                     fun addValue(name: String?) {
-                        val canBeDefault = supportsChangingDefault && name != null
-                        val isDefault = selectedEntry.getDefault() == name
+                        val canBeConfigDefault = supportsChangingDefault && (name != selectedEntry.getDefaultStateName())
+                        val isConfigDefault = selectedEntry.getDefault() == name
 
-                        val selected = selectedEntry.stateName() == name
+                        val isSelected = selectedEntry.stateName() == name
                         fun component(enabled: Int, default: Int) = Text.of {
-                            if (selected) {
+                            if (isSelected) {
                                 append("[x]", enabled)
                             } else append("[_]")
                             color = default
                             append(" ")
                             append(name ?: "<null>") {
-                                if (selected) underlined = true
+                                if (isSelected) underlined = true
                             }
 
-                            if (canBeDefault && isDefault) {
+                            if (canBeConfigDefault && isConfigDefault) {
                                 appendDefaultSelected("as selected")
                             }
                         }
@@ -81,15 +81,15 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             message = component(TextColor.DARK_GREEN, TextColor.GRAY),
                             hovered = component(TextColor.GREEN, TextColor.WHITE),
                             leftClick = { selectedEntry.setByName(name) },
-                            rightClick = if (!supportsChangingDefault) null else { {
-                                if (selected) selectedEntry.setDefault(null)
+                            rightClick = if (!supportsChangingDefault) null else Runnable {
+                                if (isConfigDefault) selectedEntry.setDefault(selectedEntry.getDefaultStateName())
                                 else selectedEntry.setDefault(name)
-                            } },
+                            },
                         ).let(::add)
                     }
-                    addValue(null)
-                    selectedEntry.states().sorted().forEach(::addValue)
-
+                    val defaultState = selectedEntry.getDefaultStateName()
+                    addValue(defaultState)
+                    selectedEntry.states().sorted().filterNot { it == defaultState }.forEach(::addValue)
                 }
             }
         }
@@ -138,16 +138,16 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             message = component(TextColor.DARK_GREEN, TextColor.GRAY),
                             hovered = component(TextColor.GREEN, TextColor.WHITE),
                             leftClick = { entry.toggle() },
-                            rightClick = if (!supportsChangingDefault) null else { { entry.toggleDefault() } },
+                            rightClick = if (!supportsChangingDefault) null else Runnable { entry.toggleDefault() },
                         )
                     }
                     is DebugSelect<*> -> {
-                        val supportsChangingDefault = entry.canSetDefault()
-                        val hasDefault = supportsChangingDefault && entry.hasDefault()
-                        val hasState = entry.hasState()
+                        val supportsChangingConfig = entry.canSetDefault()
+                        val hasSetConfig = supportsChangingConfig && entry.hasDefault()
+                        val isSetDefaultState = entry.isDefaultState()
 
                         fun component(enabled: Int, default: Int, selected: Int) = Text.of {
-                            this.color = if (hasState) enabled else default
+                            this.color = if (isSetDefaultState) default else enabled
                             if (!isSelected) {
                                 append("[☰] $name")
                             } else {
@@ -165,7 +165,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                                 hover = Text.of(entry.description, TextColor.YELLOW)
                             }
 
-                            if (hasDefault) appendDefaultSelected("to enabled")
+                            if (hasSetConfig) appendDefaultSelected("to enabled")
                         }
 
                         entry(
@@ -173,7 +173,8 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             hovered = component(TextColor.GREEN, TextColor.WHITE, TextColor.ORANGE),
                             leftClick = { selectedPath = if (!isSelected) path else path.dropLast(1) },
                             rightClick = {
-                                if (hasDefault) entry.setDefault(null) else entry.set(null)
+                                if (hasSetConfig) entry.setDefault(entry.getDefaultStateName())
+                                else entry.set(entry.getDefaultState())
                             },
                         )
                     }
@@ -235,15 +236,15 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
     private fun entry(
         message: Component,
         hovered: Component,
-        leftClick: () -> Unit,
-        rightClick: (() -> Unit)? = null,
+        leftClick: Runnable,
+        rightClick: Runnable? = null,
     ) = Entry(message, hovered, rightClick, leftClick)
 
     private inner class Entry(
         message: Component,
         private val hovered: Component,
-        private val rightClick: (() -> Unit)?,
-        private val leftClick: () -> Unit
+        private val rightClick: Runnable?,
+        private val leftClick: Runnable,
     ) : StringWidget(0, 0, message.width, McFont.height, message, McFont.self) {
         init {
             // needs to be "active" for onClick to actually run
@@ -270,8 +271,8 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
 
         override fun onClick(event: MouseButtonEvent, doubleClick: Boolean) {
             when (event.button()) {
-                InputConstants.MOUSE_BUTTON_LEFT -> this@Entry.leftClick()
-                InputConstants.MOUSE_BUTTON_RIGHT if rightClick != null -> this@Entry.rightClick()
+                InputConstants.MOUSE_BUTTON_LEFT -> this@Entry.leftClick.run()
+                InputConstants.MOUSE_BUTTON_RIGHT if rightClick != null -> this@Entry.rightClick.run()
                 else -> return
             }
             this@DevToggleScreen.rebuildWidgets()

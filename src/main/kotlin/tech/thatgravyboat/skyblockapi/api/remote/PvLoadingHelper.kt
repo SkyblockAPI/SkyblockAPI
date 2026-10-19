@@ -62,7 +62,8 @@ internal enum class LoadedData(val component: MutableComponent) {
     BACKPACK("Storage (Backpack)"),
     SACKS("Sacks"),
     MUSEUM("Museum"),
-    ATTRIBUTES("Attributes")
+    ATTRIBUTES("Attributes"),
+    RIFT_PRISM_IMBUEMENT("Rift Prism Imbuement"),
     ;
     
     constructor(string: String) : this(Text.of(string))

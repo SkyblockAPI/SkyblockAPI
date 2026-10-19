@@ -7,11 +7,13 @@ import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerMob
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
+import tech.thatgravyboat.skyblockapi.api.events.base.PredicateForEvents
 import tech.thatgravyboat.skyblockapi.api.events.entity.SlayerEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import tech.thatgravyboat.skyblockapi.utils.extentions.hasAnnotation
 import java.lang.reflect.Method
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class OnlySlayerType(
@@ -20,32 +22,38 @@ public annotation class OnlySlayerType(
     val acceptDemons: Boolean = false,
 )
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class OnlySlayerMiniBoss(
     vararg val value: SlayerMiniBoss,
 )
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class OnlySlayerDemon(
     vararg val value: SlayerDemon,
 )
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class OnlySlayerDemons
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class OnlySlayerMiniBosses(
     val bigBoys: TriState = TriState.DEFAULT,
 )
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class OnlySlayerBosses
 
+@PredicateForEvents(SlayerEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class MustBeOwnedByPlayer

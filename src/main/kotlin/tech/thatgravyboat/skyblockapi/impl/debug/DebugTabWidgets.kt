@@ -14,6 +14,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.onClick
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
 
 @Module
 internal object DebugTabWidgets {
@@ -38,19 +39,40 @@ internal object DebugTabWidgets {
     @Subscription
     private fun RegisterSkyblockApiCommandsEvent.onRegisterCommands() {
         register("copy") {
-            thenCallback("widget tabwidget", EnumArgument<TabWidget>()) {
-                val widget = argument<TabWidget>("tabwidget")
-                if (!widget.isActive) Text.sendDebug("Tab widget ${widget.name} not present.")
-                else {
-                    val lines = widget.currentLines
-                    McClient.clipboard = lines.joinToString("\n")
-                    Text.sendDebug("Contents of tab widget ") {
-                        append(widget.name, TextColor.GOLD)
-                        append(" copied to clipboard!", TextColor.YELLOW)
-                        this.hover = Text.of("Click to copy again!", TextColor.GOLD)
-                        onClick {
-                            McClient.clipboard = lines.joinToString("\n")
-                            Text.sendDebug("Copied ${widget.name} contents to clipboard.")
+            then("widget") {
+                callback {
+                    val allWidgets = TabWidget.entries
+                        .map { widget ->
+                            buildString {
+                                appendLine("${widget.name}:")
+                                widget.currentLines.forEach { appendLine(it) }
+                            }
+                        }.joinToString("${"-".repeat(10)}\n")
+                    McClient.clipboard = allWidgets
+                    Text.sendDebug("Copied all tab widgets content to clipboard!") {
+                        append("Click to copy again!") {
+                            underlined = true
+                            onClick {
+                                McClient.clipboard = allWidgets
+                                Text.sendDebug("Copied all tab widgets content to clipboard!")
+                            }
+                        }
+                    }
+                }
+                thenCallback("tabwidget", EnumArgument<TabWidget>()) {
+                    val widget = argument<TabWidget>("tabwidget")
+                    if (!widget.isActive) Text.sendDebug("Tab widget ${widget.name} not present.")
+                    else {
+                        val lines = widget.currentLines
+                        McClient.clipboard = lines.joinToString("\n")
+                        Text.sendDebug("Contents of tab widget ") {
+                            append(widget.name, TextColor.GOLD)
+                            append(" copied to clipboard!", TextColor.YELLOW)
+                            this.hover = Text.of("Click to copy again!", TextColor.GOLD)
+                            onClick {
+                                McClient.clipboard = lines.joinToString("\n")
+                                Text.sendDebug("Copied ${widget.name} contents to clipboard.")
+                            }
                         }
                     }
                 }
@@ -70,6 +92,10 @@ internal object DebugTabWidgets {
                 } else {
                     Text.sendDebug("Logged tab widgets: ${loggedWidgets.joinToString { it.name }}")
                 }
+            }
+            thenCallback("all") {
+                loggedWidgets.addAll(TabWidget.entries)
+                Text.sendDebug("Added all tab widgets to logged tab widgets.")
             }
             thenCallback("add widget", EnumArgument<TabWidget>()) {
                 val widget = argument<TabWidget>("widget")

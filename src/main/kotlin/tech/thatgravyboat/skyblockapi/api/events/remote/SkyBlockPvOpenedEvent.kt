@@ -1,6 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.events.remote
 
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import org.intellij.lang.annotations.Language
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.extentions.toDashlessString
@@ -33,6 +35,8 @@ import tech.thatgravyboat.skyblockapi.utils.json.getPath
 public data class SkyBlockPvOpenedEvent(val profileData: JsonObject) : SkyBlockEvent() {
     /** member data of the McPlayer in the currently selected profile */
     val member: JsonObject = profileData.getPath("members.${McPlayer.uuid.toDashlessString()}")?.asJsonObject!!
+
+    public fun getProfilePath(@Language("JSONPath") path: String): JsonElement? = member.getPath(path)
 }
 
 @RequiresOptIn(

@@ -42,7 +42,7 @@ public object GenericDataTypes {
             else -> id
         }
     }
-    public val ID_DAMAGE: DataType<Int> = DataType.of("id_damage") { ctx, item ->
+    public val ID_DAMAGE: DataType<Int> = DataType.of("id_damage") { ctx, _ ->
         val id = ctx[ResolutionContext.Resolver.ID] ?: return@of null
         val damage = id.substringAfterLast(":", "").toIntOrNull() ?: return@of null
         damage

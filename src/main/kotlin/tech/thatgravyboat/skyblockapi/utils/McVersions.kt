@@ -17,6 +17,7 @@ public enum class McVersion {
     public val isActive: Boolean = this.stringVersion == McClient.version.substringBefore(" ") || this.stringVersion == McClient.version.substringBefore(" ").substringBeforeLast(".")
 }
 
+//? if < 26.4 {
 @Deprecated(message = "Used mc version instead!")
 @RemoveNextVersion
 public enum class McVersionGroup(vararg versions: McVersion) {
@@ -27,3 +28,4 @@ public enum class McVersionGroup(vararg versions: McVersion) {
 
     public val isActive: Boolean = versions.any { it.isActive }
 }
+//?}
