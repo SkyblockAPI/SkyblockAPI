@@ -1,5 +1,3 @@
-@file:Suppress("SuspiciousGetterForMutableObject")
-
 package tech.thatgravyboat.skyblockapi.api.profile.hotf
 
 import me.owdding.ktcodecs.Compact
