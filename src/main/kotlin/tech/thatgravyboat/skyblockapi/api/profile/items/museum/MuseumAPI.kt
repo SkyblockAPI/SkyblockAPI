@@ -26,6 +26,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.hypixel.museum.MuseumData
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.extentions.associateByNotNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.contains
@@ -279,7 +280,7 @@ public object MuseumAPI {
                 Text.sendDebug("Museum data has been reset.")
             }
             then("check") {
-                thenCallback("id", StringArgumentType.word()) {
+                thenCallback("id id", StringArgumentType.word(), IterableSuggestionProvider(MuseumData.museumData.allItems)) {
                     val id = argument<String>("id").let(SkyBlockId::item)
                     val item = SimpleItemAPI.getItemByIdOrNull(id) ?: run {
                         Text.sendDebug("Item not found.")

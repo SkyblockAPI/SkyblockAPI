@@ -11,8 +11,6 @@ import tech.thatgravyboat.skyblockapi.api.events.location.TrophyCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
-import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
@@ -49,7 +47,7 @@ public object TrophyFishingAPI {
     )
 
     @Subscription
-    @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
+    @OnlyIn(CRIMSON_ISLE)
     internal fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
         matchWhen(content) {
@@ -76,7 +74,7 @@ public object TrophyFishingAPI {
     }
 
     @Subscription
-    @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
+    @OnlyIn(CRIMSON_ISLE)
     internal fun onInventory(event: InventoryChangeEvent) {
         if (event.title != "Trophy Fish") return
         if (event.isInPlayerInventory) return
@@ -123,7 +121,7 @@ public object TrophyFishingAPI {
         }
 
         if (hasLoadedAny) {
-            PvLoadingHelper.markLoaded(LoadedData.TROPHY_FISH)
+            PvLoadingHelper.markLoaded(TROPHY_FISH)
         }
         unlocked.forEach(TrophyFishStorage::setAmounts)
     }
@@ -134,6 +132,7 @@ public object TrophyFishingAPI {
     public fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
         return TrophyFishStorage.getCaught(type).map { TrophyFishTier.valueOf(it.key.name) to it.value }.toMap()
     }
+    //?}
 
     @JvmName("getCaughtTiers")*///?}
     public fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {

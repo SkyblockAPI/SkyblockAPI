@@ -24,6 +24,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
+import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.since
@@ -159,13 +160,18 @@ public object SacksAPI {
     @Subscription
     internal fun onRegisterCommands(event: RegisterSkyblockApiCommandsEvent) {
         event.register("sacks") {
-            thenCallback("id", StringArgumentType.string()) {
+            thenCallback("id id", StringArgumentType.string(), IterableSuggestionProvider(sackItems.keys)) {
                 val id = argument<String>("id")
                 val amount = sackItems[id] ?: run {
                     Text.sendDebug("This item isn't in sacks!")
                     return@thenCallback
                 }
                 Text.sendDebug("You have $amount of item $id")
+            }
+            thenCallback("remove id", StringArgumentType.string(), IterableSuggestionProvider(sackItems.keys)) {
+                val id = argument<String>("id")
+                SacksStorage.updateItem(id, 0)
+                Text.sendDebug("Reset $id to 0.")
             }
             thenCallback("clear") {
                 SacksStorage.clear()

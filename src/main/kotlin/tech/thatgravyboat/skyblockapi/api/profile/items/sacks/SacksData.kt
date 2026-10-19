@@ -5,6 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import kotlin.time.Instant
 
+// TODO: move somewhere else
 internal data class SacksData(
     private val _counts: MutableMap<String, Int> = mutableMapOf(),
     private val _timestamps: MutableMap<String, Instant> = mutableMapOf(),

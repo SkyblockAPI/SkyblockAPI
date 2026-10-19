@@ -1,6 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.loadout
 
 import me.owdding.ktcodecs.GenerateCodec
+import me.owdding.ktcodecs.OptionalNullable
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.ExperimentalExtendedContracts
@@ -19,20 +21,24 @@ public data class LoadoutSlot(
     var hotm: StringMatch?,
     var hotf: StringMatch?,
     var locked: Boolean = true,
+    @IntroducedAt("4.2.41") @OptionalNullable var favoredBait: SkyBlockIdMatch? = null,
 ) {
-    public constructor(id: Int) : this(id, null,null,null,null,null,null,null,null)
+    public constructor(id: Int) : this(id, null, null, null, null, null, null, null, null, favoredBait = null)
 
     context(source: DataSource)
     public fun value(value: Int?): NumberMatch = NumberMatch(value, source, currentInstant())
+
     context(source: DataSource)
     public fun value(value: String?): StringMatch = StringMatch(value, source, currentInstant())
+
+    context(source: DataSource)
+    public fun value(value: SkyBlockId?): SkyBlockIdMatch = SkyBlockIdMatch(value, source, currentInstant())
 }
 
 public enum class DataSource(public val multiplier: Double) {
     API(0.5),
     OVERVIEW(0.5),
     EDIT(1.0),
-    ;
 }
 
 @OptIn(ExperimentalContracts::class, ExperimentalExtendedContracts::class)
@@ -79,6 +85,13 @@ public data class NumberMatch(
 @GenerateCodec
 public data class StringMatch(
     val value: String?,
+    val source: DataSource,
+    val time: Instant,
+)
+
+@GenerateCodec
+public data class SkyBlockIdMatch(
+    val value: SkyBlockId?,
     val source: DataSource,
     val time: Instant,
 )

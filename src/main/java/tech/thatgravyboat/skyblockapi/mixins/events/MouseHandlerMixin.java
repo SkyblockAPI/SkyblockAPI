@@ -19,9 +19,9 @@ public class MouseHandlerMixin {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;mouseClicked(Lnet/minecraft/client/input/MouseButtonEvent;Z)Z")
     )
     private boolean mouseClicked(Screen screen, MouseButtonEvent mouseButtonEvent, boolean b, Operation<Boolean> original) {
-        var pre = new ScreenMouseClickEvent.Pre(screen, mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button());
+        var pre = new ScreenMouseClickEvent.Pre(screen, mouseButtonEvent);
         var result = pre.post(SkyBlockAPI.getEventBus()) || original.call(screen, mouseButtonEvent, b);
-        var post = new ScreenMouseClickEvent.Post(screen, mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button());
+        var post = new ScreenMouseClickEvent.Post(screen, mouseButtonEvent);
         if (result) {
             post.cancel();
         }
@@ -33,9 +33,9 @@ public class MouseHandlerMixin {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;mouseReleased(Lnet/minecraft/client/input/MouseButtonEvent;)Z")
     )
     private boolean mouseReleased(Screen instance, MouseButtonEvent mouseButtonEvent, Operation<Boolean> original) {
-        var pre = new ScreenMouseReleasedEvent.Pre(instance, mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button());
+        var pre = new ScreenMouseReleasedEvent.Pre(instance, mouseButtonEvent);
         var result = pre.post(SkyBlockAPI.getEventBus()) || original.call(instance, mouseButtonEvent);
-        var post = new ScreenMouseReleasedEvent.Post(instance, mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button());
+        var post = new ScreenMouseReleasedEvent.Post(instance, mouseButtonEvent);
         if (result) {
             post.cancel();
         }

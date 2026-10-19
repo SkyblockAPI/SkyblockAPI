@@ -15,11 +15,12 @@ public data class TrophyFish(val type: TrophyFishType, /*? < 26.4 >> 'val'*/ /*@
     @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
     @Suppress("DEPRECATION")
     @JvmName("getTier")
-    public fun getOldTier(): TrophyFishTier = TrophyFishTier.valueOf(tier.name)*///?}
+    public fun getOldTier(): TrophyFishTier = TrophyFishTier.valueOf(tier.name)
+    *///?}
 
     val item: ItemStack by lazy { type.getItem(tier) }
     val displayName: Component by lazy {
-        if (tier == TrophyTier.NONE) {
+        if (tier == NONE) {
             return@lazy type.displayName.copy()
         }
 
@@ -27,7 +28,7 @@ public data class TrophyFish(val type: TrophyFishType, /*? < 26.4 >> 'val'*/ /*@
     }
 
     public val apiName: String by lazy {
-        if (tier == TrophyTier.NONE) {
+        if (tier == NONE) {
             return@lazy type.internalName.lowercase()
         }
 

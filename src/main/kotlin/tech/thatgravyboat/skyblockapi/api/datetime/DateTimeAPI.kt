@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.datetime
 
-import me.owdding.ktmodules.Module
+//? if < 26.4 {
 import tech.thatgravyboat.skyblockapi.utils.extentions.valueOfOrNull
 import tech.thatgravyboat.skyblockapi.api.environmental.DateTimeAPI as NewDateTimeAPI
 
@@ -14,3 +14,4 @@ public object DateTimeAPI {
     public val isDay: Boolean get() = NewDateTimeAPI.isDay
     public val isNight: Boolean get() = NewDateTimeAPI.isNight
 }
+//?}

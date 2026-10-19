@@ -13,25 +13,25 @@ public enum class TrophyFishTier(public val nameSuffix: Component, public val di
     ),
     BRONZE(
         nameSuffix = Text.of("BRONZE") {
-            withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.BOLD)
+            withStyle(DARK_GRAY, BOLD)
         },
         displayName = "§8Bronze",
     ),
     SILVER(
         nameSuffix = Text.of("SILVER") {
-            withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)
+            withStyle(GRAY, BOLD)
         },
         displayName = "§7Silver",
     ),
     GOLD(
         nameSuffix = Text.of("GOLD") {
-            withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
+            withStyle(ChatFormatting.GOLD, BOLD)
         },
         displayName = "§6Gold",
     ),
     DIAMOND(
         nameSuffix = Text.of("DIAMOND") {
-            withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD)
+            withStyle(AQUA, BOLD)
         },
         displayName = "§bDiamond",
     );

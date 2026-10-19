@@ -11,8 +11,11 @@ public data class PlayerInventoryChangeEvent(
     val item: ItemStack,
     val previousItem: ItemStack,
 ) : SkyBlockEvent() {
-    //? < 26.4
-    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Should pass previousItem as well")public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
+    //? if < 26.4 {
+    /*@RemoveNextVersion
+    @Deprecated("Should pass previousItem as well")
+    public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, EMPTY)
+    *///?}
 
     public val slotIndex: Int get() = inventorySlot.index
 }
@@ -22,8 +25,11 @@ public data class PlayerHotbarChangeEvent(
     val item: ItemStack,
     val previousItem: ItemStack,
 ) : SkyBlockEvent() {
-    //? < 26.4
-    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Should pass previousItem as well")public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, ItemStack.EMPTY)
+    //? if < 26.4 {
+    /*@RemoveNextVersion
+    @Deprecated("Should pass previousItem as well")
+    public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, EMPTY)
+    *///?}
 
     public val slotIndex: Int get() = inventorySlot.index - FIRST_HOTBAR_SLOT
 

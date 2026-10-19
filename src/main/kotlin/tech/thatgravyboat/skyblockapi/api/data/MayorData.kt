@@ -96,8 +96,11 @@ public data class MayorPerk internal constructor(
     var description: String = "Not available",
     val perkpocalypse: Boolean = true,
 ) {
-    //? < 26.4
-    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Use MayorPerk.perkpocalypse instead.", ReplaceWith("perkpocalypse")) val perkapocalypse: Boolean get() = perkpocalypse
+    //? if < 26.4 {
+    /*@RemoveNextVersion
+    @Deprecated("Use MayorPerk.perkpocalypse instead.", ReplaceWith("perkpocalypse"))
+    val perkapocalypse: Boolean get() = perkpocalypse
+    *///?}
 
     internal var overrideState: TriState = DEFAULT
 

@@ -1,6 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.loadout
 
+import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.LoadoutStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
@@ -8,6 +10,8 @@ import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
@@ -40,6 +44,8 @@ public data object LoadoutAPI : ItemDebugCategory {
     private val equipmentTypes = listOf("Necklace", "Cloak", "Belt", "Gloves/Bracelet")
     private val containerRegion = ContainerRegion(width = 3, height = 4, startRow = 1, startColumn = 5)
 
+    private var lastClickedLoadout: Pair<ItemStack, LoadoutSlot>? = null
+
     @OptIn(ExperimentalContracts::class)
     private inline fun editLoadout(id: Int, modifier: LoadoutSlot.() -> Unit) {
         contract {
@@ -61,6 +67,7 @@ public data object LoadoutAPI : ItemDebugCategory {
                 event.item.addDebugString { "Slot: $slot" }
 
                 val name = event.item.cleanName
+
                 @Suppress("DEPRECATION")
                 val locked = event.item.`is`(Items.DYE.red)
                 event.item.addDebugString { "Locked: $locked" }
@@ -77,6 +84,7 @@ public data object LoadoutAPI : ItemDebugCategory {
                     var hotf: String? = null
                     var powerStone: String? = null
                     var tuningTemplate: Int? = null
+                    var favoredBait: SkyBlockId? = null
 
                     event.item.getRawLore().forEach {
                         if (armorTypes.any { type -> it.startsWith("$type: ") }) {
@@ -112,6 +120,12 @@ public data object LoadoutAPI : ItemDebugCategory {
                             event.item.addDebugString { "Tuning Template Slot -> $value" }
                             tuningTemplate = value
                         }
+                        if (it.startsWith("Favored Bait: ")) {
+                            val name = it.substringAfter(':').trim()
+                            val id = SkyBlockId.fromName(name)
+                            event.item.addDebugString { "Favored Bait -> $id" }
+                            favoredBait = id
+                        }
                     }
 
                     val armorNotNull = armorNames.indexOfFirst { it != null }
@@ -137,7 +151,8 @@ public data object LoadoutAPI : ItemDebugCategory {
                     this.hotf = value(hotf)
                     this.powerstone = value(powerStone)
                     this.tunings = value(tuningTemplate)
-                    event.item.addDebugString { "$this" }
+
+                    this.favoredBait = value(favoredBait)
                 }
             }
         }
@@ -161,8 +176,8 @@ public data object LoadoutAPI : ItemDebugCategory {
         }
 
         this.armor = value(
-            slots.indexOfFirst {
-                it.slots.mapIndexed { index, stack ->
+            slots.indexOfFirst { slot ->
+                slot.slots.mapIndexed { index, stack ->
                     val name = names[index] ?: return@mapIndexed stack.isEmpty
                     stack.cleanName == name || stack.cleanName.stripColor() == name.stripColor()
                 }.all { it }
@@ -180,11 +195,29 @@ public data object LoadoutAPI : ItemDebugCategory {
     }
 
     @Subscription
+    context(event: SlotClickEvent)
+    private fun onClick() {
+        if (event.button != InputConstants.MOUSE_BUTTON_LEFT) return
+        titleRegex.match(event.title, "current") { (current) ->
+            context(DataSource.OVERVIEW) {
+                val currentPage = current.toIntValue()
+                val slotId = containerRegion.getId(event.slot, currentPage) ?: return@match
+                val slot = storage?.slots?.values?.find { !it.locked && it.id == slotId && storage?.currentSlot != slotId } ?: return@match
+                lastClickedLoadout = (event.item to slot)
+            }
+        }
+    }
+
+    @Subscription
     context(event: ChatReceivedEvent.Pre)
     private fun onChat() {
-        loadoutEquipped.match(event.text, "name") { (loadout) ->
-            val loadout = storage?.slots?.values?.find { it.name == loadout } ?: return@match
-            swapLoadout(loadout)
+        val (item, slot) = lastClickedLoadout ?: return
+        loadoutEquipped.match(event.text, "name") { (loadoutName) ->
+            if (item.cleanName != loadoutName) return@match
+
+            swapLoadout(slot)
+
+            lastClickedLoadout = null
         }
     }
 }

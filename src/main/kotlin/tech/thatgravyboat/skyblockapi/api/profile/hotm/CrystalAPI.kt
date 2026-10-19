@@ -98,9 +98,9 @@ public object CrystalAPI {
     internal fun onTabWidget(event: TabWidgetChangeEvent) {
         crystalLoreRegex.forEachMatch(event.new, "name", "status") { (name, status) ->
             if (CrystalStorage.setCrystalStatusByName(name, CrystalStatus.fromString(status) ?: return@forEachMatch)) {
-                Logger.info("Updated $name to $status based on inventory.")
+                Logger.debug("Updated $name to $status based on inventory.")
             } else {
-                Logger.info("Failed to update crystal status for $name with status $status")
+                Logger.warn("Failed to update crystal status for $name with status $status")
             }
         }
     }
@@ -120,7 +120,7 @@ public object CrystalAPI {
         }
 
         inputCrystals.forEach {
-            Logger.info("Marked $it as not found due to Forge Spending")
+            Logger.debug("Marked $it as not found due to Forge Spending")
             CrystalStorage.setCrystalStatus(it, CrystalStatus.NOT_FOUND)
         }
     }

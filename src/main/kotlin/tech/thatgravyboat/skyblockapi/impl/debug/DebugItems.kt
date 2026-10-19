@@ -41,7 +41,7 @@ public object DebugItems {
     public var selectedIndex: Int = 0
     public var entriesSize: Int = 0
     public var lastItem: ItemStack? = null
-    public var lastSet: Instant = Instant.DISTANT_PAST
+    public var lastSet: Instant = DISTANT_PAST
     public val toggledEntries: MutableSet<ItemDebugCategory> = mutableSetOf<ItemDebugCategory>()
 
     public fun updateItem(new: ItemStack?) {

@@ -29,14 +29,16 @@ public data class BuilderDsl<Consumer>(val consumer: (Consumer) -> Unit) {
 
 public class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClientCommandSource>, public val buildContext: CommandBuildContext?) : SkyBlockEvent() {
 
-    //? < 26.4
-    //@Deprecated("Also provide build context")public constructor(dispatcher: CommandDispatcher<FabricClientCommandSource>) : this(dispatcher, null)
+    //? if < 26.4 {
+    /*@Deprecated("Also provide build context")
+    public constructor(dispatcher: CommandDispatcher<FabricClientCommandSource>) : this(dispatcher, null)
+    *///?}
 
     public fun register(command: LiteralArgumentBuilder<FabricClientCommandSource>) {
         dispatcher.register(command)
     }
 
-    public fun command(name: String, init: CommandBuilder0<FabricClientCommandSource>.() -> Unit): Unit {
+    public fun command(name: String, init: CommandBuilder0<FabricClientCommandSource>.() -> Unit) {
         dispatcher.command(name, buildContext!!, init)
     }
 

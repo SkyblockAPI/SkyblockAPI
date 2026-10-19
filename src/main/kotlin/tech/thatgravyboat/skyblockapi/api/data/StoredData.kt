@@ -5,6 +5,7 @@ import com.google.gson.JsonParser
 import com.mojang.serialization.Codec
 import me.owdding.ktmodules.Module
 import org.apache.commons.io.FileUtils
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.FreshHypixelAlphaDetectedEvent
@@ -64,12 +65,12 @@ internal class StoredData<T : Any>(
         alphaData = null
     }
 
-    inline fun edit(edit: T.() -> Unit?) {
+    inline fun edit(edit: T.() -> Unit) {
         contract {
             callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
         }
-        val data = get()
-        if (edit(data) != null) save()
+        edit(get())
+        save()
     }
 
     private fun loadNormalData() {
@@ -203,13 +204,11 @@ internal class StoredData<T : Any>(
             }
         }
 
-        private var firstJoin = false
-
         // we load data asynchronously on hypixel join
         @Subscription(HypixelJoinEvent::class)
         private fun onHypixelJoin() {
-            if (firstJoin) return
-            firstJoin = true
+            // we only load the data once, so we can unregister the event
+            SkyBlockAPI.eventBus.unregisterMethod(::onHypixelJoin)
             Scheduling.async {
                 allStoredDatas.forEach(StoredData<*>::loadNormalData)
             }
