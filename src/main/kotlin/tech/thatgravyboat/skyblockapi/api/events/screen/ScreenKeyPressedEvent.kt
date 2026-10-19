@@ -43,7 +43,7 @@ public sealed class ScreenKeyPressedEvent(
             modifiers: Int,
         ) : this(
             screen,
-            //~ if < 26.3 'scanCode' -> '0'
+            //~ if >= 26.3 'scanCode' -> '0'
             KeyEvent(key, 0, modifiers),
         )
     }//?}
@@ -60,7 +60,7 @@ public sealed class ScreenKeyPressedEvent(
             modifiers: Int,
         ) : this(
             screen,
-            //~ if < 26.3 'scanCode' -> '0'
+            //~ if >= 26.3 'scanCode' -> '0'
             KeyEvent(key, 0, modifiers),
         )
     }//?}

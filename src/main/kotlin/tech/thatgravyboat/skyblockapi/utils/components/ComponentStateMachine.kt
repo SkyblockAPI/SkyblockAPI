@@ -59,13 +59,13 @@ public data class LiteralComponentPart(val literal: String) : ComponentStateless
     override fun tryConsume(index: Int, char: Char, style: Style): StateResult {
         if (index < literal.length) {
             return if (literal[index] == char) {
-                StateResult.CONSUME
+                CONSUME
             } else {
-                StateResult.BREAK
+                BREAK
             }
         }
 
-        return StateResult.CONTINUE
+        return CONTINUE
     }
 }
 
@@ -73,10 +73,10 @@ public data class WildcardComponentPart(val sink: CharSink, val maxLength: Int =
     context(_: GroupSink)
     override fun tryConsume(index: Int, char: Char, style: Style): StateResult {
         if (index < maxLength && sink.tryConsume(char)) {
-            return StateResult.CONSUME
+            return CONSUME
         }
 
-        return StateResult.CONTINUE
+        return CONTINUE
     }
 }
 
@@ -104,7 +104,7 @@ public data class CompositeComponentPart(
         state.current.end()
 
         if (!result.continuation) {
-            return StateResult.BREAK
+            return BREAK
         }
 
         while (state.part.hasNext()) {
@@ -115,7 +115,7 @@ public data class CompositeComponentPart(
             }
         }
 
-        return StateResult.CONTINUE
+        return CONTINUE
     }
 
     context(state: State)
@@ -164,7 +164,7 @@ public data class RepeatPart(
         }
 
         state.current.end()
-        return StateResult.BREAK
+        return BREAK
     }
 
     context(state: State)
@@ -177,8 +177,11 @@ public data class ForkPart(
     val forks: List<ComponentStateMachinePart<*>>,
     val marker: Unit = Unit,
 ) : ComponentStateMachinePart<ForkPart.State> {
+
+    //? if < 26.4 {
     @Deprecated("Only for binary compat", level = DeprecationLevel.HIDDEN)
     public constructor(forks: List<StateMachinePosition<*>>) : this(forks.map { it.part }, Unit)
+    //?}
 
     public data class State(
         var state: StateMachinePosition<*>? = null,
@@ -191,12 +194,12 @@ public data class ForkPart(
         if (index == 0) {
             val machine = forks.map { StateMachinePosition(it) }.find {
                 it.tryConsume(char, style).match
-            } ?: return StateResult.BREAK
+            } ?: return BREAK
             state.state = machine
-            return StateResult.CONSUME
+            return CONSUME
         }
 
-        return state.state?.tryConsume(char, style) ?: StateResult.BREAK
+        return state.state?.tryConsume(char, style) ?: BREAK
     }
 
     context(state: State)
@@ -225,7 +228,7 @@ public data class OptionalPart(
     ): StateResult {
         val result = state.tryConsume(char, style)
         if (index == 0 && !result.continuation) {
-            return StateResult.CONTINUE
+            return CONTINUE
         }
         return result
     }
@@ -432,7 +435,7 @@ public class ComponentStateMachine(
                     }
                     return@visit Optional.empty()
                 },
-                Style.EMPTY,
+                EMPTY,
             )
             current.end()
             sink.flush()

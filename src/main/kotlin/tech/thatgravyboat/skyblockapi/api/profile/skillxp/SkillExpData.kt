@@ -4,6 +4,7 @@ import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
+// TODO: move somewhere else
 @GenerateCodec
 internal data class SkillExpData(
     val exp: MutableMap<HypixelSkillAPI.Skill, Float> = mutableMapOf(),
