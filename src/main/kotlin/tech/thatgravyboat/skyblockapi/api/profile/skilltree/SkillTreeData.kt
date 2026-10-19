@@ -6,8 +6,18 @@ import me.owdding.ktcodecs.OptionalInt
 public interface SkillTreeData<Perk : SkillTreePerk> {
     public var currentLoadoutName: String?
     public val loadouts: MutableList<SkillTreeLoadout<Perk>>
-    public var maxTokens: Int
     public var tier: Int
+    public var maxTokens: Int
+
+
+    //? if <= 26.3 {
+    @Deprecated("Shouldn't be accessing this", level = HIDDEN)
+    public var perks: MutableMap<String, Perk>
+
+    @Deprecated("Shouldn't be accessing this", level = HIDDEN)
+    public var tokens: Int
+    //?}
+
 }
 
 @GenerateCodec

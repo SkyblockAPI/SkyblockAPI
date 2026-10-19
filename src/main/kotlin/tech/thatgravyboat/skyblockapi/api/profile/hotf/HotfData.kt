@@ -1,3 +1,5 @@
+@file:Suppress("SuspiciousGetterForMutableObject")
+
 package tech.thatgravyboat.skyblockapi.api.profile.hotf
 
 import me.owdding.ktcodecs.Compact
@@ -14,9 +16,35 @@ public data class HotfData(
     override var currentLoadoutName: String? = null,
     @Compact
     override val loadouts: MutableList<SkillTreeLoadout<HotfPerk>> = mutableListOf(),
-    override var maxTokens: Int = 1,
     override var tier: Int = 0,
+    override var maxTokens: Int = 1,
 ) : SkillTreeData<HotfPerk> {
+
+    //? if <= 26.3 {
+    @Deprecated("Shouldn't be accessing this", level = HIDDEN)
+    public constructor(perks: MutableMap<String, HotfPerk>, tokens: Int = 0, tier: Int = 0) : this()
+
+    @JvmName("component1")
+    @Deprecated("Shouldn't be accessing this", level = HIDDEN)
+    public fun oldComponent1(): Map<String, HotfPerk> = emptyMap()
+    @JvmName("component2")
+    @Deprecated("Shouldn't be accessing this", level = HIDDEN)
+    public fun oldComponent2(): Int = 0
+
+    @Deprecated("Shouldn't be accessing this", level = HIDDEN)
+    public fun copy(perks: MutableMap<String, HotfPerk>, tokens: Int = 0, tier: Int = 0): HotfData = copy()
+
+    @Deprecated("Shouldn't be accessing this", level = HIDDEN)
+    override var perks: MutableMap<String, HotfPerk>
+        get() = mutableMapOf()
+        set(_) {}
+
+    @Deprecated("Shouldn't be accessing this", level = HIDDEN)
+    override var tokens: Int
+        get() = 0
+        set(_) {}
+    //?}
+
     internal companion object {
         val CODEC = SkyblockAPICodecs.getCodec<HotfData>()
     }
