@@ -39,7 +39,7 @@ internal class DebugScreenImpl<T>(
     private var scroll = 0
     private var query = ""
     private var queryTime = 0L
-    private val allMessages = messages.asReversed()
+    private val allMessages = messages
     private var filteredMessages = allMessages
         get() {
             if (query.isEmpty()) return allMessages
@@ -47,7 +47,7 @@ internal class DebugScreenImpl<T>(
                 queryTime = 0L
                 field = allMessages.parallelStream()
                     .filter { this.asSearch.invoke(it.second).contains(query, true) }
-                    .sorted { a, b -> b.first.compareTo(a.first) }
+                    .sorted { a, b -> a.first.compareTo(b.first) }
                     .toList()
             }
             return field
@@ -56,12 +56,12 @@ internal class DebugScreenImpl<T>(
     override fun init() {
         super.init()
 
-        scroll = 0
+        val visibleEntries = (this.height - 20) / 10
+        scroll = maxOf(0, filteredMessages.size - visibleEntries)
 
         val searchBar = addRenderableWidget(EditBox(McFont.self, 100, 16, CommonText.EMPTY))
         searchBar.setHint(Text.of("Search..."))
         searchBar.setResponder { query ->
-            this.scroll = 0
             this.query = query
             this.queryTime = System.currentTimeMillis()
         }
@@ -74,7 +74,7 @@ internal class DebugScreenImpl<T>(
     }
 
 
-     override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.extractTransparentBackground(graphics)
     }
 
@@ -84,7 +84,10 @@ internal class DebugScreenImpl<T>(
         val status = Text.join(this.title, ": ${messages.size}")
         graphics.drawString(status, (this.width - McFont.width(status)) / 2, 5)
 
-        val maxEntriesForScreen = (this.height / 10) + 10
+        val visibleEntries = (this.height - 20) / 10
+        scroll = scroll.coerceIn(0, maxOf(0, messages.size - visibleEntries))
+
+        val maxEntriesForScreen = visibleEntries + 10
 
         for (index in scroll until min(scroll + maxEntriesForScreen, messages.size)) {
             val (timestamp, message) = messages[index]
@@ -96,7 +99,7 @@ internal class DebugScreenImpl<T>(
                 graphics.showTooltip(this.tooltip.invoke(message))
             }
             val instant = LocalDateTime.ofInstant(timestamp.toJavaInstant(), ZoneId.systemDefault())
-            val timeComponent = Text.of("[${timeFormatter.format(instant)}]: ") { this.color = TextColor.GRAY }
+            val timeComponent = Text.of("[${timeFormatter.format(instant)}]: ", TextColor.GRAY)
             val timeWidth = McFont.width(timeComponent)
             val messageComponent = McFont.self.substrByWidth(this.display.invoke(message), this.width - timeWidth)
 
@@ -119,7 +122,8 @@ internal class DebugScreenImpl<T>(
 
     override fun mouseScrolled(mouseX: Double, mouseY: Double, deltaX: Double, deltaY: Double): Boolean {
         if (mouseY > 20) {
-            scroll = (scroll - deltaY.toInt()).coerceIn(0, maxOf(0, filteredMessages.size - 1))
+            val visibleEntries = (this.height - 20) / 10
+            scroll = (scroll - deltaY.toInt()).coerceIn(0, maxOf(0, filteredMessages.size - visibleEntries))
             return true
         }
         return false
