@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
-import com.mojang.authlib.minecraft.SessionService
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
@@ -58,7 +57,7 @@ public object McClient {
     public val version: String = SharedConstants.getCurrentVersion().name()
 
     //~ if >= 26.3 'MinecraftSessionService' -> 'SessionService'
-    public val sessionService: SessionService
+    public val sessionService: com.mojang.authlib.minecraft.SessionService
         get() = self.services().sessionService()
 
     public val self: Minecraft get() = Minecraft.getInstance()
