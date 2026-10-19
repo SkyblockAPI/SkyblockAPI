@@ -7,6 +7,9 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.extentions.toScreamingSnakeCase
 
+//? < 26.4
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+
 @ConsistentCopyVisibility
 public data class MayorCandidate internal constructor(
     val id: String,
