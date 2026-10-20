@@ -18,6 +18,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommand
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.DebugEntry
+import tech.thatgravyboat.skyblockapi.utils.DebugMultiSelect
 import tech.thatgravyboat.skyblockapi.utils.DebugSelect
 import tech.thatgravyboat.skyblockapi.utils.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.DevUtils
@@ -37,6 +38,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
     private fun debugEntryByPath(path: List<String>): DebugEntry? {
         return debugEntries.find { it.location.split() == path }
     }
+
     private fun Identifier.split(): List<String> = buildList {
         add(namespace)
         addAll(path.split('/', '.', '-'))
@@ -55,43 +57,72 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
         // so, if the path exactly matches the one of a debug select, that means that its currently selected, and so
         // we show its states
         if (column == selectedPath.size) {
-            val selectedEntry = debugEntryByPath(selectedPath)
-            if (selectedEntry is DebugSelect<*>) {
-                val supportsChangingDefault = selectedEntry.canSetDefault()
-                return buildList {
-                    fun addValue(name: String?) {
-                        val canBeConfigDefault = supportsChangingDefault && (name != selectedEntry.getDefaultStateName())
-                        val isConfigDefault = selectedEntry.getDefault() == name
+            when (val selectedEntry = debugEntryByPath(selectedPath)) {
+                is DebugSelect<*> -> {
+                    val supportsChangingDefault = selectedEntry.canSetDefault()
+                    return buildList {
+                        fun addValue(name: String?) {
+                            val canBeConfigDefault = supportsChangingDefault && (name != selectedEntry.getDefaultStateName())
+                            val isConfigDefault = selectedEntry.getDefault() == name
 
-                        val isSelected = selectedEntry.stateName() == name
-                        fun component(enabled: Int, default: Int) = Text.of {
-                            if (isSelected) {
-                                append("[x]", enabled)
-                            } else append("[_]")
-                            color = default
-                            append(" ")
-                            append(name ?: "<null>") {
-                                if (isSelected) underlined = true
-                            }
+                            val isSelected = selectedEntry.stateName() == name
+                            fun component(enabled: Int, default: Int) = Text.of {
+                                if (isSelected) {
+                                    append("[x]", enabled)
+                                } else append("[_]")
+                                color = default
+                                append(" ")
+                                append(name ?: "<null>") {
+                                    if (isSelected) underlined = true
+                                }
 
-                            if (canBeConfigDefault && isConfigDefault) {
-                                appendDefaultSelected("as selected")
+                                if (canBeConfigDefault && isConfigDefault) {
+                                    appendDefaultSelected("as selected")
+                                }
                             }
+                            entry(
+                                message = component(TextColor.DARK_GREEN, TextColor.GRAY),
+                                hovered = component(TextColor.GREEN, TextColor.WHITE),
+                                leftClick = { selectedEntry.setByName(name) },
+                                rightClick = if (!supportsChangingDefault) null else Runnable {
+                                    if (isConfigDefault) selectedEntry.setDefault(selectedEntry.getDefaultStateName())
+                                    else selectedEntry.setDefault(name)
+                                },
+                            ).let(::add)
                         }
-                        entry(
-                            message = component(TextColor.DARK_GREEN, TextColor.GRAY),
-                            hovered = component(TextColor.GREEN, TextColor.WHITE),
-                            leftClick = { selectedEntry.setByName(name) },
-                            rightClick = if (!supportsChangingDefault) null else Runnable {
-                                if (isConfigDefault) selectedEntry.setDefault(selectedEntry.getDefaultStateName())
-                                else selectedEntry.setDefault(name)
-                            },
-                        ).let(::add)
+
+                        val defaultState = selectedEntry.getDefaultStateName()
+                        addValue(defaultState)
+                        selectedEntry.states().sorted().filterNot { it == defaultState }.forEach(::addValue)
                     }
-                    val defaultState = selectedEntry.getDefaultStateName()
-                    addValue(defaultState)
-                    selectedEntry.states().sorted().filterNot { it == defaultState }.forEach(::addValue)
                 }
+
+                is DebugMultiSelect<*> -> {
+                    return buildList {
+                        fun addValue(name: String) {
+                            val isSelected = selectedEntry.isSelectedByName(name)
+                            fun component(enabled: Int, default: Int) = Text.of {
+                                if (isSelected) {
+                                    append("[x]", enabled)
+                                } else append("[_]")
+                                color = default
+                                append(" ")
+                                append(name) {
+                                    if (isSelected) underlined = true
+                                }
+                            }
+                            entry(
+                                message = component(TextColor.DARK_GREEN, TextColor.GRAY),
+                                hovered = component(TextColor.GREEN, TextColor.WHITE),
+                                leftClick = { selectedEntry.toggleByName(name) },
+                                rightClick = null,
+                            ).let(::add)
+                        }
+                        selectedEntry.states().sorted().forEach(::addValue)
+                    }
+                }
+
+                else -> {}
             }
         }
 
@@ -120,6 +151,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                 when (entry) {
                     null -> 0
                     is DebugSelect<*> -> 1
+                    is DebugMultiSelect<*> -> 1
                     is DebugToggle -> 2
                 }
             }.map { (path, entry) ->
@@ -149,6 +181,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             rightClick = if (!supportsChangingDefault) null else Runnable { entry.toggleDefault() },
                         )
                     }
+
                     is DebugSelect<*> -> {
                         val supportsChangingConfig = entry.canSetDefault()
                         val hasSetConfig = supportsChangingConfig && entry.hasDefault()
@@ -186,8 +219,60 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             },
                         )
                     }
+
+                    is DebugMultiSelect<*> -> {
+                        val supportsChangingConfig = entry.canSetDefault()
+                        val hasSetConfig = supportsChangingConfig && entry.hasDefault()
+                        val isSetDefaultState = entry.isDefaultState()
+
+                        fun component(enabled: Int, default: Int, selected: Int) = Text.of {
+                            this.color = if (isSetDefaultState) default else enabled
+                            if (!isSelected) {
+                                append("[☰] $name")
+                            } else {
+                                append("[", selected)
+                                append("☰")
+                                append("]", selected)
+                                append(" ")
+                                append(name) {
+                                    underlined = true
+                                }
+                            }
+
+                            if (entry.hasDescription()) {
+                                hover = Text.of(entry.description, TextColor.YELLOW)
+                            }
+
+                            if (hasSetConfig) {
+                                val isCurrentSaved = entry.getDefault() == entry.serialized()
+                                if (isCurrentSaved) {
+                                    appendDefaultSelected("to custom")
+                                } else {
+                                    append(" ")
+                                    append("[P*]") {
+                                        color = TextColor.GOLD
+                                        hover = Text.of("Right click to update persistent state", TextColor.GOLD)
+                                    }
+                                }
+                            }
+                        }
+
+                        entry(
+                            message = component(TextColor.DARK_GREEN, TextColor.GRAY, TextColor.YELLOW),
+                            hovered = component(TextColor.GREEN, TextColor.WHITE, TextColor.ORANGE),
+                            leftClick = { selectedPath = if (!isSelected) path else path.dropLast(1) },
+                            rightClick = {
+                                if (hasSetConfig && entry.getDefault() == entry.serialized()) {
+                                    entry.setDefault(null)
+                                } else {
+                                    entry.setDefault(entry.serialized())
+                                }
+                            },
+                        )
+                    }
+
                     else -> {
-                        fun component(selected : Int, default: Int, selectedNamespace: Int, defaultNamespace: Int) = Text.of(name) {
+                        fun component(selected: Int, default: Int, selectedNamespace: Int, defaultNamespace: Int) = Text.of(name) {
                             if (isSelected) {
                                 color = if (isNamespace) selectedNamespace else selected
                                 underlined = true
