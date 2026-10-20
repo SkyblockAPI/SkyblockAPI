@@ -22,6 +22,7 @@ import tech.thatgravyboat.skyblockapi.utils.DebugMultiSelect
 import tech.thatgravyboat.skyblockapi.utils.DebugSelect
 import tech.thatgravyboat.skyblockapi.utils.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.DevUtils
+import tech.thatgravyboat.skyblockapi.utils.extentions.removeAll
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
@@ -306,13 +307,21 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
         return selectedPath.take(path.size) == path
     }
 
+    // scrollables of the current screen, to be used for restoring the scroll amount when refreshing
+    private val scrollables = mutableMapOf<List<String>, ScrollableLayout>()
+
     override fun init() {
         super.init()
         val horizontalLayout = LinearLayout.horizontal().spacing(5)
         val maxHeight = height - PADDING * 2
 
+        // scroll amounts of the previous screen
+        val scrollAmounts = scrollables.mapValues { (_, scrollable) -> scrollable.container.scrollAmount() }
+        scrollables.clear()
+
         // 10 just in case a mod creates an insanely long debug entry
         for (column in 0..10) {
+            val currentPath = selectedPath.take(column)
             val widgets = getSelected(column)
             if (widgets.isEmpty()) break
 
@@ -320,11 +329,20 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
             widgets.forEach(currentLayout::addChild)
             currentLayout.arrangeElements()
 
-            horizontalLayout.addChild(ScrollableLayout(minecraft, currentLayout, maxHeight))
+            val scrollable = ScrollableLayout(minecraft, currentLayout, maxHeight)
+            scrollables[currentPath] = scrollable
+
+            horizontalLayout.addChild(scrollable)
         }
         horizontalLayout.arrangeElements()
 
         horizontalLayout.setPosition(PADDING, PADDING)
+
+        // update the scroll amount where applicable
+        scrollables.forEach { (key, scrollable) ->
+            scrollAmounts[key]?.let(scrollable.container::setScrollAmount)
+        }
+
         horizontalLayout.visitWidgets(this::addRenderableWidget)
     }
 

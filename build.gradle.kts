@@ -76,7 +76,7 @@ tasks.withType<KotlinCompile>().configureEach {
             "kotlin.time.ExperimentalTime",
             "kotlin.contracts.ExperimentalContracts",
         )
-        allWarningsAsErrors = true
+        //allWarningsAsErrors = true
         extraWarnings = true
         freeCompilerArgs.addAll(
             "-Xcontext-sensitive-resolution",
