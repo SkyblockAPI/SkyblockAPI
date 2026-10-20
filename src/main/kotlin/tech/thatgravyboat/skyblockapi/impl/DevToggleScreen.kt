@@ -148,12 +148,12 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
             .map { path ->
                 path to debugEntryByPath(path)
             }.sortedBy { (_, entry) ->
-                // debug selects should go first, then toggles, then other branches
+                // debug selects should go first, then multi selects, then toggles, then other branches
                 when (entry) {
                     null -> 0
                     is DebugSelect<*> -> 1
-                    is DebugMultiSelect<*> -> 1
-                    is DebugToggle -> 2
+                    is DebugMultiSelect<*> -> 2
+                    is DebugToggle -> 3
                 }
             }.map { (path, entry) ->
                 val name = path.last()
@@ -229,10 +229,10 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                         fun component(enabled: Int, default: Int, selected: Int) = Text.of {
                             this.color = if (isSetDefaultState) default else enabled
                             if (!isSelected) {
-                                append("[☰] $name")
+                                append("[+] $name")
                             } else {
                                 append("[", selected)
-                                append("☰")
+                                append("+")
                                 append("]", selected)
                                 append(" ")
                                 append(name) {

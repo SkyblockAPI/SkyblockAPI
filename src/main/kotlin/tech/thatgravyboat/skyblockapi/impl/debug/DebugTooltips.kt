@@ -54,7 +54,7 @@ public object DebugTooltips {
         lastDataType = keys[index]
     }
 
-    @Subscription
+    @Subscription(priority = Subscription.LOWEST)
     internal fun onGetItemTooltip(event: ItemTooltipEvent) {
         if (alwaysShow.isEmpty()) return
         val types = event.item.getDataTypes()
@@ -98,11 +98,7 @@ public object DebugTooltips {
         event.add(CommonText.EMPTY)
 
         if (!McScreen.isAltDown) {
-            event.add(
-                Text.of("${keys.size} Data Type(s) [Alt]") {
-                    this.color = TextColor.DARK_GRAY
-                },
-            )
+            event.add(Text.of("${keys.size} Data Type(s) [Alt]", TextColor.DARK_GRAY))
             lastDataType = null
             index = 0
         } else {
@@ -125,11 +121,7 @@ public object DebugTooltips {
             event.add(CommonText.EMPTY)
 
             val itemValue = event.item.getItemValue()
-            event.add(
-                Text.of("Value: ${itemValue.rawPrice.toFormattedString()}-${itemValue.price.toFormattedString()}") {
-                    this.color = TextColor.DARK_GRAY
-                },
-            )
+            event.add(Text.of("Value: ${itemValue.rawPrice.toFormattedString()}-${itemValue.price.toFormattedString()}", TextColor.DARK_GRAY))
             event.add(Text.of("Sources: ([Shift] for all)", TextColor.DARK_GRAY))
 
             val sources = itemValue.entryTree.sortedByDescending { it.price }
@@ -154,7 +146,7 @@ public object DebugTooltips {
                 ),
             )
             for (any in value) {
-                tooltip.add(Text.join(Text.of("   $any,", TextColor.GRAY)))
+                tooltip.add(Text.of("   $any,", TextColor.GRAY))
             }
             tooltip.add(Text.of("]", TextColor.GRAY))
         } else {
