@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.impl
 
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
-import net.fabricmc.fabric.impl.client.registry.sync.validate.OptimizedScrollableLayout
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ScrollableLayout
 import net.minecraft.client.gui.components.StringWidget
