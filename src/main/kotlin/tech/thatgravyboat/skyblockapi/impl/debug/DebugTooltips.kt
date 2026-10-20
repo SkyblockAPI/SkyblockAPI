@@ -104,7 +104,7 @@ public object DebugTooltips {
         } else {
             event.add(
                 Text.join(
-                    Text.of("${index + 1}/${types.size} Data Type(s) [", TextColor.DARK_GRAY),
+                    Text.of("${index + 1}/${keys.size} Data Type(s) [", TextColor.DARK_GRAY),
                     Text.of("ALT") {
                         this.bold = true
                         this.color = TextColor.GRAY
