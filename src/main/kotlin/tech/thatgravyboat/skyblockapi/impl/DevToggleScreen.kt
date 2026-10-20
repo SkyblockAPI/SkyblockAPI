@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.impl
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.components.ScrollableLayout
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.LinearLayout
 import net.minecraft.client.gui.screens.Screen
@@ -98,17 +99,24 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
 
         return debugEntries.asSequence()
             .map { entry ->
+                // splits the entry location into different strings separated by `/.-`, where the index
+                // indicates which part should be displayed in each column
                 entry.location.split()
             }.filter { split ->
+                // only shows the paths that actually match the selected path up until the current column
                 split.take(column) == selectedPath.take(column)
             }.mapNotNull { split ->
+                // if the current path is smaller than the column path, we ignore it, since that means that
+                // it was already displayed in a previous column (I think)
                 if (split.size <= column) return@mapNotNull null
+                // we take 1 extra element from column, as column starts at index 0
                 split.take(column + 1)
-            }.distinct()
-            .sortedBy { it.last() }
+            }.distinct() // we remove duplicate paths
+            .sortedBy { it.last() } // we sort by the name, which is the last split
             .map { path ->
                 path to debugEntryByPath(path)
             }.sortedBy { (_, entry) ->
+                // debug selects should go first, then toggles, then other branches
                 when (entry) {
                     null -> 0
                     is DebugSelect<*> -> 1
@@ -188,6 +196,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             }
                         }
                         entry(
+                            // slightly darker aqua
                             component(0x007788, TextColor.GRAY, TextColor.DARK_GREEN, TextColor.YELLOW),
                             component(TextColor.AQUA, TextColor.WHITE, TextColor.GREEN, TextColor.GOLD),
                             leftClick = { selectedPath = if (!isSelected) path else path.dropLast(1) },
@@ -215,6 +224,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
     override fun init() {
         super.init()
         val horizontalLayout = LinearLayout.horizontal().spacing(5)
+        val maxHeight = height - PADDING * 2
 
         // 10 just in case a mod creates an insanely long debug entry
         for (column in 0..10) {
@@ -225,11 +235,11 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
             widgets.forEach(currentLayout::addChild)
             currentLayout.arrangeElements()
 
-            horizontalLayout.addChild(currentLayout)
+            horizontalLayout.addChild(ScrollableLayout(minecraft, currentLayout, maxHeight))
         }
         horizontalLayout.arrangeElements()
 
-        horizontalLayout.setPosition(10, 10)
+        horizontalLayout.setPosition(PADDING, PADDING)
         horizontalLayout.visitWidgets(this::addRenderableWidget)
     }
 
@@ -281,6 +291,8 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
 
     @Module
     companion object {
+        private const val PADDING = 10
+
         @Subscription
         context(event: RegisterSkyblockApiCommandsEvent)
         private fun registerCommands() {
