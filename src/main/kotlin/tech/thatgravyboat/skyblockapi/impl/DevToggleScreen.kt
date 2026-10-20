@@ -264,6 +264,11 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
             this.handleCursor(graphics) // we call this so the cursor actually changes when hovering
         }
 
+        override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor) {
+            super.extractWidgetRenderState(graphics)
+            this.handleCursor(graphics) // we call this so the cursor actually changes when hovering
+        }
+
         override fun getMessage(): Component {
             return if (isHovered) hovered
             else super.getMessage()

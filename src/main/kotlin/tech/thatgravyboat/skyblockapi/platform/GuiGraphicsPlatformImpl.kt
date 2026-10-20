@@ -3,10 +3,11 @@ package tech.thatgravyboat.skyblockapi.platform
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState
 import org.joml.Matrix3x2f
 
+//~ if >= 26.4 'RenderPipelines' -> 'pipeline.RenderPipelines'
+import net.minecraft.client.renderer.pipeline.RenderPipelines
 //~ if = 26.3 'blaze3d' -> 'renderpearl.api'
 import com.mojang.blaze3d.pipeline.RenderPipeline
 

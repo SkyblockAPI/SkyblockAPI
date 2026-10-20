@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.input.KeyEvent
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
@@ -28,6 +27,9 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 import tech.thatgravyboat.skyblockapi.utils.text.asComponent
+
+//~ if >= 26.4 'RenderPipelines' -> 'pipeline.RenderPipelines'
+import net.minecraft.client.renderer.pipeline.RenderPipelines
 
 public val BACKGROUND: Identifier? = Identifier.withDefaultNamespace("popup/background")
 
