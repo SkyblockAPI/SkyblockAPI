@@ -12,7 +12,6 @@ import net.minecraft.client.input.MouseButtonInfo
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -22,7 +21,6 @@ import tech.thatgravyboat.skyblockapi.utils.DebugMultiSelect
 import tech.thatgravyboat.skyblockapi.utils.DebugSelect
 import tech.thatgravyboat.skyblockapi.utils.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.DevUtils
-import tech.thatgravyboat.skyblockapi.utils.extentions.removeAll
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
@@ -34,15 +32,10 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
 // im sorry to whoever has to read this and understand this
 internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
 
-    val debugEntries: List<DebugEntry> = DevUtils.allDevUtils.flatMap { it.allDebugEntries }
+    val debugEntries: List<DebugEntry> = DevUtils.allDevUtils.flatMap { it.debugEntries.values }
 
     private fun debugEntryByPath(path: List<String>): DebugEntry? {
-        return debugEntries.find { it.location.split() == path }
-    }
-
-    private fun Identifier.split(): List<String> = buildList {
-        add(namespace)
-        addAll(path.split('/', '.', '-'))
+        return debugEntries.find { it.splitLocation() == path }
     }
 
     private fun MutableComponent.appendDefaultSelected(text: String) {
@@ -58,9 +51,10 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
         // so, if the path exactly matches the one of a debug select, that means that its currently selected, and so
         // we show its states
         if (column == selectedPath.size) {
-            when (val selectedEntry = debugEntryByPath(selectedPath)) {
+            val selectedEntry = debugEntryByPath(selectedPath)
+            val supportsChangingDefault = selectedEntry?.canSetDefault() ?: false
+            when (selectedEntry) {
                 is DebugSelect<*> -> {
-                    val supportsChangingDefault = selectedEntry.canSetDefault()
                     return buildList {
                         fun addValue(name: String?) {
                             val canBeConfigDefault = supportsChangingDefault && (name != selectedEntry.getDefaultStateName())
@@ -102,6 +96,8 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                     return buildList {
                         fun addValue(name: String) {
                             val isSelected = selectedEntry.isSelectedByName(name)
+                            val isConfigDefault = selectedEntry.getIsDefaultSelectedByName(name)
+
                             fun component(enabled: Int, default: Int) = Text.of {
                                 if (isSelected) {
                                     append("[x]", enabled)
@@ -111,12 +107,18 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                                 append(name) {
                                     if (isSelected) underlined = true
                                 }
+
+                                if (supportsChangingDefault && isConfigDefault) {
+                                    appendDefaultSelected("as selected")
+                                }
                             }
                             entry(
                                 message = component(TextColor.DARK_GREEN, TextColor.GRAY),
                                 hovered = component(TextColor.GREEN, TextColor.WHITE),
                                 leftClick = { selectedEntry.toggleByName(name) },
-                                rightClick = null,
+                                rightClick = if (!supportsChangingDefault) null else Runnable {
+                                    selectedEntry.setDefaultSelectedByName(name, !isConfigDefault)
+                                },
                             ).let(::add)
                         }
                         selectedEntry.states().sorted().forEach(::addValue)
@@ -133,7 +135,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
             .map { entry ->
                 // splits the entry location into different strings separated by `/.-`, where the index
                 // indicates which part should be displayed in each column
-                entry.location.split()
+                entry.splitLocation()
             }.filter { split ->
                 // only shows the paths that actually match the selected path up until the current column
                 split.take(column) == selectedPath.take(column)
@@ -245,16 +247,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             }
 
                             if (hasSetConfig) {
-                                val isCurrentSaved = entry.getDefault() == entry.serialized()
-                                if (isCurrentSaved) {
-                                    appendDefaultSelected("to custom")
-                                } else {
-                                    append(" ")
-                                    append("[P*]") {
-                                        color = TextColor.GOLD
-                                        hover = Text.of("Right click to update persistent state", TextColor.GOLD)
-                                    }
-                                }
+                                appendDefaultSelected("to custom")
                             }
                         }
 
@@ -263,11 +256,8 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             hovered = component(TextColor.GREEN, TextColor.WHITE, TextColor.ORANGE),
                             leftClick = { selectedPath = if (!isSelected) path else path.dropLast(1) },
                             rightClick = {
-                                if (hasSetConfig && entry.getDefault() == entry.serialized()) {
-                                    entry.setDefault(null)
-                                } else {
-                                    entry.setDefault(entry.serialized())
-                                }
+                                if (hasSetConfig) entry.setDefault(entry.getDefaultStateSerialized())
+                                else entry.setBySerialized(entry.getDefaultStateSerialized())
                             },
                         )
                     }

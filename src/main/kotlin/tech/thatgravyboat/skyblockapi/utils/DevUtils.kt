@@ -18,7 +18,9 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Comp
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.utils.command.VirtualResourceArgument
+import tech.thatgravyboat.skyblockapi.utils.extentions.mapValuesNotNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.replaceWith
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
@@ -26,6 +28,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import java.nio.file.Path
 import java.util.Properties
 import java.util.concurrent.CompletableFuture
+import kotlin.collections.map
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -46,6 +49,11 @@ public sealed interface DebugEntry {
     public fun hasDescription(): Boolean {
         return description.isNotBlank() && description != location.toString() && description != location.path
     }
+
+    public fun splitLocation(): List<String> = buildList {
+        add(location.namespace)
+        addAll(location.path.split('/', '.', '-'))
+    }
 }
 
 internal fun debugToggle(path: String, description: String = path, prefix: String = path): DebugToggle {
@@ -59,18 +67,34 @@ public open class DebugToggle @JvmOverloads constructor(
     prefix: String = location.toString(),
 ) : DebugEntry {
     public open val prefix: MutableComponent = Text.of(prefix, TextColor.DARK_PURPLE)
-    public var state: Boolean = true
+
+    @Deprecated("Don't access state directly, use get() and set(value) instead")
+    //~ if >= 26.4 'public' -> 'private'
+    public var state: Boolean = false
 
     init {
         devUtils.register(this)
     }
 
+    @Suppress("DEPRECATION")
     public fun get(): Boolean = state
-    public fun set(value: Boolean): Unit = devUtils.setToggle(location, value)
 
-    public fun toggle(): Unit = devUtils.toggle(location)
-    public fun update() {
-        state = devUtils.isOn(location)
+    @Suppress("DEPRECATION")
+    public fun set(value: Boolean) {
+        state = value
+    }
+
+    public fun toggle() {
+        set(!get())
+    }
+
+    //? if < 26.4 {
+    @Deprecated("Not used anymore")
+    public fun update() {}
+    //?}
+
+    public fun reset() {
+        set(false)
     }
 
     public fun getDefault(): Boolean = devUtils.getDefaultToggle(location)
@@ -116,7 +140,6 @@ public open class DebugSelect<T : Any>(
     public fun get(): T? = state
     public fun set(value: T?) {
         this.state = fixValue(value)
-        update()
     }
 
     //? if < 26.4 {
@@ -129,10 +152,12 @@ public open class DebugSelect<T : Any>(
 
     public fun states(): List<String> = states.map(toString)
 
-    public fun stateName(): String? = this.state?.let(toString)
-    public fun update() {
-        devUtils.selectStates[location] = stateName()
-    }
+    public fun stateName(): String? = get()?.let(toString)
+
+    //? if < 26.4 {
+    @Deprecated("Not used anymore")
+    public fun update() {}
+    //?}
 
     public fun reset() {
         set(defaultState)
@@ -200,15 +225,12 @@ public open class DebugMultiSelect<T : Any>(
         isInitialized = true
         state.addAll(initialState)
 
-        val loadedState = devUtils.multiSelectStates[location]
-        if (loadedState != null && canSetDefault()) {
-            val items = loadedState.split(",")
-                .map { it.trim() }
-                .filter { it.isNotEmpty() }
-                .mapNotNull { getByName(it) }
-            state.clear()
-            state.addAll(items)
-        }
+        if (!canSetDefault()) return
+        val stored = devUtils.values[location] ?: return
+        val items = deserialize(stored)
+
+        state.clear()
+        state.addAll(items)
     }
 
     init {
@@ -217,14 +239,12 @@ public open class DebugMultiSelect<T : Any>(
 
     public fun get(): Set<T> {
         ensureInitialized()
-        return state.toSet()
+        return state
     }
 
     public fun set(values: Collection<T>) {
         ensureInitialized()
-        state.clear()
-        state.addAll(values.intersect(statesProvider().toSet()))
-        update()
+        state.replaceWith(values.intersect(statesProvider().toSet()))
     }
 
     public fun isSelected(value: T): Boolean {
@@ -232,13 +252,13 @@ public open class DebugMultiSelect<T : Any>(
         return value in state
     }
 
-    public fun isSelectedByName(name: String): Boolean = getByName(name)?.let { isSelected(it) } == true
+    public fun isSelectedByName(name: String): Boolean = getByName(name)?.let(::isSelected) == true
 
     public fun toggle(value: T) {
         ensureInitialized()
+        if (state.add(value))
         if (value in state) state.remove(value)
         else state.add(value)
-        update()
     }
 
     public fun toggleByName(name: String) {
@@ -264,11 +284,7 @@ public open class DebugMultiSelect<T : Any>(
 
     public fun serialized(): String {
         ensureInitialized()
-        return state.map(toString).sorted().joinToString(",")
-    }
-
-    public fun update() {
-        devUtils.multiSelectStates[location] = serialized()
+        return serialize(state)
     }
 
     public fun reset() {
@@ -277,19 +293,50 @@ public open class DebugMultiSelect<T : Any>(
 
     public fun getDefaultState(): Set<T> = defaultState
     public fun isDefaultState(): Boolean = get() == defaultState
-    public fun getDefaultSerialized(): String = defaultState.map(toString).sorted().joinToString(",")
+
+    public fun getDefaultStateSerialized(): String = defaultState.map(toString).sorted().joinToString(",")
+
+    public fun getIsDefaultSelectedByName(name: String): Boolean {
+        if (!canSetDefault()) return false
+        return deserialize(getDefault()).any { toString(it) == name }
+    }
+
+    public fun setDefaultSelectedByName(name: String, selected: Boolean) {
+        if (!canSetDefault()) return
+        val default = deserialize(getDefault())
+        val value = getByName(name) ?: return
+
+        if (selected) {
+            if (!default.add(value)) return
+        } else {
+            if (!default.remove(value)) return
+        }
+
+        setDefault(serialize(default))
+    }
 
     public fun getDefault(): String {
-        if (!canSetDefault()) return getDefaultSerialized()
-        return devUtils.getDefaultMultiSelect(location) ?: getDefaultSerialized()
+        if (!canSetDefault()) return getDefaultStateSerialized()
+        return devUtils.getDefaultMultiSelect(location) ?: getDefaultStateSerialized()
     }
 
     public fun setDefault(serialized: String?) {
         if (!canSetDefault()) return
-        devUtils.setMultiSelectDefault(location, serialized ?: getDefaultSerialized())
+        devUtils.setMultiSelectDefault(location, serialized ?: getDefaultStateSerialized())
     }
 
-    public fun hasDefault(): Boolean = getDefault() != getDefaultSerialized()
+    public fun hasDefault(): Boolean = getDefault() != getDefaultStateSerialized()
+
+    private fun deserialize(string: String): MutableSet<T> {
+        return string.split(',')
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .mapNotNullTo(mutableSetOf(), ::getByName)
+    }
+
+    private fun serialize(set: Set<T>): String {
+        return set.map(toString).sorted().joinToString(",")
+    }
 
     public operator fun getValue(any: Nothing?, property: KProperty<*>): Set<T> = get()
     public operator fun getValue(any: Any?, property: KProperty<*>): Set<T> = get()
@@ -306,16 +353,6 @@ internal object SkyBlockApiDevUtils : DevUtils() {
 
     override val namespace: String = SkyBlockAPI.NAMESPACE
 
-    fun init() {
-        toggles.forEach {
-            val properties = System.getProperties()
-            if (properties.containsKey(it.location.namespace + "_" + it.location.path)) {
-                states[it.location] = true
-                it.update()
-            }
-        }
-    }
-
     // TODO: add debug int thing maybe?
     fun getInt(key: String, default: Int = 0): Int {
         return properties[key].parseFormattedInt(default)
@@ -331,25 +368,34 @@ internal object SkyBlockApiDevUtils : DevUtils() {
     private fun commandRegister(event: RegisterCommandsEvent) = super.onCommandRegister(event)
 }
 
-@Suppress("UNCHECKED_CAST")
-private fun <V> Any.unsafe(): V = this as V
-
 public abstract class DevUtils {
-    protected val name: String = this::class.simpleName ?: "Unknown"
+    protected val name: String = this::class.simpleName ?: this.toString()
+
+    /** This only has the values set by default on launch */
+    public val values: MutableMap<Identifier, String> = mutableMapOf()
+    public val debugEntries: MutableMap<Identifier, DebugEntry> = mutableMapOf()
+
+    private inline fun <reified Entry : DebugEntry> getEntriesOf(): Map<Identifier, Entry> = debugEntries.mapValuesNotNull { it.value as? Entry }
+
+    public val debugToggles: Map<Identifier, DebugToggle> get() = getEntriesOf()
+    public val debugSelects: Map<Identifier, DebugSelect<*>> get() = getEntriesOf()
+    public val debugMultiSelects: Map<Identifier, DebugMultiSelect<*>> get() = getEntriesOf()
+
+    //region Deprecated
+    //? if < 26.4 {
+    @Deprecated("Get from values instead")
     public val states: MutableMap<Identifier, Boolean> = mutableMapOf()
+    @Deprecated("Get from values instead")
     public val selectStates: MutableMap<Identifier, String?> = mutableMapOf()
-    public val multiSelectStates: MutableMap<Identifier, String?> = mutableMapOf()
 
+    @Deprecated("Get from debugEntries instead")
     public val toggles: MutableList<DebugToggle> = mutableListOf()
+    @Deprecated("Get from debugEntries instead")
     public val select: MutableMap<Identifier, DebugSelect<Any>> = mutableMapOf()
-    public val multiSelect: MutableMap<Identifier, DebugMultiSelect<Any>> = mutableMapOf()
-
-    public val allDebugEntries: List<DebugEntry>
-        get() = buildList {
-            addAll(toggles)
-            addAll(select.values)
-            addAll(multiSelect.values)
-        }
+    @Deprecated("Get from debugEntries instead")
+    public val allDebugEntries: List<DebugEntry> = emptyList()
+    //?}
+    //endregion
 
     /** whether this dev utils supports changing debug entries' default states when launching */
     public open val supportsChangingDefault: Boolean = false
@@ -361,43 +407,75 @@ public abstract class DevUtils {
 
     public open val namespace: String = SkyBlockAPI.NAMESPACE
 
-    public fun <T : Any> register(debugSelect: DebugSelect<T>) {
-        select[debugSelect.location] = debugSelect.unsafe()
-        val loadedState = selectStates[debugSelect.location] ?: return
-        if (supportsChangingDefault) debugSelect.setByName(loadedState)
-    }
+    private fun registerEntry(debugEntry: DebugEntry) {
+        val location = debugEntry.location
+        val split = debugEntry.splitLocation()
 
-    public fun <T : Any> register(debugMultiSelect: DebugMultiSelect<T>) {
-        multiSelect[debugMultiSelect.location] = debugMultiSelect.unsafe()
+        val anyOverlapping = debugEntries.values.find { other ->
+            val otherSplit = other.splitLocation()
+            val shared = minOf(split.size, otherSplit.size)
+            split.take(shared) == otherSplit.take(shared)
+        }
+        if (anyOverlapping != null) McClient.throwInDev("Found overlapping debug entries: '$location' and '$anyOverlapping'")
+
+        val previous = debugEntries.put(location, debugEntry)
+        if (previous != null) McClient.throwInDev("Found duplicate debug entry with identifier '$location'")
     }
 
     public fun register(debugToggle: DebugToggle) {
-        states.putIfAbsent(debugToggle.location, false)
-        toggles += debugToggle
-        debugToggle.state = states[debugToggle.location] == true
+        registerEntry(debugToggle)
+
+        if (!supportsChangingDefault) return
+        val storedValue = when(values[debugToggle.location]) {
+            "true" -> true
+            "false" -> false
+            else -> return
+        }
+        debugToggle.set(storedValue)
     }
 
+    public fun <T : Any> register(debugSelect: DebugSelect<T>) {
+        registerEntry(debugSelect)
+
+        if (!supportsChangingDefault) return
+        val stored = values[debugSelect.location] ?: return
+        val value = debugSelect.getByName(stored) ?: return
+        debugSelect.set(value)
+    }
+
+    public fun <T : Any> register(debugMultiSelect: DebugMultiSelect<T>) {
+        registerEntry(debugMultiSelect)
+        // we don't load the values here so they can be lazily initialized
+    }
+
+    public inline fun <reified Entry : DebugEntry> getDebugEntry(location: Identifier): Entry? {
+        return debugEntries[location] as? Entry
+    }
+
+    //? if < 26.4 {
+    @Deprecated("Use getDebugEntry instead")
     public fun toggle(location: Identifier) {
-        states[location] = states[location]?.not() == true
-        toggles.find { it.location == location }?.update()
+        getDebugEntry<DebugToggle>(location)?.toggle()
     }
 
-    public fun isOn(location: Identifier): Boolean = states.getOrDefault(location, false)
+    @Deprecated("Use getDebugEntry instead")
+    public fun isOn(location: Identifier): Boolean = getDebugEntry<DebugToggle>(location)?.get() ?: false
 
+    @Deprecated("Use getDebugEntry instead")
     public fun setToggle(location: Identifier, newValue: Boolean) {
-        states[location] = newValue
-        toggles.find { it.location == location }?.update()
+        getDebugEntry<DebugToggle>(location)?.set(newValue)
     }
 
+    @Deprecated("Use getDebugEntry instead")
     public fun setSelect(location: Identifier, newValue: String?) {
-        val select = select[location] ?: return
-        select.setByName(newValue)
+        getDebugEntry<DebugSelect<*>>(location)?.setByName(newValue)
     }
 
+    @Deprecated("Use getDebugEntry instead")
     public fun toggleMultiSelectItem(location: Identifier, item: String) {
-        val multi = multiSelect[location] ?: return
-        multi.toggleByName(item)
+        getDebugEntry<DebugMultiSelect<*>>(location)?.toggleByName(item)
     }
+    //?}
 
     //region Default Management Functions
     public open fun setToggleDefault(location: Identifier, newDefaultValue: Boolean) {
@@ -414,10 +492,10 @@ public abstract class DevUtils {
     }
 
     public open fun getDefaultSelect(location: Identifier): String? {
-        val debugSelect = select[location] ?: return null
+        val select = getDebugEntry<DebugSelect<*>>(location) ?: return null
         val key = propertyKey(location)
         val currentValue = this.propertiesInstance.getProperty(key) ?: return null
-        if (currentValue !in debugSelect.states()) return null
+        if (currentValue !in select.states()) return null
         return currentValue
     }
 
@@ -447,6 +525,7 @@ public abstract class DevUtils {
         SkyBlockAPI.info("Changed properties file $name to set '$location' as '$newDefault'")
     }
 
+    @Suppress("DEPRECATION")
     protected open fun loadFromProperties(path: Path): Map<String, String> {
         val properties = this.propertiesInstance
         if (path.notExists()) return emptyMap()
@@ -457,32 +536,33 @@ public abstract class DevUtils {
         properties.forEach { (key, value) ->
             val identifier = Identifiers.parseWithSeparator(key.toString(), '@') ?: return@forEach
             val string = value.toString()
-            when (string) {
-                "true" -> states[identifier] = true
-                "false" -> states[identifier] = false
-            }
-            selectStates[identifier] = string
-            multiSelectStates[identifier] = string
             map[key.toString()] = string
+            values[identifier] = string
         }
         return map
     }
     //endregion
 
+    protected inline fun <reified Entry : DebugEntry> CommandContext<*>.debugEntry(name: String): Entry {
+        val location = argument<Identifier>(name)
+        return getDebugEntry<Entry>(location) ?: error("Debug entry of type ${Entry::class.simpleName} with location $location not found")
+    }
+
     public fun onCommandRegister(event: RegisterCommandsEvent) {
         event.register(commandName) {
             then(
                 "toggle",
-                VirtualResourceArgument(states.keys, namespace),
-                DevToolSuggestionProvider(toggles, DebugToggle::location, DebugToggle::description),
+                VirtualResourceArgument(debugToggles.keys, namespace),
+                DevToolSuggestionProvider(debugToggles.values, DebugToggle::location, DebugToggle::description),
             ) {
+
                 callback {
-                    val argument = this.getArgument("toggle", Identifier::class.java)
-                    toggle(argument)
+                    val toggle = debugEntry<DebugToggle>("toggle")
+                    toggle.toggle()
                     send(
                         Text.of("Toggled ") {
-                            append(argument.toString(), TextColor.GOLD)
-                            if (isOn(argument)) {
+                            append(toggle.location.toString(), TextColor.GOLD)
+                            if (toggle.get()) {
                                 append(" on", TextColor.GREEN)
                             } else {
                                 append(" off", TextColor.RED)
@@ -493,16 +573,16 @@ public abstract class DevUtils {
             }
             then(
                 "select",
-                VirtualResourceArgument(select.keys, namespace),
-                DevToolSuggestionProvider(select.values, DebugSelect<*>::location, DebugSelect<*>::description),
+                VirtualResourceArgument(debugSelects.keys, namespace),
+                DevToolSuggestionProvider(debugSelects.values, DebugSelect<*>::location, DebugSelect<*>::description),
             ) {
                 thenCallback(
                     "value",
                     StringArgumentType.greedyString(),
                     { context, builder ->
-                        val toggle = select[context.argument<Identifier>("select")] ?: return@thenCallback builder.buildFuture()
+                        val select = context.debugEntry<DebugSelect<*>>("select")
 
-                        toggle.states().forEach {
+                        select.states().forEach {
                             if (SharedSuggestionProvider.matchesSubStr(builder.remaining, it)) {
                                 builder.suggest(it)
                             }
@@ -511,17 +591,16 @@ public abstract class DevUtils {
                         builder.buildFuture()
                     },
                 ) {
-                    val location = argument<Identifier>("select")
-                    val toggle = select[location] ?: return@thenCallback
+                    val select = debugEntry<DebugSelect<*>>("select")
                     val value = argument<String>("value")
 
-                    val currentValue = toggle.stateName()
-                    toggle.setByName(value)
-                    val nextValue = toggle.stateName()
+                    val currentValue = select.stateName()
+                    select.setByName(value)
+                    val nextValue = select.stateName()
 
                     send(
                         Text.of("Changed value for ") {
-                            append(location.toString(), TextColor.GOLD)
+                            append(select.location.toString(), TextColor.GOLD)
                             append(": ")
                             append(currentValue.toString(), TextColor.RED)
                             append(" -> ")
@@ -532,15 +611,15 @@ public abstract class DevUtils {
             }
             then(
                 "multiselect",
-                VirtualResourceArgument(multiSelect.keys, namespace),
-                DevToolSuggestionProvider(multiSelect.values, DebugMultiSelect<*>::location, DebugMultiSelect<*>::description),
+                VirtualResourceArgument(debugMultiSelects.keys, namespace),
+                DevToolSuggestionProvider(debugMultiSelects.values, DebugMultiSelect<*>::location, DebugMultiSelect<*>::description),
             ) {
                 then("toggle") {
                     thenCallback(
                         "item",
                         StringArgumentType.greedyString(),
                         { context, builder ->
-                            val multi = multiSelect[context.argument<Identifier>("multiselect")] ?: return@thenCallback builder.buildFuture()
+                            val multi = context.debugEntry<DebugMultiSelect<*>>("multiselect")
 
                             multi.states().forEach {
                                 if (SharedSuggestionProvider.matchesSubStr(builder.remaining, it)) {
@@ -551,8 +630,7 @@ public abstract class DevUtils {
                             builder.buildFuture()
                         },
                     ) {
-                        val location = argument<Identifier>("multiselect")
-                        val multi = multiSelect[location] ?: return@thenCallback
+                        val multi = debugEntry<DebugMultiSelect<*>>("multiselect")
                         val item = argument<String>("item")
 
                         multi.toggleByName(item)
@@ -561,7 +639,7 @@ public abstract class DevUtils {
                             Text.of("Toggled ") {
                                 append(item, TextColor.YELLOW)
                                 append(" in ")
-                                append(location.toString(), TextColor.GOLD)
+                                append(multi.location.toString(), TextColor.GOLD)
                                 append(": ")
                                 if (multi.isSelectedByName(item)) {
                                     append("Added", TextColor.GREEN)
@@ -574,22 +652,20 @@ public abstract class DevUtils {
                     }
                 }
                 thenCallback("clear") {
-                    val location = argument<Identifier>("multiselect")
-                    val multi = multiSelect[location] ?: return@thenCallback
+                    val multi = debugEntry<DebugMultiSelect<*>>("multiselect")
                     multi.set(emptyList())
                     send(
                         Text.of("Cleared selections for ") {
-                            append(location.toString(), TextColor.GOLD)
+                            append(multi.location.toString(), TextColor.GOLD)
                         },
                     )
                 }
                 thenCallback("reset") {
-                    val location = argument<Identifier>("multiselect")
-                    val multi = multiSelect[location] ?: return@thenCallback
+                    val multi = debugEntry<DebugMultiSelect<*>>("multiselect")
                     multi.reset()
                     send(
                         Text.of("Reset ") {
-                            append(location.toString(), TextColor.GOLD)
+                            append(multi.location.toString(), TextColor.GOLD)
                             append(" to default: [${multi.serialized()}]")
                         },
                     )
