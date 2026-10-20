@@ -4,7 +4,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.state.gui.BlitRenderState
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
@@ -17,6 +16,9 @@ import org.joml.Matrix3x2f
 import org.joml.Vector2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
+
+//~ if >= 26.4 'RenderPipelines' -> 'pipeline.RenderPipelines'
+import net.minecraft.client.renderer.pipeline.RenderPipelines
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun adjustColor(color: Int): Int {
@@ -73,7 +75,8 @@ public fun GuiGraphicsExtractor.drawTexture(
     val maxx = (x + width)
     val maxy = (y + height)
 
-    val setup: TextureSetup = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView, it.sampler) }
+    //~ if >= 26.4 'textureView' -> 'textureView()', 'sampler' -> 'sampler()'
+    val setup: TextureSetup = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView(), it.sampler()) }
 
     this.guiRenderState.addGuiElement(
         BlitRenderState(

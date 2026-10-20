@@ -24,12 +24,13 @@ import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.utils.McVersion
-import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
 
+//? < 26.4
+//import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 //? >= 26.3
 import com.mojang.blaze3d.Blaze3D
 //? else
@@ -47,10 +48,10 @@ public object McClient {
     public val config: Path = FabricLoader.getInstance().configDir
 
     //? if < 26.4 {
-    @Deprecated("Use mcVersion instead")
+    /*@Deprecated("Use mcVersion instead")
     @Suppress("DEPRECATION")
     public val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
-    //?}
+    *///?}
     public val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
 
     public val version: String = SharedConstants.getCurrentVersion().name()

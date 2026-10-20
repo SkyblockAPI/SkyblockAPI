@@ -4,8 +4,10 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
+
+//? < 26.4
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
 public data class PlayerInventoryChangeEvent(
     val inventorySlot: Slot,
@@ -13,10 +15,10 @@ public data class PlayerInventoryChangeEvent(
     val previousItem: ItemStack,
 ) : SkyBlockEvent() {
     //? if < 26.4 {
-    @RemoveNextVersion
+    /*@RemoveNextVersion
     @Deprecated("Should pass previousItem as well")
     public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, EMPTY)
-    //?}
+    *///?}
 
     public val slotIndex: Int get() = inventorySlot.index
 }
@@ -27,10 +29,10 @@ public data class PlayerHotbarChangeEvent(
     val previousItem: ItemStack,
 ) : SkyBlockEvent() {
     //? if < 26.4 {
-    @RemoveNextVersion
+    /*@RemoveNextVersion
     @Deprecated("Should pass previousItem as well")
     public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, EMPTY)
-    //?}
+    *///?}
 
     public val slotIndex: Int get() = inventorySlot.index - FIRST_HOTBAR_SLOT
 
