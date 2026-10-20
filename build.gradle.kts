@@ -220,6 +220,7 @@ dependencies {
 val mcVersion = stonecutter.current.version.replace(".", "")
 
 loom {
+    log4jConfigs.from(rootProject.projectDir.resolve("gradle/log4j.config.xml"))
     runConfigs["client"].apply {
         generateRunConfig = true
         runDirectory = project.file("../../run")
