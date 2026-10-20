@@ -5,7 +5,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 
 public object McScreen {
 
-    public val self: Screen? get() =/*? if >= 26.2 {*/ McClient.gui.screen() /*? } else*///McClient.self.screen
+    public val self: Screen? get() = McClient.gui.screen()
 
     public val asMenu: AbstractContainerScreen<*>? get() = self as? AbstractContainerScreen<*>
 

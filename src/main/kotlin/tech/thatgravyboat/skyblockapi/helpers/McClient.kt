@@ -8,6 +8,7 @@ import net.minecraft.SharedConstants
 import net.minecraft.client.Minecraft
 import net.minecraft.client.Options
 import net.minecraft.client.gui.Gui
+import net.minecraft.client.gui.Hud
 import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.gui.screens.ChatScreen
@@ -29,8 +30,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
 
-//? >= 26.2
-import net.minecraft.client.gui.Hud
 //? >= 26.3
 import com.mojang.blaze3d.Blaze3D
 //? else
@@ -112,16 +111,14 @@ public object McClient {
     public val scoreboardTitle: Component? get() = self.level?.scoreboard?.getDisplayObjective(SIDEBAR)?.displayName
     public val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
 
-    public val toasts: ToastManager get() =/*? if >= 26.2 {*/gui.toastManager()/*? } else *///self.toastManager
+    public val toasts: ToastManager get() = gui.toastManager()
     public val gui: Gui get() = self.gui
 
-    //? >= 26.2
     public val hud: Hud get() = self.gui.hud
-    //~ if >= 26.2 'gui' -> 'hud'
     public val chat: ChatComponent get() = hud.chat
     public val options: Options get() = self.options
 
-    public val isSingleplayer: Boolean get() = /*? if >= 26.2 {*/!self.isMultiplayerServer/*? } else*///self.isSingleplayer
+    public val isSingleplayer: Boolean get() = !self.isMultiplayerServer
 
     public fun openUri(uri: String): Boolean = runCatching {
         openUri(URI.create(uri))
@@ -158,32 +155,21 @@ public object McClient {
     }
 
     public fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f) {
-        //~ if >= 26.2 'gui.' -> 'hud.' {
         hud.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
         hud.setSubtitle(subtitle ?: CommonText.EMPTY)
         hud.setTitle(title)
-        //~ }
     }
 
     public fun setScreenAsync(screen: () -> Screen?): Unit = runNextTick {
         val next = screen()
         (McScreen.self as? AbstractContainerScreen<*>)?.onClose()
-        //~ if >= 26.2 'self' -> 'gui'
         gui.setScreen(next)
     }
-
-    //? < 26.2 {
-    /*@Deprecated("Use setScreenAsync to avoid creating screens off the main thread")
-    public fun setScreenAsync(screen: Screen?): Unit = runNextTick {
-        (self.screen as? AbstractContainerScreen<*>)?.onClose()
-        self.setScreen(screen)
-    }*///? }
 
     public fun setScreen(screen: Screen?) {
         if (McScreen.self is ChatScreen) {
             setScreenAsync { screen }
         } else {
-            //~ if >= 26.2 'self' -> 'gui'
             gui.setScreen(screen)
         }
     }

@@ -2,9 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.museum
 
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
-//? < 26.2
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
-
 public enum class MuseumCategory(internal val deprecated: Boolean = false) {
     COMBAT,
     FARMING,
@@ -14,18 +11,6 @@ public enum class MuseumCategory(internal val deprecated: Boolean = false) {
     DUNGEONEERING,
     HUNTING,
     SPECIAL_ITEMS,
-    //? < 26.2 {
-    /*@RemoveNextVersion @Deprecated("This museum category doesn't exist anymore!", level = DeprecationLevel.ERROR)
-    WEAPONS(true),
-    @RemoveNextVersion @Deprecated("This museum category doesn't exist anymore!", level = DeprecationLevel.ERROR)
-    ARMOR_SETS(true),
-    @RemoveNextVersion @Deprecated("This museum category doesn't exist anymore!", level = DeprecationLevel.ERROR)
-    RARITIES(true),
-    ;
-
-    @RemoveNextVersion @Deprecated("This museum category doesn't exist anymore!", level = DeprecationLevel.ERROR)
-    public inline val isArmor: Boolean get() = false
-    *///?} else
     ;
 
     public inline val isSpecial: Boolean get() = this == SPECIAL_ITEMS

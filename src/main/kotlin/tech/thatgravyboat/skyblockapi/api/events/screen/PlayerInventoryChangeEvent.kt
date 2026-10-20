@@ -18,9 +18,7 @@ public data class PlayerInventoryChangeEvent(
     public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, EMPTY)
     //?}
 
-    //? < 26.2
-    //val slot: Int get() = slotIndex
-    val slotIndex: Int get() = inventorySlot.index
+    public val slotIndex: Int get() = inventorySlot.index
 }
 
 public data class PlayerHotbarChangeEvent(
@@ -33,9 +31,8 @@ public data class PlayerHotbarChangeEvent(
     @Deprecated("Should pass previousItem as well")
     public constructor(inventorySlot: Slot, item: ItemStack) : this(inventorySlot, item, EMPTY)
     //?}
-    //? < 26.2
-    //val slot: Int get() = slotIndex
-    val slotIndex: Int get() = inventorySlot.index - FIRST_HOTBAR_SLOT
+
+    public val slotIndex: Int get() = inventorySlot.index - FIRST_HOTBAR_SLOT
 
     public companion object {
         internal const val FIRST_HOTBAR_SLOT = 36
