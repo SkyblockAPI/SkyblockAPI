@@ -68,7 +68,7 @@ public open class DebugToggle @JvmOverloads constructor(
 ) : DebugEntry {
     public open val prefix: MutableComponent = Text.of(prefix, TextColor.DARK_PURPLE)
 
-    @Deprecated("Don't access state directly, use get() and set(value) instead")
+    @Deprecated("Don't access state directly, use get() and set(value) instead") // we cant make this deprecated level hidden since its actually used
     //~ if >= 26.4 'public' -> 'private'
     public var state: Boolean = false
 
@@ -89,7 +89,7 @@ public open class DebugToggle @JvmOverloads constructor(
     }
 
     //? if < 26.4 {
-    @Deprecated("Not used anymore")
+    @Deprecated("Not used anymore", level = HIDDEN)
     public fun update() {}
     //?}
 
@@ -143,7 +143,7 @@ public open class DebugSelect<T : Any>(
     }
 
     //? if < 26.4 {
-    @Deprecated("Use isDefaultState instead", ReplaceWith("isDefaultState()"))
+    @Deprecated("Use isDefaultState instead", ReplaceWith("isDefaultState()"), level = HIDDEN)
     public fun hasState(): Boolean = isDefaultState()
     //?}
 
@@ -381,22 +381,6 @@ public abstract class DevUtils {
     public val debugSelects: Map<Identifier, DebugSelect<*>> get() = getEntriesOf()
     public val debugMultiSelects: Map<Identifier, DebugMultiSelect<*>> get() = getEntriesOf()
 
-    //region Deprecated
-    //? if < 26.4 {
-    @Deprecated("Get from values instead")
-    public val states: MutableMap<Identifier, Boolean> = mutableMapOf()
-    @Deprecated("Get from values instead")
-    public val selectStates: MutableMap<Identifier, String?> = mutableMapOf()
-
-    @Deprecated("Get from debugEntries instead")
-    public val toggles: MutableList<DebugToggle> = mutableListOf()
-    @Deprecated("Get from debugEntries instead")
-    public val select: MutableMap<Identifier, DebugSelect<Any>> = mutableMapOf()
-    @Deprecated("Get from debugEntries instead")
-    public val allDebugEntries: List<DebugEntry> = emptyList()
-    //?}
-    //endregion
-
     /** whether this dev utils supports changing debug entries' default states when launching */
     public open val supportsChangingDefault: Boolean = false
     /** if [supportsChangingDefault] is `true`, this path should be set */
@@ -452,26 +436,39 @@ public abstract class DevUtils {
         return debugEntries[location] as? Entry
     }
 
+    //region Deprecated
     //? if < 26.4 {
-    @Deprecated("Use getDebugEntry instead")
+    @Deprecated("Get from values instead", level = HIDDEN)
+    public val states: MutableMap<Identifier, Boolean> = mutableMapOf()
+    @Deprecated("Get from values instead", level = HIDDEN)
+    public val selectStates: MutableMap<Identifier, String?> = mutableMapOf()
+
+    @Deprecated("Get from debugEntries instead", level = HIDDEN)
+    public val toggles: MutableList<DebugToggle> = mutableListOf()
+    @Deprecated("Get from debugEntries instead", level = HIDDEN)
+    public val select: MutableMap<Identifier, DebugSelect<Any>> = mutableMapOf()
+    @Deprecated("Get from debugEntries instead", level = HIDDEN)
+    public val allDebugEntries: List<DebugEntry> = emptyList()
+
+    @Deprecated("Use getDebugEntry instead", level = HIDDEN)
     public fun toggle(location: Identifier) {
         getDebugEntry<DebugToggle>(location)?.toggle()
     }
 
-    @Deprecated("Use getDebugEntry instead")
+    @Deprecated("Use getDebugEntry instead", level = HIDDEN)
     public fun isOn(location: Identifier): Boolean = getDebugEntry<DebugToggle>(location)?.get() ?: false
 
-    @Deprecated("Use getDebugEntry instead")
+    @Deprecated("Use getDebugEntry instead", level = HIDDEN)
     public fun setToggle(location: Identifier, newValue: Boolean) {
         getDebugEntry<DebugToggle>(location)?.set(newValue)
     }
 
-    @Deprecated("Use getDebugEntry instead")
+    @Deprecated("Use getDebugEntry instead", level = HIDDEN)
     public fun setSelect(location: Identifier, newValue: String?) {
         getDebugEntry<DebugSelect<*>>(location)?.setByName(newValue)
     }
 
-    @Deprecated("Use getDebugEntry instead")
+    @Deprecated("Use getDebugEntry instead", level = HIDDEN)
     public fun toggleMultiSelectItem(location: Identifier, item: String) {
         getDebugEntry<DebugMultiSelect<*>>(location)?.toggleByName(item)
     }
@@ -525,7 +522,6 @@ public abstract class DevUtils {
         SkyBlockAPI.info("Changed properties file $name to set '$location' as '$newDefault'")
     }
 
-    @Suppress("DEPRECATION")
     protected open fun loadFromProperties(path: Path): Map<String, String> {
         val properties = this.propertiesInstance
         if (path.notExists()) return emptyMap()
