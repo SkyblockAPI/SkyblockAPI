@@ -63,13 +63,12 @@ public object DebugTooltips {
         var addedHeader = false
 
         for ((key, value) in types) {
-            if (key.id in alwaysShow) {
-                if (!addedHeader) {
-                    event.add(CommonText.EMPTY)
-                    addedHeader = true
-                }
-                appendDataType(event.tooltip, key, value, withDash = false)
+            if (key.id !in alwaysShow) continue
+            if (!addedHeader) {
+                event.add(CommonText.EMPTY)
+                addedHeader = true
             }
+            appendDataType(event.tooltip, key, value, withDash = false)
         }
     }
 
