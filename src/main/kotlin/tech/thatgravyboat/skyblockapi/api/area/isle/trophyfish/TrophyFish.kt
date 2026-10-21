@@ -7,6 +7,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 public data class TrophyFish(val type: TrophyFishType, @get:JvmName("getTrophyTier") val tier: TrophyTier) {
 
+    //? if < 26.4 {
     @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
     @Suppress("DEPRECATION")
     public constructor(type: TrophyFishType, tier: TrophyFishTier) : this(type, TrophyTier.valueOf(tier.name))
@@ -15,10 +16,11 @@ public data class TrophyFish(val type: TrophyFishType, @get:JvmName("getTrophyTi
     @Suppress("DEPRECATION")
     @JvmName("getTier")
     public fun getOldTier(): TrophyFishTier = TrophyFishTier.valueOf(tier.name)
+    //?}
 
     val item: ItemStack by lazy { type.getItem(tier) }
     val displayName: Component by lazy {
-        if (tier == TrophyTier.NONE) {
+        if (tier == NONE) {
             return@lazy type.displayName.copy()
         }
 
@@ -26,7 +28,7 @@ public data class TrophyFish(val type: TrophyFishType, @get:JvmName("getTrophyTi
     }
 
     public val apiName: String by lazy {
-        if (tier == TrophyTier.NONE) {
+        if (tier == NONE) {
             return@lazy type.internalName.lowercase()
         }
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env kotlin
 
 import java.nio.file.Path
-import kotlin.io.path.exists
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.notExists
 import kotlin.io.path.readText
@@ -20,14 +19,7 @@ enum class MemberType {
     FIELD,
     ;
 
-    companion object {
-        val types = entries.associateBy { it.name.lowercase() }
-        fun fromName(name: String): MemberType = requireNotNull(types[name]) { "Unknown member type $name" }
-    }
-
-    override fun toString(): String {
-        return name.lowercase()
-    }
+    override fun toString(): String = name.lowercase()
 }
 
 enum class Modifier(val breakingIfRemoved: Boolean, val breakingIfAdded: Boolean ) {
@@ -53,9 +45,7 @@ enum class Modifier(val breakingIfRemoved: Boolean, val breakingIfAdded: Boolean
         fun fromName(name: String): Modifier = requireNotNull(modifiers[name]) { "Unknown modifier '$name'" }
     }
 
-    override fun toString(): String {
-        return name.lowercase()
-    }
+    override fun toString(): String = name.lowercase()
 }
 
 data class Member(
@@ -64,7 +54,24 @@ data class Member(
     val desc: String?,
     val returnType: String?,
     val modifiers: Set<Modifier>,
-)
+) {
+    fun equalsSignature(other: Member): Boolean = this.type == other.type && this.name == other.name &&  this.desc == other.desc && this.returnType == other.returnType
+
+    fun prettyPrint(): String = buildString {
+        modifiers.forEach {
+            if (it == Modifier.PUBLIC) return@forEach
+            append(it.toString())
+            append(" ")
+        }
+        append(type)
+        append(" ")
+        append(name)
+        if (desc != null) {
+            append("($desc)")
+        }
+        append(returnType)
+    }
+}
 
 data class ApiClass(
     val name: String, // fqname
@@ -72,11 +79,13 @@ data class ApiClass(
     val superTypes: Set<String>, // fqnames of the supertypes
     val members: MutableList<Member> = mutableListOf(), // functions and fields
 ) {
-    fun prettyPrint(includeSuper: Boolean = false): String = buildString {
+    fun prettyPrint(): String = buildString {
         modifiers.forEach {
+            if (it == Modifier.PUBLIC) return@forEach
             append(it.toString())
             append(" ")
         }
+        append("class ")
         append(name)
         if (superTypes.isNotEmpty()) {
             append(" : ")
@@ -85,9 +94,6 @@ data class ApiClass(
     }
 }
 
-private fun MatchResult.groupOrNull(key: String): String? = groups[key]?.value
-private fun MatchResult.group(key: String): String = groups[key]!!.value
-
 data class StringReader(val text: String, var index: Int = 0) {
     fun skipWhitespace() {
         while (canRead() && text[index].isWhitespace()) {
@@ -95,8 +101,9 @@ data class StringReader(val text: String, var index: Int = 0) {
         }
     }
 
-    fun ident(): String {
-        val next = text.indexOf(' ', index).takeUnless { it == -1 }!!
+    fun identifier(): String {
+        val next = text.indexOf(' ', index)
+        require(next != -1) { "coudln't find whitespace after $index" }
         return text.substring(index, next).also {
             index = next
             skipWhitespace()
@@ -104,7 +111,8 @@ data class StringReader(val text: String, var index: Int = 0) {
     }
 
     fun fqn(vararg termination: Char): String? {
-        val next = termination.minOf { text.indexOf(it, index).let { if (it < 0) Int.MAX_VALUE else it } }.takeUnless { it == -1 }!!
+        val next = termination.minOf { text.indexOf(it, index).let { if (it < 0) Int.MAX_VALUE else it } }
+        require(next != -1) { "couldn't find whitespace after $index" }
         val sub = text.substring(index, next).trim()
         if (sub.contains("\n")) {
             return null
@@ -121,7 +129,7 @@ data class StringReader(val text: String, var index: Int = 0) {
             skipWhitespace()
             return
         }
-        throw RuntimeException()
+        throw RuntimeException("Expected '$char' but found '$actual' at index $index")
     }
 
     fun expect(literal: String) {
@@ -130,7 +138,7 @@ data class StringReader(val text: String, var index: Int = 0) {
             skipWhitespace()
             return
         }
-        throw RuntimeException()
+        throw RuntimeException("Expected \"$literal\" at index $index")
     }
 
     fun canRead(): Boolean {
@@ -165,11 +173,11 @@ fun parseApi(text: String): Map<String, ApiClass> {
     val reader = StringReader(text)
     while (reader.canRead()) {
         val modifiers: MutableSet<Modifier> = mutableSetOf()
-        var current = reader.ident()
+        var current = reader.identifier()
         while (current != "class") {
             //print("$current ")
             modifiers.add(Modifier.fromName(current))
-            current = reader.ident()
+            current = reader.identifier()
         }
         //print("$current ")
         val fqn = reader.fqn(':', '{') ?: throw RuntimeException("Expected fqn to be present")
@@ -195,13 +203,13 @@ fun parseApi(text: String): Map<String, ApiClass> {
         classes[fqn] = currentClass
 
         while (!reader.match('}')) {
-            var type = reader.ident()
+            var type = reader.identifier()
             val memberModifiers = mutableSetOf<Modifier>()
             //print("  ")
             while (type != "field" && type != "fun") {
                 //print("mod: $type, ")
                 memberModifiers.add(Modifier.fromName(type))
-                type = reader.ident()
+                type = reader.identifier()
             }
             //print("type: $type, ")
 
@@ -222,7 +230,7 @@ fun parseApi(text: String): Map<String, ApiClass> {
                 //print("name: $name, ")
                 //println("ret: $returnType, ")
                 currentClass.members.add(Member(
-                    MemberType.fromName(type),
+                    MemberType.FIELD,
                     name,
                     null,
                     returnType,
@@ -238,7 +246,7 @@ fun parseApi(text: String): Map<String, ApiClass> {
                 val returnType = reader.type()
                 //println("ret: $returnType, ")
                 currentClass.members.add(Member(
-                    MemberType.fromName(type),
+                    MemberType.FUN,
                     name,
                     signature,
                     returnType,
@@ -291,20 +299,20 @@ __FILE__.toPath().toAbsolutePath().parent.parent.parent.resolve("versions").list
             emitError("Invalid modifier modifications, added: ${addedModifiers.joinToString(", ")}")
         }
 
-        apiClass.members.forEach {
+        apiClass.members.forEach { member ->
             val lazy by lazy {
-                emitError("${it.type} ${it.name}(${it.desc})${it.returnType}")
+                emitError(member.prettyPrint())
             }
             fun emitMemberError(message: String) {
                 lazy // prepends member
                 emitError("  $message")
             }
             val newMember = newApiClass.members.find { newMember ->
-                newMember.name == it.name && newMember.desc == it.desc && newMember.returnType == it.returnType
+                member.equalsSignature(newMember)
             } ?: return@forEach emitMemberError("Was fully removed!")
 
-            val removedMemberModifier = (it.modifiers - newMember.modifiers).filter { it.breakingIfRemoved }
-            val addedMemberModifier = (newMember.modifiers - it.modifiers).filter { it.breakingIfAdded }
+            val removedMemberModifier = (member.modifiers - newMember.modifiers).filter { it.breakingIfRemoved }
+            val addedMemberModifier = (newMember.modifiers - member.modifiers).filter { it.breakingIfAdded }
 
             if (removedMemberModifier.isNotEmpty()) {
                 emitMemberError("Invalid modifier modifications, removed: ${removedMemberModifier.joinToString(", ")}")

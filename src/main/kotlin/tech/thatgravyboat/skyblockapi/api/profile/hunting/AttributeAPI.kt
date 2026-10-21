@@ -548,6 +548,7 @@ public data class AttributeData(
     var rarity: SkyBlockRarity?,
     var lastUpdated: Instant = Instant.DISTANT_PAST,
 ) {
+    //~ if >= 26.4 'public' -> 'internal'
     public fun updated() {
         lastUpdated = currentInstant()
     }

@@ -48,7 +48,7 @@ internal object SacksStorage {
 
     // Returns the old value
     fun updateItem(item: String, amount: Int): Int {
-        if (item.isIgnoredItem()) return 0
+        if (amount != 0 && item.isIgnoredItem()) return 0
         val oldValue = this.counts[item]
         if (oldValue == amount) return oldValue
         SACKS.get()?.add(item, amount)

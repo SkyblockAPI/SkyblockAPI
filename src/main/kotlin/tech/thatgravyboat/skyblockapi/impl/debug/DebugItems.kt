@@ -41,7 +41,7 @@ public object DebugItems {
     public var selectedIndex: Int = 0
     public var entriesSize: Int = 0
     public var lastItem: ItemStack? = null
-    public var lastSet: Instant = Instant.DISTANT_PAST
+    public var lastSet: Instant = DISTANT_PAST
     public val toggledEntries: MutableSet<ItemDebugCategory> = mutableSetOf<ItemDebugCategory>()
 
     public fun updateItem(new: ItemStack?) {
@@ -234,6 +234,7 @@ public inline fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory
 }
 
 
+//? if < 26.4 {
 @JvmName("addDebug")
 @Deprecated(message = "Use interface method instead!")
 public fun ItemStack.addDebug0(category: ItemDebugCategory, entry: () -> Component) {
@@ -252,6 +253,7 @@ context(category: ItemDebugCategory) public fun ItemStack.addDebug0(entry: () ->
 @Deprecated(message = "Use interface method instead!")
 @JvmName("categoryAddDebugString")
 context(category: ItemDebugCategory) public fun ItemStack.addDebugString0(entry: () -> String): Unit = addStringDebug(category, entry)
+//?}
 
 
 public fun interface ItemDebugAttachable {

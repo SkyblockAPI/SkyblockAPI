@@ -13,6 +13,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Comp
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
+import tech.thatgravyboat.skyblockapi.utils.builders.TooltipBuilder
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.pluralize
 import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
@@ -22,12 +23,11 @@ import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
-import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.appendLine
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.onClick
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
-import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.trimLines
 
 @Module
 internal object ProfileDeleter {
@@ -49,7 +49,21 @@ internal object ProfileDeleter {
         }
 
         val allProfiles = ProfileStorage.getAllProfileNames()
-        val missingProfiles = allProfiles - foundProfiles
+        val missingProfiles: MutableList<String> = (allProfiles - foundProfiles).toMutableList()
+
+        val reversedProfiles = missingProfiles.filter { profileName ->
+            if (profileName.length < 2) return@filter false
+            // we check if profile name is reversed by seeing if it starts by lowercase and ends with uppercase
+            profileName.first().isLowerCase() && profileName.last().isUpperCase()
+        }
+
+        // if the profile name is reversed, we immediately delete it
+        reversedProfiles.forEach { name ->
+            handleDelete(name)
+        }
+
+        // we remove all the reversed profiles from the missing profiles
+        missingProfiles.removeAll(reversedProfiles)
 
         if (missingProfiles.isEmpty()) return
         val size = missingProfiles.size
@@ -58,18 +72,26 @@ internal object ProfileDeleter {
             append(size.toString(), TextColor.AQUA)
             append(" ${pluralize(size, "profile")} with data that does not exist anymore. ")
 
-            append("Click to delete ${pluralize(size, "it", "them")}") {
+            append("Click to delete the stored data") {
                 underlined = true
             }
 
-            hover = Text.of {
-                appendLine("Profiles are: ", TextColor.YELLOW)
-                appendLine()
+            hover = TooltipBuilder.multiline {
+                add("This won't delete your SkyBlock profiles,")
+                add("it will only delete data stored.")
+                space()
+                add("Profiles are: ", TextColor.YELLOW)
+                space()
                 missingProfiles.forEach {
-                    append(" - ", TextColor.GRAY)
-                    appendLine(it, TextColor.RED)
+                    add {
+                        color = TextColor.GRAY
+                        append(" - ")
+                        append("\"")
+                        append(it, TextColor.RED)
+                        append("\"")
+                    }
                 }
-            }.trimLines()
+            }
 
             onClick {
                 missingProfiles.forEach(::handleDelete)
@@ -102,13 +124,13 @@ internal object ProfileDeleter {
             thenCallback("profileName", StringArgumentType.string(), allProfiles) {
                 val profileName = argument<String>("profileName")
                 if (profileName !in allProfiles) {
-                    Text.sendDebug("There is no profile named $profileName!")
+                    Text.sendDebug("There is no profile named \"$profileName\"!")
                     return@thenCallback
                 }
                 handleDelete(profileName)
-                Text.sendDebug("Deleted all profile data for ") {
+                Text.sendDebug("Deleted all profile data for \"") {
                     append(profileName, TextColor.GOLD)
-                    append("!")
+                    append("\"!")
                 }
             }
         }
@@ -119,7 +141,7 @@ internal object ProfileDeleter {
     }
 
     private fun handleDelete(profileName: String) {
-        SkyBlockAPI.info("Deleting all profile data for profile $profileName")
+        SkyBlockAPI.info("Deleting all profile data for profile \"$profileName\"")
         ProfileStorage.removeProfile(profileName)
         StoredProfileData.allProfileData.forEach { it.removeProfile(profileName) }
         ProfileDeleteDataEvent(profileName).post()
