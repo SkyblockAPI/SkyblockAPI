@@ -12,6 +12,7 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.ProfileDeleteDataEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.pluralize
 import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
@@ -34,16 +35,17 @@ internal object ProfileDeleter {
     private val group = RegexGroup.CHAT.group("profile_delete")
     private val deleteRegex = group.create("delete", "Done! Your (?<name>.*) profile was deleted!")
     private val wipeRegex = group.create("wipe", "Your SkyBlock Profile (?<name>.*) has been wiped .*")
-    private val profileItemRegex = group.create("profile_management.item_name", "(?:. \\S+ )?Profile: (?<profileName>.+)")
     private val bingoStartRegex = group.create("bingo.start", "\\s+Welcome to SkyBlock Bingo!")
 
     @Subscription
     @InventoryTitle("Profile Management")
     context(event: ContainerInitializedEvent)
     private fun onContainerInitialized() {
+        if (!ProfileAPI.profileManagementTitle.matches(event.title)) return
+
         val foundProfiles = event.containerItems.mapNotNullTo(mutableSetOf()) { item ->
             if (item.isEmpty) return@mapNotNullTo null
-            profileItemRegex.findGroup(item.cleanName, "profileName")
+            ProfileAPI.profileManagementNameRegex.findGroup(item.cleanName, "profileName")
         }
 
         val allProfiles = ProfileStorage.getAllProfileNames()

@@ -10,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.putIfDifferent
 import java.util.UUID
 
 internal object ProfileStorage {
-    // Todo: use StoredProfileData instead, basically the same just better here
     private val PROFILE = StoredPlayerData(
         { ProfileData(bingoRank = null) },
         ProfileData.CODEC,
@@ -22,23 +21,25 @@ internal object ProfileStorage {
     fun getProfileTypes(): Map<String, ProfileType> = data.profileType
     fun getProfileType(): ProfileType = data.profileType[ProfileAPI.profileName] ?: ProfileType.UNKNOWN
 
-    fun setProfileType(profileName: String, profileType: ProfileType) {
+    /** Returns `true` if it changed anything */
+    fun setProfileType(profileName: String, profileType: ProfileType): Boolean {
         if (SkyBlockIsland.inAnyIsland(SkyBlockIsland.THE_CATACOMBS, SkyBlockIsland.KUUDRA)) {
             // Don't allow changing profile type in dungeons or kuudra
             // The Tablist is different and doesn't contain the profile type
             // (At least Catacombs, I assume kuudra does the same)
-            return
+            return false
         }
 
-        PROFILE.edit {
+        return PROFILE.edit {
             this.profileType.putIfDifferent(profileName, profileType)
         }
     }
 
     fun getProfileId(): UUID? = data.profileId[ProfileAPI.profileName]
 
-    fun setProfileId(profileName: String, id: UUID) {
-        PROFILE.edit {
+    /** Returns `true` if it changed anything */
+    fun setProfileId(profileName: String, id: UUID): Boolean {
+        return PROFILE.edit {
             this.profileId.putIfDifferent(profileName, id)
         }
     }
