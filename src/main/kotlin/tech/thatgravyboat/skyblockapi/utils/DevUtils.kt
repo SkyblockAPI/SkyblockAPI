@@ -68,6 +68,7 @@ public open class DebugToggle @JvmOverloads constructor(
 ) : DebugEntry {
     public open val prefix: MutableComponent = Text.of(prefix, TextColor.DARK_PURPLE)
 
+    //? < 26.4
     @Deprecated("Don't access state directly, use get() and set(value) instead") // we cant make this deprecated level hidden since its actually used
     //~ if >= 26.4 'public' -> 'private'
     public var state: Boolean = false
@@ -696,6 +697,7 @@ public abstract class DevUtils {
         contract {
             callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
         }
+        @Suppress("DEPRECATION")
         if (toggle.state) {
             send(Text.join("<", toggle.prefix, "> ", provider().copy()))
         }
