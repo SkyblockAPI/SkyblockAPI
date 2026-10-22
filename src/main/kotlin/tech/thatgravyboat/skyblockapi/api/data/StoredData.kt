@@ -156,14 +156,7 @@ internal class StoredData<T : Any>(
 
     private fun getText(path: Path): String? = if (path.exists()) path.readText() else null
 
-    private fun getText(): String? {
-        val path = if (shouldUseAlphaData() && alphaPath.exists()) {
-            alphaPath
-        } else {
-            path
-        }
-        return getText(path)
-    }
+    private fun getActivePath(): Path = if (shouldUseAlphaData()) alphaPath else path
     
     private fun setText(content: String) {
         val data = loadData(content)
@@ -263,7 +256,6 @@ internal class StoredData<T : Any>(
                 storage.block()
             }
 
-
         @Subscription
         private fun registerCommands(event: RegisterSkyblockApiCommandsEvent) {
             event.register("dev storage") {
@@ -275,12 +267,23 @@ internal class StoredData<T : Any>(
                 }
                 then("copy") {
                     storageAction {
-                        val text = getText() ?: run {
+                        val path = getActivePath()
+                        val text = getText(path) ?: run {
                             Text.of("No data found for $fileName", TextColor.RED).sendWithPrefix()
                             return@storageAction
                         }
                         McClient.clipboard = text
                         Text.sendDebug("Copied $fileName to clipboard")
+                    }
+                }
+                then("open") {
+                    callback {
+                        val folder = if (LocationAPI.onAlpha) defaultAlphaPath else defaultPath
+                        McClient.openUri(folder.toUri())
+                    }
+                    storageAction {
+                        val path = getActivePath()
+                        McClient.openUri(path.toUri())
                     }
                 }
                 then("paste") {
