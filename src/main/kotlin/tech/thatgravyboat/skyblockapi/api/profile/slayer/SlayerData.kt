@@ -5,7 +5,9 @@ import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
+// TODO: move somewhere else once its internal in all versions
 @GenerateCodec
+//~ if >= 26.4 'public' -> 'internal'
 public data class SlayerData(
     var slayers: MutableMap<SlayerType, SlayerEntry> = mutableMapOf(),
 ) {

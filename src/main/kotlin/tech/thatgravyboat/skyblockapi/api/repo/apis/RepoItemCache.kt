@@ -222,10 +222,8 @@ private class SchemaArgument<Query>(val entries: List<SchemaEntry<Query, *>>) :
     ArgumentType<Set<SchemaFieldArgument<Query, *>>> {
     override fun parse(reader: StringReader): Set<SchemaFieldArgument<Query, *>> {
         val map = mutableSetOf<SchemaFieldArgument<Query, *>>()
-        val minCursor = reader.cursor
 
         while (reader.canRead() && reader.peek() == '-') {
-            val cursor = reader.cursor
             reader.skip()
             if (!reader.canRead()) break
             val filteredEntries = entries - map.map { it.field }.toSet()

@@ -6,7 +6,9 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import kotlin.time.Instant
 
+// TODO: move somewhere else once its internal in all versions
 @GenerateCodec
+//~ if >= 26.4 'public' -> 'internal'
 public data class StorageData(
     val normal: PlayerStorageData = PlayerStorageData(),
     val rift: MutableList<PlayerStorageInstance> = mutableListOf(),
@@ -17,6 +19,7 @@ public data class StorageData(
 }
 
 @GenerateCodec
+//~ if >= 26.4 'public' -> 'internal'
 public data class PlayerStorageData(
     val enderchests: MutableList<PlayerStorageInstance> = mutableListOf(),
     val backpacks: MutableList<PlayerStorageInstance> = mutableListOf(),

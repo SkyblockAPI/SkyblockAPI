@@ -69,6 +69,27 @@ public object WeatherAPI {
             return startOfDay + (nextDay - currentDay).toInt().skyblockDays
         }
 
+    public fun getUpcomingWeatherEvents(count: Int): List<Pair<WeatherIntensity, SkyBlockInstant>> {
+        val currentDay = totalDaysSinceBase ?: return emptyList()
+        val nextDay = nextWeatherDayOffset ?: return emptyList()
+        val season = DateTimeAPI.season ?: return emptyList()
+        val day = DateTimeAPI.day
+        if (day <= 0) return emptyList()
+
+        val startOfDay = SkyBlockInstant(
+            year = SkyBlockInstant.now().year,
+            month = season.ordinal + 1,
+            day = day,
+        )
+
+        return (0 until count).map { i ->
+            val dayOffset = nextDay + (i * 3)
+            val intensity = getIntensityForDay(dayOffset)
+            val instant = startOfDay + (dayOffset - currentDay).toInt().skyblockDays
+            intensity to instant
+        }
+    }
+
     @Subscription
     private fun onCommand(event: RegisterSkyblockApiCommandsEvent) {
         event.registerWithCallback("weather") {

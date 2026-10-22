@@ -22,7 +22,7 @@ public enum class WeatherIntensity(public val color: Int, public val displayName
 
 public enum class WeatherType(public val icon: Char, public val color: Int, weatherName: String? = null) {
     RAIN('\uE09A', TextColor.AQUA),
-    THUNDERSTORM('\uE000', TextColor.YELLOW),
+    THUNDERSTORM('\uE100', TextColor.YELLOW),
     SMOG('\uE09D', TextColor.GRAY),
     ACID_RAIN('\uE090', TextColor.GREEN),
     ASHFALL('\uE091', TextColor.DARK_GRAY),

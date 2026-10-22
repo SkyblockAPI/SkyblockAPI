@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.remote
 
-import me.owdding.ktmodules.Module
+//? if < 26.4 {
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.mobs.Mob
 
@@ -13,3 +13,4 @@ public object RepoMobsAPI {
     }
 
 }
+//?}

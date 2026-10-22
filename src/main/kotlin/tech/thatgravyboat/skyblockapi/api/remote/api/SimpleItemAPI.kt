@@ -167,7 +167,7 @@ public object SimpleItemAPI {
         RepoAPI.runes().runes().entries.flatMap { (id, data) ->
             data.mapNotNull { rune ->
                 @Suppress("DEPRECATION")
-                rune.name().stripColor() to rune("$id", rune.tier())
+                rune.name().stripColor() to rune(id, rune.tier())
             }
         }.applyFiltered()
 
