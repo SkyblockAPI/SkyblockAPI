@@ -156,7 +156,7 @@ internal class StoredData<T : Any>(
 
     private fun getText(path: Path): String? = if (path.exists()) path.readText() else null
 
-    private fun getText() {
+    private fun getText(): String? {
         val path = if (shouldUseAlphaData() && alphaPath.exists()) {
             alphaPath
         } else {
@@ -249,44 +249,49 @@ internal class StoredData<T : Any>(
             clearAndRun(requiresAlphaSave, StoredData<*>::saveAlphaToSystem)
         }
 
-        private fun LiteralCommandBuilder.storageAction(action: String, readable: Boolean = true, block: StoredData<*>.() -> Unit) =
-            then(action) {
-                thenCallback(
-                    "storage",
-                    StringArgumentType.string(),
-                    allStoredDatas.filter { !readable || it.path.exists() }.map { it.fileName }
-                ) {
-                    val fileName = argument<String>("storage")
-                    val storage = allStoredDatas.find { it.fileName == fileName } ?: run {
-                        Text.of("No storage found for $fileName", TextColor.RED).sendWithPrefix()
-                        return@thenCallback
-                    }
-                    storage.block()
+        private fun LiteralCommandBuilder.storageAction(readable: Boolean = true, block: StoredData<*>.() -> Unit) =
+            thenCallback(
+                "storage",
+                StringArgumentType.string(),
+                allStoredDatas.filter { !readable || it.path.exists() }.map { it.fileName }
+            ) {
+                val fileName = argument<String>("storage")
+                val storage = allStoredDatas.find { it.fileName == fileName } ?: run {
+                    Text.of("No storage found for $fileName", TextColor.RED).sendWithPrefix()
+                    return@thenCallback
                 }
+                storage.block()
             }
+
 
         @Subscription
         private fun registerCommands(event: RegisterSkyblockApiCommandsEvent) {
             event.register("dev storage") {
-                storageAction("reset") {
-                    delete()
-                    Text.sendDebug("Successfully reset $fileName")
-                }
-                storageAction("copy") {
-                    val text = getText() ?: run {
-                        Text.of("No data found for $fileName", TextColor.RED).sendWithPrefix()
-                        return@storageAction
+                then("reset") {
+                    storageAction {
+                        delete()
+                        Text.sendDebug("Successfully reset $fileName")
                     }
-                    McClient.clipboard = text
-                    Text.sendDebug("Copied $fileName to clipboard")
                 }
-                storageAction("paste", readable = false) {
-                    val text = McClient.clipboard.ifBlank {
-                        Text.of("No data in clipboard", TextColor.RED).sendWithPrefix()
-                        return@storageAction
+                then("copy") {
+                    storageAction {
+                        val text = getText() ?: run {
+                            Text.of("No data found for $fileName", TextColor.RED).sendWithPrefix()
+                            return@storageAction
+                        }
+                        McClient.clipboard = text
+                        Text.sendDebug("Copied $fileName to clipboard")
                     }
-                    setText(text)
-                    Text.sendDebug("Pasted clipboard to $fileName")
+                }
+                then("paste") {
+                    storageAction(readable = false) {
+                        val text = McClient.clipboard.ifBlank {
+                            Text.of("No data in clipboard", TextColor.RED).sendWithPrefix()
+                            return@storageAction
+                        }
+                        setText(text)
+                        Text.sendDebug("Pasted clipboard to $fileName")
+                    }
                 }
             }
         }
