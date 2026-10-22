@@ -45,7 +45,7 @@ public object ChestDump {
 
     public val enabled: Boolean by debugToggle("chest_dumps", "Allows you to save inventories by pressing 'S'")
 
-    private val storage = FolderStorage("chest_dumps", ChestDumpStorage.DEFAULT, SkyblockAPICodecs.ChestDumpStorageCodec.codec())
+    internal val storage = FolderStorage("chest_dumps", ChestDumpStorage.DEFAULT, SkyblockAPICodecs.ChestDumpStorageCodec.codec())
 
     @Subscription
     internal fun onKey(event: ScreenKeyPressedEvent.Pre) {

@@ -18,6 +18,7 @@ import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.impl.ChestDump
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
@@ -48,6 +49,7 @@ internal class StoredData<T : Any>(
 ) {
     constructor(version: Int = 0, data: T, file: String, differentAlphaData: Boolean = true, codec: (Int) -> Codec<T>)
         : this(version, { data }, file, differentAlphaData, codec)
+
     constructor(data: T, codec: Codec<T>, file: String, differentAlphaData: Boolean = true)
         : this(0, { data }, file, differentAlphaData, { codec })
 
@@ -157,7 +159,7 @@ internal class StoredData<T : Any>(
     private fun getText(path: Path): String? = if (path.exists()) path.readText() else null
 
     private fun getActivePath(): Path = if (shouldUseAlphaData()) alphaPath else path
-    
+
     private fun setText(content: String) {
         val data = loadData(content)
         set(data)
@@ -246,7 +248,10 @@ internal class StoredData<T : Any>(
             thenCallback(
                 "storage",
                 StringArgumentType.string(),
-                allStoredDatas.filter { !readable || it.path.exists() }.map { it.fileName }
+                allStoredDatas.filter {
+                    it !in ChestDump.storage.getStorages().values &&
+                        !readable || it.path.exists()
+                }.map { it.fileName },
             ) {
                 val fileName = argument<String>("storage")
                 val storage = allStoredDatas.find { it.fileName == fileName } ?: run {
