@@ -273,12 +273,22 @@ internal class StoredData<T : Any>(
                 then("copy") {
                     storageAction {
                         val path = getActivePath()
-                        val text = getText(path) ?: run {
+                        val text = runCatching {
+                            getText(path)
+                        }.getOrElse {
+                            Text.of("JSON couldn't be parsed", TextColor.RED).sendWithPrefix()
+                            return@storageAction
+                        } ?: run {
                             Text.of("No data found for $fileName", TextColor.RED).sendWithPrefix()
                             return@storageAction
                         }
-                        McClient.clipboard = text
-                        Text.sendDebug("Copied $fileName to clipboard")
+
+                        try {
+                            McClient.clipboard = text
+                            Text.sendDebug("Copied $fileName to clipboard")
+                        } catch (e: OutOfMemoryError) {
+                            Text.of("Data is too big to copy to clipboard", TextColor.RED).sendWithPrefix()
+                        }
                     }
                 }
                 then("open") {
@@ -297,8 +307,14 @@ internal class StoredData<T : Any>(
                             Text.of("No data in clipboard", TextColor.RED).sendWithPrefix()
                             return@storageAction
                         }
-                        setText(text)
-                        Text.sendDebug("Pasted clipboard to $fileName")
+
+                        runCatching {
+                            setText(text)
+                        }.onSuccess {
+                            Text.sendDebug("Pasted clipboard to $fileName")
+                        }.onFailure {
+                            Text.of("JSON couldn't be parsed", TextColor.RED).sendWithPrefix()
+                        }
                     }
                 }
             }
