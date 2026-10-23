@@ -20,6 +20,16 @@ stonecutter parameters {
     swaps["minecraft"] = "\"" + node.metadata.version + "\";"
 }
 
+fun Project.isDummy(): Boolean = buildscript.sourceFile?.name == "dummy.gradle.kts"
+
+stonecutter.versions.forEach {
+    val project = project(it.project)
+    if (!project.isDummy()) return@forEach
+    project.tasks.configureEach {
+        enabled = false
+    }
+}
+
 
 evaluationDependsOnChildren()
 
@@ -30,6 +40,9 @@ val sbapiComponent = componentFactory.adhoc("sbapi")
 stonecutter.versions.forEach { (project, version) ->
     val gradleFriendlyVersion = version.replace(".", "")
     val project = project(project)
+
+    // we don't want to publish the dummy version
+    if (project.isDummy()) return@forEach
 
     val java = project.components.getByName<DefaultAdhocSoftwareComponent>("java")
     java.usages.forEach { context ->

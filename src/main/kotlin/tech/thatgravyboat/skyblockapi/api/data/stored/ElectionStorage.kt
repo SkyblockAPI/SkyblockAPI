@@ -70,7 +70,7 @@ internal object ElectionStorage {
 
     fun nextPerkpocalypse(instant: Instant = currentInstant()): Instant? {
         val index = getPerkpocalypseRealIndex(instant) ?: return null
-        return startMayorTime + PERKPOCALYPSE_CANDIDATE_DURATION * index
+        return startMayorTime + PERKPOCALYPSE_CANDIDATE_DURATION * (index + 1)
     }
 
     private fun getPerkpocalypseRealIndex(instant: Instant): Int? {

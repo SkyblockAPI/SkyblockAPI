@@ -3,6 +3,7 @@ package tech.thatgravyboat.skyblockapi.impl
 import com.mojang.blaze3d.platform.InputConstants
 import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.components.ScrollableLayout
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.LinearLayout
 import net.minecraft.client.gui.screens.Screen
@@ -11,12 +12,12 @@ import net.minecraft.client.input.MouseButtonInfo
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.DebugEntry
+import tech.thatgravyboat.skyblockapi.utils.DebugMultiSelect
 import tech.thatgravyboat.skyblockapi.utils.DebugSelect
 import tech.thatgravyboat.skyblockapi.utils.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.DevUtils
@@ -31,14 +32,10 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
 // im sorry to whoever has to read this and understand this
 internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
 
-    val debugEntries: List<DebugEntry> = DevUtils.allDevUtils.flatMap { it.allDebugEntries }
+    val debugEntries: List<DebugEntry> = DevUtils.allDevUtils.flatMap { it.debugEntries.values }
 
     private fun debugEntryByPath(path: List<String>): DebugEntry? {
-        return debugEntries.find { it.location.split() == path }
-    }
-    private fun Identifier.split(): List<String> = buildList {
-        add(namespace)
-        addAll(path.split('/', '.', '-'))
+        return debugEntries.find { it.splitLocation() == path }
     }
 
     private fun MutableComponent.appendDefaultSelected(text: String) {
@@ -55,42 +52,80 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
         // we show its states
         if (column == selectedPath.size) {
             val selectedEntry = debugEntryByPath(selectedPath)
-            if (selectedEntry is DebugSelect<*>) {
-                val supportsChangingDefault = selectedEntry.canSetDefault()
-                return buildList {
-                    fun addValue(name: String?) {
-                        val canBeConfigDefault = supportsChangingDefault && (name != selectedEntry.getDefaultStateName())
-                        val isConfigDefault = selectedEntry.getDefault() == name
+            val supportsChangingDefault = selectedEntry?.canSetDefault() ?: false
+            when (selectedEntry) {
+                is DebugSelect<*> -> {
+                    return buildList {
+                        fun addValue(name: String?) {
+                            val canBeConfigDefault = supportsChangingDefault && (name != selectedEntry.getDefaultStateName())
+                            val isConfigDefault = selectedEntry.getDefault() == name
 
-                        val isSelected = selectedEntry.stateName() == name
-                        fun component(enabled: Int, default: Int) = Text.of {
-                            if (isSelected) {
-                                append("[x]", enabled)
-                            } else append("[_]")
-                            color = default
-                            append(" ")
-                            append(name ?: "<null>") {
-                                if (isSelected) underlined = true
-                            }
+                            val isSelected = selectedEntry.stateName() == name
+                            fun component(enabled: Int, default: Int) = Text.of {
+                                if (isSelected) {
+                                    append("[x]", enabled)
+                                } else append("[_]")
+                                color = default
+                                append(" ")
+                                append(name ?: "<null>") {
+                                    if (isSelected) underlined = true
+                                }
 
-                            if (canBeConfigDefault && isConfigDefault) {
-                                appendDefaultSelected("as selected")
+                                if (canBeConfigDefault && isConfigDefault) {
+                                    appendDefaultSelected("as selected")
+                                }
                             }
+                            entry(
+                                message = component(TextColor.DARK_GREEN, TextColor.GRAY),
+                                hovered = component(TextColor.GREEN, TextColor.WHITE),
+                                leftClick = { selectedEntry.setByName(name) },
+                                rightClick = if (!supportsChangingDefault) null else Runnable {
+                                    if (isConfigDefault) selectedEntry.setDefault(selectedEntry.getDefaultStateName())
+                                    else selectedEntry.setDefault(name)
+                                },
+                            ).let(::add)
                         }
-                        entry(
-                            message = component(TextColor.DARK_GREEN, TextColor.GRAY),
-                            hovered = component(TextColor.GREEN, TextColor.WHITE),
-                            leftClick = { selectedEntry.setByName(name) },
-                            rightClick = if (!supportsChangingDefault) null else Runnable {
-                                if (isConfigDefault) selectedEntry.setDefault(selectedEntry.getDefaultStateName())
-                                else selectedEntry.setDefault(name)
-                            },
-                        ).let(::add)
+
+                        val defaultState = selectedEntry.getDefaultStateName()
+                        addValue(defaultState)
+                        selectedEntry.states().sorted().filterNot { it == defaultState }.forEach(::addValue)
                     }
-                    val defaultState = selectedEntry.getDefaultStateName()
-                    addValue(defaultState)
-                    selectedEntry.states().sorted().filterNot { it == defaultState }.forEach(::addValue)
                 }
+
+                is DebugMultiSelect<*> -> {
+                    return buildList {
+                        fun addValue(name: String) {
+                            val isSelected = selectedEntry.isSelectedByName(name)
+                            val isConfigDefault = selectedEntry.getIsDefaultSelectedByName(name)
+
+                            fun component(enabled: Int, default: Int) = Text.of {
+                                if (isSelected) {
+                                    append("[x]", enabled)
+                                } else append("[_]")
+                                color = default
+                                append(" ")
+                                append(name) {
+                                    if (isSelected) underlined = true
+                                }
+
+                                if (supportsChangingDefault && isConfigDefault) {
+                                    appendDefaultSelected("as selected")
+                                }
+                            }
+                            entry(
+                                message = component(TextColor.DARK_GREEN, TextColor.GRAY),
+                                hovered = component(TextColor.GREEN, TextColor.WHITE),
+                                leftClick = { selectedEntry.toggleByName(name) },
+                                rightClick = if (!supportsChangingDefault) null else Runnable {
+                                    selectedEntry.setDefaultSelectedByName(name, !isConfigDefault)
+                                },
+                            ).let(::add)
+                        }
+                        selectedEntry.states().sorted().forEach(::addValue)
+                    }
+                }
+
+                else -> {}
             }
         }
 
@@ -98,21 +133,29 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
 
         return debugEntries.asSequence()
             .map { entry ->
-                entry.location.split()
+                // splits the entry location into different strings separated by `/.-`, where the index
+                // indicates which part should be displayed in each column
+                entry.splitLocation()
             }.filter { split ->
+                // only shows the paths that actually match the selected path up until the current column
                 split.take(column) == selectedPath.take(column)
             }.mapNotNull { split ->
+                // if the current path is smaller than the column path, we ignore it, since that means that
+                // it was already displayed in a previous column (I think)
                 if (split.size <= column) return@mapNotNull null
+                // we take 1 extra element from column, as column starts at index 0
                 split.take(column + 1)
-            }.distinct()
-            .sortedBy { it.last() }
+            }.distinct() // we remove duplicate paths
+            .sortedBy { it.last() } // we sort by the name, which is the last split
             .map { path ->
                 path to debugEntryByPath(path)
             }.sortedBy { (_, entry) ->
+                // debug selects should go first, then multi selects, then toggles, then other branches
                 when (entry) {
                     null -> 0
                     is DebugSelect<*> -> 1
-                    is DebugToggle -> 2
+                    is DebugMultiSelect<*> -> 2
+                    is DebugToggle -> 3
                 }
             }.map { (path, entry) ->
                 val name = path.last()
@@ -141,6 +184,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             rightClick = if (!supportsChangingDefault) null else Runnable { entry.toggleDefault() },
                         )
                     }
+
                     is DebugSelect<*> -> {
                         val supportsChangingConfig = entry.canSetDefault()
                         val hasSetConfig = supportsChangingConfig && entry.hasDefault()
@@ -178,8 +222,48 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             },
                         )
                     }
+
+                    is DebugMultiSelect<*> -> {
+                        val supportsChangingConfig = entry.canSetDefault()
+                        val hasSetConfig = supportsChangingConfig && entry.hasDefault()
+                        val isSetDefaultState = entry.isDefaultState()
+
+                        fun component(enabled: Int, default: Int, selected: Int) = Text.of {
+                            this.color = if (isSetDefaultState) default else enabled
+                            if (!isSelected) {
+                                append("[+] $name")
+                            } else {
+                                append("[", selected)
+                                append("+")
+                                append("]", selected)
+                                append(" ")
+                                append(name) {
+                                    underlined = true
+                                }
+                            }
+
+                            if (entry.hasDescription()) {
+                                hover = Text.of(entry.description, TextColor.YELLOW)
+                            }
+
+                            if (hasSetConfig) {
+                                appendDefaultSelected("to custom")
+                            }
+                        }
+
+                        entry(
+                            message = component(TextColor.DARK_GREEN, TextColor.GRAY, TextColor.YELLOW),
+                            hovered = component(TextColor.GREEN, TextColor.WHITE, TextColor.ORANGE),
+                            leftClick = { selectedPath = if (!isSelected) path else path.dropLast(1) },
+                            rightClick = {
+                                if (hasSetConfig) entry.setDefault(entry.getDefaultStateSerialized())
+                                else entry.setBySerialized(entry.getDefaultStateSerialized())
+                            },
+                        )
+                    }
+
                     else -> {
-                        fun component(selected : Int, default: Int, selectedNamespace: Int, defaultNamespace: Int) = Text.of(name) {
+                        fun component(selected: Int, default: Int, selectedNamespace: Int, defaultNamespace: Int) = Text.of(name) {
                             if (isSelected) {
                                 color = if (isNamespace) selectedNamespace else selected
                                 underlined = true
@@ -188,6 +272,7 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
                             }
                         }
                         entry(
+                            // slightly darker aqua
                             component(0x007788, TextColor.GRAY, TextColor.DARK_GREEN, TextColor.YELLOW),
                             component(TextColor.AQUA, TextColor.WHITE, TextColor.GREEN, TextColor.GOLD),
                             leftClick = { selectedPath = if (!isSelected) path else path.dropLast(1) },
@@ -212,12 +297,21 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
         return selectedPath.take(path.size) == path
     }
 
+    // scrollables of the current screen, to be used for restoring the scroll amount when refreshing
+    private val scrollables = mutableMapOf<List<String>, ScrollableLayout>()
+
     override fun init() {
         super.init()
         val horizontalLayout = LinearLayout.horizontal().spacing(5)
+        val maxHeight = height - PADDING * 2
+
+        // scroll amounts of the previous screen
+        val scrollAmounts = scrollables.mapValues { (_, scrollable) -> scrollable.container.scrollAmount() }
+        scrollables.clear()
 
         // 10 just in case a mod creates an insanely long debug entry
         for (column in 0..10) {
+            val currentPath = selectedPath.take(column)
             val widgets = getSelected(column)
             if (widgets.isEmpty()) break
 
@@ -225,11 +319,20 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
             widgets.forEach(currentLayout::addChild)
             currentLayout.arrangeElements()
 
-            horizontalLayout.addChild(currentLayout)
+            val scrollable = ScrollableLayout(minecraft, currentLayout, maxHeight)
+            scrollables[currentPath] = scrollable
+
+            horizontalLayout.addChild(scrollable)
         }
         horizontalLayout.arrangeElements()
 
-        horizontalLayout.setPosition(10, 10)
+        horizontalLayout.setPosition(PADDING, PADDING)
+
+        // update the scroll amount where applicable
+        scrollables.forEach { (key, scrollable) ->
+            scrollAmounts[key]?.let(scrollable.container::setScrollAmount)
+        }
+
         horizontalLayout.visitWidgets(this::addRenderableWidget)
     }
 
@@ -281,6 +384,8 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
 
     @Module
     companion object {
+        private const val PADDING = 10
+
         @Subscription
         context(event: RegisterSkyblockApiCommandsEvent)
         private fun registerCommands() {

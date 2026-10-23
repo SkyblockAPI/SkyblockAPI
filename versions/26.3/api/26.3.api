@@ -7842,11 +7842,45 @@ public abstract interface class tech/thatgravyboat/skyblockapi/utils/DebugEntry 
 	public abstract fun getDevUtils ()Ltech/thatgravyboat/skyblockapi/utils/DevUtils;
 	public abstract fun getLocation ()Lnet/minecraft/resources/Identifier;
 	public fun hasDescription ()Z
+	public fun splitLocation ()Ljava/util/List;
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/DebugEntry$DefaultImpls {
 	public static fun canSetDefault (Ltech/thatgravyboat/skyblockapi/utils/DebugEntry;)Z
 	public static fun hasDescription (Ltech/thatgravyboat/skyblockapi/utils/DebugEntry;)Z
+	public static fun splitLocation (Ltech/thatgravyboat/skyblockapi/utils/DebugEntry;)Ljava/util/List;
+}
+
+public class tech/thatgravyboat/skyblockapi/utils/DebugMultiSelect : tech/thatgravyboat/skyblockapi/utils/DebugEntry {
+	public fun <init> (Lnet/minecraft/resources/Identifier;Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/DevUtils;Ljava/util/Set;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Lnet/minecraft/resources/Identifier;Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/utils/DevUtils;Ljava/util/Set;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun canSetDefault ()Z
+	public final fun get ()Ljava/util/Set;
+	public final fun getByName (Ljava/lang/String;)Ljava/lang/Object;
+	public final fun getDefault ()Ljava/lang/String;
+	public final fun getDefaultState ()Ljava/util/Set;
+	public final fun getDefaultStateSerialized ()Ljava/lang/String;
+	public fun getDescription ()Ljava/lang/String;
+	public fun getDevUtils ()Ltech/thatgravyboat/skyblockapi/utils/DevUtils;
+	public final fun getIsDefaultSelectedByName (Ljava/lang/String;)Z
+	public fun getLocation ()Lnet/minecraft/resources/Identifier;
+	public final fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Ljava/util/Set;
+	public final fun getValue (Ljava/lang/Void;Lkotlin/reflect/KProperty;)Ljava/util/Set;
+	public final fun hasDefault ()Z
+	public fun hasDescription ()Z
+	public final fun isDefaultState ()Z
+	public final fun isSelected (Ljava/lang/Object;)Z
+	public final fun isSelectedByName (Ljava/lang/String;)Z
+	public final fun reset ()V
+	public final fun serialized ()Ljava/lang/String;
+	public final fun set (Ljava/util/Collection;)V
+	public final fun setBySerialized (Ljava/lang/String;)V
+	public final fun setDefault (Ljava/lang/String;)V
+	public final fun setDefaultSelectedByName (Ljava/lang/String;Z)V
+	public fun splitLocation ()Ljava/util/List;
+	public final fun states ()Ljava/util/List;
+	public final fun toggle (Ljava/lang/Object;)V
+	public final fun toggleByName (Ljava/lang/String;)V
 }
 
 public class tech/thatgravyboat/skyblockapi/utils/DebugSelect : tech/thatgravyboat/skyblockapi/utils/DebugEntry {
@@ -7865,13 +7899,14 @@ public class tech/thatgravyboat/skyblockapi/utils/DebugSelect : tech/thatgravybo
 	public final fun getValue (Ljava/lang/Void;Lkotlin/reflect/KProperty;)Ljava/lang/Object;
 	public final fun hasDefault ()Z
 	public fun hasDescription ()Z
-	public final fun hasState ()Z
+	public final synthetic fun hasState ()Z
 	public final fun isDefaultState ()Z
 	public final fun isNullable ()Z
 	public final fun reset ()V
 	public final fun set (Ljava/lang/Object;)V
 	public final fun setByName (Ljava/lang/String;)V
 	public final fun setDefault (Ljava/lang/String;)V
+	public fun splitLocation ()Ljava/util/List;
 	public final fun stateName ()Ljava/lang/String;
 	public final fun states ()Ljava/util/List;
 	public final fun update ()V
@@ -7892,11 +7927,13 @@ public class tech/thatgravyboat/skyblockapi/utils/DebugToggle : tech/thatgravybo
 	public final fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Z
 	public final fun getValue (Ljava/lang/Void;Lkotlin/reflect/KProperty;)Z
 	public fun hasDescription ()Z
+	public final fun reset ()V
 	public final fun set (Z)V
 	public final fun setState (Z)V
+	public fun splitLocation ()Ljava/util/List;
 	public final fun toggle ()V
 	public final fun toggleDefault ()V
-	public final fun update ()V
+	public final synthetic fun update ()V
 }
 
 public abstract class tech/thatgravyboat/skyblockapi/utils/DevUtils {
@@ -7905,32 +7942,41 @@ public abstract class tech/thatgravyboat/skyblockapi/utils/DevUtils {
 	public final fun debugMessage (Ltech/thatgravyboat/skyblockapi/utils/DebugToggle;Lkotlin/jvm/functions/Function0;)V
 	public final fun debugMessageComponent (Ltech/thatgravyboat/skyblockapi/utils/DebugToggle;Lkotlin/jvm/functions/Function0;)V
 	public final fun debugMessageString (Ltech/thatgravyboat/skyblockapi/utils/DebugToggle;Lkotlin/jvm/functions/Function0;)V
-	public final fun getAllDebugEntries ()Ljava/util/List;
+	public final synthetic fun getAllDebugEntries ()Ljava/util/List;
 	public abstract fun getCommandName ()Ljava/lang/String;
+	public final fun getDebugEntries ()Ljava/util/Map;
+	public final fun getDebugMultiSelects ()Ljava/util/Map;
+	public final fun getDebugSelects ()Ljava/util/Map;
+	public final fun getDebugToggles ()Ljava/util/Map;
+	public fun getDefaultMultiSelect (Lnet/minecraft/resources/Identifier;)Ljava/lang/String;
 	public fun getDefaultSelect (Lnet/minecraft/resources/Identifier;)Ljava/lang/String;
 	public fun getDefaultToggle (Lnet/minecraft/resources/Identifier;)Z
 	protected final fun getName ()Ljava/lang/String;
 	public fun getNamespace ()Ljava/lang/String;
 	protected fun getPath ()Ljava/nio/file/Path;
 	protected final fun getPropertiesInstance ()Ljava/util/Properties;
-	public final fun getSelect ()Ljava/util/Map;
-	public final fun getSelectStates ()Ljava/util/Map;
-	public final fun getStates ()Ljava/util/Map;
+	public final synthetic fun getSelect ()Ljava/util/Map;
+	public final synthetic fun getSelectStates ()Ljava/util/Map;
+	public final synthetic fun getStates ()Ljava/util/Map;
 	public fun getSupportsChangingDefault ()Z
-	public final fun getToggles ()Ljava/util/List;
-	public final fun isOn (Lnet/minecraft/resources/Identifier;)Z
+	public final synthetic fun getToggles ()Ljava/util/List;
+	public final fun getValues ()Ljava/util/Map;
+	public final synthetic fun isOn (Lnet/minecraft/resources/Identifier;)Z
 	protected fun loadFromProperties (Ljava/nio/file/Path;)Ljava/util/Map;
 	public final fun onCommandRegister (Ltech/thatgravyboat/skyblockapi/api/events/misc/RegisterCommandsEvent;)V
 	protected fun propertyKey (Lnet/minecraft/resources/Identifier;)Ljava/lang/String;
+	public final fun register (Ltech/thatgravyboat/skyblockapi/utils/DebugMultiSelect;)V
 	public final fun register (Ltech/thatgravyboat/skyblockapi/utils/DebugSelect;)V
 	public final fun register (Ltech/thatgravyboat/skyblockapi/utils/DebugToggle;)V
 	protected fun saveProperties (Lnet/minecraft/resources/Identifier;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public abstract fun send (Lnet/minecraft/network/chat/MutableComponent;)V
-	public final fun setSelect (Lnet/minecraft/resources/Identifier;Ljava/lang/String;)V
+	public fun setMultiSelectDefault (Lnet/minecraft/resources/Identifier;Ljava/lang/String;)V
+	public final synthetic fun setSelect (Lnet/minecraft/resources/Identifier;Ljava/lang/String;)V
 	public fun setSelectDefault (Lnet/minecraft/resources/Identifier;Ljava/lang/String;)V
-	public final fun setToggle (Lnet/minecraft/resources/Identifier;Z)V
+	public final synthetic fun setToggle (Lnet/minecraft/resources/Identifier;Z)V
 	public fun setToggleDefault (Lnet/minecraft/resources/Identifier;Z)V
-	public final fun toggle (Lnet/minecraft/resources/Identifier;)V
+	public final synthetic fun toggle (Lnet/minecraft/resources/Identifier;)V
+	public final synthetic fun toggleMultiSelectItem (Lnet/minecraft/resources/Identifier;Ljava/lang/String;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/DevUtils$Companion {
