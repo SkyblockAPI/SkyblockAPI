@@ -51,10 +51,6 @@ public object DebugChat {
     internal fun onMessageFirst(event: ChatReceivedEvent.Pre) {
         messages.add(currentInstant() to StoredMessage(event.component, event.messageId))
         while (messages.size > maxMessages) messages.removeFirst()
-
-        if ((0..10).random() <= 2) {
-            event.cancel()
-        }
     }
 
     @Subscription(receiveCancelled = true)
@@ -65,9 +61,6 @@ public object DebugChat {
 
     @Subscription(receiveCancelled = true)
     internal fun onMessagePost(event: ChatReceivedEvent.Post) {
-        if ((0..10).random() <= 2) {
-            event.component = Text.of("Modified")
-        }
         val entry = getStored(event) ?: return
         if (entry.original != event.component) {
             entry.modified = event.component
