@@ -9,8 +9,9 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.UUID
 
-public abstract class ChatReceivedEvent(public val messageId: UUID) : SkyBlockEvent() {
-
+public abstract class ChatReceivedEvent internal constructor(public val messageId: UUID) : SkyBlockEvent() {
+    //? < 26.4
+    @Deprecated("No", level = DeprecationLevel.HIDDEN) public constructor(): this(UUID.randomUUID())
     public abstract val component: Component
 
     public open val text: String get() = component.stripped
