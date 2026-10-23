@@ -360,7 +360,7 @@ public enum class ProfileType(
     NORMAL,
     BINGO('Ⓑ', apiName = "bingo"),
     IRONMAN('♲', apiName = "ironman"),
-    STRANDED('☀', apiName = "bingo"),
+    STRANDED('☀', apiName = "island"),
     UNKNOWN,
     ;
 
