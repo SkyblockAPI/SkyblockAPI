@@ -76,7 +76,11 @@ tasks.withType<KotlinCompile>().configureEach {
             "kotlin.time.ExperimentalTime",
             "kotlin.contracts.ExperimentalContracts",
         )
-        allWarningsAsErrors = true
+        allWarningsAsErrors.set(
+            providers.gradleProperty("warningsAsErrors")
+                .map(String::toBoolean)
+                .getOrElse(false)
+        )
         extraWarnings = true
         freeCompilerArgs.addAll(
             "-Xcontext-sensitive-resolution",

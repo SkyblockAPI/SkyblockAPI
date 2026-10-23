@@ -26,7 +26,7 @@ jobs:
                 uses: gradle/actions/setup-gradle@v5
             -   run: chmod +x gradlew
             -   name: Build
-                run: ./gradlew :${{ matrix.version }}:build
+                run: ./gradlew :${{ matrix.version }}:build -PwarningsAsErrors=true
             -   name: Upload Artifact
                 uses: actions/upload-artifact@v7.0.0
                 with:
