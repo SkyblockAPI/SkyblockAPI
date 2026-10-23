@@ -31,6 +31,11 @@ stonecutter.versions.forEach { (project, version) ->
     val gradleFriendlyVersion = version.replace(".", "")
     val project = project(project)
 
+    // we don't want to publish the dummy version
+    if (project.buildscript.sourceFile?.name == "dummy.gradle.kts") {
+        return@forEach
+    }
+
     val java = project.components.getByName<DefaultAdhocSoftwareComponent>("java")
     java.usages.forEach { context ->
         val config = configurations.create(gradleFriendlyVersion + "_" + context.name) {
