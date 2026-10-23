@@ -29,12 +29,12 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
-import tech.thatgravyboat.skyblockapi.utils.DebugToggle
-import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugComponent
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.codecs.IncludedCodecs
 import tech.thatgravyboat.skyblockapi.utils.command.mapped
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugComponent
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName

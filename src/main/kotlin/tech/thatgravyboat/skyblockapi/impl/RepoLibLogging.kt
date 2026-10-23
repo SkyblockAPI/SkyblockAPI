@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.impl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.api.RepoLibLogger
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugToggle
 
 public object RepoLibLogging : RepoLibLogger, Logger by LoggerFactory.getLogger("Repo-Lib") {
     public val enableDebugLogging: Boolean by debugToggle("repo_lib_debug_logging")

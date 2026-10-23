@@ -22,8 +22,8 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.platform.identifier
-import tech.thatgravyboat.skyblockapi.utils.debugSelect
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugSelect
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch

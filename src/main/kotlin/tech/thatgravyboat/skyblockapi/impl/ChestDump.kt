@@ -32,7 +32,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterContainerItems
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
