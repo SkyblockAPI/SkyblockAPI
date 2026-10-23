@@ -24,6 +24,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.toStringWithFormattingCodes
+import java.util.UUID
 import kotlin.time.Instant
 
 @Module
@@ -31,6 +32,7 @@ public object DebugChat {
 
     private data class StoredMessage(
         val original: Component,
+        val id: UUID,
         var modified: Component? = null,
         var cancelled: Boolean = false,
     )
@@ -41,26 +43,34 @@ public object DebugChat {
     private val maxMessages = SkyBlockApiDevUtils.getInt("debug_chat_max_size", if (McClient.isDev) 10_000 else 500)
     private val messages = mutableListOf<Pair<Instant, StoredMessage>>()
 
-    @Subscription(priority = Int.MIN_VALUE, receiveCancelled = true)
-    internal fun onMessageFirst(event: ChatReceivedEvent.Pre) {
-        messages.add(currentInstant() to StoredMessage(event.component))
-        while (messages.size > maxMessages) messages.removeFirst()
-    }
+    private fun getStored(event: ChatReceivedEvent): StoredMessage? = messages.find {
+        it.second.id == event.messageId
+    }?.second
 
-    @Subscription(priority = Int.MAX_VALUE, receiveCancelled = true)
-    internal fun onMessageLast(event: ChatReceivedEvent.Pre) {
-        val last = messages.lastOrNull()?.second ?: return
-        last.cancelled = event.isCancelled
-        if (last.original != event.component) {
-            last.modified = event.component
+    @Subscription(receiveCancelled = true)
+    internal fun onMessageFirst(event: ChatReceivedEvent.Pre) {
+        messages.add(currentInstant() to StoredMessage(event.component, event.messageId))
+        while (messages.size > maxMessages) messages.removeFirst()
+
+        if ((0..10).random() <= 2) {
+            event.cancel()
         }
     }
 
-    @Subscription(priority = Int.MAX_VALUE)
-    internal fun onMessagePostLast(event: ChatReceivedEvent.Post) {
-        val last = messages.lastOrNull()?.second ?: return
-        if (last.original != event.component) {
-            last.modified = event.component
+    @Subscription(receiveCancelled = true)
+    internal fun onMessageCancelled(event: ChatReceivedEvent.Cancelled) {
+        val entry = getStored(event) ?: return
+        entry.cancelled = true
+    }
+
+    @Subscription(receiveCancelled = true)
+    internal fun onMessagePost(event: ChatReceivedEvent.Post) {
+        if ((0..10).random() <= 2) {
+            event.component = Text.of("Modified")
+        }
+        val entry = getStored(event) ?: return
+        if (entry.original != event.component) {
+            entry.modified = event.component
         }
     }
 
@@ -117,17 +127,21 @@ public object DebugChat {
                 JsonParser.parseString(clipboard).toData(ComponentSerialization.CODEC)
             }.getOrNull() ?: LegacyTextFixer.parse(clipboard)
 
-            if (ChatReceivedEvent.Pre(component).post()) {
+            val id = UUID.randomUUID()
+
+            if (ChatReceivedEvent.Pre(component, id).post()) {
+                ChatReceivedEvent.Cancelled(component, id).post()
                 Text.sendDebug("Chat event cancelled!") {
                     color = TextColor.RED
                 }
                 component.send()
             } else {
-                val event = ChatReceivedEvent.Post(component)
+                val event = ChatReceivedEvent.Post(component, messageId = id)
                 event.post()
                 if (event.component != component) {
                     Text.sendDebug("Chat event modified!")
                 }
+                ChatReceivedEvent.Sent(component, id).post()
                 event.component.send()
             }
         }

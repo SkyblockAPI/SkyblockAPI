@@ -17,4 +17,6 @@ public abstract class ActionBarReceivedEvent : SkyBlockEvent() {
         override val coloredText: String = component.string
     }
     public class Post(override var component: Component) : ActionBarReceivedEvent()
+    public class Cancelled(override var component: Component) : ActionBarReceivedEvent()
+    public class Sent(override var component: Component) : ActionBarReceivedEvent()
 }
