@@ -158,7 +158,7 @@ internal class StoredData<T : Any>(
 
     private fun getText(path: Path): String? = if (path.exists()) path.readText() else null
 
-    private fun getActivePath(): Path = if (shouldUseAlphaData()) alphaPath else path
+    private fun getActivePath(): Path = if (shouldUseAlphaData() && alphaData != null) alphaPath else path
 
     private fun setText(content: String) {
         val data = loadData(content)
@@ -244,14 +244,15 @@ internal class StoredData<T : Any>(
             clearAndRun(requiresAlphaSave, StoredData<*>::saveAlphaToSystem)
         }
 
-        private fun LiteralCommandBuilder.storageAction(readable: Boolean = true, block: StoredData<*>.() -> Unit) =
+        private fun LiteralCommandBuilder.storageAction(readable: Boolean = true, block: StoredData<*>.() -> Unit) {
+            val folderStorages = FolderStorage.allStorages.flatMap { it.getStorages().values }
+            val filtered = allStoredDatas.filter {
+                (!readable || it.getActivePath().exists()) && it !in folderStorages
+            }
             thenCallback(
                 "storage",
                 StringArgumentType.string(),
-                allStoredDatas.filter {
-                    it !in ChestDump.storage.getStorages().values &&
-                        !readable || it.path.exists()
-                }.map { it.fileName },
+                filtered.map { it.fileName },
             ) {
                 val fileName = argument<String>("storage")
                 val storage = allStoredDatas.find { it.fileName == fileName } ?: run {
@@ -260,6 +261,7 @@ internal class StoredData<T : Any>(
                 }
                 storage.block()
             }
+        }
 
         @Subscription
         private fun registerCommands(event: RegisterSkyblockApiCommandsEvent) {
