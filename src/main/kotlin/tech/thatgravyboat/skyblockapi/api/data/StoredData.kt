@@ -19,7 +19,6 @@ import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.impl.ChestDump
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
@@ -132,7 +131,7 @@ internal class StoredData<T : Any>(
         return alphaData
     }
 
-    private fun loadData(content: String): T {
+    private fun parseData(content: String): T {
         val json = JsonParser.parseString(content) as? JsonObject
         return if (json != null && json.has("@skyblockapi:version")) {
             val version = json.get("@skyblockapi:version").asInt
@@ -149,7 +148,7 @@ internal class StoredData<T : Any>(
             return default()
         }
         return try {
-            loadData(text)
+            parseData(text)
         } catch (e: Exception) {
             Logger.error("Failed to load data from {}", path.relativeTo(defaultPath))
             e.printStackTrace()
@@ -162,7 +161,7 @@ internal class StoredData<T : Any>(
     private fun getActivePath(): Path = if (shouldUseAlphaData() && alphaData != null) alphaPath else path
 
     private fun setText(content: String) {
-        val data = loadData(content)
+        val data = parseData(content)
         set(data)
     }
 
