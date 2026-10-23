@@ -5,6 +5,7 @@ import com.google.gson.JsonParser
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.serialization.Codec
 import me.owdding.ktmodules.Module
+import net.minecraft.commands.SharedSuggestionProvider
 import org.apache.commons.io.FileUtils
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -244,15 +245,21 @@ internal class StoredData<T : Any>(
             clearAndRun(requiresAlphaSave, StoredData<*>::saveAlphaToSystem)
         }
 
-        private fun LiteralCommandBuilder.storageAction(readable: Boolean = true, block: StoredData<*>.() -> Unit) {
+        private fun getSuggestions(readable: Boolean = true): List<String> {
             val folderStorages = FolderStorage.allStorages.flatMap { it.getStorages().values }
             val filtered = allStoredDatas.filter {
                 (!readable || it.getActivePath().exists()) && it !in folderStorages
             }
+            return filtered.map { it.fileName }
+        }
+
+        private fun LiteralCommandBuilder.storageAction(readable: Boolean = true, block: StoredData<*>.() -> Unit) =
             thenCallback(
                 "storage",
                 StringArgumentType.string(),
-                filtered.map { it.fileName },
+                { _, builder ->
+                    SharedSuggestionProvider.suggest(getSuggestions(readable), builder)
+                },
             ) {
                 val fileName = argument<String>("storage")
                 val storage = allStoredDatas.find { it.fileName == fileName } ?: run {
@@ -261,7 +268,6 @@ internal class StoredData<T : Any>(
                 }
                 storage.block()
             }
-        }
 
         @Subscription
         private fun registerCommands(event: RegisterSkyblockApiCommandsEvent) {
@@ -288,7 +294,7 @@ internal class StoredData<T : Any>(
                         try {
                             McClient.clipboard = text
                             Text.sendDebug("Copied $fileName to clipboard")
-                        } catch (e: OutOfMemoryError) {
+                        } catch (_: OutOfMemoryError) {
                             Text.of("Data is too big to copy to clipboard", TextColor.RED).sendWithPrefix()
                         }
                     }
