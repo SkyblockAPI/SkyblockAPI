@@ -20,6 +20,16 @@ stonecutter parameters {
     swaps["minecraft"] = "\"" + node.metadata.version + "\";"
 }
 
+fun Project.isDummy(): Boolean = buildscript.sourceFile?.name == "dummy.gradle.kts"
+
+stonecutter.versions.forEach {
+    val project = project(it.project)
+    if (!project.isDummy()) return@forEach
+    project.tasks.configureEach {
+        enabled = false
+    }
+}
+
 
 evaluationDependsOnChildren()
 
@@ -32,9 +42,7 @@ stonecutter.versions.forEach { (project, version) ->
     val project = project(project)
 
     // we don't want to publish the dummy version
-    if (project.buildscript.sourceFile?.name == "dummy.gradle.kts") {
-        return@forEach
-    }
+    if (project.isDummy()) return@forEach
 
     val java = project.components.getByName<DefaultAdhocSoftwareComponent>("java")
     java.usages.forEach { context ->
