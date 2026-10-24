@@ -33,6 +33,7 @@ import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.exists
@@ -74,13 +75,28 @@ internal class StoredData<T : Any>(
         alphaData = null
     }
 
-    inline fun edit(edit: T.() -> Unit) {
+    /** Only saves if [edit] returns true. Also returns the result of [edit] */
+    @JvmName("editBoolean")
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    inline fun edit(edit: T.() -> Boolean): Boolean {
         contract {
             callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
         }
-        edit(get())
-        save()
+        val edited = edit(get())
+        if (edited) save()
+        return edited
     }
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    inline fun edit(edit: T.() -> Unit?) {
+        contract {
+            callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
+        }
+        if (edit(get()) != null) save()
+    }
+
 
     private fun loadNormalData() {
         if (data != null) return

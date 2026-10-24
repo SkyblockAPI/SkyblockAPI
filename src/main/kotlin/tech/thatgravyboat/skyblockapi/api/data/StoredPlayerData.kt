@@ -8,6 +8,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import java.util.UUID
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KClass
 
 internal class StoredPlayerData<T : Any>(
@@ -44,12 +45,26 @@ internal class StoredPlayerData<T : Any>(
         save()
     }
 
-    inline fun edit(edit: T.() -> Unit) {
+    /** Only saves if [edit] returns true. Also returns the result of [edit] */
+    @JvmName("editBoolean")
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    inline fun edit(edit: T.() -> Boolean): Boolean {
         contract {
             callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
         }
-        edit(get())
-        save()
+        val edited = edit(get())
+        if (edited) save()
+        return edited
+    }
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    inline fun edit(edit: T.() -> Unit?) {
+        contract {
+            callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
+        }
+        if (edit(get()) != null) save()
     }
 
     fun deleteAll() {
