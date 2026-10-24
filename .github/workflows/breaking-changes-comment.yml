@@ -24,7 +24,7 @@ jobs:
             run:
                 shell: bash
         env:
-            GH_TOKEN: ${{ github.token }}
+            GH_TOKEN: ${{ secrets.COMMENT_TOKEN }}
             MARKER: "<!-- breaking-changes-report -->"
             LABEL: "breaking change"
         steps:
