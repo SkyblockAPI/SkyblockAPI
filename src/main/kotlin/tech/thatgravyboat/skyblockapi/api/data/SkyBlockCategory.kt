@@ -39,7 +39,7 @@ public class SkyBlockCategory private constructor(
 
         public fun create(string: String, parseModifier: Boolean): SkyBlockCategory {
             val formatted = string.lowercase()
-            val modifier = Modifier.byName(formatted.substringBefore(" "))
+            val modifier = if (parseModifier) Modifier.byName(formatted.substringBefore(" ")) else null
             return registeredCategories.getOrPut(formatted) {
                 if (modifier == null) {
                     SkyBlockCategory(formatted)
