@@ -5,30 +5,14 @@ public class SkyBlockCategory private constructor(
     public val modifier: Modifier? = null,
 ) {
 
-    public val isDungeon: Boolean = modifier == Modifier.DUNGEON
-    public val isSlayer: Boolean = modifier == Modifier.SLAYER
+    public val isDungeon: Boolean get() = modifier == Modifier.DUNGEON
+    public val isSlayer: Boolean get() = modifier == Modifier.SLAYER
 
-    //? < 26.4
-    @JvmName("equalsModifier")
     public fun equals(other: SkyBlockCategory, ignoreModifiers: Boolean = false): Boolean =
         if (!ignoreModifiers) this === other else this.name == other.name
 
-    //? < 26.4
-    @JvmName("equalsAnyModifier")
     public fun equalsAny(vararg others: SkyBlockCategory, ignoreDungeon: Boolean = false): Boolean =
         others.any { equals(it, ignoreDungeon) }
-
-    //? < 26.4 {
-    @Deprecated("use other equals instead")
-    @JvmName("equals")
-    public fun equalsOld(other: SkyBlockCategory, ignoreDungeon: Boolean = false): Boolean =
-        if (!ignoreDungeon) this === other else this.name == other.name
-
-    @Deprecated("use other equalsAny instead")
-    @JvmName("equalsAny")
-    public fun equalsAnyOld(vararg others: SkyBlockCategory, ignoreDungeon: Boolean = false): Boolean =
-        others.any { equals(it, ignoreDungeon) }
-    //?}
 
     override fun toString(): String = if (modifier != null) "$modifier $name" else name
 
@@ -39,8 +23,8 @@ public class SkyBlockCategory private constructor(
 
         public fun create(string: String, parseModifier: Boolean): SkyBlockCategory {
             val formatted = string.lowercase()
-            val modifier = if (parseModifier) Modifier.byName(formatted.substringBefore(" ")) else null
             return registeredCategories.getOrPut(formatted) {
+                val modifier = if (parseModifier) Modifier.byName(formatted.substringBefore(" ")) else null
                 if (modifier == null) {
                     SkyBlockCategory(formatted)
                 } else {
@@ -146,7 +130,7 @@ public class SkyBlockCategory private constructor(
         public val ABILITY_SCROLL: SkyBlockCategory = create("ability scroll")
         public val CAPSULE: SkyBlockCategory = create("capsule")
         public val RABBIT: SkyBlockCategory = create("rabbit") // chocolate factory
-        public val DUNGEON_PASS: SkyBlockCategory = create("dungeon pass") // seems to be admin only
+        public val DUNGEON_PASS: SkyBlockCategory = create("dungeon pass") // seems to be admin only, not a dungeon modifier
     }
 
     public enum class Modifier(displayName: String? = null) {
