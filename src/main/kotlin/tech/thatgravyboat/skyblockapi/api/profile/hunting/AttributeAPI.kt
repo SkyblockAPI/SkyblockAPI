@@ -63,12 +63,12 @@ import kotlin.time.Instant
 @Module
 public data object AttributeAPI : ItemDebugCategory {
     //? < 26.4
-    @get:JvmName("newDebugToggle")
+    @get:JvmName("debugToggle")
     private val debugToggle: DebugToggle = debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
     private val isDebugEnabled by debugToggle
 
     //? < 26.4 {
-    @get:JvmName("debugToggle")
+    @get:JvmName("getDebugToggle")
     @Suppress("ObjectPropertyName", "DEPRECATION")
     @Deprecated("Should never have been public", level = DeprecationLevel.HIDDEN)
     public val _toggle: OldDebugToggle by lazy { debugToggle.toOld() }
