@@ -76,13 +76,13 @@ jobs:
                         if [ -n "$COMMENT_ID" ]; then
                             gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" -F body=@"$BODY" > /dev/null
                         else
-                            gh pr comment "$PR_NUMBER" --body-file "$BODY"
+                            gh -R skyblockapi/skyblockapi pr comment "$PR_NUMBER" --body-file "$BODY"
                         fi
                     }
 
                     if [ "$CONCLUSION" = "success" ]; then
                         [ -z "$COMMENT_ID" ] || gh api -X DELETE "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID"
-                        gh pr edit "$PR_NUMBER" --remove-label "$LABEL" || true
+                        gh -R skyblockapi/skyblockapi pr edit "$PR_NUMBER" --remove-label "$LABEL" || true
                     elif [ -s "$REPORT" ] && [ ! -L "$REPORT" ]; then
                         {
                             echo "$MARKER"
@@ -93,9 +93,9 @@ jobs:
                             echo '```'
                         } > "$BODY"
                         post_comment
-                        gh pr edit "$PR_NUMBER" --add-label "$LABEL"
+                        gh -R skyblockapi/skyblockapi pr edit "$PR_NUMBER" --add-label "$LABEL"
                     else
                         printf '%s\nBreaking-change verification failed, see the [workflow run](%s) for details.\n' "$MARKER" "$RUN_URL" > "$BODY"
                         post_comment
-                        gh pr edit "$PR_NUMBER" --remove-label "$LABEL" || true
+                        gh -R skyblockapi/skyblockapi pr edit "$PR_NUMBER" --remove-label "$LABEL" || true
                     fi
