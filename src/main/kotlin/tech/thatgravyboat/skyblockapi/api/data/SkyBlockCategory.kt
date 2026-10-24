@@ -130,7 +130,7 @@ public class SkyBlockCategory private constructor(
         public val ABILITY_SCROLL: SkyBlockCategory = create("ability scroll")
         public val CAPSULE: SkyBlockCategory = create("capsule")
         public val RABBIT: SkyBlockCategory = create("rabbit") // chocolate factory
-        public val DUNGEON_PASS: SkyBlockCategory = create("dungeon pass") // seems to be admin only, not a dungeon modifier
+        public val DUNGEON_PASS: SkyBlockCategory = create("dungeon pass", parseModifier = false) // seems to be admin only, not a dungeon modifier
     }
 
     public enum class Modifier(displayName: String? = null) {
