@@ -62,6 +62,18 @@ public sealed interface DebugEntry {
     public fun toNew(): NewDebugEntry
 }
 
+private object DummyUtils : DevUtils() {
+    override val commandName: String = "_"
+
+    override fun send(component: MutableComponent) {}
+}
+
+internal fun NewDebugToggle.toOld(): DebugToggle = DebugToggle(
+    this.location,
+    this.description,
+    DummyUtils,
+)
+
 @Deprecated("Replace with devutils package", ReplaceWith("tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle"))
 public open class DebugToggle @JvmOverloads constructor(
     override val location: Identifier,
@@ -677,7 +689,9 @@ public abstract class DevUtils {
     }
 
     init {
-        allDevUtils.add(this)
+        if (this !is DummyUtils) {
+            allDevUtils.add(this)
+        }
     }
 
     public companion object {
