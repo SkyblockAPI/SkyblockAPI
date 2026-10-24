@@ -117,7 +117,8 @@ public class SkyBlockCategory private constructor(
         public val FARMING_TOOL: SkyBlockCategory = create("farming tool")
         public val TROPHY: SkyBlockCategory = create("trophy")
         public val ABILITY_SCROLL: SkyBlockCategory = create("ability scroll")
-        public val CAPSULE: SkyBlockCategory = create("capsule")
+        public val ABILITY_SCROLL = create("ability scroll")
+        val CAPSULE: SkyBlockCategory = create("capsule")
         public val RABBIT: SkyBlockCategory = create("rabbit") // chocolate factory
         public val DUNGEON_PASS: SkyBlockCategory = create("dungeon pass") // seems to be admin only
     }

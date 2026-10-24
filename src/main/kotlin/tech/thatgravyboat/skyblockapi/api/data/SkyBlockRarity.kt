@@ -23,7 +23,8 @@ public enum class SkyBlockRarity(public val color: Int, public val skyBlockColor
 
     public val displayName: String = toFormattedName()
     public val uppercaseDisplayName: String = displayName.uppercase()
-    public val displayText: Component = Text.of(displayName) { this.color = this@SkyBlockRarity.color }
+    public val uppercaseDisplayName: String = displayName.uppercase()
+    val displayText: Component = Text.of(displayName) { this.color = this@SkyBlockRarity.color }
 
     override fun toString(): String = displayName
 

@@ -4,17 +4,9 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 
-public inline fun JsonObject(builder: JsonObjectBuilder.() -> Unit): JsonObject {
-    val json = JsonObjectBuilder()
-    builder(json)
-    return json.build()
-}
+public inline fun JsonObject(builder: JsonObjectBuilder.() -> Unit): JsonObject = JsonObjectBuilder.invoke(builder)
 
-public inline fun JsonArray(builder: JsonArrayBuilder.() -> Unit): JsonArray {
-    val json = JsonArrayBuilder()
-    builder(json)
-    return json.build()
-}
+public inline fun JsonArray(builder: JsonArrayBuilder.() -> Unit): JsonArray = JsonArrayBuilder.invoke(builder)
 
 public class JsonObjectBuilder {
 
@@ -39,6 +31,12 @@ public class JsonObjectBuilder {
 
     public fun build(): JsonObject {
         return json
+    }
+
+    companion object {
+        inline operator fun invoke(builder: JsonObjectBuilder.() -> Unit): JsonObject {
+            return JsonObjectBuilder().apply(builder).build()
+        }
     }
 }
 
@@ -65,5 +63,11 @@ public class JsonArrayBuilder {
 
     public fun build(): JsonArray {
         return json
+    }
+
+    companion object {
+        inline operator fun invoke(builder: JsonArrayBuilder.() -> Unit): JsonArray {
+            return JsonArrayBuilder().apply(builder).build()
+        }
     }
 }

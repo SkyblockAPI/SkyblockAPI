@@ -3,6 +3,7 @@
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import kotlin.io.path.createDirectories
 
 plugins {
     kotlin("jvm")
@@ -219,6 +220,12 @@ dependencies {
 
 val mcVersion = stonecutter.current.version.replace(".", "")
 
+val regexDumpFile = project.layout.buildDirectory.file("regexes/regexes.json")
+
+val datagenOutput = project.layout.buildDirectory.file("generated/skyblock-api/data").apply {
+    get().asFile.toPath().createDirectories()
+}
+
 loom {
     log4jConfigs.from(rootProject.projectDir.resolve("gradle/log4j.config.xml"))
     runConfigs["client"].apply {
@@ -226,7 +233,6 @@ loom {
         runDirectory = project.file("../../run")
         jvmArguments.add("-Dfabric.modsFolder=${mcVersion}Mods")
     }
-
     if (accessWidenerFile.exists()) {
         accessWidenerPath.set(accessWidenerFile)
     }
@@ -234,12 +240,64 @@ loom {
 
 tasks.named("checkKotlinAbi") { enabled = false }
 
+
+fabricApi {
+    configureDataGeneration {
+        client.set(true)
+        modId.set("skyblock-api-datagen")
+        createSourceSet.set(true)
+        createRunConfiguration.set(true)
+        outputDirectory.set(datagenOutput)
+    }
+}
+
+tasks.named<JavaExec>("runDatagen") {
+    outputs.file(regexDumpFile)
+}
+
 tasks.withType<ValidateAccessWidenerTask> { enabled = false }
+
+
+afterEvaluate {
+    loom {
+        runs {
+            named("datagen") {
+                ideConfigFolder.set("Datagen")
+            }
+
+            // This creates a gradle task called "runDumpRegexes"
+            create("dumpRegexes") {
+                inherit(getByName("datagen"))
+                displayName = "Regex Dumping"
+                description = "Dumps the regexes into a file located in 'build/regexes/regexes.json'"
+
+                generateRunConfig.set(false)
+
+
+                jvmArguments.add("-Dskyblockapi.regexes.dumpEnabled=true")
+                jvmArguments.add("-Dskyblockapi.regexes.dumpPath=${regexDumpFile.get().asFile.absolutePath}")
+            }
+        }
+    }
+}
+
+
+
+fun Jar.applyDatagenOutput() {
+    if (rootProject.hasProperty("datagen")) {
+        dependsOn(tasks.named("runDatagen"))
+        with(copySpec {
+            from(datagenOutput).exclude(".cache/**")
+        })
+    }
+}
 
 tasks.named<Jar>("jar") {
     archiveClassifier = stonecutter.current.version
+    applyDatagenOutput()
 }
 
 tasks.named<Jar>("sourcesJar") {
     archiveClassifier = "${stonecutter.current.version}-sources"
+    applyDatagenOutput()
 }
