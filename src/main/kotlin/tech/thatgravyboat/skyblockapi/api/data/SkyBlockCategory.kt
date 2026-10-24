@@ -11,8 +11,8 @@ public class SkyBlockCategory private constructor(
     public fun equals(other: SkyBlockCategory, ignoreModifiers: Boolean = false): Boolean =
         if (!ignoreModifiers) this === other else this.name == other.name
 
-    public fun equalsAny(vararg others: SkyBlockCategory, ignoreDungeon: Boolean = false): Boolean =
-        others.any { equals(it, ignoreDungeon) }
+    public fun equalsAny(vararg others: SkyBlockCategory, ignoreModifiers: Boolean = false): Boolean =
+        others.any { equals(it, ignoreModifiers) }
 
     override fun toString(): String = if (modifier != null) "$modifier $name" else name
 
