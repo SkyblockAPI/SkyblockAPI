@@ -21,8 +21,8 @@ public abstract class ChatReceivedEvent protected constructor(public val message
      * Dispatched first before any other chat event, allows you to cancel the event.
      */
     public class Pre internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId), Cancellable {
-
-        //@Deprecated("No", level = DeprecationLevel.HIDDEN) public constructor(component: Component): this(component, UUID.randomUUID())
+        //? < 26.4
+        @Deprecated("No", level = DeprecationLevel.HIDDEN) public constructor(component: Component): this(component, UUID.randomUUID())
 
         // "component" cant change in the Pre event, so we can have text and coloredText not be getters
         override val text: String = component.stripped
