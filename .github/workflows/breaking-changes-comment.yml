@@ -70,7 +70,7 @@ jobs:
 
                     COMMENT_ID=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
                         | jq -s -r --arg marker "$MARKER" \
-                        'add | map(select(.user.login == "github-actions[bot]" and (.body | contains($marker)))) | .[0].id // empty')
+                        'add | map(select(.user.login == "meowtomation" and (.body | contains($marker)))) | .[0].id // empty')
 
                     post_comment() {
                         if [ -n "$COMMENT_ID" ]; then
