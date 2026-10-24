@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.getAttachedTo
-import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 internal interface ListenForNameChange {

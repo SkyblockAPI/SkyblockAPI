@@ -1,28 +1,10 @@
 package tech.thatgravyboat.skyblockapi.utils.devutils.entries
 
 import net.minecraft.resources.Identifier
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.utils.devutils.DevUtils
-import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils
 import kotlin.reflect.KProperty
 
-internal fun <T : Any> debugSelect(
-    path: String,
-    description: String = path,
-    initialState: T?,
-    states: List<T>,
-    toString: (T) -> String = { it.toString() },
-): DebugSelect<T> {
-    return DebugSelect(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils, initialState, toString, states)
-}
-
-internal inline fun <reified T : Enum<T>> debugSelect(
-    path: String,
-    description: String = path,
-    initialState: T? = null,
-): DebugSelect<T> = debugSelect(path, description, initialState, T::class.java.enumConstants.toList())
-
-public open class DebugSelect<T : Any>(
+public class DebugSelect<T : Any>(
     override val location: Identifier,
     override val description: String,
     override val devUtils: DevUtils,

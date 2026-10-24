@@ -16,7 +16,7 @@ import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.utils.container.ContainerRegion
 import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugString
-import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore

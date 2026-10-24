@@ -16,7 +16,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentViewerCategory
 import tech.thatgravyboat.skyblockapi.platform.drawString
-import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.extentions.replaceWith
 import tech.thatgravyboat.skyblockapi.utils.extentions.since

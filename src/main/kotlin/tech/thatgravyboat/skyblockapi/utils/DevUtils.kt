@@ -328,7 +328,7 @@ public open class DebugMultiSelect<T : Any>(
     override fun toNew(): NewDebugMultiSelect<T> = NewDebugMultiSelect(location, description, devUtils.new, initialState, toString, statesProvider)
 }
 
-internal class DevUtilBridge(val utils: DevUtils) : NewDevUtils() {
+internal data class DevUtilBridge(val utils: DevUtils) : NewDevUtils() {
     override val commandName: String get() = utils.commandName
     override fun send(component: MutableComponent) = utils.send(component)
 

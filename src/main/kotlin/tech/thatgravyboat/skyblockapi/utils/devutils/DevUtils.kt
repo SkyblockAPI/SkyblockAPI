@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
+import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -28,7 +29,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import java.nio.file.Path
 import java.util.Properties
 import java.util.concurrent.CompletableFuture
-import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import kotlin.io.path.createParentDirectories
@@ -37,7 +37,7 @@ import kotlin.io.path.reader
 import kotlin.io.path.writer
 
 public abstract class DevUtils {
-    protected val name: String = this::class.simpleName ?: this.toString()
+    abstract override fun toString(): String
 
     /** This only has the values set by default on launch */
     public val values: MutableMap<Identifier, String> = mutableMapOf()
@@ -55,10 +55,10 @@ public abstract class DevUtils {
     /** if [supportsChangingDefault] is `true`, this path should be set */
     protected open val path: Path? = null
 
-    protected val propertiesInstance: Properties = Properties()
+    protected val properties: Properties = Properties()
     protected open fun propertyKey(location: Identifier): String = "${location.namespace}@${location.path}"
 
-    public open val namespace: String = SkyBlockAPI.NAMESPACE
+    public abstract val namespace: String
 
     private fun registerEntry(debugEntry: DebugEntry) {
         val location = debugEntry.location
@@ -112,7 +112,7 @@ public abstract class DevUtils {
 
     public open fun getDefaultToggle(location: Identifier): Boolean {
         val key = propertyKey(location)
-        return this.propertiesInstance.getProperty(key) == "true"
+        return this.properties.getProperty(key) == "true"
     }
 
     public open fun setSelectDefault(location: Identifier, newDefaultValue: String?) {
@@ -122,7 +122,7 @@ public abstract class DevUtils {
     public open fun getDefaultSelect(location: Identifier): String? {
         val select = getDebugEntry<DebugSelect<*>>(location) ?: return null
         val key = propertyKey(location)
-        val currentValue = this.propertiesInstance.getProperty(key) ?: return null
+        val currentValue = this.properties.getProperty(key) ?: return null
         if (currentValue !in select.states()) return null
         return currentValue
     }
@@ -133,12 +133,12 @@ public abstract class DevUtils {
 
     public open fun getDefaultMultiSelect(location: Identifier): String? {
         val key = propertyKey(location)
-        return this.propertiesInstance.getProperty(key)
+        return this.properties.getProperty(key)
     }
 
     protected open fun saveProperties(location: Identifier, newDefault: String?, shouldRemove: (newDefault: String?) -> Boolean) {
-        val path = path ?: return SkyBlockAPI.info("Couldn't save $name properties because theres no path set")
-        val properties = this.propertiesInstance
+        val path = path ?: return SkyBlockAPI.info("Couldn't save ${toString()} properties because there's no path set")
+        val properties = this.properties
         val key = propertyKey(location)
         val currentValue = properties.getProperty(key)
 
@@ -150,11 +150,11 @@ public abstract class DevUtils {
         path.writer().use {
             properties.store(it, null)
         }
-        SkyBlockAPI.info("Changed properties file $name to set '$location' as '$newDefault'")
+        SkyBlockAPI.info("Changed properties file ${toString()} to set '$location' as '$newDefault'")
     }
 
     protected open fun loadFromProperties(path: Path): Map<String, String> {
-        val properties = this.propertiesInstance
+        val properties = this.properties
         if (path.notExists()) return emptyMap()
         path.reader(Charsets.UTF_8).use {
             properties.load(it)
@@ -175,7 +175,8 @@ public abstract class DevUtils {
         return getDebugEntry<Entry>(location) ?: error("Debug entry of type ${Entry::class.simpleName} with location $location not found")
     }
 
-    public fun onCommandRegister(event: RegisterCommandsEvent) {
+    @Subscription(inherited = true)
+    private fun onCommandRegister(event: RegisterCommandsEvent) {
         event.register(commandName) {
             then(
                 "toggle",
@@ -305,8 +306,7 @@ public abstract class DevUtils {
     public abstract fun send(component: MutableComponent)
 
     @JvmName("debugMessageString")
-    @OptIn(ExperimentalContracts::class)
-    public inline fun <T : DebugToggle> debugString(toggle: T, provider: () -> String) {
+    public inline fun debugString(toggle: DebugToggle, provider: () -> String) {
         contract {
             callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
         }
@@ -314,16 +314,14 @@ public abstract class DevUtils {
     }
 
     @JvmName("debugMessageComponent")
-    @OptIn(ExperimentalContracts::class)
-    public inline fun <T : DebugToggle> debugComponent(toggle: T, provider: () -> Component) {
+    public inline fun debugComponent(toggle: DebugToggle, provider: () -> Component) {
         contract {
             callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
         }
         debugMessage(toggle) { provider().copy() }
     }
 
-    @OptIn(ExperimentalContracts::class)
-    public inline fun <T : DebugToggle> debugMessage(toggle: T, provider: () -> MutableComponent) {
+    public inline fun debugMessage(toggle: DebugToggle, provider: () -> MutableComponent) {
         contract {
             callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
         }

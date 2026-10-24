@@ -31,7 +31,7 @@ import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.command.EnumArgument
 import tech.thatgravyboat.skyblockapi.utils.command.MapBackedArgumentType
-import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterValuesNotNull

@@ -11,7 +11,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.events.HypixelEventHandler
 import tech.thatgravyboat.skyblockapi.utils.components.ComponentStateMachine
-import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.asString
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanPlayerName
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant

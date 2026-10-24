@@ -1,29 +1,11 @@
 package tech.thatgravyboat.skyblockapi.utils.devutils.entries
 
 import net.minecraft.resources.Identifier
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.utils.devutils.DevUtils
-import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils
 import tech.thatgravyboat.skyblockapi.utils.extentions.replaceWith
 import kotlin.reflect.KProperty
 
-internal fun <T : Any> debugMultiSelect(
-    path: String,
-    description: String = path,
-    initialState: Set<T> = emptySet(),
-    toString: (T) -> String = { it.toString() },
-    states: () -> List<T>,
-): DebugMultiSelect<T> {
-    return DebugMultiSelect(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils, initialState, toString, states)
-}
-
-internal inline fun <reified T : Enum<T>> debugMultiSelect(
-    path: String,
-    description: String = path,
-    initialState: Set<T> = emptySet(),
-): DebugMultiSelect<T> = debugMultiSelect(path, description, initialState, { it.name }) { T::class.java.enumConstants.toList() }
-
-public open class DebugMultiSelect<T : Any>(
+public class DebugMultiSelect<T : Any>(
     override val location: Identifier,
     override val description: String,
     override val devUtils: DevUtils,

@@ -33,9 +33,8 @@ import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.codecs.IncludedCodecs
 import tech.thatgravyboat.skyblockapi.utils.command.mapped
 import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugComponent
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
-import tech.thatgravyboat.skyblockapi.utils.DebugToggle as OldDebugToggle
-import tech.thatgravyboat.skyblockapi.utils.devutils.entries.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
@@ -59,6 +58,7 @@ import tech.thatgravyboat.skyblockapi.utils.toOld
 import kotlin.math.max
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
+import tech.thatgravyboat.skyblockapi.utils.DebugToggle as OldDebugToggle
 
 @Module
 public data object AttributeAPI : ItemDebugCategory {
