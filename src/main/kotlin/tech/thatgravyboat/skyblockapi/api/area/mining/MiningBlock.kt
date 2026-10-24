@@ -26,7 +26,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.impl.ColoredBlocks
 import tech.thatgravyboat.skyblockapi.platform.drawString
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
@@ -143,6 +143,7 @@ public enum class MiningBlock(
         Type.BLOCK,
         Family.HARD_STONE,
     ),
+
     @Suppress("DEPRECATION")
     HARD_STONE_GLACITE_TUNNELS(
         listOf(Blocks.INFESTED_STONE, ColoredBlocks.LIGHT_GRAY_WOOL),
@@ -150,6 +151,7 @@ public enum class MiningBlock(
         Type.BLOCK,
         Family.HARD_STONE,
     ),
+
     @Suppress("DEPRECATION")
     HARD_STONE_MINESHAFT(
         listOf(Blocks.STONE, ColoredBlocks.LIGHT_GRAY_WOOL),
@@ -172,6 +174,7 @@ public enum class MiningBlock(
         Type.DWARVEN_METAL,
         Family.MITHRIL,
     ),
+
     @Suppress("DEPRECATION")
     HIGH_TIER_MITHRIL(
         ColoredBlocks.LIGHT_BLUE_WOOL,
@@ -194,6 +197,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     SAPPHIRE(
         listOf(ColoredBlocks.LIGHT_BLUE_STAINED_GLASS, ColoredBlocks.LIGHT_BLUE_STAINED_GLASS_PANE),
@@ -201,6 +205,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     JADE(
         listOf(ColoredBlocks.LIME_STAINED_GLASS, ColoredBlocks.LIME_STAINED_GLASS_PANE),
@@ -208,6 +213,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     AMBER(
         listOf(ColoredBlocks.ORANGE_STAINED_GLASS, ColoredBlocks.ORANGE_STAINED_GLASS_PANE),
@@ -215,6 +221,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     AMETHYST(
         listOf(ColoredBlocks.PURPLE_STAINED_GLASS, ColoredBlocks.PURPLE_STAINED_GLASS_PANE),
@@ -222,6 +229,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     TOPAZ(
         listOf(ColoredBlocks.YELLOW_STAINED_GLASS, ColoredBlocks.YELLOW_STAINED_GLASS_PANE),
@@ -229,6 +237,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     JASPER(
         listOf(ColoredBlocks.BROWN_STAINED_GLASS, ColoredBlocks.BROWN_STAINED_GLASS_PANE),
@@ -236,6 +245,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     OPAL(
         listOf(ColoredBlocks.WHITE_STAINED_GLASS, ColoredBlocks.WHITE_STAINED_GLASS_PANE),
@@ -243,6 +253,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     PERIDOT(
         listOf(ColoredBlocks.GREEN_STAINED_GLASS, ColoredBlocks.GREEN_STAINED_GLASS_PANE),
@@ -250,6 +261,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     CITRINE(
         listOf(ColoredBlocks.BROWN_STAINED_GLASS, ColoredBlocks.BROWN_STAINED_GLASS_PANE),
@@ -257,6 +269,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     ONYX(
         listOf(ColoredBlocks.BLACK_STAINED_GLASS, ColoredBlocks.BLACK_STAINED_GLASS_PANE),
@@ -264,6 +277,7 @@ public enum class MiningBlock(
         Type.GEMSTONE,
         Family.GEMSTONES,
     ),
+
     @Suppress("DEPRECATION")
     AQUAMARINE(
         listOf(ColoredBlocks.BLUE_STAINED_GLASS, ColoredBlocks.BLUE_STAINED_GLASS_PANE),
@@ -323,6 +337,7 @@ public enum class MiningBlock(
         Type.ORE,
         Family.GLACITE,
     ),
+
     @Suppress("DEPRECATION")
     MID_TIER_UMBER(
         ColoredBlocks.BROWN_TERRACOTTA,
