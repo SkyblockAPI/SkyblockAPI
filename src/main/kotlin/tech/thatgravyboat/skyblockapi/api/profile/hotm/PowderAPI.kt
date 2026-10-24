@@ -3,17 +3,19 @@ package tech.thatgravyboat.skyblockapi.api.profile.hotm
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.PowderStorage
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutSlot
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.StringMatch
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeCurrencyAPI
 import tech.thatgravyboat.skyblockapi.api.profile.skilltree.SkillTreeType
 
 @Suppress("unused")
 @Module
-public object PowderAPI : SkillTreeCurrencyAPI<PowderType, PowderAPI>(
+public data object PowderAPI : SkillTreeCurrencyAPI<PowderType, PowderAPI>(
     "powder",
-    listOf(TabWidget.POWDERS),
     PowderStorage,
     PowderType::class,
     SkillTreeType.Hotm,
+    TabWidget.POWDERS
 ) {
 
     public val mithril: Long get() = getCurrent(PowderType.MITHRIL)
@@ -23,5 +25,7 @@ public object PowderAPI : SkillTreeCurrencyAPI<PowderType, PowderAPI>(
     public val mithrilTotal: Long get() = getTotal(PowderType.MITHRIL)
     public val gemstoneTotal: Long get() = getTotal(PowderType.GEMSTONE)
     public val glaciteTotal: Long get() = getTotal(PowderType.GLACITE)
+
+    override fun LoadoutSlot.getLoadoutMatch(): StringMatch? = hotm
 
 }
