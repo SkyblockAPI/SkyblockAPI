@@ -15,6 +15,8 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.fabric.api.event.player.UseEntityCallback
 import net.fabricmc.fabric.api.event.player.UseItemCallback
 import net.minecraft.core.BlockPos
+import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
@@ -40,6 +42,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.impl.ColoredBlocks
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatComponentExtension
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
+import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
@@ -123,16 +126,51 @@ public object MiscEventHandler {
         // Chat Events
         ClientReceiveMessageEvents.ALLOW_GAME.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
         ClientReceiveMessageEvents.MODIFY_GAME.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.GAME_CANCELED.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.GAME.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+
+        data class MessageFuture(val original: Component, val parent: MessageFuture?, val id: UUID = UUID.randomUUID())
+
+        var future: MessageFuture? = null
+
+        fun MessageFuture.close() {
+            future = this.parent
+        }
+
+        fun Component.push() {
+            future = MessageFuture(this, future)
+        }
+
+        fun id(): UUID = future?.id ?: Util.NIL_UUID
 
         ClientReceiveMessageEvents.ALLOW_GAME.register(phase) { message, overlay ->
             if (overlay) {
                 !ActionBarReceivedEvent.Pre(message).post()
-            } else if (ChatReceivedEvent.Pre(message).post()) {
-                SkyBlockAPI.logger.info("[Cancelled] [CHAT] {}", message.string)
-                false
             } else {
-                true
+                message.push()
+                if (ChatReceivedEvent.Pre(message, id()).post()) {
+                    SkyBlockAPI.logger.info("[Cancelled] [CHAT] {}", message.string)
+                    false
+                } else {
+                    true
+                }
             }
+        }
+        ClientReceiveMessageEvents.GAME_CANCELED.register(phase) { message: Component, overlay: Boolean ->
+            if (overlay) {
+                ActionBarReceivedEvent.Cancelled(message).post()
+                return@register
+            }
+            ChatReceivedEvent.Cancelled(message, id()).post()
+            future?.close()
+        }
+        ClientReceiveMessageEvents.GAME.register(phase) { message: Component, overlay: Boolean ->
+            if (overlay) {
+                ActionBarReceivedEvent.Sent(message).post()
+                return@register
+            }
+            ChatReceivedEvent.Sent(message, id()).post()
+            future?.close()
         }
         ClientReceiveMessageEvents.MODIFY_GAME.register(phase) { message, overlay ->
             if (overlay) {
@@ -141,7 +179,7 @@ public object MiscEventHandler {
                     event.component
                 }
             } else {
-                ChatReceivedEvent.Post(message).let { event ->
+                ChatReceivedEvent.Post(message, messageId = id()).let { event ->
                     event.post()
                     (McClient.chat as ChatComponentExtension).`skyblockapi$setIdForMessage`(event.id)
                     event.component

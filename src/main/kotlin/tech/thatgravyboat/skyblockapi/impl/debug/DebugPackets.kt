@@ -20,7 +20,6 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.suggest
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
@@ -148,11 +147,11 @@ public object DebugPackets {
                         Text.join(
                             it.toComponent(4, true),
                             if (packet.cancelled) Text.of("This packet was cancelled!", TextColor.RED) else null,
-                            Text.of("Click to copy to clipboard") { this.color = TextColor.GRAY },
+                            Text.of("Click to copy to clipboard", TextColor.GRAY),
                             separator = Text.of("\n\n"),
                         )
                     },
-                    { Text.of(it.stackTraceToString()) { this.color = TextColor.RED } },
+                    { Text.of(it.stackTraceToString(), TextColor.RED) },
                 )
             },
             onClicked = { packet ->
