@@ -4,7 +4,6 @@ import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
-import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent.Pre
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.UUID
@@ -12,28 +11,32 @@ import java.util.UUID
 public abstract class ChatReceivedEvent protected constructor(public val messageId: UUID) : SkyBlockEvent() {
     //? < 26.4
     @Deprecated("No", level = DeprecationLevel.HIDDEN) public constructor(): this(UUID.randomUUID())
+
     public abstract val component: Component
 
-    // "component" cant change in the Pre event, so we can have text and coloredText not be getters
-    public open val text: String = component.stripped
-    public open val coloredText: String = component.string
+    // "component" can change in the Post event, so we have getters here
+    // we can't have these not be getters and Post have getters instead because of the initialization order
+    public open val text: String get() = component.stripped
+    public open val coloredText: String get() = component.string
 
     /**
      * Dispatched first before any other chat event, allows you to cancel the event.
      */
     public class Pre internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId), Cancellable {
-        //? < 26.4 {
-        @Deprecated("No", level = DeprecationLevel.HIDDEN) public constructor(component: Component): this(component, UUID.randomUUID())
+        //? < 26.4
+        @Deprecated("No", level = DeprecationLevel.HIDDEN) public constructor(component: Component) : this(component, UUID.randomUUID())
 
-        override val text: String get() = super.text
-        override val coloredText: String get() = super.text
-        //? }
+        override val text: String = super.text
+        override val coloredText: String = super.coloredText
     }
 
     /**
      * Dispatched for all cancelled messages, this also includes messages cancelled by other mods.
      */
-    public class Cancelled internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId)
+    public class Cancelled internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId) {
+        override val text: String = super.text
+        override val coloredText: String = super.coloredText
+    }
 
     /**
      * Dispatched second as long as the message didn't get cancelled, allows you to modify the message.
@@ -41,16 +44,15 @@ public abstract class ChatReceivedEvent protected constructor(public val message
     public class Post internal constructor(override var component: Component, public var id: String? = null, messageId: UUID) : ChatReceivedEvent(messageId) {
         //? < 26.4
         @Deprecated("No", level = DeprecationLevel.HIDDEN) public constructor(component: Component, id: String? = null): this(component, id, UUID.randomUUID())
-
-        // The component can be changed for this instance, so we can't cache the values.
-        public override val text: String get() = component.stripped
-        public override val coloredText: String get() = component.string
     }
 
     /**
      * Dispatched last, this event implies the message will be shown to the player.
      */
-    public class Sent internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId)
+    public class Sent internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId) {
+        override val text: String = super.text
+        override val coloredText: String = super.coloredText
+    }
 
     override fun post(bus: EventBus): Boolean = bus.post(this, null, onError)
 
