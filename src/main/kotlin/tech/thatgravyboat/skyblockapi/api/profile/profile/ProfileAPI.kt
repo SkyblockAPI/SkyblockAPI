@@ -27,7 +27,7 @@ import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.asString
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
