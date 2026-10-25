@@ -68,6 +68,7 @@ public fun ItemStack(item: Item, builder: ItemStack.() -> Unit): ItemStack {
     return stack
 }
 
+public inline val ItemStack.isNotEmpty: Boolean get() = !this.isEmpty
 public operator fun Item.contains(item: ItemStack): Boolean = item.item == this
 
 public operator fun <T : Any> ItemBuilder.set(type: DataComponentType<T>, value: T): Unit = this.set(type, value)
