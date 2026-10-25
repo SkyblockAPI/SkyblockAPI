@@ -2477,6 +2477,12 @@ public abstract class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarRe
 	public fun getText ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent$Cancelled : tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent {
+	public fun getColoredText ()Ljava/lang/String;
+	public fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public fun getText ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent {
 	public fun <init> (Lnet/minecraft/network/chat/Component;)V
 	public fun getComponent ()Lnet/minecraft/network/chat/Component;
@@ -2491,20 +2497,34 @@ public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarRecei
 	public fun getText ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent$Sent : tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent {
+	public fun getColoredText ()Ljava/lang/String;
+	public fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public fun getText ()Ljava/lang/String;
+}
+
 public abstract class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Companion;
-	public fun <init> ()V
+	public synthetic fun <init> ()V
+	protected fun <init> (Ljava/util/UUID;)V
 	public fun getColoredText ()Ljava/lang/String;
 	public abstract fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public final fun getMessageId ()Ljava/util/UUID;
 	public fun getText ()Ljava/lang/String;
 	public fun post (Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;)Z
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Cancelled : tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent {
+	public fun getColoredText ()Ljava/lang/String;
+	public fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public fun getText ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Companion {
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent {
-	public fun <init> (Lnet/minecraft/network/chat/Component;Ljava/lang/String;)V
+	public synthetic fun <init> (Lnet/minecraft/network/chat/Component;Ljava/lang/String;)V
 	public synthetic fun <init> (Lnet/minecraft/network/chat/Component;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getComponent ()Lnet/minecraft/network/chat/Component;
 	public final fun getId ()Ljava/lang/String;
@@ -2513,8 +2533,14 @@ public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEv
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent, tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent$Cancellable {
-	public fun <init> (Lnet/minecraft/network/chat/Component;)V
+	public synthetic fun <init> (Lnet/minecraft/network/chat/Component;)V
 	public fun cancel ()V
+	public fun getColoredText ()Ljava/lang/String;
+	public fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public fun getText ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Sent : tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent {
 	public fun getColoredText ()Ljava/lang/String;
 	public fun getComponent ()Lnet/minecraft/network/chat/Component;
 	public fun getText ()Ljava/lang/String;
