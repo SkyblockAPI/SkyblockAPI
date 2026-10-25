@@ -56,13 +56,13 @@ internal data object SkyBlockApiDevUtils : DevUtils() {
 
     override val supportsChangingDefault: Boolean = true
     override val path: Path = loadPath()
-    val properties_: Map<String, String> = loadFromProperties(path)
+    val propertiesMap: Map<String, String> = loadFromProperties(path)
 
     override val namespace: String = SkyBlockAPI.NAMESPACE
 
     // TODO: add debug int thing maybe?
     fun getInt(key: String, default: Int = 0): Int {
-        return properties_[key].parseFormattedInt(default)
+        return propertiesMap[key].parseFormattedInt(default)
     }
 
     private fun loadPath(): Path {

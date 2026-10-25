@@ -516,9 +516,9 @@ public abstract class DevUtils {
         }
         val map = mutableMapOf<String, String>()
         properties.forEach { (key, value) ->
-            val identifier = Identifiers.parseWithSeparator(key.toString(), '@') ?: return@forEach
             val string = value.toString()
             map[key.toString()] = string
+            val identifier = Identifiers.parseWithSeparator(key.toString(), '@') ?: return@forEach
             values[identifier] = string
         }
         return map
