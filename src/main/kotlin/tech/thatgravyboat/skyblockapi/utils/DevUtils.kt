@@ -240,9 +240,7 @@ public open class DebugMultiSelect<T : Any>(
 
     public fun toggle(value: T) {
         ensureInitialized()
-        if (state.add(value))
-            if (value in state) state.remove(value)
-            else state.add(value)
+        if (!state.add(value)) state.remove(value)
     }
 
     public fun toggleByName(name: String) {
