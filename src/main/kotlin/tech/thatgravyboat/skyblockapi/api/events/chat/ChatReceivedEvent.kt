@@ -22,8 +22,12 @@ public abstract class ChatReceivedEvent protected constructor(public val message
      * Dispatched first before any other chat event, allows you to cancel the event.
      */
     public class Pre internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId), Cancellable {
-        //? < 26.4
+        //? < 26.4 {
         @Deprecated("No", level = DeprecationLevel.HIDDEN) public constructor(component: Component): this(component, UUID.randomUUID())
+
+        override val text: String get() = super.text
+        override val coloredText: String get() = super.text
+        //? }
     }
 
     /**
