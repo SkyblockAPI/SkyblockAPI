@@ -1439,6 +1439,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory$Comp
 	public final fun getDUNGEON_CLOAK ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_GLOVES ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_HELMET ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
+	public final fun getDUNGEON_ITEM ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_LEGGINGS ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_LONGSWORD ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getDUNGEON_NECKLACE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
@@ -1459,6 +1460,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory$Comp
 	public final fun getGLOVES ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getHATCESSORY ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getHELMET ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
+	public final fun getITEM ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getLASSO ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getLEGGINGS ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getLONGSWORD ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
@@ -3535,6 +3537,7 @@ public final class tech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOp
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;Lcom/google/gson/JsonObject;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/remote/SkyBlockPvOpenedEvent;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getMember ()Lcom/google/gson/JsonObject;
+	public final fun getPath (Ljava/lang/String;)Lcom/google/gson/JsonElement;
 	public final fun getProfileData ()Lcom/google/gson/JsonObject;
 	public final fun getProfilePath (Ljava/lang/String;)Lcom/google/gson/JsonElement;
 	public fun hashCode ()I
@@ -5910,6 +5913,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/profile/ProfileDat
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType : java/lang/Enum {
 	public static final field BINGO Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType;
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType$Companion;
 	public static final field IRONMAN Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType;
 	public static final field NORMAL Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType;
 	public static final field STRANDED Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType;
@@ -5918,6 +5922,10 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/profile/ProfileTyp
 	public fun toString ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType$Companion {
+	public final fun fromApiName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/profile/ProfileType;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/profile/quiver/QuiverAPI {
@@ -9963,6 +9971,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/ItemStackExte
 	public static final fun getTag (Lnet/minecraft/world/item/ItemStack;Ljava/lang/String;)Lnet/minecraft/nbt/Tag;
 	public static final fun getTexture (Lnet/minecraft/world/item/ItemStack;)Ljava/lang/String;
 	public static final fun getUnsafeTag (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/nbt/CompoundTag;
+	public static final fun isNotEmpty (Lnet/minecraft/world/item/ItemStack;)Z
 	public static final fun isSameItem (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z
 	public static final fun isSkyblockFiller (Lnet/minecraft/world/item/ItemStack;)Z
 	public static final fun set (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;
