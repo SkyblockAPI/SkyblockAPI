@@ -1,5 +1,14 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
+import me.owdding.ktmodules.Module
+import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugString
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.extentions.pluralize
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+
 public class SkyBlockCategory private constructor(
     public val name: String,
     public val modifier: Modifier? = null,
@@ -16,14 +25,27 @@ public class SkyBlockCategory private constructor(
 
     override fun toString(): String = if (modifier != null) "$modifier $name" else name
 
-    @Suppress("unused")
+    @Module
     public companion object {
+        //region Private
+        private val missingCategories = mutableSetOf<String>()
+        private var finishedKnownCategories: Boolean = false
+        private val debugToggle = debugToggle("unknown.skyblock_category", "Warns when detecting a new unknown skyblock category")
+
+        private fun addMissing(string: String) {
+            if (!finishedKnownCategories) return // this value gets set to true when we finish loading all categories in this object
+            missingCategories.add(string)
+            debugString(debugToggle) { "Unknown category: '$string'" }
+        }
         private val registeredCategories = mutableMapOf<String, SkyBlockCategory>()
+        //endregion
+
         public val categories: Collection<SkyBlockCategory> get() = registeredCategories.values
 
         public fun create(string: String, parseModifier: Boolean): SkyBlockCategory {
             val formatted = string.lowercase()
             return registeredCategories.getOrPut(formatted) {
+                addMissing(formatted)
                 val modifier = if (parseModifier) Modifier.byName(formatted.substringBefore(" ")) else null
                 if (modifier == null) {
                     SkyBlockCategory(formatted)
@@ -37,6 +59,7 @@ public class SkyBlockCategory private constructor(
             val formatted = if (modifier == null) string.lowercase()
             else "$modifier ${string.lowercase()}"
             return registeredCategories.getOrPut(formatted) {
+                addMissing(formatted)
                 SkyBlockCategory(formatted.trim(), modifier)
             }
         }
@@ -73,7 +96,7 @@ public class SkyBlockCategory private constructor(
         public val DRILL: SkyBlockCategory = create("drill")
         public val SHEARS: SkyBlockCategory = create("shears")
 
-        public val HELMET: SkyBlockCategory = create("helmet")
+        //public val HELMET: SkyBlockCategory = create("helmet")
         public val DUNGEON_HELMET: SkyBlockCategory = create("helmet", Modifier.DUNGEON)
         public val CHESTPLATE: SkyBlockCategory = create("chestplate")
         public val DUNGEON_CHESTPLATE: SkyBlockCategory = create("chestplate", Modifier.DUNGEON)
@@ -132,6 +155,27 @@ public class SkyBlockCategory private constructor(
         public val CAPSULE: SkyBlockCategory = create("capsule")
         public val RABBIT: SkyBlockCategory = create("rabbit") // chocolate factory
         public val DUNGEON_PASS: SkyBlockCategory = create("dungeon pass", parseModifier = false) // seems to be admin only, not a dungeon modifier
+
+        public val DUNGEON_ITEM: SkyBlockCategory = create("item", Modifier.DUNGEON)
+        public val ITEM: SkyBlockCategory = create("item") // there is no current item for this, but because "dungeon item" is a category, we add it here as well
+
+        init {
+            // we set this to true at the end so we can know what categories get registered from outside
+            finishedKnownCategories = true
+        }
+
+        @Subscription
+        private fun onCommands(event: RegisterSkyblockApiCommandsEvent) {
+            event.registerWithCallback("unknown categories") {
+                if (missingCategories.isEmpty()) {
+                    Text.sendDebug("No unknown categories.")
+                    return@registerWithCallback
+                }
+                McClient.clipboard = missingCategories.joinToString(prefix = "[", postfix = "]")
+                val size = missingCategories.size
+                Text.sendDebug("Copied $size unknown ${pluralize(size, "category", "categories")} to clipboard.")
+            }
+        }
     }
 
     public enum class Modifier(displayName: String? = null) {
