@@ -16,6 +16,7 @@ public enum class Essence(public val canBeSold: Boolean = true) {
     SUN_GECKO(false),
     FOREST,
     FOSSIL,
+    SAFARI,
     UNKNOWN(false),
     ;
 

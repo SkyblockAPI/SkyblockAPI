@@ -95,12 +95,10 @@ public inline fun <T> List<T>.sublistAfterUntil(beforePredicate: (T) -> Boolean,
     return emptyList()
 }
 
-/** Puts the value [value] into [key], and returns `true` if the previous value stored in that key was different */
-@Suppress("NOTHING_TO_INLINE")
-public inline fun <K, V> MutableMap<K, V>.putIfDifferent(key: K, value: V): Boolean {
-    if (this[key] == value) return false
-    this[key] = value
-    return true
+/** Returns `true` if the previous value for the key [key] was different than [value]*/
+public fun <K, V> MutableMap<K, V>.changeValue(key: K, value: V): Boolean {
+    val previous = this.put(key, value)
+    return previous != value
 }
 
 public fun <K> MutableMap<K, Int>.addOrPut(key: K, number: Int): Int = merge(key, number, Int::plus)!!

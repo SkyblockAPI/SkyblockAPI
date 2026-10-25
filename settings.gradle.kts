@@ -16,6 +16,10 @@ plugins {
 }
 
 val versions = listOf("26.3", "26.2", "26.1")
+// we have a dummy version here so that the IntelliJ plugin doesn't report comments we do
+// when removing code in the next version via stonecutter
+// if there is no dummy version needed at some point, leave as blank
+val dummyVersion = "26.4"
 
 stonecutter {
     create(rootProject) {
@@ -23,6 +27,11 @@ stonecutter {
             version(it).buildscript = "build.gradle.kts"
         }
         vcsVersion = versions.first()
+
+        if (dummyVersion.isNotEmpty() && dummyVersion !in versions) {
+            versions("DUMMY-VERSION-DO-NOT-USE" to dummyVersion).buildscript = "dummy.gradle.kts"
+        }
+
     }
 }
 

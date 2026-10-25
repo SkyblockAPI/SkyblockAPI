@@ -5,6 +5,8 @@ import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.notExists
 import kotlin.io.path.readText
 
+val isLocal = args.contains("local")
+
 fun Path.executeCommand(vararg args: String) {
     ProcessBuilder(*args)
         .redirectOutput(this.toFile())
@@ -354,5 +356,11 @@ buildString {
         errors.forEach(::appendLine)
         appendLine()
     }
-}.trimEnd().let(::println)
+}.trimEnd().let {
+    println(it)
+
+    if (isLocal && it.isEmpty()) {
+        println("No breaking changes!")
+    }
+}
 

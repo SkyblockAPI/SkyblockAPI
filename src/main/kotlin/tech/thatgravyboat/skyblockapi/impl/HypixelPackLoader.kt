@@ -1,6 +1,9 @@
 package tech.thatgravyboat.skyblockapi.impl
 
 import me.owdding.ktmodules.Module
+import net.fabricmc.loader.api.FabricLoader
+import net.fabricmc.loader.api.SemanticVersion
+import net.fabricmc.loader.api.Version
 import net.fabricmc.loader.impl.util.FileSystemUtil
 import org.apache.commons.io.IOUtils
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
@@ -10,8 +13,11 @@ import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import java.io.InputStream
+import java.lang.invoke.VarHandle
 import java.net.URI
+import java.nio.file.AccessMode
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -45,6 +51,11 @@ public object HypixelPackLoader {
     public fun downloadAndApplyPack(path: String) {
         if (LocationAPI.isOnSkyBlock) {
             Text.of("Pack Downloading doesn't work on SkyBlock").sendWithPrefix()
+            return
+        }
+
+        if (FabricLoader.getInstance().getModContainer("fabricloader").map { it.metadata.version < SemanticVersion.parse("0.20.0") }.orElse(false) == true) {
+            Text.of("Pack downloading requires fabric-loader 0.20.0 or newer!", TextColor.RED).sendWithPrefix()
             return
         }
 
@@ -99,8 +110,9 @@ public object HypixelPackLoader {
         IOUtils.copy(this, input.outputStream(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING))
         ZipOutputStream(output.outputStream(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)).close()
 
-        val inputSystem = FileSystemUtil.getJarFileSystem(input, false)
-        val outputSystem = FileSystemUtil.getJarFileSystem(output, true)
+        val inputSystem = FileSystemUtil.getJarFileSystem(input, FileSystemUtil.AccessMode.READ_ONLY)
+        val outputSystem = FileSystemUtil.getJarFileSystem(output, FileSystemUtil.AccessMode.READ_WRITE)
+
         try {
             val inputRoot = inputSystem.get().getPath("/")
             val outputRoot = outputSystem.get().getPath("/")

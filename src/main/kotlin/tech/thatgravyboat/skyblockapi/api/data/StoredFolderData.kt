@@ -23,6 +23,7 @@ internal class FolderStorage<T : Any>(
 
     init {
         load()
+        allStorages.add(this)
     }
 
     fun load() {
@@ -77,6 +78,10 @@ internal class FolderStorage<T : Any>(
         StoredData.allStoredDatas.removeAll(storages.values)
         storages.clear()
         load()
+    }
+
+    companion object {
+        val allStorages = mutableListOf<FolderStorage<*>>()
     }
 }
 
