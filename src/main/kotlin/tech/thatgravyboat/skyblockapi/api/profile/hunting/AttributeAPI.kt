@@ -54,25 +54,23 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
-import tech.thatgravyboat.skyblockapi.utils.toOld
 import kotlin.math.max
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
-import tech.thatgravyboat.skyblockapi.utils.DebugToggle as OldDebugToggle
 
 @Module
 public data object AttributeAPI : ItemDebugCategory {
     //? < 26.4
-    @get:JvmName("debugToggle")
+    //@get:JvmName("debugToggle")
     private val debugToggle: DebugToggle = debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
     private val isDebugEnabled by debugToggle
 
     //? < 26.4 {
-    @get:JvmName("getDebugToggle")
+    /*@get:JvmName("getDebugToggle")
     @Suppress("ObjectPropertyName", "DEPRECATION")
     @Deprecated("Should never have been public", level = DeprecationLevel.HIDDEN)
     public val _toggle: OldDebugToggle by lazy { debugToggle.toOld() }
-    //? }
+    *///? }
 
     private val attributeRarities = SkyBlockRarity.COMMON.rangeTo(SkyBlockRarity.LEGENDARY)
 
@@ -559,7 +557,7 @@ public data class AttributeData(
     var lastUpdated: Instant = Instant.DISTANT_PAST,
 ) {
     //~ if >= 26.4 'public' -> 'internal'
-    public fun updated() {
+    internal fun updated() {
         lastUpdated = currentInstant()
     }
 

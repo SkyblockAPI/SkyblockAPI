@@ -16,7 +16,6 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
-import tech.thatgravyboat.skyblockapi.utils.DevUtilBridge
 import tech.thatgravyboat.skyblockapi.utils.command.VirtualResourceArgument
 import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugEntry
 import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugMultiSelect
@@ -35,6 +34,9 @@ import kotlin.io.path.createParentDirectories
 import kotlin.io.path.notExists
 import kotlin.io.path.reader
 import kotlin.io.path.writer
+
+//? < 26.4
+//import tech.thatgravyboat.skyblockapi.utils.DevUtilBridge
 
 public abstract class DevUtils {
     abstract override fun toString(): String
@@ -331,9 +333,11 @@ public abstract class DevUtils {
     }
 
     init {
-        if (this !is DevUtilBridge) {
-            allDevUtils.add(this)
-        }
+        //? < 26.4
+        //if (this !is DevUtilBridge) {
+        allDevUtils.add(this)
+        //? < 26.4
+        //}
     }
 
     public companion object {

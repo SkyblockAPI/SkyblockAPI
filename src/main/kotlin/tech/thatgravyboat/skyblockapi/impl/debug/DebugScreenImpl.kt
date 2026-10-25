@@ -1,3 +1,4 @@
+//~gui_extraction
 package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.mojang.blaze3d.platform.InputConstants
@@ -74,12 +75,12 @@ internal class DebugScreenImpl<T>(
     }
 
 
-     override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractBackground(graphics: GuiGraphicsExtractor) {
         super.extractTransparentBackground(graphics)
     }
 
-    override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
-        super.extractRenderState(graphics, mouseX, mouseY, partialTicks)
+    override fun extractRenderState(graphics: GuiGraphicsExtractor) {
+        super.extractRenderState(graphics)
         val messages = filteredMessages
         val status = Text.join(this.title, ": ${messages.size}")
         graphics.drawString(status, (this.width - McFont.width(status)) / 2, 5)
@@ -89,7 +90,7 @@ internal class DebugScreenImpl<T>(
         for (index in scroll until min(scroll + maxEntriesForScreen, messages.size)) {
             val (timestamp, message) = messages[index]
             val y = 20 + (index - scroll) * 10
-            val hovered = mouseY in y until y + 10
+            val hovered = graphics.mouseY() in y until y + 10
 
             if (hovered) {
                 graphics.drawFilledBox(0, y, this.width, 10, 0x80FFFFFF.toInt())

@@ -32,7 +32,7 @@ public sealed class ScreenKeyReleasedEvent(
 
     public class Pre(screen: Screen, event: KeyEvent) : ScreenKeyReleasedEvent(screen, event)
     //? < 26.4 {
-    {
+    /*{
         @Deprecated("Provide a KeyEvent instead", level = DeprecationLevel.HIDDEN)
         public constructor(
             screen: Screen,
@@ -45,11 +45,11 @@ public sealed class ScreenKeyReleasedEvent(
             //~ if >= 26.3 'scanCode' -> '0'
             KeyEvent(key, 0, modifiers),
         )
-    }//?}
+    }*///?}
 
     public class Post(screen: Screen, event: KeyEvent) : ScreenKeyReleasedEvent(screen, event)
     //? < 26.4 {
-    {
+    /*{
         @Deprecated("Provide a KeyEvent instead", level = DeprecationLevel.HIDDEN)
         public constructor(
             screen: Screen,
@@ -62,5 +62,5 @@ public sealed class ScreenKeyReleasedEvent(
             //~ if >= 26.3 'scanCode' -> '0'
             KeyEvent(key, 0, modifiers),
         )
-    }//?}
+    }*///?}
 }

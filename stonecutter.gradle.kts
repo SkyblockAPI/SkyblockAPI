@@ -16,6 +16,24 @@ stonecutter active "26.4"
 stonecutter parameters {
     swaps["mod_version"] = "\"" + property("version") + "\";"
     swaps["minecraft"] = "\"" + node.metadata.version + "\";"
+
+    replacements.string(current.parsed >= "26.4", "gui_extraction") {
+        listOf("graphics", "guiGraphics").forEach { graphics ->
+            listOf("extractRenderState", "extractBackground", "extractWidgetRenderState", "extractContents").forEach { method ->
+                replace(
+                    "override fun $method($graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float)",
+                    "override fun $method($graphics: GuiGraphicsExtractor)",
+                )
+                replace("$method($graphics, mouseX, mouseY, a)", "$method($graphics)")
+            }
+            replace("this, $graphics, mouseX, mouseY", "this, $graphics, $graphics.mouseX(), $graphics.mouseY()")
+            replace("{ $graphics, a ->", "{ $graphics ->")
+            replace("extractDeferredElements(mouseX, mouseY, a)", "extractDeferredElements()")
+            replace("GuiGraphicsExtractor $graphics, int mouseX, int mouseY, float a, CallbackInfo", "GuiGraphicsExtractor $graphics, CallbackInfo")
+            replace("GuiGraphicsExtractor $graphics, int mouseX, int mouseY, CallbackInfo", "GuiGraphicsExtractor $graphics, CallbackInfo")
+            replace("GuiGraphicsExtractor $graphics, Slot slot, int x, int y, CallbackInfo", "GuiGraphicsExtractor $graphics, Slot slot, CallbackInfo")
+        }
+    }
 }
 
 fun Project.isDummy(): Boolean = buildscript.sourceFile?.name == "dummy.gradle.kts"
@@ -89,7 +107,7 @@ stonecutter.versions.forEach { (project, version) ->
 
             attributes.addAllLater(context.attributes)
             outgoing.artifacts.addAll(context.artifacts)
-            dependencies.addAll( context.dependencies)
+            dependencies.addAll(context.dependencies)
             dependencyConstraints.addAll(context.dependencyConstraints)
 
 

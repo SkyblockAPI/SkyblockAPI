@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class LoadoutData(
+internal data class LoadoutData(
     var armor: WardrobeData = WardrobeData(),
     var equipment: WardrobeData = WardrobeData(),
     var loadouts: Loadout = Loadout(),

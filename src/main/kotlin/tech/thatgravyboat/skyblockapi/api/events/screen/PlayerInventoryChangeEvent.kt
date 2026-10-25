@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 //? < 26.4
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
 public data class PlayerInventoryChangeEvent(
     val inventorySlot: Slot,

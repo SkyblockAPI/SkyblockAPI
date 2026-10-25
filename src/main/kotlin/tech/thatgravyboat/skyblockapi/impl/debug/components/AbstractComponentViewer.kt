@@ -1,3 +1,4 @@
+//~ gui_extraction
 package tech.thatgravyboat.skyblockapi.impl.debug.components
 
 import com.google.gson.JsonElement
@@ -119,7 +120,7 @@ public class AbstractComponentViewer(public val map: Map<ComponentViewerCategory
         return super.mouseScrolled(x, y, scrollX, scrollY)
     }
 
-    override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
+    override fun extractRenderState(graphics: GuiGraphicsExtractor) {
         if (selectedCategory == null || map[selectedCategory] == null) {
             graphics.centeredText(McFont.self, "No entry found!", width / 2, height / 2 - McFont.height / 2, ARGB.opaque(0xFF0000))
         }
@@ -132,13 +133,13 @@ public class AbstractComponentViewer(public val map: Map<ComponentViewerCategory
             graphics.text(McFont.self, line, width / 4 + 8, height / 8 + 6 + (index * (McFont.height + 1)), -1, false)
         }
         graphics.disableScissor()
-        super.extractRenderState(graphics, mouseX, mouseY, a)
+        super.extractRenderState(graphics)
     }
 
     public val widgetHeight: Int get() = (height / 4) * 3
 
-    override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
-        super.extractBackground(graphics, mouseX, mouseY, a)
+    override fun extractBackground(graphics: GuiGraphicsExtractor) {
+        super.extractBackground(graphics)
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, width / 4, height / 8, width / 2, widgetHeight)
     }
 }

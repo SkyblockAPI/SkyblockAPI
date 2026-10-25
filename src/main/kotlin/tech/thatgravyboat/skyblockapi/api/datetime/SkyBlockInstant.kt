@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.datetime
 
 //? if < 26.4 {
-import org.jetbrains.annotations.Range
+/*import org.jetbrains.annotations.Range
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -100,4 +100,4 @@ public val Int.skyblockMonths: Duration get() = (this * MONTH_IN_MILLIS).millise
 
 @Deprecated("Replace with the environmental Package", ReplaceWith("tech.thatgravyboat.skyblockapi.api.environmental.skyblockYears"))
 public val Int.skyblockYears: Duration get() = (this * YEAR_IN_MILLIS).milliseconds
-//?}
+*///?}

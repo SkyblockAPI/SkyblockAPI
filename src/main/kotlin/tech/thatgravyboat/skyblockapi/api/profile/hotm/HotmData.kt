@@ -11,7 +11,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class HotmData(
+internal data class HotmData(
     @OptionalNullable
     override var currentLoadoutName: String? = null,
     @Compact
@@ -21,7 +21,7 @@ public data class HotmData(
 ) : SkillTreeData<HotmPerk> {
 
     //? if <= 26.3 {
-    @Deprecated("Shouldn't be accessing this", level = HIDDEN)
+    /*@Deprecated("Shouldn't be accessing this", level = HIDDEN)
     public constructor(perks: MutableMap<String, HotmPerk>, tokens: Int = 0, tier: Int = 0) : this()
 
     @JvmName("component1")
@@ -43,7 +43,7 @@ public data class HotmData(
     override var tokens: Int
         get() = 0
         set(_) {}
-    //?}
+    *///?}
 
     public companion object {
         public val CODEC: Codec<HotmData> = SkyblockAPICodecs.getCodec<HotmData>()
