@@ -8,29 +8,30 @@ public abstract class ActionBarReceivedEvent : SkyBlockEvent() {
 
     public abstract val component: Component
 
-    public open val text: String get() = component.stripped
-    public open val coloredText: String get() = component.string
+    public open val text: String = component.stripped
+    public open val coloredText: String = component.string
 
     /**
      * Dispatched first before any other chat event, allows you to cancel the event.
      */
-    public class Pre(override val component: Component) : ActionBarReceivedEvent(), Cancellable {
-        // "component" cant change in the Pre event, so we can have text and coloredText not be getters
-        override val text: String = component.stripped
-        override val coloredText: String = component.string
-    }
+    public class Pre(override val component: Component) : ActionBarReceivedEvent(), Cancellable
 
     /**
      * Dispatched for all cancelled messages, this also includes messages cancelled by other mods.
      */
-    public class Cancelled internal constructor(override var component: Component) : ActionBarReceivedEvent()
+    public class Cancelled internal constructor(override val component: Component) : ActionBarReceivedEvent()
 
     /**
      * Dispatched second as long as the message didn't get cancelled, allows you to modify the message.
      */
-    public class Post(override var component: Component) : ActionBarReceivedEvent()
+    public class Post(override var component: Component) : ActionBarReceivedEvent() {
+        // The component can be changed for this instance, so we can't cache the values.
+        override val text: String get() = component.stripped
+        override val coloredText: String get() = component.string
+    }
+
     /**
      * Dispatched last, this event implies the message will be shown to the player.
      */
-    public class Sent internal constructor(override var component: Component) : ActionBarReceivedEvent()
+    public class Sent internal constructor(override val component: Component) : ActionBarReceivedEvent()
 }
