@@ -464,6 +464,6 @@ public data object MaxwellAPI : ItemDebugCategory {
     private fun isAccessoryOrEmpty(item: ItemStack): Boolean {
         if (item.isEmpty) return true
         val category = item.getData(DataTypes.CATEGORY) ?: return false
-        return category.equalsAny(SkyBlockCategory.ACCESSORY, SkyBlockCategory.HATCESSORY, ignoreDungeon = true)
+        return category.equalsAny(SkyBlockCategory.ACCESSORY, SkyBlockCategory.HATCESSORY, ignoreModifiers = true)
     }
 }
