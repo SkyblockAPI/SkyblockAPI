@@ -96,7 +96,7 @@ public class SkyBlockCategory private constructor(
         public val DRILL: SkyBlockCategory = create("drill")
         public val SHEARS: SkyBlockCategory = create("shears")
 
-        //public val HELMET: SkyBlockCategory = create("helmet")
+        public val HELMET: SkyBlockCategory = create("helmet")
         public val DUNGEON_HELMET: SkyBlockCategory = create("helmet", Modifier.DUNGEON)
         public val CHESTPLATE: SkyBlockCategory = create("chestplate")
         public val DUNGEON_CHESTPLATE: SkyBlockCategory = create("chestplate", Modifier.DUNGEON)
