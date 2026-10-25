@@ -25,13 +25,13 @@ internal object PvLoadingHelper {
 
     fun markLoaded(data: LoadedData) = list.add(data)
 
-    @Subscription(priority = LOWEST)
+    @Subscription(SkyBlockPvOpenedEvent::class, priority = LOWEST)
     @OptIn(SkyBlockPvRequired::class)
-    private fun SkyBlockPvOpenedEvent.postPvLoad() = McClient.runNextTick(::sendAndReset)
+    private fun postPvLoad() = McClient.runNextTick(::sendAndReset)
 
-    @Subscription(priority = LOWEST)
+    @Subscription(SkyBlockPvMuseumOpenedEvent::class, priority = LOWEST)
     @OptIn(SkyBlockPvRequired::class)
-    private fun SkyBlockPvMuseumOpenedEvent.postMuseumLoad() = McClient.runNextTick(::sendAndReset)
+    private fun postMuseumLoad() = McClient.runNextTick(::sendAndReset)
 
     private fun sendAndReset() {
         if (list.isEmpty()) return
@@ -64,6 +64,7 @@ internal enum class LoadedData(val component: MutableComponent) {
     MUSEUM("Museum"),
     ATTRIBUTES("Attributes"),
     RIFT_PRISM_IMBUEMENT("Rift Prism Imbuement"),
+    PROFILE_DATA("Profile Data"),
     ;
     
     constructor(string: String) : this(Text.of(string))

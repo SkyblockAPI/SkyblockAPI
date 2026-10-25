@@ -1,0 +1,105 @@
+name: Breaking Changes Commenter
+
+# The checker run is controlled by the PR author, so its report is only ever treated as text.
+on:
+    workflow_run:
+        workflows: [ "Breaking Changes Checker" ]
+        types: [ completed ]
+
+permissions:
+    actions: read
+    pull-requests: write
+
+jobs:
+    comment:
+        if: >-
+            github.event.workflow_run.event == 'pull_request'
+            && contains(fromJSON('["success","failure","timed_out"]'), github.event.workflow_run.conclusion)
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        concurrency:
+            group: breaking-changes-comment-${{ github.event.workflow_run.head_repository.id }}-${{ github.event.workflow_run.head_branch }}
+            cancel-in-progress: true
+        defaults:
+            run:
+                shell: bash
+        env:
+            GH_TOKEN: ${{ secrets.COMMENT_TOKEN }}
+            MARKER: "<!-- breaking-changes-report -->"
+            LABEL: "breaking change"
+        steps:
+            -   name: Download breaking-change report
+                uses: actions/download-artifact@v5
+                continue-on-error: true
+                with:
+                    name: breaking-change-report-${{ github.event.workflow_run.run_attempt }}
+                    path: ${{ runner.temp }}/report
+                    run-id: ${{ github.event.workflow_run.id }}
+                    github-token: ${{ github.token }}
+
+            -   name: Resolve PR number
+                id: pr
+                env:
+                    HEAD_REPO: ${{ github.event.workflow_run.head_repository.full_name }}
+                    HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+                run: |
+                    PR_NUMBER=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls?state=open" \
+                        | jq -s --arg repo "$HEAD_REPO" --arg branch "$HEAD_BRANCH" \
+                        'add | map(select(.head.repo.full_name == $repo and .head.ref == $branch)) | .[0].number // empty')
+                    echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+
+            -   name: Check if commit is still current
+                id: current
+                if: steps.pr.outputs.number != ''
+                env:
+                    PR_NUMBER: ${{ steps.pr.outputs.number }}
+                    RUN_SHA: ${{ github.event.workflow_run.head_sha }}
+                run: |
+                    CURRENT_SHA=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq '.head.sha')
+                    echo "value=$([ "$CURRENT_SHA" = "$RUN_SHA" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+            -   name: Update comment and label
+                if: steps.current.outputs.value == 'true'
+                env:
+                    PR_NUMBER: ${{ steps.pr.outputs.number }}
+                    CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+                    RUN_URL: ${{ github.event.workflow_run.html_url }}/attempts/${{ github.event.workflow_run.run_attempt }}
+                run: |
+                    REPORT="$RUNNER_TEMP/report/api.removed"
+                    BODY="$RUNNER_TEMP/comment.md"
+
+                    COMMENT_ID=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+                        | jq -s -r --arg marker "$MARKER" \
+                        'add | map(select(.user.login == "meowtomation" and (.body | contains($marker)))) | .[0].id // empty')
+
+                    post_comment() {
+                        if [ -n "$COMMENT_ID" ]; then
+                            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" -F body=@"$BODY" > /dev/null
+                        else
+                            gh -R skyblockapi/skyblockapi pr comment "$PR_NUMBER" --body-file "$BODY"
+                        fi
+                    }
+
+                    if [ "$CONCLUSION" = "success" ]; then
+                        {
+                            echo "$MARKER"
+                            echo "All breaking changes have been resolved!"
+                        } > "$BODY"
+                        [ -z "$COMMENT_ID" ] || gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" -F body=@"$BODY" > /dev/null
+                        gh -R skyblockapi/skyblockapi pr edit "$PR_NUMBER" --remove-label "$LABEL" || true
+                    elif [ -s "$REPORT" ] && [ ! -L "$REPORT" ]; then
+                        {
+                            echo "$MARKER"
+                            echo "Breaking changes were detected in this pull request:"
+                            echo '```diff'
+                            head -c 50000 "$REPORT" | tr -d '`\000'
+                            echo
+                            echo '```'
+                        } > "$BODY"
+                        post_comment
+                        gh -R skyblockapi/skyblockapi pr edit "$PR_NUMBER" --add-label "$LABEL"
+                    else
+                        printf '%s\nBreaking-change verification failed, see the [workflow run](%s) for details.\n' "$MARKER" "$RUN_URL" > "$BODY"
+                        post_comment
+                        gh -R skyblockapi/skyblockapi pr edit "$PR_NUMBER" --remove-label "$LABEL" || true
+                    fi

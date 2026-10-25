@@ -16,21 +16,24 @@ import tech.thatgravyboat.skyblockapi.api.events.location.AreaChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.IslandChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.SkyBlockLocationEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.platform.identifier
-import tech.thatgravyboat.skyblockapi.utils.debugSelect
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.ApiDebug
+import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugString
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugSelect
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.pluralize
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
@@ -38,10 +41,10 @@ import kotlin.time.Instant
 @Module
 public object LocationAPI {
 
+    private val unknownAreasDebug = debugToggle("unknown.areas", "Warns when detecting a new unknown skyblock area")
+    private val unknownBiomesDebug = debugToggle("unknown.biomes", "Warns when detecting a new unknown skyblock biome")
     private val unknownAreas = mutableMapOf<String, SkyBlockIsland?>()
-    private var sendUnknownAreaChatMessage = false
     private val unknownBiomes = mutableSetOf<Identifier>()
-    private var sendUnknownBiomeChatMessage = false
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
         "location",
@@ -167,9 +170,7 @@ public object LocationAPI {
             val knownArea = SkyBlockAreas.registeredAreas.entries.find { it.value.name == location } != null
             if (!knownArea) {
                 unknownAreas.putIfAbsent(location, island)
-                if (sendUnknownAreaChatMessage) {
-                    Text.of("Unknown area detected: $location").send()
-                }
+                debugString(unknownAreasDebug) { "Unknown area detected: '$location'" }
             }
         }
 
@@ -208,9 +209,7 @@ public object LocationAPI {
 
         if (!knownBiome) {
             unknownBiomes.add(biome)
-            if (sendUnknownBiomeChatMessage) {
-                Text.of("Unknown biome detected: $biome").send()
-            }
+            debugString(unknownBiomesDebug) { "Unknown biome detected: '$biome'" }
         }
     }
 
@@ -231,33 +230,43 @@ public object LocationAPI {
     @Subscription(ServerDisconnectEvent::class)
     private fun onServerDisconnect() = reset()
 
+    @ApiDebug("LocationAPI", "location")
+    internal fun debug(builder: DebugBuilder) = with(builder) {
+        field("island", island?.displayName)
+        field("area", area.name)
+        field("biome", biome?.biome)
+        field(::serverId)
+        field("playerCount", "$playerCount${maxPlayercount?.let { "/$it" }.orEmpty()}")
+        field(::isGuest)
+        field(::onHypixel)
+        field(::onAlpha)
+    }
+
     @Subscription
     internal fun onCommand(event: RegisterSkyblockApiCommandsEvent) {
-        event.registerWithCallback("unknownareas") {
-            McClient.clipboard = unknownAreas.entries.joinToString("\n") { "${it.value?.name ?: "null"} -> ${it.key}" }
-            Text.of("Copied ${unknownAreas.size} unknown areas to clipboard!").send()
-            sendUnknownAreaChatMessage = !sendUnknownAreaChatMessage
+        event.register("unknown") {
+            thenCallback("areas") {
+                if (unknownAreas.isEmpty()) {
+                    Text.sendDebug("No missing areas.")
+                    return@thenCallback
+                }
+                McClient.clipboard = unknownAreas.entries.joinToString(prefix = "[", postfix = "]") { "${it.value?.name ?: "null"} -> ${it.key}" }
+                val size = unknownAreas.size
+                Text.sendDebug("Copied $size unknown ${pluralize(size, "biome")} to clipboard.")
+            }
+            thenCallback("biomes") {
+                if (unknownBiomes.isEmpty()) {
+                    Text.sendDebug("No missing biomes.")
+                    return@thenCallback
+                }
+                McClient.clipboard = unknownBiomes.joinToString(prefix = "[", postfix = "]")
+                val size = unknownBiomes.size
+                Text.sendDebug("Copied $size unknown ${pluralize(size, "area")} to clipboard.")
+            }
         }
         event.registerWithCallback("dev trigger new_alpha") {
             FreshHypixelAlphaDetectedEvent.post()
             Text.sendDebug("Triggered a NewHypixelAlphaDetectedEvent.")
-        }
-        event.registerWithCallback("unknownbiomes") {
-            McClient.clipboard = unknownBiomes.joinToString("\n") { "$it" }
-            Text.of("Copied ${unknownBiomes.size} unknown biomes to clipboard!").send()
-            sendUnknownBiomeChatMessage = !sendUnknownBiomeChatMessage
-        }
-        event.registerWithCallback("location") {
-            Text.multiline(
-                "Island: ${island?.displayName ?: "Unknown"}",
-                "Area: ${area.name}",
-                "Biome: ${biome?.biome ?: "Unknown"}",
-                "Server ID: ${serverId ?: "Unknown"}",
-                "Player Count: $playerCount${maxPlayercount?.let { " / $it" }.orEmpty()}",
-                "Is Guest: $isGuest",
-                "On Hypixel: $onHypixel",
-                "On Alpha: $onAlpha",
-            ).send()
         }
     }
 }

@@ -3,6 +3,9 @@
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.nio.file.StandardCopyOption
+import kotlin.io.path.copyTo
+import kotlin.io.path.deleteIfExists
 
 plugins {
     kotlin("jvm")
@@ -220,6 +223,7 @@ dependencies {
 val mcVersion = stonecutter.current.version.replace(".", "")
 
 loom {
+    log4jConfigs.from(rootProject.projectDir.resolve("gradle/log4j.config.xml"))
     runConfigs["client"].apply {
         generateRunConfig = true
         runDirectory = project.file("../../run")
@@ -241,4 +245,37 @@ tasks.named<Jar>("jar") {
 
 tasks.named<Jar>("sourcesJar") {
     archiveClassifier = "${stonecutter.current.version}-sources"
+}
+
+tasks.named("updateKotlinAbi") {
+    mustRunAfter("copyApiData")
+}
+
+tasks.register("copyApiData") {
+    group = "skyblock-api"
+    description = "Copy old files"
+
+    val name = project.name
+
+    doFirst {
+        val path = layout.projectDirectory.asFile.toPath()
+        val api = path.resolve("api/${name}.api")
+        api.copyTo(api.resolveSibling("${name}.api.old"), StandardCopyOption.REPLACE_EXISTING)
+    }
+}
+
+
+tasks.register("resetApiData") {
+    group = "skyblock-api"
+    description = "Rever api data to before update"
+
+    val name = project.name
+
+    doFirst {
+        val path = layout.projectDirectory.asFile.toPath()
+        val api = path.resolve("api/${name}.api")
+        val backupApi = api.resolveSibling("${name}.api.old")
+        backupApi.copyTo(api, StandardCopyOption.REPLACE_EXISTING)
+        backupApi.deleteIfExists()
+    }
 }

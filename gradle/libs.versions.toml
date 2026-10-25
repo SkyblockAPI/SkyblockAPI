@@ -7,7 +7,7 @@ meowdding-resources = "1.0.17"
 meowdding-item-dfu = "1.0.14"
 meowdding-auto-mixins = "1.0.8"
 
-fabric-loader = "0.19.3"
+fabric-loader = "0.20.1"
 fabric-language-kotlin = "1.13.12+kotlin.2.4.0"
 
 kotlin = "2.4.0"
@@ -17,7 +17,7 @@ kotlin-symbol-processor = "2.3.11"
 hypixel-modapi = "1.0.2"
 hypixel-modapi-fabric = "1.0.2+build.1+mc26.1"
 
-skyblockapi-repolib = "4.1.11"
+skyblockapi-repolib = "4.1.14"
 
 # Dev versions
 devauth-fabric = "1.2.2"
