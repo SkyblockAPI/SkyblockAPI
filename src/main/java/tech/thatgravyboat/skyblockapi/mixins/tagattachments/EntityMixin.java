@@ -1,10 +1,5 @@
 package tech.thatgravyboat.skyblockapi.mixins.tagattachments;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
@@ -26,6 +21,11 @@ import tech.thatgravyboat.skyblockapi.api.events.entity.EntityEvents;
 import tech.thatgravyboat.skyblockapi.api.events.entity.ListenForNameChange;
 import tech.thatgravyboat.skyblockapi.api.events.entity.NameChangedEvent;
 import tech.thatgravyboat.skyblockapi.helpers.EntityAttachmentAccessor;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements ListenForNameChange, EntityAttachmentAccessor {

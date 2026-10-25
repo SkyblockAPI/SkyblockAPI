@@ -1,44 +1,48 @@
+@file:Suppress("DEPRECATION")
+
 package tech.thatgravyboat.skyblockapi.utils
 
+//? if < 26.4 {
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.suggestion.SuggestionProvider
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
-import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.utils.command.VirtualResourceArgument
 import tech.thatgravyboat.skyblockapi.utils.extentions.mapValuesNotNull
-import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.replaceWith
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.nio.file.Path
 import java.util.Properties
 import java.util.concurrent.CompletableFuture
-import kotlin.collections.map
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import kotlin.io.path.Path
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.notExists
 import kotlin.io.path.reader
 import kotlin.io.path.writer
 import kotlin.reflect.KProperty
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugEntry as NewDebugEntry
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle as NewDebugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugSelect as NewDebugSelect
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugMultiSelect as NewDebugMultiSelect
+import tech.thatgravyboat.skyblockapi.utils.devutils.DevUtils as NewDevUtils
 
+@Deprecated("Replace with devutils package", ReplaceWith("tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugEntry"))
 public sealed interface DebugEntry {
     public val location: Identifier
     public val description: String
@@ -54,12 +58,23 @@ public sealed interface DebugEntry {
         add(location.namespace)
         addAll(location.path.split('/', '.', '-'))
     }
+
+    public fun toNew(): NewDebugEntry
 }
 
-internal fun debugToggle(path: String, description: String = path, prefix: String = path): DebugToggle {
-    return DebugToggle(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils, prefix)
+private object DummyUtils : DevUtils() {
+    override val commandName: String = "_"
+
+    override fun send(component: MutableComponent) {}
 }
 
+internal fun NewDebugToggle.toOld(): DebugToggle = DebugToggle(
+    this.location,
+    this.description,
+    DummyUtils,
+)
+
+@Deprecated("Replace with devutils package", ReplaceWith("tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle"))
 public open class DebugToggle @JvmOverloads constructor(
     override val location: Identifier,
     override val description: String,
@@ -68,9 +83,7 @@ public open class DebugToggle @JvmOverloads constructor(
 ) : DebugEntry {
     public open val prefix: MutableComponent = Text.of(prefix, TextColor.DARK_PURPLE)
 
-    //? < 26.4
     @Deprecated("Don't access state directly, use get() and set(value) instead") // we cant make this deprecated level hidden since its actually used
-    //~ if >= 26.4 'public' -> 'private'
     public var state: Boolean = false
 
     init {
@@ -89,10 +102,9 @@ public open class DebugToggle @JvmOverloads constructor(
         set(!get())
     }
 
-    //? if < 26.4 {
     @Deprecated("Not used anymore", level = HIDDEN)
-    public fun update() {}
-    //?}
+    public fun update() {
+    }
 
     public fun reset() {
         set(false)
@@ -105,24 +117,10 @@ public open class DebugToggle @JvmOverloads constructor(
 
     public operator fun getValue(any: Any?, property: KProperty<*>): Boolean = get()
 
+    override fun toNew(): NewDebugToggle = NewDebugToggle(location, description, devUtils.new, prefix.stripped)
 }
 
-internal fun <T : Any> debugSelect(
-    path: String,
-    description: String = path,
-    initialState: T?,
-    states: List<T>,
-    toString: (T) -> String = { it.toString() },
-): DebugSelect<T> {
-    return DebugSelect(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils, initialState, toString, states)
-}
-
-internal inline fun <reified T : Enum<T>> debugSelect(
-    path: String,
-    description: String = path,
-    initialState: T? = null,
-): DebugSelect<T> = debugSelect(path, description, initialState, T::class.java.enumConstants.toList())
-
+@Deprecated("Replace with devutils package", ReplaceWith("tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugSelect"))
 public open class DebugSelect<T : Any>(
     override val location: Identifier,
     override val description: String,
@@ -143,10 +141,8 @@ public open class DebugSelect<T : Any>(
         this.state = fixValue(value)
     }
 
-    //? if < 26.4 {
     @Deprecated("Use isDefaultState instead", ReplaceWith("isDefaultState()"), level = HIDDEN)
     public fun hasState(): Boolean = isDefaultState()
-    //?}
 
     public fun getByName(name: String?): T? = states.find { toString(it) == name }
     public fun setByName(name: String?): Unit = set(getByName(name))
@@ -155,10 +151,9 @@ public open class DebugSelect<T : Any>(
 
     public fun stateName(): String? = get()?.let(toString)
 
-    //? if < 26.4 {
     @Deprecated("Not used anymore")
-    public fun update() {}
-    //?}
+    public fun update() {
+    }
 
     public fun reset() {
         set(defaultState)
@@ -190,24 +185,12 @@ public open class DebugSelect<T : Any>(
 
     // If the default value isn't null, we don't let the user use null
     private fun fixValue(value: T?): T? = value ?: defaultState
+
+
+    override fun toNew(): NewDebugSelect<T> = NewDebugSelect(location, description, devUtils.new, defaultState, toString, states)
 }
 
-internal fun <T : Any> debugMultiSelect(
-    path: String,
-    description: String = path,
-    initialState: Set<T> = emptySet(),
-    toString: (T) -> String = { it.toString() },
-    states: () -> List<T>,
-): DebugMultiSelect<T> {
-    return DebugMultiSelect(SkyBlockAPI.id(path), description, SkyBlockApiDevUtils, initialState, toString, states)
-}
-
-internal inline fun <reified T : Enum<T>> debugMultiSelect(
-    path: String,
-    description: String = path,
-    initialState: Set<T> = emptySet(),
-): DebugMultiSelect<T> = debugMultiSelect(path, description, initialState, { it.name }) { T::class.java.enumConstants.toList() }
-
+@Deprecated("Replace with devutils package", ReplaceWith("tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugMultiSelect"))
 public open class DebugMultiSelect<T : Any>(
     override val location: Identifier,
     override val description: String,
@@ -258,8 +241,8 @@ public open class DebugMultiSelect<T : Any>(
     public fun toggle(value: T) {
         ensureInitialized()
         if (state.add(value))
-        if (value in state) state.remove(value)
-        else state.add(value)
+            if (value in state) state.remove(value)
+            else state.add(value)
     }
 
     public fun toggleByName(name: String) {
@@ -341,34 +324,32 @@ public open class DebugMultiSelect<T : Any>(
 
     public operator fun getValue(any: Nothing?, property: KProperty<*>): Set<T> = get()
     public operator fun getValue(any: Any?, property: KProperty<*>): Set<T> = get()
+
+    override fun toNew(): NewDebugMultiSelect<T> = NewDebugMultiSelect(location, description, devUtils.new, initialState, toString, statesProvider)
 }
 
-@Module
-internal object SkyBlockApiDevUtils : DevUtils() {
-    override val commandName: String = "sbapi toggle"
-    override fun send(component: MutableComponent) = component.sendWithPrefix()
+internal data class DevUtilBridge(val utils: DevUtils) : NewDevUtils() {
+    override val commandName: String get() = utils.commandName
+    override fun send(component: MutableComponent) = utils.send(component)
 
-    override val supportsChangingDefault: Boolean = true
-    override val path: Path = loadPath()
-    val properties: Map<String, String> = loadFromProperties(path)
+    override val supportsChangingDefault: Boolean get() = utils.supportsChangingDefault
 
-    override val namespace: String = SkyBlockAPI.NAMESPACE
+    override val namespace: String get() = utils.namespace
 
-    // TODO: add debug int thing maybe?
-    fun getInt(key: String, default: Int = 0): Int {
-        return properties[key].parseFormattedInt(default)
-    }
+    override fun setToggleDefault(location: Identifier, newDefaultValue: Boolean) = utils.setToggleDefault(location, newDefaultValue)
 
-    private fun loadPath(): Path {
-        val specifiedPath = System.getenv("tech_thatgravyboat_sbapi_debug_property_path") ?: System.getProperty("sbapi.property_path")
-        return if (specifiedPath != null) Path(specifiedPath)
-        else McClient.config.resolve("sbapi.properties")
-    }
+    override fun getDefaultToggle(location: Identifier): Boolean = utils.getDefaultToggle(location)
 
-    @Subscription
-    private fun commandRegister(event: RegisterCommandsEvent) = super.onCommandRegister(event)
+    override fun setSelectDefault(location: Identifier, newDefaultValue: String?) = utils.setSelectDefault(location, newDefaultValue)
+
+    override fun getDefaultSelect(location: Identifier): String? = utils.getDefaultSelect(location)
+
+    override fun setMultiSelectDefault(location: Identifier, newDefaultValue: String?) = utils.setMultiSelectDefault(location, newDefaultValue)
+
+    override fun getDefaultMultiSelect(location: Identifier): String? = utils.getDefaultMultiSelect(location)
 }
 
+@Deprecated("Replace with devutils package", ReplaceWith("tech.thatgravyboat.skyblockapi.utils.devutils.DevUtils"))
 public abstract class DevUtils {
     protected val name: String = this::class.simpleName ?: this.toString()
 
@@ -384,6 +365,7 @@ public abstract class DevUtils {
 
     /** whether this dev utils supports changing debug entries' default states when launching */
     public open val supportsChangingDefault: Boolean = false
+
     /** if [supportsChangingDefault] is `true`, this path should be set */
     protected open val path: Path? = null
 
@@ -391,6 +373,8 @@ public abstract class DevUtils {
     protected open fun propertyKey(location: Identifier): String = "${location.namespace}@${location.path}"
 
     public open val namespace: String = SkyBlockAPI.NAMESPACE
+
+    internal val new: NewDevUtils by lazy { DevUtilBridge(this) }
 
     private fun registerEntry(debugEntry: DebugEntry) {
         val location = debugEntry.location
@@ -411,7 +395,7 @@ public abstract class DevUtils {
         registerEntry(debugToggle)
 
         if (!supportsChangingDefault) return
-        val storedValue = when(values[debugToggle.location]) {
+        val storedValue = when (values[debugToggle.location]) {
             "true" -> true
             "false" -> false
             else -> return
@@ -438,16 +422,18 @@ public abstract class DevUtils {
     }
 
     //region Deprecated
-    //? if < 26.4 {
     @Deprecated("Get from values instead", level = HIDDEN)
     public val states: MutableMap<Identifier, Boolean> = mutableMapOf()
+
     @Deprecated("Get from values instead", level = HIDDEN)
     public val selectStates: MutableMap<Identifier, String?> = mutableMapOf()
 
     @Deprecated("Get from debugEntries instead", level = HIDDEN)
     public val toggles: MutableList<DebugToggle> = mutableListOf()
+
     @Deprecated("Get from debugEntries instead", level = HIDDEN)
     public val select: MutableMap<Identifier, DebugSelect<Any>> = mutableMapOf()
+
     @Deprecated("Get from debugEntries instead", level = HIDDEN)
     public val allDebugEntries: List<DebugEntry> = emptyList()
 
@@ -473,7 +459,6 @@ public abstract class DevUtils {
     public fun toggleMultiSelectItem(location: Identifier, item: String) {
         getDebugEntry<DebugMultiSelect<*>>(location)?.toggleByName(item)
     }
-    //?}
 
     //region Default Management Functions
     public open fun setToggleDefault(location: Identifier, newDefaultValue: Boolean) {
@@ -531,9 +516,9 @@ public abstract class DevUtils {
         }
         val map = mutableMapOf<String, String>()
         properties.forEach { (key, value) ->
-            val identifier = Identifiers.parseWithSeparator(key.toString(), '@') ?: return@forEach
             val string = value.toString()
             map[key.toString()] = string
+            val identifier = Identifiers.parseWithSeparator(key.toString(), '@') ?: return@forEach
             values[identifier] = string
         }
         return map
@@ -704,7 +689,9 @@ public abstract class DevUtils {
     }
 
     init {
-        allDevUtils.add(this)
+        if (this !is DummyUtils) {
+            allDevUtils.add(this)
+        }
     }
 
     public companion object {
@@ -727,3 +714,4 @@ private data class DevToolSuggestionProvider<T>(val utils: Iterable<T>, val loca
         return builder.buildFuture()
     }
 }
+//?}

@@ -1,7 +1,5 @@
-import com.sun.org.apache.xpath.internal.XPathAPI.eval
 import org.gradle.api.publish.internal.component.DefaultAdhocSoftwareComponent
 import org.gradle.kotlin.dsl.support.serviceOf
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 repositories {
     mavenCentral()
@@ -22,6 +20,8 @@ stonecutter parameters {
 
 fun Project.isDummy(): Boolean = buildscript.sourceFile?.name == "dummy.gradle.kts"
 
+val versionProjects = stonecutter.versions.map { project(it.project) }.filterNot { it.isDummy() }
+
 stonecutter.versions.forEach {
     val project = project(it.project)
     if (!project.isDummy()) return@forEach
@@ -30,8 +30,45 @@ stonecutter.versions.forEach {
     }
 }
 
-
 evaluationDependsOnChildren()
+
+tasks.register<Exec>("checkBreakingChangesInternal") {
+    group = "skyblock-api"
+    description = "Compares the changes"
+    versionProjects.forEach { project ->
+        dependsOn(project.tasks.named("updateKotlinAbi"), project.tasks.named("copyApiData"))
+        mustRunAfter(project.tasks.named("updateKotlinAbi"))
+    }
+
+    this.workingDir = rootProject.layout.projectDirectory.asFile
+    this.setCommandLine("kotlin", ".github/scripts/compare_dumps.main.kts", "local")
+
+    isIgnoreExitValue = true
+
+    doFirst {
+        standardOutputCapture.start()
+    }
+    doLast {
+        standardOutputCapture.stop()
+    }
+}
+val stoneProject = project
+
+versionProjects.forEach { project ->
+    project.tasks.named("resetApiData") {
+        mustRunAfter(stoneProject.tasks.named("checkBreakingChangesInternal"))
+    }
+}
+
+tasks.register("checkBreakingChanges") {
+    group = "skyblock-api"
+    description = "Checks for breaking changes"
+
+    versionProjects.forEach { project ->
+        dependsOn(project.tasks.named("updateKotlinAbi"), project.tasks.named("copyApiData"), project.tasks.named("resetApiData"))
+    }
+    dependsOn("checkBreakingChangesInternal")
+}
 
 //<editor-fold desc="Publishing setup">
 val componentFactory = project.serviceOf<SoftwareComponentFactory>()

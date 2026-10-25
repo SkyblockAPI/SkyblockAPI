@@ -117,7 +117,7 @@ public object LoreDataTypes {
     public val CATEGORY: DataType<SkyBlockCategory> = DataType.of("category") { ctx, stack ->
         getRarityLine(stack, ctx)?.let { line ->
             line.first.removePrefix(line.second.displayName.uppercase()).trim().ifBlank { null }
-        }?.let(SkyBlockCategory::create)
+        }?.let { SkyBlockCategory.create(it, parseModifier = true) }
             // pets inside inventories don't have the rarity/category line
             ?: if (ctx[ResolutionContext.Resolver.PET_DATA] != null) SkyBlockCategory.PET else null
     }
