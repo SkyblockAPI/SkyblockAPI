@@ -16,11 +16,11 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
-import tech.thatgravyboat.skyblockapi.utils.DebugEntry
-import tech.thatgravyboat.skyblockapi.utils.DebugMultiSelect
-import tech.thatgravyboat.skyblockapi.utils.DebugSelect
-import tech.thatgravyboat.skyblockapi.utils.DebugToggle
-import tech.thatgravyboat.skyblockapi.utils.DevUtils
+import tech.thatgravyboat.skyblockapi.utils.devutils.DevUtils
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugEntry
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugMultiSelect
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugSelect
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
@@ -28,11 +28,16 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.width
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
+import tech.thatgravyboat.skyblockapi.utils.DevUtils as OldDevUtils
 
 // im sorry to whoever has to read this and understand this
 internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
 
-    val debugEntries: List<DebugEntry> = DevUtils.allDevUtils.flatMap { it.debugEntries.values }
+    val debugEntries: List<DebugEntry> = buildList {
+        @Suppress("DEPRECATION")
+        addAll(OldDevUtils.allDevUtils.flatMap { it.debugEntries.values.map { it.toNew() } })
+        addAll(DevUtils.allDevUtils.flatMap { it.debugEntries.values })
+    }
 
     private fun debugEntryByPath(path: List<String>): DebugEntry? {
         return debugEntries.find { it.splitLocation() == path }

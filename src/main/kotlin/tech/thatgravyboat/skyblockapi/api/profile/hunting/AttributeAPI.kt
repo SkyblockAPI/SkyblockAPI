@@ -29,12 +29,12 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
-import tech.thatgravyboat.skyblockapi.utils.DebugToggle
-import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugComponent
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.codecs.IncludedCodecs
 import tech.thatgravyboat.skyblockapi.utils.command.mapped
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugComponent
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
@@ -54,15 +54,25 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.toOld
 import kotlin.math.max
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
+import tech.thatgravyboat.skyblockapi.utils.DebugToggle as OldDebugToggle
 
 @Module
 public data object AttributeAPI : ItemDebugCategory {
-
-    public val debugToggle: DebugToggle = debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
+    //? < 26.4
+    @get:JvmName("debugToggle")
+    private val debugToggle: DebugToggle = debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
     private val isDebugEnabled by debugToggle
+
+    //? < 26.4 {
+    @get:JvmName("getDebugToggle")
+    @Suppress("ObjectPropertyName", "DEPRECATION")
+    @Deprecated("Should never have been public", level = DeprecationLevel.HIDDEN)
+    public val _toggle: OldDebugToggle by lazy { debugToggle.toOld() }
+    //? }
 
     private val attributeRarities = SkyBlockRarity.COMMON.rangeTo(SkyBlockRarity.LEGENDARY)
 

@@ -6,7 +6,6 @@ import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 
 //? < 26.4
 import net.minecraft.client.input.MouseButtonInfo
-import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenMouseClickEvent
 
 public sealed class ScreenMouseReleasedEvent(
     public val screen: Screen,
