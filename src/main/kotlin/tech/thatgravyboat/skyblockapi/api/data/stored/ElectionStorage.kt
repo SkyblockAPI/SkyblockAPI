@@ -15,8 +15,8 @@ import tech.thatgravyboat.skyblockapi.api.environmental.skyblockDays
 import tech.thatgravyboat.skyblockapi.api.environmental.skyblockYears
 import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.utils.extentions.changeValue
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
-import tech.thatgravyboat.skyblockapi.utils.extentions.putIfDifferent
 import kotlin.math.floor
 import kotlin.time.Instant
 
@@ -91,7 +91,7 @@ internal object ElectionStorage {
     /** Returns `true` if it changed the description */
     fun setPerkDescription(perkId: String, description: String): Boolean {
         return DATA.edit {
-            perkDescriptions.putIfDifferent(perkId, description)
+            perkDescriptions.changeValue(perkId, description)
         }
     }
 

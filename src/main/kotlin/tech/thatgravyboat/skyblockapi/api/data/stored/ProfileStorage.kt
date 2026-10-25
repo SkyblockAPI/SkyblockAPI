@@ -6,7 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileAPI
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.profile.ProfileType
-import tech.thatgravyboat.skyblockapi.utils.extentions.putIfDifferent
+import tech.thatgravyboat.skyblockapi.utils.extentions.changeValue
 import java.util.UUID
 
 internal object ProfileStorage {
@@ -31,7 +31,7 @@ internal object ProfileStorage {
         }
 
         return PROFILE.edit {
-            this.profileType.putIfDifferent(profileName, profileType)
+            this.profileType.changeValue(profileName, profileType)
         }
     }
 
@@ -40,7 +40,7 @@ internal object ProfileStorage {
     /** Returns `true` if it changed anything */
     fun setProfileId(profileName: String, id: UUID): Boolean {
         return PROFILE.edit {
-            this.profileId.putIfDifferent(profileName, id)
+            this.profileId.changeValue(profileName, id)
         }
     }
 
@@ -52,7 +52,7 @@ internal object ProfileStorage {
 
     fun setSkyBlockLevel(profileName: String, level: Int) {
         PROFILE.edit {
-            this.sbLevel.putIfDifferent(profileName, level)
+            this.sbLevel.changeValue(profileName, level)
         }
     }
 
@@ -60,7 +60,7 @@ internal object ProfileStorage {
 
     fun setSkyBlockLevelProgress(profileName: String, levelProgress: Int) {
         PROFILE.edit {
-            this.sbLevelProgress.putIfDifferent(profileName, levelProgress)
+            this.sbLevelProgress.changeValue(profileName, levelProgress)
         }
     }
 
@@ -68,7 +68,7 @@ internal object ProfileStorage {
 
     fun setCoop(profileName: String, isCoop: Boolean) {
         PROFILE.edit {
-            this.coop.putIfDifferent(profileName, isCoop)
+            this.coop.changeValue(profileName, isCoop)
         }
     }
 
