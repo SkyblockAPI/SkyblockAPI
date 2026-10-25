@@ -34,7 +34,8 @@ public class SkyBlockCategory private constructor(
         }
 
         public fun create(string: String, @IntroducedAt("4.2.43") modifier: Modifier? = null): SkyBlockCategory {
-            val formatted = string.lowercase()
+            val formatted = if (modifier == null) string.lowercase()
+            else "$modifier ${string.lowercase()}"
             return registeredCategories.getOrPut(formatted) {
                 SkyBlockCategory(formatted.trim(), modifier)
             }
