@@ -1,6 +1,8 @@
 package tech.thatgravyboat.skyblockapi.api.profile.maxwell
 
 import com.mojang.brigadier.arguments.BoolArgumentType
+import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
@@ -22,6 +24,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
+import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugAttachable
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
@@ -68,8 +71,20 @@ public data object MaxwellAPI : ItemDebugCategory {
     val accessoryPower: Int
         get() = MaxwellStorage.accessoryPower
 
-    val accessories: List<ItemStack>
+    //? < 26.4 {
+    @Suppress("DEPRECATION")
+    @get:JvmName("getAccessories")
+    @Deprecated("Use accessoryItems instead", ReplaceWith("accessoryItems"), level = DeprecationLevel.ERROR)
+    val _accessories: List<ItemStack>
+        get() = MaxwellStorage.meow
+
+    @get:JvmName("accessories")
+    //? }
+    val accessories: List<AccessoryBagEntry>
         get() = MaxwellStorage.accessories
+
+    val accessoryItems: List<ItemStack>
+        get() = MaxwellStorage.accessories.map(AccessoryBagEntry::item)
 
     val unlockedPowers: Set<MaxwellPower>
         get() = MaxwellStorage.unlockedPowers
@@ -467,3 +482,12 @@ public data object MaxwellAPI : ItemDebugCategory {
         return category.equalsAny(SkyBlockCategory.ACCESSORY, SkyBlockCategory.HATCESSORY, ignoreModifiers = true)
     }
 }
+
+
+@GenerateCodec
+public data class AccessoryBagEntry(
+    val item: ItemStack,
+    val page: Int,
+    val slot: Int,
+)
+

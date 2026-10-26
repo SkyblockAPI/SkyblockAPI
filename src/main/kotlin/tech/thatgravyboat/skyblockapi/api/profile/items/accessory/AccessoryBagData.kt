@@ -4,7 +4,7 @@ import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.world.item.ItemStack
 
 // TODO: move somewhere else once its internal in all versions
-@GenerateCodec
+@Deprecated("Moved to maxwell api", level = DeprecationLevel.WARNING)
 //~ if >= 26.4 'public' -> 'internal'
 public data class AccessoryBagItem(
     val item: ItemStack,

@@ -4,6 +4,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.MaxwellData
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockStat
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
+import tech.thatgravyboat.skyblockapi.api.profile.maxwell.AccessoryBagEntry
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPower
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPowers
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
@@ -31,7 +32,14 @@ internal object MaxwellStorage {
             data?.accessoryPower = value
         }
 
-    val accessories: MutableList<ItemStack>
+
+    //? < 26.4 {
+    @Deprecated("Use accessoryItems instead", level = DeprecationLevel.WARNING)
+    val meow: MutableList<ItemStack>
+        get() = data?.accessories?.mapTo(mutableListOf(), AccessoryBagEntry::item) ?: mutableListOf()
+    //? }
+
+    val accessories: MutableList<AccessoryBagEntry>
         get() = data?.accessories ?: mutableListOf()
 
     val unlockedPowers: MutableSet<MaxwellPower>
@@ -68,17 +76,17 @@ internal object MaxwellStorage {
         val newIndex = firstIndex + index
         if (newIndex > accessories.lastIndex) {
             while (accessories.lastIndex <= newIndex) {
-                accessories.add(ItemStack.EMPTY)
+                accessories.add(AccessoryBagEntry(accessory, page, index))
             }
         }
-        if (accessories.getOrNull(newIndex)?.isSameItem(accessory) == true) return
-        accessories[newIndex] = accessory
+        if (accessories.getOrNull(newIndex)?.item?.isSameItem(accessory) == true) return
+        accessories[newIndex] = AccessoryBagEntry(accessory, page, index)
         save()
     }
 
     /** Accessories in accessory bag get all the empty items between them removed on server change */
     fun fixEmptyAccessories() {
-        val removedAny = accessories.removeAll { it.isEmpty }
+        val removedAny = accessories.removeAll { it.item.isEmpty }
         if (removedAny) save()
     }
 
