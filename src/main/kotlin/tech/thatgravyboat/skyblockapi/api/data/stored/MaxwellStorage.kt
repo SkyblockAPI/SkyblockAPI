@@ -33,12 +33,6 @@ internal object MaxwellStorage {
         }
 
 
-    //? < 26.4 {
-    @Deprecated("Use accessoryItems instead", level = DeprecationLevel.WARNING)
-    val meow: MutableList<ItemStack>
-        get() = data?.accessories?.mapTo(mutableListOf(), AccessoryBagEntry::item) ?: mutableListOf()
-    //? }
-
     val accessories: MutableList<AccessoryBagEntry>
         get() = data?.accessories ?: mutableListOf()
 

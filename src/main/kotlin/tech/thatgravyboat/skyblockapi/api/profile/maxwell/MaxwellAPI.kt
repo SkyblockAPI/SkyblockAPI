@@ -71,19 +71,10 @@ public data object MaxwellAPI : ItemDebugCategory {
     val accessoryPower: Int
         get() = MaxwellStorage.accessoryPower
 
-    //? < 26.4 {
-    @Suppress("DEPRECATION")
-    @get:JvmName("getAccessories")
-    @Deprecated("Use accessoryItems instead", ReplaceWith("accessoryItems"), level = DeprecationLevel.ERROR)
-    val _accessories: List<ItemStack>
-        get() = MaxwellStorage.meow
-
-    @get:JvmName("accessories")
-    //? }
-    val accessories: List<AccessoryBagEntry>
+    val accessoryEntries: List<AccessoryBagEntry>
         get() = MaxwellStorage.accessories
 
-    val accessoryItems: List<ItemStack>
+    val accessories: List<ItemStack>
         get() = MaxwellStorage.accessories.map(AccessoryBagEntry::item)
 
     val unlockedPowers: Set<MaxwellPower>
