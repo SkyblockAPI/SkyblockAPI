@@ -92,6 +92,7 @@ public object DataTypes {
     public val DITTO_ITEM_ID: DataType<String> = GenericDataTypes.DITTO_ITEM_ID
 
     public val PARTY_HAT_COLOR: DataType<String> = GenericDataTypes.PARTY_HAT_COLOR
+    public val PARTY_HAT_EMOJI: DataType<String> = GenericDataTypes.PARTY_HAT_EMOJI
     public val PARTY_HAT_YEAR: DataType<Int> = GenericDataTypes.PARTY_HAT_YEAR
 
     public val RABBIT_FACTION: DataType<String> = GenericDataTypes.RABBIT_FACTION

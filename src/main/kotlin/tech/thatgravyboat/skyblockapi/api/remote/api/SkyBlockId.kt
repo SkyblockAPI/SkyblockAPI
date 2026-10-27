@@ -232,22 +232,43 @@ private fun ItemStack.getSbId(context: ResolutionContext): SkyBlockId? {
             model?.let { SkyBlockId.item("abicase_$it") }
         }
 
-        "PARTY_HAT_CRAB_ANIMATED" -> {
-            val hatColor = DataTypes.PARTY_HAT_COLOR()
-            addStringDebug(DefaultIdResolver) { "Resolving animated party hat crab $hatColor" }
-            hatColor?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
-        }
+        //region Hatcessories
         "PARTY_HAT_CRAB" -> {
             val hatColor = DataTypes.PARTY_HAT_COLOR()
             addStringDebug(DefaultIdResolver) { "Resolving party hat crab $hatColor" }
             hatColor?.let { SkyBlockId.item("party_hat_crab_$it") }
         }
 
+        "PARTY_HAT_CRAB_ANIMATED" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving animated party hat crab $hatColor" }
+            hatColor?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
+        }
+
+        "PARTY_HAT_SLOTH" -> {
+            val hatEmoji = DataTypes.PARTY_HAT_EMOJI()
+            addStringDebug(DefaultIdResolver) { "Resolving party hat sloth $hatEmoji" }
+            hatEmoji?.let { SkyBlockId.item("party_hat_sloth_${it}") }
+        }
+
+        "BALLOON_HAT_2024" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving balloon hat 2024 $hatColor" }
+            hatColor?.let { SkyBlockId.item("cake_hat_2025_$it") }
+        }
+
+        "BALLOON_HAT_2025" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving balloon hat 2025 $hatColor" }
+            hatColor?.let { SkyBlockId.item("cake_hat_2025_$it") }
+        }
+
         "CAKE_HAT_2026" -> {
             val hatColor = DataTypes.PARTY_HAT_COLOR()
-            addStringDebug(DefaultIdResolver) { "Resolving party hat crab $hatColor" }
+            addStringDebug(DefaultIdResolver) { "Resolving cake hat 2026 $hatColor" }
             hatColor?.let { SkyBlockId.item("cake_hat_2026_$it") }
         }
+        //endregion
 
         "FACTION_RABBIT" -> {
             val faction = DataTypes.RABBIT_FACTION()
