@@ -73,6 +73,15 @@ public object Text {
         McClient.chat.addClientSystemMessage(this)
     }
 
+    /**
+     * Pipes the component through the whole message pipeline, making it so other fabric and other mods are gonna handle it.
+     * @receiver Component to send
+     */
+    public fun Component.imitateServerMessage() {
+        //~ if > 26.1 'self.chatListener' -> 'gui.chatListener()'
+        McClient.gui.chatListener().handleSystemMessage(this, true)
+    }
+
     public fun Component.send(id: String): Unit = McClient.chat.setMessageId(id) {
         this.send()
     }

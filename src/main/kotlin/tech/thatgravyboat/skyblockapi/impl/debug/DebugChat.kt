@@ -18,7 +18,9 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.imitateServerMessage
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
+import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
@@ -29,6 +31,21 @@ import kotlin.time.Instant
 
 @Module
 public object DebugChat {
+
+    private var sentComponent: Component? = null
+        set(value) {
+            if (value != null) {
+                sentMessage = null
+            }
+            field = value
+        }
+    private var sentMessage: UUID? = null
+        set(value) {
+            if (value != null) {
+                sentComponent = null
+            }
+            field = value
+        }
 
     private data class StoredMessage(
         val original: Component,
@@ -43,12 +60,17 @@ public object DebugChat {
     private val maxMessages = SkyBlockApiDevUtils.getInt("debug_chat_max_size", if (McClient.isDev) 10_000 else 500)
     private val messages = mutableListOf<Pair<Instant, StoredMessage>>()
 
-    private fun getStored(event: ChatReceivedEvent): StoredMessage? = messages.find {
-        it.second.id == event.messageId
+    private fun getStored(event: ChatReceivedEvent): StoredMessage? = getStored(event.messageId)
+    private fun getStored(uuid: UUID?): StoredMessage? = messages.find {
+        it.second.id == uuid
     }?.second
 
     @Subscription(receiveCancelled = true)
     internal fun onMessageFirst(event: ChatReceivedEvent.Pre) {
+        if (sentComponent == event.component) {
+            sentMessage = event.messageId
+        }
+
         messages.add(currentInstant() to StoredMessage(event.component, event.messageId))
         while (messages.size > maxMessages) messages.removeFirst()
     }
@@ -120,22 +142,23 @@ public object DebugChat {
                 JsonParser.parseString(clipboard).toData(ComponentSerialization.CODEC)
             }.getOrNull() ?: LegacyTextFixer.parse(clipboard)
 
-            val id = UUID.randomUUID()
+            Text.of {
+                append("<< ")
+                append(component)
+            }.send()
+            sentComponent = component
+            component.imitateServerMessage()
+            val message = getStored(sentMessage)
+            sentMessage = null
 
-            if (ChatReceivedEvent.Pre(component, id).post()) {
-                ChatReceivedEvent.Cancelled(component, id).post()
+            if (message == null) return@registerWithCallback
+            if (message.cancelled) {
                 Text.sendDebug("Chat event cancelled!") {
                     color = TextColor.RED
                 }
-                component.send()
-            } else {
-                val event = ChatReceivedEvent.Post(component, messageId = id)
-                event.post()
-                if (event.component != component) {
-                    Text.sendDebug("Chat event modified!")
-                }
-                ChatReceivedEvent.Sent(component, id).post()
-                event.component.send()
+            }
+            if (message.modified != null) {
+                Text.sendDebug("Chat event modified!")
             }
         }
     }
