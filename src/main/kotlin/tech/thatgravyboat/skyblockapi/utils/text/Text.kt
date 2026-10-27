@@ -78,6 +78,7 @@ public object Text {
      * @receiver Component to send
      */
     public fun Component.imitateServerMessage() {
+        //~ if > 26.1 'self.chatListener' -> 'gui.chatListener()'
         McClient.gui.chatListener().handleSystemMessage(this, true)
     }
 
