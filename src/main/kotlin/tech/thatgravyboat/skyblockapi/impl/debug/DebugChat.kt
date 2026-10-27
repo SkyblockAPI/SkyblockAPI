@@ -65,18 +65,6 @@ public object DebugChat {
         it.second.id == uuid
     }?.second
 
-
-    @Subscription(receiveCancelled = true, priority = Subscription.HIGHEST)
-    internal fun onMessageFirstt(event: ChatReceivedEvent.Pre) {
-        if ((0..100).random() < 30) event.cancel()
-    }
-
-
-    @Subscription(receiveCancelled = true, priority = Subscription.HIGHEST)
-    internal fun onMessageFirstt(event: ChatReceivedEvent.Post) {
-        if ((0..100).random() < 30) event.component = Text.of("mrrp")
-    }
-
     @Subscription(receiveCancelled = true)
     internal fun onMessageFirst(event: ChatReceivedEvent.Pre) {
         if (sentComponent == event.component) {
