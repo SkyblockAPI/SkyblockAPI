@@ -8,10 +8,13 @@ import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import tech.thatgravyboat.skyblockapi.api.data.stored.FriendStorage
+import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerCacheStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.FriendEvent
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.GuildEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.PlayerCacheUpdate
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
@@ -104,6 +107,9 @@ public object FriendsAPI {
         components.any(::handleSingleLine)
     }
 
+    @Subscription(GuildEvent.Join::class, GuildEvent.Leave::class)
+    private fun onGuildMember() = resetListSearch()
+
     // TODO: also call this on guild join/leave message if the person is in your friends list
     private fun resetListSearch() {
         currentPage = 0
@@ -142,7 +148,12 @@ public object FriendsAPI {
                         name = component.stripped
                     }
                     val isBestFriend = component.string.contains("§l")
-                    val uuid = CommonRegexes.getUuidFromViewProfile(component)
+                    var uuid = CommonRegexes.getUuidFromViewProfile(component)
+
+                    // if uuid isn't null, we update it. if it is null, we try to find it in cache
+                    if (uuid != null) PlayerCacheStorage.updatePlayer(uuid, name)
+                    else uuid = PlayerCacheStorage.getPlayerUUID(name)
+
                     FriendStorage.updateFriend(name, uuid, isBestFriend, nick)
                     foundFriends += name
                 }
@@ -263,6 +274,11 @@ public object FriendsAPI {
                 }
             }
         }
+    }
+
+    @Subscription
+    private fun onPlayerCacheUpdate(event: PlayerCacheUpdate) {
+        FriendStorage.updateIfNeeded(event.uuid, event.name)
     }
 
     @Subscription(ServerDisconnectEvent::class)
