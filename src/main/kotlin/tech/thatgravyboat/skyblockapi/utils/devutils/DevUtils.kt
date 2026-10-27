@@ -24,8 +24,10 @@ import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugSelect
 import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.mapValuesNotNull
 import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.prefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import java.nio.file.Path
 import java.util.Properties
 import java.util.concurrent.CompletableFuture
@@ -326,7 +328,7 @@ public abstract class DevUtils {
             callsInPlace(provider, InvocationKind.AT_MOST_ONCE)
         }
         if (toggle.get()) {
-            send(Text.join("<", toggle.prefix, "> ", provider().copy()))
+            send(Text.join("<", toggle.prefix, "> ", provider()))
         }
     }
 
