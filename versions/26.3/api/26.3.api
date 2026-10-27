@@ -1732,6 +1732,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getORIGIN_TAG ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPARTY_HAT_COLOR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getPARTY_HAT_EMOJI ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPARTY_HAT_YEAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPELTS_EARNED ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPERSONAL_ACCESSORY_ACTIVE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1916,6 +1917,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getORIGIN_TAG ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPARTY_HAT_COLOR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getPARTY_HAT_EMOJI ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPARTY_HAT_YEAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPELTS_EARNED ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPET_DATA ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
