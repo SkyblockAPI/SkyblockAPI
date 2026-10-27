@@ -10639,6 +10639,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/Text {
 	public static synthetic fun atlas$default (Ltech/thatgravyboat/skyblockapi/utils/text/Text;Lnet/minecraft/resources/Identifier;Lnet/minecraft/resources/Identifier;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun copy (Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/text/Text;Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;
+	public final fun imitateServerMessage (Lnet/minecraft/network/chat/Component;)V
 	public final fun join ([Ljava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun join ([Ljava/lang/Object;Lnet/minecraft/network/chat/Component;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun join ([Ljava/lang/Object;Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
