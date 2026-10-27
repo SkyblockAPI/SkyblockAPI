@@ -32,9 +32,15 @@ internal object MaxwellStorage {
             data?.accessoryPower = value
         }
 
-
-    val accessories: MutableList<AccessoryBagEntry>
+    val accessories: MutableList<ItemStack>
         get() = data?.accessories ?: mutableListOf()
+
+    val accessoriesEntries: List<AccessoryBagEntry>
+        get() = accessories.mapIndexed { index, stack ->
+            val page = (index / MAX_ACCESSORIES_PER_PAGE) + 1
+            val slot = index % MAX_ACCESSORIES_PER_PAGE
+            AccessoryBagEntry(stack, page, slot)
+        }
 
     val unlockedPowers: MutableSet<MaxwellPower>
         get() = data?.unlockedPowers ?: mutableSetOf()
@@ -70,17 +76,17 @@ internal object MaxwellStorage {
         val newIndex = firstIndex + index
         if (newIndex > accessories.lastIndex) {
             while (accessories.lastIndex <= newIndex) {
-                accessories.add(AccessoryBagEntry(accessory, page, index))
+                accessories.add(ItemStack.EMPTY)
             }
         }
-        if (accessories.getOrNull(newIndex)?.item?.isSameItem(accessory) == true) return
-        accessories[newIndex] = AccessoryBagEntry(accessory, page, index)
+        if (accessories.getOrNull(newIndex)?.isSameItem(accessory) == true) return
+        accessories[newIndex] = accessory
         save()
     }
 
     /** Accessories in accessory bag get all the empty items between them removed on server change */
     fun fixEmptyAccessories() {
-        val removedAny = accessories.removeAll { it.item.isEmpty }
+        val removedAny = accessories.removeAll { it.isEmpty }
         if (removedAny) save()
     }
 
