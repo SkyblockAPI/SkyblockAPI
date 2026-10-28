@@ -30,7 +30,6 @@ stonecutter parameters {
             replace("{ $graphics, a ->", "{ $graphics ->")
             replace("extractDeferredElements(mouseX, mouseY, a)", "extractDeferredElements()")
             replace("GuiGraphicsExtractor $graphics, int mouseX, int mouseY, float a, CallbackInfo", "GuiGraphicsExtractor $graphics, CallbackInfo")
-            replace("GuiGraphicsExtractor $graphics, int mouseX, int mouseY, CallbackInfo", "GuiGraphicsExtractor $graphics, CallbackInfo")
             replace("GuiGraphicsExtractor $graphics, Slot slot, int x, int y, CallbackInfo", "GuiGraphicsExtractor $graphics, Slot slot, CallbackInfo")
         }
     }

@@ -424,19 +424,21 @@ public class ComponentStateMachine(
 
         }
         context(sink) {
-            val isSuccess = component.visit(
+            //~ if >= 26.4 'visit' -> 'visitUnbounded' {
+            val isSuccess = component.visitUnbounded(
                 { style, contents ->
                     for (char in contents) {
                         val result = current.tryConsume(char, style)
                         if (result.continuation && result.match) {
                             continue
                         }
-                        return@visit Optional.of(false)
+                        return@visitUnbounded Optional.of(false)
                     }
-                    return@visit Optional.empty()
+                    return@visitUnbounded Optional.empty()
                 },
                 EMPTY,
             )
+            //~}
             current.end()
             sink.flush()
 

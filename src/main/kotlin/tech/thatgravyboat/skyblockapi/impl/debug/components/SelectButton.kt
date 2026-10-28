@@ -139,8 +139,8 @@ internal class SelectButton<T>(width: Int, height: Int) : AbstractButton(0, 0, w
 
                     val entry = button.entries[index]
                     val entryY = y + SELECT_BUTTON_PADDING + i * SELECT_BUTTON_HEIGHT + i * SELECT_BUTTON_SPACING
-                    val hovered = graphics.mouseY() >= x && graphics.mouseX() <= x + button.width && graphics.mouseY() >= entryY && graphics
-                        .mouseX() <= entryY + SELECT_BUTTON_HEIGHT
+                    //~ if >= 26.4 'mouseY' -> 'graphics.mouseY()', 'mouseX' -> 'graphics.mouseX()'
+                    val hovered = graphics.mouseX() >= x && graphics.mouseX() <= x + button.width && graphics.mouseY() >= entryY && graphics.mouseY() <= entryY + SELECT_BUTTON_HEIGHT
 
                     val text = Text.join(if (entry.selected) entry.selectedText else entry.unselectedText) {
                         this.underlined = hovered

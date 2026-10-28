@@ -17,8 +17,8 @@ import org.joml.Vector2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 
-//~ if >= 26.4 'RenderPipelines' -> 'pipeline.RenderPipelines'
-import net.minecraft.client.renderer.pipeline.RenderPipelines
+//~ if >= 26.4 'renderer.RenderPipelines' -> 'gui.GuiPipeline'
+import net.minecraft.client.gui.GuiPipeline
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun adjustColor(color: Int): Int {
@@ -62,7 +62,8 @@ public fun GuiGraphicsExtractor.drawString(text: FormattedCharSequence, x: Int, 
 
 
 public fun GuiGraphicsExtractor.drawSprite(texture: Identifier, x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
-    this.blitSprite(RenderPipelines.GUI_TEXTURED, texture, x, y, width, height, color)
+    //~ if >= 26.4 'RenderPipelines.GUI_TEXTURED' -> 'GuiPipeline.TEXTURED'
+    this.blitSprite(GuiPipeline.TEXTURED, texture, x, y, width, height, color)
 }
 
 public fun GuiGraphicsExtractor.drawTexture(
@@ -80,7 +81,8 @@ public fun GuiGraphicsExtractor.drawTexture(
 
     this.guiRenderState.addGuiElement(
         BlitRenderState(
-            RenderPipelines.GUI_TEXTURED, setup, Matrix3x2f(this.pose()),
+            //~ if >= 26.4 'RenderPipelines.GUI_TEXTURED' -> 'GuiPipeline.TEXTURED'
+            GuiPipeline.TEXTURED, setup, Matrix3x2f(this.pose()),
             minx, miny, maxx, maxy, u0, u1, v0, v1, color,
             this.scissorStack.peek(),
         ),

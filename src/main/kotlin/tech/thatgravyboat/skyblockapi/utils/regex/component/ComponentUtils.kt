@@ -11,7 +11,8 @@ internal object ComponentUtils {
         val components = mutableListOf<Component>()
         var current = 0
 
-        component.visit({ style, part ->
+        //~ if >= 26.4 'visit' -> 'visitUnbounded'
+        component.visitUnbounded({ style, part ->
             val length = part.stripColor().length
             if (current + length <= start) {
                 current += length

@@ -29,8 +29,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 import tech.thatgravyboat.skyblockapi.utils.text.asComponent
 
-//~ if >= 26.4 'RenderPipelines' -> 'pipeline.RenderPipelines'
-import net.minecraft.client.renderer.pipeline.RenderPipelines
+//~ if >= 26.4 'renderer.RenderPipelines' -> 'gui.GuiPipeline'
+import net.minecraft.client.gui.GuiPipeline
 
 public val BACKGROUND: Identifier? = Identifier.withDefaultNamespace("popup/background")
 
@@ -140,7 +140,8 @@ public class AbstractComponentViewer(public val map: Map<ComponentViewerCategory
 
     override fun extractBackground(graphics: GuiGraphicsExtractor) {
         super.extractBackground(graphics)
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, width / 4, height / 8, width / 2, widgetHeight)
+        //~ if >= 26.4 'RenderPipelines.GUI_TEXTURED' -> 'GuiPipeline.TEXTURED'
+        graphics.blitSprite(GuiPipeline.TEXTURED, BACKGROUND, width / 4, height / 8, width / 2, widgetHeight)
     }
 }
 

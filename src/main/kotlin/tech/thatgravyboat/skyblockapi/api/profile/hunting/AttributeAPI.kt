@@ -58,6 +58,11 @@ import kotlin.math.max
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
+//? < 26.3 {
+/*import tech.thatgravyboat.skyblockapi.utils.toOld
+import tech.thatgravyboat.skyblockapi.utils.DebugToggle as OldDebugToggle
+*///?}
+
 @Module
 public data object AttributeAPI : ItemDebugCategory {
     //? < 26.4

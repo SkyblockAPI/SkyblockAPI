@@ -26,6 +26,9 @@ import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudEvent;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
+//? < 26.4
+//import net.minecraft.client.DeltaTracker;
+
 @Mixin(Hud.class)
 public abstract class HudMixin {
 
@@ -39,7 +42,7 @@ public abstract class HudMixin {
     private int toolHighlightTimer;
 
     @Inject(method = "extractSleepOverlay", at = @At("HEAD"))
-        //~ if >=26.4 ', DeltaTracker delta, CallbackInfo' -> ', CallbackInfo'
+    //~ if >=26.4 ', DeltaTracker delta, CallbackInfo' -> ', CallbackInfo'
     private void onRenderSleepOverlay(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         if (this.isHidden()) {
             return;
@@ -57,7 +60,8 @@ public abstract class HudMixin {
             target = "Lnet/minecraft/client/gui/Hud;extractItemHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
         )
     )
-    private boolean onRenderHotbar(Hud instance, GuiGraphicsExtractor graphics) {
+    //~ if >=26.4 ', DeltaTracker delta)' -> ')'
+    private boolean onRenderHotbar(Hud instance, GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         return !new RenderHudElementEvent(HudElement.HOTBAR, graphics).post(SkyBlockAPI.getEventBus());
     }
 

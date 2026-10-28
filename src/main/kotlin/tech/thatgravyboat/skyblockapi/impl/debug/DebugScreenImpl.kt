@@ -93,6 +93,7 @@ internal class DebugScreenImpl<T>(
         for (index in scroll until min(scroll + maxEntriesForScreen, messages.size)) {
             val (timestamp, message) = messages[index]
             val y = 20 + (index - scroll) * 10
+            //~ if >= 26.4 'mouseY' -> 'graphics.mouseY()'
             val hovered = graphics.mouseY() in y until y + 10
 
             if (hovered) {
