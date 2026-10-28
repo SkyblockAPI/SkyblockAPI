@@ -5774,11 +5774,27 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/wardrobe/War
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/AccessoryBagEntry {
+	public fun <init> (Lnet/minecraft/world/item/ItemStack;II)V
+	public final fun component1 ()Lnet/minecraft/world/item/ItemStack;
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun copy (Lnet/minecraft/world/item/ItemStack;II)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/AccessoryBagEntry;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/AccessoryBagEntry;Lnet/minecraft/world/item/ItemStack;IIILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/AccessoryBagEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getPage ()I
+	public final fun getSlot ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI : tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun fork (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;
 	public final fun getAccessories ()Ljava/util/List;
+	public final fun getAccessoryEntries ()Ljava/util/Collection;
 	public final fun getAccessoryPower ()I
 	public final fun getConsumedRiftPrism ()Z
 	public final fun getMagicalPower ()I
