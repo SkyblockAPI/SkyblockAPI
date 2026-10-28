@@ -44,6 +44,7 @@ stonecutter.versions.forEach {
     val project = project(it.project)
     if (!project.isDummy()) return@forEach
     project.tasks.configureEach {
+        if (this.group == "stonecutter-impl") return@configureEach
         enabled = false
     }
 }

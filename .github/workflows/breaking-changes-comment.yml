@@ -52,7 +52,7 @@ jobs:
                 id: current
                 if: steps.pr.outputs.number != ''
                 env:
-                    PR_NUMBER: ${{ steps.pr.outputs.number }}
+                    PR_NUMBER: ${{ steps.pr.outputs.number }} 
                     RUN_SHA: ${{ github.event.workflow_run.head_sha }}
                 run: |
                     CURRENT_SHA=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq '.head.sha')
@@ -74,10 +74,10 @@ jobs:
 
                     post_comment() {
                         if [ -n "$COMMENT_ID" ]; then
-                            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" -F body=@"$BODY" > /dev/null
-                        else
-                            gh -R skyblockapi/skyblockapi pr comment "$PR_NUMBER" --body-file "$BODY"
+                            gh api -X DELETE "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" > /dev/null
                         fi
+                        
+                        gh -R skyblockapi/skyblockapi pr comment "$PR_NUMBER" --body-file "$BODY"
                     }
 
                     if [ "$CONCLUSION" = "success" ]; then

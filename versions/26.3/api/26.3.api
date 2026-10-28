@@ -1732,6 +1732,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getORIGIN_TAG ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPARTY_HAT_COLOR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getPARTY_HAT_EMOJI ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPARTY_HAT_YEAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPELTS_EARNED ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPERSONAL_ACCESSORY_ACTIVE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1916,6 +1917,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getNECRON_SCROLLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getORIGIN_TAG ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPARTY_HAT_COLOR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getPARTY_HAT_EMOJI ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPARTY_HAT_YEAR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPELTS_EARNED ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getPET_DATA ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -2465,6 +2467,12 @@ public abstract class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarRe
 	public fun getText ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent$Cancelled : tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent {
+	public fun getColoredText ()Ljava/lang/String;
+	public fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public fun getText ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent {
 	public fun <init> (Lnet/minecraft/network/chat/Component;)V
 	public fun getComponent ()Lnet/minecraft/network/chat/Component;
@@ -2479,20 +2487,34 @@ public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarRecei
 	public fun getText ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent$Sent : tech/thatgravyboat/skyblockapi/api/events/chat/ActionBarReceivedEvent {
+	public fun getColoredText ()Ljava/lang/String;
+	public fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public fun getText ()Ljava/lang/String;
+}
+
 public abstract class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Companion;
-	public fun <init> ()V
+	public synthetic fun <init> ()V
+	protected fun <init> (Ljava/util/UUID;)V
 	public fun getColoredText ()Ljava/lang/String;
 	public abstract fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public final fun getMessageId ()Ljava/util/UUID;
 	public fun getText ()Ljava/lang/String;
 	public fun post (Ltech/thatgravyboat/skyblockapi/api/events/base/EventBus;)Z
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Cancelled : tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent {
+	public fun getColoredText ()Ljava/lang/String;
+	public fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public fun getText ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Companion {
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Post : tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent {
-	public fun <init> (Lnet/minecraft/network/chat/Component;Ljava/lang/String;)V
+	public synthetic fun <init> (Lnet/minecraft/network/chat/Component;Ljava/lang/String;)V
 	public synthetic fun <init> (Lnet/minecraft/network/chat/Component;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getComponent ()Lnet/minecraft/network/chat/Component;
 	public final fun getId ()Ljava/lang/String;
@@ -2501,8 +2523,14 @@ public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEv
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Pre : tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent, tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent$Cancellable {
-	public fun <init> (Lnet/minecraft/network/chat/Component;)V
+	public synthetic fun <init> (Lnet/minecraft/network/chat/Component;)V
 	public fun cancel ()V
+	public fun getColoredText ()Ljava/lang/String;
+	public fun getComponent ()Lnet/minecraft/network/chat/Component;
+	public fun getText ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent$Sent : tech/thatgravyboat/skyblockapi/api/events/chat/ChatReceivedEvent {
 	public fun getColoredText ()Ljava/lang/String;
 	public fun getComponent ()Lnet/minecraft/network/chat/Component;
 	public fun getText ()Ljava/lang/String;
@@ -5670,11 +5698,27 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/vault/VaultA
 	public final fun getItems ()Ljava/util/List;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/AccessoryBagEntry {
+	public fun <init> (Lnet/minecraft/world/item/ItemStack;II)V
+	public final fun component1 ()Lnet/minecraft/world/item/ItemStack;
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun copy (Lnet/minecraft/world/item/ItemStack;II)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/AccessoryBagEntry;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/AccessoryBagEntry;Lnet/minecraft/world/item/ItemStack;IIILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/AccessoryBagEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getItem ()Lnet/minecraft/world/item/ItemStack;
+	public final fun getPage ()I
+	public final fun getSlot ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI : tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun fork (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;
 	public final fun getAccessories ()Ljava/util/List;
+	public final fun getAccessoryEntries ()Ljava/util/Collection;
 	public final fun getAccessoryPower ()I
 	public final fun getConsumedRiftPrism ()Z
 	public final fun getPower ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
@@ -10453,6 +10497,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/text/Text {
 	public static synthetic fun atlas$default (Ltech/thatgravyboat/skyblockapi/utils/text/Text;Lnet/minecraft/resources/Identifier;Lnet/minecraft/resources/Identifier;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun copy (Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/text/Text;Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;
+	public final fun imitateServerMessage (Lnet/minecraft/network/chat/Component;)V
 	public final fun join ([Ljava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun join ([Ljava/lang/Object;Lnet/minecraft/network/chat/Component;)Lnet/minecraft/network/chat/MutableComponent;
 	public final fun join ([Ljava/lang/Object;Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/network/chat/MutableComponent;

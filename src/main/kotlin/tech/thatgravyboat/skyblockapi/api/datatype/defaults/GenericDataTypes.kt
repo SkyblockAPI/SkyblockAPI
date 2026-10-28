@@ -119,6 +119,7 @@ public object GenericDataTypes {
 
 
     public val PARTY_HAT_COLOR: DataType<String> = DataType.simple("party_hat_color")
+    public val PARTY_HAT_EMOJI: DataType<String> = DataType.simple("party_hat_emoji")
     public val PARTY_HAT_YEAR: DataType<Int> = DataType.simple("party_hat_year")
 
     public val RABBIT_FACTION: DataType<String> = DataType.simple("faction_rabbit_id")

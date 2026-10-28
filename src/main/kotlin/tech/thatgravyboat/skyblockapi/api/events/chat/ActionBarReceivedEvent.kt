@@ -11,10 +11,34 @@ public abstract class ActionBarReceivedEvent : SkyBlockEvent() {
     public open val text: String get() = component.stripped
     public open val coloredText: String get() = component.string
 
-    public class Pre(override val component: Component) : ActionBarReceivedEvent(), Cancellable {
-        // "component" cant change in the Pre event, so we can have text and coloredText not be getters
-        override val text: String = component.stripped
-        override val coloredText: String = component.string
+    /**
+     * Dispatched first before any other action bar event, allows you to cancel the event.
+     */
+    //~ if >= 26.4 'public constructor' -> 'internal constructor'
+    public class Pre public constructor(override val component: Component) : ActionBarReceivedEvent(), Cancellable {
+        override val text: String = super.text
+        override val coloredText: String = super.coloredText
     }
-    public class Post(override var component: Component) : ActionBarReceivedEvent()
+
+    /**
+     * Dispatched for all cancelled components, this also includes components cancelled by other mods.
+     */
+    public class Cancelled internal constructor(override val component: Component) : ActionBarReceivedEvent() {
+        override val text: String = super.text
+        override val coloredText: String = super.coloredText
+    }
+
+    /**
+     * Dispatched second as long as the event didn't get cancelled, allows you to modify the component.
+     */
+    //~ if >= 26.4 'public constructor' -> 'internal constructor'
+    public class Post public constructor(override var component: Component) : ActionBarReceivedEvent()
+
+    /**
+     * Dispatched last, this event implies the event will be shown to the player.
+     */
+    public class Sent internal constructor(override val component: Component) : ActionBarReceivedEvent() {
+        override val text: String = super.text
+        override val coloredText: String = super.coloredText
+    }
 }
