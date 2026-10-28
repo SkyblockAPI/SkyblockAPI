@@ -68,6 +68,9 @@ public data object MaxwellAPI : ItemDebugCategory {
     val accessoryPower: Int
         get() = MaxwellStorage.accessoryPower
 
+    val accessoryEntries: Collection<AccessoryBagEntry>
+        get() = MaxwellStorage.accessoriesEntries
+
     val accessories: List<ItemStack>
         get() = MaxwellStorage.accessories
 
