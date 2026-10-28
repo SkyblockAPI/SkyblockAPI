@@ -4,6 +4,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.MaxwellData
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockStat
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
+import tech.thatgravyboat.skyblockapi.api.profile.maxwell.AccessoryBagEntry
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPower
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPowers
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
@@ -33,6 +34,13 @@ internal object MaxwellStorage {
 
     val accessories: MutableList<ItemStack>
         get() = data?.accessories ?: mutableListOf()
+
+    val accessoriesEntries: List<AccessoryBagEntry>
+        get() = accessories.mapIndexed { index, stack ->
+            val page = (index / MAX_ACCESSORIES_PER_PAGE) + 1
+            val slot = index % MAX_ACCESSORIES_PER_PAGE
+            AccessoryBagEntry(stack, page, slot)
+        }
 
     val unlockedPowers: MutableSet<MaxwellPower>
         get() = data?.unlockedPowers ?: mutableSetOf()

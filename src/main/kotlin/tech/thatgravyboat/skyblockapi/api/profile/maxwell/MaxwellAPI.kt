@@ -26,8 +26,8 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugAttachable
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
-import tech.thatgravyboat.skyblockapi.utils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.container.ContainerRegion
+import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.extentions.addIfNotNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.asBoolean
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
@@ -67,6 +67,9 @@ public data object MaxwellAPI : ItemDebugCategory {
 
     val accessoryPower: Int
         get() = MaxwellStorage.accessoryPower
+
+    val accessoryEntries: Collection<AccessoryBagEntry>
+        get() = MaxwellStorage.accessoriesEntries
 
     val accessories: List<ItemStack>
         get() = MaxwellStorage.accessories
@@ -464,6 +467,6 @@ public data object MaxwellAPI : ItemDebugCategory {
     private fun isAccessoryOrEmpty(item: ItemStack): Boolean {
         if (item.isEmpty) return true
         val category = item.getData(DataTypes.CATEGORY) ?: return false
-        return category.equalsAny(SkyBlockCategory.ACCESSORY, SkyBlockCategory.HATCESSORY, ignoreDungeon = true)
+        return category.equalsAny(SkyBlockCategory.ACCESSORY, SkyBlockCategory.HATCESSORY, ignoreModifiers = true)
     }
 }

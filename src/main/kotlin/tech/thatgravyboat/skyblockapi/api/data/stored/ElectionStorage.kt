@@ -15,6 +15,7 @@ import tech.thatgravyboat.skyblockapi.api.environmental.skyblockDays
 import tech.thatgravyboat.skyblockapi.api.environmental.skyblockYears
 import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.utils.extentions.changeValue
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import kotlin.math.floor
 import kotlin.time.Instant
@@ -70,7 +71,7 @@ internal object ElectionStorage {
 
     fun nextPerkpocalypse(instant: Instant = currentInstant()): Instant? {
         val index = getPerkpocalypseRealIndex(instant) ?: return null
-        return startMayorTime + PERKPOCALYPSE_CANDIDATE_DURATION * index
+        return startMayorTime + PERKPOCALYPSE_CANDIDATE_DURATION * (index + 1)
     }
 
     private fun getPerkpocalypseRealIndex(instant: Instant): Int? {
@@ -89,10 +90,8 @@ internal object ElectionStorage {
 
     /** Returns `true` if it changed the description */
     fun setPerkDescription(perkId: String, description: String): Boolean {
-        DATA.edit {
-            if (perkDescriptions[perkId] == description) return false
-            perkDescriptions[perkId] = description
-            return true
+        return DATA.edit {
+            perkDescriptions.changeValue(perkId, description)
         }
     }
 

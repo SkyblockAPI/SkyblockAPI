@@ -158,7 +158,10 @@ public object DebugEntities {
                     } else {
                         val json = hoveredEntity.save().toJson(CompoundTag.CODEC).toPrettyString()
                         McClient.clipboard = json
-                        Text.sendDebug("Copied entity ${hoveredEntity.name} to clipboard: $json")
+                        Text.sendDebug("Copied entity ") {
+                            append(hoveredEntity.name)
+                            append(" to clipboard.")
+                        }
                     }
                 }
             }

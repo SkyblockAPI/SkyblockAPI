@@ -3,51 +3,54 @@ name: API Baseline Updater
 on:
     push:
         branches: [ "4.0" ]
+    workflow_dispatch:
 
 permissions:
-    contents: write
-    pull-requests: write
+    contents: read
 
-# should hopefully cancel current actions when a newer one happens
 concurrency:
     group: breaking-changes-baseline-${{ github.ref_name }}
     cancel-in-progress: true
 
 jobs:
     baseline-updater:
-
+        if: github.repository_owner == 'SkyblockAPI' && github.ref == 'refs/heads/4.0'
         runs-on: ubuntu-latest
-
+        timeout-minutes: 45
         steps:
+            # No credentials are kept, the build runs plugins and dependencies that could read them.
             -   uses: actions/checkout@v5
                 with:
-                    token: ${{ secrets.BOT_TOKEN }}
+                    persist-credentials: false
 
             -   name: Setup JDK 25
                 uses: actions/setup-java@v5
                 with:
-                    distribution: temurin
+                    distribution: 'temurin'
                     java-version: '25'
 
             -   name: Setup gradle
                 uses: gradle/actions/setup-gradle@v5
 
             -   run: chmod +x gradlew
+
             -   name: Build
                 run: ./gradlew build
 
-            -   name: Build with Gradle
-                run: ./gradlew updateLegacyAbi || true
+            -   name: Update Legacy ABI
+                run: ./gradlew updateLegacyAbi
 
-            -   name: Check for breaking changes
+            -   name: Commit and push updated dumps
                 env:
-                    GH_TOKEN: ${{ secrets.BOT_TOKEN }}
+                    BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
                 run: |
-                    if ! $(git diff --exit-code versions/26.2/api/26.2.api) || ! $(git diff --exit-code versions/26.3/api/26.3.api);
-                    then
-                        git config --global user.email "meowtomation@users.noreply.github.com"
-                        git config --global user.name "meowtomation"
-                        git add .
-                        git commit -m "update api dump"
-                        git push
+                    git add -- 'versions/*/api/*.api'
+                    if git diff --cached --quiet; then
+                        echo "API dumps are up to date."
+                        exit 0
                     fi
+
+                    git config user.email "meowtomation@users.noreply.github.com"
+                    git config user.name "meowtomation"
+                    git commit -m "update api dump"
+                    git push "https://x-access-token:${BOT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/${GITHUB_REF_NAME}"

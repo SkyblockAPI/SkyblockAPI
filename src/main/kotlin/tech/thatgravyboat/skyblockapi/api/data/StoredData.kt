@@ -2,14 +2,19 @@ package tech.thatgravyboat.skyblockapi.api.data
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.serialization.Codec
 import me.owdding.ktmodules.Module
+import net.minecraft.commands.SharedSuggestionProvider
 import org.apache.commons.io.FileUtils
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.TimePassed
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.FreshHypixelAlphaDetectedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.HypixelJoinEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.LiteralCommandBuilder
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
@@ -21,10 +26,14 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJsonOrThrow
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.json.JsonObject
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.exists
@@ -41,6 +50,7 @@ internal class StoredData<T : Any>(
 ) {
     constructor(version: Int = 0, data: T, file: String, differentAlphaData: Boolean = true, codec: (Int) -> Codec<T>)
         : this(version, { data }, file, differentAlphaData, codec)
+
     constructor(data: T, codec: Codec<T>, file: String, differentAlphaData: Boolean = true)
         : this(0, { data }, file, differentAlphaData, { codec })
 
@@ -65,13 +75,28 @@ internal class StoredData<T : Any>(
         alphaData = null
     }
 
-    inline fun edit(edit: T.() -> Unit) {
+    /** Only saves if [edit] returns true. Also returns the result of [edit] */
+    @JvmName("editBoolean")
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    inline fun edit(edit: T.() -> Boolean): Boolean {
         contract {
             callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
         }
-        edit(get())
-        save()
+        val edited = edit(get())
+        if (edited) save()
+        return edited
     }
+
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    inline fun edit(edit: T.() -> Unit?) {
+        contract {
+            callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
+        }
+        if (edit(get()) != null) save()
+    }
+
 
     private fun loadNormalData() {
         if (data != null) return
@@ -122,29 +147,39 @@ internal class StoredData<T : Any>(
         return alphaData
     }
 
-    private fun loadData(path: Path, default: () -> T): T {
-        if (!path.exists()) {
-            path.createParentDirectories()
-            return default()
+    private fun parseData(content: String): T {
+        val json = JsonParser.parseString(content) as? JsonObject
+        return if (json != null && json.has("@skyblockapi:version")) {
+            val version = json.get("@skyblockapi:version").asInt
+            val dataElement = json.getAsJsonObject("@skyblockapi:data")
+            dataElement.toDataOrThrow(this.codec(version))
         } else {
-            try {
-                val json = JsonParser.parseString(path.readText()) as? JsonObject
-                if (json != null && json.has("@skyblockapi:version") && json.has("@skyblockapi:version")) {
-                    val version = json.get("@skyblockapi:version").asInt
-                    val dataElement = json.getAsJsonObject("@skyblockapi:data")
-
-                    return dataElement.toDataOrThrow(this.codec(version))
-                } else {
-                    return json.toDataOrThrow(this.codec(0))
-                }
-            } catch (e: Exception) {
-                Logger.error("Failed to load data from {}", path.relativeTo(defaultPath))
-                e.printStackTrace()
-                return default()
-            }
+            json.toDataOrThrow(this.codec(0))
         }
     }
 
+    private fun loadData(path: Path, default: () -> T): T {
+        val text = getText(path) ?: run {
+            path.createParentDirectories()
+            return default()
+        }
+        return try {
+            parseData(text)
+        } catch (e: Exception) {
+            Logger.error("Failed to load data from {}", path.relativeTo(defaultPath))
+            e.printStackTrace()
+            default()
+        }
+    }
+
+    private fun getText(path: Path): String? = if (path.exists()) path.readText() else null
+
+    private fun getActivePath(): Path = if (shouldUseAlphaData() && alphaData != null) alphaPath else path
+
+    private fun setText(content: String) {
+        val data = parseData(content)
+        set(data)
+    }
 
     private val currentCodec = codec(version)
 
@@ -181,6 +216,7 @@ internal class StoredData<T : Any>(
             e.printStackTrace()
         }
     }
+
     private fun saveAlphaToSystem() {
         val alphaData = alphaData ?: return
         savePath(alphaData, alphaPath)
@@ -222,6 +258,89 @@ internal class StoredData<T : Any>(
         private fun onTick() {
             clearAndRun(requiresSave, StoredData<*>::saveToSystem)
             clearAndRun(requiresAlphaSave, StoredData<*>::saveAlphaToSystem)
+        }
+
+        private fun getSuggestions(readable: Boolean = true): List<String> {
+            val folderStorages = FolderStorage.allStorages.flatMap { it.getStorages().values }
+            val filtered = allStoredDatas.filter {
+                (!readable || it.getActivePath().exists()) && it !in folderStorages
+            }
+            return filtered.map { it.fileName }
+        }
+
+        private fun LiteralCommandBuilder.storageAction(readable: Boolean = true, block: StoredData<*>.() -> Unit) =
+            thenCallback(
+                "storage",
+                StringArgumentType.string(),
+                { _, builder ->
+                    SharedSuggestionProvider.suggest(getSuggestions(readable), builder)
+                },
+            ) {
+                val fileName = argument<String>("storage")
+                val storage = allStoredDatas.find { it.fileName == fileName } ?: run {
+                    Text.of("No storage found for $fileName", TextColor.RED).sendWithPrefix()
+                    return@thenCallback
+                }
+                storage.block()
+            }
+
+        @Subscription
+        private fun registerCommands(event: RegisterSkyblockApiCommandsEvent) {
+            event.register("dev storage") {
+                then("reset") {
+                    storageAction {
+                        delete()
+                        Text.sendDebug("Successfully reset $fileName")
+                    }
+                }
+                then("copy") {
+                    storageAction {
+                        val path = getActivePath()
+                        val text = runCatching {
+                            getText(path)
+                        }.getOrElse {
+                            Text.of("JSON couldn't be parsed", TextColor.RED).sendWithPrefix()
+                            return@storageAction
+                        } ?: run {
+                            Text.of("No data found for $fileName", TextColor.RED).sendWithPrefix()
+                            return@storageAction
+                        }
+
+                        try {
+                            McClient.clipboard = text
+                            Text.sendDebug("Copied $fileName to clipboard")
+                        } catch (_: OutOfMemoryError) {
+                            Text.of("Data is too big to copy to clipboard", TextColor.RED).sendWithPrefix()
+                        }
+                    }
+                }
+                then("open") {
+                    callback {
+                        val folder = if (LocationAPI.onAlpha) defaultAlphaPath else defaultPath
+                        McClient.openUri(folder.toUri())
+                    }
+                    storageAction {
+                        val path = getActivePath()
+                        McClient.openUri(path.toUri())
+                    }
+                }
+                then("paste") {
+                    storageAction(readable = false) {
+                        val text = McClient.clipboard.ifBlank {
+                            Text.of("No data in clipboard", TextColor.RED).sendWithPrefix()
+                            return@storageAction
+                        }
+
+                        runCatching {
+                            setText(text)
+                        }.onSuccess {
+                            Text.sendDebug("Pasted clipboard to $fileName")
+                        }.onFailure {
+                            Text.of("JSON couldn't be parsed", TextColor.RED).sendWithPrefix()
+                        }
+                    }
+                }
+            }
         }
 
         //region Stored Data Creation

@@ -7,6 +7,9 @@ import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import java.util.UUID
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KClass
 
 internal class StoredProfileData<T : Any>(
@@ -93,6 +96,19 @@ internal class StoredProfileData<T : Any>(
         removeProfile(profile)
     }
 
+    /** Only saves if [edit] returns true. Also returns the result of [edit] */
+    @JvmName("editBoolean")
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
+    inline fun edit(edit: T.() -> Boolean): Boolean {
+        contract {
+            callsInPlace(edit, InvocationKind.AT_MOST_ONCE)
+        }
+        val edited = edit(get() ?: return false)
+        if (edited) save()
+        return edited
+    }
+
     /**
      * Helper function for editing data and saving.
      * If you don't want the data to be saved, you have to edit return `null` to the lambda or just return in the current function altogether.
@@ -114,7 +130,12 @@ internal class StoredProfileData<T : Any>(
      * }
      * ```
      * */
+    @OptIn(ExperimentalTypeInference::class)
+    @OverloadResolutionByLambdaReturnType
     inline fun edit(edit: T.() -> Unit?) {
+        contract {
+            callsInPlace(edit, InvocationKind.AT_MOST_ONCE)
+        }
         val data = get() ?: return
         if (edit(data) != null) save()
     }

@@ -36,6 +36,7 @@ public data class SkyBlockPvOpenedEvent(val profileData: JsonObject) : SkyBlockE
     /** member data of the McPlayer in the currently selected profile */
     val member: JsonObject = profileData.getPath("members.${McPlayer.uuid.toDashlessString()}")?.asJsonObject!!
 
+    public fun getPath(@Language("JSONPATH") path: String): JsonElement? = profileData.getPath(path)
     public fun getProfilePath(@Language("JSONPath") path: String): JsonElement? = member.getPath(path)
 }
 
