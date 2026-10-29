@@ -110,7 +110,6 @@ public object FriendsAPI {
     @Subscription(GuildEvent.Join::class, GuildEvent.Leave::class)
     private fun onGuildMember() = resetListSearch()
 
-    // TODO: also call this on guild join/leave message if the person is in your friends list
     private fun resetListSearch() {
         currentPage = 0
         maxPage = 0

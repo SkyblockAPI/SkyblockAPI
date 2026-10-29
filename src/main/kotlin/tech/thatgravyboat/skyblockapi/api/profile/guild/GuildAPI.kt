@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.guild
 
 import me.owdding.ktmodules.Module
-import tech.thatgravyboat.skyblockapi.api.data.stored.FriendStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.GuildStorage
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerCacheStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -12,31 +11,19 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.PlayerCacheUpdate
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugString
-import tech.thatgravyboat.skyblockapi.utils.components.ComponentStateMachine
 import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
-import tech.thatgravyboat.skyblockapi.utils.extentions.asString
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.extentions.since
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 import tech.thatgravyboat.skyblockapi.utils.regex.component.findOrNull
-import tech.thatgravyboat.skyblockapi.utils.regex.component.match
-import tech.thatgravyboat.skyblockapi.utils.regex.component.matchOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.regex.findWhen
-import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
-import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.width
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.onClick
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
@@ -264,7 +251,7 @@ public object GuildAPI {
                     members.isEmpty() -> Text.sendDebug("No guild members known")
                     else -> {
                         McClient.clipboard = members.joinToString("\n", transform = GuildMember::name)
-                        Text.sendDebug("Copied guild members to clipboard")
+                        Text.sendDebug("Copied ${members.size} guild members to clipboard")
                     }
                 }
             }

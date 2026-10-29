@@ -98,13 +98,8 @@ internal object GuildStorage {
     }
 
     fun addMembersByNames(names: Collection<String>) {
-        batchSave {
-            var anyUpdated = false
-            names.withUUID().forEach { (name, uuid) ->
-                val (_, updated) = ensureMemberAdded(name, uuid)
-                if (updated) anyUpdated = true
-            }
-            anyUpdated
+        names.withUUID().forEach { (name, uuid) ->
+            ensureMemberAdded(name, uuid)
         }
     }
 
@@ -120,19 +115,7 @@ internal object GuildStorage {
 
     fun reset(): Boolean = STORAGE.delete()
 
-    private var blockingSave = false
-
-    /** Disables saving while inside this block, to not call save() unnecessarily, and only saves if [action] returns `true` */
-    private fun batchSave(action: () -> Boolean) {
-        blockingSave = true
-        val shouldSave = action()
-        blockingSave = false
-        if (shouldSave) save()
-    }
-
-    fun save() {
-        if (!blockingSave) STORAGE.save()
-    }
+    fun save() = STORAGE.save()
 
     private fun Collection<String>.withUUID(): Map<String, UUID?> =
         associateWith { name ->
