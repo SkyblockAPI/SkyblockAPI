@@ -5,6 +5,8 @@ import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.utils.devutils.DevUtils
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import kotlin.reflect.KProperty
 
 public class DebugToggle @JvmOverloads constructor(
@@ -13,7 +15,11 @@ public class DebugToggle @JvmOverloads constructor(
     override val devUtils: DevUtils,
     prefix: String = location.toString(),
 ) : DebugEntry {
-    public val prefix: MutableComponent = Text.of(prefix, TextColor.DARK_PURPLE)
+
+    public val prefix: MutableComponent = Text.of(prefix) {
+        color = TextColor.DARK_PURPLE
+        if (hasDescription()) hover = Text.of(description)
+    }
 
     private var state: Boolean = false
 

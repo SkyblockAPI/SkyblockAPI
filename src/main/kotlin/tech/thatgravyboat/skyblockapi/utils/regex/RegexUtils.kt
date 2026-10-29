@@ -73,6 +73,15 @@ public object RegexUtils {
         return input.any { find(it, groups = groups, action = action) }
     }
 
+    public fun Regex.findAll(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
+        var anyFound = false
+        findAll(input).forEach {
+            action(Destructured(it, *groups))
+            anyFound = true
+        }
+        return anyFound
+    }
+
     public fun Regex.findAll(input: List<CharSequence>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
         var globalFound = false
         input.forEach {

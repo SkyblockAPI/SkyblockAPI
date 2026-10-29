@@ -67,6 +67,12 @@ internal class StoredPlayerData<T : Any>(
         if (edit(get()) != null) save()
     }
 
+    fun delete(): Boolean {
+        val deleted = storedData.get().remove(McPlayer.uuid) != null
+        if (deleted) save()
+        return deleted
+    }
+
     fun deleteAll() {
         storedData.delete()
         save()
