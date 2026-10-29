@@ -2724,6 +2724,19 @@ public final class tech/thatgravyboat/skyblockapi/api/events/hypixel/FriendEvent
 	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/friends/Friend;)V
 }
 
+public abstract class tech/thatgravyboat/skyblockapi/api/events/hypixel/GuildEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/guild/GuildMember;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getGuildMember ()Ltech/thatgravyboat/skyblockapi/api/profile/guild/GuildMember;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/hypixel/GuildEvent$Join : tech/thatgravyboat/skyblockapi/api/events/hypixel/GuildEvent {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/guild/GuildMember;)V
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/hypixel/GuildEvent$Leave : tech/thatgravyboat/skyblockapi/api/events/hypixel/GuildEvent {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/guild/GuildMember;)V
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/events/hypixel/HypixelJoinEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
 	public fun <init> (Lnet/hypixel/data/region/Environment;)V
 	public final fun component1 ()Lnet/hypixel/data/region/Environment;
@@ -3434,6 +3447,19 @@ public class tech/thatgravyboat/skyblockapi/api/events/misc/DebugBuilder {
 	public final fun getFields ()Ljava/util/List;
 	public final fun getName ()Lnet/minecraft/network/chat/Component;
 	public final fun getPrefix ()Lnet/minecraft/network/chat/Component;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/misc/PlayerCacheUpdate : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+	public fun <init> (Ljava/util/UUID;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/util/UUID;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/util/UUID;Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/events/misc/PlayerCacheUpdate;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/misc/PlayerCacheUpdate;Ljava/util/UUID;Ljava/lang/String;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/misc/PlayerCacheUpdate;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getUuid ()Ljava/util/UUID;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/misc/ProfileDeleteDataEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
@@ -4985,6 +5011,27 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/garden/PlotData {
 	public final fun setLocked (Z)V
 	public final fun setName (Ljava/lang/String;)V
 	public final fun setPest (Ltech/thatgravyboat/skyblockapi/api/profile/garden/Pest;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/guild/GuildAPI {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/guild/GuildAPI;
+	public final fun getGuildName ()Ljava/lang/String;
+	public final fun getInGuild ()Z
+	public final fun getMembers ()Ljava/util/Collection;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/guild/GuildMember {
+	public fun <init> (Ljava/lang/String;Ljava/util/UUID;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/UUID;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/UUID;
+	public final fun copy (Ljava/lang/String;Ljava/util/UUID;)Ltech/thatgravyboat/skyblockapi/api/profile/guild/GuildMember;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/profile/guild/GuildMember;Ljava/lang/String;Ljava/util/UUID;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/profile/guild/GuildMember;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getUuid ()Ljava/util/UUID;
+	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -10283,7 +10330,9 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/RegexUtils {
 	public final fun find (Lkotlin/text/Regex;Ljava/lang/CharSequence;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Z
 	public static synthetic fun find$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexUtils;Ljava/util/List;Ljava/lang/CharSequence;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 	public static synthetic fun find$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexUtils;Lkotlin/text/Regex;Ljava/lang/CharSequence;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
+	public final fun findAll (Lkotlin/text/Regex;Ljava/lang/CharSequence;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Z
 	public final fun findAll (Lkotlin/text/Regex;Ljava/util/List;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Z
+	public static synthetic fun findAll$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexUtils;Lkotlin/text/Regex;Ljava/lang/CharSequence;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 	public static synthetic fun findAll$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexUtils;Lkotlin/text/Regex;Ljava/util/List;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 	public final fun findGroup (Lkotlin/text/Regex;Ljava/lang/CharSequence;Ljava/lang/String;)Ljava/lang/String;
 	public final fun findGroup (Lkotlin/text/Regex;Ljava/util/List;Ljava/lang/String;)Ljava/lang/String;
@@ -10327,6 +10376,12 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/component/Componen
 	public final fun value ()Lnet/minecraft/network/chat/Component;
 }
 
+public final class tech/thatgravyboat/skyblockapi/utils/regex/component/ComponentMatchSwitchKt {
+	public static final fun anyComponentMatchWhen (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Z
+	public static final fun componentFindWhen (Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;)Z
+	public static final fun componentMatchWhen (Lnet/minecraft/network/chat/Component;Lkotlin/jvm/functions/Function1;)Z
+}
+
 public final class tech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex {
 	public fun <init> (Ljava/lang/String;)V
 	public fun <init> (Lkotlin/text/Regex;)V
@@ -10363,6 +10418,12 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/component/Componen
 	public static final fun matchOrNull (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static synthetic fun matchOrNull$default (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun toComponentRegex (Lkotlin/text/Regex;)Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegexSwitch {
+	public fun <init> ()V
+	public final fun case (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun case$default (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegexSwitch;Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/regex/component/Destructured {
