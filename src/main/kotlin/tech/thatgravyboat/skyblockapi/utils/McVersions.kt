@@ -21,7 +21,7 @@ public enum class McVersion {
 /*@Deprecated(message = "Used mc version instead!")
 @tech.thatgravyboat.skyblockapi.RemoveNextVersion
 public enum class McVersionGroup(vararg versions: McVersion) {
-    MC_26_1(McVersion.MC_26_1),
+    @Deprecated("Minecraft 26.1 isn't supported anymore.") @Suppress("DEPRECATION") MC_26_1(McVersion.MC_26_1),
     MC_26_2(McVersion.MC_26_2),
     MC_26_3(McVersion.MC_26_3),
     ;
