@@ -39,7 +39,6 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
-import tech.thatgravyboat.skyblockapi.impl.ColoredBlocks
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatComponentExtension
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import java.util.UUID
@@ -111,12 +110,9 @@ public object MiscEventHandler {
             InteractionResult.PASS
         }
         LevelRenderEvents.COLLECT_SUBMITS.register { ctx ->
-            //~ if >= 26.2 'mainCamera' -> 'mainCamera()'
             val camera = McClient.self.gameRenderer.mainCamera()
             RenderWorldEvent.CollectSubmits(
                 ctx.poseStack(),
-                //? 26.1
-                //ctx.bufferSource(),
                 ctx.submitNodeCollector(),
                 camera.position(),
                 camera.rotation(),
@@ -204,7 +200,7 @@ public object MiscEventHandler {
         if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.blocks || old in MiningBlockFamily.VANILLA_BLOCKS.blocks)) return true
         if (new == Blocks.RED_SANDSTONE && old == Blocks.RED_SAND) return true
         @Suppress("DEPRECATION")
-        if (new == ColoredBlocks.GRAY_TERRACOTTA && old == Blocks.MYCELIUM) return true
+        if (new == Blocks.DYED_TERRACOTTA.gray && old == Blocks.MYCELIUM) return true
 
         return false
     }

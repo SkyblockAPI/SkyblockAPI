@@ -18,8 +18,6 @@ public data class ScoreboardUpdateEvent(
     val newComponents: List<Component>,
 ) : SkyBlockEvent() {
 
-    //? < 26.2
-    //@RemoveNextVersion @Deprecated("Use newComponents instead", ReplaceWith("newComponents")) val components: List<Component> get() = newComponents
 
     val added: List<String> = new - old.toSet()
     val removed: List<String> = old - new.toSet()

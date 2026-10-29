@@ -15,7 +15,7 @@ plugins {
     id("dev.kikugie.stonecutter") version "0.10-alpha.12"
 }
 
-val versions = listOf("26.3", "26.2", "26.1")
+val versions = listOf("26.3", "26.2")
 // we have a dummy version here so that the IntelliJ plugin doesn't report comments we do
 // when removing code in the next version via stonecutter
 // if there is no dummy version needed at some point, leave as blank
