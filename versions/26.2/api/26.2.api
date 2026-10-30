@@ -429,6 +429,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/hub/FarmhouseAPI {
 public final class tech/thatgravyboat/skyblockapi/api/area/hub/SpookyFestivalAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/area/hub/SpookyFestivalAPI;
 	public final fun getDuration-UwyO8pc ()J
+	public final fun getEstimatedEnd ()Lkotlin/time/Instant;
 	public final fun getGreenCandy ()I
 	public final fun getOnGoing ()Z
 	public final fun getPoints ()I
