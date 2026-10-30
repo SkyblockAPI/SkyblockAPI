@@ -17,14 +17,9 @@ import tech.thatgravyboat.skyblockapi.impl.events.PacketEventHandler;
 @Mixin(ClientLevel.class)
 public abstract class ClientLevelMixin extends Level {
 
-    //? >=26.4 {
-    protected ClientLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, boolean isClientSide, boolean isDebug, int maxChainedNeighborUpdates) {
-        super(levelData, dimension, registryAccess, dimensionTypeRegistration, isClientSide, isDebug, maxChainedNeighborUpdates);
+    protected ClientLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, boolean isClientSide, boolean isDebug, /*? < 26.4 >>+ ',' */ /*long biomeZoomSeed,*/ int maxChainedNeighborUpdates) {
+        super(levelData, dimension, registryAccess, dimensionTypeRegistration, isClientSide, isDebug, /*? < 26.4 >> */ /*biomeZoomSeed,*/ maxChainedNeighborUpdates);
     }
-    //?} else {
-    /*protected ClientLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates) {
-        super(levelData, dimension, registryAccess, dimensionTypeRegistration, isClientSide, isDebug, biomeZoomSeed, maxChainedNeighborUpdates);
-    }*///?}
 
     @WrapMethod(method = "setServerVerifiedBlockState")
     private void onBlockUpdate(BlockPos pos, BlockState blockState, int updateFlag, Operation<Void> original) {

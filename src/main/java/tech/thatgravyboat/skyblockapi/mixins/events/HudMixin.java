@@ -60,8 +60,8 @@ public abstract class HudMixin {
             target = "Lnet/minecraft/client/gui/Hud;extractItemHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
         )
     )
-    //~ if >=26.4 ', DeltaTracker delta)' -> ')'
-    private boolean onRenderHotbar(Hud instance, GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
+    //~ if >= 26.4 ', DeltaTracker deltaTracker)' -> ')'
+    private boolean onRenderHotbar(Hud instance, GuiGraphicsExtractor graphics) {
         return !new RenderHudElementEvent(HudElement.HOTBAR, graphics).post(SkyBlockAPI.getEventBus());
     }
 

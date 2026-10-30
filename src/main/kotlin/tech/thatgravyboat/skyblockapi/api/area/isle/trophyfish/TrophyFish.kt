@@ -5,7 +5,7 @@ import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-public data class TrophyFish(val type: TrophyFishType, /*? < 26.4 >> 'val'*/ /*@get:JvmName("getTrophyTier") */val tier: TrophyTier) {
+public data class TrophyFish(val type: TrophyFishType, /*? < 26.4 >> */ /*@get:JvmName("getTrophyTier")*/ val tier: TrophyTier) {
 
     //? < 26.4 {
     /*@Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
