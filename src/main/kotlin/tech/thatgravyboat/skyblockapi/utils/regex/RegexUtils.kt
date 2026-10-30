@@ -3,9 +3,9 @@ package tech.thatgravyboat.skyblockapi.utils.regex
 public object RegexUtils {
 
     public fun Regex.match(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
-        val match = matchEntire(input)
-        match?.let { action(Destructured(it, *groups)) }
-        return match != null
+        val match = matchEntire(input) ?: return false
+        action(Destructured(match, *groups))
+        return true
     }
 
     public fun List<Regex>.match(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
@@ -23,13 +23,14 @@ public object RegexUtils {
     }
 
     public fun Regex.find(input: CharSequence, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean {
-        val match = find(input)
-        match?.let { action(Destructured(it, *groups)) }
-        return match != null
+        val match = find(input) ?: return false
+        action(Destructured(match, *groups))
+        return true
     }
 
     public fun Regex.findGroup(input: CharSequence, group: String): String? {
-        return find(input)?.let { Destructured(it, group).component1() }
+        val match = find(input) ?: return null
+        return match.groups[group]?.value
     }
 
     public fun Regex.findGroup(input: List<String>, group: String): String? {
