@@ -8,7 +8,6 @@ import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktcodecs.OptionalBoolean
 import me.owdding.ktcodecs.OptionalIfEmpty
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPower
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPowers
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
@@ -18,7 +17,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class MaxwellData(
+internal data class MaxwellData(
     var power: MaxwellPower = MaxwellPowers.NO_POWER,
     @FieldNames("accessory_power", "magicalPower")
     var accessoryPower: Int = 0,
@@ -31,9 +30,8 @@ public data class MaxwellData(
     @FieldName("consumed_rift_prism") @OptionalBoolean(false) @IntroducedAt("4.2.40")
     var consumedRiftPrism: Boolean = false,
 ) {
-    @RemoveNextVersion
-    @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN)
-    var magicalPower: Int by ::accessoryPower
+    //? < 26.4
+    //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN) var magicalPower: Int by ::accessoryPower
 
     public companion object {
         public val CODEC: Codec<MaxwellData> = SkyblockAPICodecs.getCodec<MaxwellData>()

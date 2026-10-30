@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Hud;
@@ -27,6 +26,9 @@ import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudEvent;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
+//? < 26.4
+//import net.minecraft.client.DeltaTracker;
+
 @Mixin(Hud.class)
 public abstract class HudMixin {
 
@@ -40,11 +42,13 @@ public abstract class HudMixin {
     private int toolHighlightTimer;
 
     @Inject(method = "extractSleepOverlay", at = @At("HEAD"))
-    private void onRenderSleepOverlay(GuiGraphicsExtractor graphics, DeltaTracker delta, CallbackInfo ci) {
+    //~ if >=26.4 ', DeltaTracker delta, CallbackInfo' -> ', CallbackInfo'
+    private void onRenderSleepOverlay(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         if (this.isHidden()) {
             return;
         }
-        float partialTicks = delta.getGameTimeDeltaPartialTick(false);
+        //~ if >=26.4 'delta' -> 'graphics.deltaTracker()'
+        float partialTicks = graphics.deltaTracker().getGameTimeDeltaPartialTick(false);
         new RenderHudEvent(graphics, partialTicks).post(SkyBlockAPI.getEventBus());
     }
 
@@ -52,10 +56,12 @@ public abstract class HudMixin {
         method = "extractHotbarAndDecorations",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/Hud;extractItemHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"
+            //~ if >= 26.4 ';Lnet/minecraft/client/DeltaTracker;)' -> ';)'
+            target = "Lnet/minecraft/client/gui/Hud;extractItemHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
         )
     )
-    private boolean onRenderHotbar(Hud instance, GuiGraphicsExtractor graphics, DeltaTracker delta) {
+    //~ if >= 26.4 ', DeltaTracker deltaTracker)' -> ')'
+    private boolean onRenderHotbar(Hud instance, GuiGraphicsExtractor graphics) {
         return !new RenderHudElementEvent(HudElement.HOTBAR, graphics).post(SkyBlockAPI.getEventBus());
     }
 
@@ -63,10 +69,11 @@ public abstract class HudMixin {
         method = "extractHotbarAndDecorations",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/contextualbar/ContextualBar;extractBackground(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"
+            //~ if >= 26.4 ';Lnet/minecraft/client/DeltaTracker;)' -> ';)'
+            target = "Lnet/minecraft/client/gui/contextualbar/ContextualBar;extractBackground(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
         )
     )
-    private void onRenderBar(GuiGraphicsExtractor graphics, DeltaTracker $$1, CallbackInfo ci) {
+    private void onRenderBar(CallbackInfo ci, @Local(argsOnly = true) GuiGraphicsExtractor graphics) {
         var renderer = this.contextualInfoBar.getSecond();
         if (renderer instanceof ExperienceBar) {
             if (new RenderHudElementEvent(HudElement.EXPERIENCE, graphics).post(SkyBlockAPI.getEventBus())) {
@@ -171,7 +178,7 @@ public abstract class HudMixin {
 
 
     @Inject(method = "extractChat", at = @At("HEAD"), cancellable = true)
-    private void onChatRender(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void onChatRender(CallbackInfo ci, @Local(argsOnly = true) GuiGraphicsExtractor graphics) {
         if (new RenderHudElementEvent(HudElement.CHAT, graphics).post(SkyBlockAPI.getEventBus())) {
             ci.cancel();
         }
@@ -186,7 +193,7 @@ public abstract class HudMixin {
 
 
     @Inject(method = "extractEffects", at = @At("HEAD"), cancellable = true)
-    private void onEffectsRender(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void onEffectsRender(CallbackInfo ci, @Local(argsOnly = true) GuiGraphicsExtractor graphics) {
         if (new RenderHudElementEvent(HudElement.EFFECTS, graphics).post(SkyBlockAPI.getEventBus())) {
             ci.cancel();
         }

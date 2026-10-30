@@ -1,5 +1,5 @@
 //? < 26.4 {
-package tech.thatgravyboat.skyblockapi.api.profile.items.accessory
+/*package tech.thatgravyboat.skyblockapi.api.profile.items.accessory
 
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellAPI
 
@@ -8,4 +8,4 @@ public object AccessoryBagAPI {
     @Suppress("DEPRECATION")
     public fun getItems(): List<AccessoryBagItem> = MaxwellAPI.accessoryEntries.map { (item, page, slot) -> AccessoryBagItem(item, page, slot) }
 }
-//? }
+*///? }

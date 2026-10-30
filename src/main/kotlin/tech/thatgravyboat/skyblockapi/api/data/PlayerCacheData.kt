@@ -8,8 +8,8 @@ import java.util.UUID
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class PlayerCacheData(
-    val players: MutableMap<UUID, CachedPlayer> = mutableMapOf()
+internal data class PlayerCacheData(
+    val players: MutableMap<UUID, CachedPlayer> = mutableMapOf(),
 ) {
     public companion object {
         public val CODEC: Codec<PlayerCacheData> = SkyblockAPICodecs.getCodec<PlayerCacheData>()
@@ -18,7 +18,7 @@ public data class PlayerCacheData(
 
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class CachedPlayer(
+internal data class CachedPlayer(
     var name: String,
-    var time: Long = System.currentTimeMillis()
+    var time: Long = System.currentTimeMillis(),
 )

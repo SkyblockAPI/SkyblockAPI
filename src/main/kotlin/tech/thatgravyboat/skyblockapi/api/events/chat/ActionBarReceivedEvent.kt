@@ -15,7 +15,7 @@ public abstract class ActionBarReceivedEvent : SkyBlockEvent() {
      * Dispatched first before any other action bar event, allows you to cancel the event.
      */
     //~ if >= 26.4 'public constructor' -> 'internal constructor'
-    public class Pre public constructor(override val component: Component) : ActionBarReceivedEvent(), Cancellable {
+    public class Pre internal constructor(override val component: Component) : ActionBarReceivedEvent(), Cancellable {
         override val text: String = super.text
         override val coloredText: String = super.coloredText
     }
@@ -32,7 +32,7 @@ public abstract class ActionBarReceivedEvent : SkyBlockEvent() {
      * Dispatched second as long as the event didn't get cancelled, allows you to modify the component.
      */
     //~ if >= 26.4 'public constructor' -> 'internal constructor'
-    public class Post public constructor(override var component: Component) : ActionBarReceivedEvent()
+    public class Post internal constructor(override var component: Component) : ActionBarReceivedEvent()
 
     /**
      * Dispatched last, this event implies the event will be shown to the player.

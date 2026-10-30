@@ -15,16 +15,16 @@ plugins {
     id("dev.kikugie.stonecutter") version "0.10-alpha.12"
 }
 
-val versions = listOf("26.3", "26.2")
+val versions = listOf("26.4", "26.3", "26.2")
 // we have a dummy version here so that the IntelliJ plugin doesn't report comments we do
 // when removing code in the next version via stonecutter
 // if there is no dummy version needed at some point, leave as blank
-val dummyVersion = "26.4"
+val dummyVersion = "27.1"
 
 stonecutter {
     create(rootProject) {
         versions.forEach {
-            version(it).buildscript = "build.gradle.kts"
+            version(it)
         }
         vcsVersion = versions.first()
 

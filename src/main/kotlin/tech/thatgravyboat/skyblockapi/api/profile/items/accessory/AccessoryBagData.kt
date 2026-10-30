@@ -1,5 +1,5 @@
 //? < 26.4 {
-package tech.thatgravyboat.skyblockapi.api.profile.items.accessory
+/*package tech.thatgravyboat.skyblockapi.api.profile.items.accessory
 
 import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.world.item.ItemStack
@@ -11,4 +11,4 @@ public data class AccessoryBagItem(
     val page: Int,
     val slot: Int,
 )
-//? }
+*///? }

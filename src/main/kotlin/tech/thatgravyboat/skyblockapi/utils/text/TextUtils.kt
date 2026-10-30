@@ -26,7 +26,8 @@ public object TextUtils {
         val components = mutableListOf<Component>()
         var current = Component.empty()
 
-        this.visit(
+        //~ if >= 26.4 'visit' -> 'visitUnbounded'
+        this.visitUnbounded(
             { style, part ->
                 val lines = part.split(separator)
                 current.append(Component.literal(lines[0]).setStyle(style))
@@ -93,7 +94,8 @@ public object TextUtils {
         val sb = StringBuilder()
         var last = Style.EMPTY
 
-        this.visit(
+        //~ if >= 26.4 'visit' -> 'visitUnbounded'
+        this.visitUnbounded(
             { style, text ->
                 if (style != last) {
                     sb.append(ChatFormatting.RESET)

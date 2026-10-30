@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 
-//? if < 26.4 {
-import net.minecraft.ChatFormatting
+//? < 26.4 {
+/*import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
@@ -19,4 +19,4 @@ public enum class TrophyFishRank(public val displayName: Component) {
         }
     }
 }
-//?}
+*///?}

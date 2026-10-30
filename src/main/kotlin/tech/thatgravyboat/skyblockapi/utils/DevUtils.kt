@@ -3,7 +3,7 @@
 package tech.thatgravyboat.skyblockapi.utils
 
 //? if < 26.4 {
-import com.mojang.brigadier.arguments.StringArgumentType
+/*import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.suggestion.SuggestionProvider
 import com.mojang.brigadier.suggestion.Suggestions
@@ -712,4 +712,4 @@ private data class DevToolSuggestionProvider<T>(val utils: Iterable<T>, val loca
         return builder.buildFuture()
     }
 }
-//?}
+*///?}
