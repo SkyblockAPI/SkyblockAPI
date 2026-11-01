@@ -78,8 +78,8 @@ public object SlayerProgressAPI {
     }
 
     @Subscription
-    @OnlyOnSkyBlock
     @MustBeContainer
+    @OnlyOnSkyBlock
     internal fun onInventory(event: InventoryChangeEvent) {
         if (!SlayerType.entries.map { it.displayName }.contains(event.title)) return
         val slayerType = SlayerType.entries.find { it.displayName == event.title } ?: return
@@ -109,9 +109,9 @@ public object SlayerProgressAPI {
     }
 
     @Subscription
-    @OnlyOnSkyBlock
-    @MustBeContainer
     @InventoryTitle("Slayer")
+    @MustBeContainer
+    @OnlyOnSkyBlock
     internal fun onSlayerInventory(event: InventoryChangeEvent) {
         if (event.slot.index != 29) return
         if (event.slot.item.cleanName != "Slayer Leaderboards") return
@@ -125,9 +125,9 @@ public object SlayerProgressAPI {
     private fun InventoryChangeEvent.getLoreLines() = this.slot.item.getRawLore()
     private fun InventoryChangeEvent.getLore() = this.getLoreLines().joinToString("\n")
 
+    @OptIn(SkyBlockPvRequired::class)
     @Subscription
     @OnlyOnSkyBlock
-    @OptIn(SkyBlockPvRequired::class)
     internal fun onPv(event: SkyBlockPvOpenedEvent) {
         event.member.getPath("slayer.slayer_bosses").asMap { k, v ->
             SlayerType.fromName(k) to v.asJsonObject["xp"].asLong(0)

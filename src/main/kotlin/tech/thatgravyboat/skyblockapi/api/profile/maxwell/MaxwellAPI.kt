@@ -182,8 +182,8 @@ public data object MaxwellAPI : ItemDebugCategory {
     //endregion
     //endregion
 
-    @OnlyOnSkyBlock
     @Subscription
+    @OnlyOnSkyBlock
     internal fun onChat(event: ChatReceivedEvent.Pre) {
         findWhen(event.text) {
             case(selectPowerRegex, "power") { (power) ->
@@ -209,8 +209,8 @@ public data object MaxwellAPI : ItemDebugCategory {
     }
 
     // These need to be on InventoryChangeEvent because you can interact with the GUI and update data
-    @OnlyOnSkyBlock
     @Subscription
+    @OnlyOnSkyBlock
     internal fun onInventoryUpdate(event: InventoryChangeEvent) {
         if (event.isInPlayerInventory) return
 
@@ -219,8 +219,8 @@ public data object MaxwellAPI : ItemDebugCategory {
         if (handleTuningsGui(event)) return
     }
 
-    @OnlyOnSkyBlock
     @Subscription
+    @OnlyOnSkyBlock
     internal fun onInventoryFullyOpened(event: ContainerInitializedEvent) {
         if (handleBagsGui(event)) return
     }

@@ -221,8 +221,8 @@ public object GuildAPI {
 
     }
 
-    @TimePassed("1s")
     @Subscription(TickEvent::class)
+    @TimePassed("1s")
     private fun onTick() {
         // fallback in case the closing line of guild list message doesn't appear after 2 seconds
         if (inGuildListMessage && lastGuildListMessage.since() > 2.seconds) finishGuildListMessage()
