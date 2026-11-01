@@ -122,8 +122,7 @@ public object DebugItems {
         }
     }
 
-    @Subscription
-    context(event: TickEvent)
+    @Subscription(TickEvent::class)
     internal fun tick() {
         if (this.lastItem != null && this.lastSet.since() > 5.seconds) {
             updateItem(null)

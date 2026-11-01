@@ -186,8 +186,8 @@ public object LocationAPI {
     }
 
 
-    @OnlyOnSkyBlock
     @Subscription(TickEvent::class)
+    @OnlyOnSkyBlock
     internal fun onTick() {
         val pos = McPlayer.self?.blockPosition() ?: return
         val biome = McLevel.selfOrNull?.getBiome(pos)?.unwrapKey()?.getOrNull()?.identifier ?: run {

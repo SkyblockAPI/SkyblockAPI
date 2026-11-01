@@ -70,8 +70,8 @@ internal object TabListEventHandler {
     }
 
     @Subscription(TickEvent::class)
-    @OnlyOnSkyBlock
     @TimePassed("1s")
+    @OnlyOnSkyBlock
     private fun onTick() {
         val newTabList = McClient.tablist.take(TAB_LIST_LENGTH).map { it.displayName }.chunked(TAB_LIST_SECTION)
         val newStringTabList = newTabList.map { list -> list.map { it.stripped } }

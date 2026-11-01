@@ -21,9 +21,9 @@ public object ScoreboardEventHandler {
     private var lastScoreboard = listOf<Component>()
     private var lastTitle: String? = null
 
-    @OnlyOnSkyBlock
-    @TimePassed("1s")
     @Subscription(TickEvent::class)
+    @TimePassed("1s")
+    @OnlyOnSkyBlock
     internal fun onTick() {
         if (!ProfileAPI.isLoaded) return
 

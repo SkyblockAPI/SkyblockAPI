@@ -170,8 +170,8 @@ public object ProfileAPI {
         this.lastWorldSwap = currentInstant()
     }
 
-    @OnlyWidget(PROFILE)
     @Subscription(priority = Int.MIN_VALUE)
+    @OnlyWidget(PROFILE)
     internal fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
         profileRegex.anyMatch(event.new, "name") { (name) ->
             val profileType = ProfileType.fromIcon(name.last())
@@ -209,9 +209,9 @@ public object ProfileAPI {
         }
     }
 
-    @OnlyNonGuest
-    @OnlyIn(PRIVATE_ISLAND)
     @Subscription
+    @OnlyIn(PRIVATE_ISLAND)
+    @OnlyNonGuest
     internal fun onTablistUpdate(event: TabListChangeEvent) {
         val line = event.new.firstOrNull()?.firstOrNull()?.stripped ?: return
         coopRegex.match(line) {
@@ -267,9 +267,9 @@ public object ProfileAPI {
         ProfileChangeEvent(newProfile).post()
     }
 
-    @OnlyOnSkyBlock
-    @TimePassed("5s")
     @Subscription(TickEvent::class)
+    @TimePassed("5s")
+    @OnlyOnSkyBlock
     internal fun onTick() {
         if (this.isLoaded) return
 
@@ -298,8 +298,8 @@ public object ProfileAPI {
     }
 
     // profile management inventory is used as a fallback in case we never know the profile name somehow
-    @OnlyOnSkyBlock
     @Subscription
+    @OnlyOnSkyBlock
     private fun onProfileManagement(event: ContainerInitializedEvent) {
         if (!profileManagementTitle.matches(event.title)) return
 
