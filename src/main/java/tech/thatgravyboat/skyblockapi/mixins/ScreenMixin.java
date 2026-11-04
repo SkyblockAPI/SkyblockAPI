@@ -1,7 +1,6 @@
 //~ gui_extraction
 package tech.thatgravyboat.skyblockapi.mixins;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,7 +24,7 @@ public class ScreenMixin {
     protected Minecraft minecraft;
 
     @Inject(method = "extractRenderStateWithTooltipAndSubtitles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;nextStratum()V", ordinal = 0), cancellable = true)
-    private void extractRenderStateWithTooltipAndSubtitles(CallbackInfo ci, @Local(argsOnly = true, name = "graphics") GuiGraphicsExtractor graphics) {
+    private void extractRenderStateWithTooltipAndSubtitles(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         var screen = (Screen) (Object) this;
         if (new RenderScreenBackgroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus())) {
             new RenderScreenForegroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus());
@@ -44,7 +43,7 @@ public class ScreenMixin {
             //~ gui_extraction
         )
     )
-    private void renderAfter(CallbackInfo ci, @Local(argsOnly = true, name = "graphics") GuiGraphicsExtractor graphics) {
+    private void renderAfter(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         new RenderScreenForegroundEvent((Screen) (Object) this, graphics).post(SkyBlockAPI.getEventBus());
     }
 
