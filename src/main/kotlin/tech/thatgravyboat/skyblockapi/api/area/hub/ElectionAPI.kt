@@ -245,8 +245,8 @@ public object ElectionAPI {
         return perkData
     }
 
-    @TimePassed("1s")
     @Subscription(TickEvent::class)
+    @TimePassed("1s")
     internal fun onTick() {
         if (!MayorPerks.PERKPOCALYPSE.active) return
         val jerryInfo = currentJerryCandidate

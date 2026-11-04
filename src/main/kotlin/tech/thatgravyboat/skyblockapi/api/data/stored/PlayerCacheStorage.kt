@@ -9,6 +9,7 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityAddedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.PlayerCacheUpdate
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.utils.extentions.isRealPlayer
@@ -70,12 +71,14 @@ internal object PlayerCacheStorage {
         val player = uuid.player
         if (player == null) {
             players[uuid] = CachedPlayer(name)
+            PlayerCacheUpdate(uuid, name).post()
             scheduleSave()
             return true
         }
         player.time = System.currentTimeMillis()
         if (player.name != name) {
             player.name = name
+            PlayerCacheUpdate(uuid, name).post()
             return true
         }
         scheduleSave()

@@ -23,8 +23,8 @@ public object ForgeAPI {
     private val durationRegex = RegexGroup.INVENTORY.group("forge").create("duration", "Time Remaining: (?<duration>.*)")
 
     @Subscription
-    @IgnoreFiller
     @InventoryTitle("The Forge")
+    @IgnoreFiller
     internal fun onInvUpdate(event: InventoryChangeEvent) {
         if (!event.isInMainPart) return
 

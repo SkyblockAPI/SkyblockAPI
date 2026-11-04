@@ -4,6 +4,8 @@ import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.helpers.getStrippedAttachedLines
 import tech.thatgravyboat.skyblockapi.utils.DiscoverableValue
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 
 public data class SlayerInfo(val entity: Entity) {
     private fun discoverTypeIfNeeded(): SlayerMob? {
@@ -13,11 +15,7 @@ public data class SlayerInfo(val entity: Entity) {
         }
     }
 
-    private fun discoverOwner(): String? {
-        return entity.getStrippedAttachedLines()
-            .find { it.startsWith("spawned by: ", ignoreCase = true) }
-            ?.substringAfterLast(":")?.trim()
-    }
+    private fun discoverOwner(): String? = SlayerAPI.slayerOwnerRegex.findGroup(entity.getStrippedAttachedLines(), "name")
 
     val owner: String? by DiscoverableValue(::discoverOwner)
     val isOwnedByPlayer: Boolean get() = owner == McPlayer.name

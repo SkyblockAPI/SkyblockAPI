@@ -97,9 +97,9 @@ public object StorageAPI {
         }
     }
 
+    @OptIn(SkyBlockPvRequired::class)
     @Subscription
     @OnlyOnSkyBlock
-    @OptIn(SkyBlockPvRequired::class)
     private fun SkyBlockPvOpenedEvent.parseEnderChest() {
         val rawEnderchestData = member.getPath("inventory.ender_chest_contents") as? JsonObject ?: return
         val enderchestData = rawEnderchestData.parseInvData().takeUnless { it.isEmpty() } ?: return
@@ -117,9 +117,9 @@ public object StorageAPI {
         }
     }
 
+    @OptIn(SkyBlockPvRequired::class)
     @Subscription
     @OnlyOnSkyBlock
-    @OptIn(SkyBlockPvRequired::class)
     private fun SkyBlockPvOpenedEvent.parseBackPacks() {
         val rawBackPackData = member.getPath("inventory.backpack_contents") as? JsonObject ?: return
         rawBackPackData.entrySet().forEach { (index, json) ->

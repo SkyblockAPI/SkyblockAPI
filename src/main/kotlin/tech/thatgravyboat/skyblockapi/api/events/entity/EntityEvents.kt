@@ -26,8 +26,7 @@ public object EntityEvents {
     @JvmField
     public var remainingPerTick: Long = 40
 
-    @Subscription
-    context(_: TickEvent)
+    @Subscription(TickEvent::class)
     internal fun tick() {
         remainingPerTick = 40
     }

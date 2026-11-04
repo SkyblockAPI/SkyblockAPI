@@ -32,8 +32,8 @@ public object SkillExpAPI {
     private val itemLoreXpRegex = group.create("itemLoreExp", "^\\s+(?<current>[\\d,.]+)(?:/(?<needed>[\\d,.]+[kmbKMB]?))?")
 
     @Subscription
-    @OnlyOnSkyBlock
     @InventoryTitle("Your Skills")
+    @OnlyOnSkyBlock
     internal fun onInventory(event: InventoryChangeEvent) {
         if (!event.isInMainPart) return
         if (event.isSkyBlockFiller) return

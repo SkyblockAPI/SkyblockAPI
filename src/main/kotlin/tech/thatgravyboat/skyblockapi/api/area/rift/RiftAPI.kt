@@ -99,8 +99,8 @@ public object RiftAPI {
     }
 
     @Subscription
-    @OnlyIn(SkyBlockIsland.THE_RIFT)
     @OnlyWidget(TabWidget.GOOD_TO_KNOW)
+    @OnlyIn(SkyBlockIsland.THE_RIFT)
     internal fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         visitedRiftRegex.anyFound(event.new, "visited") { (visited) ->
             timesVisted = visited.toIntValue()
