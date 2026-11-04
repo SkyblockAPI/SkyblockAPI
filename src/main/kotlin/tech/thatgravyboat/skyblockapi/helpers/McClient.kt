@@ -75,16 +75,10 @@ public object McClient {
         }
 
     public val mouse: Pair<Double, Double>
-        get() = Pair(
-            self.mouseHandler.xpos() * (window.guiScaledWidth / window.screenWidth.coerceAtLeast(1).toDouble()),
-            self.mouseHandler.ypos() * (window.guiScaledHeight / window.screenHeight.coerceAtLeast(1).toDouble()),
-        )
+        get() = Pair(self.mouseHandler.getScaledXPos(window), self.mouseHandler.getScaledYPos(window))
 
     public val tablist: List<PlayerInfo>
-        get() = connection
-            ?.listedOnlinePlayers
-            ?.sortedWith(tabListComparator)
-            ?: emptyList()
+        get() = connection?.listedOnlinePlayers?.sortedWith(tabListComparator) ?: emptyList()
 
     public val players: List<PlayerInfo>
         get() = tablist.filter { it.profile.id.isRealPlayer() }

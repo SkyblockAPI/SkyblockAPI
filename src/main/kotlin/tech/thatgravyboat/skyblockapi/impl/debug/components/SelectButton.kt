@@ -82,7 +82,8 @@ internal class SelectButton<T>(width: Int, height: Int) : AbstractButton(0, 0, w
     override fun extractContents(graphics: GuiGraphicsExtractor) {
         val text = this.getMessage()
 
-        graphics.drawSprite(SPRITES.get(this.active, this.isHoveredOrFocused), this.x, this.y, this.width, this.height)
+        //~ if >= 26.4 'isHoveredOrFocused' -> 'isHighlighted'
+        graphics.drawSprite(SPRITES.get(this.active, this.isHighlighted), this.x, this.y, this.width, this.height)
         graphics.drawString(text, this.x + (this.width - text.width) / 2, this.y + (this.height - 8) / 2, shadow = true)
     }
 

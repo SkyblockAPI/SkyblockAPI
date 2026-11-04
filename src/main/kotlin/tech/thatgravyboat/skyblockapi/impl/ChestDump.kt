@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.brigadier.arguments.StringArgumentType
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
+import net.minecraft.client.gui.components.inventory.SlotWidget
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -91,8 +92,10 @@ public object ChestDump {
                     super.onClose()
                 }
 
-                override fun slotClicked(slot: Slot?, slotId: Int, buttonNum: Int, containerInput: ContainerInput?) {
-                    val slot = slot ?: return
+                //~ if >= 26.4 'Slot?' -> 'SlotWidget?', 'slot:' -> 'slotWidget:'
+                override fun slotClicked(slotWidget: SlotWidget?, slotId: Int, buttonNum: Int, containerInput: ContainerInput?) {
+                    //~ if >= 26.4 'slot ?:' -> 'slotWidget?.slot()'
+                    val slot = slotWidget?.slot() ?: return
                     SkyBlockAPI.info("<ChestDump> Clicked slot $slotId with button $buttonNum and click type $containerInput")
                     SlotClickEvent(slot.item, slot, buttonNum, this).post()
                 }

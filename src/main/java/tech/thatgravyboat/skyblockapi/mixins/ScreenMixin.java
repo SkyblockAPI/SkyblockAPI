@@ -25,7 +25,7 @@ public class ScreenMixin {
     protected Minecraft minecraft;
 
     @Inject(method = "extractRenderStateWithTooltipAndSubtitles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;nextStratum()V", ordinal = 0), cancellable = true)
-    private void extractRenderStateWithTooltipAndSubtitles(@Local(argsOnly = true, name = "graphics") GuiGraphicsExtractor graphics, CallbackInfo ci) {
+    private void extractRenderStateWithTooltipAndSubtitles(CallbackInfo ci, @Local(argsOnly = true, name = "graphics") GuiGraphicsExtractor graphics) {
         var screen = (Screen) (Object) this;
         if (new RenderScreenBackgroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus())) {
             new RenderScreenForegroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus());
@@ -44,7 +44,7 @@ public class ScreenMixin {
             //~ gui_extraction
         )
     )
-    private void renderAfter(@Local(argsOnly = true, name = "graphics") GuiGraphicsExtractor graphics, CallbackInfo ci) {
+    private void renderAfter(CallbackInfo ci, @Local(argsOnly = true, name = "graphics") GuiGraphicsExtractor graphics) {
         new RenderScreenForegroundEvent((Screen) (Object) this, graphics).post(SkyBlockAPI.getEventBus());
     }
 
