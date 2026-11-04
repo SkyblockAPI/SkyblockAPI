@@ -13,7 +13,7 @@ import net.minecraft.client.gui.components.inventory.SlotWidget
 
 public fun AbstractContainerScreen<*>.getHoveredSlot(): Slot? {
     //? < 26.4
-    // return (this as AbstractContainerScreenAccessor).hoveredSlot
+     //return (this as AbstractContainerScreenAccessor).hoveredSlot
     //? else
     return this.children().filterIsInstance<SlotWidget>().find { it.isHovered }?.slot()
 }
