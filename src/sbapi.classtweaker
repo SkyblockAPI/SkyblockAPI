@@ -5,6 +5,6 @@ transitive-inject-interface net/minecraft/world/entity/Entity tech/thatgravyboat
 transitive-inject-interface net/minecraft/world/item/ItemStack tech/thatgravyboat/skyblockapi/impl/debug/components/ComponentDataAttachable
 transitive-inject-interface net/minecraft/world/item/ItemStack tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugAccessor
 
-
 accessible class net/minecraft/client/gui/components/ScrollableLayout$Container
 accessible field net/minecraft/client/gui/components/ScrollableLayout container Lnet/minecraft/client/gui/components/ScrollableLayout$Container;
+accessible field net/minecraft/client/renderer/state/gui/GuiRenderState firstStratumAfterBlur I
