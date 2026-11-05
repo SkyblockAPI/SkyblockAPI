@@ -10344,6 +10344,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/component/Componen
 	public static final fun find (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Z
 	public static synthetic fun find$default (Ljava/util/List;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 	public static synthetic fun find$default (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
+	public static final fun findGroup (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;Ljava/lang/String;)Lnet/minecraft/network/chat/Component;
 	public static final fun findOrNull (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static synthetic fun findOrNull$default (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun findThenNull (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lkotlin/Unit;
