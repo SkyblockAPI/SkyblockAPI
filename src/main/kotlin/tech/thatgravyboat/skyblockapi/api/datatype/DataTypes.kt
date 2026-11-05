@@ -45,6 +45,8 @@ public object DataTypes {
     public val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS*///?}
     public val BOOSTER_TIERS: DataType<Map<String, Int>> = GenericDataTypes.BOOSTER_TIERS
     public val JALAPENO_BOOK: DataType<Boolean> = GenericDataTypes.JALAPENO_BOOK
+    public val WOOD_SINGULARITY: DataType<Boolean> = GenericDataTypes.WOOD_SINGULARITY
+    public val MANA_DISINTEGRATOR: DataType<Int> = GenericDataTypes.MANA_DISINTEGRATOR
     public val MIDAS_WEAPON_BID: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_BID
     public val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_ADDED_COINS
     public val MIDAS_WEAPON_PAID: DataType<Long> = GenericDataTypes.MIDAS_WEAPON_PAID
@@ -69,6 +71,7 @@ public object DataTypes {
     public val RUNEBOOK: DataType<Int> = GenericDataTypes.RUNEBOOK
     public val DOWSING_MODE: DataType<String> = GenericDataTypes.DOWSING_MODE
     public val HONEY_POT_USES: DataType<Int> = GenericDataTypes.HONEY_POT_USES
+    public val CAKE_BAG_YEARS: DataType<List<Int>> = GenericDataTypes.CAKE_BAG_YEARS
 
     public val USED_RUNE: DataType<SkyBlockId> = GenericDataTypes.USED_RUNE
     public val HELMET_SKIN: DataType<String> = GenericDataTypes.HELMET_SKIN
@@ -130,6 +133,7 @@ public object DataTypes {
 
     // Farming
     public val CULTIVATING_CROPS: DataType<Long> = GenericDataTypes.CULTIVATING_CROPS
+    public val FARMING_FOR_DUMMIES: DataType<Int> = GenericDataTypes.FARMING_FOR_DUMMIES
     public val TOOL_LEVEL: DataType<Int> = GenericDataTypes.TOOL_LEVEL
     public val TOOL_EXP: DataType<Double> = GenericDataTypes.TOOL_EXP
     public val TOOL_OVERCLOCKS: DataType<Int> = GenericDataTypes.TOOL_OVERCLOCKS

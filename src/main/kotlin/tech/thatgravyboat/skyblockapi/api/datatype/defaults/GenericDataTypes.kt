@@ -4,12 +4,15 @@ import com.google.gson.JsonObject
 import me.owdding.ktmodules.Module
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.nbt.NbtAccounter
+import net.minecraft.nbt.NbtIo
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.remote.hypixel.parseV0Data
 import tech.thatgravyboat.skyblockapi.utils.extentions.asBoolean
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.asLong
@@ -22,13 +25,13 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getUuidOrNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import java.io.ByteArrayInputStream
+import java.io.DataInputStream
 import java.util.UUID
+import java.util.zip.GZIPInputStream
 import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Instant
-
-//? < 26.2
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
 @Module
 public object GenericDataTypes {
@@ -64,6 +67,8 @@ public object GenericDataTypes {
     public val HOT_POTATO_BOOKS: DataType<Int> = DataType.simple("hot_potato_count", "hot_potato_count")
     public val ART_OF_WAR: DataType<Boolean> = DataType.simple("art_of_war", "art_of_war_count")
     public val ART_OF_PEACE: DataType<Boolean> = DataType.simple("art_of_peace", "artOfPeaceApplied")
+    public val WOOD_SINGULARITY: DataType<Boolean> = DataType.simple("wood_singularity", "wood_singularity_count")
+    public val MANA_DISINTEGRATOR: DataType<Int> = DataType.simple("mana_disintegrator", "mana_disintegrator_count")
     public val BOOK_OF_STATS: DataType<Int> = DataType.simple("book_of_stats", "stats_book")
     public val RUNEBOOK: DataType<Int> = DataType.simple("runic_kills")
     public val POTION_TYPE: DataType<String> = DataType.simple("potion_type")
@@ -101,7 +106,8 @@ public object GenericDataTypes {
     public val ABSORB_LOGS: DataType<Long> = DataType.simple("absorb_logs_chopped")
     public val LOGS_CUT: DataType<Long> = DataType.simple("logs_cut")
 
-    public val STAR_COUNT: DataType<Int> = DataType.of("star_count") { it.unsafeTag?.getIntOrNull("upgrade_level") ?: it.unsafeTag?.getIntOrNull("dungeon_item_level") }
+    public val STAR_COUNT: DataType<Int> =
+        DataType.of("star_count") { it.unsafeTag?.getIntOrNull("upgrade_level") ?: it.unsafeTag?.getIntOrNull("dungeon_item_level") }
     public val NECRON_SCROLLS: DataType<List<String>> = DataType.of("necron_scrolls") {
         val list = it.unsafeTag?.getList("ability_scroll")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull() }
 
@@ -125,6 +131,7 @@ public object GenericDataTypes {
     public val RABBIT_FACTION: DataType<String> = DataType.simple("faction_rabbit_id")
 
     public val CULTIVATING_CROPS: DataType<Long> = DataType.simple("cultivating_crops", "farmed_cultivating")
+    public val FARMING_FOR_DUMMIES: DataType<Int> = DataType.simple("farming_for_dummies", "farming_for_dummies_count")
     public val TOOL_LEVEL: DataType<Int> = DataType.simple("tool_level", "levelable_lvl")
     public val TOOL_EXP: DataType<Double> = DataType.simple("tool_exp", "levelable_exp")
     public val TOOL_OVERCLOCKS: DataType<Int> = DataType.simple("tool_overclocks", "levelable_overclocks")
@@ -157,7 +164,8 @@ public object GenericDataTypes {
     public val SINKER: DataType<Pair<UUID, String>> = getFishingRodPartDataType("sinker")
 
     /** In SkyBlock items that are only available in new versions are shown via [DataComponents.ITEM_MODEL], this returns the item that is displayed. */
-    public val VISIBLE_ITEM: DataType<Item> = DataType.of("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
+    public val VISIBLE_ITEM: DataType<Item> =
+        DataType.of("visible_item") { it.get(DataComponents.ITEM_MODEL)?.let(BuiltInRegistries.ITEM::getOptional)?.getOrNull() }
     public val CLEAN_NAME: DataType<String> = DataType.of("clean_name") { it.hoverName.stripped }
 
     public val VINYLS: DataType<List<SkyBlockId>> = DataType.of("vinyls") {
@@ -172,6 +180,14 @@ public object GenericDataTypes {
 
     public val DOWSING_MODE: DataType<String> = DataType.simple("dowsing_mode")
     public val HONEY_POT_USES: DataType<Int> = DataType.simple("honey_pot_uses")
+
+    public val CAKE_BAG_YEARS: DataType<List<Int>> = DataType.of("cake_bag_years") {
+        val thing = it.unsafeTag?.getList("new_year_cake_bag_data")?.getOrNull() ?: return@of null
+        val bytes = thing.map { it.asByte().getOrNull() ?: return@of null }.toByteArray()
+        val tag = NbtIo.readUnnamedTag(DataInputStream(GZIPInputStream(ByteArrayInputStream(bytes))), NbtAccounter.unlimitedHeap())
+
+        tag.asCompound().getOrNull()?.parseV0Data()?.mapNotNull { it.unsafeTag?.getIntOrNull("new_years_cake") }?.ifEmpty { null }
+    }
 
     private fun getFishingRodPartDataType(name: String) = DataType.of(name) {
         val tag = it.unsafeTag?.getObjectOrNull(name) ?: return@of null

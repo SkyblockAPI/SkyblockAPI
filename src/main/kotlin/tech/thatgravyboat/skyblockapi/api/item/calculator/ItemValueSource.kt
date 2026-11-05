@@ -12,11 +12,14 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.DivanPowderCoa
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.DrillComponentsCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.EnchantmentCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.EnrichmentCalculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.EthermergeCalculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.FarmingForDummiesCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.GemstoneCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.HelmetSkinCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.HotPotatoCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.ItemStarsCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.JalapenoBookCalculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.ManaDisintegratorCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.NecronScrollsCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.OverclockerCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.PolarVoidCalculator
@@ -25,7 +28,9 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.Recombobulator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.ReforgeCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.RodPartCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.SilexCalculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.TransmissionTunerCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.WetBookCalculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.WoodSingularityCalculator
 import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 
 public enum class ItemValueSource(public val calc: Calculator) : Calculator by calc {
@@ -37,6 +42,10 @@ public enum class ItemValueSource(public val calc: Calculator) : Calculator by c
     ART_OF_WAR(ArtOfWarCalculator),
     ART_OF_PEACE(ArtOfPeaceCalculator),
     JALAPENO_BOOK(JalapenoBookCalculator),
+    MANA_DISINTEGRATOR(ManaDisintegratorCalculator),
+    WOOD_SINGULARITY(WoodSingularityCalculator),
+    TRANSMISSION_TUNER(TransmissionTunerCalculator),
+    ETHERWARP(EthermergeCalculator),
     BOOSTERS(BoostersCalculator),
     NECRON_SCROLLS(NecronScrollsCalculator),
     ITEM_STARS(ItemStarsCalculator),
@@ -53,7 +62,8 @@ public enum class ItemValueSource(public val calc: Calculator) : Calculator by c
     APPLIED_DYE(AppliedDyeCalculator),
     HELMET_SKIN(HelmetSkinCalculator),
     ENRICHMENT(EnrichmentCalculator),
-    OVERCLOCKER(OverclockerCalculator)
+    OVERCLOCKER(OverclockerCalculator),
+    FARMING_FOR_DUMMIES(FarmingForDummiesCalculator),
     ;
 
     public companion object {

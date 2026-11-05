@@ -1,9 +1,8 @@
-@file:OptIn(ExperimentalEncodingApi::class)
-
 package tech.thatgravyboat.skyblockapi.api.remote.hypixel
 
 import com.google.gson.JsonObject
 import me.owdding.dfu.item.LegacyDataFixer
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
 import net.minecraft.nbt.Tag
@@ -12,7 +11,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.runCatchingWithPrint
 import java.io.ByteArrayInputStream
 import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.jvm.optionals.getOrNull
 
 internal fun JsonObject.parseInvData(): List<ItemStack> = runCatching {
@@ -29,5 +27,9 @@ private fun parseV0InventoryData(json: JsonObject): List<ItemStack> {
         runCatchingWithPrint { it.legacyStack() }.getOrDefault(ItemStack.EMPTY)
     } ?: emptyList()
 }
+
+public fun CompoundTag.parseV0Data(): List<ItemStack> = this.getList("i").getOrNull()?.mapNotNull {
+    runCatchingWithPrint { it.legacyStack() }.getOrDefault(ItemStack.EMPTY)
+} ?: emptyList()
 
 public fun Tag.legacyStack(): ItemStack = LegacyDataFixer.fromTag(this) ?: ItemStack.EMPTY
