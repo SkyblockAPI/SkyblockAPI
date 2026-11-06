@@ -16,6 +16,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuPot
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
 import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.DefaultIdResolver
 import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind
+import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addStringDebug
@@ -187,25 +188,19 @@ public value class SkyBlockId private constructor(public val id: String) {
 
     public fun trySafe(consumer: (String) -> SkyBlockId): SkyBlockId = if (isUnsafe) consumer(cleanId) else this
 
-    public fun toItem(): ItemStack = when {
-        isRune -> getRune()
-        isPet -> getPet()
-        isItem -> getItem()
-        isEnchantment -> getEnchantment()
-        isAttribute -> getAttribute()
-        isPotion -> getPotion()
-
-        else -> ItemStack(Items.BARRIER) {
-            set(DataComponents.CUSTOM_NAME, Text.of(id) { this.color = TextColor.RED })
-        }
+    public fun toLazyItem(): LazyItemStack = when {
+        isRune -> SimpleItemAPI.getLazyItemStackForRune(this)
+        isPet -> SimpleItemAPI.getLazyItemStackForPet(this)
+        isItem -> SimpleItemAPI.getLazyItemStackForItem(this)
+        isEnchantment -> SimpleItemAPI.getLazyItemStackForEnchantment(this)
+        isAttribute -> SimpleItemAPI.getLazyItemStackForAttribute(this)
+        isPotion -> SimpleItemAPI.getLazyItemStackForPotion(this)
+        else -> null
+    } ?: LazyItemStack(Items.BARRIER) {
+        set(DataComponents.CUSTOM_NAME, Text.of(id) { this.color = TextColor.RED })
     }
 
-    private fun getItem(): ItemStack = SimpleItemAPI.getItemById(this)
-    private fun getPet(): ItemStack = SimpleItemAPI.getPetById(this)
-    private fun getRune(): ItemStack = SimpleItemAPI.getRuneById(this)
-    private fun getEnchantment(): ItemStack = SimpleItemAPI.getEnchantmentById(this)
-    private fun getAttribute(): ItemStack = SimpleItemAPI.getAttributeById(this)
-    private fun getPotion(): ItemStack = SimpleItemAPI.getPotionById(this)
+    public fun toItem(): ItemStack = toLazyItem().create()
 
     override fun toString(): String = "SkyBlockId($id)"
 }
