@@ -22,15 +22,13 @@ public class ClipboardManagerMixin {
         } catch (OutOfMemoryError ignored) {
             var encoded = ((String) text).getBytes(StandardCharsets.UTF_8);
 
-            var success = false;
             ByteBuffer buffer = MemoryUtil.memAlloc(encoded.length + 1);
             try {
                 buffer.put(encoded).put((byte) 0).flip();
-                success = SDLClipboard.SDL_SetClipboardText(buffer);
+                return SDLClipboard.SDL_SetClipboardText(buffer);
             } finally {
                 MemoryUtil.memFree(buffer);
             }
-            return success;
         }
     }
 
