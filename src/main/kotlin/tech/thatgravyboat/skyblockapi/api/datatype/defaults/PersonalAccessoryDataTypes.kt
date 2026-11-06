@@ -47,7 +47,7 @@ public object PersonalAccessoryDataTypes {
 
             item.unsafeTag?.forEach { key, tag ->
                 if (!key.startsWith(PERSONAL_COMPACT)) return@forEach
-                val index = key.substring(PERSONAL_COMPACT.length).toIntOrNull() ?: return@forEach
+                val index = key.drop(PERSONAL_COMPACT.length + 1).toIntOrNull() ?: return@forEach
                 val string = tag.asString().getOrNull() ?: return@forEach
                 setIndex(index, string)
             }
@@ -65,7 +65,7 @@ public object PersonalAccessoryDataTypes {
 
             item.unsafeTag?.forEach { key, tag ->
                 if (!key.startsWith(PERSONAL_DELETE)) return@forEach
-                val index = key.substring(PERSONAL_DELETE.length).toIntOrNull() ?: return@forEach
+                val index = key.drop(PERSONAL_DELETE.length + 1).toIntOrNull() ?: return@forEach
                 val string = tag.asString().getOrNull() ?: return@forEach
                 setIndex(index, string)
             }
