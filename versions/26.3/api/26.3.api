@@ -6339,6 +6339,7 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId {
 	public static final fun isRune-impl (Ljava/lang/String;)Z
 	public static final fun isUnsafe-impl (Ljava/lang/String;)Z
 	public static final fun toItem-impl (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
+	public static final fun toLazyItem-impl (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun trySafe-BCdM1xk (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
