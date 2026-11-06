@@ -15,7 +15,10 @@ import net.minecraft.resources.Identifier
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.IdentifierPattern
 import net.minecraft.util.Unit
-import net.minecraft.util.valueproviders.*
+import net.minecraft.util.valueproviders.FloatProvider
+import net.minecraft.util.valueproviders.FloatProviders
+import net.minecraft.util.valueproviders.IntProvider
+import net.minecraft.util.valueproviders.IntProviders
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import org.joml.Vector3f

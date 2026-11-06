@@ -17,8 +17,26 @@ import tech.thatgravyboat.skyblockapi.impl.events.PacketEventHandler;
 @Mixin(ClientLevel.class)
 public abstract class ClientLevelMixin extends Level {
 
-    protected ClientLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates) {
-        super(levelData, dimension, registryAccess, dimensionTypeRegistration, isClientSide, isDebug, biomeZoomSeed, maxChainedNeighborUpdates);
+    protected ClientLevelMixin(
+        WritableLevelData levelData,
+        ResourceKey<Level> dimension,
+        RegistryAccess registryAccess,
+        Holder<DimensionType> dimensionTypeRegistration,
+        boolean isClientSide,
+        /*? <26.4 >>+ ',' */ //boolean isDebug,
+        /*? <26.4 >>+ ',' */ //long biomeZoomSeed,
+        int maxChainedNeighborUpdates
+    ) {
+        super(
+            levelData,
+            dimension,
+            registryAccess,
+            dimensionTypeRegistration,
+            isClientSide,
+            /*? <26.4 >> */ //isDebug,
+            /*? <26.4 >> */ //biomeZoomSeed,
+            maxChainedNeighborUpdates
+        );
     }
 
     @WrapMethod(method = "setServerVerifiedBlockState")

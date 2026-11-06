@@ -96,7 +96,19 @@ public object DebugItems {
                 }
                 append("```")
             }
+            else -> return
         }
+
+        event.cancel()
+    }
+
+
+    @Subscription
+    public fun onKeyNavigated(event: ScreenKeyPressedEvent.Navigation) {
+        if (!isEnabled) return
+        if (!McScreen.isShiftDown) return
+        if (lastItem?.getEntries() == null) return
+        event.cancel()
     }
 
     @Subscription
@@ -233,8 +245,8 @@ public inline fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory
 }
 
 
-//? if < 26.4 {
-@JvmName("addDebug")
+//? < 26.4 {
+/*@JvmName("addDebug")
 @Deprecated(message = "Use interface method instead!")
 public fun ItemStack.addDebug0(category: ItemDebugCategory, entry: () -> Component) {
     if (!DebugItems.isEnabled) return
@@ -252,8 +264,7 @@ context(category: ItemDebugCategory) public fun ItemStack.addDebug0(entry: () ->
 @Deprecated(message = "Use interface method instead!")
 @JvmName("categoryAddDebugString")
 context(category: ItemDebugCategory) public fun ItemStack.addDebugString0(entry: () -> String): Unit = addStringDebug(category, entry)
-//?}
-
+*///?}
 
 public fun interface ItemDebugAttachable {
     @Suppress("FunctionName")

@@ -1,3 +1,4 @@
+//~gui_extraction
 package tech.thatgravyboat.skyblockapi.impl.debug.components
 
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -22,8 +23,11 @@ internal open class Overlay : Screen(Component.empty()) {
         super.repositionElements()
     }
 
-    override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
-        this.background?.extractRenderStateWithTooltipAndSubtitles(graphics, -1, -1, partialTick)
+    override fun extractBackground(graphics: GuiGraphicsExtractor) {
+        //? >= 26.4
+        graphics.extractWithoutMouse { this.background?.extractRenderStateWithTooltipAndSubtitles(graphics) }
+        //? else
+        //this.background?.extractRenderStateWithTooltipAndSubtitles(graphics, -1, -1, a)
         graphics.nextStratum()
     }
 

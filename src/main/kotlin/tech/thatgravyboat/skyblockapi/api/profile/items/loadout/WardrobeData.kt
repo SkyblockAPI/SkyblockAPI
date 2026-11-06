@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class WardrobeData(
+internal data class WardrobeData(
     var currentSlot: Int = -1,
     var slots: MutableList<WardrobeSlot> = mutableListOf(),
 ) {

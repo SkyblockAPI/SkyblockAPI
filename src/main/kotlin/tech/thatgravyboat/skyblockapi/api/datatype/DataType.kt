@@ -1,15 +1,12 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 import net.minecraft.world.item.ItemStack
-import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 import tech.thatgravyboat.skyblockapi.utils.extentions.getCompoundTagFunctionByType
 import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
-
-//? < 26.2
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import org.jetbrains.annotations.ApiStatus
 
 public class DataType<T> private constructor(
     public val id: String,
@@ -19,10 +16,10 @@ public class DataType<T> private constructor(
 ) {
 
     //? if < 26.4 {
-    @get:Deprecated("Scheduled for removal in 26.3")
+    /*@get:Deprecated("Scheduled for removal in 26.3")
     @get:ApiStatus.ScheduledForRemoval
     public val factory: (ItemStack) -> T? get() = ::resolve
-    //?}
+    *///?}
 
     init {
         if (autoRegister) DataTypesRegistry.addDataType(this)

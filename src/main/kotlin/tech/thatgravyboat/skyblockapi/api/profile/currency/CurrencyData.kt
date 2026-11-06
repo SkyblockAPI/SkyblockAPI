@@ -5,7 +5,7 @@ import me.owdding.ktcodecs.GenerateCodec
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class CurrencyData(
+internal data class CurrencyData(
     var purse: Double = 0.0,
     var purseType: PurseType = PurseType.UNKNOWN,
     var personalBank: Long = 0,
