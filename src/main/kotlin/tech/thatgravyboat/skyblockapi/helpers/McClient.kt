@@ -33,6 +33,9 @@ import java.nio.file.Path
 
 //? >= 26.3
 import com.mojang.blaze3d.Blaze3D
+import org.lwjgl.sdl.SDLClipboard
+import org.lwjgl.sdl.SDLError
+import java.lang.foreign.Arena
 //? else
 //import net.minecraft.util.Util
 
@@ -70,7 +73,18 @@ public object McClient {
     public var clipboard: String
         get() = self.keyboardHandler.clipboard
         set(value) {
-            self.keyboardHandler.clipboard = value
+            //? if >= 26.3 {
+            Arena.ofConfined().use { arena ->
+                val memory = arena.allocateFrom(value)
+                // Doesn't use SDL_SetClipboardText due to out of stack memory issues with large text
+                if (!SDLClipboard.nSDL_SetClipboardText(memory.address())) {
+                    throw IllegalStateException(
+                        "Failed to set clipboard text: ${SDLError.SDL_GetError() ?: "Unknown SDL error"}",
+                    )
+                }
+            }
+            //?} else
+            // self.keyboardHandler.clipboard = value
         }
 
     public val mouse: Pair<Double, Double>

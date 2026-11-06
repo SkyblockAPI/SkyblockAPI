@@ -309,8 +309,8 @@ internal class StoredData<T : Any>(
                         try {
                             McClient.clipboard = text
                             Text.sendDebug("Copied $fileName to clipboard")
-                        } catch (_: OutOfMemoryError) {
-                            Text.of("Data is too big to copy to clipboard", TextColor.RED).sendWithPrefix()
+                        } catch (_: IllegalStateException) {
+                            Text.of("Failed to copy $fileName to clipboard", TextColor.RED).sendWithPrefix()
                         }
                     }
                 }
