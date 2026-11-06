@@ -309,8 +309,8 @@ internal class StoredData<T : Any>(
                         try {
                             McClient.clipboard = text
                             Text.sendDebug("Copied $fileName to clipboard")
-                        } catch (_: IllegalStateException) {
-                            Text.of("Failed to copy $fileName to clipboard", TextColor.RED).sendWithPrefix()
+                        } catch (e: IllegalStateException) {
+                            Text.of("Failed to copy $fileName to clipboard - ${e.message}", TextColor.RED).sendWithPrefix()
                         }
                     }
                 }
