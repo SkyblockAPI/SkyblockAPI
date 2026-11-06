@@ -95,6 +95,8 @@ public fun ComponentRegex.indexOfFirstFind(input: List<Component>): Int = input.
 public fun List<ComponentRegex>.find(input: Component, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean =
     any { it.find(input = input, groups = groups, action = action) }
 
+public fun ComponentRegex.findGroup(input: Component, group: String): Component? = find(input)?.let { Destructured(it, group).component1() }
+
 public fun ComponentRegex.anyFound(input: List<Component>, vararg groups: String = arrayOf(), action: (Destructured) -> Unit = {}): Boolean =
     input.any { find(it, groups = groups, action = action) }
 

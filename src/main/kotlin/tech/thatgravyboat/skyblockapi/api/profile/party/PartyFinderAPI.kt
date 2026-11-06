@@ -20,8 +20,8 @@ import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 
 @Module
 public object PartyFinderAPI {
-    private val itemGroup = RegexGroup.Companion.INVENTORY.group("partyfinder")
-    private val chatGroup = RegexGroup.Companion.CHAT.group("partyfinder")
+    private val itemGroup = RegexGroup.INVENTORY.group("partyfinder")
+    private val chatGroup = RegexGroup.CHAT.group("partyfinder")
 
     private val dungeonTypeItemRegex = itemGroup.create(
         "dungeon_type_item",
@@ -121,8 +121,8 @@ public object PartyFinderAPI {
 
     @Subscription
     @InventoryTitle("Group Builder")
-    @MustBeContainer
     @IgnoreFiller
+    @MustBeContainer
     internal fun onInventoryChange(event: InventoryChangeEvent) {
         if (!event.isInMainPart) return
 

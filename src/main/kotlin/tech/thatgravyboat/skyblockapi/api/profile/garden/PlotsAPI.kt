@@ -162,8 +162,8 @@ public object PlotAPI {
     }
 
     @Subscription
-    @OnlyNonGuest
     @OnlyIn(SkyBlockIsland.GARDEN)
+    @OnlyNonGuest
     internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (scoreboardNoPestsRegex.anyMatch(event.new)) {
             clearPests()
@@ -189,10 +189,10 @@ public object PlotAPI {
     }
 
     @Subscription
-    @OnlyNonGuest
-    @OnlyIn(SkyBlockIsland.GARDEN)
-    @MustBeContainer
     @InventoryTitle("Configure Plots")
+    @MustBeContainer
+    @OnlyIn(SkyBlockIsland.GARDEN)
+    @OnlyNonGuest
     private fun InventoryChangeEvent.onInventoryChange() {
         val plotId = plots.find { it.slot == slot.index }?.id ?: return
         val itemId = item.getSkyBlockId() ?: item.getItemModel().takeUnless { it == Items.OAK_BUTTON || it in ItemTag.GLASS_PANES }?.let {
@@ -219,8 +219,8 @@ public object PlotAPI {
     }
 
     @Subscription
-    @OnlyNonGuest
     @OnlyIn(SkyBlockIsland.GARDEN)
+    @OnlyNonGuest
     internal fun onChat(event: ChatReceivedEvent.Pre) {
         val shouldSynch = matchWhen(event.text) {
             case(chatSingularSpawnRegex, "name") { (name) ->
@@ -257,8 +257,8 @@ public object PlotAPI {
     }
 
     @Subscription
-    @OnlyNonGuest
     @OnlyWidget(TabWidget.PESTS)
+    @OnlyNonGuest
     internal fun onTabWidget(event: TabWidgetChangeEvent) {
         val plots = mutableListOf<Int>()
         var alive = 0

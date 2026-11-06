@@ -38,6 +38,6 @@ public object HollowsAPI {
         heat = 0
     }
 
-    @Subscription
-    private fun onServerChange(event: ServerChangeEvent) = reset()
+    @Subscription(ServerChangeEvent::class)
+    private fun onServerChange() = reset()
 }

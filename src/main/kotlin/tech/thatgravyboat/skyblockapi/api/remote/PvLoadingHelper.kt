@@ -25,12 +25,12 @@ internal object PvLoadingHelper {
 
     fun markLoaded(data: LoadedData) = list.add(data)
 
-    @Subscription(SkyBlockPvOpenedEvent::class, priority = LOWEST)
     @OptIn(SkyBlockPvRequired::class)
+    @Subscription(SkyBlockPvOpenedEvent::class, priority = LOWEST)
     private fun postPvLoad() = McClient.runNextTick(::sendAndReset)
 
-    @Subscription(SkyBlockPvMuseumOpenedEvent::class, priority = LOWEST)
     @OptIn(SkyBlockPvRequired::class)
+    @Subscription(SkyBlockPvMuseumOpenedEvent::class, priority = LOWEST)
     private fun postMuseumLoad() = McClient.runNextTick(::sendAndReset)
 
     private fun sendAndReset() {

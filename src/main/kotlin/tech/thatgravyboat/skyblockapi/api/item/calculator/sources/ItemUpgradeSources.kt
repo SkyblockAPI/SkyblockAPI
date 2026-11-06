@@ -5,10 +5,12 @@ import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.item.calculator.BoolDataTypeCalculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.BoolDataTypeItemListCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.CalculationEntry
 import tech.thatgravyboat.skyblockapi.api.item.calculator.Calculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.CostEntries
 import tech.thatgravyboat.skyblockapi.api.item.calculator.DataTypeListCalculator
+import tech.thatgravyboat.skyblockapi.api.item.calculator.IntDataTypeWithLimitCalculator
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemEntry
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemStarEntry
 import tech.thatgravyboat.skyblockapi.api.item.calculator.ItemWithLimitEntry
@@ -92,6 +94,10 @@ internal object BoostersCalculator : Calculator {
 }
 
 internal object JalapenoBookCalculator : BoolDataTypeCalculator(DataTypes.JALAPENO_BOOK, "JALAPENO_BOOK")
+internal object WoodSingularityCalculator : BoolDataTypeCalculator(DataTypes.WOOD_SINGULARITY, "WOOD_SINGULARITY")
+internal object ManaDisintegratorCalculator : IntDataTypeWithLimitCalculator(DataTypes.MANA_DISINTEGRATOR, "MANA_DISINTEGRATOR", 10)
+internal object TransmissionTunerCalculator : IntDataTypeWithLimitCalculator(DataTypes.TUNED_TRANSMISSION, "TRANSMISSION_TUNER", 4)
+internal object EthermergeCalculator : BoolDataTypeItemListCalculator(DataTypes.ETHERMERGE, listOf("ETHERWARP_CONDUIT", "ETHERWARP_MERGER"))
 
 internal object ItemStarsCalculator : Calculator {
     val masterStars = listOf(
@@ -133,4 +139,5 @@ internal object ItemStarsCalculator : Calculator {
 
 internal object NecronScrollsCalculator : DataTypeListCalculator(DataTypes.NECRON_SCROLLS)
 
+// TODO: Change when hypixel removes the current enrichment system
 internal object EnrichmentCalculator : SkyBlockIdDataTypeCalculator(DataTypes.ENRICHMENT)

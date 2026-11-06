@@ -253,8 +253,8 @@ internal class StoredData<T : Any>(
         @Subscription(FreshHypixelAlphaDetectedEvent::class)
         private fun onFreshAlpha() = allStoredDatas.forEach(StoredData<*>::deleteAlpha)
 
-        @TimePassed("10s")
         @Subscription(TickEvent::class)
+        @TimePassed("10s")
         private fun onTick() {
             clearAndRun(requiresSave, StoredData<*>::saveToSystem)
             clearAndRun(requiresAlphaSave, StoredData<*>::saveAlphaToSystem)

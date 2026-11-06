@@ -6,6 +6,7 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListHeaderFooterChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
@@ -15,6 +16,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 @Module
 public object SpookyFestivalAPI {
@@ -38,6 +40,9 @@ public object SpookyFestivalAPI {
     public var duration: Duration = Duration.ZERO
         private set
 
+    public var estimatedEnd: Instant = Instant.DISTANT_PAST
+        private set
+
     public var greenCandy: Int = 0
         private set
 
@@ -55,6 +60,7 @@ public object SpookyFestivalAPI {
             val seconds = match["sec"]?.toIntValue() ?: 0
 
             duration = hours.hours + minutes.minutes + seconds.seconds
+            estimatedEnd = currentInstant() + duration
         }
     }
 

@@ -118,9 +118,9 @@ public object SacksAPI {
         }
     }
 
+    @OptIn(SkyBlockPvRequired::class)
     @Subscription
     @OnlyOnSkyBlock
-    @OptIn(SkyBlockPvRequired::class)
     private fun SkyBlockPvOpenedEvent.updateSacks() {
         val sacks = member.getPath("inventory.sacks_counts") as? JsonObject ?: return
 
