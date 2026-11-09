@@ -1913,6 +1913,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getETHERMERGE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getFARMING_FOR_DUMMIES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getGILDED_GIFTED_COINS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getHAS_ENRICHMENT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHELMET_SKIN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHONEY_POT_USES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
