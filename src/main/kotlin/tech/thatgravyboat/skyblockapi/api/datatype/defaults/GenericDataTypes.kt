@@ -84,6 +84,10 @@ public object GenericDataTypes {
     public val MIDAS_WEAPON_PAID: DataType<Long> = DataType.of("midas_weapon_paid") { ctx, stack ->
         listOfNotNull(MIDAS_WEAPON_BID.resolve(stack, ctx), MIDAS_WEAPON_ADDED_COINS.resolve(stack, ctx)).sum().toLong().takeUnless { it == 0L }
     }
+    public val HAS_ENRICHMENT: DataType<Boolean> = DataType.of("has_enrichment") { item ->
+        // we do takeIf so that we only store the data type if its true
+        item.unsafeTag?.contains("talisman_enrichment")?.takeIf { it }
+    }
     public val ENRICHMENT: DataType<SkyBlockId> = DataType.of("enrichment") {
         val id = it.unsafeTag?.getStringOrNull("talisman_enrichment") ?: return@of null
         SkyBlockId.item("talisman_enrichment_$id")
