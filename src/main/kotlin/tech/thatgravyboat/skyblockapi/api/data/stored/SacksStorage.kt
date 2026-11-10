@@ -3,11 +3,13 @@ package tech.thatgravyboat.skyblockapi.api.data.stored
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.owdding.ktmodules.Module
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.items.sacks.SackEntry
 import tech.thatgravyboat.skyblockapi.api.profile.items.sacks.SacksData
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
+import tech.thatgravyboat.skyblockapi.utils.extentions.forNullGetter
 import kotlin.time.Instant
 
 @Module
@@ -37,6 +39,7 @@ internal object SacksStorage {
                         { list -> list.filterNot { entry -> entry.id.isIgnoredItem() } },
                         { list -> list.filterNot { entry -> entry.id.isIgnoredItem() } },
                     ).optionalFieldOf("items", listOf()).forGetter(SacksData::asSackEntries),
+                    CodecUtils.list(ItemStack.OPTIONAL_CODEC).optionalFieldOf("ownedSacks").forNullGetter(SacksData::ownedSacks)
                 ).apply(it, ::SacksData)
             }
             else -> CodecUtils.unit { SacksData() }
@@ -45,6 +48,7 @@ internal object SacksStorage {
 
     val counts: Map<String, Int> get() = SACKS.get()?.counts ?: emptyMap()
     val timestamps: Map<String, Instant> get() = SACKS.get()?.timestamps ?: emptyMap()
+    val ownedSacks: List<ItemStack> get() = SACKS.get()?.ownedSacks ?: emptyList()
 
     // Returns the old value
     fun updateItem(item: String, amount: Int): Int {
@@ -66,6 +70,13 @@ internal object SacksStorage {
     fun clear() {
         SACKS.get()?.clear()
         SACKS.save()
+    }
+
+    fun setOwnedSacks(sacks: List<ItemStack>) {
+        SACKS.edit {
+            ownedSacks.clear()
+            ownedSacks.addAll(sacks)
+        }
     }
 
     private fun String.isIgnoredItem(): Boolean = IGNORED_ITEMS.any { it.equals(this, ignoreCase = true) }

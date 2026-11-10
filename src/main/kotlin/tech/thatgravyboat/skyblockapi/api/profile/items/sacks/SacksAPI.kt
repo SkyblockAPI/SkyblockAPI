@@ -26,7 +26,9 @@ import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.filterContainerItems
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.since
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
@@ -54,9 +56,11 @@ public object SacksAPI {
     ).toComponentRegex()
     public val addedItemsRegex: Regex = RegexGroup.CHAT.create("sackapi.changed", " {2}(?<amount>[+-][\\d.,]+) (?<item>.+) \\(")
     public val sackTitleRegex: Regex = RegexGroup.INVENTORY.create("sackapi.title", ".* Sack")
+    public val sackOfSacksTitleRegex: Regex = RegexGroup.INVENTORY.create("sackapi.sack_of_sacks.title", "Sack of Sacks")
     public val sackAmountRegex: Regex = RegexGroup.INVENTORY.create("sackapi.amount", "Stored: (?<amount>[\\d,.]+)/.*")
 
     public val sackItems: Map<String, Int> get() = SacksStorage.counts
+    public val ownedSacks: List<ItemStack> get() = SacksStorage.ownedSacks
 
     // Diff of updates gotten from recent sacks inventory
     private val recentUpdates: Cache<String, Int> = CacheBuilder.newBuilder()
@@ -98,7 +102,7 @@ public object SacksAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    internal fun onInventoryUpdate(event: InventoryChangeEvent) {
+    internal fun onSackInventoryUpdate(event: InventoryChangeEvent) {
         if (event.isInPlayerInventory) return
         if (!sackTitleRegex.matches(event.title)) return
         val item = event.item
@@ -116,6 +120,14 @@ public object SacksAPI {
         sackAmountRegex.anyMatch(item.getRawLore(), "amount") { (amount) ->
             updateItem(id, amount.toIntValue())
         }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    internal fun onSackOfSacksInventoryUpdate(event: InventoryChangeEvent) {
+        if (event.isInPlayerInventory) return
+        if (!sackOfSacksTitleRegex.matches(event.title)) return
+        SacksStorage.setOwnedSacks(event.inventory.filterContainerItems().filterNot { it.getSkyBlockId() == null })
     }
 
     @OptIn(SkyBlockPvRequired::class)

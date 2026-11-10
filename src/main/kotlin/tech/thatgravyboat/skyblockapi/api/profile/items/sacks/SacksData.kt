@@ -1,14 +1,18 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.sacks
 
 import me.owdding.ktcodecs.GenerateCodec
+import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import java.util.Optional
 import kotlin.time.Instant
 
 // TODO: move somewhere else
 internal data class SacksData(
     private val _counts: MutableMap<String, Int> = mutableMapOf(),
     private val _timestamps: MutableMap<String, Instant> = mutableMapOf(),
+    val ownedSacks: MutableList<ItemStack> = mutableListOf(),
 ) {
 
     init {
@@ -18,7 +22,7 @@ internal data class SacksData(
     val counts: Map<String, Int> get() = _counts
     val timestamps: Map<String, Instant> get() = _timestamps
 
-    constructor(entries: List<SackEntry>) : this() {
+    constructor(entries: List<SackEntry>, ownedSacks: Optional<MutableList<ItemStack>> = Optional.empty()) : this(ownedSacks = ownedSacks.orElseGet { mutableListOf() }) {
         entries.forEach { add(it) }
         removeUnobtainable()
     }
