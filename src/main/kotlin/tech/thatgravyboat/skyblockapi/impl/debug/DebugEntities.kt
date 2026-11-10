@@ -8,7 +8,7 @@ import com.mojang.serialization.Codec
 import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.client.player.AbstractClientPlayer
-import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.suggestions.SuggestionContext
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -40,7 +40,7 @@ public object DebugEntities {
 
     private val suggestions = SuggestionProvider<FabricClientCommandSource> { _, builder ->
         builder.suggest("*") // Suggest all entities
-        SharedSuggestionProvider.suggestResource(BuiltInRegistries.ENTITY_TYPE.keySet(), builder)
+        SuggestionContext.suggestResource(BuiltInRegistries.ENTITY_TYPE.keySet(), builder)
     }
 
     private fun getEntityFilter(input: String): ((EntityType<*>) -> Boolean) {

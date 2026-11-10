@@ -11,7 +11,7 @@ import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.suggestions.SuggestionContext
 import net.minecraft.commands.arguments.NbtTagArgument
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
@@ -324,7 +324,7 @@ private data class SkyBlockIdArgument(val skyblockIds: Iterable<SkyBlockId> = Si
 
     fun suggest(builder: SuggestionsBuilder, name: String) {
         val filtered = name.sanitizeForCommandInput()
-        if (SharedSuggestionProvider.matchesSubStr(builder.remaining.lowercase(), filtered.lowercase())) {
+        if (SuggestionContext.matchesSubStr(builder.remaining.lowercase(), filtered.lowercase())) {
             builder.suggest(filtered)
         }
     }
@@ -425,7 +425,7 @@ private class FlagArgument<T : CommandFlag>(val flags: Iterable<T>) : ArgumentTy
                 if (reader.canRead() && reader.peek() == '-') {
                     reader.read()
                     val offset = builder.createOffset(reader.cursor)
-                    SharedSuggestionProvider.suggest(filteredFlags.map { it.longName }, offset)
+                    SuggestionContext.suggest(filteredFlags.map { it.longName }, offset)
                     return offset.buildFuture()
                 }
                 return builder.buildFuture()

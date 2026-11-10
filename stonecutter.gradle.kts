@@ -33,6 +33,11 @@ stonecutter parameters {
             replace("GuiGraphicsExtractor $graphics, Slot slot, int x, int y, CallbackInfo", "GuiGraphicsExtractor $graphics, Slot slot, CallbackInfo")
         }
     }
+
+    replacements.string(current.parsed >= "26.4") {
+        replace("net.minecraft.commands.SharedSuggestionProvider", "net.minecraft.commands.suggestions.SuggestionContext")
+        replace("SharedSuggestionProvider", "SuggestionContext")
+    }
 }
 
 fun Project.isDummy(): Boolean = buildscript.sourceFile?.name == "dummy.gradle.kts"

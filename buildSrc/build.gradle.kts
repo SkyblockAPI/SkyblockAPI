@@ -20,7 +20,7 @@ dependencies {
     implementation(plugin(libs.plugins.kotlin.symbol.processor))
     implementation(plugin(libs.plugins.meowdding.resources))
     implementation(plugin(libs.plugins.meowdding.auto.mixins))
-    implementation("dev.kikugie.stonecutter:dev.kikugie.stonecutter.gradle.plugin:0.10-alpha.12")
+    implementation("dev.kikugie.stonecutter:dev.kikugie.stonecutter.gradle.plugin:0.10")
 }
 
 gradlePlugin {

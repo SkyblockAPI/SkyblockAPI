@@ -6,7 +6,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.suggestions.SuggestionContext
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
@@ -420,7 +420,7 @@ public data object AttributeAPI : ItemDebugCategory {
                 },
                 SuggestionProvider<FabricClientCommandSource> { _, builder ->
                     if (!RepoAPI.isInitialized()) return@SuggestionProvider builder.buildFuture()
-                    SharedSuggestionProvider.suggest(
+                    SuggestionContext.suggest(
                         buildSet {
                             for (value in _attributeMap.keys.mapNotNull { SkyBlockAttributesRepo.get(it.cleanId) }) {
                                 add(value.id.lowercase())
