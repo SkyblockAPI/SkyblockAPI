@@ -60,28 +60,34 @@ public fun String?.parseFormattedFloat(): Float = parseFormattedDouble().toFloat
 
 public fun String?.parseRomanOrArabic(): Int = parseRomanNumeral().takeIf { it != 0 } ?: toIntValue()
 
-public fun String?.parseDuration(): Duration? = this?.runCatching {
-    var total = 0L
-    var current = 0L
+public fun String?.parseDuration(): Duration? {
+    if (this == null) return null
+    var totalMillis = 0L
+    val current = StringBuilder()
     this.forEach {
         when {
-            it.isDigit() -> current = current * 10 + it.toString().toLong()
+            it.isDigit() || it == '.' -> current.append(it)
             it.isLetter() -> {
-                total += current * when (it) {
+                val amount = current.toString().toDoubleOrNull() ?: return null
+                val unitMultiplier = when (it) {
                     't' -> 50
                     's' -> 1000
                     'm' -> 60 * 1000
                     'h' -> 60 * 60 * 1000
                     'd' -> 24 * 60 * 60 * 1000
                     'y' -> 365L * 24 * 60 * 60 * 1000
-                    else -> 0
+                    else -> return null
                 }
-                current = 0
+                totalMillis += (amount * unitMultiplier).toLong()
+                current.clear()
             }
+            !it.isWhitespace() -> return null
         }
     }
-    return@runCatching total.milliseconds
-}?.getOrNull()
+    // means that there is something that didn't have a unit
+    if (current.isNotBlank()) return null
+    return totalMillis.milliseconds
+}
 
 public fun String?.parseWordDuration(): Duration? = this?.runCatching {
     var total = 0L

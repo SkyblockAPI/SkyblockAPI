@@ -1694,6 +1694,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOSTER_TIERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getCAKE_BAG_YEARS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCATEGORY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCLEAN_NAME ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCOMPACT_BLOCKS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1713,6 +1714,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getENGINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getENRICHMENT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getETHERMERGE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getFARMING_FOR_DUMMIES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getFUEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getFUEL_TANK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getGEMSTONES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1726,6 +1728,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getJALAPENO_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLOGS_CUT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getMANA_DISINTEGRATOR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMIDAS_WEAPON_ADDED_COINS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMIDAS_WEAPON_BID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMIDAS_WEAPON_PAID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1777,6 +1780,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/DataTypes {
 	public final fun getVISIBLE_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getWATER_LEVEL ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getWET_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getWOOD_SINGULARITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/datatype/ResolutionContext {
@@ -1888,6 +1892,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getBOOK_OF_STATS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOOSTER_TIERS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getBOTTLE_OF_JYRRE_SECONDS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getCAKE_BAG_YEARS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCLEAN_NAME ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getCULTIVATING_CROPS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getDAVID_CLOAK_UPGRADE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1901,7 +1906,9 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getENCHANTMENTS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getENRICHMENT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getETHERMERGE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getFARMING_FOR_DUMMIES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getGILDED_GIFTED_COINS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getHAS_ENRICHMENT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHELMET_SKIN ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHONEY_POT_USES ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getHOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1911,6 +1918,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getJALAPENO_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLINE ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getLOGS_CUT ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getMANA_DISINTEGRATOR ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMIDAS_WEAPON_ADDED_COINS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMIDAS_WEAPON_BID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getMIDAS_WEAPON_PAID ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
@@ -1948,6 +1956,7 @@ public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericD
 	public final fun getVINYLS ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getVISIBLE_ITEM ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 	public final fun getWET_BOOK ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
+	public final fun getWOOD_SINGULARITY ()Ltech/thatgravyboat/skyblockapi/api/datatype/DataType;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/datatype/defaults/GenericDataTypes$PetData {
@@ -4194,12 +4203,15 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueS
 	public static final field DRILL_COMPONENTS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field ENCHANTMENT Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field ENRICHMENT Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field ETHERWARP Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field FARMING_FOR_DUMMIES Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field FISHING_ROD_PARTS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field GEMSTONE Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field HELMET_SKIN Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field HOT_POTATO Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field ITEM_STARS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field JALAPENO_BOOK Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field MANA_DISINTEGRATOR Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field NECRON_SCROLLS Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field OVERCLOCKER Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field POLARVOID Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
@@ -4207,7 +4219,9 @@ public final class tech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueS
 	public static final field RECOMBOBULATOR Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field REFORGE Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field SILEX Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field TRANSMISSION_TUNER Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public static final field WET_BOOK Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
+	public static final field WOOD_SINGULARITY Ltech/thatgravyboat/skyblockapi/api/item/calculator/ItemValueSource;
 	public fun calculate (Ljava/lang/String;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;
 	public final fun getCalc ()Ltech/thatgravyboat/skyblockapi/api/item/calculator/Calculator;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
@@ -6326,6 +6340,7 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId {
 	public static final fun isRune-impl (Ljava/lang/String;)Z
 	public static final fun isUnsafe-impl (Ljava/lang/String;)Z
 	public static final fun toItem-impl (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
+	public static final fun toLazyItem-impl (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun trySafe-BCdM1xk (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
@@ -6361,6 +6376,7 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId$Comp
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelApiUtilsKt {
 	public static final fun legacyStack (Lnet/minecraft/nbt/Tag;)Lnet/minecraft/world/item/ItemStack;
+	public static final fun parseV0Data (Lnet/minecraft/nbt/CompoundTag;)Ljava/util/List;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/hypixel/HypixelSkillAPI {
@@ -10344,6 +10360,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/component/Componen
 	public static final fun find (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Z
 	public static synthetic fun find$default (Ljava/util/List;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 	public static synthetic fun find$default (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
+	public static final fun findGroup (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;Ljava/lang/String;)Lnet/minecraft/network/chat/Component;
 	public static final fun findOrNull (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static synthetic fun findOrNull$default (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun findThenNull (Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;Lnet/minecraft/network/chat/Component;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lkotlin/Unit;

@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.repo
 
 import com.mojang.serialization.Codec
+import net.minecraft.core.component.DataComponentMap
 import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.component.DataComponents
@@ -53,7 +54,7 @@ public class LazyItemStack {
     }
 
     public operator fun <T : Any> get(component: DataComponentType<T>): T? {
-         return components.get(net.minecraft.core.component.DataComponentMap.EMPTY, component)
+         return components.get(DataComponentMap.EMPTY, component)
     }
     public fun <T : Any> getOrDefault(component: DataComponentType<T>, default: T): T = get(component) ?: default
 

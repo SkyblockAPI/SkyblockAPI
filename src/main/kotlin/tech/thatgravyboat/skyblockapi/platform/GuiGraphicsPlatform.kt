@@ -16,6 +16,7 @@ import org.joml.Matrix3x2f
 import org.joml.Vector2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
+import tech.thatgravyboat.skyblockapi.utils.Logger
 
 //~ if >= 26.4 'renderer.RenderPipelines' -> 'gui.GuiPipeline'
 import net.minecraft.client.gui.GuiPipeline
@@ -135,5 +136,10 @@ public fun GuiGraphicsExtractor.getScale(): Vector2f {
 }
 
 public fun GuiGraphicsExtractor.applyBackgroundBlur() {
-    this.blurBeforeThisStratum()
+    if (this.guiRenderState.firstStratumAfterBlur != Int.MAX_VALUE) return
+    try {
+        this.blurBeforeThisStratum()
+    } catch (e: Exception) {
+        Logger.error("Failed to apply background blur", e)
+    }
 }
