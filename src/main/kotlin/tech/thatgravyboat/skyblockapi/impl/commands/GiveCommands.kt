@@ -11,8 +11,8 @@ import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import net.minecraft.commands.suggestions.SuggestionContext
 import net.minecraft.commands.arguments.NbtTagArgument
+import net.minecraft.commands.suggestions.SuggestionContext
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
