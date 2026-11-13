@@ -1,4 +1,5 @@
-package tech.thatgravyboat.skyblockapi.mixins;
+//? < 26.4 {
+/*package tech.thatgravyboat.skyblockapi.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -58,4 +59,4 @@ public class AbstractContainerScreenMixin {
             , replaceExisting
         );
     }
-}
+}*///?}

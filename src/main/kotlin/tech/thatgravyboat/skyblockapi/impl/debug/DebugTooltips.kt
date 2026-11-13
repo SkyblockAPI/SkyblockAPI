@@ -51,7 +51,16 @@ public object DebugTooltips {
             InputConstants.KEY_LEFT -> if (index == 0) keys.size - 1 else index - 1
             else -> return
         }
+        event.cancel()
         lastDataType = keys[index]
+    }
+
+    @Subscription
+    public fun onKeyNavigated(event: ScreenKeyPressedEvent.Navigation) {
+        if (!isEnabled) return
+        if (keys.isEmpty()) return
+        if (!McScreen.isAltDown) return
+        event.cancel()
     }
 
     @Subscription(priority = Subscription.LOWEST)

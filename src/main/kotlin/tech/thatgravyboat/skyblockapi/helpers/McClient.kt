@@ -1,7 +1,6 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
 import com.mojang.blaze3d.platform.Window
-import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.SharedConstants
@@ -16,7 +15,6 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.client.multiplayer.PlayerInfo
-import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.resources.Identifier
@@ -24,15 +22,22 @@ import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.utils.McVersion
-import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 import tech.thatgravyboat.skyblockapi.utils.extentions.isRealPlayer
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
 
+//? if < 26.4
+//import com.mojang.brigadier.CommandDispatcher
+//? if < 26.4
+//import net.minecraft.commands.suggestions.SuggestionContext
+//? < 26.4
+//import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 //? >= 26.3
 import com.mojang.blaze3d.Blaze3D
+//? if >= 26.4
+import net.minecraft.commands.SuggestionBox
 //? else
 //import net.minecraft.util.Util
 
@@ -48,10 +53,10 @@ public object McClient {
     public val config: Path = FabricLoader.getInstance().configDir
 
     //? if < 26.4 {
-    @Deprecated("Use mcVersion instead")
+    /*@Deprecated("Use mcVersion instead")
     @Suppress("DEPRECATION")
     public val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
-    //?}
+    *///?}
     public val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
 
     public val version: String = SharedConstants.getCurrentVersion().name()
@@ -74,16 +79,10 @@ public object McClient {
         }
 
     public val mouse: Pair<Double, Double>
-        get() = Pair(
-            self.mouseHandler.xpos() * (window.guiScaledWidth / window.screenWidth.coerceAtLeast(1).toDouble()),
-            self.mouseHandler.ypos() * (window.guiScaledHeight / window.screenHeight.coerceAtLeast(1).toDouble()),
-        )
+        get() = Pair(self.mouseHandler.getScaledXPos(window), self.mouseHandler.getScaledYPos(window))
 
     public val tablist: List<PlayerInfo>
-        get() = connection
-            ?.listedOnlinePlayers
-            ?.sortedWith(tabListComparator)
-            ?: emptyList()
+        get() = connection?.listedOnlinePlayers?.sortedWith(tabListComparator) ?: emptyList()
 
     public val players: List<PlayerInfo>
         get() = tablist.filter { it.profile.id.isRealPlayer() }
@@ -110,7 +109,9 @@ public object McClient {
         }
 
     public val scoreboardTitle: Component? get() = self.level?.scoreboard?.getDisplayObjective(SIDEBAR)?.displayName
-    public val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
+
+    //~ if >= 26.4 'commands' -> 'commandSuggestions()', 'CommandDispatcher<out SharedSuggestionProvider>' -> 'SuggestionBox'
+    public val serverCommands: SuggestionBox? get() = connection?.commandSuggestions()
 
     public val toasts: ToastManager get() = gui.toastManager()
     public val gui: Gui get() = self.gui

@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.nio.file.StandardCopyOption
 import kotlin.io.path.copyTo
 import kotlin.io.path.deleteIfExists
+import kotlin.io.path.exists
 
 plugins {
     kotlin("jvm")
@@ -260,6 +261,7 @@ tasks.register("copyApiData") {
     doFirst {
         val path = layout.projectDirectory.asFile.toPath()
         val api = path.resolve("api/${name}.api")
+        if (!api.exists()) return@doFirst
         api.copyTo(api.resolveSibling("${name}.api.old"), StandardCopyOption.REPLACE_EXISTING)
     }
 }
@@ -275,7 +277,13 @@ tasks.register("resetApiData") {
         val path = layout.projectDirectory.asFile.toPath()
         val api = path.resolve("api/${name}.api")
         val backupApi = api.resolveSibling("${name}.api.old")
-        backupApi.copyTo(api, StandardCopyOption.REPLACE_EXISTING)
-        backupApi.deleteIfExists()
+        // TODO: figure out a better way to do this
+        // we need to delete the api file if the backup doesn't exist, because that means its a new version locally
+        if (backupApi.exists()) {
+            backupApi.copyTo(api, StandardCopyOption.REPLACE_EXISTING)
+            backupApi.deleteIfExists()
+        } else {
+            api.deleteIfExists()
+        }
     }
 }

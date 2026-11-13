@@ -6,7 +6,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.suggestions.SuggestionContext
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
@@ -16,7 +16,6 @@ import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
-import tech.thatgravyboat.skyblockapi.utils.DevUtilBridge
 import tech.thatgravyboat.skyblockapi.utils.command.VirtualResourceArgument
 import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugEntry
 import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugMultiSelect
@@ -24,10 +23,8 @@ import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugSelect
 import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.mapValuesNotNull
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.prefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import java.nio.file.Path
 import java.util.Properties
 import java.util.concurrent.CompletableFuture
@@ -37,6 +34,9 @@ import kotlin.io.path.createParentDirectories
 import kotlin.io.path.notExists
 import kotlin.io.path.reader
 import kotlin.io.path.writer
+
+//? < 26.4
+//import tech.thatgravyboat.skyblockapi.utils.DevUtilBridge
 
 public abstract class DevUtils {
     abstract override fun toString(): String
@@ -213,7 +213,7 @@ public abstract class DevUtils {
                         val select = context.debugEntry<DebugSelect<*>>("select")
 
                         select.states().forEach {
-                            if (SharedSuggestionProvider.matchesSubStr(builder.remaining, it)) {
+                            if (SuggestionContext.matchesSubStr(builder.remaining, it)) {
                                 builder.suggest(it)
                             }
                         }
@@ -252,7 +252,7 @@ public abstract class DevUtils {
                             val multi = context.debugEntry<DebugMultiSelect<*>>("multiselect")
 
                             multi.states().forEach {
-                                if (SharedSuggestionProvider.matchesSubStr(builder.remaining, it)) {
+                                if (SuggestionContext.matchesSubStr(builder.remaining, it)) {
                                     builder.suggest(it)
                                 }
                             }
@@ -333,9 +333,11 @@ public abstract class DevUtils {
     }
 
     init {
-        if (this !is DevUtilBridge) {
-            allDevUtils.add(this)
-        }
+        //? < 26.4
+        //if (this !is DevUtilBridge) {
+        allDevUtils.add(this)
+        //? < 26.4
+        //}
     }
 
     public companion object {
@@ -346,7 +348,7 @@ public abstract class DevUtils {
 private data class DevToolSuggestionProvider<T>(val utils: Iterable<T>, val location: T.() -> Identifier, val description: T.() -> String) :
     SuggestionProvider<FabricClientCommandSource> {
     override fun getSuggestions(context: CommandContext<FabricClientCommandSource>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
-        fun matches(arg: String): Boolean = SharedSuggestionProvider.matchesSubStr(builder.remaining.lowercase(), arg)
+        fun matches(arg: String): Boolean = SuggestionContext.matchesSubStr(builder.remaining.lowercase(), arg)
 
         utils.forEach {
             if (matches(it.location().toString().lowercase()) || matches(it.location().path.lowercase())) {

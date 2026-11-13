@@ -9,7 +9,7 @@ import java.util.UUID
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class ProfileData(
+internal data class ProfileData(
     val profileType: MutableMap<String, ProfileType> = mutableMapOf(),
     val sbLevel: MutableMap<String, Int> = mutableMapOf(),
     val sbLevelProgress: MutableMap<String, Int> = mutableMapOf(),

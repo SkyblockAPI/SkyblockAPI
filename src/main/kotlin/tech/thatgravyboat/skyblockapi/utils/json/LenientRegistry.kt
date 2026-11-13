@@ -6,15 +6,18 @@ import net.minecraft.core.HolderLookup
 import net.minecraft.core.HolderOwner
 import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
-import net.minecraft.resources.RegistryOps
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.TagKey
 import java.util.Optional
 import java.util.concurrent.ConcurrentHashMap
 
+//? if < 26.4
+//import net.minecraft.resources.RegistryOps
+
 internal class LenientHolderOwner<T : Any> : HolderOwner<T>
 
-internal class LenientHolderLookupAdapter(private val provider: HolderLookup.Provider) : RegistryOps.RegistryInfoLookup {
+//~ if >= 26.4 'RegistryOps.RegistryInfoLookup' -> 'HolderGetter.Provider'
+internal class LenientHolderLookupAdapter(private val provider: HolderLookup.Provider) : HolderGetter.Provider {
 
     //? >= 26.3 {
     private val cache = ConcurrentHashMap<ResourceKey<out Registry<*>>, Optional<out HolderGetter<*>>>()

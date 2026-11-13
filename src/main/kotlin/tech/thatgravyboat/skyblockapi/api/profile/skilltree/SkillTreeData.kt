@@ -4,7 +4,7 @@ import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktcodecs.OptionalInt
 
 //~ if >= 26.4 'public' -> 'internal'
-public interface SkillTreeData<Perk : SkillTreePerk> {
+internal interface SkillTreeData<Perk : SkillTreePerk> {
     public var currentLoadoutName: String?
     public val loadouts: MutableList<SkillTreeLoadout<Perk>>
     public var tier: Int
@@ -12,12 +12,12 @@ public interface SkillTreeData<Perk : SkillTreePerk> {
 
 
     //? if < 26.4 {
-    @Deprecated("Shouldn't be accessing this", level = HIDDEN)
+    /*@Deprecated("Shouldn't be accessing this", level = HIDDEN)
     public var perks: MutableMap<String, Perk>
 
     @Deprecated("Shouldn't be accessing this", level = HIDDEN)
     public var tokens: Int
-    //?}
+    *///?}
 
 }
 

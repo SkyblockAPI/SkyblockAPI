@@ -1,11 +1,11 @@
 package tech.thatgravyboat.skyblockapi.api.events.location.isle
 
-//? if < 26.4 {
-import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishTier
+//? < 26.4 {
+/*import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishTier
 import tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish.TrophyFishType
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 
 @Deprecated("Use TrophyCaughtEvent.Fish instead")
 @Suppress("DEPRECATION")
 public data class TrophyFishCaughtEvent(val type: TrophyFishType, val tier: TrophyFishTier, val amount: Int = 1) : SkyBlockEvent()
-//?}
+*///?}

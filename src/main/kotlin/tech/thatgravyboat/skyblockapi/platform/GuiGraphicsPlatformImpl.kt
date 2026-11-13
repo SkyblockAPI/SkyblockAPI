@@ -3,12 +3,15 @@ package tech.thatgravyboat.skyblockapi.platform
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState
 import org.joml.Matrix3x2f
 
-//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
-import com.mojang.renderpearl.api.pipeline.RenderPipeline
+//~ if >= 26.4 'renderer.RenderPipelines' -> 'gui.GuiPipeline'
+import net.minecraft.client.gui.GuiPipeline
+//? < 26.3
+ //import com.mojang.blaze3d.pipeline.RenderPipeline
+//? else if = 26.3
+ //import com.mojang.renderpearl.api.pipeline.RenderPipeline
 
 internal class GradientGuiElement(
     val pose: Matrix3x2f,
@@ -24,7 +27,8 @@ internal class GradientGuiElement(
         consumer.addVertexWith2DPose(this.pose, this.x1.toFloat(), this.y0.toFloat()).setColor(this.col4)
     }
 
-    override fun pipeline(): RenderPipeline = RenderPipelines.GUI
+    //~ if >= 26.4 'RenderPipelines.GUI' -> 'GuiPipeline.DEFAULT', 'RenderPipeline' -> 'GuiPipeline'
+    override fun pipeline(): GuiPipeline = GuiPipeline.DEFAULT
     override fun textureSetup(): TextureSetup = TextureSetup.noTexture()
     override fun scissorArea(): ScreenRectangle? = scissor
     override fun bounds(): ScreenRectangle? = bounds

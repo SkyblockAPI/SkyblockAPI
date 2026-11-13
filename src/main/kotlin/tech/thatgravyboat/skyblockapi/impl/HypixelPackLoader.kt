@@ -3,7 +3,6 @@ package tech.thatgravyboat.skyblockapi.impl
 import me.owdding.ktmodules.Module
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.SemanticVersion
-import net.fabricmc.loader.api.Version
 import net.fabricmc.loader.impl.util.FileSystemUtil
 import org.apache.commons.io.IOUtils
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
@@ -15,9 +14,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import java.io.InputStream
-import java.lang.invoke.VarHandle
 import java.net.URI
-import java.nio.file.AccessMode
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption

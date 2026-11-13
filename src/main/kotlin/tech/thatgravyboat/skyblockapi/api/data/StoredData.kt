@@ -5,7 +5,7 @@ import com.google.gson.JsonParser
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.serialization.Codec
 import me.owdding.ktmodules.Module
-import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.suggestions.SuggestionContext
 import org.apache.commons.io.FileUtils
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -273,7 +273,7 @@ internal class StoredData<T : Any>(
                 "storage",
                 StringArgumentType.string(),
                 { _, builder ->
-                    SharedSuggestionProvider.suggest(getSuggestions(readable), builder)
+                    SuggestionContext.suggest(getSuggestions(readable), builder)
                 },
             ) {
                 val fileName = argument<String>("storage")
