@@ -24,11 +24,12 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterContainerItems
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
-import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.since
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
@@ -61,6 +62,7 @@ public object SacksAPI {
 
     public val sackItems: Map<String, Int> get() = SacksStorage.counts
     public val ownedSacks: List<ItemStack> get() = SacksStorage.ownedSacks
+    public val ownedSackIds: List<SkyBlockId> get() = SacksStorage.ownedSacks.mapNotNull { it.getSkyBlockId() }
 
     // Diff of updates gotten from recent sacks inventory
     private val recentUpdates: Cache<String, Int> = CacheBuilder.newBuilder()
