@@ -1079,6 +1079,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/CrystalType : java/la
 	public final fun getDisplayName ()Lnet/minecraft/network/chat/MutableComponent;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getId-EnzYQXU ()Ljava/lang/String;
+	public final fun getPlaceable ()Z
 	public final fun getTextColor ()I
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/data/CrystalType;

@@ -63,7 +63,6 @@ internal enum class LoadedData(val component: MutableComponent) {
     SACKS("Sacks"),
     MUSEUM("Museum"),
     ATTRIBUTES("Attributes"),
-    RIFT_PRISM_IMBUEMENT("Rift Prism Imbuement"),
     PROFILE_DATA("Profile Data"),
     ;
     

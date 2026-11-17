@@ -27,8 +27,9 @@ internal data class MaxwellData(
     var tunings: MutableSet<MaxwellTuning> = mutableSetOf(),
     @FieldName("tuning_templates") @OptionalIfEmpty @Compact
     var tuningTemplates: MutableList<MaxwellTuningTemplate> = mutableListOf(),
-    @FieldName("consumed_rift_prism") @OptionalBoolean(false) @IntroducedAt("4.2.40")
-    var consumedRiftPrism: Boolean = false,
+    //? if < 26.4 {
+    @Deprecated("You can no longer consume it.") @FieldName("consumed_rift_prism") @OptionalBoolean(false) @IntroducedAt("4.2.40")
+    var consumedRiftPrism: Boolean = false,//?}
 ) {
     //? < 26.4
     //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN) var magicalPower: Int by ::accessoryPower

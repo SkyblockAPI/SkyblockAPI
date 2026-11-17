@@ -7,12 +7,12 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
-public enum class CrystalType(public val textColor: Int, skyblockId: String? = null) {
-    JADE(TextColor.GREEN),
-    AMBER(TextColor.GOLD),
-    AMETHYST(TextColor.DARK_PURPLE),
-    SAPPHIRE(TextColor.AQUA),
-    TOPAZ(TextColor.YELLOW),
+public enum class CrystalType(public val textColor: Int, public val placeable: Boolean = false, skyblockId: String? = null) {
+    JADE(TextColor.GREEN, true),
+    AMBER(TextColor.GOLD, true),
+    AMETHYST(TextColor.DARK_PURPLE, true),
+    SAPPHIRE(TextColor.AQUA, true),
+    TOPAZ(TextColor.YELLOW, true),
     JASPER(TextColor.LIGHT_PURPLE),
     RUBY(TextColor.RED),
     OPAL(TextColor.WHITE),
@@ -44,7 +44,7 @@ public enum class CrystalStatus {
     public companion object {
         public fun fromString(str: String): CrystalStatus? = when (str) {
             "Not Found", "✖ Not Found" -> NOT_FOUND
-            "Found", "✔ Found" -> FOUND
+            "Not Placed", "✖ Not Placed", "Found", "✔ Found" -> FOUND
             "Placed", "✔ Placed" -> PLACED
             else -> null
         }
