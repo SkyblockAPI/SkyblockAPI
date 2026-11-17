@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.profile.maxwell
 
-import com.mojang.brigadier.arguments.BoolArgumentType
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
@@ -13,15 +12,11 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
-import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutChangeEvent
-import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugAttachable
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
@@ -29,7 +24,6 @@ import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.utils.container.ContainerRegion
 import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.extentions.addIfNotNull
-import tech.thatgravyboat.skyblockapi.utils.extentions.asBoolean
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
@@ -44,8 +38,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.findWhen
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
-import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 
 private const val THAUMATURGY_MP_SLOT = 48
 private const val THAUMATURGY_STATS_TUNING_SLOT = 51
@@ -250,6 +242,7 @@ public data object MaxwellAPI : ItemDebugCategory {
                     MaxwellStorage.updateAccessoryPower(ap)
                 }
             }
+
             THAUMATURGY_STATS_TUNING_SLOT -> {
                 val tunings = buildList {
                     item.getRawLore().forEach { line ->
@@ -259,6 +252,7 @@ public data object MaxwellAPI : ItemDebugCategory {
                 event.appendTuningDebug(tunings)
                 MaxwellStorage.updateTunings(tunings)
             }
+
             in thaumaturgyPowerStonesRegion -> {
                 if (item == ItemStack.EMPTY) return true
                 val power = MaxwellPowers.getByName(item.cleanName) ?: return true
@@ -368,6 +362,7 @@ public data object MaxwellAPI : ItemDebugCategory {
                     MaxwellStorage.removeTuning(stat)
                 }
             }
+
             in tuningTemplatesRegion -> {
                 val isLocked = lockedTemplateNameRegex.matches(item.cleanName)
                 if (isLocked) {
@@ -380,7 +375,7 @@ public data object MaxwellAPI : ItemDebugCategory {
                 val lore = item.getRawLore()
                 val sublist = lore.sublistAfterUntil(
                     beforePredicate = unlockedTemplateStartStatsRegex::matches,
-                    untilPredicate = String::isBlank
+                    untilPredicate = String::isBlank,
                 )
                 val tunings: Set<MaxwellTuning> = sublist.mapNotNullTo(mutableSetOf()) { line ->
                     handleTuningsLine(line)
@@ -394,12 +389,14 @@ public data object MaxwellAPI : ItemDebugCategory {
     }
 
     private fun ItemDebugAttachable.appendTuningDebug(tunings: Collection<MaxwellTuning>) {
-        addDebugString { buildString {
-            appendLine("Tunings: ")
-            tunings.onEach { tuning ->
-                appendLine("  Stat: ${tuning.stat}, Amount: ${tuning.value.toFormattedString()}")
-            }.ifEmpty { appendLine("  None") }
-        }}
+        addDebugString {
+            buildString {
+                appendLine("Tunings: ")
+                tunings.onEach { tuning ->
+                    appendLine("  Stat: ${tuning.stat}, Amount: ${tuning.value.toFormattedString()}")
+                }.ifEmpty { appendLine("  None") }
+            }
+        }
     }
 
     @Subscription
