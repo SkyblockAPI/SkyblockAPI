@@ -7,7 +7,6 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.SacksStorage
-import tech.thatgravyboat.skyblockapi.api.data.stored.SacksStorage.SACKS
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
