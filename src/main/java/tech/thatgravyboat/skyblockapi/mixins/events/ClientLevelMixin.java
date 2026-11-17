@@ -23,8 +23,8 @@ public abstract class ClientLevelMixin extends Level {
         RegistryAccess registryAccess,
         Holder<DimensionType> dimensionTypeRegistration,
         boolean isClientSide,
-        /*? <26.4 >>+ ',' */ //boolean isDebug,
-        /*? <26.4 >>+ ',' */ //long biomeZoomSeed,
+        /*? if <26.4 >>+ ',' */ //boolean isDebug,
+        /*? if <26.4 >>+ ',' */ //long biomeZoomSeed,
         int maxChainedNeighborUpdates
     ) {
         super(
@@ -33,8 +33,8 @@ public abstract class ClientLevelMixin extends Level {
             registryAccess,
             dimensionTypeRegistration,
             isClientSide,
-            /*? <26.4 >> */ //isDebug,
-            /*? <26.4 >> */ //biomeZoomSeed,
+            /*? if <26.4 >> */ //isDebug,
+            /*? if <26.4 >> */ //biomeZoomSeed,
             maxChainedNeighborUpdates
         );
     }

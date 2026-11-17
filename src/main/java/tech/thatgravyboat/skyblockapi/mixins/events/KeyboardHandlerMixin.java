@@ -16,7 +16,6 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent;
 import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyReleasedEvent;
 
-@Debug(export = true)
 @Mixin(KeyboardHandler.class)
 public class KeyboardHandlerMixin {
 
