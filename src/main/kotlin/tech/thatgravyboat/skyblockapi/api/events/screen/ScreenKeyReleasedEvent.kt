@@ -11,15 +11,19 @@ public sealed class ScreenKeyReleasedEvent(
     protected constructor(
         screen: Screen,
         key: Int,
-        //? < 26.3
+        //? if < 26.3
         //scanCode: Int,
         modifiers: Int,
-    ) : this(screen, KeyEvent(key,
-        //? < 26.3
-        //scanCode,
-        //? else
-        0,
-        modifiers)
+    ) : this(
+        screen,
+        KeyEvent(
+            key,
+            //? if < 26.3
+            //scanCode,
+            //? else
+            0,
+            modifiers,
+        ),
     )
     public val key: Int = event.key
 
@@ -27,17 +31,17 @@ public sealed class ScreenKeyReleasedEvent(
     public val keycode: Int = event.keycode
     public val modifiers: Int = event.modifiers
 
-    //? < 26.3
+    //? if < 26.3
     //public val scanCode: Int = event.scancode
 
     public class Pre(screen: Screen, event: KeyEvent) : ScreenKeyReleasedEvent(screen, event)
-    //? < 26.4 {
+    //? if < 26.4 {
     {
         @Deprecated("Provide a KeyEvent instead", level = DeprecationLevel.HIDDEN)
         public constructor(
             screen: Screen,
             key: Int,
-            //? < 26.3
+            //? if < 26.3
             //scanCode: Int,
             modifiers: Int,
         ) : this(
@@ -48,13 +52,13 @@ public sealed class ScreenKeyReleasedEvent(
     }//?}
 
     public class Post(screen: Screen, event: KeyEvent) : ScreenKeyReleasedEvent(screen, event)
-    //? < 26.4 {
+    //? if < 26.4 {
     {
         @Deprecated("Provide a KeyEvent instead", level = DeprecationLevel.HIDDEN)
         public constructor(
             screen: Screen,
             key: Int,
-            //? < 26.3
+            //? if < 26.3
             //scanCode: Int,
             modifiers: Int,
         ) : this(

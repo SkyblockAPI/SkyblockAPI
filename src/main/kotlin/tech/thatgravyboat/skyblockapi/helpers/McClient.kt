@@ -31,7 +31,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
 
-//? >= 26.3
+//? if >= 26.3
 import com.mojang.blaze3d.Blaze3D
 //? else
 //import net.minecraft.util.Util
@@ -130,7 +130,7 @@ public object McClient {
     }
 
     public fun openUri(uri: URI) {
-        //? >= 26.3 {
+        //? if >= 26.3 {
         Blaze3D.openUri(uri)
         //? } else
         //Util.getPlatform().openUri(uri)

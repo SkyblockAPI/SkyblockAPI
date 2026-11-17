@@ -39,7 +39,7 @@ public object DataTypes {
     public val ART_OF_WAR: DataType<Boolean> = GenericDataTypes.ART_OF_WAR
     public val ART_OF_PEACE: DataType<Boolean> = GenericDataTypes.ART_OF_PEACE
 
-    //? < 26.3 {
+    //? if < 26.3 {
     /*@Deprecated("Removed DataType", ReplaceWith("GenericDataTypes.BOOSTER_TIERS"))
     @Suppress("DEPRECATION")
     public val BOOSTERS: DataType<List<String>> = GenericDataTypes.BOOSTERS*///?}

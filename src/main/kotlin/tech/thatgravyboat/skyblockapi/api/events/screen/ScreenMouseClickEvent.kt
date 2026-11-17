@@ -4,7 +4,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.input.MouseButtonEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 
-//? < 26.4
+//? if < 26.4
 import net.minecraft.client.input.MouseButtonInfo
 
 public sealed class ScreenMouseClickEvent(
@@ -23,14 +23,14 @@ public sealed class ScreenMouseClickEvent(
     public val button: Int = event.button()
 
     public class Pre(screen: Screen, event: MouseButtonEvent) : ScreenMouseClickEvent(screen, event)
-    //? < 26.4 {
+    //? if < 26.4 {
     {
         @Deprecated("Provide a MouseButtonEvent instead", level = DeprecationLevel.HIDDEN)
         public constructor(screen: Screen, x: Double, y: Double, button: Int) : this(screen, MouseButtonEvent(x, y, MouseButtonInfo(button, 0)))
     }//?}
 
     public class Post(screen: Screen, event: MouseButtonEvent) : ScreenMouseClickEvent(screen, event)
-    //? < 26.4 {
+    //? if < 26.4 {
     {
         @Deprecated("Provide a MouseButtonEvent instead", level = DeprecationLevel.HIDDEN)
         public constructor(screen: Screen, x: Double, y: Double, button: Int) : this(screen, MouseButtonEvent(x, y, MouseButtonInfo(button, 0)))

@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe
 
-//? < 26.3 {
+//? if < 26.3 {
 /*import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.ArmorWardrobeAPI as NewWardrobeAPI
 
 @Deprecated("Replace with ArmorWardrobeAPI", ReplaceWith("ech.thatgravyboat.skyblockapi.api.profile.items.loadout.ArmorWardrobeAPI"))

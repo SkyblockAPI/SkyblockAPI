@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-//? < 26.2
+//? if < 26.2
 //import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
 public class DataType<T> private constructor(

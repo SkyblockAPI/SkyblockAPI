@@ -1,4 +1,4 @@
-//? < 26.4 {
+//? if < 26.4 {
 package tech.thatgravyboat.skyblockapi.api.profile.items.accessory
 
 import me.owdding.ktcodecs.GenerateCodec

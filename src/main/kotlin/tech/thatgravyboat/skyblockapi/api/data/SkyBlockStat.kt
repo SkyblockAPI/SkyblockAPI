@@ -108,7 +108,7 @@ public enum class SkyBlockStat(
     HUNTING_WISDOM(GENERIC_WISDOM),
 
     // Misc Stats
-    //? < 26.3 {
+    //? if < 26.3 {
     /*@Deprecated("Unused in game, use TROPHY_CHANCE instead.") TROPHY_FISH_CHANCE('♔', TextColor.GOLD),
     @Deprecated("Unused in game, use HUNTING_FORTUNE instead.") SYPHON_LUCK('♣', TextColor.LIGHT_PURPLE),
     @Deprecated("Unused in game, use HUNTING_FORTUNE instead.") HUNTER_FORTUNE('', TextColor.LIGHT_PURPLE),*///?}

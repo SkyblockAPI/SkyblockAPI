@@ -7,7 +7,7 @@ public enum class McVersion {
     @Deprecated("Minecraft 26.1 isn't supported anymore.") MC_26_1,
     MC_26_2,
     MC_26_3,
-    //? > 26.3
+    //? if > 26.3
     //add new version!
     ;
 

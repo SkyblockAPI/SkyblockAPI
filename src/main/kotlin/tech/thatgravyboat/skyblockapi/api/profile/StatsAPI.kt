@@ -42,7 +42,7 @@ public object StatsAPI {
     public var maxVitality: Int = 100
         private set
 
-    //? < 26.3 {
+    //? if < 26.3 {
     /*@Deprecated("Use vitality instead", ReplaceWith("vitality"))
     public val vitaliy: Int get() = vitality
     @Deprecated("Use maxVitality instead", ReplaceWith("maxVitality"))

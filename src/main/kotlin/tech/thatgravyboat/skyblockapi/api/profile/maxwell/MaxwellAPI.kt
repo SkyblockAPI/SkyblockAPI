@@ -54,7 +54,7 @@ public data object MaxwellAPI : ItemDebugCategory {
     val power: MaxwellPower
         get() = MaxwellStorage.power
 
-    //? < 26.3
+    //? if < 26.3
     //@Deprecated("magicalPower has been renamed by Hypixel", ReplaceWith("accessoryPower")) val magicalPower: Int get() = accessoryPower
 
     val accessoryPower: Int

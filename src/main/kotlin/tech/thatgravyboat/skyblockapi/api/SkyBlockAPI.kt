@@ -29,7 +29,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import java.nio.file.Files
 
-//? < 26.3
+//? if < 26.3
 //import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 
 @Module
@@ -53,7 +53,7 @@ public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         SkyblockAPIModules.init { eventBus.register(it) }
         if (McClient.isDev) SkyblockAPIDevModules.init(eventBus::register)
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
-            //? < 26.3 {
+            //? if < 26.3 {
             /*@Suppress("DEPRECATION")
             RepoStatusEvent(status).post()
             *///? }

@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe
 
-//? < 26.3 {
+//? if < 26.3 {
 /*import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeSlot as NewWardrobeSlot
 
