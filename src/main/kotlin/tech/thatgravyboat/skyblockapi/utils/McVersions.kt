@@ -3,7 +3,8 @@ package tech.thatgravyboat.skyblockapi.utils
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 
 public enum class McVersion {
-    @Deprecated("Minecraft 26.1 isn't supported anymore.") MC_26_1,
+    //? if < 26.4
+    // @Deprecated("Minecraft 26.1 isn't supported anymore.") MC_26_1,
     MC_26_2,
     MC_26_3,
     MC_26_4,
