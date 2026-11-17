@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.api.profile.items.sacks.SacksData
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.extentions.forNullGetter
+import tech.thatgravyboat.skyblockapi.utils.extentions.replaceWith
 import kotlin.time.Instant
 
 @Module
@@ -74,8 +75,7 @@ internal object SacksStorage {
 
     fun setOwnedSacks(sacks: List<ItemStack>) {
         SACKS.edit {
-            ownedSacks.clear()
-            ownedSacks.addAll(sacks)
+            ownedSacks.replaceWith(sacks)
         }
     }
 
