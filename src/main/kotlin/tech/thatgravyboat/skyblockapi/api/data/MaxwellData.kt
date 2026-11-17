@@ -5,7 +5,6 @@ import me.owdding.ktcodecs.Compact
 import me.owdding.ktcodecs.FieldName
 import me.owdding.ktcodecs.FieldNames
 import me.owdding.ktcodecs.GenerateCodec
-import me.owdding.ktcodecs.OptionalBoolean
 import me.owdding.ktcodecs.OptionalIfEmpty
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
@@ -28,12 +27,31 @@ public data class MaxwellData(
     var tunings: MutableSet<MaxwellTuning> = mutableSetOf(),
     @FieldName("tuning_templates") @OptionalIfEmpty @Compact
     var tuningTemplates: MutableList<MaxwellTuningTemplate> = mutableListOf(),
-    @FieldName("consumed_rift_prism") @OptionalBoolean(false) @IntroducedAt("4.2.40")
-    var consumedRiftPrism: Boolean = false,
 ) {
+
+    public constructor(
+        power: MaxwellPower = MaxwellPowers.NO_POWER,
+        accessoryPower: Int = 0,
+        accessories: MutableList<ItemStack> = mutableListOf(),
+        unlockedPowers: MutableSet<MaxwellPower> = mutableSetOf(MaxwellPowers.NO_POWER),
+        tunings: MutableSet<MaxwellTuning> = mutableSetOf(),
+        tuningTemplates: MutableList<MaxwellTuningTemplate> = mutableListOf(),
+        consumedRiftPrism: Boolean = false,
+    ) : this(
+        power,
+        accessoryPower,
+        accessories,
+        unlockedPowers,
+        tunings,
+        tuningTemplates,
+    )
+
     @RemoveNextVersion
     @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN)
     var magicalPower: Int by ::accessoryPower
+
+    @Deprecated("You can no longer consume it.")
+    var consumedRiftPrism: Boolean = false
 
     public companion object {
         public val CODEC: Codec<MaxwellData> = SkyblockAPICodecs.getCodec<MaxwellData>()

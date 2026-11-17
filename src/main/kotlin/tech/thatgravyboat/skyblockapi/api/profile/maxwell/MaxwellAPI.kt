@@ -83,8 +83,9 @@ public data object MaxwellAPI : ItemDebugCategory {
     val tuningTemplates: Collection<MaxwellTuningTemplate>
         get() = MaxwellStorage.tuningTemplates
 
-    val consumedRiftPrism: Boolean
-        get() = MaxwellStorage.consumedRiftPrism
+    //? if < 26.4 {
+    @Deprecated("You can no longer consume it.")
+    val consumedRiftPrism: Boolean = false//?}
 
     //region Regex
     private val chatGroup = RegexGroup.CHAT.group("maxwell")
@@ -92,10 +93,6 @@ public data object MaxwellAPI : ItemDebugCategory {
     private val selectPowerRegex = chatGroup.create(
         "select",
         "^(?:Your selected power was set to |You selected the )(?<power>.+?)(?:!|(?: power)? for your Accessory Bag!)",
-    )
-    private val imbuedRiftPrismRegex = chatGroup.create(
-        "rift_prism.imbued",
-        """^(?:Erihann imbued your Rift Prism right into your spirit!|\[NPC] Erihann: You are imbued with the power of the Rift Prism\.)"""
     )
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("maxwell")
@@ -190,22 +187,7 @@ public data object MaxwellAPI : ItemDebugCategory {
                 val newPower = MaxwellPowers.getByName(power) ?: return@case
                 MaxwellStorage.updatePower(newPower)
             }
-            case(imbuedRiftPrismRegex) {
-                MaxwellStorage.consumedRiftPrism = true
-            }
         }
-    }
-
-    @OptIn(SkyBlockPvRequired::class)
-    @Subscription
-    private fun onPvOpen(event: SkyBlockPvOpenedEvent) {
-        val prev = consumedRiftPrism
-        val new = event.getProfilePath("rift.access.consumed_prism").asBoolean(default = false)
-        if (prev == new) return
-        MaxwellStorage.consumedRiftPrism = new
-        PvLoadingHelper.markLoaded(RIFT_PRISM_IMBUEMENT)
-
-        // TODO: maybe also load other data if it hasn't been updated recently
     }
 
     // These need to be on InventoryChangeEvent because you can interact with the GUI and update data
@@ -426,24 +408,6 @@ public data object MaxwellAPI : ItemDebugCategory {
             thenCallback("reset") {
                 MaxwellStorage.reset()
                 Text.sendDebug("Reset Maxwell Data!")
-            }
-            then("rift_prism") {
-                thenCallback("get") {
-                    Text.sendDebug("Rift prism is ") {
-                        if (consumedRiftPrism) append("consumed", TextColor.GREEN)
-                        else append("not consumed", TextColor.RED)
-                        append(".")
-                    }
-                }
-                thenCallback("set consumed", BoolArgumentType.bool()) {
-                    val consumed = argument<Boolean>("consumed")
-                    MaxwellStorage.consumedRiftPrism = consumed
-                    Text.sendDebug("Manually set rift prism as ") {
-                        if (consumed) append("consumed", TextColor.GREEN)
-                        else append("not consumed", TextColor.RED)
-                        append(".")
-                    }
-                }
             }
             then("tunings") {
                 thenCallback("templates") {
