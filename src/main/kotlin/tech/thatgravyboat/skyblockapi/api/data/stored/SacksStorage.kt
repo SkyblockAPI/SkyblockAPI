@@ -73,6 +73,11 @@ internal object SacksStorage {
         SACKS.save()
     }
 
+    fun clearOwnedSacks() {
+        SACKS.get()?.ownedSacks?.clear()
+        SACKS.save()
+    }
+
     fun setOwnedSacks(sacks: List<ItemStack>) {
         SACKS.edit {
             ownedSacks.replaceWith(sacks)

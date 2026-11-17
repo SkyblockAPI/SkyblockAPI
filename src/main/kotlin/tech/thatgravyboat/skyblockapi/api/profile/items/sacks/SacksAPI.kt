@@ -7,6 +7,7 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.stored.SacksStorage
+import tech.thatgravyboat.skyblockapi.api.data.stored.SacksStorage.SACKS
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
@@ -26,6 +27,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterContainerItems
@@ -174,6 +176,17 @@ public object SacksAPI {
     @Subscription
     internal fun onRegisterCommands(event: RegisterSkyblockApiCommandsEvent) {
         event.register("sacks") {
+            then("ownedSacks") {
+                thenCallback("clear") {
+                    SacksStorage.clearOwnedSacks()
+                    Text.sendDebug("Cleared all owned sack.")
+                }
+                thenCallback("copy") {
+                    McClient.clipboard = ownedSackIds.joinToString(", ")
+                    Text.sendDebug("Copied owned sacks to clipboard.")
+                }
+            }
+
             thenCallback("id id", StringArgumentType.string(), IterableSuggestionProvider(sackItems.keys)) {
                 val id = argument<String>("id")
                 val amount = sackItems[id] ?: run {
