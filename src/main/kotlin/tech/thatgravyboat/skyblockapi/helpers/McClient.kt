@@ -28,18 +28,16 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
 
-//? if < 26.4
-//import com.mojang.brigadier.CommandDispatcher
-//? if < 26.4
-//import net.minecraft.commands.suggestions.SuggestionContext
-//? < 26.4
-//import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
-//? >= 26.3
+//? if >= 26.3
 import com.mojang.blaze3d.Blaze3D
-//? if >= 26.4
+//? if >= 26.4 {
 import net.minecraft.commands.SuggestionBox
-//? else
+//? } else {
+//import com.mojang.brigadier.CommandDispatcher
+//import net.minecraft.commands.suggestions.SuggestionContext
+//import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 //import net.minecraft.util.Util
+//? }
 
 public object McClient {
 
@@ -131,7 +129,7 @@ public object McClient {
     }
 
     public fun openUri(uri: URI) {
-        //? >= 26.3 {
+        //? if >= 26.3 {
         Blaze3D.openUri(uri)
         //? } else
         //Util.getPlatform().openUri(uri)

@@ -8,7 +8,7 @@ public enum class McVersion {
     MC_26_2,
     MC_26_3,
     MC_26_4,
-    //? > 26.4
+    //? if > 26.4
     //add new version!
     ;
 
@@ -18,7 +18,7 @@ public enum class McVersion {
     public val isActive: Boolean = this.stringVersion == McClient.version.substringBefore(" ") || this.stringVersion == McClient.version.substringBefore(" ").substringBeforeLast(".")
 }
 
-//? < 26.4 {
+//? if < 26.4 {
 /*@Deprecated(message = "Used mc version instead!")
 @tech.thatgravyboat.skyblockapi.RemoveNextVersion
 public enum class McVersionGroup(vararg versions: McVersion) {

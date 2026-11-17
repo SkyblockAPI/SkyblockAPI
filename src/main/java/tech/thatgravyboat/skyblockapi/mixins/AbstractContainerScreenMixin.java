@@ -25,7 +25,7 @@ public class AbstractContainerScreenMixin {
         method = "extractTooltip",
         at = @At(
             value = "INVOKE",
-            //? >= 26.3 {
+            //? if >= 26.3 {
             target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;Z)V"
             //?} else
             //target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"
@@ -39,7 +39,7 @@ public class AbstractContainerScreenMixin {
         final int xo,
         final int yo,
         final @Nullable Identifier style,
-        //? >= 26.3
+        //? if >=26.3
         boolean replaceExisting,
         Operation<Void> original,
         @Local(ordinal = 0) ItemStack stack
@@ -55,7 +55,7 @@ public class AbstractContainerScreenMixin {
             xo,
             yo,
             style
-            //? >= 26.3
+            //? if >=26.3
             , replaceExisting
         );
     }

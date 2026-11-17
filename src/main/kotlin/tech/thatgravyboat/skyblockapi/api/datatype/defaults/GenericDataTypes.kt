@@ -150,7 +150,7 @@ public object GenericDataTypes {
     public val PET_DATA: DataType<PetData> = DataType.of("pet_data") { ctx, _ -> ctx[ResolutionContext.Resolver.PET_DATA] }
     public val JALAPENO_BOOK: DataType<Boolean> = DataType.simple("jalapeno_book", "jalapeno_count")
 
-    //? < 26.3 {
+    //? if < 26.3 {
     /*@Deprecated("Removed DataType", ReplaceWith("GenericDataTypes.BOOSTER_TIERS"))
     public val BOOSTERS: DataType<List<String>> = DataType.of("boosters") {
         it.unsafeTag?.getList("boosters")?.getOrNull()?.mapNotNull { list -> list.asString().getOrNull()?.let { "${it}_BOOSTER" } } ?: emptyList()

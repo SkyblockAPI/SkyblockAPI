@@ -70,7 +70,7 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         lastStack.set(stack);
     }
 
-    //? >= 26.3 {
+    //? if >=26.3 {
     @WrapMethod(
         method = "setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;ZZ)V"
     )
@@ -83,7 +83,7 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         )
     )*///?}
     private void onRenderTooltipInternal(
-        //? <= 26.2
+        //? if <=26.2
         //GuiGraphicsExtractor instance,
         Font font,
         List<ClientTooltipComponent> list,
@@ -92,14 +92,14 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         ClientTooltipPositioner positioner,
         Identifier style,
         boolean replaceExisting,
-        //? >= 26.3
+        //? if >=26.3
         boolean extraSpaceAfterFirstLine,
         Operation<Void> operation
     ) {
         List<ClientTooltipComponent> listCopy = new ArrayList<>(list);
         GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
         event.post(SkyBlockAPI.getEventBus());
-        //? >= 26.3 {
+        //? if >=26.3 {
         operation.call(font, listCopy, x, y, positioner, style, replaceExisting, extraSpaceAfterFirstLine);
         //?} else
         //operation.call(instance, font, listCopy, x, y, positioner, style, replaceExisting);

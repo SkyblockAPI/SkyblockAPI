@@ -19,7 +19,7 @@ internal class LenientHolderOwner<T : Any> : HolderOwner<T>
 //~ if >= 26.4 'RegistryOps.RegistryInfoLookup' -> 'HolderGetter.Provider'
 internal class LenientHolderLookupAdapter(private val provider: HolderLookup.Provider) : HolderGetter.Provider {
 
-    //? >= 26.3 {
+    //? if >= 26.3 {
     private val cache = ConcurrentHashMap<ResourceKey<out Registry<*>>, Optional<out HolderGetter<*>>>()
 
     data class FakeHolder<T : Any>(val parent: HolderGetter<T>) : HolderGetter<T> {

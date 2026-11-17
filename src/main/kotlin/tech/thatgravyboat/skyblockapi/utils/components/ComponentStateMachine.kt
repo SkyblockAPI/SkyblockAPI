@@ -209,13 +209,13 @@ public data class ForkPart(
 }
 
 public data class OptionalPart(
-    //? <= 26.3
+    //? if <= 26.3
     //@get:JvmName("newPart")
     val part: ComponentStateMachinePart<*>,
 ) : ComponentStateMachinePart<StateMachinePosition<*>> {
     public constructor(part: StateMachinePosition<*>) : this(part.part)
 
-    //? <= 26.3
+    //? if <= 26.3
     //@get:JvmName("part") val _part: StateMachinePosition<out Any?> get() = StateMachinePosition(part)
 
     override fun createState(): StateMachinePosition<*> = StateMachinePosition(part)

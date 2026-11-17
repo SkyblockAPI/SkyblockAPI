@@ -8,12 +8,12 @@ import tech.thatgravyboat.skyblockapi.api.events.repo.RepoEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.getAnnotation
 import java.lang.reflect.Method
 
-//? < 26.3
+//? if < 26.3
 //import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 
 @PredicateForEvents(
     RepoEvent::class,
-    //? < 26.3
+    //? if < 26.3
     //@Suppress("DEPRECATION") RepoStatusEvent::class
 )
 @Retention(AnnotationRetention.RUNTIME)
@@ -26,7 +26,7 @@ public class RepoStatusPredicateProvider : EventPredicateProvider {
         return { event, _ ->
             @Suppress("DEPRECATION")
             when (event) {
-                //? < 26.3
+                //? if < 26.3
                 //is RepoStatusEvent -> event.status == status.repoStatus
                 is RepoEvent.Reload -> event.status == status.repoStatus
                 is RepoEvent.Status -> event.status == status.repoStatus

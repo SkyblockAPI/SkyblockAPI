@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.UUID
 
 public abstract class ChatReceivedEvent protected constructor(public val messageId: UUID) : SkyBlockEvent() {
-    //? < 26.4
+    //? if < 26.4
     //@Deprecated("No", level = DeprecationLevel.HIDDEN) public constructor(): this(UUID.randomUUID())
 
     public abstract val component: Component
@@ -23,7 +23,7 @@ public abstract class ChatReceivedEvent protected constructor(public val message
      * Dispatched first before any other chat event, allows you to cancel the event.
      */
     public class Pre internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId), Cancellable {
-        //? < 26.4
+        //? if < 26.4
         //@Deprecated("Shouldn't be used", level = DeprecationLevel.HIDDEN) public constructor(component: Component) : this(component, UUID.randomUUID())
 
         override val text: String = super.text
@@ -42,7 +42,7 @@ public abstract class ChatReceivedEvent protected constructor(public val message
      * Dispatched second as long as the message didn't get cancelled, allows you to modify the message.
      */
     public class Post internal constructor(override var component: Component, public var id: String? = null, messageId: UUID) : ChatReceivedEvent(messageId) {
-        //? < 26.4
+        //? if < 26.4
         //@Deprecated("Shouldn't be used", level = DeprecationLevel.HIDDEN) public constructor(component: Component, id: String? = null): this(component, id, UUID.randomUUID())
     }
 
