@@ -81,7 +81,6 @@ internal object SacksStorage {
     fun setOwnedSacks(sacks: List<ItemStack>) {
         SACKS.edit {
             ownedSacks.replaceWith(sacks)
-            Unit
         }
     }
 
