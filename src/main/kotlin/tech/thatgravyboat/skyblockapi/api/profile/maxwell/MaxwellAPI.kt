@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.profile.maxwell
 
-import com.mojang.brigadier.arguments.BoolArgumentType
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
@@ -13,15 +12,11 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
-import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutChangeEvent
-import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugAttachable
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
@@ -29,7 +24,6 @@ import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.utils.container.ContainerRegion
 import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugString
 import tech.thatgravyboat.skyblockapi.utils.extentions.addIfNotNull
-import tech.thatgravyboat.skyblockapi.utils.extentions.asBoolean
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
@@ -44,8 +38,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.findWhen
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
-import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 
 private const val THAUMATURGY_MP_SLOT = 48
 private const val THAUMATURGY_STATS_TUNING_SLOT = 51
@@ -83,8 +75,9 @@ public data object MaxwellAPI : ItemDebugCategory {
     val tuningTemplates: Collection<MaxwellTuningTemplate>
         get() = MaxwellStorage.tuningTemplates
 
-    val consumedRiftPrism: Boolean
-        get() = MaxwellStorage.consumedRiftPrism
+    //? if < 26.4 {
+    @Deprecated("You can no longer consume it.")
+    val consumedRiftPrism: Boolean = false//?}
 
     //region Regex
     private val chatGroup = RegexGroup.CHAT.group("maxwell")
@@ -92,10 +85,6 @@ public data object MaxwellAPI : ItemDebugCategory {
     private val selectPowerRegex = chatGroup.create(
         "select",
         "^(?:Your selected power was set to |You selected the )(?<power>.+?)(?:!|(?: power)? for your Accessory Bag!)",
-    )
-    private val imbuedRiftPrismRegex = chatGroup.create(
-        "rift_prism.imbued",
-        """^(?:Erihann imbued your Rift Prism right into your spirit!|\[NPC] Erihann: You are imbued with the power of the Rift Prism\.)"""
     )
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("maxwell")
@@ -190,22 +179,7 @@ public data object MaxwellAPI : ItemDebugCategory {
                 val newPower = MaxwellPowers.getByName(power) ?: return@case
                 MaxwellStorage.updatePower(newPower)
             }
-            case(imbuedRiftPrismRegex) {
-                MaxwellStorage.consumedRiftPrism = true
-            }
         }
-    }
-
-    @OptIn(SkyBlockPvRequired::class)
-    @Subscription
-    private fun onPvOpen(event: SkyBlockPvOpenedEvent) {
-        val prev = consumedRiftPrism
-        val new = event.getProfilePath("rift.access.consumed_prism").asBoolean(default = false)
-        if (prev == new) return
-        MaxwellStorage.consumedRiftPrism = new
-        PvLoadingHelper.markLoaded(RIFT_PRISM_IMBUEMENT)
-
-        // TODO: maybe also load other data if it hasn't been updated recently
     }
 
     // These need to be on InventoryChangeEvent because you can interact with the GUI and update data
@@ -268,6 +242,7 @@ public data object MaxwellAPI : ItemDebugCategory {
                     MaxwellStorage.updateAccessoryPower(ap)
                 }
             }
+
             THAUMATURGY_STATS_TUNING_SLOT -> {
                 val tunings = buildList {
                     item.getRawLore().forEach { line ->
@@ -277,6 +252,7 @@ public data object MaxwellAPI : ItemDebugCategory {
                 event.appendTuningDebug(tunings)
                 MaxwellStorage.updateTunings(tunings)
             }
+
             in thaumaturgyPowerStonesRegion -> {
                 if (item == ItemStack.EMPTY) return true
                 val power = MaxwellPowers.getByName(item.cleanName) ?: return true
@@ -386,6 +362,7 @@ public data object MaxwellAPI : ItemDebugCategory {
                     MaxwellStorage.removeTuning(stat)
                 }
             }
+
             in tuningTemplatesRegion -> {
                 val isLocked = lockedTemplateNameRegex.matches(item.cleanName)
                 if (isLocked) {
@@ -398,7 +375,7 @@ public data object MaxwellAPI : ItemDebugCategory {
                 val lore = item.getRawLore()
                 val sublist = lore.sublistAfterUntil(
                     beforePredicate = unlockedTemplateStartStatsRegex::matches,
-                    untilPredicate = String::isBlank
+                    untilPredicate = String::isBlank,
                 )
                 val tunings: Set<MaxwellTuning> = sublist.mapNotNullTo(mutableSetOf()) { line ->
                     handleTuningsLine(line)
@@ -412,12 +389,14 @@ public data object MaxwellAPI : ItemDebugCategory {
     }
 
     private fun ItemDebugAttachable.appendTuningDebug(tunings: Collection<MaxwellTuning>) {
-        addDebugString { buildString {
-            appendLine("Tunings: ")
-            tunings.onEach { tuning ->
-                appendLine("  Stat: ${tuning.stat}, Amount: ${tuning.value.toFormattedString()}")
-            }.ifEmpty { appendLine("  None") }
-        }}
+        addDebugString {
+            buildString {
+                appendLine("Tunings: ")
+                tunings.onEach { tuning ->
+                    appendLine("  Stat: ${tuning.stat}, Amount: ${tuning.value.toFormattedString()}")
+                }.ifEmpty { appendLine("  None") }
+            }
+        }
     }
 
     @Subscription
@@ -426,24 +405,6 @@ public data object MaxwellAPI : ItemDebugCategory {
             thenCallback("reset") {
                 MaxwellStorage.reset()
                 Text.sendDebug("Reset Maxwell Data!")
-            }
-            then("rift_prism") {
-                thenCallback("get") {
-                    Text.sendDebug("Rift prism is ") {
-                        if (consumedRiftPrism) append("consumed", TextColor.GREEN)
-                        else append("not consumed", TextColor.RED)
-                        append(".")
-                    }
-                }
-                thenCallback("set consumed", BoolArgumentType.bool()) {
-                    val consumed = argument<Boolean>("consumed")
-                    MaxwellStorage.consumedRiftPrism = consumed
-                    Text.sendDebug("Manually set rift prism as ") {
-                        if (consumed) append("consumed", TextColor.GREEN)
-                        else append("not consumed", TextColor.RED)
-                        append(".")
-                    }
-                }
             }
             then("tunings") {
                 thenCallback("templates") {
