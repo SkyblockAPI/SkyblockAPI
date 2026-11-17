@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 
 public data class TrophyFish(val type: TrophyFishType, /*? < 26.4 >> */ /*@get:JvmName("getTrophyTier")*/ val tier: TrophyTier) {
 
-    //? < 26.4 {
+    //? if < 26.4 {
     /*@Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
     @Suppress("DEPRECATION")
     public constructor(type: TrophyFishType, tier: TrophyFishTier) : this(type, TrophyTier.valueOf(tier.name))

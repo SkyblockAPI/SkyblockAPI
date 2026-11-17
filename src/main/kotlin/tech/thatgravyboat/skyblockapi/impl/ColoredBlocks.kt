@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.impl
 
-//? < 26.4 {
+//? if < 26.4 {
 /*import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 

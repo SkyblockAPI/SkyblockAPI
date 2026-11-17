@@ -35,7 +35,7 @@ import kotlin.io.path.notExists
 import kotlin.io.path.reader
 import kotlin.io.path.writer
 
-//? < 26.4
+//? if < 26.4
 //import tech.thatgravyboat.skyblockapi.utils.DevUtilBridge
 
 public abstract class DevUtils {
@@ -333,10 +333,10 @@ public abstract class DevUtils {
     }
 
     init {
-        //? < 26.4
+        //? if < 26.4
         //if (this !is DevUtilBridge) {
         allDevUtils.add(this)
-        //? < 26.4
+        //? if < 26.4
         //}
     }
 

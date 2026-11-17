@@ -26,7 +26,7 @@ import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudElementEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudEvent;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
-//? < 26.4
+//? if <26.4
 //import net.minecraft.client.DeltaTracker;
 
 @Mixin(Hud.class)

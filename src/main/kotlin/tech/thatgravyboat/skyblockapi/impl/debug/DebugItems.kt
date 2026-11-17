@@ -245,7 +245,7 @@ public inline fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory
 }
 
 
-//? < 26.4 {
+//? if < 26.4 {
 /*@JvmName("addDebug")
 @Deprecated(message = "Use interface method instead!")
 public fun ItemStack.addDebug0(category: ItemDebugCategory, entry: () -> Component) {

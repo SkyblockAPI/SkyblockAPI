@@ -4,7 +4,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.inventory.Slot
 import tech.thatgravyboat.skyblockapi.mixins.accessors.AbstractContainerScreenAccessor
 
-//? >= 26.4
+//? if >= 26.4
 import net.minecraft.client.gui.components.inventory.SlotWidget
 
 /**
@@ -12,7 +12,7 @@ import net.minecraft.client.gui.components.inventory.SlotWidget
  */
 
 public fun AbstractContainerScreen<*>.getHoveredSlot(): Slot? {
-    //? < 26.4
+    //? if < 26.4
      //return (this as AbstractContainerScreenAccessor).hoveredSlot
     //? else
     return this.children().filterIsInstance<SlotWidget>().find { it.isHovered }?.slot()

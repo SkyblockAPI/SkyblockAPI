@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.isInFuture
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.extentions.toScreamingSnakeCase
 
-//? < 26.4
+//? if < 26.4
 //import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
 @ConsistentCopyVisibility

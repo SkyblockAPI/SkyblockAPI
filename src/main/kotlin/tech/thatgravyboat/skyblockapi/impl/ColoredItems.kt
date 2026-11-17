@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.impl
 
-//? < 26.4 {
+//? if < 26.4 {
 /*import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 

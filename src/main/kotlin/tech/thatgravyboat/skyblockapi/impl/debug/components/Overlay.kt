@@ -24,7 +24,7 @@ internal open class Overlay : Screen(Component.empty()) {
     }
 
     override fun extractBackground(graphics: GuiGraphicsExtractor) {
-        //? >= 26.4
+        //? if >= 26.4
         graphics.extractWithoutMouse { this.background?.extractRenderStateWithTooltipAndSubtitles(graphics) }
         //? else
         //this.background?.extractRenderStateWithTooltipAndSubtitles(graphics, -1, -1, a)

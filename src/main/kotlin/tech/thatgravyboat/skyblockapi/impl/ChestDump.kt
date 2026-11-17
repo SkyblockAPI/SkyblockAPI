@@ -38,9 +38,9 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-//? < 26.4
+//? if < 26.4
 //import net.minecraft.world.inventory.Slot
-//? >= 26.4
+//? if >= 26.4
 import net.minecraft.client.gui.components.inventory.SlotWidget
 
 @Suppress("UnstableApiUsage")

@@ -20,7 +20,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyReleasedEvent;
 @Mixin(KeyboardHandler.class)
 public class KeyboardHandlerMixin {
 
-    //? >= 26.4 {
+    //? if >=26.4 {
     @Definition(id = "screen", local = @Local(type = Screen.class, name = "screen"))
     @Expression("screen != null")
     @ModifyExpressionValue(

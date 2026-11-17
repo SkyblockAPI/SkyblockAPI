@@ -30,14 +30,14 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
 
-//? < 26.4
+//? if < 26.4
 //import tech.thatgravyboat.skyblockapi.utils.DevUtils as OldDevUtils
 
 // im sorry to whoever has to read this and understand this
 internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
 
     val debugEntries: List<DebugEntry> = buildList {
-        //? < 26.4
+        //? if < 26.4
         //@Suppress("DEPRECATION") addAll(OldDevUtils.allDevUtils.flatMap { it.debugEntries.values.map { it.toNew() } })
         addAll(DevUtils.allDevUtils.flatMap { it.debugEntries.values })
     }

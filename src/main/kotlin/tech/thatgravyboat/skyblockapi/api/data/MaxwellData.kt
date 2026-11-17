@@ -31,7 +31,7 @@ internal data class MaxwellData(
     /*@Deprecated("You can no longer consume it.") @FieldName("consumed_rift_prism") @OptionalBoolean(false) @IntroducedAt("4.2.40")
     var consumedRiftPrism: Boolean = false,*///?}
 ) {
-    //? < 26.4
+    //? if < 26.4
     //@tech.thatgravyboat.skyblockapi.RemoveNextVersion @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN) var magicalPower: Int by ::accessoryPower
 
     public companion object {

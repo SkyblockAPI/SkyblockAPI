@@ -8,7 +8,7 @@ import org.joml.Matrix3x2f
 
 //~ if >= 26.4 'renderer.RenderPipelines' -> 'gui.GuiPipeline'
 import net.minecraft.client.gui.GuiPipeline
-//? < 26.3
+//? if < 26.3
  //import com.mojang.blaze3d.pipeline.RenderPipeline
 //? else if = 26.3
  //import com.mojang.renderpearl.api.pipeline.RenderPipeline

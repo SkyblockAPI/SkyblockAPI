@@ -8,7 +8,7 @@ public sealed class ScreenKeyReleasedEvent(
     public val screen: Screen,
     public val event: KeyEvent,
 ) : CancellableSkyBlockEvent() {
-    //? < 26.4 {
+    //? if < 26.4 {
     /*protected constructor(
         screen: Screen,
         key: Int,

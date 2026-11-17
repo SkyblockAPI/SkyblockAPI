@@ -1,6 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 
-//? < 26.4 {
+//? if < 26.4 {
 /*import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.utils.text.Text
