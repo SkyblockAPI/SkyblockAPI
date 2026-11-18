@@ -50,7 +50,12 @@ public object DataTypes {
     public val MIDAS_WEAPON_BID: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_BID
     public val MIDAS_WEAPON_ADDED_COINS: DataType<Int> = GenericDataTypes.MIDAS_WEAPON_ADDED_COINS
     public val MIDAS_WEAPON_PAID: DataType<Long> = GenericDataTypes.MIDAS_WEAPON_PAID
-    public val ENRICHMENT: DataType<SkyBlockId> = GenericDataTypes.ENRICHMENT
+    public val HAS_ENRICHMENT: DataType<Boolean> = GenericDataTypes.HAS_ENRICHMENT
+
+    //? if < 26.4 {
+    @Deprecated("All enrichments are now in theory strength", ReplaceWith("HAS_ENRICHMENT"))
+    @Suppress("DEPRECATION")
+    public val ENRICHMENT: DataType<SkyBlockId> = GenericDataTypes.ENRICHMENT//?}
     public val SOULBOUND: DataType<LoreDataTypes.SoulboundType> = LoreDataTypes.SOULBOUND
     public val ETHERMERGE: DataType<Boolean> = GenericDataTypes.ETHERMERGE
     public val TUNED_TRANSMISSION: DataType<Int> = GenericDataTypes.TUNED_TRANSMISSION
