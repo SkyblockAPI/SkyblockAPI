@@ -35,6 +35,7 @@ internal object MaxwellStorage {
     val accessories: MutableList<ItemStack>
         get() = data?.accessories ?: mutableListOf()
 
+    @Suppress("DEPRECATION")
     val accessoriesEntries: List<AccessoryBagEntry>
         get() = accessories.mapIndexed { index, stack ->
             val page = (index / MAX_ACCESSORIES_PER_PAGE) + 1
