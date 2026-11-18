@@ -60,8 +60,10 @@ public data object MaxwellAPI : ItemDebugCategory {
     val accessoryPower: Int
         get() = MaxwellStorage.accessoryPower
 
-    val accessoryEntries: Collection<AccessoryBagEntry>
-        get() = MaxwellStorage.accessoriesEntries
+    //? if < 26.4 {
+    @Deprecated("Accessories aren't really assigned a specific slot and page anymore.", ReplaceWith("accessories"))
+    @Suppress("DEPRECATION")
+    val accessoryEntries: Collection<AccessoryBagEntry> get() = MaxwellStorage.accessoriesEntries//?}
 
     val accessories: List<ItemStack>
         get() = MaxwellStorage.accessories
