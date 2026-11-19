@@ -90,7 +90,7 @@ internal object ElectionStorage {
 
     /** Returns `true` if it changed the description */
     fun setPerkDescription(perkId: String, description: String): Boolean {
-        return DATA.edit {
+        return DATA.editIf {
             perkDescriptions.changeValue(perkId, description)
         }
     }

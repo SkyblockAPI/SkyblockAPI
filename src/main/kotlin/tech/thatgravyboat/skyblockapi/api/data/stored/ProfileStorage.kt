@@ -30,7 +30,7 @@ internal object ProfileStorage {
             return false
         }
 
-        return PROFILE.edit {
+        return PROFILE.editIf {
             this.profileType.changeValue(profileName, profileType)
         }
     }
@@ -39,7 +39,7 @@ internal object ProfileStorage {
 
     /** Returns `true` if it changed anything */
     fun setProfileId(profileName: String, id: UUID): Boolean {
-        return PROFILE.edit {
+        return PROFILE.editIf {
             this.profileId.changeValue(profileName, id)
         }
     }
@@ -51,7 +51,7 @@ internal object ProfileStorage {
     fun getSkyBlockLevel(): Int = data.sbLevel[ProfileAPI.profileName] ?: 0
 
     fun setSkyBlockLevel(profileName: String, level: Int) {
-        PROFILE.edit {
+        PROFILE.editIf {
             this.sbLevel.changeValue(profileName, level)
         }
     }
@@ -59,7 +59,7 @@ internal object ProfileStorage {
     fun getSkyBlockLevelProgress(): Int = data.sbLevelProgress[ProfileAPI.profileName] ?: 0
 
     fun setSkyBlockLevelProgress(profileName: String, levelProgress: Int) {
-        PROFILE.edit {
+        PROFILE.editIf {
             this.sbLevelProgress.changeValue(profileName, levelProgress)
         }
     }
@@ -67,7 +67,7 @@ internal object ProfileStorage {
     fun isCoop(): Boolean = data.coop[ProfileAPI.profileName] == true
 
     fun setCoop(profileName: String, isCoop: Boolean) {
-        PROFILE.edit {
+        PROFILE.editIf {
             this.coop.changeValue(profileName, isCoop)
         }
     }
