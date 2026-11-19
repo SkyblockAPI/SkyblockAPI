@@ -5694,9 +5694,12 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/museum/Museu
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/sacks/SacksAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/sacks/SacksAPI;
 	public final fun getAddedItemsRegex ()Lkotlin/text/Regex;
+	public final fun getOwnedSackIds ()Ljava/util/List;
+	public final fun getOwnedSacks ()Ljava/util/List;
 	public final fun getSackAmountRegex ()Lkotlin/text/Regex;
 	public final fun getSackItems ()Ljava/util/Map;
 	public final fun getSackMessageRegex ()Ltech/thatgravyboat/skyblockapi/utils/regex/component/ComponentRegex;
+	public final fun getSackOfSacksTitleRegex ()Lkotlin/text/Regex;
 	public final fun getSackTitleRegex ()Lkotlin/text/Regex;
 }
 
