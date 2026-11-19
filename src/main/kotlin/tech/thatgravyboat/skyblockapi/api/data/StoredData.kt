@@ -250,7 +250,10 @@ internal class StoredData<T : Any>(
         }
 
         @Subscription(FreshHypixelAlphaDetectedEvent::class)
-        private fun onFreshAlpha() = allStoredDatas.forEach(StoredData<*>::deleteAlpha)
+        private fun onFreshAlpha() {
+            Logger.info("Fresh Alpha detected, deleting stored alpha data.")
+            allStoredDatas.forEach(StoredData<*>::deleteAlpha)
+        }
 
         @Subscription(TickEvent::class)
         @TimePassed("10s")
