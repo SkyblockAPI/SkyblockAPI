@@ -42,6 +42,7 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 private const val THAUMATURGY_MP_SLOT = 48
 private const val THAUMATURGY_STATS_TUNING_SLOT = 51
 private const val BAGS_ACCESSORY_BAG_SLOT = 23
+private const val ACCESSORY_BAG_ACCESSORY_BAG_SLOT = 4
 
 private val thaumaturgyPowerStonesRegion = ContainerRegion(width = 7, height = 5, startRow = 1, startColumn = 1)
 private val tuningGuiRegion = ContainerRegion(width = 4, height = 2, startRow = 2, startColumn = 1)
@@ -117,7 +118,7 @@ public data object MaxwellAPI : ItemDebugCategory {
 
     private val accessoryBagTitleRegex = inventoryGroup.create(
         "accessory_bag.title",
-        "^Accessory Bag(?: \\((?<current>[\\d,.]+))?",
+        "^\\((?<current>\\d+)/\\d+\\) Accessory Bag",
     )
 
     private val bagsGroup = inventoryGroup.group("bags")
@@ -279,10 +280,15 @@ public data object MaxwellAPI : ItemDebugCategory {
     // TODO: maybe use ContainerRegion.getId for getting the "real" index?
     private fun handleAccessoryBagGui(event: InventoryChangeEvent): Boolean {
         val match = accessoryBagTitleRegex.find(event.title) ?: return false
-        if (isAccessoryOrEmpty(event.item)) {
-            val currentPage = match.groups["current"]?.value?.parseFormattedInt(1) ?: 1
-            MaxwellStorage.updateAccessory(currentPage, event.slot.index, event.item)
-            event.addDebugString { "Accessory in page $currentPage" }
+
+        if (event.slot.index == ACCESSORY_BAG_ACCESSORY_BAG_SLOT) {
+            parseAccessoryBagStack(event.item)
+        } else {
+            if (isAccessoryOrEmpty(event.item)) {
+                val currentPage = match.groups["current"]?.value?.parseFormattedInt(1) ?: 1
+                MaxwellStorage.updateAccessory(currentPage, event.slot.index, event.item)
+                event.addDebugString { "Accessory in page $currentPage" }
+            }
         }
         return true
     }
@@ -290,6 +296,10 @@ public data object MaxwellAPI : ItemDebugCategory {
     private fun handleBagsGui(event: ContainerInitializedEvent): Boolean {
         if (!bagsTitleRegex.contains(event.title)) return false
         val item = event.itemStacks.getOrNull(BAGS_ACCESSORY_BAG_SLOT) ?: return false
+        return parseAccessoryBagStack(item)
+    }
+
+    private fun parseAccessoryBagStack(item: ItemStack): Boolean {
         var foundMp = false
         var foundPower = false
         var foundTunings = false
