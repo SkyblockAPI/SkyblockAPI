@@ -242,7 +242,7 @@ public object LocationAPI {
                 }
                 McClient.clipboard = unknownAreas.entries.joinToString(prefix = "[", postfix = "]") { "${it.value?.name ?: "null"} -> ${it.key}" }
                 val size = unknownAreas.size
-                Text.sendDebug("Copied $size unknown ${pluralize(size, "biome")} to clipboard.")
+                Text.sendDebug("Copied $size unknown ${pluralize(size, "area")} to clipboard.")
             }
         }
         event.registerWithCallback("dev trigger new_alpha") {
