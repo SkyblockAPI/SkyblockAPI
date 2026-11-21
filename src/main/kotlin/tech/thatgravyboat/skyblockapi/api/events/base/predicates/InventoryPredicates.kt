@@ -19,6 +19,7 @@ public annotation class InventoryTitle(
 )
 
 // TODO: this annotation doesnt do anything right now???
+@PredicateForEvents(InventoryChangeEvent::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class MustBeContainer

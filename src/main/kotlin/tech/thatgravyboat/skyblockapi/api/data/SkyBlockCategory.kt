@@ -1,13 +1,11 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
+import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.IncludedCodec
 import me.owdding.ktmodules.Module
-import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
-import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugString
+import tech.thatgravyboat.skyblockapi.utils.RegisterableValues
 import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
-import tech.thatgravyboat.skyblockapi.utils.extentions.pluralize
-import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
 
 public class SkyBlockCategory private constructor(
     public val name: String,
@@ -25,32 +23,28 @@ public class SkyBlockCategory private constructor(
 
     override fun toString(): String = if (modifier != null) "$modifier $name" else name
 
+    // TODO: move to a `SkyBlockCategories` class instead of companion
     @Module
-    public companion object {
-        //region Private
-        private val missingCategories = mutableSetOf<String>()
-        private var finishedKnownCategories: Boolean = false
-        private val debugToggle = debugToggle("unknown.skyblock_category", "Warns when detecting a new unknown skyblock category")
+    public companion object : RegisterableValues<SkyBlockCategory>() {
+        @IncludedCodec(keyable = true)
+        public val CODEC: Codec<SkyBlockCategory> = Codec.STRING.xmap(
+            { create(it, true) },
+            SkyBlockCategory::toString
+        )
 
-        private fun addMissing(string: String) {
-            if (!finishedKnownCategories) return // this value gets set to true when we finish loading all categories in this object
-            missingCategories.add(string)
-            debugString(debugToggle) { "Unknown category: '$string'" }
-        }
-        private val registeredCategories = mutableMapOf<String, SkyBlockCategory>()
-        //endregion
+        override val name: String = "category"
+        override val pluralName: String = "categories"
 
-        public val categories: Collection<SkyBlockCategory> get() = registeredCategories.values
+        override val debugToggle: DebugToggle = debugToggle("unknown.category", "Warns when detecting a new unknown skyblock category")
+        public val categories: Collection<SkyBlockCategory> get() = registered.values
 
         public fun create(string: String, parseModifier: Boolean): SkyBlockCategory {
-            val formatted = string.lowercase()
-            return registeredCategories.getOrPut(formatted) {
-                addMissing(formatted)
-                val modifier = if (parseModifier) Modifier.byName(formatted.substringBefore(" ")) else null
+            return getOrCreate(string.lowercase()) { key ->
+                val modifier = if (parseModifier) Modifier.byName(key.substringBefore(" ")) else null
                 if (modifier == null) {
-                    SkyBlockCategory(formatted)
+                    SkyBlockCategory(key)
                 } else {
-                    SkyBlockCategory(formatted.substringAfter(" ").trim(), modifier)
+                    SkyBlockCategory(key.substringAfter(" ").trim(), modifier)
                 }
             }
         }
@@ -58,8 +52,7 @@ public class SkyBlockCategory private constructor(
         public fun create(string: String, @IntroducedAt("4.2.43") modifier: Modifier? = null): SkyBlockCategory {
             val formatted = if (modifier == null) string.lowercase()
             else "$modifier ${string.lowercase()}"
-            return registeredCategories.getOrPut(formatted) {
-                addMissing(formatted)
+            return getOrCreate(formatted) {
                 SkyBlockCategory(formatted.trim(), modifier)
             }
         }
@@ -155,24 +148,6 @@ public class SkyBlockCategory private constructor(
 
         public val DUNGEON_ITEM: SkyBlockCategory = create("item", Modifier.DUNGEON)
         public val ITEM: SkyBlockCategory = create("item") // there is no current item for this, but because "dungeon item" is a category, we add it here as well
-
-        init {
-            // we set this to true at the end so we can know what categories get registered from outside
-            finishedKnownCategories = true
-        }
-
-        @Subscription
-        private fun onCommands(event: RegisterSkyblockApiCommandsEvent) {
-            event.registerWithCallback("unknown categories") {
-                if (missingCategories.isEmpty()) {
-                    Text.sendDebug("No unknown categories.")
-                    return@registerWithCallback
-                }
-                McClient.clipboard = missingCategories.joinToString(prefix = "[", postfix = "]")
-                val size = missingCategories.size
-                Text.sendDebug("Copied $size unknown ${pluralize(size, "category", "categories")} to clipboard.")
-            }
-        }
     }
 
     public enum class Modifier(displayName: String? = null) {
