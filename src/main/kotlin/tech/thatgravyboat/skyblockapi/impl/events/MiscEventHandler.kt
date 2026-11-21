@@ -25,6 +25,7 @@ import tech.thatgravyboat.skyblockapi.api.area.mining.MiningBlockFamily
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.chat.TitleReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.BlockMinedEvent
 import tech.thatgravyboat.skyblockapi.api.events.level.LeftClickBlockEvent
@@ -119,11 +120,19 @@ public object MiscEventHandler {
             ).post()
         }
 
-        // Chat Events
+        //region Chat Events
         ClientReceiveMessageEvents.ALLOW_GAME.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
         ClientReceiveMessageEvents.MODIFY_GAME.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
         ClientReceiveMessageEvents.GAME_CANCELED.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
         ClientReceiveMessageEvents.GAME.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.ALLOW_TITLE.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.ALLOW_SUBTITLE.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.MODIFY_TITLE.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.MODIFY_SUBTITLE.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.TITLE.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.SUBTITLE.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.TITLE_CANCELED.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.SUBTITLE_CANCELED.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
 
         data class MessageFuture(val original: Component, val parent: MessageFuture?, val id: UUID = UUID.randomUUID())
 
@@ -182,6 +191,47 @@ public object MiscEventHandler {
                 }
             }
         }
+        ClientReceiveMessageEvents.ALLOW_TITLE.register(phase) { component ->
+            if (TitleReceivedEvent.Title.Pre(component).post()) {
+                SkyBlockAPI.logger.info("[Cancelled] [TITLE] {}", component.string)
+                false
+            } else {
+                true
+            }
+        }
+        ClientReceiveMessageEvents.ALLOW_SUBTITLE.register(phase) { component ->
+            if (TitleReceivedEvent.Subtitle.Pre(component).post()) {
+                SkyBlockAPI.logger.info("[Cancelled] [SUBTITLE] {}", component.string)
+                false
+            } else {
+                true
+            }
+        }
+        ClientReceiveMessageEvents.TITLE_CANCELED.register(phase) { component ->
+            TitleReceivedEvent.Title.Cancelled(component).post()
+        }
+        ClientReceiveMessageEvents.SUBTITLE_CANCELED.register(phase) { component ->
+            TitleReceivedEvent.Subtitle.Cancelled(component).post()
+        }
+        ClientReceiveMessageEvents.TITLE.register(phase) { component ->
+            TitleReceivedEvent.Title.Sent(component).post()
+        }
+        ClientReceiveMessageEvents.SUBTITLE.register(phase) { component ->
+            TitleReceivedEvent.Subtitle.Sent(component).post()
+        }
+        ClientReceiveMessageEvents.MODIFY_TITLE.register(phase) { component ->
+            TitleReceivedEvent.Title.Post(component).let { event ->
+                event.post()
+                event.component
+            }
+        }
+        ClientReceiveMessageEvents.MODIFY_SUBTITLE.register(phase) { component ->
+            TitleReceivedEvent.Subtitle.Post(component).let { event ->
+                event.post()
+                event.component
+            }
+        }
+        //endregion
 
         // Server Disconnect
         ClientPlayConnectionEvents.DISCONNECT.register { _, _ ->
