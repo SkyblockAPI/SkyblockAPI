@@ -62,7 +62,7 @@ public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
         }
         MeowddingItemDfu.load()
 
-        //org.spongepowered.asm.mixin.MixinEnvironment.getCurrentEnvironment().audit()
+        org.spongepowered.asm.mixin.MixinEnvironment.getCurrentEnvironment().audit()
     }
 
     internal fun postInit() {

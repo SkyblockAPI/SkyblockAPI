@@ -4,7 +4,6 @@ import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.helpers.getStrippedAttachedLines
 import tech.thatgravyboat.skyblockapi.utils.DiscoverableValue
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 
 public data class SlayerInfo(val entity: Entity) {

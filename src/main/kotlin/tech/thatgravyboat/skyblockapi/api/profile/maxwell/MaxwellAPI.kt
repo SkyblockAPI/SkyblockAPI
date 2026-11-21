@@ -78,8 +78,8 @@ public data object MaxwellAPI : ItemDebugCategory {
         get() = MaxwellStorage.tuningTemplates
 
     //? if < 26.4 {
-    @Deprecated("You can no longer consume it.")
-    val consumedRiftPrism: Boolean = false//?}
+    /*@Deprecated("You can no longer consume it.")
+    val consumedRiftPrism: Boolean = false*///?}
 
     //region Regex
     private val chatGroup = RegexGroup.CHAT.group("maxwell")

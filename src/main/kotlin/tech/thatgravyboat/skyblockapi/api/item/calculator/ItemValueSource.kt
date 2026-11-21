@@ -34,7 +34,7 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.sources.WoodSingularit
 import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 
 //~ if >= 26.4 'public val calc' -> 'internal val calc'
-public enum class ItemValueSource(public val calc: Calculator) : Calculator by calc {
+public enum class ItemValueSource(internal val calc: Calculator) : Calculator by calc {
     BASE_ITEM(BaseItemSource),
     RECOMBOBULATOR(RecombobulatorCalculator),
     REFORGE(ReforgeCalculator),

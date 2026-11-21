@@ -10,7 +10,7 @@ import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.suggestions.SuggestionContext
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -302,7 +302,7 @@ private class SchemaArgument<Query>(val entries: List<SchemaEntry<Query, *>>) :
             if (entry == null) {
                 reader.cursor = cursor
                 val offset = builder.createOffset(reader.cursor)
-                SharedSuggestionProvider.suggest(filteredFlags.map { it.name }, offset)
+                SuggestionContext.suggest(filteredFlags.map { it.name }, offset)
                 return offset.buildFuture()
             }
 
@@ -322,7 +322,7 @@ private class SchemaArgument<Query>(val entries: List<SchemaEntry<Query, *>>) :
                 }
                 val list = mutableListOf<String>()
                 entry.suggestionProvider(SuggestionConsumer { list.add(it) })
-                val first = SharedSuggestionProvider.suggest(list, builder.createOffset(reader.cursor))
+                val first = SuggestionContext.suggest(list, builder.createOffset(reader.cursor))
                 val second = flagType.listSuggestions(context, builder.createOffset(reader.cursor))
 
                 return CompletableFuture.allOf(first, second).thenApply {
