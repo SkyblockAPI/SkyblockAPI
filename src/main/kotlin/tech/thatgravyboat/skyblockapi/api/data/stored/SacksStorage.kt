@@ -15,7 +15,7 @@ import kotlin.time.Instant
 
 @Module
 internal object SacksStorage {
-    private val IGNORED_ITEMS = listOf("COMMON_HOOK") // Items that Hypixel shows in the Sack but don't go in there.
+    private val IGNORED_ITEMS = listOf("COMMON_HOOK", "NETHER_STAR") // Items that Hypixel shows in the Sack but don't go in there.
 
     private val SACKS = StoredProfileData(
         3,
