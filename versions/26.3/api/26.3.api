@@ -1404,7 +1404,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory$Companion {
+public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory$Companion : tech/thatgravyboat/skyblockapi/utils/RegisterableValues {
 	public final synthetic fun create (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun create (Ljava/lang/String;Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory$Modifier;)Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun create (Ljava/lang/String;Z)Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
@@ -1427,6 +1427,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory$Comp
 	public final fun getCHESTPLATE ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getCHISEL ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getCLOAK ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
 	public final fun getCOMBAT_SHARD ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getCOSMETIC ()Ltech/thatgravyboat/skyblockapi/api/data/SkyBlockCategory;
 	public final fun getCategories ()Ljava/util/Collection;
@@ -4607,7 +4608,7 @@ public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome$Com
 	public final fun inAnyBiome ([Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;)Z
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockBiomes {
+public final class tech/thatgravyboat/skyblockapi/api/location/SkyBlockBiomes : tech/thatgravyboat/skyblockapi/utils/RegisterableValues {
 	public static final field HYPIXEL_IDENTIFIER Ljava/lang/String;
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiomes;
 	public final fun getBAYOU ()Ltech/thatgravyboat/skyblockapi/api/location/SkyBlockBiome;
@@ -4772,13 +4773,15 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/community/FameRank
 	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/profile/community/FameRanks {
+public final class tech/thatgravyboat/skyblockapi/api/profile/community/FameRanks : tech/thatgravyboat/skyblockapi/utils/RegisterableValues {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRanks;
 	public final fun getAMBASSADOR ()Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRank;
 	public final fun getARCHON ()Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRank;
 	public final fun getATTACHE ()Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRank;
 	public final fun getById (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRank;
+	public final fun getByIdOrNull (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRank;
 	public final fun getByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRank;
+	public final fun getByNameOrNull (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRank;
 	public final fun getCHANCELLOR ()Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRank;
 	public final fun getCITIZEN ()Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRank;
 	public final fun getCONTRIBUTOR ()Ltech/thatgravyboat/skyblockapi/api/profile/community/FameRank;
@@ -5320,6 +5323,51 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/accessory/Ac
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorAPI : tech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorAPI;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun fork (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;
+	public final fun getCompactors ()Ljava/util/Map;
+	public final fun getSackThreshold ()Ljava/util/Map;
+	public final fun hasSackThreshold (Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;)Z
+	public fun hashCode ()I
+	public final fun isCompacting-Sg9Psy0 (Ljava/lang/String;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType {
+	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType$Companion;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3-EnzYQXU ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInternalName ()Ljava/lang/String;
+	public final fun getItems ()Ljava/util/Map;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getSackThreshold ()Z
+	public final fun getSkyblockId-EnzYQXU ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType$Companion {
+	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorTypes : tech/thatgravyboat/skyblockapi/utils/RegisterableValues {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorTypes;
+	public final fun getByInternalName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;
+	public final fun getByInternalNameOrNull (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;
+	public final fun getByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;
+	public final fun getByNameOrNull (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;
+	public final fun getCOMBAT ()Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;
+	public final fun getFARMING ()Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;
+	public final fun getFISHING ()Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;
+	public final fun getFORAGING ()Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;
+	public final fun getHUSBANDRY ()Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;
+	public final fun getMINING ()Ltech/thatgravyboat/skyblockapi/api/profile/items/compactor/PersonalCompactorType;
+}
+
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/equipment/EquipmentAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/equipment/EquipmentAPI;
 	public final fun getIslandEquipment ()Ljava/util/Map;
@@ -5814,7 +5862,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPow
 	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
 }
 
-public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPowers {
+public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPowers : tech/thatgravyboat/skyblockapi/utils/RegisterableValues {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPowers;
 	public final fun getADEPT ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getBIZARRE ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
@@ -5822,7 +5870,9 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPow
 	public final fun getBUBBA ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getBUTTERY ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getById (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
+	public final fun getByIdOrNull (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getByName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
+	public final fun getByNameOrNull (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getCOMMANDO ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getCRUMBLY ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getDEMONIC ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
@@ -6324,6 +6374,7 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId {
 	public static final field UNSAFE Ljava/lang/String;
 	public static final fun asDerived-BCdM1xk (Ljava/lang/String;Z)Ljava/lang/String;
 	public static synthetic fun asDerived-BCdM1xk$default (Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/String;
+	public static final fun asRoot-EnzYQXU (Ljava/lang/String;)Ljava/lang/String;
 	public static final synthetic fun box-impl (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
@@ -8287,6 +8338,17 @@ public final class tech/thatgravyboat/skyblockapi/utils/McVersionGroup : java/la
 	public final fun isActive ()Z
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/McVersionGroup;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/utils/McVersionGroup;
+}
+
+public abstract class tech/thatgravyboat/skyblockapi/utils/RegisterableValues {
+	protected final fun checkMissingKey (Ljava/lang/String;)V
+	protected fun debugCommand ()V
+	protected abstract fun getDebugToggle ()Ltech/thatgravyboat/skyblockapi/utils/devutils/entries/DebugToggle;
+	protected abstract fun getName ()Ljava/lang/String;
+	protected final fun getOrCreate (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	protected fun getPluralName ()Ljava/lang/String;
+	public final fun getRegistered ()Ljava/util/Map;
+	public final fun getValues ()Ljava/util/Collection;
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/Scheduling {
@@ -10295,6 +10357,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/regex/RegexUtils {
 	public static synthetic fun findAll$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexUtils;Lkotlin/text/Regex;Ljava/lang/CharSequence;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 	public static synthetic fun findAll$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexUtils;Lkotlin/text/Regex;Ljava/util/List;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Z
 	public final fun findGroup (Lkotlin/text/Regex;Ljava/lang/CharSequence;Ljava/lang/String;)Ljava/lang/String;
+	public final fun findGroup (Lkotlin/text/Regex;Ljava/util/Iterator;Ljava/lang/String;)Ljava/lang/String;
 	public final fun findGroup (Lkotlin/text/Regex;Ljava/util/List;Ljava/lang/String;)Ljava/lang/String;
 	public final fun findGroups (Lkotlin/text/Regex;Ljava/lang/CharSequence;[Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/utils/regex/Destructured;
 	public static synthetic fun findGroups$default (Ltech/thatgravyboat/skyblockapi/utils/regex/RegexUtils;Lkotlin/text/Regex;Ljava/lang/CharSequence;[Ljava/lang/String;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/regex/Destructured;
