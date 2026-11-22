@@ -61,10 +61,11 @@ public fun GuiGraphicsExtractor.drawString(text: FormattedCharSequence, x: Int, 
     this.text(McFont.self, text, x, y, adjustColor(color), shadow)
 }
 
+//~ if >= 26.4 'RenderPipelines.GUI_TEXTURED' -> 'GuiPipeline.TEXTURED', 'RenderPipeline' -> 'GuiPipeline'
+public val GUI_TEXTURED_PIPELINE: GuiPipeline = GuiPipeline.TEXTURED
 
 public fun GuiGraphicsExtractor.drawSprite(texture: Identifier, x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
-    //~ if >= 26.4 'RenderPipelines.GUI_TEXTURED' -> 'GuiPipeline.TEXTURED'
-    this.blitSprite(GuiPipeline.TEXTURED, texture, x, y, width, height, color)
+    this.blitSprite(GUI_TEXTURED_PIPELINE, texture, x, y, width, height, color)
 }
 
 public fun GuiGraphicsExtractor.drawTexture(
@@ -82,8 +83,7 @@ public fun GuiGraphicsExtractor.drawTexture(
 
     this.guiRenderState.addGuiElement(
         BlitRenderState(
-            //~ if >= 26.4 'RenderPipelines.GUI_TEXTURED' -> 'GuiPipeline.TEXTURED'
-            GuiPipeline.TEXTURED, setup, Matrix3x2f(this.pose()),
+            GUI_TEXTURED_PIPELINE, setup, Matrix3x2f(this.pose()),
             minx, miny, maxx, maxy, u0, u1, v0, v1, color,
             this.scissorStack.peek(),
         ),

@@ -21,6 +21,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
+import tech.thatgravyboat.skyblockapi.platform.GUI_TEXTURED_PIPELINE
 import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -28,9 +29,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
 import tech.thatgravyboat.skyblockapi.utils.text.asComponent
-
-//~ if >= 26.4 'renderer.RenderPipelines' -> 'gui.GuiPipeline'
-import net.minecraft.client.gui.GuiPipeline
 
 public val BACKGROUND: Identifier? = Identifier.withDefaultNamespace("popup/background")
 
@@ -140,8 +138,7 @@ public class AbstractComponentViewer(public val map: Map<ComponentViewerCategory
 
     override fun extractBackground(graphics: GuiGraphicsExtractor) {
         super.extractBackground(graphics)
-        //~ if >= 26.4 'RenderPipelines.GUI_TEXTURED' -> 'GuiPipeline.TEXTURED'
-        graphics.blitSprite(GuiPipeline.TEXTURED, BACKGROUND, width / 4, height / 8, width / 2, widgetHeight)
+        graphics.blitSprite(GUI_TEXTURED_PIPELINE, BACKGROUND, width / 4, height / 8, width / 2, widgetHeight)
     }
 }
 
