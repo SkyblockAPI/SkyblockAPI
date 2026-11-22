@@ -19,7 +19,7 @@ import kotlin.time.Instant
 
 @Module
 internal object SacksStorage {
-    private val IGNORED_ITEMS = listOf("item:common_hook", "item:nether_start").map(SkyBlockId::item) // Items that Hypixel shows in the Sack but don't go in there.
+    private val IGNORED_ITEMS = listOf("common_hook", "nether_star").map(SkyBlockId::item) // Items that Hypixel shows in the Sack but don't go in there.
 
     private val oldCodec = (RecordCodecBuilder.mapCodec<SackEntry> {
         it.group(
