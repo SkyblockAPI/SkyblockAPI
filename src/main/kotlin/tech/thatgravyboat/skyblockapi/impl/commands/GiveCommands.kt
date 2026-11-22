@@ -301,7 +301,7 @@ public object GiveCommands {
 
 }
 
-private data class SkyBlockIdArgument(val skyblockIds: Iterable<SkyBlockId> = SimpleItemAPI.getAllIds(), val filter: (SkyBlockId) -> Boolean = { true }) :
+internal data class SkyBlockIdArgument(val skyblockIds: Iterable<SkyBlockId> = SimpleItemAPI.getAllIds(), val filter: (SkyBlockId) -> Boolean = { true }) :
     ArgumentType<SkyBlockId>, SuggestionProvider<FabricClientCommandSource> {
 
     override fun parse(reader: StringReader): SkyBlockId {
