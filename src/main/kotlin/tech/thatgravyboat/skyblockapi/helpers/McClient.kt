@@ -33,11 +33,11 @@ import com.mojang.blaze3d.Blaze3D
 //? if >= 26.4 {
 import net.minecraft.commands.SuggestionBox
 //? } else {
-//import com.mojang.brigadier.CommandDispatcher
-//import net.minecraft.commands.suggestions.SuggestionContext
-//import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
-//import net.minecraft.util.Util
-//? }
+/*import com.mojang.brigadier.CommandDispatcher
+import net.minecraft.commands.suggestions.SuggestionContext
+import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
+import net.minecraft.util.Util
+*///? }
 
 public object McClient {
 

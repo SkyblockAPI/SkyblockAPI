@@ -18,6 +18,8 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.Logger
 
+//? if < 26.4
+//import com.mojang.blaze3d.pipeline.RenderPipeline
 //~ if >= 26.4 'renderer.RenderPipelines' -> 'gui.GuiPipeline'
 import net.minecraft.client.gui.GuiPipeline
 
