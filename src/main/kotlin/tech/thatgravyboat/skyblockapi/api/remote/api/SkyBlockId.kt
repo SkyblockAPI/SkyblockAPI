@@ -20,7 +20,6 @@ import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
 import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addStringDebug
-import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -151,6 +150,7 @@ public value class SkyBlockId private constructor(public val id: String) {
         !this.isDerived && derived -> SkyBlockId("$DERIVED${this.id}")
         else -> this
     }
+    public fun asRoot(): SkyBlockId = asDerived(false)
 
     public val isDerived: Boolean get() = this.id.startsWith(DERIVED)
     public val rootId: String get() = this.id.removeDerived()

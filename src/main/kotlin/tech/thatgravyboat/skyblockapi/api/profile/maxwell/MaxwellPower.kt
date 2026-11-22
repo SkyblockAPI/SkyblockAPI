@@ -2,29 +2,36 @@ package tech.thatgravyboat.skyblockapi.api.profile.maxwell
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
-import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.utils.RegisterableValues
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
+import tech.thatgravyboat.skyblockapi.utils.extentions.toSnakeCase
 
 public data class MaxwellPower(val name: String, val internalName: String) {
     public companion object {
         @IncludedCodec(keyable = true)
-        public val CODEC: Codec<MaxwellPower> = SkyblockAPICodecs.getCodec<String>().xmap(MaxwellPowers::getById, MaxwellPower::internalName)
+        public val CODEC: Codec<MaxwellPower> = Codec.STRING.xmap(MaxwellPowers::getById, MaxwellPower::internalName)
     }
 }
 
 @Suppress("unused")
-public object MaxwellPowers {
+public object MaxwellPowers : RegisterableValues<MaxwellPower>() {
+    override val name: String = "power"
+    override val debugToggle: DebugToggle = debugToggle("unknown.maxwell_power", "Warns when detecting a new unknown maxwell power")
 
-    private val registeredPowers = mutableMapOf<String, MaxwellPower>()
+    public fun getByNameOrNull(name: String): MaxwellPower? = registered.values.find { it.name.equals(name, true) }
+    public fun getByName(name: String): MaxwellPower = getByNameOrNull(name) ?: register(name.toSnakeCase(), name)
 
-    public fun getByName(name: String): MaxwellPower? {
-        return registeredPowers.values.find { it.name.equals(name, true) }
+    public fun getByIdOrNull(id: String): MaxwellPower? = registered[id]
+    public fun getById(id: String): MaxwellPower {
+        getByIdOrNull(id)?.let { return it }
+        checkMissingKey(id)
+        return NO_POWER
     }
-
-    public fun getById(id: String): MaxwellPower = registeredPowers[id] ?: NO_POWER
 
     // For powers that are obtained with power stones, the key is the ID of the power stone item
     private fun register(key: String, name: String): MaxwellPower {
-        return registeredPowers.getOrPut(key) { MaxwellPower(name, key) }
+        return getOrCreate(key) { MaxwellPower(name, key) }
     }
 
     public val NO_POWER: MaxwellPower = register("NO_POWER", "No Power")

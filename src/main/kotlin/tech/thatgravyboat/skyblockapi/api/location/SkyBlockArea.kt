@@ -13,6 +13,7 @@ public data class SkyBlockArea(val name: String) {
     }
 }
 
+// doesn't use RegisterableValues because we store the island we found the area in
 @Suppress("unused")
 public object SkyBlockAreas {
 
