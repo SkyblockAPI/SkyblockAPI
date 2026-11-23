@@ -2703,13 +2703,19 @@ public final class tech/thatgravyboat/skyblockapi/api/events/entity/SlayerInfoLi
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/events/hypixel/ChangedSackItem {
-	public fun <init> (Ljava/lang/String;I)V
+	public synthetic fun <init> (Ljava/lang/String;I)V
+	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()I
-	public final fun copy (Ljava/lang/String;I)Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ChangedSackItem;
+	public final fun component3-EnzYQXU ()Ljava/lang/String;
+	public final synthetic fun copy (Ljava/lang/String;I)Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ChangedSackItem;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ChangedSackItem;Ljava/lang/String;IILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ChangedSackItem;
+	public final fun copy-apSjbPU (Ljava/lang/String;ILjava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ChangedSackItem;
+	public static synthetic fun copy-apSjbPU$default (Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ChangedSackItem;Ljava/lang/String;ILjava/lang/String;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/hypixel/ChangedSackItem;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDiff ()I
+	public final fun getId-EnzYQXU ()Ljava/lang/String;
 	public final fun getItem ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -5742,6 +5748,7 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/items/museum/Museu
 public final class tech/thatgravyboat/skyblockapi/api/profile/items/sacks/SacksAPI {
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/profile/items/sacks/SacksAPI;
 	public final fun getAddedItemsRegex ()Lkotlin/text/Regex;
+	public final fun getItems ()Ljava/util/Map;
 	public final fun getOwnedSackIds ()Ljava/util/List;
 	public final fun getOwnedSacks ()Ljava/util/List;
 	public final fun getSackAmountRegex ()Lkotlin/text/Regex;
@@ -8465,6 +8472,25 @@ public final class tech/thatgravyboat/skyblockapi/utils/command/MappedArgument :
 
 public final class tech/thatgravyboat/skyblockapi/utils/command/MappedArgumentKt {
 	public static final fun mapped (Lcom/mojang/brigadier/arguments/ArgumentType;Lkotlin/jvm/functions/Function1;)Lcom/mojang/brigadier/arguments/ArgumentType;
+}
+
+public final class tech/thatgravyboat/skyblockapi/utils/command/SkyBlockIdArgument : com/mojang/brigadier/arguments/ArgumentType, com/mojang/brigadier/suggestion/SuggestionProvider {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Iterable;
+	public final fun component2 ()Lkotlin/jvm/functions/Function1;
+	public final fun copy (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ltech/thatgravyboat/skyblockapi/utils/command/SkyBlockIdArgument;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/utils/command/SkyBlockIdArgument;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/utils/command/SkyBlockIdArgument;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFilter ()Lkotlin/jvm/functions/Function1;
+	public final fun getSkyblockIds ()Ljava/lang/Iterable;
+	public fun getSuggestions (Lcom/mojang/brigadier/context/CommandContext;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
+	public fun hashCode ()I
+	public fun listSuggestions (Lcom/mojang/brigadier/context/CommandContext;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
+	public synthetic fun parse (Lcom/mojang/brigadier/StringReader;)Ljava/lang/Object;
+	public fun parse-BCdM1xk (Lcom/mojang/brigadier/StringReader;)Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class tech/thatgravyboat/skyblockapi/utils/command/dsl/CommandArgumentBinding {
