@@ -21,6 +21,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 //? if < 26.4
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseSpawnEvent
+import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanOrArabic
 
 @Module
@@ -90,7 +91,7 @@ public object MineshaftAPI {
     private var inCorpseLoot = false
     private var consumedKey = true
     private var corpseType: CorpseType? = null
-    private var corpseLoot = mutableListOf<Pair<SkyBlockId, Int>>()
+    private var corpseLoot = mutableMapOf<SkyBlockId, Int>()
 
     @Subscription
     @OnlyIn(MINESHAFT)
@@ -172,13 +173,13 @@ public object MineshaftAPI {
                     val isEnchantment = enchantmentItemRegex.match(itemName, "name", "level") { (name, levelString) ->
                         val level = levelString.parseRomanOrArabic()
                         val enchantId = SkyBlockEnchantmentsRepo.getFromName(name) ?: return@match
-                        corpseLoot.add(SkyBlockId.enchantment(enchantId.id, level) to count)
+                        corpseLoot.addOrPut(SkyBlockId.enchantment(enchantId.id, level), count)
                     }
 
                     if (isEnchantment) return@match
 
                     val id = SkyBlockId.fromName(itemName, dropLast = false) ?: return@match
-                    corpseLoot.add(id to count)
+                    corpseLoot.addOrPut(id, count)
                 }
             }
         }
