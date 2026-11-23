@@ -53,7 +53,7 @@ public class SkyBlockCategory private constructor(
             val formatted = if (modifier == null) string.lowercase()
             else "$modifier ${string.lowercase()}"
             return getOrCreate(formatted) {
-                SkyBlockCategory(formatted.trim(), modifier)
+                SkyBlockCategory(string.lowercase(), modifier)
             }
         }
 
