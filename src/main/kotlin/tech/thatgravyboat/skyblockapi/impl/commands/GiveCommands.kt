@@ -6,7 +6,6 @@ import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
-import com.mojang.brigadier.suggestion.SuggestionProvider
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import me.owdding.ktmodules.Module
@@ -30,11 +29,11 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.builders.ItemBuilder
+import tech.thatgravyboat.skyblockapi.utils.command.SkyBlockIdArgument
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.createSkull
 import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
-import tech.thatgravyboat.skyblockapi.utils.extentions.sanitizeForCommandInput
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toData
@@ -299,40 +298,6 @@ public object GiveCommands {
         McClient.self.player?.containerMenu?.broadcastChanges()
     }
 
-}
-
-private data class SkyBlockIdArgument(val skyblockIds: Iterable<SkyBlockId> = SimpleItemAPI.getAllIds(), val filter: (SkyBlockId) -> Boolean = { true }) :
-    ArgumentType<SkyBlockId>, SuggestionProvider<FabricClientCommandSource> {
-
-    override fun parse(reader: StringReader): SkyBlockId {
-        val cursor = reader.cursor
-        while (reader.canRead() && reader.peek() != ' ') {
-            reader.skip()
-        }
-        val string = reader.string.substring(cursor, reader.cursor)
-
-
-        return skyblockIds.find { it.id == string.lowercase() } ?: SkyBlockId.unsafe(string.lowercase())
-    }
-
-    override fun <S : Any> listSuggestions(context: CommandContext<S>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
-        skyblockIds.forEach {
-            suggest(builder, it.id.lowercase())
-        }
-        return builder.buildFuture()
-    }
-
-    fun suggest(builder: SuggestionsBuilder, name: String) {
-        val filtered = name.sanitizeForCommandInput()
-        if (SharedSuggestionProvider.matchesSubStr(builder.remaining.lowercase(), filtered.lowercase())) {
-            builder.suggest(filtered)
-        }
-    }
-
-    override fun getSuggestions(
-        p0: CommandContext<FabricClientCommandSource>,
-        p1: SuggestionsBuilder,
-    ) = listSuggestions(p0, p1)
 }
 
 private interface CommandFlag {
