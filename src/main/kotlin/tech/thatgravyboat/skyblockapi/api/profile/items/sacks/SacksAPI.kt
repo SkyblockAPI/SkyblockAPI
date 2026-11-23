@@ -27,8 +27,8 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.impl.commands.SkyBlockIdArgument
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
+import tech.thatgravyboat.skyblockapi.utils.command.SkyBlockIdArgument
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterContainerItems
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
@@ -106,7 +106,12 @@ public object SacksAPI {
             }
 
             recentUpdates.invalidateAll()
-            SacksChangeEvent(changedItems.map { (item, amount) -> ChangedSackItem(item.skyblockId, amount, item) }).post()
+            SacksChangeEvent(changedItems.map { (item, amount) -> ChangedSackItem(
+                //? if < 26.4
+                item.skyblockId,
+                amount,
+                item
+            ) }).post()
         }
     }
 
@@ -119,7 +124,7 @@ public object SacksAPI {
         if (event.isInPlayerInventory) return
         if (!sackTitleRegex.matches(event.title)) return
         val item = event.item
-        val id = event.item.getData(DataTypes.SKYBLOCK_ID) ?: return
+        val id = event.item.getData(DataTypes.SKYBLOCK_ID)?.asRoot() ?: return
 
         when (event.title) {
             "Gemstones Sack" -> {
@@ -196,7 +201,7 @@ public object SacksAPI {
                 }
             }
 
-            thenCallback("id id", StringArgumentType.string(), IterableSuggestionProvider(items.keys)) {
+            thenCallback("id id", SkyBlockIdArgument(), IterableSuggestionProvider(items.keys)) {
                 val id = argument<SkyBlockId>("id")
                 val amount = items[id] ?: run {
                     Text.sendDebug("This item isn't in sacks!")
