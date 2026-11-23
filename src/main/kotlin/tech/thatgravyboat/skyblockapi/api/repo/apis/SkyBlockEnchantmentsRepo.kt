@@ -29,6 +29,9 @@ public object SkyBlockEnchantmentsRepo : RepoItemCacheAsQuery<Query>("Enchantmen
     }
 
     public fun get(id: String): EnchantsAPI.Enchant? = ifInitialized { this.repo.getEnchantment(id) }
+    public fun getFromName(name: String): EnchantsAPI.Enchant? = ifInitialized {
+        this.repo.enchantments().toList().find { it.second.name.equals(name, true) }?.second
+    }
 
     public data class Query(
         var id: String = "",

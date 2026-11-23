@@ -6,17 +6,22 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
-import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseSpawnEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftEnteredEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.MineshaftFoundEvent
-import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockEnchantmentsRepo
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+
+//? if < 26.4
+import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseSpawnEvent
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanOrArabic
 
 @Module
 public object MineshaftAPI {
@@ -45,6 +50,26 @@ public object MineshaftAPI {
         "found",
         "WOW! You found a Glacite Mineshaft portal!",
     )
+    private val corpseStartRegex = chatGroup.create(
+        "corpse.start",
+        " +(?<type>\\w+) CORPSE LOOT! ?",
+    )
+    private val corpseItemRegex = chatGroup.create(
+        "corpse.item",
+        " +(?<item>.+?)(?: x(?<amount>[\\d,]+)|$)",
+    )
+    private val enchantmentItemRegex = chatGroup.create(
+        "corpse.item_enchantment",
+        "Enchanted Book \\((?<name>.*) (?<level>[IVX]+)\\)", // Enchanted Book (Ice Cold I)
+    )
+    private val corpseEndRegex = chatGroup.create(
+        "corpse.end",
+        "▬{64}",
+    )
+    private val corpseResourceful = chatGroup.create(
+        "corpse.resourceful",
+        "LUCKY! Your Resourceful perk saved your key from being consumed!",
+    )
 
     public var mineshaftType: MineshaftType? = null
         private set
@@ -53,7 +78,7 @@ public object MineshaftAPI {
         private set
 
     public val isCrystal: Boolean
-        get() = mineshaftVariant == MineshaftVariant.CRYSTAL
+        get() = mineshaftVariant == CRYSTAL
 
     public var scrap: Int = 0
         private set
@@ -61,17 +86,23 @@ public object MineshaftAPI {
     public var corpses: List<Corpse> = listOf()
         private set
 
+
+    private var inCorpseLoot = false
+    private var consumedKey = true
+    private var corpseType: CorpseType? = null
+    private var corpseLoot = mutableListOf<Pair<SkyBlockId, Int>>()
+
     @Subscription
-    @OnlyIn(SkyBlockIsland.MINESHAFT)
+    @OnlyIn(MINESHAFT)
     internal fun onWidgetUpdate(event: TabWidgetChangeEvent) {
         when (event.widget) {
-            TabWidget.AREA -> {
+            AREA -> {
                 scrapRegex.anyFound(event.new, "scrap") { (scrap) ->
                     MineshaftAPI.scrap = scrap.toIntValue()
                 }
             }
 
-            TabWidget.FROZEN_CORPSES -> {
+            FROZEN_CORPSES -> {
                 val foundCorpses = buildList {
                     corpseRegex.findAll(event.new, "corpse", "state") { (corpse, state) ->
                         val type = CorpseType.byName(corpse) ?: return@findAll
@@ -82,7 +113,9 @@ public object MineshaftAPI {
                 val wasEmpty = corpses.isEmpty()
                 corpses = foundCorpses
                 if (wasEmpty && corpses.isNotEmpty()) {
-                    CorpseSpawnEvent(foundCorpses).post()
+                    //? if < 26.4
+                    @Suppress("DEPRECATION") CorpseSpawnEvent(foundCorpses).post()
+                    CorpseEvent.Spawn(foundCorpses).post()
                 }
             }
 
@@ -91,7 +124,7 @@ public object MineshaftAPI {
     }
 
     @Subscription
-    @OnlyIn(SkyBlockIsland.MINESHAFT)
+    @OnlyIn(MINESHAFT)
     internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         mineshaftTypeRegex.anyFound(event.added, "type", "variant") { (type, variant) ->
             this.mineshaftType = MineshaftType.fromId(type)
@@ -101,10 +134,53 @@ public object MineshaftAPI {
     }
 
     @Subscription
-    @OnlyIn(SkyBlockIsland.DWARVEN_MINES)
-    internal fun onChat(event: ChatReceivedEvent.Pre) {
+    @OnlyIn(DWARVEN_MINES)
+    internal fun onDwarvenChat(event: ChatReceivedEvent.Pre) {
         if (mineshaftFoundRegex.matches(event.text)) {
             MineshaftFoundEvent.post()
+        }
+    }
+
+    @Subscription
+    @OnlyIn(MINESHAFT)
+    internal fun onCorpseChat(event: ChatReceivedEvent.Pre) {
+        when {
+            corpseStartRegex.match(event.text) -> {
+                corpseStartRegex.match(event.text, "type") { (type) ->
+                    inCorpseLoot = true
+                    corpseLoot.clear()
+                    corpseType = CorpseType.byName(type)
+                }
+            }
+
+            corpseEndRegex.match(event.text) && inCorpseLoot -> {
+                inCorpseLoot = false
+                CorpseEvent.Looted(corpseType ?: return, corpseLoot, consumedKey).post()
+                corpseLoot.clear()
+                consumedKey = true
+            }
+
+            corpseResourceful.matches(event.text) -> {
+                consumedKey = false
+            }
+
+            inCorpseLoot -> {
+                corpseItemRegex.match(event.text) { match ->
+                    val itemName = match["item"] ?: return@match
+                    val count = match["amount"].toIntValue().coerceAtLeast(1)
+
+                    val isEnchantment = enchantmentItemRegex.match(itemName, "name", "level") { (name, levelString) ->
+                        val level = levelString.parseRomanOrArabic()
+                        val enchantId = SkyBlockEnchantmentsRepo.getFromName(name) ?: return@match
+                        corpseLoot.add(SkyBlockId.enchantment(enchantId.id, level) to count)
+                    }
+
+                    if (isEnchantment) return@match
+
+                    val id = SkyBlockId.fromName(itemName, dropLast = false) ?: return@match
+                    corpseLoot.add(id to count)
+                }
+            }
         }
     }
 

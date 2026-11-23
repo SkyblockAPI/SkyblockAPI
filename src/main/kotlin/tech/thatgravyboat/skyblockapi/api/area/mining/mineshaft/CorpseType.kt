@@ -1,13 +1,17 @@
 package tech.thatgravyboat.skyblockapi.api.area.mining.mineshaft
 
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
-public enum class CorpseType(public val key: String? = null) {
+public enum class CorpseType(public val keyId: SkyBlockId? = null) {
     LAPIS,
-    TUNGSTEN("TUNGSTEN_KEY"),
-    UMBER("UMBER_KEY"),
-    VANGUARD("SKELETON_KEY"),
+    TUNGSTEN(SkyBlockId.item("tungsten_key")),
+    UMBER(SkyBlockId.item("umber_key")),
+    VANGUARD(SkyBlockId.item("skeleton_key")),
     ;
+
+    @Deprecated("Use keyId instead", ReplaceWith("keyId"))
+    public val key: String? = keyId?.skyblockId
 
     private val string = toFormattedName()
     override fun toString(): String = string
