@@ -113,7 +113,7 @@ public object DebugPackets {
             }
             val type = entry.type.id().toShortLanguageKey()
             val cancelled = if (entry.cancelled) "Y" else "N"
-            "${timestamp.epochSeconds},$direction,$type,$cancelled,$packet"
+            "${timestamp.toEpochMilliseconds()},$direction,$type,$cancelled,$packet"
         }
         copyToClipboard("$header\n${content.joinToString("\n")}", "Export copied to clipboard!")
     }
