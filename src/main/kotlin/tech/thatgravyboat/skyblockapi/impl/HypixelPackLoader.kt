@@ -51,11 +51,6 @@ public object HypixelPackLoader {
             return
         }
 
-        if (FabricLoader.getInstance().getModContainer("fabricloader").map { it.metadata.version < SemanticVersion.parse("0.20.0") }.orElse(false) == true) {
-            Text.of("Pack downloading requires fabric-loader 0.20.0 or newer!", TextColor.RED).sendWithPrefix()
-            return
-        }
-
         val mcVersion = McClient.mcVersion.stringVersion
         val isAlpha = path == "alpha"
         val branch = if (isAlpha) "alpha/$mcVersion" else mcVersion

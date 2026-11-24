@@ -139,5 +139,4 @@ internal object ItemStarsCalculator : Calculator {
 
 internal object NecronScrollsCalculator : DataTypeListCalculator(DataTypes.NECRON_SCROLLS)
 
-// TODO: Change when hypixel removes the current enrichment system
-internal object EnrichmentCalculator : SkyBlockIdDataTypeCalculator(DataTypes.ENRICHMENT)
+internal object EnrichmentCalculator : BoolDataTypeCalculator(DataTypes.HAS_ENRICHMENT, "ACCESSORY_ENRICHMENT")

@@ -5,9 +5,15 @@ import net.minecraft.core.BlockPos
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.Vec3
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.platform.identifier
+import tech.thatgravyboat.skyblockapi.utils.RegisterableValues
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
+import tech.thatgravyboat.skyblockapi.utils.extentions.pluralize
+import tech.thatgravyboat.skyblockapi.utils.text.Text
 import kotlin.jvm.optionals.getOrNull
 
 @GenerateCodec
@@ -25,17 +31,17 @@ public data class SkyBlockBiome(val biome: Identifier) {
 }
 
 @Suppress("unused")
-public object SkyBlockBiomes {
+public object SkyBlockBiomes : RegisterableValues<SkyBlockBiome>() {
 
+    override val name: String = "biome"
+    override val debugToggle: DebugToggle = debugToggle("unknown.biome", "Warns when detecting a new unknown skyblock biome")
     public const val HYPIXEL_IDENTIFIER: String = "hypixel"
 
-    internal val registeredBiomes = mutableMapOf<String, SkyBlockBiome>()
-
-    public fun getSkyBlockBiomeOrNull(biome: Identifier): SkyBlockBiome? = registeredBiomes.toList().find { it.second.biome == biome }?.second
+    public fun getSkyBlockBiomeOrNull(biome: Identifier): SkyBlockBiome? = registered[biome.path]
     public fun getSkyBlockBiome(biome: Identifier): SkyBlockBiome = getSkyBlockBiomeOrNull(biome) ?: register(biome.path, biome)
 
-    private fun register(key: String, id: String = key) = registeredBiomes.getOrPut(key) { SkyBlockBiome(Identifiers.of(HYPIXEL_IDENTIFIER, key)) }
-    private fun register(key: String, id: Identifier) = registeredBiomes.getOrPut(key) { SkyBlockBiome(id) }
+    private fun register(key: String, id: String = key) = getOrCreate(key) { SkyBlockBiome(Identifiers.of(HYPIXEL_IDENTIFIER, key)) }
+    private fun register(key: String, id: Identifier) = getOrCreate(key) { SkyBlockBiome(id) }
 
     // HUB
     public val WILDERNESS: SkyBlockBiome = register("wilderness")
@@ -67,4 +73,10 @@ public object SkyBlockBiomes {
 
     // Unused biome which seem to be originally planned as like Park
     public val BOG: SkyBlockBiome = register("bog")
+
+    override fun debugCommand() {
+        McClient.clipboard = missing.joinToString(prefix = "[", postfix = "]")
+        val size = missing.size
+        Text.sendDebug("Copied $size unknown ${pluralize(size, "biome")} to clipboard.")
+    }
 }

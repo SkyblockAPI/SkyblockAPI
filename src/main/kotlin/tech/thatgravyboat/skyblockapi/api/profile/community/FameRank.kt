@@ -2,27 +2,37 @@ package tech.thatgravyboat.skyblockapi.api.profile.community
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
-import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.utils.RegisterableValues
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
+import tech.thatgravyboat.skyblockapi.utils.extentions.toSnakeCase
 
 public data class FameRank(val id: String, val name: String, val multiplier: Double) {
     public companion object {
 
         @IncludedCodec(keyable = true)
-        public val CODEC: Codec<FameRank> = SkyblockAPICodecs.getCodec<String>().xmap(FameRanks::getById, FameRank::id)
+        public val CODEC: Codec<FameRank> = Codec.STRING.xmap(FameRanks::getById, FameRank::id)
     }
 }
 
 @Suppress("unused")
-public object FameRanks {
+public object FameRanks : RegisterableValues<FameRank>() {
+    override val name: String = "fame_rank"
+    override val debugToggle: DebugToggle = debugToggle("unknown.fame_rank", "Warns when detecting a new unknown fame rank")
 
     private val registeredFameRanks = mutableMapOf<String, FameRank>()
 
-    public fun getByName(name: String): FameRank? = registeredFameRanks.values.find { it.name.equals(name, true) }
+    public fun getByNameOrNull(name: String): FameRank? = registered.values.find { it.name.equals(name, true) }
+    public fun getByName(name: String): FameRank = getByNameOrNull(name) ?: register(name.toSnakeCase(), name, 1.0)
 
-    public fun getById(id: String): FameRank = registeredFameRanks[id] ?: NEW_PLAYER
+    public fun getByIdOrNull(id: String): FameRank? = registered[id]
+    public fun getById(id: String): FameRank {
+        getByIdOrNull(id)?.let { return it }
+        checkMissingKey(id)
+        return NEW_PLAYER
+    }
 
-    private fun register(key: String, name: String, multiplier: Double) =
-        registeredFameRanks.getOrPut(key) { FameRank(key, name, multiplier) }
+    private fun register(key: String, name: String, multiplier: Double) = getOrCreate(key) { FameRank(key, name, multiplier) }
 
     public val NEW_PLAYER: FameRank = register("new_player", "New Player", 1.0)
     public val SETTLER: FameRank = register("settler", "Settler", 1.1)

@@ -8,7 +8,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import java.util.UUID
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KClass
 
 internal class StoredPlayerData<T : Any>(
@@ -45,11 +44,8 @@ internal class StoredPlayerData<T : Any>(
         save()
     }
 
-    /** Only saves if [edit] returns true. Also returns the result of [edit] */
-    @JvmName("editBoolean")
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    inline fun edit(edit: T.() -> Boolean): Boolean {
+    /** Only saves if [editIf] returns true. Also returns the result of [editIf] */
+    inline fun editIf(edit: T.() -> Boolean): Boolean {
         contract {
             callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
         }
@@ -58,13 +54,16 @@ internal class StoredPlayerData<T : Any>(
         return edited
     }
 
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    inline fun edit(edit: T.() -> Unit?) {
+    /**
+     * Avoids saving if you return inside the function
+     * @sample tech.thatgravyboat.skyblockapi.api.data.stored.ProfileStorage.setBingoRank
+     */
+    inline fun edit(edit: T.() -> Unit) {
         contract {
             callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
         }
-        if (edit(get()) != null) save()
+        edit(get())
+        save()
     }
 
     fun delete(): Boolean {

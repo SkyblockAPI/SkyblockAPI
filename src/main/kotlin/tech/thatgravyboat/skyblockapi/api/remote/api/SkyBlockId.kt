@@ -150,6 +150,7 @@ public value class SkyBlockId private constructor(public val id: String) {
         !this.isDerived && derived -> SkyBlockId("$DERIVED${this.id}")
         else -> this
     }
+    public fun asRoot(): SkyBlockId = asDerived(false)
 
     public val isDerived: Boolean get() = this.id.startsWith(DERIVED)
     public val rootId: String get() = this.id.removeDerived()

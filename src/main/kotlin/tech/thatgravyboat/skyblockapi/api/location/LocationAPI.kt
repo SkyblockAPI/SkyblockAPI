@@ -2,7 +2,6 @@ package tech.thatgravyboat.skyblockapi.api.location
 
 import me.owdding.ktmodules.Module
 import net.hypixel.data.type.GameType
-import net.minecraft.resources.Identifier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
@@ -42,9 +41,7 @@ import kotlin.time.Instant
 public object LocationAPI {
 
     private val unknownAreasDebug = debugToggle("unknown.areas", "Warns when detecting a new unknown skyblock area")
-    private val unknownBiomesDebug = debugToggle("unknown.biomes", "Warns when detecting a new unknown skyblock biome")
     private val unknownAreas = mutableMapOf<String, SkyBlockIsland?>()
-    private val unknownBiomes = mutableSetOf<Identifier>()
 
     private val locationRegex = RegexGroup.SCOREBOARD.create(
         "location",
@@ -84,7 +81,12 @@ public object LocationAPI {
         private set
 
     public var area: SkyBlockArea = SkyBlockAreas.NONE
-        private set
+        private set(value) {
+            if (field == value) return
+            val prev = field
+            field = value
+            AreaChangeEvent(prev, value).post()
+        }
 
     public var biome: SkyBlockBiome? = null
         private set
@@ -163,9 +165,7 @@ public object LocationAPI {
     @OnlyOnSkyBlock
     internal fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         locationRegex.anyMatch(event.added, "location") { (location) ->
-            val old = area
             area = SkyBlockArea(location)
-            AreaChangeEvent(old, area).post()
 
             val knownArea = SkyBlockAreas.registeredAreas.entries.find { it.value.name == location } != null
             if (!knownArea) {
@@ -200,17 +200,7 @@ public object LocationAPI {
             return
         }
 
-        val knownBiome = SkyBlockBiomes.registeredBiomes.contains(biome.path)
-
-        val hypixelBiome = SkyBlockBiomes.getSkyBlockBiome(biome)
-        if (LocationAPI.biome == hypixelBiome) return
-
-        LocationAPI.biome = hypixelBiome
-
-        if (!knownBiome) {
-            unknownBiomes.add(biome)
-            debugString(unknownBiomesDebug) { "Unknown biome detected: '$biome'" }
-        }
+        this.biome = SkyBlockBiomes.getSkyBlockBiome(biome)
     }
 
     private fun reset() {
@@ -252,15 +242,6 @@ public object LocationAPI {
                 }
                 McClient.clipboard = unknownAreas.entries.joinToString(prefix = "[", postfix = "]") { "${it.value?.name ?: "null"} -> ${it.key}" }
                 val size = unknownAreas.size
-                Text.sendDebug("Copied $size unknown ${pluralize(size, "biome")} to clipboard.")
-            }
-            thenCallback("biomes") {
-                if (unknownBiomes.isEmpty()) {
-                    Text.sendDebug("No missing biomes.")
-                    return@thenCallback
-                }
-                McClient.clipboard = unknownBiomes.joinToString(prefix = "[", postfix = "]")
-                val size = unknownBiomes.size
                 Text.sendDebug("Copied $size unknown ${pluralize(size, "area")} to clipboard.")
             }
         }

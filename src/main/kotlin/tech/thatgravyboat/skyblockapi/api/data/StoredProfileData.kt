@@ -9,7 +9,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.getEmptyConstructor
 import java.util.UUID
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KClass
 
 internal class StoredProfileData<T : Any>(
@@ -96,11 +95,8 @@ internal class StoredProfileData<T : Any>(
         removeProfile(profile)
     }
 
-    /** Only saves if [edit] returns true. Also returns the result of [edit] */
-    @JvmName("editBoolean")
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    inline fun edit(edit: T.() -> Boolean): Boolean {
+    /** Only saves if [editIf] returns true. Also returns the result of [editIf] */
+    inline fun editIf(edit: T.() -> Boolean): Boolean {
         contract {
             callsInPlace(edit, InvocationKind.AT_MOST_ONCE)
         }
@@ -110,34 +106,15 @@ internal class StoredProfileData<T : Any>(
     }
 
     /**
-     * Helper function for editing data and saving.
-     * If you don't want the data to be saved, you have to edit return `null` to the lambda or just return in the current function altogether.
-     * Returning in the current function alltogether is generally better, since when compiled it makes it avoid dealing with the nullable Unit,
-     * and simply calls [save] after editing
-     * Since Kotlin returns [Unit] in lambdas when not specified, those are usually not needed to be actually written.
-     *
-     * Examples:
-     * ```kt
-     * STORED_DATA.edit {
-     *     if (this.value == newValue) return
-     *     this.value = newValue
-     * }
-     * ```
-     * ```kt
-     * STORED_DATA.edit {
-     *     if (this.value == newValue) return@edit null
-     *     this.value = newValue
-     * }
-     * ```
-     * */
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    inline fun edit(edit: T.() -> Unit?) {
+     * Avoids saving if you return inside the function
+     * @sample tech.thatgravyboat.skyblockapi.api.data.stored.ProfileStorage.setBingoRank
+     */
+    inline fun edit(edit: T.() -> Unit) {
         contract {
             callsInPlace(edit, InvocationKind.AT_MOST_ONCE)
         }
-        val data = get() ?: return
-        if (edit(data) != null) save()
+        edit(get() ?: return)
+        save()
     }
 
     fun removeProfile(name: String) {

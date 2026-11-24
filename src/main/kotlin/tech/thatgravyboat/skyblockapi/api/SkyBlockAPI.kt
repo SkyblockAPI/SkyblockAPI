@@ -12,6 +12,7 @@ import tech.thatgravyboat.repolib.api.RepoLibLogger
 import tech.thatgravyboat.repolib.api.RepoVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.misc.PostInitEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiDebugEvent
@@ -67,6 +68,7 @@ public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal fun postInit() {
         DataTypesRegistry.load()
+        PostInitEvent.post()
     }
 
     internal fun id(path: String) = Identifiers.of(NAMESPACE, path)

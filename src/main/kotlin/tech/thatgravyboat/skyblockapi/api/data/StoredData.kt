@@ -33,7 +33,6 @@ import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.io.path.createParentDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.exists
@@ -75,11 +74,8 @@ internal class StoredData<T : Any>(
         alphaData = null
     }
 
-    /** Only saves if [edit] returns true. Also returns the result of [edit] */
-    @JvmName("editBoolean")
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    inline fun edit(edit: T.() -> Boolean): Boolean {
+    /** Only saves if [editIf] returns true. Also returns the result of [editIf] */
+    inline fun editIf(edit: T.() -> Boolean): Boolean {
         contract {
             callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
         }
@@ -88,13 +84,16 @@ internal class StoredData<T : Any>(
         return edited
     }
 
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    inline fun edit(edit: T.() -> Unit?) {
+    /**
+     * Avoids saving if you return inside the function
+     * @sample tech.thatgravyboat.skyblockapi.api.data.stored.ProfileStorage.setBingoRank
+     */
+    inline fun edit(edit: T.() -> Unit) {
         contract {
             callsInPlace(edit, InvocationKind.EXACTLY_ONCE)
         }
-        if (edit(get()) != null) save()
+        edit(get())
+        save()
     }
 
 
@@ -251,7 +250,10 @@ internal class StoredData<T : Any>(
         }
 
         @Subscription(FreshHypixelAlphaDetectedEvent::class)
-        private fun onFreshAlpha() = allStoredDatas.forEach(StoredData<*>::deleteAlpha)
+        private fun onFreshAlpha() {
+            Logger.info("Fresh Alpha detected, deleting stored alpha data.")
+            allStoredDatas.forEach(StoredData<*>::deleteAlpha)
+        }
 
         @Subscription(TickEvent::class)
         @TimePassed("10s")

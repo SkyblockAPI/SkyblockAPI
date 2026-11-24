@@ -15,13 +15,13 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.repolib.api.RepoAPI
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.CommandBuilder
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.commands.GiveCommands
 import tech.thatgravyboat.skyblockapi.impl.suggestion.ArgumentTypeSuggestionProvider
 import tech.thatgravyboat.skyblockapi.impl.suggestion.LayeredSuggestionProvider
@@ -38,12 +38,8 @@ public abstract class RepoItemCache<K>(private val name: String) {
     private val cache: MutableMap<K, LazyItemStack?> = mutableMapOf()
 
     init {
-        if (repos.contains(name)) {
-            Logger.warn("RepoItemCache with name '$name' already exists. This may cause issues with cache invalidation.")
-        }
-
-        SkyBlockAPI.eventBus.register<ServerChangeEvent> {
-            this.cache.values.forEach { it?.invalidate() }
+        if (repos.put(name, this) != null) {
+            McClient.throwInDev("RepoItemCache with name '$name' already exists. This may cause issues with cache invalidation.")
         }
     }
 
@@ -68,9 +64,16 @@ public abstract class RepoItemCache<K>(private val name: String) {
         cache.clear()
     }
 
+    @Module
     public companion object {
+        private val repos = mutableMapOf<String, RepoItemCache<*>>()
 
-        private val repos: MutableSet<String> = mutableSetOf()
+        @Subscription(ServerChangeEvent::class)
+        private fun onServerChange() {
+            repos.values.forEach { cache ->
+                cache.cache.values.forEach { it?.invalidate() }
+            }
+        }
 
         protected fun LazyItemStack(json: JsonObject?): LazyItemStack? = LazyItemStack.CODEC
             .parse(Json.ops, json ?: return null)
