@@ -788,6 +788,7 @@ public final class tech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/Corp
 	public static final field VANGUARD Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/CorpseType;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getKey ()Ljava/lang/String;
+	public final fun getKeyId-W95Wflg ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/CorpseType;
 	public static fun values ()[Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/CorpseType;
@@ -3342,6 +3343,35 @@ public final class tech/thatgravyboat/skyblockapi/api/events/location/isle/Troph
 	public final fun getAmount ()I
 	public final fun getTier ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishTier;
 	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/isle/trophyfish/TrophyFishType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class tech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent : tech/thatgravyboat/skyblockapi/api/events/base/SkyBlockEvent {
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent$Looted : tech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent {
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/CorpseType;Ljava/util/Map;Z)V
+	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/CorpseType;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun component3 ()Z
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/CorpseType;Ljava/util/Map;Z)Ltech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent$Looted;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent$Looted;Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/CorpseType;Ljava/util/Map;ZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent$Looted;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getKeyConsumed ()Z
+	public final fun getLoot ()Ljava/util/Map;
+	public final fun getType ()Ltech/thatgravyboat/skyblockapi/api/area/mining/mineshaft/CorpseType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent$Spawn : tech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent$Spawn;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent$Spawn;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/events/location/mineshaft/CorpseEvent$Spawn;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCorpses ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -6934,6 +6964,7 @@ public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockEnchantm
 	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockEnchantmentsRepo;
 	public synthetic fun create (Ljava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public final fun get (Ljava/lang/String;)Ltech/thatgravyboat/repolib/api/EnchantsAPI$Enchant;
+	public final fun getFromName (Ljava/lang/String;)Ltech/thatgravyboat/repolib/api/EnchantsAPI$Enchant;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/repo/apis/SkyBlockEnchantmentsRepo$Query {
