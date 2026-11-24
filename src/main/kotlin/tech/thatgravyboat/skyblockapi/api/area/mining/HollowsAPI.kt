@@ -28,7 +28,7 @@ public object HollowsAPI {
 
     private val nucleusStartRegex = nucleusGroup.create(
         "start",
-        " +CRYSTAL NUCLEUS LOOT BUNDLE",
+        " +CRYSTAL NUCLEUS LOOT BUNDLE ?",
     )
     private val nucleusItemRegex = nucleusGroup.create(
         "item",
