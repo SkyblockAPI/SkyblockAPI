@@ -178,6 +178,7 @@ compactingResources {
     configureTask(tasks.named<AbstractCopyTask>("processResources").get())
 
     removeComments("skyblockid/unobtainable_ids")
+    removeComments("accessories")
     substituteFromDifferentFile("slayer", "slayers")
 }
 

@@ -2,29 +2,33 @@ package tech.thatgravyboat.skyblockapi.api.profile.maxwell
 
 import me.owdding.ktmodules.Module
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
+import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockStat
 import tech.thatgravyboat.skyblockapi.api.data.stored.MaxwellStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.IgnoreFiller
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.profile.ProfileChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutAPI.loadoutDebug
 import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.LoadoutChangeEvent
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
+import tech.thatgravyboat.skyblockapi.api.remote.repo.accessory.RepoAccessoryData
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugAttachable
 import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
 import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.utils.container.ContainerRegion
 import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugString
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.addIfNotNull
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
@@ -61,11 +65,16 @@ public data object MaxwellAPI : ItemDebugCategory {
         get() = MaxwellStorage.accessoryPower
 
     //? if < 26.4 {
-    @Deprecated("Accessories aren't really assigned a specific slot and page anymore.", ReplaceWith("accessories"))
+    @Deprecated("Accessories aren't really assigned a specific slot and page anymore.", ReplaceWith("accessories"), level = HIDDEN)
     @Suppress("DEPRECATION")
-    val accessoryEntries: Collection<AccessoryBagEntry> get() = MaxwellStorage.accessoriesEntries//?}
+    val accessoryEntries: Collection<AccessoryBagEntry> get() = emptyList()//?}
 
+    //~ if >= 26.4 'List<' -> 'Collection<' {
     val accessories: List<ItemStack>
+        get() = accessoryFamilies.values/*? if < 26.4 */.toList()
+    //~}
+
+    val accessoryFamilies: Map<String, ItemStack>
         get() = MaxwellStorage.accessories
 
     val unlockedPowers: Set<MaxwellPower>
@@ -117,7 +126,7 @@ public data object MaxwellAPI : ItemDebugCategory {
 
     private val accessoryBagTitleRegex = inventoryGroup.create(
         "accessory_bag.title",
-        "^Accessory Bag(?: \\((?<current>[\\d,.]+))?",
+        """^(?:\(\d+/\d+\) )?Accessory Bag""",
     )
 
     private val bagsGroup = inventoryGroup.group("bags")
@@ -173,6 +182,8 @@ public data object MaxwellAPI : ItemDebugCategory {
     //endregion
     //endregion
 
+    private val missingFamiliesToggle = debugToggle("unknown.accessory_family", "Warns when an accessory without an accessory family is found")
+
     @Subscription
     @OnlyOnSkyBlock
     internal fun onChat(event: ChatReceivedEvent.Pre) {
@@ -186,6 +197,7 @@ public data object MaxwellAPI : ItemDebugCategory {
 
     // These need to be on InventoryChangeEvent because you can interact with the GUI and update data
     @Subscription
+    @IgnoreFiller
     @OnlyOnSkyBlock
     internal fun onInventoryUpdate(event: InventoryChangeEvent) {
         if (event.isInPlayerInventory) return
@@ -200,9 +212,6 @@ public data object MaxwellAPI : ItemDebugCategory {
     internal fun onInventoryFullyOpened(event: ContainerInitializedEvent) {
         if (handleBagsGui(event)) return
     }
-
-    @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
-    private fun onServerChange() = MaxwellStorage.fixEmptyAccessories()
 
     @Subscription(priority = Subscription.HIGHEST)
     context(event: LoadoutChangeEvent)
@@ -272,13 +281,43 @@ public data object MaxwellAPI : ItemDebugCategory {
         }
     }
 
-    // TODO: maybe use ContainerRegion.getId for getting the "real" index?
     private fun handleAccessoryBagGui(event: InventoryChangeEvent): Boolean {
-        val match = accessoryBagTitleRegex.find(event.title) ?: return false
-        if (isAccessoryOrEmpty(event.item)) {
-            val currentPage = match.groups["current"]?.value?.parseFormattedInt(1) ?: 1
-            MaxwellStorage.updateAccessory(currentPage, event.slot.index, event.item)
-            event.addDebugString { "Accessory in page $currentPage" }
+        if (!accessoryBagTitleRegex.containsMatchIn(event.title)) return false
+        if (!event.isInMainPart) return true
+        val item = event.item
+        val itemModel = item.getItemModel()
+
+        // item with "No results" whenever you search
+        if (itemModel == Items.BARRIER) return true
+
+        if (itemModel == Items.DYE.gray) {
+            val familyName = RepoAccessoryData.getFamilyFromItemName(item.cleanName)?.name
+            if (familyName == null) {
+                debugString(missingFamiliesToggle) { "Unknown accessory family for accessory ${item.cleanName}" }
+                event.addDebugString { "Unknown accessory family" }
+                return true
+            }
+            MaxwellStorage.removeAccessory(familyName)
+            event.addDebugString { "No accessory in family $familyName" }
+
+        } else if (isAccessory(item)) {
+            val id = item.getSkyBlockId() ?: run {
+                debugString(missingFamiliesToggle) { "Accessory without id: ${item.cleanName}" }
+                return true
+            }
+            val family = RepoAccessoryData.getFamilyFromItemId(id)
+            val familyName = family?.name ?: run {
+                debugString(missingFamiliesToggle) { "Unknown accessory family for accessory ${item.cleanName} [${id.rootId}]" }
+                event.addDebugString { "Unknown accessory family for ${id.rootId}, using id as family" }
+
+                return@run id.cleanId
+            }
+            val tier = family?.tierOf(id)
+
+            MaxwellStorage.updateAccessory(familyName, item)
+            event.addDebugString { "Accessory of family $familyName" + if (tier != null) " (tier $tier)" else "" }
+        } else {
+            debugString(missingFamiliesToggle) { "Unknown item in accessory bag gui: ${item.cleanName}" }
         }
         return true
     }
@@ -397,12 +436,42 @@ public data object MaxwellAPI : ItemDebugCategory {
         }
     }
 
+    @Subscription(ProfileChangeEvent::class)
+    private fun onProfileJoin() = MaxwellStorage.fixAccessoryFamilies()
+
     @Subscription
     internal fun onCommandRegister(event: RegisterSkyblockApiCommandsEvent) {
         event.register("maxwell") {
             thenCallback("reset") {
                 MaxwellStorage.reset()
                 Text.sendDebug("Reset Maxwell Data!")
+            }
+            thenCallback("accessories") {
+                val families = mutableMapOf<String, ItemStack?>()
+                val unknownFamilies = mutableSetOf<String>()
+                val duplicateFamilies = mutableSetOf<String>()
+
+                RepoAccessoryData.families.keys.forEach { families[it] = null }
+                MaxwellStorage.accessories.forEach { (family, item) ->
+                    if (family !in families) unknownFamilies.add(family)
+                    if (families[family] != null) duplicateFamilies.add(family)
+                    families[family] = item
+                }
+                val text = buildString {
+                    if (unknownFamilies.isNotEmpty()) {
+                        appendLine("Unknown families: ${unknownFamilies.size}")
+                    }
+                    if (duplicateFamilies.isNotEmpty()) {
+                        appendLine("Families with duplicates: ${duplicateFamilies.size}")
+                    }
+                    appendLine("Owned accessories:")
+                    for ((family, item) in families) {
+                        append(" - $family: ")
+                        appendLine(item?.cleanName ?: "<null>")
+                    }
+                }
+                McClient.clipboard = text
+                Text.sendDebug("Copied accessory data to clipboard")
             }
             then("tunings") {
                 thenCallback("templates") {
@@ -423,9 +492,9 @@ public data object MaxwellAPI : ItemDebugCategory {
         }
     }
 
-    private fun isAccessoryOrEmpty(item: ItemStack): Boolean {
-        if (item.isEmpty) return true
+    private fun isAccessory(item: ItemStack): Boolean {
+        if (item.isEmpty) return false
         val category = item.getData(DataTypes.CATEGORY) ?: return false
-        return category.equalsAny(SkyBlockCategory.ACCESSORY, SkyBlockCategory.HATCESSORY, ignoreModifiers = true)
+        return category.equalsAny(ACCESSORY, HATCESSORY, ignoreModifiers = true)
     }
 }

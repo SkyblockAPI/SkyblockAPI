@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.maxwell
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.utils.RegisterableValues
 import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
@@ -15,6 +16,7 @@ public data class MaxwellPower(val name: String, val internalName: String) {
 }
 
 @Suppress("unused")
+@Module
 public object MaxwellPowers : RegisterableValues<MaxwellPower>() {
     override val name: String = "power"
     override val debugToggle: DebugToggle = debugToggle("unknown.maxwell_power", "Warns when detecting a new unknown maxwell power")
