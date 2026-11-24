@@ -2,15 +2,17 @@ package tech.thatgravyboat.skyblockapi.api.events.base.predicates
 
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
+import tech.thatgravyboat.skyblockapi.api.events.base.PredicateForEvents
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.hasAnnotation
 import java.lang.reflect.Method
 
+@PredicateForEvents
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnlyOnSkyBlock
+public annotation class OnlyOnSkyBlock
 
-class OnlyOnSkyBlockEventPredicateProvider : EventPredicateProvider {
+public class OnlyOnSkyBlockEventPredicateProvider : EventPredicateProvider {
 
     override fun getPredicate(method: Method): EventPredicate? {
         if (!method.hasAnnotation<OnlyOnSkyBlock>()) return null

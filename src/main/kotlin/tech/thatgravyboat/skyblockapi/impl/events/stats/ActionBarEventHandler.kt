@@ -7,20 +7,40 @@ import tech.thatgravyboat.skyblockapi.api.data.item.ArmorStack
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.*
+import tech.thatgravyboat.skyblockapi.api.events.info.ActionBarWidget
+import tech.thatgravyboat.skyblockapi.api.events.info.ActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ActionBarWidgetUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ArmadilloActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ArmorStackActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.DefenseActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.DrillActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.HealthActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.ManaActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.OverflowManaActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.PressureActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.RenderActionBarWidgetEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.RiftTimeActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.SecretsActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpLiteralActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpPercentActionBarWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.info.VitalityActionBarWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseDuration
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.regex.component.Destructured
 import tech.thatgravyboat.skyblockapi.utils.regex.component.find
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.remove
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.split
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.toStringWithFormattingCodes
 import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.trim
 
-data class ActionBarWidgetType(
+public data class ActionBarWidgetType(
     val widget: ActionBarWidget,
     val regex: ComponentRegex,
     val factory: (Component, Component, Destructured) -> ActionBarWidgetUpdateEvent?,
@@ -30,57 +50,59 @@ data class ActionBarWidgetType(
 )
 
 @Module
-object ActionBarEventHandler {
+public object ActionBarEventHandler {
 
     private val types = listOf(
-        // Health: §c1,303/1,303❤
+        // §c3,487/3,487
         ActionBarWidgetType(
             ActionBarWidget.HEALTH,
-            ComponentRegex("(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)❤(?:\\+§.[\\d,]+.)?"),
+            ComponentRegex("(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)[❤\uE010](?:\\+[\\d,]+.)?"),
             factory = { old, new, it ->
                 ActionBarWidgetUpdateEvent.Health(it["health"].toIntValue(), it["maxhealth"].toIntValue(), old, new)
             },
             legacyFactory = { old, new ->
-                Regex("§.(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)❤(?:\\+§.[\\d,]+.)?").findOrNull(new) {
+                Regex("§.(?<health>[\\d,]+)/(?<maxhealth>[\\d,]+)[❤\uE010](?:\\+§.[\\d,]+.)?").findOrNull(new) {
                     HealthActionBarWidgetChangeEvent(it["health"].toIntValue(), it["maxhealth"].toIntValue(), old, new)
                 }
             },
         ),
-        // Defense: §a245§a❈ Defense
+        // §a435
+        // §a133§a Defense
         ActionBarWidgetType(
             ActionBarWidget.DEFENSE,
-            ComponentRegex("(?<defense>[\\d,]+)❈ Defense"),
+            ComponentRegex("(?<defense>[\\d,]+)[❈\uE008](?: Defense)?"),
             factory = { old, new, it ->
                 ActionBarWidgetUpdateEvent.Defense(it["defense"].toIntValue(), old, new)
             },
             legacyFactory = { old, new ->
-                Regex("§.(?<defense>[\\d,]+)§.❈ Defense").findOrNull(new) {
+                Regex("§.(?<defense>[\\d,]+)(?:§.)?[❈\uE008](?: Defense)?").findOrNull(new) {
                     DefenseActionBarWidgetChangeEvent(it["defense"].toIntValue(), old, new)
                 }
             },
         ),
-        // Mana: §b319/319✎ Mana
+        // §b527/527
+        // §b264/264 Mana
         ActionBarWidgetType(
             ActionBarWidget.MANA,
-            ComponentRegex("(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ Mana"),
+            ComponentRegex("(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)[✎\uE003](?: Mana)?"),
             factory = { old, new, it ->
                 ActionBarWidgetUpdateEvent.Mana(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, new)
             },
             legacyFactory = { old, new ->
-                Regex("§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)✎ Mana").findOrNull(new) {
+                Regex("§.(?<mana>[\\d,]+)/(?<maxmana>[\\d,]+)[✎\uE003](?: Mana)?").findOrNull(new) {
                     ManaActionBarWidgetChangeEvent(it["mana"].toIntValue(), it["maxmana"].toIntValue(), old, new)
                 }
             },
         ),
-        // Overflow Mana: §3400ʬ
+        // §3400ʬ
         ActionBarWidgetType(
             ActionBarWidget.OVERFLOW_MANA,
-            ComponentRegex("(?<overflow>[\\d,]+)ʬ"),
+            ComponentRegex("(?<overflow>[\\d,]+)[ʬ\uE017]"),
             factory = { old, new, it ->
                 ActionBarWidgetUpdateEvent.OverflowMana(it["overflow"].toIntValue(), old, new)
             },
             legacyFactory = { old, new ->
-                Regex("§.(?<overflow>[\\d,]+)ʬ").findOrNull(new) {
+                Regex("§.(?<overflow>[\\d,]+)[ʬ\uE017]").findOrNull(new) {
                     OverflowManaActionBarWidgetChangeEvent(it["overflow"].toIntValue(), old, new)
                 }
             },
@@ -201,7 +223,7 @@ object ActionBarEventHandler {
         // Pressure
         ActionBarWidgetType(
             ActionBarWidget.PRESSURE,
-            ComponentRegex("Pressure: ❍(?<pressure>\\d+)%"),
+            ComponentRegex("Pressure: [❍\uE01B](?<pressure>\\d+)%"),
             factory = { old, new, it ->
                 ActionBarWidgetUpdateEvent.Pressure(it["pressure"].toIntValue(), old, new)
             },
@@ -260,6 +282,12 @@ object ActionBarEventHandler {
             ComponentRegex("NOT ENOUGH MANA"),
             factory = { old, new, _ -> ActionBarWidgetUpdateEvent.NoMana(old, new) },
         ),
+        // §4122/122
+        ActionBarWidgetType(
+            ActionBarWidget.VITALITY,
+            ComponentRegex("(?<current>[\\d,]+)/(?<max>[\\d,]+)\uE028"),
+            factory = { old, new, it -> ActionBarWidgetUpdateEvent.Vitality(it["current"].parseFormattedInt(), it["max"].parseFormattedInt(), old, new) },
+        ),
     )
 
     private val widgets = mutableMapOf<ActionBarWidget, Component>()
@@ -267,7 +295,7 @@ object ActionBarEventHandler {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onActionbarReceivedPre(event: ActionBarReceivedEvent.Pre) {
+    internal fun onActionbarReceivedPre(event: ActionBarReceivedEvent.Pre) {
         widgetsToHide.clear()
 
         val parts = event.component.split("     ")
@@ -305,7 +333,7 @@ object ActionBarEventHandler {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onActionbarReceivedPost(event: ActionBarReceivedEvent.Post) {
+    internal fun onActionbarReceivedPost(event: ActionBarReceivedEvent.Post) {
         var currentBar = event.component
 
         val iterator = widgetsToHide.iterator()

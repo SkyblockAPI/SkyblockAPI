@@ -2,8 +2,10 @@ package tech.thatgravyboat.skyblockapi.api.profile.currency
 
 import me.owdding.ktcodecs.GenerateCodec
 
+// TODO: move somewhere else once its internal in all versions
 @GenerateCodec
-data class CurrencyData(
+//~ if >= 26.4 'public' -> 'internal'
+public data class CurrencyData(
     var purse: Double = 0.0,
     var purseType: PurseType = PurseType.UNKNOWN,
     var personalBank: Long = 0,
@@ -15,4 +17,5 @@ data class CurrencyData(
     var sowdust: Long = 0,
     var northStars: Long = 0,
     var soulflow: Long = 0,
+    var kernels: Long = 0,
 )

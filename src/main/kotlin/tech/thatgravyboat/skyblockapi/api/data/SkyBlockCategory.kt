@@ -1,47 +1,165 @@
 package tech.thatgravyboat.skyblockapi.api.data
 
-class SkyBlockCategory private constructor(
-    val name: String,
-    val isDungeon: Boolean = false
+import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.IncludedCodec
+import me.owdding.ktmodules.Module
+import tech.thatgravyboat.skyblockapi.utils.RegisterableValues
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
+
+public class SkyBlockCategory private constructor(
+    public val name: String,
+    public val modifier: Modifier? = null,
 ) {
 
-    fun equals(other: SkyBlockCategory, ignoreDungeon: Boolean = false): Boolean =
-        if (!ignoreDungeon) this === other else this.name == other.name
+    public val isDungeon: Boolean get() = modifier == Modifier.DUNGEON
+    public val isSlayer: Boolean get() = modifier == Modifier.SLAYER
 
-    fun equalsAny(vararg others: SkyBlockCategory, ignoreDungeon: Boolean = false): Boolean =
-        others.any { equals(it, ignoreDungeon) }
+    public fun equals(other: SkyBlockCategory, ignoreModifiers: Boolean = false): Boolean =
+        if (!ignoreModifiers) this === other else this.name == other.name
 
-    override fun toString(): String = if (isDungeon) "dungeon $name" else name
+    public fun equalsAny(vararg others: SkyBlockCategory, ignoreModifiers: Boolean = false): Boolean =
+        others.any { equals(it, ignoreModifiers) }
 
-    @Suppress("unused")
-    companion object {
-        private val registeredCategories = mutableMapOf<String, SkyBlockCategory>()
+    override fun toString(): String = if (modifier != null) "$modifier $name" else name
 
-        fun create(string: String): SkyBlockCategory {
-            val formatted = string.lowercase()
-            return registeredCategories.getOrPut(formatted) {
-                if (formatted.startsWith("dungeon", true)) {
-                    SkyBlockCategory(formatted.removePrefix("dungeon").trim(), true)
+    // TODO: move to a `SkyBlockCategories` class instead of companion
+    @Module
+    public companion object : RegisterableValues<SkyBlockCategory>() {
+        @IncludedCodec(keyable = true)
+        public val CODEC: Codec<SkyBlockCategory> = Codec.STRING.xmap(
+            { create(it, true) },
+            SkyBlockCategory::toString
+        )
+
+        override val name: String = "category"
+        override val pluralName: String = "categories"
+
+        override val debugToggle: DebugToggle = debugToggle("unknown.category", "Warns when detecting a new unknown skyblock category")
+        public val categories: Collection<SkyBlockCategory> get() = registered.values
+
+        public fun create(string: String, parseModifier: Boolean): SkyBlockCategory {
+            return getOrCreate(string.lowercase()) { key ->
+                val modifier = if (parseModifier) Modifier.byName(key.substringBefore(" ")) else null
+                if (modifier == null) {
+                    SkyBlockCategory(key)
                 } else {
-                    SkyBlockCategory(formatted.trim())
+                    SkyBlockCategory(key.substringAfter(" ").trim(), modifier)
                 }
             }
         }
 
-        val NECKLACE = create("necklace")
-        val DUNGEON_NECKLACE = create("dungeon necklace")
-        val CLOAK = create("cloak")
-        val DUNGEON_CLOAK = create("dungeon cloak")
-        val BELT = create("belt")
-        val DUNGEON_BELT = create("dungeon belt")
-        val GLOVES = create("gloves")
-        val DUNGEON_GLOVES = create("dungeon gloves")
-        val BRACELET = create("bracelet")
-        val DUNGEON_BRACELET = create("dungeon bracelet")
-        val ARROW = create("arrow")
-        val ACCESSORY = create("accessory")
-        val DUNGEON_ACCESSORY = create("dungeon accessory")
-        val HATCESSORY = create("hatcessory")
+        public fun create(string: String, @IntroducedAt("4.2.43") modifier: Modifier? = null): SkyBlockCategory {
+            val formatted = if (modifier == null) string.lowercase()
+            else "$modifier ${string.lowercase()}"
+            return getOrCreate(formatted) {
+                SkyBlockCategory(string.lowercase(), modifier)
+            }
+        }
 
+        public val NECKLACE: SkyBlockCategory = create("necklace")
+        public val DUNGEON_NECKLACE: SkyBlockCategory = create("necklace", Modifier.DUNGEON)
+        public val CLOAK: SkyBlockCategory = create("cloak")
+        public val DUNGEON_CLOAK: SkyBlockCategory = create("cloak", Modifier.DUNGEON)
+        public val BELT: SkyBlockCategory = create("belt")
+        public val DUNGEON_BELT: SkyBlockCategory = create("belt", Modifier.DUNGEON)
+        public val GLOVES: SkyBlockCategory = create("gloves")
+        public val DUNGEON_GLOVES: SkyBlockCategory = create("gloves", Modifier.DUNGEON)
+        public val BRACELET: SkyBlockCategory = create("bracelet")
+        public val DUNGEON_BRACELET: SkyBlockCategory = create("bracelet", Modifier.DUNGEON)
+        public val ARROW: SkyBlockCategory = create("arrow")
+        public val ACCESSORY: SkyBlockCategory = create("accessory")
+        public val DUNGEON_ACCESSORY: SkyBlockCategory = create("accessory", Modifier.DUNGEON)
+        public val HATCESSORY: SkyBlockCategory = create("hatcessory")
+
+        public val SWORD: SkyBlockCategory = create("sword")
+        public val DUNGEON_SWORD: SkyBlockCategory = create("sword", Modifier.DUNGEON)
+        public val SLAYER_SWORD: SkyBlockCategory = create("sword", Modifier.SLAYER)
+        public val LONGSWORD: SkyBlockCategory = create("longsword")
+        public val DUNGEON_LONGSWORD: SkyBlockCategory = create("longsword", Modifier.DUNGEON)
+        public val BOW: SkyBlockCategory = create("bow")
+        public val DUNGEON_BOW: SkyBlockCategory = create("bow", Modifier.DUNGEON)
+        public val WAND: SkyBlockCategory = create("wand")
+        public val DUNGEON_WAND: SkyBlockCategory = create("wand", Modifier.DUNGEON)
+        public val AXE: SkyBlockCategory = create("axe")
+        public val GAUNTLET: SkyBlockCategory = create("gauntlet")
+        public val PICKAXE: SkyBlockCategory = create("pickaxe")
+        public val DUNGEON_PICKAXE: SkyBlockCategory = create("pickaxe", Modifier.DUNGEON)
+        public val SHOVEL: SkyBlockCategory = create("shovel")
+        public val DRILL: SkyBlockCategory = create("drill")
+        public val SHEARS: SkyBlockCategory = create("shears")
+
+        public val HELMET: SkyBlockCategory = create("helmet")
+        public val DUNGEON_HELMET: SkyBlockCategory = create("helmet", Modifier.DUNGEON)
+        public val CHESTPLATE: SkyBlockCategory = create("chestplate")
+        public val DUNGEON_CHESTPLATE: SkyBlockCategory = create("chestplate", Modifier.DUNGEON)
+        public val LEGGINGS: SkyBlockCategory = create("leggings")
+        public val DUNGEON_LEGGINGS: SkyBlockCategory = create("leggings", Modifier.DUNGEON)
+        public val BOOTS: SkyBlockCategory = create("boots")
+        public val DUNGEON_BOOTS: SkyBlockCategory = create("boots", Modifier.DUNGEON)
+
+        public val FISHING_ROD: SkyBlockCategory = create("fishing rod")
+        public val ROD_PART: SkyBlockCategory = create("rod part") // in the api its called "FISHING_ROD_PART"
+        public val BAIT: SkyBlockCategory = create("bait")
+        public val FISHING_NET: SkyBlockCategory = create("fishing net")
+
+        public val DEPLOYABLE: SkyBlockCategory = create("deployable")
+        public val VACUUM: SkyBlockCategory = create("vacuum")
+        public val ABIPHONE: SkyBlockCategory = create("abiphone")
+        public val CARNIVAL_MASK: SkyBlockCategory = create("carnival mask")
+        public val POWER_STONE: SkyBlockCategory = create("power stone")
+        public val TRAVEL_SCROLL: SkyBlockCategory = create("travel scroll")
+        public val REFORGE_STONE: SkyBlockCategory = create("reforge stone")
+        public val PET: SkyBlockCategory = create("pet")
+        public val ARROW_POISON: SkyBlockCategory = create("arrow poison")
+        public val PET_ITEM: SkyBlockCategory = create("pet item")
+        public val ENCHANTED_BOOK: SkyBlockCategory = create("enchanted book")
+        public val POTION: SkyBlockCategory = create("potion")
+        public val RIFT_TIMECHARM: SkyBlockCategory = create("rift timecharm")
+        public val COSMETIC: SkyBlockCategory = create("cosmetic")
+        public val MEMENTO: SkyBlockCategory = create("memento")
+        public val PORTAL: SkyBlockCategory = create("portal")
+        public val SACK: SkyBlockCategory = create("sack")
+        public val CHISEL: SkyBlockCategory = create("chisel")
+        public val DYE: SkyBlockCategory = create("dye")
+        public val ORE: SkyBlockCategory = create("ore")
+        public val BLOCK: SkyBlockCategory = create("block")
+        public val DWARVEN_METAL: SkyBlockCategory = create("dwarven metal")
+        public val GEMSTONE: SkyBlockCategory = create("gemstone")
+        public val LASSO: SkyBlockCategory = create("lasso")
+        public val SALT: SkyBlockCategory = create("salt")
+        public val TRAP: SkyBlockCategory = create("trap")
+        public val BOOSTER: SkyBlockCategory = create("booster")
+
+        public val WATER_SHARD: SkyBlockCategory = create("water shard")
+        public val FOREST_SHARD: SkyBlockCategory = create("forest shard")
+        public val COMBAT_SHARD: SkyBlockCategory = create("combat shard")
+        public val MINING_SHARD: SkyBlockCategory = create("mining shard")
+
+        public val GARDEN_CHIP: SkyBlockCategory = create("garden chip")
+        public val MUTATION: SkyBlockCategory = create("mutation")
+        public val WATERING_CAN: SkyBlockCategory = create("watering can")
+        public val FARMING_TOOL: SkyBlockCategory = create("farming tool")
+        public val TROPHY: SkyBlockCategory = create("trophy")
+        public val ABILITY_SCROLL: SkyBlockCategory = create("ability scroll")
+        public val CAPSULE: SkyBlockCategory = create("capsule")
+        public val RABBIT: SkyBlockCategory = create("rabbit") // chocolate factory
+        public val DUNGEON_PASS: SkyBlockCategory = create("dungeon pass", parseModifier = false) // seems to be admin only, not a dungeon modifier
+
+        public val DUNGEON_ITEM: SkyBlockCategory = create("item", Modifier.DUNGEON)
+        public val ITEM: SkyBlockCategory = create("item") // there is no current item for this, but because "dungeon item" is a category, we add it here as well
+    }
+
+    public enum class Modifier(displayName: String? = null) {
+        DUNGEON,
+        SLAYER,
+        ;
+
+        public val displayName: String = displayName ?: name.lowercase()
+        override fun toString(): String = displayName
+
+        public companion object {
+            public fun byName(name: String): Modifier? = entries.find { it.name.equals(name, true) }
+        }
     }
 }

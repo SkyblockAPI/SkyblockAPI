@@ -81,6 +81,15 @@ internal object CurrencyStorage {
             }
         }
 
+    var kernels: Long
+        get() = data?.kernels ?: 0L
+        set(value) {
+            CURRENCY.edit {
+                if (kernels == value) return
+                kernels = value
+            }
+        }
+
     var northStars: Long
         get() = data?.northStars ?: 0L
         set(value) {

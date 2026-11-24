@@ -6,10 +6,10 @@ import net.minecraft.world.entity.Entity
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.getAttachedTo
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
-
 
 internal interface ListenForNameChange {
 
@@ -19,19 +19,19 @@ internal interface ListenForNameChange {
 
 }
 
+// TODO: actually implement the debug for this? no clue what its even supposed to do
 @Module
-object EntityEvents {
-    var debug: Boolean = false
+public object EntityEvents {
+    public val debug: Boolean by debugToggle("mob_attachments", "Note: does nothing right now")
+    @JvmField
+    public var remainingPerTick: Long = 40
 
-    @Subscription
-    fun onCommandsRegistration(event: RegisterCommandsEvent) {
-        event.registerWithCallback("sbapi mob_attachments") {
-            debug = !debug
-        }
+    @Subscription(TickEvent::class)
+    internal fun tick() {
+        remainingPerTick = 40
     }
-
     @Subscription(priority = Subscription.HIGHEST)
-    fun onNameAttach(event: ComponentAttachEvent) {
+    internal fun onNameAttach(event: ComponentAttachEvent) {
         if (event.literalComponent.trim().startsWith("[Lv")) {
             event.cancel()
             EntityInfoLineAttachEvent(event.component, event.infoLineEntity).post(SkyBlockAPI.eventBus)
@@ -41,25 +41,25 @@ object EntityEvents {
 
 }
 
-open class EntityInfoLineEvent(
-    val component: Component,
-    val infoLineEntity: Entity,
+public open class EntityInfoLineEvent(
+    public val component: Component,
+    public val infoLineEntity: Entity,
 ) : CancellableSkyBlockEvent() {
-    val attachedTo: Entity? get() = infoLineEntity.getAttachedTo()
-    val literalComponent by lazy { component.stripped }
+    public val attachedTo: Entity? get() = infoLineEntity.getAttachedTo()
+    public val literalComponent: String = component.stripped
 }
 
-class EntityInfoLineAttachEvent(
+public class EntityInfoLineAttachEvent(
     component: Component,
     infoLineEntity: Entity,
 ) : EntityInfoLineEvent(component, infoLineEntity)
 
-class NameChangedEvent(
+public class NameChangedEvent(
     component: Component,
     infoLineEntity: Entity,
 ) : EntityInfoLineEvent(component, infoLineEntity)
 
-class ComponentAttachEvent(
+public class ComponentAttachEvent(
     component: Component,
     infoLineEntity: Entity,
 ) : EntityInfoLineEvent(component, infoLineEntity)

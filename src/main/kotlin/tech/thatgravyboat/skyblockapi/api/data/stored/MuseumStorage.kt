@@ -19,7 +19,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRarityLineIndex
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 import tech.thatgravyboat.skyblockapi.utils.extentions.withoutGetter
-import kotlin.collections.MutableMap
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
@@ -80,7 +79,6 @@ internal object MuseumStorage {
     private val MUSEUM = StoredProfileData<MuseumStorageData>(
         "museum.json",
         1,
-        autoLoadOnProfileSwap = true,
     ) { version ->
         when (version) {
             0 -> V0_CODEC

@@ -1,12 +1,12 @@
-//? if >= 1.21.11 {
 package tech.thatgravyboat.skyblockapi.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.resources.Identifier;
@@ -21,17 +21,20 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.minecraft.ui.GatherItemTooltipComponentsEvent;
 import tech.thatgravyboat.skyblockapi.api.events.render.RenderItemBarEvent;
 import tech.thatgravyboat.skyblockapi.hooks.GuiGraphicsHook;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Mixin(GuiGraphics.class)
+@Mixin(GuiGraphicsExtractor.class)
 public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
 
     @Unique
     private final ThreadLocal<ItemStack> lastStack = ThreadLocal.withInitial(() -> ItemStack.EMPTY);
 
-    @WrapOperation(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isBarVisible()Z"))
+
+    @WrapOperation(
+        method = "itemBar",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isBarVisible()Z")
+    )
     private boolean itemBarVisible(ItemStack instance, Operation<Boolean> original, @Share("bar") LocalRef<RenderItemBarEvent> bar) {
         var event = new RenderItemBarEvent(instance, 0, -1f);
         event.post(SkyBlockAPI.getEventBus());
@@ -39,7 +42,10 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         return (event.getPercent() >= 0f && event.getColor() != 0) || original.call(instance);
     }
 
-    @WrapOperation(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getBarWidth()I"))
+    @WrapOperation(
+        method = "itemBar",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getBarWidth()I")
+    )
     private int itemBarWidth(ItemStack instance, Operation<Integer> original, @Share("bar") LocalRef<RenderItemBarEvent> bar) {
         var event = bar.get();
         if (event != null && event.getPercent() >= 0f) {
@@ -48,7 +54,10 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         return original.call(instance);
     }
 
-    @WrapOperation(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getBarColor()I"))
+    @WrapOperation(
+        method = "itemBar",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getBarColor()I")
+    )
     private int itemBarColor(ItemStack instance, Operation<Integer> original, @Share("bar") LocalRef<RenderItemBarEvent> bar) {
         var event = bar.get();
         if (event != null && event.getColor() != 0) {
@@ -62,27 +71,39 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         lastStack.set(stack);
     }
 
-    @WrapOperation(
+    //? if >=26.3 {
+    @WrapMethod(
+        method = "setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;ZZ)V"
+    )
+        //?} else {
+    /*@WrapOperation(
         method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V"
+            target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V"
         )
-    )
+    )*///?}
     private void onRenderTooltipInternal(
-        GuiGraphics instance,
+        //? if <=26.2
+        //GuiGraphicsExtractor instance,
         Font font,
         List<ClientTooltipComponent> list,
-        int x, int y,
+        int x,
+        int y,
         ClientTooltipPositioner positioner,
-        Identifier texture,
-        boolean force,
+        Identifier style,
+        boolean replaceExisting,
+        //? if >=26.3
+        boolean extraSpaceAfterFirstLine,
         Operation<Void> operation
     ) {
         List<ClientTooltipComponent> listCopy = new ArrayList<>(list);
         GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
         event.post(SkyBlockAPI.getEventBus());
-        operation.call(instance, font, listCopy, x, y, positioner, texture, force);
+        //? if >=26.3 {
+        operation.call(font, listCopy, x, y, positioner, style, replaceExisting, extraSpaceAfterFirstLine);
+        //?} else
+        //operation.call(instance, font, listCopy, x, y, positioner, style, replaceExisting);
     }
 
     @Override

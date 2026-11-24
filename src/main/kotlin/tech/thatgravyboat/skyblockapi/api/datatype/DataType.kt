@@ -1,43 +1,61 @@
 package tech.thatgravyboat.skyblockapi.api.datatype
 
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import org.jetbrains.annotations.ApiStatus
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
 import tech.thatgravyboat.skyblockapi.utils.extentions.getCompoundTagFunctionByType
-import tech.thatgravyboat.skyblockapi.utils.extentions.tag
+import tech.thatgravyboat.skyblockapi.utils.extentions.unsafeTag
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-class DataType<T> @RemoveNextVersion constructor(
-    val id: String,
-    autoRegister: Boolean,
-    val factory: (ItemStack) -> T?,
-    val type: KType?,
-) {
-    @RemoveNextVersion
-    constructor(id: String, autoRegister: Boolean, factory: (ItemStack) -> T?) : this(id, autoRegister, factory, null)
+//? if < 26.2
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
-    @RemoveNextVersion
-    constructor(id: String, factory: (ItemStack) -> T?) : this(id, true, factory)
+public class DataType<T> private constructor(
+    public val id: String,
+    autoRegister: Boolean,
+    private val resolver: (ResolutionContext, ItemStack) -> T?,
+    public val type: KType?,
+) {
+
+    //? if < 26.4 {
+    @get:Deprecated("Scheduled for removal in 26.3")
+    @get:ApiStatus.ScheduledForRemoval
+    public val factory: (ItemStack) -> T? get() = ::resolve
+    //?}
 
     init {
         if (autoRegister) DataTypesRegistry.addDataType(this)
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun cast(value: Any?): T? = value as? T
+    public fun cast(value: Any?): T? = value as? T
 
-    companion object {
-        fun <T> of(id: String, type: KType, autoRegister: Boolean = true, factory: (ItemStack) -> T?): DataType<T> {
-            return DataType(id, autoRegister, factory, type)
+    public fun resolve(stack: ItemStack, context: ResolutionContext = ResolutionContext(stack)): T? {
+        return resolver.invoke(context, stack)
+    }
+
+    public companion object {
+
+        public fun <T> of(id: String, type: KType, autoRegister: Boolean = true, resolver: (ResolutionContext, ItemStack) -> T?): DataType<T> {
+            return DataType(id, autoRegister, resolver, type)
         }
 
-        inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline factory: (ItemStack) -> T?): DataType<T> =
-            of(id, typeOf<T>(), autoRegister, factory)
+        public inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline resolver: (ResolutionContext, ItemStack) -> T?): DataType<T> {
+            return of(id, typeOf<T>(), autoRegister, resolver)
+        }
 
-        fun <T : Any> simple(id: String, type: KType, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
+        public fun <T> of(id: String, type: KType, autoRegister: Boolean = true, factory: (ItemStack) -> T?): DataType<T> {
+            return DataType(id, autoRegister, { _, stack -> factory(stack) }, type)
+        }
+
+        public inline fun <reified T> of(id: String, autoRegister: Boolean = true, noinline factory: (ItemStack) -> T?): DataType<T> {
+            return of(id, typeOf<T>(), autoRegister, factory)
+        }
+
+        public fun <T : Any> simple(id: String, type: KType, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
             val function = getCompoundTagFunctionByType<T>(type)
-            return of(id, type, autoRegister) { item -> item.tag?.let { function(it, tagName) } }
+            return of(id, type, autoRegister) { item -> item.unsafeTag?.let { function(it, tagName) } }
         }
 
         /**
@@ -45,7 +63,7 @@ class DataType<T> @RemoveNextVersion constructor(
          *
          * See [getCompoundTagFunctionByType] for the allowed classes.
          */
-        inline fun <reified T : Any> simple(id: String, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
+        public inline fun <reified T : Any> simple(id: String, tagName: String = id, autoRegister: Boolean = true): DataType<T> {
             return simple(id, typeOf<T>(), tagName, autoRegister)
         }
     }

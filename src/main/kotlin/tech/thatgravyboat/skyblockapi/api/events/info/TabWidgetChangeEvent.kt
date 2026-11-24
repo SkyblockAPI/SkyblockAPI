@@ -8,20 +8,21 @@ import tech.thatgravyboat.skyblockapi.impl.events.TabListEventHandler
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 
-typealias TabWidgetUpdateEvent = TabWidgetChangeEvent
+public typealias TabWidgetUpdateEvent = TabWidgetChangeEvent
 
-data class TabWidgetChangeEvent(
+public data class TabWidgetChangeEvent(
     val widget: TabWidget,
     val old: List<String>,
     val new: List<String>,
     val newComponents: List<Component>,
+    val matchResult: MatchResult? = null,
 ) : SkyBlockEvent() {
     val isEmpty: Boolean get() = new.isEmpty()
     override fun post(bus: EventBus): Boolean = bus.post(this, this.widget)
 }
 
 @Suppress("unused")
-enum class TabWidget(@Language("RegExp") regex: String) {
+public enum class TabWidget(@Language("RegExp") regex: String) {
     // General
     AREA("(?:Area|Dungeon): (?<area>.*)"),
     PROFILE("Profile: (?<profile>.*)"),
@@ -55,8 +56,13 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     AGATHA_CONTEST("Agatha's Contest:"),
     STARBORN_TEMPLE("Starborn Temple:"),
     FOREST_WHISPERS("Forest Whispers: (?<amount>[\\dkmbKMB,.]+)"),
+    DESERT_WHISPERS("Desert Whispers: (?<amount>[\\dkmbKMB,.]+)"),
     MOONGLADE_BEACON("Moonglade Beacon: (?<amount>[\\d,.]+) Stacks?"),
+    TORRHUS_BEACON("Torrhus Beacon: (?<amount>[\\d,.]+) Stacks?"),
     SHARD_TRAPS("Shard Traps"),
+
+    // Hunting
+    SALTS("Salts:"),
 
     // Garden + Farming
     COMPOSTER("Composter:"),
@@ -68,12 +74,15 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     CROP_MILESTONES("Crop Milestones:"),
 
     // Crimson Isle
-    REPUTATION("(?:Mage|Barbarian) Reputation:"),
+    REPUTATION("(?<type>Mage|Barbarian) Reputation:"),
     TROPHY_FISH("Trophy Fish:"),
     FACTION_QUESTS("Faction Quests:"),
 
     // End
     DRAGON("Dragon: \\((?<type>.+)\\)"),
+
+    // Lotus Atoll
+    TROPHY_FROGS("Trophy Frogs:"),
 
     // Dungeons + Dungeon Hub
     DOWNED("Downed: (?<status>.*)"),
@@ -91,15 +100,15 @@ enum class TabWidget(@Language("RegExp") regex: String) {
     ADVERTISEMENT("Advertisement:"),
     ;
 
-    val regex = RegexGroup.TABLIST_WIDGET.create(name.lowercase(), regex)
+    public val regex: Regex = RegexGroup.TABLIST_WIDGET.create(name.lowercase(), regex)
 
-    val currentLines: List<String>
+    public val currentLines: List<String>
         get() = TabListEventHandler.widgets[this].orEmpty()
 
-    val isActive: Boolean
+    public val isActive: Boolean
         get() = this in TabListEventHandler.widgets
 
     private val string = toFormattedName()
 
-    override fun toString() = string
+    override fun toString(): String = string
 }

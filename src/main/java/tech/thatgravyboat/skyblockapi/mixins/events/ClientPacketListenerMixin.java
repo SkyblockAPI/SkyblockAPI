@@ -19,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI;
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityAttributesUpdateEvent;
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityEquipmentUpdateEvent;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,8 +57,8 @@ public class ClientPacketListenerMixin {
     @Inject(method = "handleUpdateAttributes", at = @At("TAIL"))
     private void postAttributesUpdate(
         CallbackInfo ci,
-        @Local Entity entity,
-        @Share("modifiedAttributes") LocalRef<Map<Holder<Attribute>, EntityAttributesUpdateEvent.ChangedAttribute>> modifiedAttributesRef
+        @Share("modifiedAttributes") LocalRef<Map<Holder<Attribute>, EntityAttributesUpdateEvent.ChangedAttribute>> modifiedAttributesRef,
+        @Local Entity entity
     ) {
         var modified = modifiedAttributesRef.get();
         if (modified != null && !modified.isEmpty()) {

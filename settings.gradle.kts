@@ -1,28 +1,39 @@
-rootProject.name = "skyblock-api"
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven(url = "https://maven.teamresourceful.com/repository/maven-public/")
+        maven("https://maven.teamresourceful.com/repository/maven-public/")
         maven("https://maven.kikugie.dev/snapshots")
         maven("https://maven.fabricmc.net/")
     }
 }
 
+
+rootProject.name = "skyblock-api"
+
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
-    id("dev.kikugie.stonecutter") version "0.7.10"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+    id("dev.kikugie.stonecutter") version "0.10-alpha.12"
 }
 
-val versions = listOf("1.21.11", "1.21.10", "1.21.8", "1.21.5")
+val versions = listOf("26.3", "26.2")
+// we have a dummy version here so that the IntelliJ plugin doesn't report comments we do
+// when removing code in the next version via stonecutter
+// if there is no dummy version needed at some point, leave as blank
+val dummyVersion = "26.4"
 
 stonecutter {
     create(rootProject) {
-        versions(versions)
+        versions.forEach {
+            version(it).buildscript = "build.gradle.kts"
+        }
         vcsVersion = versions.first()
+
+        if (dummyVersion.isNotEmpty() && dummyVersion !in versions) {
+            versions("DUMMY-VERSION-DO-NOT-USE" to dummyVersion).buildscript = "dummy.gradle.kts"
+        }
+
     }
 }
-
 
 dependencyResolutionManagement {
     versionCatalogs {

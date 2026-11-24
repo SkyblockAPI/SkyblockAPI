@@ -5,28 +5,28 @@ import net.minecraft.network.chat.MutableComponent
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
-class TooltipBuilder() {
-    constructor(lines: List<Component>) : this() {
+public class TooltipBuilder() {
+    public constructor(lines: List<Component>) : this() {
         this.lines.addAll(lines)
     }
 
-    companion object {
-        fun multiline(init: TooltipBuilder.() -> Unit): MutableComponent = Text.multiline(TooltipBuilder().also(init).lines)
+    public companion object {
+        public fun multiline(init: TooltipBuilder.() -> Unit): MutableComponent = Text.multiline(TooltipBuilder().also(init).lines)
     }
 
     private val lines = mutableListOf<Component>()
 
-    fun add(line: Component) = lines.add(line)
+    public fun add(line: Component): Boolean = lines.add(line)
 
-    fun space() = lines.add(CommonText.EMPTY)
+    public fun space(): Boolean = lines.add(CommonText.EMPTY)
 
-    fun add(number: Number, init: MutableComponent.() -> Unit = {}) = lines.add(Text.of(number.toString(), init))
-    fun add(boolean: Boolean, init: MutableComponent.() -> Unit = {}) = lines.add(Text.of(boolean.toString(), init))
-    fun add(text: String, init: MutableComponent.() -> Unit = {}) = lines.add(Text.of(text, init))
-    fun add(text: String, color: Int) = lines.add(Text.of(text).withColor(color))
-    fun add(init: MutableComponent.() -> Unit) = lines.add(Text.of("", init))
+    public fun add(number: Number, init: MutableComponent.() -> Unit = {}): Boolean = lines.add(Text.of(number.toString(), init))
+    public fun add(boolean: Boolean, init: MutableComponent.() -> Unit = {}): Boolean = lines.add(Text.of(boolean.toString(), init))
+    public fun add(text: String, init: MutableComponent.() -> Unit = {}): Boolean = lines.add(Text.of(text, init))
+    public fun add(text: String, color: Int): Boolean = lines.add(Text.of(text).withColor(color))
+    public fun add(init: MutableComponent.() -> Unit): Boolean = lines.add(Text.of("", init))
 
-    fun isEmpty() = lines.isEmpty()
-    fun build(): Component = Text.multiline(*lines.toTypedArray())
-    fun lines() = lines
+    public fun isEmpty(): Boolean = lines.isEmpty()
+    public fun build(): Component = Text.multiline(*lines.toTypedArray())
+    public fun lines(): MutableList<Component> = lines
 }

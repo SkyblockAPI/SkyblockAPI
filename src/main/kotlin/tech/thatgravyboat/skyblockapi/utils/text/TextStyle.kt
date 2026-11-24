@@ -1,0 +1,221 @@
+package tech.thatgravyboat.skyblockapi.utils.text
+
+import net.minecraft.network.chat.ClickEvent
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.FontDescription
+import net.minecraft.network.chat.HoverEvent
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.Style
+import net.minecraft.resources.Identifier
+import tech.thatgravyboat.skyblockapi.hooks.RunnableClickEventHook
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.style
+import java.net.URI
+
+
+private fun MutableComponent.withFont(location: Identifier?): MutableComponent =
+    this.style { if (location == null) withFont(null) else withFont(FontDescription.Resource(location)) }
+
+private fun Component.font(): Identifier? = (this.style.font as? FontDescription.Resource)?.id
+
+private fun Component.hover(): Component? = (this.style.hoverEvent as? HoverEvent.ShowText)?.value()
+
+private fun Component.command(): String? = (this.style.clickEvent as? ClickEvent.RunCommand)?.command()
+
+private fun Component.customPayloadClick(): ClickEvent.Custom? = this.style.clickEvent as? ClickEvent.Custom
+
+private fun Component.clipboard(): String? = (this.style.clickEvent as? ClickEvent.CopyToClipboard)?.value()
+
+private fun Component.suggest(): String? = (this.style.clickEvent as? ClickEvent.SuggestCommand)?.command()
+
+private fun Component.uri(): URI? = (this.style.clickEvent as? ClickEvent.OpenUrl)?.uri()
+
+private fun Component.url(): String? = this.uri()?.toString()
+
+private fun Component.color(): Int = this.style.color?.value ?: 0
+
+private fun Component.shadowColor(): Int? = this.style.shadowColor
+
+private fun Component.bold(): Boolean = this.style.isBold
+
+private fun Component.italic(): Boolean = this.style.isItalic
+
+private fun Component.underlined(): Boolean = this.style.isUnderlined
+
+private fun Component.strikethrough(): Boolean = this.style.isStrikethrough
+
+private fun Component.obfuscated(): Boolean = this.style.isObfuscated
+
+public object TextStyle {
+
+    public fun MutableComponent.style(init: Style.() -> Style): MutableComponent {
+        this.withStyle { init.invoke(style) }
+        return this
+    }
+
+    public fun MutableComponent.hoverEvent(init: () -> HoverEvent?): MutableComponent {
+        this.style { withHoverEvent(init.invoke()) }
+        return this
+    }
+
+    public fun MutableComponent.clickEvent(init: () -> ClickEvent?): MutableComponent {
+        this.style { withClickEvent(init.invoke()) }
+        return this
+    }
+
+    public fun MutableComponent.onClick(runnable: () -> Unit): MutableComponent = this.style {
+        val event = ClickEvent.SuggestCommand("SkyBlockAPI OnClick Action")
+        @Suppress("KotlinConstantConditions")
+        ((event as Any) as? RunnableClickEventHook)?.`skyblockapi$setRunnable` { runnable() }
+        withClickEvent(event)
+    }
+
+
+    public val Component.font: Identifier?
+        get() = font()
+
+    public var MutableComponent.font: Identifier?
+        get() = font()
+        set(value) {
+            this.withFont(value)
+        }
+
+
+    public val Component.hover: Component?
+        get() = hover()
+
+    public var MutableComponent.hover: Component?
+        get() = hover()
+        set(value) {
+            this.hoverEvent { value?.let { HoverEvent.ShowText(it) } }
+        }
+
+
+    public val Component.clipboard: String?
+        get() = clipboard()
+
+    public var MutableComponent.clipboard: String?
+        get() = clipboard()
+        set(value) {
+            this.clickEvent { value?.let { ClickEvent.CopyToClipboard(it) } }
+        }
+
+
+    public val Component.command: String?
+        get() = command()
+
+    public var MutableComponent.command: String?
+        get() = command()
+        set(value) {
+            this.clickEvent { value?.let { ClickEvent.RunCommand(it) } }
+        }
+
+
+    public val Component.suggest: String?
+        get() = suggest()
+
+    public var MutableComponent.suggest: String?
+        get() = suggest()
+        set(value) {
+            this.clickEvent { value?.let { ClickEvent.SuggestCommand(it) } }
+        }
+
+
+    public val Component.customPayloadClick: ClickEvent.Custom?
+        get() = customPayloadClick()
+
+    public var MutableComponent.customPayloadClick: ClickEvent.Custom?
+        get() = customPayloadClick()
+        set(value) {
+            this.clickEvent { value }
+        }
+
+
+    public val Component.uri: URI?
+        get() = uri()
+
+    public var MutableComponent.uri: URI?
+        get() = uri()
+        set(value) {
+            this.clickEvent { value?.let { ClickEvent.OpenUrl(it) } }
+        }
+
+
+    public val Component.url: String?
+        get() = url()
+
+    public var MutableComponent.url: String?
+        get() = url()
+        set(value) {
+            this.uri = value?.let(URI::create)
+        }
+
+
+    public val Component.color: Int
+        get() = color()
+
+    public var MutableComponent.color: Int
+        get() = color()
+        set(value) {
+            this.style { withColor(value) }
+        }
+
+
+    public val Component.shadowColor: Int?
+        get() = shadowColor()
+
+    public var MutableComponent.shadowColor: Int?
+        get() = shadowColor()
+        set(value) {
+            this.style { this.withShadowColor(value ?: 0) }
+        }
+
+
+    public val Component.bold: Boolean
+        get() = bold()
+
+    public var MutableComponent.bold: Boolean
+        get() = bold()
+        set(value) {
+            this.style { withBold(value) }
+        }
+
+
+    public val Component.italic: Boolean
+        get() = italic()
+
+    public var MutableComponent.italic: Boolean
+        get() = italic()
+        set(value) {
+            this.style { withItalic(value) }
+        }
+
+
+    public val Component.underlined: Boolean
+        get() = underlined()
+
+    public var MutableComponent.underlined: Boolean
+        get() = underlined()
+        set(value) {
+            this.style { withUnderlined(value) }
+        }
+
+
+    public val Component.strikethrough: Boolean
+        get() = strikethrough()
+
+    public var MutableComponent.strikethrough: Boolean
+        get() = strikethrough()
+        set(value) {
+            this.style { withStrikethrough(value) }
+        }
+
+
+    public val Component.obfuscated: Boolean
+        get() = obfuscated()
+
+    public var MutableComponent.obfuscated: Boolean
+        get() = obfuscated()
+        set(value) {
+            this.style { withObfuscated(value) }
+        }
+}

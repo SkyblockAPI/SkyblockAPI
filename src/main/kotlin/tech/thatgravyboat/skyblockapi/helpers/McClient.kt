@@ -1,13 +1,14 @@
 package tech.thatgravyboat.skyblockapi.helpers
 
-import com.mojang.authlib.minecraft.MinecraftSessionService
 import com.mojang.blaze3d.platform.Window
 import com.mojang.brigadier.CommandDispatcher
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.SharedConstants
 import net.minecraft.client.Minecraft
 import net.minecraft.client.Options
 import net.minecraft.client.gui.Gui
+import net.minecraft.client.gui.Hud
 import net.minecraft.client.gui.components.ChatComponent
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.client.gui.screens.ChatScreen
@@ -19,88 +20,78 @@ import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ServerboundChatCommandPacket
 import net.minecraft.resources.Identifier
-import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.world.level.GameType
-import net.minecraft.world.scores.DisplaySlot
+import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.utils.McVersion
 import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
+import tech.thatgravyboat.skyblockapi.utils.extentions.isRealPlayer
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.net.URI
 import java.nio.file.Path
 
-//? if > 1.21.8 {
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader
-//?} else {
-/*import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper
-import net.minecraft.server.packs.resources.ResourceManager
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
-*///?}
+//? if >= 26.3
+import com.mojang.blaze3d.Blaze3D
+//? else
+//import net.minecraft.util.Util
 
-object McClient {
+public object McClient {
 
     private val tabListComparator: Comparator<PlayerInfo> = compareBy(
-        { it.gameMode == GameType.SPECTATOR },
+        { it.gameMode == SPECTATOR },
         { it.team?.name ?: "" },
         { it.profile.name.lowercase() },
     )
 
-    val isDev = FabricLoader.getInstance().isDevelopmentEnvironment
-    val config: Path = FabricLoader.getInstance().configDir
+    public val isDev: Boolean = FabricLoader.getInstance().isDevelopmentEnvironment
+    public val config: Path = FabricLoader.getInstance().configDir
 
-    val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
-    val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
+    //? if < 26.4 {
+    @Deprecated("Use mcVersion instead")
+    @Suppress("DEPRECATION")
+    public val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
+    //?}
+    public val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
 
-    //? if > 1.21.5 {
-    val version: String = SharedConstants.getCurrentVersion().name()
-    //?} else
-    /*val version: String = SharedConstants.getCurrentVersion().name*/
+    public val version: String = SharedConstants.getCurrentVersion().name()
 
-    val sessionService: MinecraftSessionService
-    //? if > 1.21.8 {
+    //~ if >= 26.3 'MinecraftSessionService' -> 'SessionService'
+    public val sessionService: com.mojang.authlib.minecraft.SessionService
         get() = self.services().sessionService()
-    //?} else
-    /*get() = self.minecraftSessionService*/
 
-    val self: Minecraft get() = Minecraft.getInstance()
-    val connection: ClientPacketListener? get() = self.connection
+    public val self: Minecraft get() = Minecraft.getInstance()
+    public val connection: ClientPacketListener? get() = self.connection
 
-    val window: Window by self::window
-    val windowHandle: Long
-        //? if > 1.21.8 {
+    public val window: Window by self::window
+    public val windowHandle: Long
         get() = window.handle()
-    //?} else
-    /*get() = window.window*/
 
-    var clipboard: String
+    public var clipboard: String
         get() = self.keyboardHandler.clipboard
         set(value) {
             self.keyboardHandler.clipboard = value
         }
 
-    val mouse: Pair<Double, Double>
+    public val mouse: Pair<Double, Double>
         get() = Pair(
             self.mouseHandler.xpos() * (window.guiScaledWidth / window.screenWidth.coerceAtLeast(1).toDouble()),
             self.mouseHandler.ypos() * (window.guiScaledHeight / window.screenHeight.coerceAtLeast(1).toDouble()),
         )
 
-    val tablist: List<PlayerInfo>
+    public val tablist: List<PlayerInfo>
         get() = connection
             ?.listedOnlinePlayers
             ?.sortedWith(tabListComparator)
             ?: emptyList()
 
-    val players: List<PlayerInfo>
-        get() = tablist.filter { it.profile.id.version() == 4 }
+    public val players: List<PlayerInfo>
+        get() = tablist.filter { it.profile.id.isRealPlayer() }
 
-    val scoreboard: Collection<Component>
+    public val scoreboard: Collection<Component>
         get() {
             val scoreboard = self.level?.scoreboard ?: return emptyList()
-            val objective = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return emptyList()
+            val objective = scoreboard.getDisplayObjective(SIDEBAR) ?: return emptyList()
             return scoreboard.listPlayerScores(objective)
                 .sortedBy { -it.value() }
                 .map {
@@ -118,96 +109,91 @@ object McClient {
                 }
         }
 
-    val scoreboardTitle get() = self.level?.scoreboard?.getDisplayObjective(DisplaySlot.SIDEBAR)?.displayName
-    val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
+    public val scoreboardTitle: Component? get() = self.level?.scoreboard?.getDisplayObjective(SIDEBAR)?.displayName
+    public val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
 
-    val toasts: ToastManager get() = self.toastManager
-    val gui: Gui get() = self.gui
-    val chat: ChatComponent get() = gui.chat
-    val options: Options get() = self.options
+    public val toasts: ToastManager get() = gui.toastManager()
+    public val gui: Gui get() = self.gui
 
-    fun openUri(uri: String): Boolean = runCatching {
+    public val hud: Hud get() = self.gui.hud
+    public val chat: ChatComponent get() = hud.chat
+    public val options: Options get() = self.options
+
+    public val isSingleplayer: Boolean get() = !self.isMultiplayerServer
+
+    public fun openUri(uri: String): Boolean = runCatching {
         openUri(URI.create(uri))
     }.isSuccess
 
-    fun openUri(uri: URI) {
-        /*? if > 1.21.10 {*/net.minecraft.util.Util/*?} else {*//*net.minecraft.Util*//*?}*/
-            .getPlatform().openUri(uri)
+    public fun reloadResourcePacks() {
+        self.reloadResourcePacks()
     }
 
-    fun runNextTick(action: () -> Unit) {
+    public fun openUri(uri: URI) {
+        //? if >= 26.3 {
+        Blaze3D.openUri(uri)
+        //? } else
+        //Util.getPlatform().openUri(uri)
+    }
+
+    /**
+     * Runs the next render tick.
+     */
+    public fun runNextTick(action: () -> Unit) {
         self.schedule(action)
     }
 
-    fun runOrNextTick(action: () -> Unit) {
+    /**
+     * Runs either on the current or next render tick
+     * depending on if it's executed from the render thread.
+     */
+    public fun runOrNextTick(action: () -> Unit) {
         self.executeIfPossible(action)
     }
 
-    //? if = 1.21.5 {
-    /*@Deprecated("Use runNextTick instead")
-    fun tell(action: () -> Unit) = runNextTick(action)
-    *///?}
-
-    fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f) {
+    public fun playSound(sound: SoundEvent, volume: Float = 1f, pitch: Float = 1f) {
         McPlayer.self?.playSound(sound, volume, pitch)
     }
 
-    fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f) {
-        gui.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
-        gui.setSubtitle(subtitle ?: CommonText.EMPTY)
-        gui.setTitle(title)
+    public fun setTitle(title: Component, subtitle: Component? = null, fadeInTime: Float = 1f, stayTime: Float = 3f, fadeOutTime: Float = 1f) {
+        hud.setTimes((fadeInTime * 20).toInt(), (stayTime * 20).toInt(), (fadeOutTime * 20).toInt())
+        hud.setSubtitle(subtitle ?: CommonText.EMPTY)
+        hud.setTitle(title)
     }
 
-    fun setScreenAsync(screen: () -> Screen?) = runNextTick {
+    public fun setScreenAsync(screen: () -> Screen?): Unit = runNextTick {
         val next = screen()
-        (self.screen as? AbstractContainerScreen<*>)?.onClose()
-        self.setScreen(next)
+        (McScreen.self as? AbstractContainerScreen<*>)?.onClose()
+        gui.setScreen(next)
     }
 
-    @Deprecated("Use setScreenAsync to avoid creating screens off the main thread")
-    fun setScreenAsync(screen: Screen?) = runNextTick {
-        (self.screen as? AbstractContainerScreen<*>)?.onClose()
-        self.setScreen(screen)
-    }
-
-    fun setScreen(screen: Screen?) {
-        if (self.screen is ChatScreen) {
+    public fun setScreen(screen: Screen?) {
+        if (McScreen.self is ChatScreen) {
             setScreenAsync { screen }
         } else {
-            self.setScreen(screen)
+            gui.setScreen(screen)
         }
     }
 
-    fun sendCommand(command: String) {
+    public fun sendCommand(command: String) {
         connection?.send(ServerboundChatCommandPacket(command.removePrefix("/")))
     }
 
     /** Sends a command that first goes through client side commands, and then server commands */
-    fun sendClientCommand(command: String) {
+    public fun sendClientCommand(command: String) {
         connection?.sendCommand(command.removePrefix("/"))
     }
 
-    fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
-        //? if > 1.21.8 {
-        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(id, listener)
-        //?} else
-        /*ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(ReloadListenerWrapper(id, listener))*/
+    public fun registerClientReloadListener(id: Identifier, listener: PreparableReloadListener) {
+        ResourceLoader.get(CLIENT_RESOURCES).registerReloadListener(id, listener)
     }
 
-    //? if <= 1.21.8 {
-    /*private data class ReloadListenerWrapper(
-        val id: Identifier,
-        val original: PreparableReloadListener,
-    ) : IdentifiableResourceReloadListener {
-        override fun getFabricId(): Identifier = id
+    public fun anyModInstalled(modIds: Collection<String>): Boolean = modIds.any { FabricLoader.getInstance().isModLoaded(it) }
+    public fun anyModInstalled(vararg modIds: String): Boolean = anyModInstalled(modIds.asList())
 
-        override fun reload(
-            barrier: PreparableReloadListener.PreparationBarrier,
-            manager: ResourceManager,
-            backgroundExecutor: Executor,
-            gameExecutor: Executor,
-        ): CompletableFuture<Void> = original.reload(barrier, manager, backgroundExecutor, gameExecutor)
+    public fun throwInDev(message: String) {
+        if (isDev) throw IllegalStateException("Error while in development environment: $message")
+        else SkyBlockAPI.error("Error while not in development environment: $message")
     }
-    *///?}
 }
 

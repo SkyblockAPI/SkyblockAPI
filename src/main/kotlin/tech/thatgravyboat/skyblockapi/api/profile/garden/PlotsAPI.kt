@@ -9,30 +9,41 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import tech.thatgravyboat.skyblockapi.api.data.stored.PlotsStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.base.predicates.*
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.InventoryTitle
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyNonGuest
+import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
-import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
-import tech.thatgravyboat.skyblockapi.helpers.McPlayer.contains
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.ApiDebug
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getItemModel
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.Destructured
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.matchOrNull
+import tech.thatgravyboat.skyblockapi.utils.regex.component.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import kotlin.math.floor
 
 @Module
-object PlotAPI {
+public object PlotAPI {
     //region Regex
     private val inventoryGroup = RegexGroup.INVENTORY.group("plots")
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("plots")
@@ -46,22 +57,22 @@ object PlotAPI {
 
     private val deskPestsRegex = inventoryGroup.create(
         "pests",
-        "ൠ This plot has (?<amount>\\d+) ൠ Pests?!",
+        "[ൠ\uE07F\uE018] This plot has (?<amount>\\d+) [ൠ\uE07F\uE018] Pests?!",
     )
 
     private val scoreboardPestAmountRegex = scoreboardGroup.create(
         "pest_amount",
-        " ⏣ The Garden ൠ x(?<amount>\\d+)",
-    )
+        " [⏣\uE067] (?<text>The Garden) [ൠ\uE07F\uE018] x(?<amount>\\d+)",
+    ).toComponentRegex()
 
     private val scoreboardNoPestsRegex = scoreboardGroup.create(
         "no_pests",
-        " ⏣ (?:The Garden|Plot - .+)",
+        " [⏣\uE067] (?:The Garden|Plot - .+)",
     )
 
     private val scoreboardPlotPestAmountRegex = scoreboardGroup.create(
         "plot_pest_amount",
-        " {3}Plot - (?<name>.+) ൠ x(?<amount>\\d+)",
+        " {3}Plot - (?<name>.+) [ൠ\uE07F\uE018] x(?<amount>\\d+)",
     )
 
     private val tablistAliveRegex = tablistGroup.create(
@@ -76,22 +87,22 @@ object PlotAPI {
 
     private val chatSingularSpawnRegex = chatGroup.create(
         "singular_spawn",
-        "[^:]*! A ൠ Pest has appeared in Plot - (?<name>.+)!",
+        "[^:]*! A [ൠ\uE07F\uE018] Pest has appeared in Plot - (?<name>.+)!",
     )
     private val chatPluralSpawnRegex = chatGroup.create(
         "plural_spawn",
-        "[^:]+! (?<amount>\\d+) ൠ Pests? have spawned in Plot - (?<name>.+)!",
+        "[^:]+! (?<amount>\\d+) [ൠ\uE07F\uE018] Pests? have spawned in Plot - (?<name>.+)!",
     )
     private val chatOfflineSpawnRegex = chatGroup.create(
         "offline",
-        "[^:]+! While you were offline, ൠ Pests? spawned in Plots (?<plots>.*)!",
+        "[^:]+! While you were offline, [ൠ\uE07F\uE018] Pests? spawned in Plots (?<plots>.*)!",
     )
 
     //endregion
 
     private var currentPlotSlot = 1
 
-    val plots = listOf(
+    public val plots: List<Plot> = listOf(
         listOf(21, 13, 9, 14, 22),
         listOf(15, 5, 1, 6, 16),
         listOf(10, 2, 0, 3, 11),
@@ -109,20 +120,23 @@ object PlotAPI {
         }.also { currentPlotSlot += 4 }
     }
 
-    var currentPestAmount = 0
+    public var currentPestAmount: Int = 0
+        private set
+    public var hasPestDebuff: Boolean = false
         private set
 
 
-    fun getPlot(id: Int): Plot? = plots.find { it.id == id }
-    fun getPlotByName(name: String): Plot? = plots.find { it.data?.name == name }
+    public fun getPlot(id: Int): Plot? = plots.find { it.id == id }
+    public fun getPlotByName(name: String): Plot? = plots.find { it.data?.name == name }
 
-    fun getPlot(pos: Vec3): Plot? = plots.find { pos in it.aabb }
-    fun getPlot(pos: BlockPos): Plot? = getPlot(Vec3(pos))
-    fun getCurrentPlot(): Plot? = McPlayer.position?.let(::getPlot)
+    public fun getPlot(pos: Vec3): Plot? = plots.find { pos in it.aabb }
+    public fun getPlot(pos: BlockPos): Plot? = getPlot(Vec3(pos))
+    public fun getCurrentPlot(): Plot? = McPlayer.position?.let(::getPlot)
 
 
     private fun clearPests() {
         currentPestAmount = 0
+        hasPestDebuff = false
         plots.forEach { plot ->
             plot.data?.pest = Pest(0, inaccurate = false)
             plot.data?.save()
@@ -148,17 +162,18 @@ object PlotAPI {
     }
 
     @Subscription
-    @OnlyNonGuest
     @OnlyIn(SkyBlockIsland.GARDEN)
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    @OnlyNonGuest
+    internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         if (scoreboardNoPestsRegex.anyMatch(event.new)) {
             clearPests()
             return
         }
 
         var shouldSynch = false
-        scoreboardPestAmountRegex.anyMatch(event.new, "amount") { (amount) ->
-            currentPestAmount = amount.toIntValue()
+        scoreboardPestAmountRegex.anyMatch(event.addedComponents, "text", "amount") { (text, amount) ->
+            hasPestDebuff = text.string.contains("§c") // TODO: make it so we dont need to rely on color codes 
+            currentPestAmount = amount.stripped.toIntValue()
             shouldSynch = true
         }
 
@@ -174,10 +189,10 @@ object PlotAPI {
     }
 
     @Subscription
-    @OnlyNonGuest
-    @OnlyIn(SkyBlockIsland.GARDEN)
-    @MustBeContainer
     @InventoryTitle("Configure Plots")
+    @MustBeContainer
+    @OnlyIn(SkyBlockIsland.GARDEN)
+    @OnlyNonGuest
     private fun InventoryChangeEvent.onInventoryChange() {
         val plotId = plots.find { it.slot == slot.index }?.id ?: return
         val itemId = item.getSkyBlockId() ?: item.getItemModel().takeUnless { it == Items.OAK_BUTTON || it in ItemTag.GLASS_PANES }?.let {
@@ -204,9 +219,9 @@ object PlotAPI {
     }
 
     @Subscription
-    @OnlyNonGuest
     @OnlyIn(SkyBlockIsland.GARDEN)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    @OnlyNonGuest
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val shouldSynch = matchWhen(event.text) {
             case(chatSingularSpawnRegex, "name") { (name) ->
                 val plot = getPlotByName(name) ?: return@case
@@ -242,9 +257,9 @@ object PlotAPI {
     }
 
     @Subscription
-    @OnlyNonGuest
     @OnlyWidget(TabWidget.PESTS)
-    fun onTabWidget(event: TabWidgetChangeEvent) {
+    @OnlyNonGuest
+    internal fun onTabWidget(event: TabWidgetChangeEvent) {
         val plots = mutableListOf<Int>()
         var alive = 0
 
@@ -282,50 +297,48 @@ object PlotAPI {
         synch()
     }
 
+    @ApiDebug("PlotAPI")
+    internal fun debug(builder: DebugBuilder) = with(builder) {
+        field(::currentPestAmount)
+        field(::hasPestDebuff)
+        val currentPlot = getCurrentPlot()
+        field("currentPlot", currentPlot?.id, copyValue = currentPlot?.toString())
+        field(
+            "plots",
+            "Click to copy",
+            description = Text.of("Click to copy plot data to clipboard"),
+            plots.toString()
+        )
+    }
+
 
     @Subscription
-    fun onCommand(event: RegisterCommandsEvent) {
-        event.register("sbapi garden plots") {
-            thenCallback("clear") {
-                PlotsStorage.clear()
-                Text.of("Cleared all plots!").sendWithPrefix()
-            }
-
-            callback {
-                val string = buildList {
-                    add("Plots:")
-                    PlotsStorage.plots.forEach { plot ->
-                        val string = buildString {
-                            append("  - Plot ${plot.id}: ${plot.name}, ")
-                            append("Pests: ${plot.pest}${if (plot.pest.inaccurate) " (Inacc)" else ""}, ")
-                            append("Locked: ${plot.locked}, ")
-                            append("Icon: ${plot.deskIcon ?: "None"}, ")
-                            append("Greenhouse: ${plot.isGreenhouse}")
-                        }
-                        add(string)
-                    }
-                }
-
-                McClient.clipboard = string.joinToString("\n")
-                Text.multiline(string).sendWithPrefix()
-            }
+    internal fun onCommand(event: RegisterSkyblockApiCommandsEvent) {
+        event.registerWithCallback("garden plots clear") {
+            PlotsStorage.clear()
+            Text.of("Cleared all plots!").sendWithPrefix()
         }
     }
 
 }
 
-data class Plot(
+public data class Plot(
     val id: Int,
     val slot: Int,
     val aabb: AABB,
 ) {
-    val isBarn = id == 0
-    val tpName = if (isBarn) "barn" else id
-    val data get() = PlotsStorage.getPlot(id)
+    val isBarn: Boolean = id == 0
+    @get:JvmName("getTpName")
+    val _tpName: Any get() = if (isBarn) "barn" else id
+    @get:JvmName("tpName")
+    val tpName: String = if (isBarn) "barn" else id.toString()
+    val data: PlotData? get() = PlotsStorage.getPlot(id)
+
+    override fun toString(): String = "Plot(id=$id, slot=$slot, aabb=$aabb, data=$data)"
 }
 
 @GenerateCodec
-data class PlotData(
+public data class PlotData(
     val id: Int,
     var name: String,
     var pest: Pest,
@@ -333,7 +346,7 @@ data class PlotData(
     var isGreenhouse: Boolean = false,
     var locked: Boolean = false,
 ) {
-    constructor(id: Int, pest: Pest, deskIcon: String? = null, locked: Boolean = false) : this(id, "$id", pest, deskIcon, locked)
+    public constructor(id: Int, pest: Pest, deskIcon: String? = null, locked: Boolean = false) : this(id, "$id", pest, deskIcon, locked)
 
     internal fun save() {
         PlotsStorage.setPlot(this)
@@ -341,7 +354,7 @@ data class PlotData(
 }
 
 @GenerateCodec
-data class Pest(
+public data class Pest(
     var pest: Int,
     var inaccurate: Boolean,
 )

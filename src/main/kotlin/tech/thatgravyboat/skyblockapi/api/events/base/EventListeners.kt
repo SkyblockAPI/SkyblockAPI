@@ -1,15 +1,16 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
-import kotlinx.coroutines.Runnable
 import java.lang.invoke.LambdaMetafactory
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 import java.lang.reflect.Method
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.function.Consumer
+import kotlinx.coroutines.Runnable
 
 internal class EventListeners {
 
-    private val listeners: MutableList<Listener> = mutableListOf()
+    private val listeners: MutableList<Listener> = CopyOnWriteArrayList()
 
     fun removeListener(listener: Any) {
         listeners.removeIf { it.listener == listener }
@@ -64,11 +65,12 @@ internal class EventListeners {
 
     private fun createNoArgEventConsumer(name: String, instance: Any, method: Method): Consumer<Any> {
         try {
-            val handle = MethodHandles.lookup().unreflect(method)
+            val lookup = MethodHandles.privateLookupIn(method.declaringClass, MethodHandles.lookup())
+            val handle = lookup.unreflect(method)
             val runnable = LambdaMetafactory.metafactory(
-                MethodHandles.lookup(),
+                lookup,
                 "run",
-                MethodType.methodType(Runnable::class.java, instance::class.java),
+                MethodType.methodType(Runnable::class.java, method.declaringClass),
                 MethodType.methodType(Nothing::class.javaPrimitiveType),
                 handle,
                 MethodType.methodType(Nothing::class.javaPrimitiveType),
@@ -86,12 +88,13 @@ internal class EventListeners {
     @Suppress("UNCHECKED_CAST")
     private fun createEventConsumer(name: String, instance: Any, method: Method): Consumer<Any> {
         try {
-            val lookup = MethodHandles.privateLookupIn(instance.javaClass, MethodHandles.lookup())
+            val lookup = MethodHandles.privateLookupIn(method.declaringClass, MethodHandles.lookup())
             val handle = lookup.unreflect(method)
+            @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
             return LambdaMetafactory.metafactory(
                 lookup,
                 "accept",
-                MethodType.methodType(Consumer::class.java, instance::class.java),
+                MethodType.methodType(Consumer::class.java, method.declaringClass),
                 MethodType.methodType(Nothing::class.javaPrimitiveType, Object::class.java),
                 handle,
                 MethodType.methodType(Nothing::class.javaPrimitiveType, method.parameterTypes[0]),

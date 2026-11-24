@@ -1,15 +1,15 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe
 
-import me.owdding.ktcodecs.GenerateCodec
-import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+//? if < 26.3 {
+/*import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeData as NewWardrobeData
 
-@GenerateCodec
-data class WardrobeData(
+@Deprecated("Replace with WardrobeAPI", ReplaceWith("tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeData"))
+@Suppress("DEPRECATION")
+public data class WardrobeData(
     var currentSlot: Int = -1,
     var slots: MutableList<WardrobeSlot> = mutableListOf(),
-) {
-    companion object {
-        val CODEC = SkyblockAPICodecs.getCodec<WardrobeData>()
-    }
-}
+)
 
+@Suppress("DEPRECATION")
+internal fun NewWardrobeData.into() = WardrobeData(currentSlot, slots.mapTo(mutableListOf()) { it.into() })
+*///?}

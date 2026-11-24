@@ -1,6 +1,13 @@
 package tech.thatgravyboat.skyblockapi.impl.debug.packets
 
-import com.google.gson.*
+import com.google.gson.ExclusionStrategy
+import com.google.gson.FieldAttributes
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
+import com.google.gson.JsonNull
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 import com.mojang.serialization.Codec
 import com.mojang.util.InstantTypeAdapter
 import com.mojang.util.UUIDTypeAdapter
@@ -31,9 +38,10 @@ import tech.thatgravyboat.skyblockapi.platform.identifier
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJsonOrThrow
 import java.lang.reflect.Modifier
 import java.lang.reflect.Type
-import java.util.*
+import java.util.Optional
+import java.util.UUID
 
-object DebugWriter {
+public object DebugWriter {
 
     private val gson = GsonBuilder()
         .disableHtmlEscaping()
@@ -58,7 +66,7 @@ object DebugWriter {
         .registerTypeAdapter<Holder<*>> { holder, context -> holder.unwrap().map({ context.serialize(it.identifier) }, { context.serialize(it) }) }
         .create()
 
-    fun Packet<*>.toJson(): JsonElement = gson.toJsonTree(this)
+    public fun Packet<*>.toJson(): JsonElement = gson.toJsonTree(this)
 }
 
 private object SkipMixinUniqueFields : ExclusionStrategy {

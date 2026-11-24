@@ -7,11 +7,14 @@ import tech.thatgravyboat.skyblockapi.api.data.stored.QuiverStorage
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerHotbarChangeEvent
-import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
+import tech.thatgravyboat.skyblockapi.api.events.screen.PlayerInventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
+import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -19,57 +22,55 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyFound
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
 
 @Module
-object QuiverAPI {
+public object QuiverAPI {
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("quiver")
 
-    private val activeArrowRegex = inventoryGroup.create(
+    private val arrowCountRegex = inventoryGroup.create(
         "active",
-        "^Active Arrow: (?<type>.+) \\((?i)(?<amount>[\\d,.kmb]+)\\)$"
+        "Arrows Remaining: (?<amount>[\\d,.kmb]+)",
     )
     private val quiverInventoryRegex = inventoryGroup.create(
         "inventory",
         "^Quiver$"
     )
 
-    var currentArrow: String?
+    public var currentArrow: String?
         get() = QuiverStorage.currentArrow
         private set(value) {
             QuiverStorage.updateCurrent(value ?: return)
         }
 
-    var currentAmount: Int?
+    public var currentAmount: Int?
         get() = arrows[currentArrow]
         private set(value) {
             QuiverStorage.updateArrow(currentArrow ?: return, value ?: return)
         }
 
-    val arrows: Map<String, Int>
+    public val arrows: Map<String, Int>
         get() = mutableArrows
 
     private inline val mutableArrows: MutableMap<String, Int>
         get() = QuiverStorage.arrows
 
     @Subscription
-    fun onHotbarChange(event: PlayerHotbarChangeEvent) {
-        if (event.slot != 8) return
+    internal fun onPlayerInventoryChange(event: PlayerInventoryChangeEvent) {
         val item = event.item
         if (item.getData(DataTypes.QUIVER_ARROW) != true) return
-        activeArrowRegex.anyFound(item.getRawLore(), "type", "amount") { (type, amount) ->
-            val id = RepoItemsAPI.getItemIdByName(type)
-            currentArrow = id
-            if (id == null) return@anyFound
+        arrowCountRegex.anyFound(item.getRawLore(), "amount") { (amount) ->
+            currentArrow = SkyBlockItemsRepo.getIdByName(item.cleanName)
+            if (currentArrow == null) return@anyFound
             currentAmount = amount.toIntValue()
         }
     }
 
     @Subscription
-    fun onInventoryInitialized(event: ContainerInitializedEvent) {
+    internal fun onInventoryInitialized(event: ContainerInitializedEvent) {
         handleQuiverInventory(event.title, event.itemStacks)
     }
 
     @Subscription
-    fun onInventoryChange(event: InventoryChangeEvent) {
+    internal fun onInventoryChange(event: InventoryChangeEvent) {
         handleQuiverInventory(event.title, event.itemStacks)
     }
 
@@ -85,6 +86,15 @@ object QuiverAPI {
             }
         }
         QuiverStorage.setArrows(newArrows)
+    }
+
+    @ApiDebug("Quiver")
+    internal fun debug(builder: DebugBuilder) = with(builder) {
+        fields(
+            ::currentArrow,
+            ::currentAmount,
+            ::arrows,
+        )
     }
 
 }

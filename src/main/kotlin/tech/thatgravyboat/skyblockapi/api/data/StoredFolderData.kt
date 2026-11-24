@@ -3,20 +3,27 @@ package tech.thatgravyboat.skyblockapi.api.data
 
 import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.helpers.McClient
 import java.nio.file.Path
-import kotlin.io.path.*
+import kotlin.io.path.createDirectories
+import kotlin.io.path.extension
+import kotlin.io.path.isRegularFile
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.nameWithoutExtension
+import kotlin.io.path.relativeTo
 
 internal class FolderStorage<T : Any>(
-    val folder: String,
+    private val version: Int = 0,
+    private val folder: String,
     val default: T,
-    val codec: Codec<T>,
+    private val codec: (Int) -> Codec<T>,
 ) {
+    constructor(folder: String, default: T, codec: Codec<T>) : this(0, folder, default, { codec })
     private val storages = mutableMapOf<String, StoredData<T>>()
-    private val defaultPath: Path = McClient.config.resolve("skyblockapi/$folder")
+    private val defaultPath: Path = StoredData.defaultPath.resolve(folder)
 
     init {
         load()
+        allStorages.add(this)
     }
 
     fun load() {
@@ -25,13 +32,14 @@ internal class FolderStorage<T : Any>(
                 val id = it.nameWithoutExtension
                 try {
                     id to StoredData(
-                        version = 0,
+                        version = version,
                         data = default,
                         file = "$folder/$id.json",
-                        codec = { codec },
+                        differentAlphaData = false,
+                        codec = codec,
                     )
                 } catch (e: Exception) {
-                    SkyBlockAPI.error("Failed to load storage file: ${it.relativeTo(McClient.config)}", e)
+                    SkyBlockAPI.error("Failed to load storage file: ${it.relativeTo(StoredData.defaultPath)}", e)
                     null
                 }
             },
@@ -43,10 +51,11 @@ internal class FolderStorage<T : Any>(
     fun set(id: String, value: T) {
         storages.getOrPut(id) {
             StoredData(
-                version = 0,
-                factory = { value },
+                version = version,
+                data = value,
                 file = "$folder/$id.json",
-                codec = { codec },
+                differentAlphaData = false,
+                codec = codec,
             )
         }.set(value)
     }
@@ -54,7 +63,9 @@ internal class FolderStorage<T : Any>(
     fun get(id: String): T? = storages[id]?.get()
 
     fun remove(id: String) {
-        storages.remove(id)?.delete()
+        val storage = storages.remove(id) ?: return
+        storage.delete()
+        StoredData.allStoredDatas.remove(storage)
     }
 
     private fun files() =
@@ -64,8 +75,13 @@ internal class FolderStorage<T : Any>(
     fun getAll(): Map<String, T> = storages.mapValues { it.value.get() }
 
     fun refresh() {
+        StoredData.allStoredDatas.removeAll(storages.values)
         storages.clear()
         load()
+    }
+
+    companion object {
+        val allStorages = mutableListOf<FolderStorage<*>>()
     }
 }
 

@@ -8,42 +8,66 @@ import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.utils.Logger
+import tech.thatgravyboat.skyblockapi.utils.Scheduling
+import tech.thatgravyboat.skyblockapi.utils.http.Http
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import java.nio.file.Files
 
-@Module
-object ItemData {
-    @Deprecated("Use ItemData.data instead", ReplaceWith("data.values"))
-    val itemData: List<HypixelApiItem> get() = data.values.toList()
+private const val URL = "https://api.hypixel.net/v2/resources/skyblock/items"
 
-    val data: Map<String, HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
+@Module
+public object ItemData {
+
+    private val backupData: Map<String, HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
         ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
         .associateBy(HypixelApiItem::id)
 
+    private var hypixelData: Map<String, HypixelApiItem> = emptyMap()
+
+    init {
+        Scheduling.async {
+            val response = Http.getResult(
+                URL,
+                SkyblockAPICodecs.getCodec<HypixelItemsResponse>(),
+            ).getOrElse {
+                Logger.warn("Failed to get item data from URL: $it", it)
+                return@async
+            }
+            hypixelData = response.items.associateBy { it.id }
+        }
+    }
+
+    public val data: Map<String, HypixelApiItem> get() = hypixelData.takeUnless { it.isEmpty() } ?: backupData
+
     @JvmName("getItemDataFromSkyBlockId")
-    fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.skyblockId)
+    public fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.skyblockId)
 
-    fun getItemData(id: String): HypixelApiItem? = data[id.uppercase()]
+    public fun getItemData(id: String): HypixelApiItem? = data[id.uppercase()]
 
-    @Deprecated("Use getNpcSellPrice instead", ReplaceWith("getNpcSellPrice(id)"), DeprecationLevel.ERROR)
-    fun getNpcPrice(id: String): Int? = getItemData(id)?.npcSellPrice
-    fun getNpcSellPrice(id: String): Float? = getItemData(id)?.npcSellPriceFloat
+    public fun getNpcSellPrice(id: String): Float? = getItemData(id)?.npcSellPriceFloat
+
+    public fun getMotesSellPrice(id: String): Float? = getItemData(id)?.motesSellPrice
 }
 
 @GenerateCodec
-data class HypixelApiItem(
+public data class HypixelItemsResponse(val items: List<HypixelApiItem>)
+
+@GenerateCodec
+public data class HypixelApiItem(
     val id: String,
     @param:FieldName("gemstone_slots") val gemstones: List<GemstoneCost> = emptyList(),
     @param:FieldName("upgrade_costs") val upgradeCost: List<List<Cost>> = emptyList(),
     @param:FieldName("dungeon_item_conversion_cost") val conversionCost: EssenceCost?,
     @param:FieldName("npc_sell_price") val npcSellPrice: Int?,
     @param:FieldName("npc_sell_price") val npcSellPriceFloat: Float?,
+    @param:FieldName("mote_sell_price") val motesSellPrice: Float?,
     @param:FieldName("museum_data") val museumData: ItemMuseumData?,
     @param:FieldName("rift_transferrable") val riftTransferable: Boolean = false,
     val origin: ItemOrigin?,
 ) {
-    companion object {
-        val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()
+    public companion object {
+        public val CODEC: Codec<HypixelApiItem> = SkyblockAPICodecs.HypixelApiItemCodec.codec()
     }
 }

@@ -14,39 +14,39 @@ import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.parseInvData
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
+import tech.thatgravyboat.skyblockapi.utils.extentions.since
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.json.getPath
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
-import tech.thatgravyboat.skyblockapi.utils.time.since
 
 @Module
-object StorageAPI {
+public object StorageAPI {
 
     private val inventoryGroup = RegexGroup.INVENTORY.group("storage")
 
     private val enderchestRegex = inventoryGroup.create("enderchest", "Ender Chest \\((?<page>\\d+)/\\d+\\)")
     private val backpackRegex = inventoryGroup.create("backpack", ".* Backpack (?:✦ )?\\(Slot #(?<page>\\d+)\\)")
-    private val riftStorageRegex = inventoryGroup.create("rift", "Rift Storage \\((?<page>\\d+)/\\d+\\)")
+    private val riftStorageRegex = inventoryGroup.create("rift", "Rift Storage(?: \\((?<page>\\d+)/\\d+\\))?")
 
 
     /**
      * Note: The index of the storage are stored in the PlayerStorageInstance and the index in the list is not representative of the page.
      */
-    val enderchests get(): List<PlayerStorageInstance> = PlayerStorageStorage.enderchests
+    public val enderchests: List<PlayerStorageInstance> get(): List<PlayerStorageInstance> = PlayerStorageStorage.enderchests
 
     /**
      * Note: The index of the storage are stored in the PlayerStorageInstance and the index in the list is not representative of the page.
      */
-    val backpacks get(): List<PlayerStorageInstance> = PlayerStorageStorage.backpacks
+    public val backpacks: List<PlayerStorageInstance> get(): List<PlayerStorageInstance> = PlayerStorageStorage.backpacks
 
     /**
      * Note: The index of the storage are stored in the PlayerStorageInstance and the index in the list is not representative of the page.
      */
-    val riftStorage get(): List<PlayerStorageInstance> = PlayerStorageStorage.riftStorage
+    public val riftStorage: List<PlayerStorageInstance> get(): List<PlayerStorageInstance> = PlayerStorageStorage.riftStorage
 
     @Subscription
-    fun onInventoryLoad(event: ContainerInitializedEvent) {
+    internal fun onInventoryLoad(event: ContainerInitializedEvent) {
         val size = McScreen.asMenu?.menu?.slots?.size?.let { it - 36 } ?: return
         enderchestRegex.match(event.title, "page") { (page) ->
             val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
@@ -60,15 +60,16 @@ object StorageAPI {
             PlayerStorageStorage.setBackpack(PlayerStorageInstance(pageId - 1, items.toMutableList()))
         }
 
-        riftStorageRegex.match(event.title, "page") { (page) ->
-            val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
+        riftStorageRegex.match(event.title) { matcher ->
+            val page = matcher["page"]?.toIntValue() ?: 1
+            val pageId = page.takeIf { it > 0 } ?: return@match
             val items = event.itemStacks.take(size).drop(9)
             PlayerStorageStorage.setRiftStorage(PlayerStorageInstance(pageId - 1, items.toMutableList()))
         }
     }
 
     @Subscription
-    fun onInventoryChange(event: InventoryChangeEvent) {
+    internal fun onInventoryChange(event: InventoryChangeEvent) {
         if (event.isInPlayerInventory) return
         if (event.isInTopRow) return
         val index = event.slot.index
@@ -87,17 +88,18 @@ object StorageAPI {
             PlayerStorageStorage.setBackpack(instance)
         }
 
-        riftStorageRegex.match(event.title, "page") { (page) ->
-            val pageId = page.toIntValue().takeIf { it > 0 } ?: return@match
+        riftStorageRegex.match(event.title) { matcher ->
+            val page = matcher["page"]?.toIntValue() ?: 1
+            val pageId = page.takeIf { it > 0 } ?: return@match
             val instance = PlayerStorageStorage.riftStorage.find { it.index == pageId - 1 } ?: return@match
             instance.items.setAt(index - 9, event.item)
             PlayerStorageStorage.setRiftStorage(instance)
         }
     }
 
+    @OptIn(SkyBlockPvRequired::class)
     @Subscription
     @OnlyOnSkyBlock
-    @OptIn(SkyBlockPvRequired::class)
     private fun SkyBlockPvOpenedEvent.parseEnderChest() {
         val rawEnderchestData = member.getPath("inventory.ender_chest_contents") as? JsonObject ?: return
         val enderchestData = rawEnderchestData.parseInvData().takeUnless { it.isEmpty() } ?: return
@@ -115,9 +117,9 @@ object StorageAPI {
         }
     }
 
+    @OptIn(SkyBlockPvRequired::class)
     @Subscription
     @OnlyOnSkyBlock
-    @OptIn(SkyBlockPvRequired::class)
     private fun SkyBlockPvOpenedEvent.parseBackPacks() {
         val rawBackPackData = member.getPath("inventory.backpack_contents") as? JsonObject ?: return
         rawBackPackData.entrySet().forEach { (index, json) ->

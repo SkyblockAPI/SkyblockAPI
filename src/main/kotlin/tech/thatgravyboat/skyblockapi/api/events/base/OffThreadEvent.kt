@@ -6,4 +6,4 @@ package tech.thatgravyboat.skyblockapi.api.events.base
  */
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
-annotation class OffThreadEvent()
+public annotation class OffThreadEvent()

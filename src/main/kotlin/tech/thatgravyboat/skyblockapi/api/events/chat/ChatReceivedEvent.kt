@@ -6,20 +6,57 @@ import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import java.util.UUID
 
-abstract class ChatReceivedEvent : SkyBlockEvent() {
+public abstract class ChatReceivedEvent protected constructor(public val messageId: UUID) : SkyBlockEvent() {
+    //? if < 26.4
+    @Deprecated("No", level = DeprecationLevel.HIDDEN) public constructor(): this(UUID.randomUUID())
 
-    abstract val component: Component
+    public abstract val component: Component
 
-    val text: String get() = component.stripped
-    val coloredText: String get() = component.string
+    // "component" can change in the Post event, so we have getters here
+    // we can't have these not be getters and Post have getters instead because of the initialization order
+    public open val text: String get() = component.stripped
+    public open val coloredText: String get() = component.string
 
-    class Pre(override val component: Component) : ChatReceivedEvent(), Cancellable
-    class Post(override var component: Component, var id: String? = null) : ChatReceivedEvent()
+    /**
+     * Dispatched first before any other chat event, allows you to cancel the event.
+     */
+    public class Pre internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId), Cancellable {
+        //? if < 26.4
+        @Deprecated("Shouldn't be used", level = DeprecationLevel.HIDDEN) public constructor(component: Component) : this(component, UUID.randomUUID())
 
-    override fun post(bus: EventBus) = bus.post(this, null, onError)
+        override val text: String = super.text
+        override val coloredText: String = super.coloredText
+    }
 
-    companion object {
+    /**
+     * Dispatched for all cancelled messages, this also includes messages cancelled by other mods.
+     */
+    public class Cancelled internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId) {
+        override val text: String = super.text
+        override val coloredText: String = super.coloredText
+    }
+
+    /**
+     * Dispatched second as long as the message didn't get cancelled, allows you to modify the message.
+     */
+    public class Post internal constructor(override var component: Component, public var id: String? = null, messageId: UUID) : ChatReceivedEvent(messageId) {
+        //? if < 26.4
+        @Deprecated("Shouldn't be used", level = DeprecationLevel.HIDDEN) public constructor(component: Component, id: String? = null): this(component, id, UUID.randomUUID())
+    }
+
+    /**
+     * Dispatched last, this event implies the message will be shown to the player.
+     */
+    public class Sent internal constructor(override val component: Component, messageId: UUID) : ChatReceivedEvent(messageId) {
+        override val text: String = super.text
+        override val coloredText: String = super.coloredText
+    }
+
+    override fun post(bus: EventBus): Boolean = bus.post(this, null, onError)
+
+    public companion object {
         private val onError: ((Throwable) -> Unit)? = if (McClient.isDev) null else {
             { SkyBlockAPI.logger.error("Error posting ChatReceivedEvent", it) }
         }

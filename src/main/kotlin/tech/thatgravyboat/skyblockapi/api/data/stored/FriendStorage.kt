@@ -10,11 +10,22 @@ internal object FriendStorage {
     private val FRIENDS = StoredPlayerData(
         ::FriendData,
         FriendData.CODEC,
-        "friends.json"
+        "friends.json",
+        differentAlphaData = false,
     )
 
     val friends: MutableList<Friend>
         get() = FRIENDS.get().friends
+
+    fun updateIfNeeded(uuid: UUID, name: String) {
+        val friends = friends
+        val friend = friends.find { it.uuid == uuid || it.name == name } ?: return
+
+        if (friend.name == name && friend.uuid == uuid) return
+        friends.remove(friend)
+        friends.add(friend.copy(name = name, uuid = uuid))
+        save()
+    }
 
     fun updateFriend(
         name: String,

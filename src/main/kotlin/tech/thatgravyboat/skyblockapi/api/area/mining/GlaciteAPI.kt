@@ -4,15 +4,18 @@ import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.ServerChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockArea
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockAreas
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockBiome
+import tech.thatgravyboat.skyblockapi.api.location.SkyBlockBiomes
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
 @Module
-object GlaciteAPI {
+public object GlaciteAPI {
 
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("mining.glacite")
 
@@ -21,10 +24,15 @@ object GlaciteAPI {
         "Cold: -(?<cold>\\d+)❄"
     )
 
-    var cold: Int = 0
+    public var cold: Int = 0
         private set
 
-    fun inGlaciteTunnels() = when {
+    public fun inColdArea(): Boolean = when {
+        SkyBlockIsland.SAFARI.inIsland() -> SkyBlockBiome.inAnyBiome(SkyBlockBiomes.ICY, SkyBlockBiomes.ICY_CAVES)
+        else -> inGlaciteTunnels()
+    }
+
+    public fun inGlaciteTunnels(): Boolean = when {
         SkyBlockIsland.MINESHAFT.inIsland() -> true
         SkyBlockIsland.DWARVEN_MINES.inIsland() -> SkyBlockArea.inAnyArea(
             SkyBlockAreas.GLACITE_TUNNELS,
@@ -36,7 +44,7 @@ object GlaciteAPI {
     }
 
     @Subscription
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardUpdate(event: ScoreboardUpdateEvent) {
         val coldFound = coldRegex.anyMatch(event.added, "cold") { (cold) ->
             this.cold = cold.toIntValue()
         }
@@ -50,6 +58,6 @@ object GlaciteAPI {
         cold = 0
     }
 
-    @Subscription
-    fun onServerChange(event: ServerChangeEvent) = reset()
+    @Subscription(ServerChangeEvent::class, ServerDisconnectEvent::class)
+    private fun onServerChange() = reset()
 }

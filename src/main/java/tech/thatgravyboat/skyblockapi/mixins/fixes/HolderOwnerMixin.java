@@ -10,7 +10,8 @@ import tech.thatgravyboat.skyblockapi.utils.json.LenientHolderOwner;
 @SuppressWarnings("unchecked")
 public interface HolderOwnerMixin<T> {
 
-    @WrapMethod(method = "canSerializeIn")
+    //~ if >= 26.3 'canSerializeIn' -> 'canSerialize'
+    @WrapMethod(method = "canSerialize")
     private boolean canSerializeIn(HolderOwner<T> owner, Operation<Boolean> original) {
         return ((HolderOwner<T>) this) instanceof LenientHolderOwner<T> ||
             owner instanceof LenientHolderOwner<T> ||

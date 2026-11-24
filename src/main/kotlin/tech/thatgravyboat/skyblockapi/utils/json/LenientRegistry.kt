@@ -1,10 +1,14 @@
 package tech.thatgravyboat.skyblockapi.utils.json
 
+import net.minecraft.core.Holder
+import net.minecraft.core.HolderGetter
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.HolderOwner
+import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
 import net.minecraft.resources.RegistryOps
 import net.minecraft.resources.ResourceKey
+import net.minecraft.tags.TagKey
 import java.util.Optional
 import java.util.concurrent.ConcurrentHashMap
 
@@ -12,7 +16,35 @@ internal class LenientHolderOwner<T : Any> : HolderOwner<T>
 
 internal class LenientHolderLookupAdapter(private val provider: HolderLookup.Provider) : RegistryOps.RegistryInfoLookup {
 
-    private val cache = ConcurrentHashMap<ResourceKey<out Registry<*>>, Optional<out RegistryOps.RegistryInfo<*>>>()
+    //? if >= 26.3 {
+    private val cache = ConcurrentHashMap<ResourceKey<out Registry<*>>, Optional<out HolderGetter<*>>>()
+
+    data class FakeHolder<T : Any>(val parent: HolderGetter<T>) : HolderGetter<T> {
+        override fun get(id: ResourceKey<T>): Optional<Holder.Reference<T>> {
+            return parent.get(id)
+        }
+
+        override fun get(id: TagKey<T>): Optional<HolderSet.Named<T>> {
+            return parent.get(id)
+        }
+
+        override fun canSerialize(owner: HolderOwner<T>?): Boolean {
+            return true
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Any> lookup(key: ResourceKey<out Registry<out T>>): Optional<HolderGetter<T>> {
+        return this.cache.computeIfAbsent(key) { key ->
+            this.provider.lookup(key).map {
+                FakeHolder(it)
+            }
+        } as Optional<HolderGetter<T>>
+    }
+
+
+    //?} else {
+    /*private val cache = ConcurrentHashMap<ResourceKey<out Registry<*>>, Optional<out RegistryOps.RegistryInfo<*>>>()
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : Any> lookup(key: ResourceKey<out Registry<out T>>): Optional<RegistryOps.RegistryInfo<T>> {
@@ -21,7 +53,7 @@ internal class LenientHolderLookupAdapter(private val provider: HolderLookup.Pro
                 RegistryOps.RegistryInfo<Any>(LenientHolderOwner<Any>(), lookup, lookup.registryLifecycle())
             }
         } as Optional<RegistryOps.RegistryInfo<T>>
-    }
+    }*///?}
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -29,7 +61,5 @@ internal class LenientHolderLookupAdapter(private val provider: HolderLookup.Pro
         return this.provider == other.provider
     }
 
-    override fun hashCode(): Int {
-        return this.provider.hashCode()
-    }
+    override fun hashCode(): Int = this.provider.hashCode()
 }

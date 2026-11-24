@@ -1,11 +1,14 @@
 package tech.thatgravyboat.skyblockapi.api.datatype.defaults
 
+import com.mojang.serialization.Codec
+import me.owdding.ktcodecs.IncludedCodec
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.generated.EnumCodec
 import kotlin.jvm.optionals.getOrNull
 
-enum class Gemstone {
+public enum class Gemstone {
     RUBY,
 
     AMBER,
@@ -24,7 +27,7 @@ enum class Gemstone {
     ;
 }
 
-enum class GemstoneQuality {
+public enum class GemstoneQuality {
     ROUGH,
     FLAWED,
     FINE,
@@ -33,7 +36,7 @@ enum class GemstoneQuality {
     ;
 }
 
-enum class GemstoneSlot(vararg val gemstones: Gemstone) {
+public enum class GemstoneSlot(public vararg val gemstones: Gemstone) {
     JADE(Gemstone.JADE), // exists
     AMBER(Gemstone.AMBER), // exists
     TOPAZ(Gemstone.TOPAZ),
@@ -51,15 +54,22 @@ enum class GemstoneSlot(vararg val gemstones: Gemstone) {
     DEFENSIVE(Gemstone.AMETHYST, Gemstone.RUBY, Gemstone.OPAL),
     MINING(Gemstone.JADE, Gemstone.AMBER, Gemstone.TOPAZ), // exists
     UNIVERSAL(*Gemstone.entries.toTypedArray()),
-    OFFENSIVE(Gemstone.SAPPHIRE, Gemstone.JASPER) // apparently unused
+    OFFENSIVE(Gemstone.SAPPHIRE, Gemstone.JASPER), // apparently unused
+    UNKNOWN,
+    ;
+
+    public companion object {
+        @IncludedCodec
+        public val CODEC: Codec<GemstoneSlot> = EnumCodec.forKCodec(entries.toTypedArray()).orElse(UNKNOWN)
+    }
 }
 
-data class GemstoneSlotData(val gemstone: Gemstone, val slot: GemstoneSlot, val quality: GemstoneQuality) {
-    val itemId = "${quality.name}_${gemstone.name}_GEM"
-    val skyblockId = SkyBlockId.item(itemId)
+public data class GemstoneSlotData(val gemstone: Gemstone, val slot: GemstoneSlot, val quality: GemstoneQuality) {
+    val itemId: String = "${quality.name}_${gemstone.name}_GEM"
+    val skyblockId: SkyBlockId = SkyBlockId.item(itemId)
 }
 
-fun parseGemstones(tag: CompoundTag?): List<GemstoneSlotData>? {
+public fun parseGemstones(tag: CompoundTag?): List<GemstoneSlotData>? {
     tag ?: return null
     val gems = tag.getCompoundOrEmpty("gems") ?: return null
 

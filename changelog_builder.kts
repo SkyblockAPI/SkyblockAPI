@@ -32,7 +32,8 @@ val commits = execute("git", "log", "$lastTag..HEAD", "--pretty=%H||%an||%s", "-
     val message = split[2]
     if (author == "meowtomation") return@forEach
 
-    out.append("- `$message` - $author ([${hash.take(8)}](https://github.com/SkyblockAPI/SkyblockAPI/commit/$hash))\n")
+    val shortHash = hash.take(8)
+    out.append("- `$message` - $author ([$shortHash](https://github.com/SkyblockAPI/SkyblockAPI/commit/$shortHash))\n")
 }
 
 out.append("\n<@&1434211736126357588>")

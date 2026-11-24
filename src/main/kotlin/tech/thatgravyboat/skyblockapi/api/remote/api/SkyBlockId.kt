@@ -3,54 +3,83 @@ package tech.thatgravyboat.skyblockapi.api.remote.api
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
+import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.DELIMITER
+import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.UNKNOWN
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuIdRegex
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.neuPotionRegex
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockIdOverrides.fixHypixelId
-import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
-import tech.thatgravyboat.skyblockapi.utils.extentions.ItemStack
+import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.DefaultIdResolver
+import tech.thatgravyboat.skyblockapi.api.remote.api.resolvers.IdResolverKind
+import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
+import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
+import tech.thatgravyboat.skyblockapi.impl.debug.addStringDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.get
 import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 
-typealias SkyBlockItemId = SkyBlockId
+public typealias SkyBlockItemId = SkyBlockId
 
 @JvmInline
-value class SkyBlockId private constructor(val id: String) {
-    companion object Companion {
+public value class SkyBlockId private constructor(public val id: String) {
+    public companion object Companion {
+        @JvmStatic
+        @get:JvmName("getIdResolverKind")
+        internal val idResolverKind: ThreadLocal<IdResolverKind> = ThreadLocal.withInitial { IdResolverKind.Unknown }
+
         private val amountRegex = Regex(".*?x[\\d,]+")
         private val petRegex = Regex("\\[?lvl \\d+]? (.*)")
         internal val neuIdRegex = Regex("\\w+;\\d+")
+        internal val neuPotionRegex = Regex("POTION_\\w+")
 
-        const val DELIMITER = ":"
-        const val ITEM = "item$DELIMITER"
+        public const val DELIMITER: String = ":"
+        public const val DERIVED: String = "!"
+        public const val ITEM: String = "item$DELIMITER"
 
-        const val PET = "pet$DELIMITER"
-        const val RUNE = "rune$DELIMITER"
-        const val ATTRIBUTE = "attribute$DELIMITER"
-        const val ENCHANTMENT = "enchantment$DELIMITER"
-        const val UNSAFE = "unsafe$DELIMITER"
-        const val UNKNOWN = "sbapi${DELIMITER}unknown"
-        val EMPTY: SkyBlockId = item(UNKNOWN)
+        public const val PET: String = "pet$DELIMITER"
+        public const val RUNE: String = "rune$DELIMITER"
+        public const val ATTRIBUTE: String = "attribute$DELIMITER"
+        public const val ENCHANTMENT: String = "enchantment$DELIMITER"
+        public const val POTION: String = "potion$DELIMITER"
+        public const val UNSAFE: String = "unsafe$DELIMITER"
+        public const val UNKNOWN_VALUE: String = "unknown"
+        public const val UNKNOWN: String = "sbapi${DELIMITER}$UNKNOWN_VALUE"
+        public val EMPTY: SkyBlockId = item(UNKNOWN)
 
-        fun item(id: String) = SkyBlockId("$ITEM$id".lowercase())
-        fun pet(id: String) = SkyBlockId("$PET$id".lowercase())
-        fun pet(id: String, rarity: String) = SkyBlockId("$PET$id$DELIMITER$rarity".lowercase())
-        fun rune(id: String) = SkyBlockId("$RUNE$id".lowercase())
-        fun rune(id: String, level: Int) = SkyBlockId("$RUNE$id$DELIMITER$level".lowercase())
-        fun attribute(id: String) = SkyBlockId("$ATTRIBUTE$id".lowercase())
-        fun enchantment(id: String) = SkyBlockId("$ENCHANTMENT$id".lowercase())
-        fun enchantment(id: String, level: Int) = SkyBlockId("$ENCHANTMENT$id$DELIMITER$level".lowercase())
+        public fun item(id: String): SkyBlockId = SkyBlockId("$ITEM$id".lowercase())
+        public fun pet(id: String): SkyBlockId = SkyBlockId("$PET$id".lowercase())
+        public fun pet(id: String, rarity: String): SkyBlockId = SkyBlockId("$PET$id$DELIMITER$rarity".lowercase())
+        public fun pet(id: String, rarity: SkyBlockRarity): SkyBlockId = pet(id, rarity.name)
+        public fun rune(id: String): SkyBlockId = SkyBlockId("$RUNE$id".lowercase())
+        public fun rune(id: String, level: Int): SkyBlockId = SkyBlockId("$RUNE$id$DELIMITER$level".lowercase())
+        public fun attribute(id: String): SkyBlockId = SkyBlockId("$ATTRIBUTE$id".lowercase())
+        public fun enchantment(id: String): SkyBlockId = SkyBlockId("$ENCHANTMENT$id".lowercase())
+        public fun enchantment(id: String, level: Int): SkyBlockId = SkyBlockId("$ENCHANTMENT$id$DELIMITER$level".lowercase())
+        public fun potion(id: String): SkyBlockId = SkyBlockId("$POTION$id".lowercase())
+        public fun potion(id: String, level: Int): SkyBlockId = SkyBlockId("$POTION$id$DELIMITER$level".lowercase())
+        public fun potion(type: String?, internalPotion: String?, level: Int?): SkyBlockId = when {
+            type == null -> potion("water")
+            type != "POTION" -> potion(type)
+            internalPotion == null -> potion(UNKNOWN)
+            level != null -> potion(internalPotion, level)
+            else -> potion(internalPotion)
+        }
 
-        fun fromItem(item: ItemStack) = item.getSbId()
+        public fun fromItem(
+            item: ItemStack,
+            @IntroducedAt("4.2.27")
+            context: ResolutionContext = ResolutionContext(item)
+        ): SkyBlockId? = item.getSbId(context)
 
-        fun fromName(name: String, dropLast: Boolean = true): SkyBlockId? {
+        public fun fromName(name: String, dropLast: Boolean = true): SkyBlockId? {
             var name = name.lowercase().stripColor()
             if (name.matches(petRegex)) {
                 name = name.replace(petRegex, "$1")
@@ -63,60 +92,80 @@ value class SkyBlockId private constructor(val id: String) {
             return SimpleItemAPI.findIdByName(name.trim()) ?: if (dropLast) SimpleItemAPI.findIdByName(name.substringBeforeLast(" ").trim()) else null
         }
 
-        fun unknownType(input: String): SkyBlockId? {
+        public fun unknownType(input: String): SkyBlockId? {
             val unsafeId = unsafe(input.lowercase())
 
             fun <T> safe(init: () -> T): T? {
                 return runCatching { init() }.getOrNull()
             }
 
-            safe { SimpleItemAPI.getItemByIdOrNull(unsafeId) }?.let { return item(input) }
-            safe { SimpleItemAPI.getPetByIdOrNull(unsafeId) }?.let { return pet(input) }
-            safe { SimpleItemAPI.getEnchantmentByIdOrNull(unsafeId) }?.let { return enchantment(input) }
-            safe { SimpleItemAPI.getAttributeByIdOrNull(unsafeId) }?.let { return attribute(input) }
-            safe { SimpleItemAPI.getRuneByIdOrNull(unsafeId) }?.let { return rune(input) }
+            safe { SimpleItemAPI.getLazyItemStackForItem(unsafeId) }?.let { return item(input) }
+            safe { SimpleItemAPI.getLazyItemStackForPet(unsafeId) }?.let { return pet(input) }
+            safe { SimpleItemAPI.getLazyItemStackForEnchantment(unsafeId) }?.let { return enchantment(input) }
+            safe { SimpleItemAPI.getLazyItemStackForAttribute(unsafeId) }?.let { return attribute(input) }
+            safe { SimpleItemAPI.getLazyItemStackForRune(unsafeId) }?.let { return rune(input) }
+            safe { SimpleItemAPI.getPotionByIdOrNull(unsafeId) }?.let { return potion(input) }
 
             return null
         }
 
-        fun unsafe(id: String) = SkyBlockId("$UNSAFE$id")
+        public fun unsafe(id: String): SkyBlockId = SkyBlockId("$UNSAFE$id")
 
         @IncludedCodec
-        val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap(::SkyBlockId, SkyBlockId::id)
+        public val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap(::SkyBlockId, SkyBlockId::rootId)
 
-        val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.id })
+        public val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.rootId })
 
-        fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this)
+        public fun ItemStack.getSkyBlockId(): SkyBlockId? = this[DataTypes.SKYBLOCK_ID] ?: createIdForItem(this, ResolutionContext(this))
 
-        internal fun createIdForItem(stack: ItemStack): SkyBlockId? {
-            val itemId = fromItem(stack)
-            if (itemId != null) return itemId
+        private data object SkyblockIdResolver : ItemDebugCategory
 
-            // Used for ignoring same names on things like dyes and barriers where it is usually important to keep it as no id.
-            // i.e. anvil with no items has a barrier named 'Anvil'
-            if (stack.item in ItemTag.IGNORE_NAME_LOOKUP) return null
+        internal fun createIdForItem(stack: ItemStack, ctx: ResolutionContext): SkyBlockId? {
+            val kind = idResolverKind.get()
+            stack.addStringDebug(SkyblockIdResolver) { "Using $kind resolvers" }
+            return kind.entries().firstNotNullOfOrNull {
+                stack.addStringDebug(SkyblockIdResolver) { "Trying $it" }
+                it.tryResolve(stack, ctx, kind)
+            }
+        }
 
-            // If names are the same as their vanilla counterpart then ignore as this is likely just a UI item.
-            // i.e. ender chest icon in storage
-            if (stack.item.name.stripped.equals(stack.hoverName.stripped, true)) return null
+        @JvmStatic
+        @JvmName("wrap")
+        internal fun <T : Any, D : Any> wrap(codec: StreamCodec<T, D>, kind: IdResolverKind) = object : StreamCodec<T, D> {
+            override fun decode(first: T): D {
+                return try {
+                    idResolverKind.set(kind)
+                    codec.decode(first)
+                } finally {
+                    idResolverKind.set(IdResolverKind.Unknown)
+                }
+            }
 
-            val nameId = fromName(stack.hoverName.stripped, false) ?: return null
-
-            // An item may not be available if it can't be parsed, in this case we will just return the id we suspect.
-            val repoItem = SimpleItemAPI.getUnknownById(nameId) ?: return nameId
-
-            return if (repoItem.item == stack.item) nameId else null
+            override fun encode(first: T, second: D) = codec.encode(first, second)
         }
     }
 
-    val isItem: Boolean get() = id.startsWith(ITEM)
-    val isPet: Boolean get() = id.startsWith(PET)
-    val isRune: Boolean get() = id.startsWith(RUNE)
-    val isEnchantment: Boolean get() = id.startsWith(ENCHANTMENT)
-    val isAttribute: Boolean get() = id.startsWith(ATTRIBUTE)
-    val isUnsafe: Boolean get() = id.startsWith(UNSAFE)
-    val cleanId: String get() = id.substringAfter(DELIMITER)
-    val skyblockId: String
+    public fun asDerived(derived: Boolean = true): SkyBlockId = when {
+        this.isDerived && !derived -> SkyBlockId(this.id.removeDerived())
+        !this.isDerived && derived -> SkyBlockId("$DERIVED${this.id}")
+        else -> this
+    }
+    public fun asRoot(): SkyBlockId = asDerived(false)
+
+    public val isDerived: Boolean get() = this.id.startsWith(DERIVED)
+    public val rootId: String get() = this.id.removeDerived()
+
+    private fun String.removeDerived() = this.removePrefix(DERIVED)
+
+    public val isItem: Boolean get() = rootId.startsWith(ITEM)
+    public val isPet: Boolean get() = rootId.startsWith(PET)
+    public val isRune: Boolean get() = rootId.startsWith(RUNE)
+    public val isEnchantment: Boolean get() = rootId.startsWith(ENCHANTMENT)
+    public val isAttribute: Boolean get() = rootId.startsWith(ATTRIBUTE)
+    public val isPotion: Boolean get() = rootId.startsWith(POTION)
+    public val isUnsafe: Boolean get() = rootId.startsWith(UNSAFE)
+    public val cleanId: String get() = rootId.substringAfter(DELIMITER)
+    public val skyblockId: String
         get() = fixHypixelId() ?: when {
 
             isPet -> cleanId.substringBeforeLast(DELIMITER)
@@ -125,68 +174,128 @@ value class SkyBlockId private constructor(val id: String) {
             }
 
             isAttribute -> {
-                "${RepoAttributeAPI.getAttributeDataById(cleanId)?.shardName()}_SHARD"
+                "${SkyBlockAttributesRepo.get(cleanId)?.shardName()}_SHARD"
             }
 
             else -> cleanId
         }.uppercase()
-    val bazaarId: String
+    public val bazaarId: String
         get() = when {
-            isAttribute -> RepoAttributeAPI.getAttributeDataById(cleanId)?.shardId ?: "UNKNOWN"
+            isAttribute -> SkyBlockAttributesRepo.get(cleanId)?.shardId ?: "UNKNOWN"
             isEnchantment -> "ENCHANTMENT_${cleanId.substringBeforeLast(DELIMITER)}_${cleanId.substringAfterLast(DELIMITER)}"
             else -> skyblockId
         }
 
-    fun trySafe(consumer: (String) -> SkyBlockId): SkyBlockId = if (isUnsafe) consumer(cleanId) else this
+    public fun trySafe(consumer: (String) -> SkyBlockId): SkyBlockId = if (isUnsafe) consumer(cleanId) else this
 
-    fun toItem(): ItemStack = when {
-
-        isRune -> getRune()
-        isPet -> getPet()
-        isItem -> getItem()
-        isEnchantment -> getEnchantment()
-        isAttribute -> getAttribute()
-
-        else -> ItemStack(Items.BARRIER) {
-            set(DataComponents.CUSTOM_NAME, Text.of(id) { this.color = TextColor.RED })
-        }
+    public fun toLazyItem(): LazyItemStack = when {
+        isRune -> SimpleItemAPI.getLazyItemStackForRune(this)
+        isPet -> SimpleItemAPI.getLazyItemStackForPet(this)
+        isItem -> SimpleItemAPI.getLazyItemStackForItem(this)
+        isEnchantment -> SimpleItemAPI.getLazyItemStackForEnchantment(this)
+        isAttribute -> SimpleItemAPI.getLazyItemStackForAttribute(this)
+        isPotion -> SimpleItemAPI.getLazyItemStackForPotion(this)
+        else -> null
+    } ?: LazyItemStack(Items.BARRIER) {
+        set(DataComponents.CUSTOM_NAME, Text.of(id) { this.color = TextColor.RED })
     }
 
-    private fun getItem(): ItemStack = SimpleItemAPI.getItemById(this)
-    private fun getPet(): ItemStack = SimpleItemAPI.getPetById(this)
-    private fun getRune(): ItemStack = SimpleItemAPI.getRuneById(this)
-    private fun getEnchantment(): ItemStack = SimpleItemAPI.getEnchantmentById(this)
-    private fun getAttribute(): ItemStack = SimpleItemAPI.getAttributeById(this)
+    public fun toItem(): ItemStack = toLazyItem().create()
 
-    override fun toString() = "SkyBlockId($id)"
+    override fun toString(): String = "SkyBlockId($id)"
 }
 
-private fun ItemStack.getSbId(): SkyBlockId? = when (val id = DataTypes.ID.factory(this) ?: return null) {
-    "ATTRIBUTE_SHARD" -> {
-        DataTypes.ATTRIBUTES.factory(this)?.entries?.firstOrNull()?.let { (key, _) -> RepoAttributeAPI.getAttributeDataById(key)?.attributeId }
-            .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
+private fun ItemStack.getSbId(context: ResolutionContext): SkyBlockId? {
+    operator fun <Type> DataType<Type>.invoke() = this.resolve(this@getSbId, context)
+
+    val id = DataTypes.ID() ?: run {
+        addStringDebug(DefaultIdResolver) { "Item doesn't have id" }
+        return null
     }
 
-    "ABICASE" -> DataTypes.ABICASE_MODEL.factory(this)?.let { SkyBlockId.item("abicase_$it") }
-
-    "PARTY_HAT_CRAB_ANIMATED" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
-    "PARTY_HAT_CRAB" -> DataTypes.PARTY_HAT_COLOR.factory(this)?.let { SkyBlockId.item("party_hat_crab_$it") }
-
-    else if (id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id))) -> {
-        val enchants = DataTypes.ENCHANTMENTS.factory(this)?.entries
-
-        when (enchants?.size) {
-            null, 0 -> SkyBlockId.enchantment(UNKNOWN)
-            1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key.lowercase(), value) }
-            else -> SkyBlockId.item("enchanted_book")
+    return when (id) {
+        "ATTRIBUTE_SHARD" -> {
+            val attributes = DataTypes.ATTRIBUTES()
+            addStringDebug(DefaultIdResolver) { "Trying attributes $attributes" }
+            attributes?.entries?.firstOrNull()?.let { (key, _) -> SkyBlockAttributesRepo.get(key)?.attributeId }
+                .let { it ?: UNKNOWN }.let(SkyBlockId::attribute)
         }
-    }
 
-    else if (id == "PET" || id == "RUNE" || id == "UNIQUE_RUNE" || (this.`is`(Items.PLAYER_HEAD) && neuIdRegex.matches(id))) -> {
-        DataTypes.USED_RUNE.factory(this) ?: DataTypes.PET_DATA.factory(this)?.let { (id, _, _, rarity) ->
-            "$id$DELIMITER${rarity.name}"
-        }.let { it ?: UNKNOWN }.let(SkyBlockId::pet)
-    }
+        "ABICASE" -> {
+            val model = DataTypes.ABICASE_MODEL()
+            addStringDebug(DefaultIdResolver) { "Resolving to abicase $model" }
+            model?.let { SkyBlockId.item("abicase_$it") }
+        }
 
-    else -> SkyBlockId.item(id)
+        //region Hatcessories
+        "PARTY_HAT_CRAB" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving party hat crab $hatColor" }
+            hatColor?.let { SkyBlockId.item("party_hat_crab_$it") }
+        }
+
+        "PARTY_HAT_CRAB_ANIMATED" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving animated party hat crab $hatColor" }
+            hatColor?.let { SkyBlockId.item("party_hat_crab_${it}_animated") }
+        }
+
+        "PARTY_HAT_SLOTH" -> {
+            val hatEmoji = DataTypes.PARTY_HAT_EMOJI()
+            addStringDebug(DefaultIdResolver) { "Resolving party hat sloth $hatEmoji" }
+            hatEmoji?.let { SkyBlockId.item("party_hat_sloth_${it}") }
+        }
+
+        "BALLOON_HAT_2024" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving balloon hat 2024 $hatColor" }
+            hatColor?.let { SkyBlockId.item("cake_hat_2025_$it") }
+        }
+
+        "BALLOON_HAT_2025" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving balloon hat 2025 $hatColor" }
+            hatColor?.let { SkyBlockId.item("cake_hat_2025_$it") }
+        }
+
+        "CAKE_HAT_2026" -> {
+            val hatColor = DataTypes.PARTY_HAT_COLOR()
+            addStringDebug(DefaultIdResolver) { "Resolving cake hat 2026 $hatColor" }
+            hatColor?.let { SkyBlockId.item("cake_hat_2026_$it") }
+        }
+        //endregion
+
+        "FACTION_RABBIT" -> {
+            val faction = DataTypes.RABBIT_FACTION()
+            addStringDebug(DefaultIdResolver) { "Resolving rabbit faction $faction" }
+            faction?.let { SkyBlockId.item("faction_rabbit_$it") }
+        }
+
+        else if (id == "POTION" || neuPotionRegex.matches(id)) -> {
+            val type = DataTypes.POTION_TYPE()
+            val internalPotion = DataTypes.POTION()
+            val level = DataTypes.POTION_LEVEL()
+            addStringDebug(DefaultIdResolver) { "Resolving potion type: $type, internalPotion: $internalPotion, level: $level" }
+            SkyBlockId.potion(type, internalPotion, level)
+        }
+
+        else if (id == "ENCHANTED_BOOK" || (this.`is`(Items.ENCHANTED_BOOK) && neuIdRegex.matches(id))) -> {
+            val enchants = DataTypes.ENCHANTMENTS()?.entries
+
+            addStringDebug(DefaultIdResolver) { "Resolving enchantments $enchants" }
+            when (enchants?.size) {
+                null, 0 -> SkyBlockId.enchantment(UNKNOWN)
+                1 -> enchants.first().let { (key, value) -> SkyBlockId.enchantment(key.lowercase(), value) }
+                else -> SkyBlockId.item("enchanted_book")
+            }
+        }
+
+        else if (id == "PET" || id == "RUNE" || id == "UNIQUE_RUNE" || (this.`is`(Items.PLAYER_HEAD) && neuIdRegex.matches(id))) -> {
+            DataTypes.USED_RUNE() ?: DataTypes.PET_DATA()?.let { (id, _, _, rarity) ->
+                SkyBlockId.pet(id, rarity)
+            } ?: SkyBlockId.pet(UNKNOWN)
+        }
+
+        else -> SkyBlockId.item(id)
+    }
 }

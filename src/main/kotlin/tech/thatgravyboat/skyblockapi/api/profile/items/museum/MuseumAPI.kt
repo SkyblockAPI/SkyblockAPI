@@ -8,8 +8,8 @@ import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.api.data.stored.MuseumStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvMuseumOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
@@ -18,15 +18,21 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
-import tech.thatgravyboat.skyblockapi.api.remote.RepoItemsAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata.ItemData
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.museum.MuseumData
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockItemsRepo
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
+import tech.thatgravyboat.skyblockapi.utils.extentions.associateByNotNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.contains
+import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.isSkyblockFiller
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toPrettyString
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -45,7 +51,7 @@ import java.util.concurrent.CompletableFuture
 
 /** Currently doesn't support special items. */
 @Module
-object MuseumAPI {
+public object MuseumAPI {
 
     //region Regex
     private val inventoryGroup = RegexGroup.INVENTORY.group("museum")
@@ -85,23 +91,23 @@ object MuseumAPI {
 
     //endregion
 
-    val milestone: Int get() = MuseumStorage.milestone
+    public val milestone: Int get() = MuseumStorage.milestone
 
-    fun getAllItems(): List<ItemStack> = MuseumStorage.getAllItems()
-    fun getItemsOnCategory(category: MuseumCategory): List<ItemStack> = MuseumStorage.getItemsOnCategory(category)
-    fun getItemsWithCategory(): Map<MuseumCategory, List<ItemStack>> = MuseumStorage.getItemsWithCategory()
+    public fun getAllItems(): List<ItemStack> = MuseumStorage.getAllItems()
+    public fun getItemsOnCategory(category: MuseumCategory): List<ItemStack> = MuseumStorage.getItemsOnCategory(category)
+    public fun getItemsWithCategory(): Map<MuseumCategory, List<ItemStack>> = MuseumStorage.getItemsWithCategory()
 
     /** Returns `true` if the item can be donated to museum. Ignores special items. */
-    fun isMuseumItem(id: SkyBlockId): Boolean = MuseumData.isMuseumItem(id)
+    public fun isMuseumItem(id: SkyBlockId): Boolean = MuseumData.isMuseumItem(id)
 
     /** Returns `true` if the item has been donated to museum. Ignores special items. */
-    fun isDonated(id: SkyBlockId): Boolean = internalIsDonated(id, mutableSetOf())
+    public fun isDonated(id: SkyBlockId): Boolean = internalIsDonated(id, mutableSetOf())
 
     /** Returns `true` if the item has been donated to museum and is stored in it. Ignores special items. */
-    fun isStoredInMuseum(id: SkyBlockId): Boolean = MuseumStorage.isItemStored(id)
+    public fun isStoredInMuseum(id: SkyBlockId): Boolean = MuseumStorage.isItemStored(id)
 
     /** Returns the item with id [id] stored in the museum, or null if it's not stored. */
-    fun getItemInMuseum(id: SkyBlockId): ItemStack? = MuseumStorage.getItemStored(id)
+    public fun getItemInMuseum(id: SkyBlockId): ItemStack? = MuseumStorage.getItemStored(id)
 
     private fun internalIsDonated(id: SkyBlockId, checkedIds: MutableSet<SkyBlockId>): Boolean {
         if (!checkedIds.add(id)) return false
@@ -128,16 +134,16 @@ object MuseumAPI {
         }
     }
 
-    private fun ItemStack.isNotDonated(): Boolean = this in Items.GRAY_DYE
-    private fun ItemStack.isNotStored(): Boolean = this in Items.LIME_DYE
+    private fun ItemStack.isNotDonated(): Boolean = this in Items.DYE.gray
+    private fun ItemStack.isNotStored(): Boolean = this in Items.DYE.lime
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB)
-    fun onSlotClick(event: SlotClickEvent) {
+    internal fun onSlotClick(event: SlotClickEvent) {
         if (event.isInPlayerInventory) return
         if (!donateTitleRegex.match(event.title)) return
         val item = event.item
-        if (item !in Items.LIME_TERRACOTTA) return
+        if (item !in Items.DYED_TERRACOTTA.lime) return
         if (!confirmDonateItem.match(item.cleanName)) return
         val lastIndex = event.slot.index - 1
         if (lastIndex !in 0..event.slots.lastIndex) return
@@ -156,7 +162,7 @@ object MuseumAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB)
-    fun onInventoryOpen(event: ContainerInitializedEvent) {
+    internal fun onInventoryOpen(event: ContainerInitializedEvent) {
         val items = event.containerItems
         if (!inventoryTitleRegex.contains(event.title)) return
         val filtered = items.filterNot { it.isSkyblockFiller() }
@@ -172,7 +178,7 @@ object MuseumAPI {
                         ids.forEach(MuseumStorage::deleteItem)
                         continue
                     }
-                    val id = RepoItemsAPI.getItemIdByName(item.cleanName) ?: continue
+                    val id = SkyBlockItemsRepo.getIdByName(item.cleanName) ?: continue
                     val sbId = SkyBlockId.item(id)
                     MuseumStorage.deleteItem(sbId)
                 }
@@ -187,7 +193,7 @@ object MuseumAPI {
                         }
                         continue
                     }
-                    val id = RepoItemsAPI.getItemIdByName(item.cleanName)?.let(SkyBlockId::item) ?: continue
+                    val id = SkyBlockItemsRepo.getIdByName(item.cleanName)?.let(SkyBlockId::item) ?: continue
                     val category = getCategory(id) ?: continue
                     MuseumStorage.addNotStoredItem(category, id)
                 }
@@ -220,7 +226,7 @@ object MuseumAPI {
 
     @Subscription
     @OnlyIn(SkyBlockIsland.HUB)
-    fun onInventoryUpdate(event: InventoryChangeEvent) {
+    internal fun onInventoryUpdate(event: InventoryChangeEvent) {
         if (!mainMuseumTitleRegex.match(event.title)) return
         if (!museumRewardsItem.match(event.item.cleanName)) return
 
@@ -231,7 +237,7 @@ object MuseumAPI {
 
     @OptIn(SkyBlockPvRequired::class)
     @Subscription
-    fun onPvOpen(event: SkyBlockPvMuseumOpenedEvent) {
+    internal fun onPvOpen(event: SkyBlockPvMuseumOpenedEvent) {
         CompletableFuture.runAsync {
             MuseumStorage.reset()
             PvLoadingHelper.markLoaded(LoadedData.MUSEUM)
@@ -266,14 +272,14 @@ object MuseumAPI {
     }
 
     @Subscription
-    fun onRegisterCommands(event: RegisterCommandsEvent) {
-        event.register("sbapi museum") {
+    internal fun onRegisterCommands(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("museum") {
             thenCallback("reset") {
                 MuseumStorage.reset()
                 Text.sendDebug("Museum data has been reset.")
             }
             then("check") {
-                thenCallback("id", StringArgumentType.word()) {
+                thenCallback("id id", StringArgumentType.word(), IterableSuggestionProvider(MuseumData.museumData.allItems)) {
                     val id = argument<String>("id").let(SkyBlockId::item)
                     val item = SimpleItemAPI.getItemByIdOrNull(id) ?: run {
                         Text.sendDebug("Item not found.")

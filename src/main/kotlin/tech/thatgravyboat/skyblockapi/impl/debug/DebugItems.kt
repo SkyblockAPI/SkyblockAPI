@@ -1,0 +1,277 @@
+package tech.thatgravyboat.skyblockapi.impl.debug
+
+import com.google.common.collect.Multimap
+import com.mojang.blaze3d.platform.InputConstants
+import me.owdding.ktmodules.Module
+import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
+import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.render.RenderScreenForegroundEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
+import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
+import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.helpers.McFont
+import tech.thatgravyboat.skyblockapi.helpers.McScreen
+import tech.thatgravyboat.skyblockapi.impl.debug.components.ComponentViewerCategory
+import tech.thatgravyboat.skyblockapi.platform.drawString
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.replaceWith
+import tech.thatgravyboat.skyblockapi.utils.extentions.since
+import tech.thatgravyboat.skyblockapi.utils.text.Text
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.splitLines
+import java.util.function.BiFunction
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
+
+@Module
+public object DebugItems {
+
+    public val isEnabled: Boolean by debugToggle("item_debug_entries")
+
+    public var selectedIndex: Int = 0
+    public var entriesSize: Int = 0
+    public var lastItem: ItemStack? = null
+    public var lastSet: Instant = DISTANT_PAST
+    public val toggledEntries: MutableSet<ItemDebugCategory> = mutableSetOf<ItemDebugCategory>()
+
+    public fun updateItem(new: ItemStack?) {
+        val entries = new?.getEntries()
+        val newEntriesCategories = entries?.keySet()?.toList().orEmpty()
+        val lastItem = this.lastItem
+        val oldEntries = lastItem?.getEntries()
+        val oldEntriesCategories = oldEntries?.keySet()?.toList().orEmpty()
+
+        if (entries != null && oldEntries != null) {
+            val oldSelectedCategory = oldEntriesCategories[selectedIndex]
+            val newIndex = newEntriesCategories.indexOf(oldSelectedCategory)
+
+            // If we had an entry selected earlier, we try to select the same entry for the new item
+            if (newIndex != -1) this.selectedIndex = newIndex
+            else this.selectedIndex = 0
+
+            // we keep the entries we had open for the previous item open on the new one
+            val newToggledEntries = newEntriesCategories.filter { it in toggledEntries }
+            toggledEntries.replaceWith(newToggledEntries)
+        } else {
+            this.selectedIndex = 0
+            toggledEntries.clear()
+        }
+
+        this.lastItem = new
+        this.entriesSize = newEntriesCategories.size
+    }
+
+    @Subscription
+    internal fun onKeyPressed(event: ScreenKeyPressedEvent.Pre) {
+        if (!isEnabled) return
+        if (!McScreen.isShiftDown) return
+        val entries = lastItem?.getEntries() ?: return
+
+        when (event.key) {
+            InputConstants.KEY_DOWN -> selectedIndex = (selectedIndex + 1) % entriesSize
+            InputConstants.KEY_UP -> selectedIndex =  if (selectedIndex == 0) entriesSize - 1 else selectedIndex - 1
+            InputConstants.KEY_RIGHT -> toggledEntries.add(entries.keySet().toList()[this.selectedIndex])
+            InputConstants.KEY_LEFT -> toggledEntries.remove(entries.keySet().toList()[this.selectedIndex])
+            InputConstants.KEY_C -> McClient.clipboard = buildString {
+                append("```")
+                if (McScreen.isControlDown) {
+                    entries.asMap().forEach { (category, components) ->
+                        append("## ").appendLine(category)
+                        appendLine(components.joinToString("\n"))
+                    }
+                } else {
+                    val category = entries.keySet().toList()[selectedIndex]
+                    append("## ").appendLine(category)
+                    appendLine(entries.get(category).joinToString("\n"))
+                }
+                append("```")
+            }
+        }
+    }
+
+    @Subscription
+    internal fun onForegroundRender(event: RenderScreenForegroundEvent) {
+        if (!isEnabled) return
+        if (!McScreen.isShiftDown) return
+        lastItem ?: return
+
+        buildList {
+            add("Up - Go up")
+            add("Down - Go down")
+            add("Right - Expand category")
+            add("Left - Collapse category")
+            add("C - Copy selected category")
+            add("Ctrl + C - Copy all categories")
+        }.forEachIndexed { index, line ->
+            event.graphics.drawString(
+                line,
+                8,
+                8 + index * McFont.height,
+                0xFFFFFFFF.toInt(),
+            )
+        }
+    }
+
+    @Subscription(TickEvent::class)
+    internal fun tick() {
+        if (this.lastItem != null && this.lastSet.since() > 5.seconds) {
+            updateItem(null)
+        }
+    }
+
+    @Subscription
+    internal fun onGetDebugTooltip(event: ItemDebugTooltipEvent) {
+        val item = event.item
+        val entries = item.getEntries() ?: return
+        if (lastItem != item || entriesSize != entries.asMap()?.keys?.size) {
+            updateItem(item)
+        }
+        this.lastSet = currentInstant()
+
+
+        if (!McScreen.isShiftDown) {
+            event.add(
+                Text.of("$entriesSize Debug Entry(s) [Shift]") {
+                    this.color = TextColor.DARK_GRAY
+                },
+            )
+            updateItem(item)
+        } else {
+            event.add(
+                Text.join(
+                    Text.of("$entriesSize Debug Entry(s) [") { this.color = TextColor.DARK_GRAY },
+                    Text.of("Shift") {
+                        this.bold = true
+                        this.color = TextColor.GRAY
+                    },
+                    Text.of("]") { this.color = TextColor.DARK_GRAY },
+                ),
+            )
+            entries.asMap().entries.forEachIndexed { index, (category, entries) ->
+                val isExpanded = toggledEntries.contains(category)
+                val isSelected = index == selectedIndex
+                event.add(Text.of {
+                    if (isExpanded) {
+                        append("v ")
+                    } else {
+                        append("> ")
+                    }
+                    append(category.toString())
+                    if (isSelected) {
+                        this.color = TextColor.GREEN
+                    } else {
+                        this.color = TextColor.GRAY
+                    }
+                })
+                if (!isExpanded) return@forEachIndexed
+                for (component in entries) {
+                    val lines = component.splitLines()
+                    for ((index, item) in lines.withIndex()) {
+                        if (index == lines.lastIndex && item.stripped.isBlank()) break
+                        event.add(Text.of {
+                            this.color = TextColor.GRAY
+                            append("  ")
+                            append(item)
+                        })
+                    }
+                }
+            }
+        }
+
+    }
+
+}
+
+public fun ItemDebugAccessor.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
+public fun ItemStack.getEntries(): Multimap<ItemDebugCategory, Component>? = this.`skyblockapi$getEntries`()
+
+@OptIn(ExperimentalContracts::class)
+public inline fun ItemDebugAttachable.addDebug(category: ItemDebugCategory, entry: () -> Component) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
+    if (!DebugItems.isEnabled) return
+    this.`skyblockapi$addEntry`(category, entry())
+}
+
+@OptIn(ExperimentalContracts::class)
+@JvmName("categoryAddDebug")
+context(category: ItemDebugCategory)
+public inline fun ItemDebugAttachable.addDebug(entry: () -> Component) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
+    addDebug(category, entry)
+}
+
+@OptIn(ExperimentalContracts::class)
+@JvmName("categoryAddDebugString")
+context(category: ItemDebugCategory)
+public inline fun ItemDebugAttachable.addDebugString(entry: () -> String) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
+    addStringDebug(category, entry)
+}
+
+@OptIn(ExperimentalContracts::class)
+public inline fun ItemDebugAttachable.addStringDebug(category: ItemDebugCategory, entry: () -> String) {
+    contract {
+        callsInPlace(entry, InvocationKind.AT_MOST_ONCE)
+    }
+    addDebug(category) { Component.literal(entry()) }
+}
+
+
+//? if < 26.4 {
+@JvmName("addDebug")
+@Deprecated(message = "Use interface method instead!")
+public fun ItemStack.addDebug0(category: ItemDebugCategory, entry: () -> Component) {
+    if (!DebugItems.isEnabled) return
+    this.`skyblockapi$addEntry`(category, entry())
+}
+
+@JvmName("addStringDebug")
+@Deprecated(message = "Use interface method instead!")
+public fun ItemStack.addStringDebug0(category: ItemDebugCategory, entry: () -> String): Unit = addDebug(category) { Component.literal(entry()) }
+
+@JvmName("categoryAddDebug")
+@Deprecated(message = "Use interface method instead!")
+context(category: ItemDebugCategory) public fun ItemStack.addDebug0(entry: () -> Component): Unit = addDebug(category, entry)
+
+@Deprecated(message = "Use interface method instead!")
+@JvmName("categoryAddDebugString")
+context(category: ItemDebugCategory) public fun ItemStack.addDebugString0(entry: () -> String): Unit = addStringDebug(category, entry)
+//?}
+
+
+public fun interface ItemDebugAttachable {
+    @Suppress("FunctionName")
+    public fun `skyblockapi$addEntry`(category: ItemDebugCategory, entry: Component)
+}
+
+public fun interface ItemDebugCategory : ComponentViewerCategory {
+    public companion object {
+        public val fork: BiFunction<ItemDebugCategory, String, ItemDebugCategory> = Util.memoize { parent, name ->
+            return@memoize ItemDebugCategory { "$parent/$name" }
+        }
+    }
+
+    public fun fork(name: String): ItemDebugCategory = fork.apply(this, name)
+}
+
+public interface ItemDebugAccessor : ItemDebugAttachable {
+    override fun `skyblockapi$addEntry`(category: ItemDebugCategory, entry: Component)
+    @Suppress("FunctionName")
+    public fun `skyblockapi$getEntries`(): Multimap<ItemDebugCategory, Component>?
+}

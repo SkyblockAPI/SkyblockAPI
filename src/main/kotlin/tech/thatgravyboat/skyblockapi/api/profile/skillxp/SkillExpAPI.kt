@@ -8,10 +8,14 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.SkillExpGainedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpLiteralActionBarWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.SkillXpPercentActionBarWidgetChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.HypixelSkillAPI
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanOrArabic
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFloatValue
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedString
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
@@ -19,24 +23,25 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 
 @Module
-object SkillExpAPI {
+public object SkillExpAPI {
 
-    val skills: Map<HypixelSkillAPI.Skill, Float> get() = SkillExpStorage.data?.exp ?: emptyMap()
+    public val skills: Map<HypixelSkillAPI.Skill, Float> get() = SkillExpStorage.data?.exp ?: emptyMap()
 
     private val group = RegexGroup.INVENTORY.group("skillexp")
-    private val itemNameRegex = group.create("itemName", "(?<name>.*) (?<level>\\d+)")
+    private val itemNameRegex = group.create("itemName", "(?<name>.*) (?<level>\\d+|[IVXLCDMivxlcdm]+)")
     private val itemLoreXpRegex = group.create("itemLoreExp", "^\\s+(?<current>[\\d,.]+)(?:/(?<needed>[\\d,.]+[kmbKMB]?))?")
 
     @Subscription
-    @OnlyOnSkyBlock
     @InventoryTitle("Your Skills")
-    fun onInventory(event: InventoryChangeEvent) {
+    @OnlyOnSkyBlock
+    internal fun onInventory(event: InventoryChangeEvent) {
         if (!event.isInMainPart) return
         if (event.isSkyBlockFiller) return
 
         itemNameRegex.match(event.item.cleanName, "name", "level") { (name, level) ->
             val skill = HypixelSkillAPI.Skill.getByName(name) ?: return@match
-            val level = level.toIntValue()
+            val level = level.parseRomanOrArabic()
+            if (level <= 0) return@match
 
             itemLoreXpRegex.anyMatch(event.item.getRawLore(), "current") { (current) ->
                 val xp = if (skill.data.maxLevel == level) {
@@ -52,7 +57,7 @@ object SkillExpAPI {
     }
 
     @Subscription
-    fun onActionbarLiteral(event: SkillXpLiteralActionBarWidgetChangeEvent) {
+    internal fun onActionbarLiteral(event: SkillXpLiteralActionBarWidgetChangeEvent) {
         val skill = event.skill ?: return
 
         // if needed is 0, they are at max level
@@ -66,7 +71,7 @@ object SkillExpAPI {
     }
 
     @Subscription
-    fun onActionbarPercent(event: SkillXpPercentActionBarWidgetChangeEvent) {
+    internal fun onActionbarPercent(event: SkillXpPercentActionBarWidgetChangeEvent) {
         val skill = event.skill ?: return
         val level = SkillExpStorage.getLevel(skill)
 
@@ -83,8 +88,8 @@ object SkillExpAPI {
     }
 
     @Subscription
-    fun onCommand(event: RegisterCommandsEvent) {
-        event.register("sbapi skill") {
+    internal fun onCommand(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("skill") {
             thenCallback("list") {
                 val skills = SkillExpStorage.data?.exp ?: return@thenCallback Text.of("No skill data found.").send()
                 skills.entries.sortedByDescending { it.value }.forEach { (skill, xp) ->

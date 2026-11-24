@@ -11,19 +11,28 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
-import net.minecraft.world.inventory.*
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.ChestMenu
+import net.minecraft.world.inventory.ContainerInput
+import net.minecraft.world.inventory.MenuType
+import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.FolderStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent.Companion.argument
-import tech.thatgravyboat.skyblockapi.api.events.screen.*
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerCloseEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ContainerInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenInitializedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyPressedEvent
+import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterContainerItems
 import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -32,14 +41,14 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @Suppress("UnstableApiUsage")
 @Module
-object ChestDump {
+public object ChestDump {
 
-    val enabled by debugToggle("chest_dumps", "Allows you to save inventories by pressing 'S'")
+    public val enabled: Boolean by debugToggle("chest_dumps", "Allows you to save inventories by pressing 'S'")
 
     private val storage = FolderStorage("chest_dumps", ChestDumpStorage.DEFAULT, SkyblockAPICodecs.ChestDumpStorageCodec.codec())
 
     @Subscription
-    fun onKey(event: ScreenKeyPressedEvent.Pre) {
+    internal fun onKey(event: ScreenKeyPressedEvent.Pre) {
         if (!enabled) return
         if (event.key != InputConstants.KEY_S) return
 
@@ -62,7 +71,7 @@ object ChestDump {
     }
 
 
-    fun <T : AbstractContainerMenu> createScreen(type: MenuType<T>, dump: ChestDumpStorage): Screen = when (type) {
+    public fun <T : AbstractContainerMenu> createScreen(type: MenuType<T>, dump: ChestDumpStorage): Screen = when (type) {
         MenuType.GENERIC_9x1, MenuType.GENERIC_9x2, MenuType.GENERIC_9x3, MenuType.GENERIC_9x4, MenuType.GENERIC_9x5, MenuType.GENERIC_9x6 -> {
             val menu = type.create(-1, McPlayer.self!!.inventory)
             object : ContainerScreen(menu as ChestMenu, McPlayer.self!!.inventory, dump.title) {
@@ -73,7 +82,7 @@ object ChestDump {
                     ContainerInitializedEvent(menu.slots.map { it.item }, this).post()
                     ScreenInitializedEvent(this).post()
                     dump.items.forEachIndexed { index, item ->
-                        InventoryChangeEvent(item, menu.slots[index], dump.title, menu.slots, this).post()
+                        InventoryChangeEvent(item, menu.slots[index], dump.title, menu.slots, this, ItemStack.EMPTY).post()
                     }
                 }
 
@@ -82,8 +91,10 @@ object ChestDump {
                     super.onClose()
                 }
 
-                override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ClickType?) {
-                    SkyBlockAPI.info("<ChestDump> Clicked slot $slotId with button $mouseButton and click type $type")
+                override fun slotClicked(slot: Slot?, slotId: Int, buttonNum: Int, containerInput: ContainerInput?) {
+                    val slot = slot ?: return
+                    SkyBlockAPI.info("<ChestDump> Clicked slot $slotId with button $buttonNum and click type $containerInput")
+                    SlotClickEvent(slot.item, slot, buttonNum, this).post()
                 }
 
                 override fun handleSlotStateChanged(slotId: Int, containerId: Int, newState: Boolean) {
@@ -95,15 +106,15 @@ object ChestDump {
         else -> throw UnsupportedOperationException("Unsupported menu type: $type")
     }
 
-    fun openDump(dump: ChestDumpStorage) {
+    public fun openDump(dump: ChestDumpStorage) {
         val type = BuiltInRegistries.MENU.getValue(dump.type)!!
         val screen = createScreen(type, dump)
         McClient.setScreenAsync { screen }
     }
 
     @Subscription
-    fun command(event: RegisterCommandsEvent) {
-        event.register("sbapi chestdump") {
+    internal fun command(event: RegisterSkyblockApiCommandsEvent) {
+        event.register("chestdump") {
             val suggestions = IterableSuggestionProvider(storage.getStorages().entries) {
                 val dump = it.value.get()
                 "${dump.title.stripped}-${it.key.take(3)}"
@@ -143,13 +154,13 @@ object ChestDump {
     }
 
     @GenerateCodec
-    data class ChestDumpStorage(
+    public data class ChestDumpStorage(
         val title: Component,
         val items: List<ItemStack>,
         val type: Identifier,
     ) {
-        companion object {
-            val DEFAULT = ChestDumpStorage(CommonText.EMPTY, emptyList(), BuiltInRegistries.MENU.getKey(MenuType.GENERIC_9x6)!!)
+        public companion object {
+            public val DEFAULT: ChestDumpStorage = ChestDumpStorage(CommonText.EMPTY, emptyList(), BuiltInRegistries.MENU.getKey(MenuType.GENERIC_9x6)!!)
         }
     }
 

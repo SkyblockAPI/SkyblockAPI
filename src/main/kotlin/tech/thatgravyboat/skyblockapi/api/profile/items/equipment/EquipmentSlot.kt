@@ -3,7 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.items.equipment
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockCategory
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
-enum class EquipmentSlot(
+public enum class EquipmentSlot(
     internal val slot: Int,
     vararg categories: SkyBlockCategory,
 ) {

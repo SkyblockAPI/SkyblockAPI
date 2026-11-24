@@ -7,9 +7,9 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription.Companion.LOW
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvMuseumOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.builders.TooltipBuilder
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
@@ -25,17 +25,17 @@ internal object PvLoadingHelper {
 
     fun markLoaded(data: LoadedData) = list.add(data)
 
-    @Subscription(priority = LOWEST)
     @OptIn(SkyBlockPvRequired::class)
-    private fun SkyBlockPvOpenedEvent.postPvLoad() = sendAndReset()
+    @Subscription(SkyBlockPvOpenedEvent::class, priority = LOWEST)
+    private fun postPvLoad() = McClient.runNextTick(::sendAndReset)
 
-    @Subscription(priority = LOWEST)
     @OptIn(SkyBlockPvRequired::class)
-    private fun SkyBlockPvMuseumOpenedEvent.postMuseumLoad() = sendAndReset()
+    @Subscription(SkyBlockPvMuseumOpenedEvent::class, priority = LOWEST)
+    private fun postMuseumLoad() = McClient.runNextTick(::sendAndReset)
 
     private fun sendAndReset() {
         if (list.isEmpty()) return
-        Text.debug("Loaded some data from pv! ") {
+        Text.sendDebug("Loaded some data from pv! ") {
             append("(hover)") {
                 this.color = TextColor.GRAY
             }
@@ -50,7 +50,7 @@ internal object PvLoadingHelper {
                     }
                 }
             }
-        }.send()
+        }
         list.clear()
     }
 }
@@ -62,6 +62,8 @@ internal enum class LoadedData(val component: MutableComponent) {
     BACKPACK("Storage (Backpack)"),
     SACKS("Sacks"),
     MUSEUM("Museum"),
+    ATTRIBUTES("Attributes"),
+    PROFILE_DATA("Profile Data"),
     ;
     
     constructor(string: String) : this(Text.of(string))

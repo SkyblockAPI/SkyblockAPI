@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.utils.http
 
 import com.google.gson.Gson
+import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.utils.json.Json
 import java.io.InputStream
 import java.net.URI
@@ -12,9 +13,9 @@ import java.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
-typealias StreamResponse = java.net.http.HttpResponse<InputStream>
+public typealias StreamResponse = java.net.http.HttpResponse<InputStream>
 
-object Http {
+public object Http {
 
     private val client = HttpClient.newBuilder()
         .version(HttpClient.Version.HTTP_2)
@@ -51,7 +52,7 @@ object Http {
         )
     }
 
-    suspend fun <T : Any> head(
+    public suspend fun <T : Any> head(
         url: String,
         timeout: Int = 10000,
         queries: Map<String, Any> = mapOf(),
@@ -74,7 +75,7 @@ object Http {
      * @param handler: The handler to process the response
      * @return: The data returned by the handler
      */
-    suspend fun <T : Any> get(
+    public suspend fun <T : Any> get(
         url: String,
         queries: Map<String, Any> = mapOf(),
         timeout: Int = 10000,
@@ -98,7 +99,7 @@ object Http {
      * @param headers: The headers to send with the request
      * @return: The data returned by the handler
      */
-    suspend inline fun <reified T : Any> getResult(
+    public suspend inline fun <reified T : Any> getResult(
         url: String,
         gson: Gson = Json.gson,
         crossinline errorFactory: ((String) -> Exception) = ::RuntimeException,
@@ -118,6 +119,36 @@ object Http {
     }
 
     /**
+     * This will perform a GET request on a provided url and return data as a Result.
+     *
+     * @param url: The URL to send the GET request to
+     * @param codec: A codec to parse the response with
+     * @param errorFactory: The factory to create an error from the response if it is not successful
+     * @param queries: The queries to append to the URL
+     * @param timeout: The timeout in milliseconds
+     * @param headers: The headers to send with the request
+     * @return: The data returned by the handler
+     */
+    public suspend inline fun <reified T : Any> getResult(
+        url: String,
+        codec: Codec<T>,
+        crossinline errorFactory: ((String) -> Exception) = ::RuntimeException,
+        queries: Map<String, Any> = mapOf(),
+        timeout: Int = 10000,
+        headers: Map<String, String> = mapOf(),
+    ): Result<T> = try {
+        get(url = url, queries = queries, timeout = timeout, headers = headers) {
+            if (isOk) {
+                Result.success(asCodec(codec))
+            } else {
+                Result.failure(errorFactory(asText()))
+            }
+        }
+    } catch (e: Exception) {
+        Result.failure(errorFactory(e.message ?: "Unknown error"))
+    }
+
+    /**
      * This will perform a POST request on a provided url and return a response that is processed by a provided handler.
      *
      * @param url: The URL to send the POST request to
@@ -127,7 +158,7 @@ object Http {
      * @param body: The body to send with the request
      * @param handler: The handler to process the response
      */
-    suspend fun <T : Any> post(
+    public suspend fun <T : Any> post(
         url: String,
         timeout: Int = 10000,
         queries: Map<String, Any> = mapOf(),
@@ -155,7 +186,7 @@ object Http {
      * @param handler: The handler to process the response
      * @return: The data returned by the handler
      */
-    suspend fun <T : Any> post(
+    public suspend fun <T : Any> post(
         url: String,
         timeout: Int = 10000,
         queries: Map<String, Any> = mapOf(),

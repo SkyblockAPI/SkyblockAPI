@@ -1,34 +1,31 @@
 package tech.thatgravyboat.skyblockapi.utils
 
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 
-enum class McVersion {
-    MC_1_21_5,
-    MC_1_21_6,
-    MC_1_21_7,
-    MC_1_21_8,
-    MC_1_21_9,
-    MC_1_21_10,
-    MC_1_21_11,
+public enum class McVersion {
+    @Deprecated("Minecraft 26.1 isn't supported anymore.") MC_26_1,
+    MC_26_2,
+    MC_26_3,
+    //? if > 26.3
+    //add new version!
     ;
 
-    val stringVersion = name.substringAfter("_").replace("_", ".")
-    val isActive: Boolean = this.stringVersion == McClient.version.substringBefore(" ")
+    public val stringVersion: String = name.substringAfter("_").replace("_", ".")
+
+    /** should match both yy.drop and yy.drop.patch */
+    public val isActive: Boolean = this.stringVersion == McClient.version.substringBefore(" ") || this.stringVersion == McClient.version.substringBefore(" ").substringBeforeLast(".")
 }
 
-enum class McVersionGroup(vararg versions: McVersion) {
-    MC_1_21_5(McVersion.MC_1_21_5),
-    MC_1_21_6(
-        McVersion.MC_1_21_6,
-        McVersion.MC_1_21_7,
-        McVersion.MC_1_21_8,
-    ),
-    MC_1_21_9(
-        McVersion.MC_1_21_9,
-        McVersion.MC_1_21_10,
-    ),
-    MC_1_21_11(McVersion.MC_1_21_11)
+//? if < 26.4 {
+@Deprecated(message = "Used mc version instead!")
+@RemoveNextVersion
+public enum class McVersionGroup(vararg versions: McVersion) {
+    @Deprecated("Minecraft 26.1 isn't supported anymore.") @Suppress("DEPRECATION") MC_26_1(McVersion.MC_26_1),
+    MC_26_2(McVersion.MC_26_2),
+    MC_26_3(McVersion.MC_26_3),
     ;
 
-    val isActive = versions.any { it.isActive }
+    public val isActive: Boolean = versions.any { it.isActive }
 }
+//?}

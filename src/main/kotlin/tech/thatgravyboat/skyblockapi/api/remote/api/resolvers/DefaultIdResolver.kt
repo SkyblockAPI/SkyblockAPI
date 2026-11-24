@@ -1,0 +1,17 @@
+package tech.thatgravyboat.skyblockapi.api.remote.api.resolvers
+
+import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.datatype.ResolutionContext
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.fromItem
+
+@IdResolvers
+internal data object DefaultIdResolver : IdResolver {
+
+    override val types: List<IdResolverKind> = listOf(IdResolverKind.Unknown)
+    override val priority: Int = Int.MAX_VALUE - 1 // If we want to override SkyBlock Ids
+
+    override fun tryResolve(itemStack: ItemStack, context: ResolutionContext, resolverKind: IdResolverKind): SkyBlockId? {
+        return fromItem(itemStack, context)
+    }
+}

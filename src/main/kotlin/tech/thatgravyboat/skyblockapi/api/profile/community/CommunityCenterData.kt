@@ -4,13 +4,15 @@ import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
+// TODO: move somewhere else once its internal in all versions
 @GenerateCodec
-data class CommunityCenterData(
+//~ if >= 26.4 'public' -> 'internal'
+public data class CommunityCenterData(
     var rank: FameRank = FameRanks.NEW_PLAYER,
     var gems: Long = 0,
     val bitsAvailable: MutableMap<String, Long> = mutableMapOf(),
 ) {
-    companion object {
-        val CODEC: Codec<CommunityCenterData> = SkyblockAPICodecs.getCodec<CommunityCenterData>()
+    public companion object {
+        public val CODEC: Codec<CommunityCenterData> = SkyblockAPICodecs.getCodec<CommunityCenterData>()
     }
 }

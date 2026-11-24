@@ -1,19 +1,18 @@
 package tech.thatgravyboat.skyblockapi.api.events.base
 
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.debug.DebugEvents
 import java.lang.reflect.Method
-import java.lang.reflect.Modifier
-import kotlin.reflect.full.extensionReceiverParameter
-import kotlin.reflect.jvm.kotlinFunction
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.reflect.KFunction
+import kotlin.reflect.jvm.javaMethod
 
-class EventBus {
+public class EventBus {
 
-    private val listeners: MutableMap<Class<*>, EventListeners> = mutableMapOf()
-    private val handlers: MutableMap<Class<*>, EventHandler<*>> = mutableMapOf()
+    private val listeners: MutableMap<Class<*>, EventListeners> = ConcurrentHashMap()
+    private val handlers: MutableMap<Class<*>, EventHandler<*>> = ConcurrentHashMap()
 
-    fun register(instance: Any) {
+    public fun register(instance: Any) {
         var clazz: Class<*>? = instance.javaClass
         while (clazz != null) {
             if (clazz == Any::class.java) break
@@ -23,16 +22,16 @@ class EventBus {
         }
     }
 
-    inline fun <reified T : SkyBlockEvent> register(priority: Int = 0, receiveCancelled: Boolean = false, noinline callback: (T) -> Unit) {
+    public inline fun <reified T : SkyBlockEvent> register(priority: Int = 0, receiveCancelled: Boolean = false, noinline callback: (T) -> Unit) {
         register(T::class.java, priority, receiveCancelled, callback = callback)
     }
 
-    fun <T : SkyBlockEvent> register(type: Class<T>, priority: Int = 0, receiveCancelled: Boolean = false, callback: (T) -> Unit) {
+    public fun <T : SkyBlockEvent> register(type: Class<T>, priority: Int = 0, receiveCancelled: Boolean = false, callback: (T) -> Unit) {
         unregisterHandler(type)
         listeners.getOrPut(type) { EventListeners() }.addListener(callback, priority, receiveCancelled)
     }
 
-    fun unregister(instance: Any) {
+    public fun unregister(instance: Any) {
         var clazz: Class<*>? = instance.javaClass
         while (clazz != null) {
             if (clazz == Any::class.java) break
@@ -41,16 +40,30 @@ class EventBus {
         }
     }
 
-    inline fun <reified T : SkyBlockEvent> unregister(noinline callback: (T) -> Unit) {
+    public inline fun <reified T : SkyBlockEvent> unregister(noinline callback: (T) -> Unit) {
         unregister(T::class.java, callback = callback)
     }
 
-    fun <T : SkyBlockEvent> unregister(type: Class<T>, callback: (T) -> Unit) {
+    public fun <T : SkyBlockEvent> unregister(type: Class<T>, callback: (T) -> Unit) {
         unregisterHandler(type)
         listeners.values.forEach { it.removeListener(callback) }
     }
 
-    fun post(
+    // We don't provide an `instance` of the class here, so it doesn't check if the method passed is part of a super class
+    public fun unregisterMethod(kFunction: KFunction<*>) {
+        unregisterMethod(kFunction.javaMethod ?: return)
+    }
+
+    // We don't provide an `instance` of the class here, so it doesn't check if the method passed is part of a super class
+    public fun unregisterMethod(method: Method) {
+        val (_, event) = getEventData(method) ?: return
+        event.forEach {
+            unregisterMethodInternal(method, it)
+        }
+    }
+
+
+    public fun post(
         event: SkyBlockEvent,
         context: Any? = null,
         onError: ((Throwable) -> Unit)? = null,
@@ -81,18 +94,7 @@ class EventBus {
     private fun registerMethod(method: Method, instance: Any) {
         val (options, events) = getEventData(method) ?: return
         if (!options.inherited && method.declaringClass != instance.javaClass) return
-
-        val kotlin = method.kotlinFunction
-        if (kotlin?.extensionReceiverParameter != null && McClient.isDev && Modifier.isPublic(method.modifiers)) {
-            if (!DebugEvents.hasWarned) DebugEvents.methodsToWarn.add(method)
-            SkyBlockAPI.logger.warn("""
-            
-            Public extension functions for events are unrecommended as they will populate the auto complete for the subscribed events.
-            You can make extensions be private for subscriptions.
-            
-            The method ${method.name} in class ${method.declaringClass.name} is public and has an extension receiver.
-            """.trimIndent())
-        }
+        DebugEvents.tryWarn(method)
 
         events.forEach {
             registerMethodInternal(method, instance, it, options)
@@ -107,7 +109,7 @@ class EventBus {
         when (method.parameterCount) {
             1 -> listeners.addListener(method, instance, options)
             0 -> listeners.addNoArgListener(method, instance, options)
-            else -> throw IllegalStateException("Expected method with zero or one parameters got %s".format(method.parameterCount))
+            else -> McClient.throwInDev("Expected method with zero or one parameters got %s".format(method.parameterCount))
         }
     }
 
@@ -116,18 +118,22 @@ class EventBus {
         if (method.parameterCount == 0 && options.event.isNotEmpty()) {
             return EventData(options, options.event.toList().map { it.java })
         }
-        if (method.parameterTypes.size != 1) return null
-        return method.parameterTypes.firstOrNull()?.let { EventData(options, listOf(it)) }
+        val singleEvent = method.parameterTypes.singleOrNull()
+        if (singleEvent == null) {
+            McClient.throwInDev("Expected exactly one parameter type in function ${method.name} in class ${method.declaringClass.name}")
+            return null
+        }
+        return EventData(options, listOf(singleEvent))
     }
 
-    data class EventData(
+    public data class EventData(
         val options: Subscription,
         val events: List<Class<*>>,
     )
 
-    private fun unregisterHandler(clazz: Class<*>) = this.handlers.keys
-        .filter { it.isAssignableFrom(clazz) }
-        .forEach(this.handlers::remove)
+    private fun unregisterHandler(clazz: Class<*>) {
+        this.handlers.keys.removeIf { it.isAssignableFrom(clazz) }
+    }
 
     private fun getEventClasses(clazz: Class<*>): List<Class<*>> {
         val classes = mutableListOf<Class<*>>()

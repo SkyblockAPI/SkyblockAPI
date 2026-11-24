@@ -1,8 +1,9 @@
 package tech.thatgravyboat.skyblockapi.api.area.farming
 
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
+import tech.thatgravyboat.skyblockapi.utils.extentions.valueOfOrNull
 
-enum class TrapperAnimalType {
+public enum class TrapperAnimalType {
     TRACKABLE,
     UNTRACKABLE,
     UNDETECTED,
@@ -14,8 +15,7 @@ enum class TrapperAnimalType {
     private val string = toFormattedName()
     override fun toString(): String = string
 
-    companion object {
-        fun fromString(string: String): TrapperAnimalType =
-            runCatching { valueOf(string.uppercase()) }.getOrDefault(UNKNOWN)
+    public companion object {
+        public fun fromString(string: String): TrapperAnimalType = valueOfOrNull(string.uppercase()) ?: UNKNOWN
     }
 }

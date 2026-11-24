@@ -6,6 +6,8 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
+import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
@@ -14,14 +16,14 @@ import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 @Module
-object PetsAPI {
+public object PetsAPI {
 
     private val petGroup = RegexGroup.TABLIST_WIDGET.group("pet")
 
 
     private val petRegex = petGroup.create(
         "pet",
-        " \\[Lvl (?<level>\\d+)] (?<pet>[\\w ]+)(?: ✦)?"
+        " \\[Lvl (?<level>\\d+)](?: \\[\\d+✦])? (?<pet>[\\w ]+)(?: ✦)?",
     ).toComponentRegex()
 
     private val petXpRegex = petGroup.create(
@@ -39,27 +41,27 @@ object PetsAPI {
         " MAX LEVEL"
     )
 
-    var pet: String? = null
+    public var pet: String? = null
         private set
 
-    var rarity: SkyBlockRarity? = null
+    public var rarity: SkyBlockRarity? = null
         private set
 
-    var level: Int = 0
+    public var level: Int = 0
         private set
 
-    var isMaxLevel: Boolean = false
+    public var isMaxLevel: Boolean = false
         private set
 
-    var xp: Double = 0.0
+    public var xp: Double = 0.0
         private set
 
-    var xpToNextLevel: Double = 0.0
+    public var xpToNextLevel: Double = 0.0
         private set
 
     @Subscription
     @OnlyWidget(TabWidget.PET)
-    fun onTabWidgetChange(event: TabWidgetChangeEvent) {
+    internal fun onTabWidgetChange(event: TabWidgetChangeEvent) {
         this.reset()
         if (event.new.size < 2) return
         petRegex.anyMatch(event.newComponents, "level", "pet") { (level, pet) ->
@@ -83,5 +85,15 @@ object PetsAPI {
         isMaxLevel = false
         xp = 0.0
         xpToNextLevel = 0.0
+    }
+
+    @ApiDebug("PetsAPI")
+    internal fun debug(builder: DebugBuilder) = with(builder) {
+        field(::pet)
+        field(::rarity)
+        field(::level)
+        field(::isMaxLevel)
+        field(::xp)
+        field(::xpToNextLevel)
     }
 }

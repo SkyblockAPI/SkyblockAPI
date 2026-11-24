@@ -19,6 +19,10 @@ internal interface VisualItemAccessor {
     fun `skyblockapi$getBackgroundItem`(): ItemStack?
     fun `skyblockapi$setBackgroundColor`(color: Int)
     fun `skyblockapi$getBackgroundColor`(): Int
+    fun `skyblockapi$setForegroundColor`(color: Int)
+    fun `skyblockapi$getForegroundColor`(): Int
+    fun `skyblockapi$setBorderColor`(color: Int)
+    fun `skyblockapi$getBorderColor`(): Int
 
     companion object {
         @JvmStatic
@@ -33,12 +37,12 @@ internal fun ItemStack.asVisualItemAccessor(): VisualItemAccessor {
     return VisualItemAccessor.getVisualItemAccessor(this)
 }
 
-fun ItemStack.replaceVisually(builder: ItemBuilder.() -> Unit) = replaceVisually(ItemBuilder().apply { builder() }.build())
+public fun ItemStack.replaceVisually(builder: ItemBuilder.() -> Unit): Unit = replaceVisually(ItemBuilder().apply { builder() }.build())
 
-fun ItemStack.replaceVisually(replacement: ItemStack?) {
+public fun ItemStack.replaceVisually(replacement: ItemStack?) {
     this.asVisualItemAccessor().`skyblockapi$setVisualItem`(replacement)
 }
 
 internal fun ItemStack.getClickAction() = this.asVisualItemAccessor().`skyblockapi$getOnClickAction`()
-fun ItemStack.getVisualItem() = this.asVisualItemAccessor().`skyblockapi$getVisualItem`()
+public fun ItemStack.getVisualItem(): ItemStack? = this.asVisualItemAccessor().`skyblockapi$getVisualItem`()
 

@@ -7,9 +7,16 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents
 import net.fabricmc.fabric.api.event.Event
-import net.fabricmc.fabric.api.event.player.*
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback
+import net.fabricmc.fabric.api.event.player.UseBlockCallback
+import net.fabricmc.fabric.api.event.player.UseEntityCallback
+import net.fabricmc.fabric.api.event.player.UseItemCallback
 import net.minecraft.core.BlockPos
+import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
@@ -18,20 +25,28 @@ import tech.thatgravyboat.skyblockapi.api.area.mining.MiningBlockFamily
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ActionBarReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.level.*
+import tech.thatgravyboat.skyblockapi.api.events.level.BlockChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.BlockMinedEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.LeftClickBlockEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.LeftClickEntityEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.RightClickBlockEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.RightClickEntityEvent
+import tech.thatgravyboat.skyblockapi.api.events.level.RightClickItemEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.render.RenderWorldEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ItemDebugTooltipEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel
 import tech.thatgravyboat.skyblockapi.impl.events.chat.ChatComponentExtension
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
+import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
 @Module
-object MiscEventHandler {
+public object MiscEventHandler {
 
     private val phase = Identifiers.of("skyblockapi", "phase")
 
@@ -45,8 +60,8 @@ object MiscEventHandler {
         ClientTickEvents.END_CLIENT_TICK.register {
             TickEvent.post(SkyBlockAPI.eventBus)
         }
-        ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            RegisterCommandsEvent(dispatcher).post()
+        ClientCommandRegistrationCallback.EVENT.register { dispatcher, context ->
+            RegisterCommandsEvent(dispatcher, context).post()
         }
         ItemTooltipCallback.EVENT.register { stack, _, flags, list ->
             if (flags.isAdvanced) {
@@ -94,20 +109,64 @@ object MiscEventHandler {
             lastBlockClicked = pos
             InteractionResult.PASS
         }
+        LevelRenderEvents.COLLECT_SUBMITS.register { ctx ->
+            val camera = McClient.self.gameRenderer.mainCamera()
+            RenderWorldEvent.CollectSubmits(
+                ctx.poseStack(),
+                ctx.submitNodeCollector(),
+                camera.position(),
+                camera.rotation(),
+            ).post()
+        }
 
         // Chat Events
         ClientReceiveMessageEvents.ALLOW_GAME.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
         ClientReceiveMessageEvents.MODIFY_GAME.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.GAME_CANCELED.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+        ClientReceiveMessageEvents.GAME.addPhaseOrdering(phase, Event.DEFAULT_PHASE)
+
+        data class MessageFuture(val original: Component, val parent: MessageFuture?, val id: UUID = UUID.randomUUID())
+
+        var future: MessageFuture? = null
+
+        fun MessageFuture.close() {
+            future = this.parent
+        }
+
+        fun Component.push() {
+            future = MessageFuture(this, future)
+        }
+
+        fun id(): UUID = future?.id ?: Util.NIL_UUID
 
         ClientReceiveMessageEvents.ALLOW_GAME.register(phase) { message, overlay ->
             if (overlay) {
                 !ActionBarReceivedEvent.preparePre(message).post()
-            } else if (ChatReceivedEvent.Pre(message).post()) {
-                SkyBlockAPI.logger.info("[Cancelled] [CHAT] {}", message.string)
-                false
             } else {
-                true
+                message.push()
+                if (ChatReceivedEvent.Pre(message, id()).post()) {
+                    SkyBlockAPI.logger.info("[Cancelled] [CHAT] {}", message.string)
+                    false
+                } else {
+                    true
+                }
             }
+        }
+        ClientReceiveMessageEvents.GAME_CANCELED.register(phase) { message: Component, overlay: Boolean ->
+            if (overlay) {
+                ActionBarReceivedEvent.Cancelled(message).post()
+                return@register
+            }
+            ChatReceivedEvent.Cancelled(message, id()).post()
+            future?.close()
+        }
+        ClientReceiveMessageEvents.GAME.register(phase) { message: Component, overlay: Boolean ->
+            if (overlay) {
+                ActionBarReceivedEvent.Sent(message).post()
+                return@register
+            }
+            ChatReceivedEvent.Sent(message, id()).post()
+            future?.close()
         }
         ClientReceiveMessageEvents.MODIFY_GAME.register(phase) { message, overlay ->
             if (overlay) {
@@ -116,9 +175,9 @@ object MiscEventHandler {
                     event.component
                 }
             } else {
-                ChatReceivedEvent.Post(message).let { event ->
+                ChatReceivedEvent.Post(message, messageId = id()).let { event ->
                     event.post()
-                    (McClient.self.gui.chat as ChatComponentExtension).`skyblockapi$setIdForMessage`(event.id)
+                    (McClient.chat as ChatComponentExtension).`skyblockapi$setIdForMessage`(event.id)
                     event.component
                 }
             }
@@ -140,13 +199,14 @@ object MiscEventHandler {
         if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.blocks) return true
         if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.blocks || old in MiningBlockFamily.VANILLA_BLOCKS.blocks)) return true
         if (new == Blocks.RED_SANDSTONE && old == Blocks.RED_SAND) return true
-        if (new == Blocks.GRAY_TERRACOTTA && old == Blocks.MYCELIUM) return true
+        if (new == Blocks.DYED_TERRACOTTA.gray && old == Blocks.MYCELIUM) return true
 
         return false
     }
 
     @Subscription
-    fun onBlockChange(event: BlockChangeEvent) {
+    internal fun onBlockChange(event: BlockChangeEvent) {
+        @Suppress("SENSELESS_COMPARISON")
         if (
             (blocksClicked.getIfPresent(event.pos) != null || event.pos.distSqr(lastBlockClicked) < 25 /* maybe check if 5 block range is good enough */)
             && validMineChange(McLevel[event.pos].block, event.state.block)

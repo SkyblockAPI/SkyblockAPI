@@ -1,8 +1,14 @@
 package tech.thatgravyboat.skyblockapi.api.profile.hunting
 
+import com.google.gson.JsonObject
+import com.mojang.brigadier.arguments.StringArgumentType
+import com.mojang.brigadier.suggestion.SuggestionProvider
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.data.stored.AttributeStorage
@@ -11,31 +17,62 @@ import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.MustBeContainer
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
+import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.item.replaceVisually
-import tech.thatgravyboat.skyblockapi.api.remote.api.RepoAttributeAPI
+import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
+import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockAttributesRepo
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
+import tech.thatgravyboat.skyblockapi.impl.debug.ItemDebugCategory
+import tech.thatgravyboat.skyblockapi.impl.debug.addDebugString
 import tech.thatgravyboat.skyblockapi.impl.tagkey.ItemTag
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.codecs.IncludedCodecs
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.command.mapped
+import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils.debugComponent
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
+import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.get
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanOrArabic
+import tech.thatgravyboat.skyblockapi.utils.extentions.rangeTo
+import tech.thatgravyboat.skyblockapi.utils.extentions.since
+import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextBuilder.append
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.toOld
 import kotlin.math.max
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Instant
+import tech.thatgravyboat.skyblockapi.utils.DebugToggle as OldDebugToggle
 
 @Module
-object AttributeAPI {
+public data object AttributeAPI : ItemDebugCategory {
+    //? if < 26.4
+    @get:JvmName("debugToggle")
+    private val debugToggle: DebugToggle = debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
+    private val isDebugEnabled by debugToggle
 
-    private val isDebugEnabled by debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
+    //? if < 26.4 {
+    @get:JvmName("getDebugToggle")
+    @Suppress("ObjectPropertyName", "DEPRECATION")
+    @Deprecated("Should never have been public", level = DeprecationLevel.HIDDEN)
+    public val _toggle: OldDebugToggle by lazy { debugToggle.toOld() }
+    //? }
 
     private val attributeRarities = SkyBlockRarity.COMMON.rangeTo(SkyBlockRarity.LEGENDARY)
 
@@ -49,11 +86,11 @@ object AttributeAPI {
     private val inventoryGroup = RegexGroup.INVENTORY.group("attribute")
 
     private val attributeMenuGroup = inventoryGroup.group("attribute_menu")
-    private val attributeMenuRegex = attributeMenuGroup.create("title", "^Attribute Menu$")
+    public val attributeMenuRegex: Regex = attributeMenuGroup.create("title", "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Attribute Menu$")
     private val syphonMoreRegex = attributeMenuGroup.create("more", "^Syphon (\\d+) more to level up!")
 
     private val huntingBoxGroup = inventoryGroup.group("hunting_box")
-    private val huntingBoxMenuRegex = huntingBoxGroup.create("title", "^Hunting Box$")
+    public val huntingBoxMenuRegex: Regex = huntingBoxGroup.create("title", "^(?:\\((?<currentPage>\\d+)/\\d+\\) )?Hunting Box$")
     private val ownedRegex = huntingBoxGroup.create("owned", "^Owned: (?<amount>[\\d,.]+) Shards?$")
     private val attributeMaxedRegex = huntingBoxGroup.create("maxed", "^Attribute Maxed!$")
     private val levelRegex = huntingBoxGroup.create("level", "[IXV0-9]+")
@@ -65,7 +102,10 @@ object AttributeAPI {
     private val chatGroup = RegexGroup.CHAT.group("attribute")
 
     private val trapGroup = chatGroup.group("trap")
-    private val foundShardRegex = trapGroup.create("caught", "^(?:You caught|LOOT SHARE You received) (?<amount>an?|x?\\d+) (?<name>.*?) Shards?(?: for assisting \\w+)?!$")
+    private val foundShardRegex = trapGroup.create(
+        "caught",
+        "^(?:You caught|LOOT SHARE!? You received) (?<amount>an?|x?\\d+|\\d+x?) (?<name>.*?) Shards?(?: for assisting .*| from .*)?!$",
+    )
 
     private val fusionChatGroup = chatGroup.group("fusion")
     private val fusionObtainedRegex = fusionChatGroup.create("obtained", "FUSION! You obtained (?:an? )?(.*?)(?: (x\\d+))?!.*")
@@ -76,11 +116,24 @@ object AttributeAPI {
 
     private val saltGroup = chatGroup.group("salt")
     private val saltSingularRegex = saltGroup.create("singular", "(?:CHARM|SALT|NAGA) You charmed an? (?<name>.*?) and captured its Shard\\.")
-    private val saltMultipleRegex = saltGroup.create("multiple", "(?:CHARM|SALT|NAGA) You charmed an? (?<name>.*?) and captured (?<amount>\\d+) Shards from it\\.")
+    private val saltMultipleRegex =
+        saltGroup.create("multiple", "(?:CHARM|SALT|NAGA) You charmed an? (?<name>.*?) and captured (?<amount>\\d+) Shards from it\\.")
 
     private val sentToHuntingBoxRegex = chatGroup.create("sent_to_hunting_box", "You sent (?<amount>an?|\\d+) (?<shard>.*? Shard)s? to your Hunting Box.")
 
-    private val fishingRegex = chatGroup.create("fishing", "^⛃ .*? CATCH! You caught a (?<name>.*) Shard!$")
+    private val fishingRegex = chatGroup.create("fishing", "^\uE025 .*? CATCH! You caught a (?<name>.*) Shard!$")
+    private val fishingMultipleRegex = chatGroup.create("fishing_multiple", "^\uE025 .*? CATCH! You caught (?<name>.*) Shard! x(?<amount>\\d+)$")
+
+    private val capturedRegex = chatGroup.create(
+        "capture",
+        "^CAPTURE! You (?:caught an?|found) .+ and (?:gained|as a reward (?:he|she|they|it) gave you) (?<amount>an?|\\d+x) (?<name>.*?) Shard!$",
+    )
+
+    private val floorDropRegex = chatGroup.create("floor_drop.drop", "^FLOOR DROP! You found (?<name>.*?) Shards? on the ground!$")
+
+    private val givenRegex = chatGroup.create("given", "^You have been given a (?<name>.*?)!$")
+
+    private val bossRegex = chatGroup.create("boss", "^SHARD! Your contribution earned you the (?<name>.*?) Shard!$")
     //endregion
 
     private val deferredFusion = DeferredFusion()
@@ -95,12 +148,12 @@ object AttributeAPI {
     @Subscription
     @MustBeContainer
     @OnlyOnSkyBlock
-    fun attributeMenu(event: InventoryChangeEvent) {
+    internal fun attributeMenu(event: InventoryChangeEvent) {
         if (!event.title.matches(attributeMenuRegex)) return
         if (event.isOnSides) return
 
         val id = event.item[DataTypes.SKYBLOCK_ID] ?: return
-        val data = RepoAttributeAPI.getAttributeDataById(id.cleanId) ?: return
+        val data = SkyBlockAttributesRepo.get(id.cleanId) ?: return
         val isLocked = event.item in ItemTag.HUNTING_NOT_FOUND
 
         val attributeData = getData(id)
@@ -116,18 +169,19 @@ object AttributeAPI {
 
             attributeData.calculateSyphoned(level, syphonMore)
         }
+        attributeData.updated()
         AttributeStorage.save()
     }
 
     @Subscription
     @MustBeContainer
     @OnlyOnSkyBlock
-    fun huntingBox(event: InventoryChangeEvent) {
+    internal fun huntingBox(event: InventoryChangeEvent) {
         if (!event.title.matches(huntingBoxMenuRegex)) return
-        if (event.isOnSides) return
+        if (!event.isInMainPart) return
 
         val id = event.item[DataTypes.SKYBLOCK_ID] ?: return
-        val data = RepoAttributeAPI.getAttributeDataById(id.cleanId) ?: return
+        val data = SkyBlockAttributesRepo.get(id.cleanId) ?: return
 
         val attributeData = getData(id)
         val rarity = attributeData.rarity ?: return
@@ -156,21 +210,9 @@ object AttributeAPI {
     }
 
     @Subscription
-    @OnlyOnSkyBlock
-    fun foundShard(event: ChatReceivedEvent.Pre) {
-        if (!event.text.matches(foundShardRegex)) return
-        foundShardRegex.match(event.text, "amount", "name") { (amount, name) ->
-            val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
-            val id = SkyBlockId.fromName(name) ?: return@match
-            addOwnedAttributeAmount(id, actualAmount)
-        }
-        AttributeStorage.save()
-    }
-
-    @Subscription
     @MustBeContainer
     @OnlyOnSkyBlock
-    fun fusionMenu(event: InventoryChangeEvent) {
+    internal fun fusionMenu(event: InventoryChangeEvent) {
         if (!event.title.matches(confirmFusionRegex)) return
         if (event.isOnSides) return
         if (event.slot.index !in anyFusionSlot) return
@@ -196,7 +238,7 @@ object AttributeAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun fusionComplete(event: ChatReceivedEvent.Pre) {
+    internal fun fusionComplete(event: ChatReceivedEvent.Pre) {
         if (!event.text.matches(fusionObtainedRegex)) return
         if (!deferredFusion.isComplete()) return
         deferredFusion.submit()
@@ -205,7 +247,7 @@ object AttributeAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun syphoned(event: ChatReceivedEvent.Pre) {
+    internal fun syphoned(event: ChatReceivedEvent.Pre) {
         syphonedRegex.match(event.text, "amount", "name") { (amount, name) ->
             val id = SkyBlockId.fromName(name) ?: return@match
             val amount = amount.toIntValue()
@@ -219,35 +261,45 @@ object AttributeAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun salt(event: ChatReceivedEvent.Pre) {
-        saltSingularRegex.match(event.text, "name") { (name) ->
-            val id = SkyBlockId.fromName(name) ?: return@match
-            addOwnedAttributeAmount(id, 1)
-        }
-        saltMultipleRegex.match(event.text, "name", "amount") { (name, amount) ->
-            val id = SkyBlockId.fromName(name) ?: return@match
-            addOwnedAttributeAmount(id, amount.toIntValue())
-        }
-    }
-
-    @Subscription
-    @OnlyOnSkyBlock
-    fun huntingBox(event: ChatReceivedEvent.Pre) {
-        sentToHuntingBoxRegex.match(event.text, "amount", "shard") { (amount, shard) ->
-            val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
-            val id = SkyBlockId.fromName(shard, true) ?: return@match
-
-            addOwnedAttributeAmount(id, actualAmount)
-        }
-    }
-
-    @Subscription
-    @OnlyOnSkyBlock
-    fun fishing(event: ChatReceivedEvent.Pre) {
-        fishingRegex.match(event.text, "name") { (name) ->
-            val id = SkyBlockId.fromName(name, true) ?: return@match
-
-            addOwnedAttributeAmount(id, 1)
+    internal fun chatShardGain(event: ChatReceivedEvent.Pre) {
+        matchWhen(event.text) {
+            case(foundShardRegex, "amount", "name") { (amount, name) ->
+                val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
+                addOwnedAttributeAmountFromName(name, actualAmount)
+            }
+            case(saltSingularRegex, "name") { (name) ->
+                addOwnedAttributeAmountFromName(name)
+            }
+            case(saltMultipleRegex, "name", "amount") { (name, amount) ->
+                addOwnedAttributeAmountFromName(name, amount)
+            }
+            case(sentToHuntingBoxRegex, "amount", "shard") { (amount, shard) ->
+                val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
+                addOwnedAttributeAmountFromName(shard, actualAmount)
+            }
+            case(sentToHuntingBoxRegex, "amount", "shard") { (amount, shard) ->
+                val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
+                addOwnedAttributeAmountFromName(shard, actualAmount)
+            }
+            case(fishingRegex, "name") { (name) ->
+                addOwnedAttributeAmountFromName(name)
+            }
+            case(fishingMultipleRegex, "name", "amount") { (name, amount) ->
+                addOwnedAttributeAmountFromName(name, amount)
+            }
+            case(capturedRegex, "amount", "name") { (name, amount) ->
+                val actualAmount = if (amount.startsWith("a")) 1 else amount.filter { it.isDigit() }.toIntValue()
+                addOwnedAttributeAmountFromName(name, actualAmount)
+            }
+            case(floorDropRegex, "name") { (name) ->
+                addOwnedAttributeAmountFromName(name)
+            }
+            case(givenRegex, "name") { (name) ->
+                addOwnedAttributeAmountFromName(name)
+            }
+            case(bossRegex, "name") { (name) ->
+                addOwnedAttributeAmountFromName(name)
+            }
         }
     }
 
@@ -262,58 +314,64 @@ object AttributeAPI {
         } else {
             this.syphoned = nextLevelSyphoned - syphonMore
         }
+        this.updated()
         AttributeStorage.save()
     }
 
     private fun ItemStack.debugInfo(attributeData: AttributeData) {
-        if (!isDebugEnabled) return
-        replaceVisually {
-            copyFrom(this@debugInfo)
-            tooltip {
-                lines().addAll(this@debugInfo.getLore())
-                space()
-                add("Syphoned: ${attributeData.syphoned}")
-                add("Level: ${attributeData.level}")
-                add("Owned: ${attributeData.owned}")
-                add("Rarity: ${attributeData.rarity}")
-                add("Unlocked: ${attributeData.unlocked}")
-            }
-        }
+        addDebugString { "Syphoned: ${attributeData.syphoned}" }
+        addDebugString { "Level: ${attributeData.level}" }
+        addDebugString { "Owned: ${attributeData.owned}" }
+        addDebugString { "Rarity: ${attributeData.rarity}" }
+        addDebugString { "Unlocked: ${attributeData.unlocked}" }
     }
 
     private fun SkyBlockId.toAttributeData() = AttributeData(
         rarity = attributeRarities.find { it.name.startsWith(this.cleanId.take(1), true) },
     )
 
+    internal fun addOwnedAttributeAmountFromName(name: String, amount: String) = addOwnedAttributeAmountFromName(name, amount.toIntValue())
+    internal fun addOwnedAttributeAmountFromName(name: String, amount: Int = 1) {
+        addOwnedAttributeAmount(SkyBlockId.fromName(name) ?: return, amount)
+    }
+
     internal fun addOwnedAttributeAmount(id: SkyBlockId, amount: Int) {
-        if (isDebugEnabled) {
-            Text.debug("Owned ") {
+        debugComponent(debugToggle) {
+            Text.of("Owned ") {
                 append(id.toItem().hoverName)
                 if (amount >= 0) {
                     append(" +$amount") { this.color = TextColor.GREEN }
                 } else {
                     append(" $amount") { this.color = TextColor.RED }
                 }
-            }.send()
+            }
         }
-        getData(id).owned += amount
+
+        getData(id).apply {
+            owned += amount
+            updated()
+        }
         AttributeStorage.save()
     }
 
     internal fun removeOwnedAttributeAmount(id: SkyBlockId, amount: Int) = addOwnedAttributeAmount(id, -amount)
 
     internal fun addSyphonedAttributeAmount(id: SkyBlockId, amount: Int) {
-        if (isDebugEnabled) {
-            Text.debug("Syphoned ") {
+        debugComponent(debugToggle) {
+            Text.of("Syphoned ") {
                 append(id.toItem().hoverName)
                 if (amount >= 0) {
                     append(" +$amount") { this.color = TextColor.GREEN }
                 } else {
                     append(" $amount") { this.color = TextColor.RED }
                 }
-            }.send()
+            }
         }
-        getData(id).syphoned += amount
+
+        getData(id).apply {
+            syphoned += amount
+            updated()
+        }
         AttributeStorage.save()
     }
 
@@ -324,17 +382,144 @@ object AttributeAPI {
         AttributeStorage.save()
     }
 
+    private fun resetSyphonedAttributeAmount() {
+        for (key in _attributeMap.keys) {
+            _attributeMap[key]?.syphoned = 0
+        }
+        AttributeStorage.save()
+    }
+
     @Subscription
-    fun onCommandRegister(event: RegisterCommandsEvent) {
-        event.register("sbapi attributes") {
-            then("reset") {
-                then("owned") {
-                    callback {
-                        resetOwnedAttributeAmounts()
-                        Text.debug("Reset Owned Shards!").send()
-                    }
+    internal fun onCommandRegister(event: RegisterSkyblockApiCommandsEvent) {
+        event.command("attributes") {
+            "reset *" {
+                "owned" executes {
+                    resetOwnedAttributeAmounts()
+                    Text.sendDebug("Reset Owned Shards!")
+                }
+
+                "syphoned" executes {
+                    resetSyphonedAttributeAmount()
+                    Text.sendDebug("Reset Syphoned Shards!")
+                }
+                execute {
+                    _attributeMap.clear()
+                    Text.sendDebug("Reset All Shards!")
+
                 }
             }
+            "reset id"(
+                StringArgumentType.string().mapped { id ->
+                    if (!RepoAPI.isInitialized()) return@mapped null
+                    RepoAPI.attributes().attributes().values.find {
+                        listOf(it.id, it.shardId, it.attributeId).any { it.equals(id, true) }
+                    }
+                },
+                SuggestionProvider<FabricClientCommandSource> { _, builder ->
+                    if (!RepoAPI.isInitialized()) return@SuggestionProvider builder.buildFuture()
+                    SharedSuggestionProvider.suggest(
+                        buildSet {
+                            for (value in _attributeMap.keys.mapNotNull { SkyBlockAttributesRepo.get(it.cleanId) }) {
+                                add(value.id.lowercase())
+                                add(value.shardId.lowercase())
+                                add(value.attributeId.lowercase())
+                            }
+                        },
+                        builder,
+                    )
+                    return@SuggestionProvider builder.buildFuture()
+                },
+            ) {
+                "owned" executes {
+                    if (it == null) {
+                        Text.sendDebug("Unknown shard!")
+                        return@executes
+                    }
+                    getData(SkyBlockId.attribute(it.attributeId)).owned = 0
+                    Text.sendDebug("Reset owned ${it.shardName} Shard!")
+                }
+                "syphoned" executes {
+                    if (it == null) {
+                        Text.sendDebug("Unknown shard!")
+                        return@executes
+                    }
+                    getData(SkyBlockId.attribute(it.attributeId)).syphoned = 0
+                    Text.sendDebug("Reset syphoned ${it.name} Attribute!")
+                }
+                execute {
+                    if (it == null) {
+                        Text.sendDebug("Unknown shard!")
+                        return@execute
+                    }
+                    _attributeMap.remove(SkyBlockId.attribute(it.attributeId))
+                    Text.sendDebug("Reset ${it.name} Attribute!")
+                }
+            }
+        }
+    }
+
+    @OptIn(SkyBlockPvRequired::class)
+    @Subscription
+    @OnlyOnSkyBlock
+    context(event: SkyBlockPvOpenedEvent)
+    internal fun udpateAttributes() {
+        var hasLoadedAny = false
+
+        val owned = this._attributeMap.keys
+
+        val used = mutableSetOf<SkyBlockId>()
+
+        val stacks = event.member["attributes"]?.asJsonObject?.get("stacks")?.asMap { key, element ->
+            key to element.asInt(0)
+        } ?: emptyMap()
+
+        stacks.forEach { (key, amount) ->
+            val id = SkyBlockId.attribute(SkyBlockAttributesRepo.get(key)?.attributeId() ?: return@forEach)
+            used.add(id)
+            val data = getData(id)
+            if (data.syphoned != amount && data.lastUpdated.since() >= 5.minutes) {
+                debugComponent(debugToggle) {
+                    Text.of("Set syphoned from pv ") {
+                        append(id.toItem().hoverName)
+                        append(" +$amount") { this.color = TextColor.GREEN }
+                    }
+                }
+                data.syphoned = amount
+                data.updated()
+                hasLoadedAny = true
+            }
+        }
+
+        val ownedArray = event.member["shards"]?.asJsonObject?.get("owned")?.asJsonArray
+        ownedArray?.filterIsInstance<JsonObject>()?.forEach {
+            val type = it["type"]?.asString?.lowercase() ?: return@forEach
+            val amount = it["amount_owned"].asInt(0)
+
+
+            val id = SkyBlockId.attribute(SkyBlockAttributesRepo.get(type)?.attributeId() ?: return@forEach)
+            used.add(id)
+            val data = getData(id)
+            if (data.owned != amount && data.lastUpdated.since() >= 5.minutes) {
+                debugComponent(debugToggle) {
+                    Text.of("Set owned from pv ") {
+                        append(id.toItem().hoverName)
+                        append(" +$amount") { this.color = TextColor.GREEN }
+                    }
+                }
+
+                data.owned = amount
+                data.updated()
+                hasLoadedAny = true
+            }
+        }
+
+        if (hasLoadedAny || used.isNotEmpty()) {
+            owned.removeAll {
+                !used.contains(it)
+            }
+
+            PvLoadingHelper.markLoaded(LoadedData.ATTRIBUTES)
+            AttributeStorage.save()
         }
     }
 
@@ -367,11 +552,17 @@ private data class DeferredFusion(
 }
 
 @GenerateCodec
-data class AttributeData(
+public data class AttributeData(
     var owned: Int = 0,
     var syphoned: Int = 0,
     var rarity: SkyBlockRarity?,
+    var lastUpdated: Instant = Instant.DISTANT_PAST,
 ) {
+    //~ if >= 26.4 'public' -> 'internal'
+    public fun updated() {
+        lastUpdated = currentInstant()
+    }
+
     val level: Int get() = AttributeAPI.attributeLevelData[rarity]?.indexOfLast { it <= syphoned } ?: -1
     val unlocked: Boolean get() = syphoned >= 1
 }

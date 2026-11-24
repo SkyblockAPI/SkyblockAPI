@@ -1,0 +1,42 @@
+package tech.thatgravyboat.skyblockapi.api.repo.apis
+
+import com.mojang.brigadier.arguments.IntegerArgumentType
+import com.mojang.brigadier.arguments.StringArgumentType
+import me.owdding.ktmodules.Module
+import tech.thatgravyboat.repolib.api.EnchantsAPI
+import tech.thatgravyboat.repolib.api.RepoAPI
+import tech.thatgravyboat.skyblockapi.api.repo.LazyItemStack
+import tech.thatgravyboat.skyblockapi.api.repo.apis.SkyBlockEnchantmentsRepo.Query
+import tech.thatgravyboat.skyblockapi.utils.extentions.firstOrElseLast
+
+private val schema: RepoItemQuerySchema<Query>.() -> Unit = {
+    field("id", StringArgumentType.string(), Query::id) { suggestions ->
+        if (!RepoAPI.isInitialized()) return@field
+        RepoAPI.enchantments().enchantments().keys.forEach(suggestions)
+    }
+    optionalField("level", IntegerArgumentType.integer(1), Query::level)
+}
+
+@Module
+public object SkyBlockEnchantmentsRepo : RepoItemCacheAsQuery<Query>("Enchantments", ::Query, schema) {
+
+    private val repo get() = RepoAPI.enchantments()
+
+    override fun create(key: Query): LazyItemStack? {
+        val enchantment = get(key.id) ?: return null
+        val enchantmentLevel = enchantment.levels().values.sortedBy(EnchantsAPI.EnchantLevel::level).firstOrElseLast { it.level() == key.level } ?: return null
+        return enchantmentLevel.item.let(::LazyItemStack)
+    }
+
+    public fun get(id: String): EnchantsAPI.Enchant? = ifInitialized { this.repo.getEnchantment(id) }
+    public fun getFromName(name: String): EnchantsAPI.Enchant? = ifInitialized {
+        this.repo.enchantments().entries.find { it.value.name.equals(name, true) }?.value
+    }
+
+    public data class Query(
+        var id: String = "",
+        var level: Int? = null,
+    ) {
+        public fun create(): LazyItemStack? = create(this)
+    }
+}

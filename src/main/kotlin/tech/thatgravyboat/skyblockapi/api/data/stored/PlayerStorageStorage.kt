@@ -5,7 +5,7 @@ import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.items.storage.PlayerStorageData
 import tech.thatgravyboat.skyblockapi.api.profile.items.storage.PlayerStorageInstance
 import tech.thatgravyboat.skyblockapi.api.profile.items.storage.StorageData
-import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 
 @Module
 internal object PlayerStorageStorage {
@@ -14,7 +14,6 @@ internal object PlayerStorageStorage {
         ::StorageData,
         StorageData.CODEC,
         "player_storage.json",
-        true
     )
 
     private inline val storage: StorageData? get() = PLAYER_STORAGE.get()

@@ -11,8 +11,11 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.DebugBuilder
+import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedDouble
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseFormattedLong
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -22,7 +25,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.reflect.KMutableProperty0
 
-enum class PurseType(scoreboardName: String? = null) {
+public enum class PurseType(scoreboardName: String? = null) {
     NORMAL("PURSE"),
     PIGGY,
     UNKNOWN,
@@ -30,8 +33,8 @@ enum class PurseType(scoreboardName: String? = null) {
 
     private val scoreboardName: String = scoreboardName ?: name
 
-    companion object {
-        fun fromName(name: String): PurseType = entries.find { it.scoreboardName.equals(name, true) } ?: UNKNOWN
+    public companion object {
+        public fun fromName(name: String): PurseType = entries.find { it.scoreboardName.equals(name, true) } ?: UNKNOWN
     }
 }
 
@@ -39,7 +42,7 @@ private typealias CurrencyEvent = CurrencyUpdateEvent<*>
 
 @Module
 @Suppress("MemberVisibilityCanBePrivate")
-object CurrencyAPI {
+public object CurrencyAPI {
 
     private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("currency")
     private val bankSingleRegex = widgetGroup.create("profile.bank.single", "(?i) Bank: (?<bank>(?i)[\\d,.kmb]+)")
@@ -59,46 +62,54 @@ object CurrencyAPI {
     private val copperRegex = currencyGroup.create("copper", "^Copper: (?<copper>(?i)[\\d,.kmb]+)")
     private val sowdustRegex = currencyGroup.create("sowdust", "^Sowdust: (?<sowdust>(?i)[\\d,.kmb]+)")
     private val northStarsRegex = currencyGroup.create("northstars", "^North Stars: (?<northstars>(?i)[\\d,.kmb]+)")
+    private val kernelsRegex = currencyGroup.create("kernels", "^Kernels: (?<kernels>(?i)[\\d,.kmb]+)")
 
-    var purse: Double by CurrencyStorage::purse
+    private val inventoryGroup = RegexGroup.INVENTORY.group("currency")
+    private val inventoryKernelsRegex = inventoryGroup.create("kernels", "^Your Kernels: (?<kernels>(?i)[\\d,.kmb]+)")
+    private val inventoryGemsRegex = inventoryGroup.create("gems", "^Gems: (?<gems>(?i)[\\d,.kmb]+)")
+
+    public var purse: Double by CurrencyStorage::purse
         private set
 
-    var purseType: PurseType by CurrencyStorage::purseType
+    public var purseType: PurseType by CurrencyStorage::purseType
         private set
 
-    var personalBank: Long by CurrencyStorage::personalBank
+    public var personalBank: Long by CurrencyStorage::personalBank
         private set
 
-    var coopBank: Long by CurrencyStorage::coopBank
+    public var coopBank: Long by CurrencyStorage::coopBank
         private set
 
-    val bank get() = personalBank + coopBank
+    public val bank: Long get() = personalBank + coopBank
 
-    var motes: Long by CurrencyStorage::motes
+    public var motes: Long by CurrencyStorage::motes
         private set
 
-    var bits: Long by CurrencyStorage::bits
+    public var bits: Long by CurrencyStorage::bits
         private set
 
-    var copper: Long by CurrencyStorage::copper
+    public var copper: Long by CurrencyStorage::copper
         private set
 
-    var sowdust: Long by CurrencyStorage::sowdust
+    public var sowdust: Long by CurrencyStorage::sowdust
         private set
 
-    var northStars: Long by CurrencyStorage::northStars
+    public var kernels: Long by CurrencyStorage::kernels
         private set
 
-    var gems: Long by CommunityCenterStorage::gems
+    public var northStars: Long by CurrencyStorage::northStars
+        private set
+
+    public  var gems: Long by CommunityCenterStorage::gems
         private set
 
     // TODO: move somewhere else, since soulflow isn't really a currency
-    var soulflow: Long by CurrencyStorage::soulflow
+    public var soulflow: Long by CurrencyStorage::soulflow
         private set
 
     @Subscription
     @OnlyWidget(TabWidget.PROFILE, TabWidget.AREA)
-    fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
+    internal fun onTabListWidgetChange(event: TabWidgetChangeEvent) {
         when (event.widget) {
             TabWidget.PROFILE -> {
                 bankSingleRegex.anyMatch(event.new, "bank") { (bank) ->
@@ -126,7 +137,7 @@ object CurrencyAPI {
 
     @Subscription
     @OnlyOnSkyBlock
-    fun onScoreboardChange(event: ScoreboardUpdateEvent) {
+    internal fun onScoreboardChange(event: ScoreboardUpdateEvent) {
         if (SkyBlockIsland.THE_RIFT.inIsland()) {
             // Has a decimal place if obtained via mcgrubber burgers
             motesRegex.findCurrency(event.added, "motes", ::motes, CurrencyEvent::Motes)
@@ -136,12 +147,27 @@ object CurrencyAPI {
             } else if (SkyBlockIsland.GARDEN.inIsland()) {
                 copperRegex.findCurrencyChecked(event.added, "copper", ::copper, CurrencyEvent::Copper)
                 sowdustRegex.findCurrencyChecked(event.added, "sowdust", ::sowdust, CurrencyEvent::SowDust)
+                kernelsRegex.findCurrencyChecked(event.added, "kernels", ::kernels, CurrencyEvent::Kernels)
             }
             purseRegex.anyFound(event.added, "type", "purse") { (type, purse) ->
                 this.purseType = PurseType.fromName(type)
                 this.purse = post(purse.parseFormattedDouble(), this.purse, CurrencyEvent::Purse)
             }
             bitsRegex.findCurrency(event.added, "bits", ::bits, CurrencyEvent::Bits)
+        }
+    }
+
+    @Subscription
+    @OnlyOnSkyBlock
+    internal fun onInventoryUpdate(event: InventoryChangeEvent) {
+        when (event.title) {
+            "Grand Bakery" if (event.item.cleanName == "Grand Bakery") -> {
+                inventoryKernelsRegex.findCurrencyChecked(event.item.getRawLore(), "kernels", ::kernels, CurrencyEvent::Kernels)
+            }
+
+            "Community Shop" if (event.item.cleanName == "Community Shop" && event.slot.index == 49) -> {
+                inventoryGemsRegex.findCurrencyChecked(event.item.getRawLore(), "gems", ::gems, CurrencyEvent::Gems)
+            }
         }
     }
 
@@ -201,17 +227,20 @@ object CurrencyAPI {
 
     @ApiDebug("Currency")
     internal fun debug(builder: DebugBuilder) = with(builder) {
-        field("purse", purse)
-        field("purseType", purseType)
-        field("personalBank", personalBank)
-        field("coopBank", coopBank)
-        field("bank", bank)
-        field("motes", motes)
-        field("bits", bits)
-        field("copper", copper)
-        field("sowdust", sowdust)
-        field("northStars", northStars)
-        field("gems", gems)
-        field("soulflow", soulflow)
+        fields(
+            ::purse,
+            ::purseType,
+            ::personalBank,
+            ::coopBank,
+            ::bank,
+            ::motes,
+            ::bits,
+            ::copper,
+            ::sowdust,
+            ::northStars,
+            ::gems,
+            ::soulflow,
+            ::kernels,
+        )
     }
 }

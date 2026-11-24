@@ -1,11 +1,16 @@
 package tech.thatgravyboat.skyblockapi.api.profile.items.wardrobe
 
-import me.owdding.ktcodecs.GenerateCodec
-import net.minecraft.world.item.ItemStack
+//? if < 26.3 {
+/*import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeSlot as NewWardrobeSlot
 
-@GenerateCodec
-data class WardrobeSlot(
+@Deprecated("Replace with WardrobeAPI", ReplaceWith("tech.thatgravyboat.skyblockapi.api.profile.items.loadout.WardrobeSlot"))
+public data class WardrobeSlot(
     val id: Int,
     val armor: MutableList<ItemStack>,
     val locked: Boolean,
 )
+
+@Suppress("DEPRECATION")
+internal fun NewWardrobeSlot.into() = WardrobeSlot(id, slots, locked)
+*///?}

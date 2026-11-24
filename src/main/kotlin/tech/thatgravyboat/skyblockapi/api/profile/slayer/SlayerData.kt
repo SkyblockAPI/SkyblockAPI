@@ -1,20 +1,23 @@
 package tech.thatgravyboat.skyblockapi.api.profile.slayer
 
+import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.api.area.slayer.SlayerType
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
+// TODO: move somewhere else once its internal in all versions
 @GenerateCodec
-data class SlayerData(
+//~ if >= 26.4 'public' -> 'internal'
+public data class SlayerData(
     var slayers: MutableMap<SlayerType, SlayerEntry> = mutableMapOf(),
 ) {
-    companion object {
-        val CODEC = SkyblockAPICodecs.getCodec<SlayerData>()
+    public companion object {
+        public val CODEC: Codec<SlayerData> = SkyblockAPICodecs.getCodec<SlayerData>()
     }
 }
 
 @GenerateCodec
-data class SlayerEntry(
+public data class SlayerEntry(
     var xp: Long = 0L,
     var meterXp: Long = 0L,
 )

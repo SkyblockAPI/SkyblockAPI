@@ -1,28 +1,44 @@
-@file:Suppress("UnstableApiUsage")
+@file:OptIn(ExperimentalAbiValidation::class)
 
-import com.google.devtools.ksp.gradle.KspAATask
-import net.fabricmc.loom.task.RemapJarTask
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.nio.file.StandardCopyOption
+import kotlin.io.path.copyTo
+import kotlin.io.path.deleteIfExists
 
 plugins {
-    idea
-    id("fabric-loom")
     kotlin("jvm")
-    alias(libs.plugins.kotlin.symbol.processor)
-    alias(libs.plugins.meowdding.resources)
-    alias(libs.plugins.meowdding.auto.mixins)
-    //alias(libs.plugins.detekt)
-    `versioned-catalogues`
-    `item-data`
+    id("net.fabricmc.fabric-loom")
+    id("me.owdding.resources")
+    id("me.owdding.auto-mixins")
+    id("com.google.devtools.ksp")
+    id("versioned-catalogues")
+    id("item-data")
+    id("commands")
+    id("idea")
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xrender-internal-diagnostic-names")
+    }
+
+    abiValidation {
+        filters {
+            exclude {
+                byNames.addAll(
+                    "tech.thatgravyboat.skyblockapi.mixins.**"
+                )
+            }
+        }
+    }
 }
 
 repositories {
     fun scopedMaven(url: String, vararg paths: String) = maven(url) { content { paths.forEach(::includeGroupAndSubgroups) } }
 
     scopedMaven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1", "me.djtheredstoner")
-    scopedMaven("https://repo.hypixel.net/repository/Hypixel", "net.hypixel")
     scopedMaven("https://maven.parchmentmc.org/", "org.parchmentmc")
     scopedMaven("https://api.modrinth.com/maven", "maven.modrinth")
     scopedMaven(
@@ -31,80 +47,13 @@ repositories {
         "com.teamresourceful",
         "tech.thatgravyboat",
         "me.owdding",
-        "com.terraformersmc"
+        "com.terraformersmc",
+        "net.hypixel"
     )
+    //scopedMaven("https://repo.hypixel.net/repository/Hypixel", "net.hypixel")
     scopedMaven("https://maven.nucleoid.xyz/", "eu.pb4")
     mavenCentral()
-}
-
-dependencies {
-    minecraft(versionedCatalog["minecraft"])
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment(variantOf(versionedCatalog["parchment"]) {
-            artifactType("zip")
-        })
-    })
-
-    compileOnly(project(":annotations"))
-    compileOnly(libs.bundles.meowdding)
-    ksp(libs.bundles.meowdding)
-
-    modImplementation(libs.fabric.language.kotlin)
-
-    api(libs.meowdding.item.dfu) {
-        capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}") }
-    }
-    include(libs.meowdding.item.dfu) {
-        capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}-remapped") }
-    }
-
-    api(libs.hypixel.modapi)
-    modImplementation(libs.bundles.hypixel)
-    include(libs.hypixel.modapi.fabric)
-
-    modApi(libs.skyblockapi.repolib)
-    include(libs.skyblockapi.repolib)
-
-    if(stonecutter.eval(stonecutter.current.version, ">=1.21.11")) {
-        // TODO https://github.com/DJtheRedstoner/DevAuth/issues/24
-        runtimeOnly("org.apache.httpcomponents:httpclient:4.5.14")
-        runtimeOnly("org.apache.httpcomponents:httpcore:4.4.16")
-    }
-    modRuntimeOnly(libs.devauth)
-
-    modImplementation(versionedCatalog["fabric.api"])
-    modImplementation(libs.fabric.language.kotlin)
-    modImplementation(libs.fabric.loader)
-}
-
-val mcVersion = stonecutter.current.version.replace(".", "")
-val accessWidenerFile = rootProject.file("src/sbapi.accesswidener")
-loom {
-    runConfigs["client"].apply {
-        ideConfigGenerated(true)
-        runDir = "../../run"
-        vmArg("-Dfabric.modsFolder=" + '"' + "${mcVersion}Mods" + '"')
-    }
-
-    if (accessWidenerFile.exists()) {
-        accessWidenerPath.set(accessWidenerFile)
-    }
-}
-
-afterEvaluate {
-
-    tasks.withType(KspAATask::class.java).configureEach {
-        kspConfig.processorOptions.put(
-            "meowdding.project_name",
-            "SkyBlockAPI" + (kspConfig.cachesDir.get().asFile.name.takeUnless { it == "main" }?.let { "Versioned" } ?: "")
-        )
-    }
-}
-
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
-    withSourcesJar()
+    mavenLocal()
 }
 
 val archiveName = "skyblock-api"
@@ -118,39 +67,54 @@ tasks.named("build") {
     }
 }
 
-compactingResources {
-    basePath = "repo"
-    pathDirectory = "../../src"
-
-    configureTask(tasks.named<AbstractCopyTask>("processResources").get())
-
-    removeComments("skyblockid/unobtainable_ids")
-    substituteFromDifferentFile("slayer", "slayers")
-}
-
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    options.release.set(21)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
-    compilerOptions.optIn.add("kotlin.time.ExperimentalTime")
-    compilerOptions.freeCompilerArgs.addAll(
-        "-Xcontext-parameters",
-        "-Xcontext-sensitive-resolution",
-        "-Xnullability-annotations=@org.jspecify.annotations:ignore"
-    )
+    compilerOptions {
+        optIn.addAll(
+            "kotlin.time.ExperimentalTime",
+            "kotlin.ExperimentalVersionOverloading",
+            "kotlin.time.ExperimentalTime",
+            "kotlin.contracts.ExperimentalContracts",
+        )
+        allWarningsAsErrors = true
+        extraWarnings = true
+        freeCompilerArgs.addAll(
+            "-Xcontext-sensitive-resolution",
+            "-Xnullability-annotations=@org.jspecify.annotations:ignore",
+            // Protected constructors + public methods inside internal classes
+            "-Xwarning-level=REDUNDANT_VISIBILITY_MODIFIER:disabled",
+        )
+    }
 }
 
-tasks.processResources {
+val accessWidenerFile = rootProject.file("src/sbapi.classtweaker")
+
+tasks.withType<ProcessResources>().configureEach {
+    with(copySpec {
+        from(accessWidenerFile)
+    })
+    filteringCharset = "UTF-8"
+}
+
+tasks.named<ProcessResources>("processResources") {
+    val range = if (versionedCatalog.versions.has("minecraft.range")) {
+        versionedCatalog.versions["minecraft.range"].toString()
+    } else {
+        val start = versionedCatalog.versions.getOrFallback("minecraft.start", "minecraft")
+        val end = versionedCatalog.versions.getOrFallback("minecraft.end", "minecraft")
+        ">=$start <=$end"
+    }
+
     val replacements = mapOf(
-        "version" to version,
-        "minecraft_start" to versionedCatalog.versions.getOrFallback("minecraft.start", "minecraft"),
-        "minecraft_end" to versionedCatalog.versions.getOrFallback("minecraft.end", "minecraft"),
-        "fabric_lang_kotlin" to libs.versions.fabric.language.kotlin.get(),
-        "hypixel_mod_api" to libs.versions.hypixel.modapi.fabric.get(),
-        "fabric_loader" to libs.versions.fabric.loader.get(),
+        "version" to project.version,
+        "minecraft_range" to range,
+        "fabric_lang_kotlin" to versionedCatalog.versions["fabric.language.kotlin"],
+        "hypixel_mod_api" to versionedCatalog.versions["hypixel.modapi.fabric"],
+        "fabric_loader" to versionedCatalog.versions["fabric.loader"],
+        "repo_lib" to versionedCatalog.versions["skyblockapi.repolib"],
     )
     inputs.properties(replacements)
 
@@ -159,43 +123,31 @@ tasks.processResources {
     }
 }
 
-tasks.withType<ProcessResources>().configureEach {
-    with(copySpec {
-        from(accessWidenerFile)
-    })
+base {
+    archivesName = archiveName
 }
-
-idea {
-    module {
-        isDownloadJavadoc = true
-        isDownloadSources = true
-
-        excludeDirs.add(file("run"))
-    }
-}
-
-tasks.withType<ValidateAccessWidenerTask> { enabled = false }
 
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
-tasks.apiCheck {
-    enabled = false
-}
-
-tasks.processResources {
-    filteringCharset = "UTF-8"
-}
+val javaVersion get() = 25
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    options.release.set(21)
+    options.release.set(javaVersion)
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
+    withSourcesJar()
 }
+
+kotlin {
+    jvmToolchain(javaVersion)
+}
+
 
 ksp {
     arg("meowdding.modules.project_name", "SkyblockAPI")
@@ -210,18 +162,120 @@ autoMixins {
     mixinExtrasVersion = "0.5.0"
 }
 
-base {
-    archivesName = archiveName
+idea {
+    module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
+
+        excludeDirs.add(file("run"))
+    }
 }
 
+compactingResources {
+    basePath = "repo"
+    pathDirectory = "../../src"
+
+    configureTask(tasks.named<AbstractCopyTask>("processResources").get())
+
+    removeComments("skyblockid/unobtainable_ids")
+    substituteFromDifferentFile("slayer", "slayers")
+}
+
+kotlin {
+    jvmToolchain(25)
+    explicitApi()
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.VERSION_25
+}
+
+dependencies {
+    minecraft(versionedCatalog["minecraft"])
+
+    compileOnly(project(":annotations"))
+    compileOnly(versionedCatalog.bundles["meowdding"])
+    ksp(versionedCatalog.bundles["meowdding"])
+
+    api(versionedCatalog["fabric.language.kotlin"])
+
+    api(versionedCatalog["meowdding.item.dfu"]) {
+        capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}") }
+    }
+    include(versionedCatalog["meowdding.item.dfu"]) {
+        capabilities { requireCapability("me.owdding:item-data-fixer-${stonecutter.current.version}") }
+    }
+
+    api(versionedCatalog["hypixel.modapi"])
+    api(versionedCatalog["hypixel.modapi.fabric"])
+    include(versionedCatalog["hypixel.modapi.fabric"])
+
+    api(versionedCatalog["skyblockapi.repolib"])
+    include(versionedCatalog["skyblockapi.repolib"])
+
+    runtimeOnly(versionedCatalog["devauth"])
+
+    implementation(versionedCatalog["fabric.api"])
+    implementation(versionedCatalog["fabric.loader"])
+}
+
+val mcVersion = stonecutter.current.version.replace(".", "")
+
+loom {
+    log4jConfigs.from(rootProject.projectDir.resolve("gradle/log4j.config.xml"))
+    runConfigs["client"].apply {
+        generateRunConfig = true
+        runDirectory = project.file("../../run")
+        jvmArguments.add("-Dfabric.modsFolder=${mcVersion}Mods")
+    }
+
+    if (accessWidenerFile.exists()) {
+        accessWidenerPath.set(accessWidenerFile)
+    }
+}
+
+tasks.named("checkKotlinAbi") { enabled = false }
+
+tasks.withType<ValidateAccessWidenerTask> { enabled = false }
+
 tasks.named<Jar>("jar") {
-    archiveClassifier = "${stonecutter.current.version}-dev"
+    archiveClassifier = stonecutter.current.version
 }
 
 tasks.named<Jar>("sourcesJar") {
     archiveClassifier = "${stonecutter.current.version}-sources"
 }
 
-tasks.named<RemapJarTask>("remapJar") {
-    archiveClassifier = stonecutter.current.version
+tasks.named("updateKotlinAbi") {
+    mustRunAfter("copyApiData")
+}
+
+tasks.register("copyApiData") {
+    group = "skyblock-api"
+    description = "Copy old files"
+
+    val name = project.name
+
+    doFirst {
+        val path = layout.projectDirectory.asFile.toPath()
+        val api = path.resolve("api/${name}.api")
+        api.copyTo(api.resolveSibling("${name}.api.old"), StandardCopyOption.REPLACE_EXISTING)
+    }
+}
+
+
+tasks.register("resetApiData") {
+    group = "skyblock-api"
+    description = "Rever api data to before update"
+
+    val name = project.name
+
+    doFirst {
+        val path = layout.projectDirectory.asFile.toPath()
+        val api = path.resolve("api/${name}.api")
+        val backupApi = api.resolveSibling("${name}.api.old")
+        backupApi.copyTo(api, StandardCopyOption.REPLACE_EXISTING)
+        backupApi.deleteIfExists()
+    }
 }

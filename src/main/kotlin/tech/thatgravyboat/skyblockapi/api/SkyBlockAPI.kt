@@ -5,58 +5,70 @@ import com.mojang.serialization.Codec
 import me.owdding.dfu.item.MeowddingItemDfu
 import me.owdding.ktmodules.Module
 import net.fabricmc.loader.api.FabricLoader
-import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import tech.thatgravyboat.repolib.api.RepoAPI
+import tech.thatgravyboat.repolib.api.RepoLibLogger
 import tech.thatgravyboat.repolib.api.RepoVersion
 import tech.thatgravyboat.skyblockapi.api.events.base.EventBus
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
+import tech.thatgravyboat.skyblockapi.api.events.misc.PostInitEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiDebugEvent
+import tech.thatgravyboat.skyblockapi.api.events.repo.RepoEvent
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIApiDebug
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIDevModules
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPIModules
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.DataTypesRegistry
+import tech.thatgravyboat.skyblockapi.impl.RepoLibLogging
 import tech.thatgravyboat.skyblockapi.platform.Identifiers
 import tech.thatgravyboat.skyblockapi.utils.ApiDebug
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
+import tech.thatgravyboat.skyblockapi.utils.text.Text
 import java.nio.file.Files
 
+//? if < 26.3
+//import tech.thatgravyboat.skyblockapi.api.events.misc.RepoStatusEvent
+
 @Module
-object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
+public object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
 
     internal val mod = FabricLoader.getInstance().getModContainer("skyblock-api").orElseThrow()
-    val MOD_ID: String get() = mod.metadata.id
-    const val NAMESPACE: String = "skyblockapi"
+    public val MOD_ID: String get() = mod.metadata.id
+    public val VERSION: String get() = mod.metadata.version.friendlyString
+    public const val NAMESPACE: String = "skyblockapi"
 
     @JvmStatic
-    val eventBus = EventBus()
+    public val eventBus: EventBus = EventBus()
 
-    internal val logger = this
+    internal val logger: Logger = this
 
     internal val isDebug get() = System.getProperty("skyblockapi.debug")?.lowercase() == "true"
 
-    @JvmStatic
-    @ApiStatus.Internal
-    fun init() {
+    internal fun init() {
         debug("Starting sbapi!")
+        RepoLibLogger.setInstance(RepoLibLogging)
         SkyblockAPIModules.init { eventBus.register(it) }
         if (McClient.isDev) SkyblockAPIDevModules.init(eventBus::register)
         RepoAPI.setup(RepoVersion.fromName(McClient.version) ?: RepoVersion.V1_21_7) { status ->
+            //? if < 26.3 {
+            /*@Suppress("DEPRECATION")
             RepoStatusEvent(status).post()
+            *///? }
+            RepoEvent.Status(status).post()
+            RepoEvent.Reload(status).post()
         }
         MeowddingItemDfu.load()
+
+        //org.spongepowered.asm.mixin.MixinEnvironment.getCurrentEnvironment().audit()
     }
 
-    @JvmStatic
-    @ApiStatus.Internal
-    fun postInit() {
+    internal fun postInit() {
         DataTypesRegistry.load()
+        PostInitEvent.post()
     }
 
     internal fun id(path: String) = Identifiers.of(NAMESPACE, path)
@@ -67,6 +79,9 @@ object SkyBlockAPI : Logger by LoggerFactory.getLogger("SkyBlockAPI") {
     private fun RegisterCommandsEvent.registerSkyblockApiCommands() {
         val event = RegisterSkyblockApiCommandsEvent(this)
         event.post()
+        event.registerWithCallback("version") {
+            Text.sendDebug("Current version is: $VERSION")
+        }
         RegisterSkyblockApiDebugEvent(event).post()
     }
 

@@ -1,16 +1,17 @@
 package tech.thatgravyboat.skyblockapi.api.area.farming.garden
 
-import net.minecraft.core.BlockPos
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.StemBlock
 import net.minecraft.world.level.block.state.BlockState
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
-import tech.thatgravyboat.skyblockapi.helpers.McLevel
 
-enum class Crop(val tool: FarmingTool, vararg block: Block, skyBlockId: String? = null) {
+public enum class Crop(
+    public val tool: FarmingTool,
+    vararg block: Block,
+    skyBlockId: String? = null,
+) {
     WHEAT(FarmingTool.THEORETICAL_HOE_WHEAT, Blocks.WHEAT),
     CARROT(FarmingTool.THEORETICAL_HOE_CARROT, Blocks.CARROTS),
     POTATO(FarmingTool.THEORETICAL_HOE_POTATO, Blocks.POTATOES),
@@ -38,16 +39,14 @@ enum class Crop(val tool: FarmingTool, vararg block: Block, skyBlockId: String? 
     },
     ;
 
-    val blocks: Set<Block> = block.toSet()
-    val skyBlockId: SkyBlockId = SkyBlockId.item(skyBlockId ?: name)
+    public val blocks: Set<Block> = block.toSet()
+    public val skyBlockId: SkyBlockId = SkyBlockId.item(skyBlockId ?: name)
 
-    open fun isCrop(state: BlockState): Boolean = state.block in blocks
+    public open fun isCrop(state: BlockState): Boolean = state.block in blocks
 
-    @RemoveNextVersion(ReplaceWith("item"))
-    val icon: () -> ItemStack = { this.skyBlockId.toItem() }
-    val item: ItemStack get() = this.skyBlockId.toItem()
+    public val item: ItemStack get() = this.skyBlockId.toItem()
 
-    companion object {
+    public companion object {
         private fun isStemOfAge(state: BlockState, vararg ages: Int): Boolean = state.getValue(StemBlock.AGE) in ages
         private fun isSunflowerOrMoonFlower(state: BlockState): Boolean {
             return when (state.block) {

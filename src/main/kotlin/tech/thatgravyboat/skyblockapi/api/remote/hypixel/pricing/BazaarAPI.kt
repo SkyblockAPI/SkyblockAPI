@@ -14,14 +14,14 @@ import kotlin.time.Duration.Companion.seconds
 private const val URL = "https://api.hypixel.net/v2/skyblock/bazaar"
 
 @Module
-object BazaarAPI {
+public object BazaarAPI {
 
-    var products = listOf<BazaarProduct>()
+    public var products: List<BazaarProduct> = listOf<BazaarProduct>()
         private set
 
-    fun getProduct(skyBlockId: SkyBlockId) = getProduct(skyBlockId.bazaarId)
+    public fun getProduct(skyBlockId: SkyBlockId): BazaarProduct? = getProduct(skyBlockId.bazaarId)
 
-    fun getProduct(id: String?) = products.find { it.productId.equals(id, true) }
+    public fun getProduct(id: String?): BazaarProduct? = products.find { it.productId.equals(id, true) }
 
     init {
         Scheduling.schedule(0.seconds, 2.hours) {
@@ -42,7 +42,7 @@ object BazaarAPI {
         }
     }
 
-    data class BazaarProduct(
+    public data class BazaarProduct(
         val productId: String,
         val sellPrice: Double,
         val sellVolume: Long,

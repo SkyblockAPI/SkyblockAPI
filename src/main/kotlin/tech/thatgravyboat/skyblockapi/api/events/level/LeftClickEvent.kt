@@ -5,7 +5,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 
-open class LeftClickEvent(val stack: ItemStack) : CancellableSkyBlockEvent()
+public open class LeftClickEvent(public val stack: ItemStack) : CancellableSkyBlockEvent()
 
-class LeftClickEntityEvent(val entity: Entity, stack: ItemStack) : LeftClickEvent(stack)
-class LeftClickBlockEvent(val pos: BlockPos, stack: ItemStack) : LeftClickEvent(stack)
+public class LeftClickEntityEvent(public val entity: Entity, stack: ItemStack) : LeftClickEvent(stack)
+public class LeftClickBlockEvent(public val pos: BlockPos, stack: ItemStack) : LeftClickEvent(stack)

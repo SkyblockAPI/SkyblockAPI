@@ -1,15 +1,70 @@
 package tech.thatgravyboat.skyblockapi.api.events.screen
 
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.input.KeyEvent
 import tech.thatgravyboat.skyblockapi.api.events.base.CancellableSkyBlockEvent
 
-sealed class ScreenKeyReleasedEvent(
-    val screen: Screen,
-    val key: Int,
-    val scanCode: Int,
-    val modifiers: Int,
+public sealed class ScreenKeyReleasedEvent(
+    public val screen: Screen,
+    public val event: KeyEvent,
 ) : CancellableSkyBlockEvent() {
+    protected constructor(
+        screen: Screen,
+        key: Int,
+        //? if < 26.3
+        //scanCode: Int,
+        modifiers: Int,
+    ) : this(
+        screen,
+        KeyEvent(
+            key,
+            //? if < 26.3
+            //scanCode,
+            //? else
+            0,
+            modifiers,
+        ),
+    )
+    public val key: Int = event.key
 
-    class Pre(screen: Screen, key: Int, scanCode: Int, modifiers: Int) : ScreenKeyReleasedEvent(screen, key, scanCode, modifiers)
-    class Post(screen: Screen, key: Int, scanCode: Int, modifiers: Int) : ScreenKeyReleasedEvent(screen, key, scanCode, modifiers)
+    //~ if > 26.2 'scancode' -> 'keycode'
+    public val keycode: Int = event.keycode
+    public val modifiers: Int = event.modifiers
+
+    //? if < 26.3
+    //public val scanCode: Int = event.scancode
+
+    public class Pre(screen: Screen, event: KeyEvent) : ScreenKeyReleasedEvent(screen, event)
+    //? if < 26.4 {
+    {
+        @Deprecated("Provide a KeyEvent instead", level = DeprecationLevel.HIDDEN)
+        public constructor(
+            screen: Screen,
+            key: Int,
+            //? if < 26.3
+            //scanCode: Int,
+            modifiers: Int,
+        ) : this(
+            screen,
+            //~ if >= 26.3 'scanCode' -> '0'
+            KeyEvent(key, 0, modifiers),
+        )
+    }//?}
+
+    public class Post(screen: Screen, event: KeyEvent) : ScreenKeyReleasedEvent(screen, event)
+    //? if < 26.4 {
+    {
+        @Deprecated("Provide a KeyEvent instead", level = DeprecationLevel.HIDDEN)
+        public constructor(
+            screen: Screen,
+            key: Int,
+            //? if < 26.3
+            //scanCode: Int,
+            modifiers: Int,
+        ) : this(
+            screen,
+            //~ if >= 26.3 'scanCode' -> '0'
+            KeyEvent(key, 0, modifiers),
+        )
+    }//?}
 }

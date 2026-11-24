@@ -2,67 +2,91 @@ package tech.thatgravyboat.skyblockapi.api.area.isle.trophyfish
 
 import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.api.data.stored.TrophyFishStorage
+import tech.thatgravyboat.skyblockapi.api.datatype.defaults.trophy.TrophyTier
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyIn
 import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyOnSkyBlock
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.TrophyCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvOpenedEvent
 import tech.thatgravyboat.skyblockapi.api.events.remote.SkyBlockPvRequired
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
-import tech.thatgravyboat.skyblockapi.api.location.SkyBlockIsland
-import tech.thatgravyboat.skyblockapi.api.remote.LoadedData
 import tech.thatgravyboat.skyblockapi.api.remote.PvLoadingHelper
-import tech.thatgravyboat.skyblockapi.utils.extentions.*
+import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
+import tech.thatgravyboat.skyblockapi.utils.extentions.asMap
+import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
+import tech.thatgravyboat.skyblockapi.utils.extentions.filterKeysNotNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
+import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import kotlin.math.max
 
 @Module
-object TrophyFishingAPI {
+public object TrophyFishingAPI {
 
     private val chatGroup = RegexGroup.CHAT.group("trophy_api")
     private val inventoryGroup = RegexGroup.INVENTORY.group("trophy_api")
 
-    private val trophyFishCaughtRegex = chatGroup.create(
-        "caught",
-        "♔ TROPHY FISH! You caught an? (?<type>.+?) (?<tier>${TrophyFishTier.entries.joinToString("|", transform = { it.name })})!",
+    private val singleTrophyFishCaughtRegex = chatGroup.create(
+        "fish_singleCaught",
+        ". TROPHY FISH! You caught(?: an?)? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })})!",
+    )
+
+    private val multiTrophyFishCaughtRegex = chatGroup.create(
+        "fish_multiCaught",
+        ". TROPHY FISH! You caught(?: an?)? (?<type>.+?) (?<tier>${TrophyTier.entries.joinToString("|", transform = { it.name })}) x(?<amount>\\d+)!",
     )
 
     private val trophyFishDescription = inventoryGroup.create(
-        "description",
+        "fish_description",
         "(?<tier>Diamond|Silver|Gold|Bronze) \\S+(?: \\((?<amount>\\d+)\\))?",
     )
 
     @Subscription
-    @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    @OnlyIn(CRIMSON_ISLE)
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val content = event.text.trim()
-        trophyFishCaughtRegex.match(content, "type", "tier") { (type, tier) ->
-            val fishTier = TrophyFishTier.valueOf(tier)
-            val type = TrophyFishType.getByDisplayName(type) ?: return@match
+        matchWhen(content) {
+            case(singleTrophyFishCaughtRegex, "type", "tier") { (type, tier) ->
+                val fishTier = TrophyTier.valueOf(tier)
+                val type = TrophyFishType.getByDisplayName(type) ?: return@case
 
-            TrophyFishStorage.addCaught(type, fishTier)
-            TrophyFishCaughtEvent(type, fishTier).post()
+                TrophyFishStorage.addCaught(type, fishTier)
+                @Suppress("DEPRECATION")
+                TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name)).post()
+                TrophyCaughtEvent.Fish(type, fishTier).post()
+            }
+            case(multiTrophyFishCaughtRegex, "type", "tier", "amount") { (type, tier, amount) ->
+                val fishTier = TrophyTier.valueOf(tier)
+                val type = TrophyFishType.getByDisplayName(type) ?: return@case
+                val amount = amount.toIntOrNull() ?: return@case
+
+                TrophyFishStorage.addCaught(type, fishTier)
+                @Suppress("DEPRECATION")
+                TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name), amount).post()
+                TrophyCaughtEvent.Fish(type, fishTier, amount).post()
+            }
         }
     }
 
     @Subscription
-    @OnlyIn(SkyBlockIsland.CRIMSON_ISLE)
-    fun onInventory(event: InventoryChangeEvent) {
-        if (event.title != "Trophy Fishing") return
+    @OnlyIn(CRIMSON_ISLE)
+    internal fun onInventory(event: InventoryChangeEvent) {
+        if (event.title != "Trophy Fish") return
         if (event.isInPlayerInventory) return
         if (!event.isInMainPart) return
         if (event.isSkyBlockFiller) return
 
         val byName = TrophyFishType.getByDisplayName(event.item.cleanName) ?: return
-        val caught = mutableMapOf<TrophyFishTier, Int>()
+        val caught = mutableMapOf<TrophyTier, Int>()
         event.item.getRawLore().forEach {
             trophyFishDescription.match(it, "tier", "amount") { match ->
                 val (tierName) = match
                 val amount = match["amount"] ?: "0"
-                val tier = TrophyFishTier.getByName(tierName)
-                caught.put(tier, amount.toInt())
+                val tier = TrophyTier.getByName(tierName)
+                caught[tier] = amount.toInt()
             }
         }
         TrophyFishStorage.setAmounts(byName, caught)
@@ -71,7 +95,7 @@ object TrophyFishingAPI {
     @OptIn(SkyBlockPvRequired::class)
     @Subscription
     @OnlyOnSkyBlock
-    fun onPv(event: SkyBlockPvOpenedEvent) {
+    internal fun onPv(event: SkyBlockPvOpenedEvent) {
         val obtained = event.member["trophy_fish"].asMap { key, value ->
             if (!value.isJsonPrimitive) null to 0
             else key to value.asInt(0)
@@ -82,7 +106,7 @@ object TrophyFishingAPI {
         val unlocked = grouped.mapValues { entry ->
             val caught = getCaught(entry.key)
             entry.value.associate { value ->
-                val tier = TrophyFishTier.entries.find { value.key.endsWith(it.name, true) }
+                val tier = TrophyTier.entries.find { value.key.endsWith(it.name, true) }
                 val previous = tier?.let(caught::get) ?: 0
                 val value = value.value
 
@@ -95,12 +119,21 @@ object TrophyFishingAPI {
         }
 
         if (hasLoadedAny) {
-            PvLoadingHelper.markLoaded(LoadedData.TROPHY_FISH)
+            PvLoadingHelper.markLoaded(TROPHY_FISH)
         }
         unlocked.forEach(TrophyFishStorage::setAmounts)
     }
 
-    fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
+    //? if < 26.4 {
+    @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
+    @Suppress("DEPRECATION")
+    public fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
+        return TrophyFishStorage.getCaught(type).map { TrophyFishTier.valueOf(it.key.name) to it.value }.toMap()
+    }
+    //?}
+
+    @JvmName("getCaughtTiers")
+    public fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
         return TrophyFishStorage.getCaught(type)
     }
 }

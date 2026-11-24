@@ -5,12 +5,14 @@ import me.owdding.ktcodecs.GenerateCodec
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
+// TODO: move somewhere else once its internal in all versions
 @GenerateCodec
-data class EquipmentData(
+//~ if >= 26.4 'public' -> 'internal'
+public data class EquipmentData(
     val slots: MutableMap<EquipmentSlot, ItemStack> = mutableMapOf(),
     val riftSlots: MutableMap<EquipmentSlot, ItemStack> = mutableMapOf(),
 ) {
-    companion object {
+    public companion object {
         internal val CODEC: Codec<EquipmentData> = SkyblockAPICodecs.EquipmentDataCodec.codec()
     }
 }

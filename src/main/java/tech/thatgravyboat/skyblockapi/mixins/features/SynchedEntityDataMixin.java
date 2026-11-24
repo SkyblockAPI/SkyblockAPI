@@ -10,10 +10,10 @@ import tech.thatgravyboat.skyblockapi.hooks.DataItemHook;
 public class SynchedEntityDataMixin {
 
     @WrapMethod(method = "assignValue")
+    @SuppressWarnings("unchecked")
     private <T> void onAssignValue(SynchedEntityData.DataItem<T> item, SynchedEntityData.DataValue<?> value, Operation<Void> original) {
         original.call(item, value);
         if (item instanceof DataItemHook<?> hook) {
-            //noinspection unchecked
             ((DataItemHook<T>) hook).skyblockapi$setServerValue((T) value.value());
         }
     }

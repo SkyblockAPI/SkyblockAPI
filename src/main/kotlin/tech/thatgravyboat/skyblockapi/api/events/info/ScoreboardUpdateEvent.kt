@@ -2,25 +2,26 @@ package tech.thatgravyboat.skyblockapi.api.events.info
 
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
-import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
-typealias ScoreboardChangeEvent = ScoreboardUpdateEvent
+//? if < 26.2
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+
+public typealias ScoreboardChangeEvent = ScoreboardUpdateEvent
 
 /**
  * Fired when the scoreboard changes in SkyBlock.
  */
-data class ScoreboardUpdateEvent(
+public data class ScoreboardUpdateEvent(
     val old: List<String>,
     val new: List<String>,
-    val components: List<Component>,
+    val oldComponents: List<Component>,
+    val newComponents: List<Component>,
 ) : SkyBlockEvent() {
+
 
     val added: List<String> = new - old.toSet()
     val removed: List<String> = old - new.toSet()
 
-    private val addedSet: Set<String> = added.toSet()
-    private val removedSet: Set<String> = removed.toSet()
-
-    val addedComponents: List<Component> = components.filter { it.stripped in addedSet }
-    val removedComponents: List<Component> = components.filter { it.stripped in removedSet }
+    val addedComponents: List<Component> = newComponents - oldComponents.toSet()
+    val removedComponents: List<Component> = oldComponents - newComponents.toSet()
 }

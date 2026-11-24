@@ -1,15 +1,16 @@
 package tech.thatgravyboat.skyblockapi.api.remote
 
-import me.owdding.ktmodules.Module
+//? if < 26.4 {
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.repolib.api.mobs.Mob
 
-@Module
-object RepoMobsAPI {
+@Deprecated("Use SkyBlockMobsRepo instead")
+public object RepoMobsAPI {
 
-    fun getMobOrNull(id: String): Mob? {
+    public fun getMobOrNull(id: String): Mob? {
         if (!RepoAPI.isInitialized()) return null
         return RepoAPI.mobs().getMob(id)
     }
 
 }
+//?}

@@ -8,11 +8,14 @@ import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import tech.thatgravyboat.skyblockapi.api.data.stored.FriendStorage
+import tech.thatgravyboat.skyblockapi.api.data.stored.PlayerCacheStorage
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.hypixel.FriendEvent
+import tech.thatgravyboat.skyblockapi.api.events.hypixel.GuildEvent
 import tech.thatgravyboat.skyblockapi.api.events.location.ServerDisconnectEvent
-import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterCommandsEvent
+import tech.thatgravyboat.skyblockapi.api.events.misc.PlayerCacheUpdate
+import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.toIntValue
 import tech.thatgravyboat.skyblockapi.utils.regex.CommonRegexes
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
@@ -22,7 +25,6 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import tech.thatgravyboat.skyblockapi.utils.regex.component.find
 import tech.thatgravyboat.skyblockapi.utils.regex.component.toComponentRegex
 import tech.thatgravyboat.skyblockapi.utils.text.Text
-import tech.thatgravyboat.skyblockapi.utils.text.Text.send
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
@@ -32,7 +34,7 @@ import java.util.UUID
 
 @Suppress("unused")
 @Module
-object FriendsAPI {
+public object FriendsAPI {
 
     //region Regex
     private val regexGroup = RegexGroup.CHAT.group("friend")
@@ -75,18 +77,18 @@ object FriendsAPI {
     )
     //endregion
 
-    val friends: List<Friend>
+    public val friends: List<Friend>
         get() = FriendStorage.friends
 
-    fun isFriend(name: String): Boolean = FriendStorage.getFriend(name) != null
+    public fun isFriend(name: String): Boolean = FriendStorage.getFriend(name) != null
 
-    fun isFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid) != null
+    public fun isFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid) != null
 
-    fun isBestFriend(name: String): Boolean = FriendStorage.getFriend(name)?.bestFriend ?: false
+    public fun isBestFriend(name: String): Boolean = FriendStorage.getFriend(name)?.bestFriend ?: false
 
-    fun isBestFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid)?.bestFriend ?: false
+    public fun isBestFriend(uuid: UUID): Boolean = FriendStorage.getFriend(uuid)?.bestFriend ?: false
 
-    fun getFriend(name: String): Friend? = FriendStorage.getFriend(name)
+    public fun getFriend(name: String): Friend? = FriendStorage.getFriend(name)
 
     // Dealing with friends list
     private var currentPage: Int = 0
@@ -95,7 +97,7 @@ object FriendsAPI {
     private val foundFriends: MutableSet<String> = mutableSetOf()
 
     @Subscription(priority = Int.MIN_VALUE)
-    fun onChat(event: ChatReceivedEvent.Pre) {
+    internal fun onChat(event: ChatReceivedEvent.Pre) {
         val components = event.component.splitLines()
         if (components.size == 1) {
             handleSingleLine(components.first())
@@ -105,7 +107,9 @@ object FriendsAPI {
         components.any(::handleSingleLine)
     }
 
-    // TODO: also call this on guild join/leave message if the person is in your friends list
+    @Subscription(GuildEvent.Join::class, GuildEvent.Leave::class)
+    private fun onGuildMember() = resetListSearch()
+
     private fun resetListSearch() {
         currentPage = 0
         maxPage = 0
@@ -143,7 +147,12 @@ object FriendsAPI {
                         name = component.stripped
                     }
                     val isBestFriend = component.string.contains("§l")
-                    val uuid = CommonRegexes.getUuidFromViewProfile(component)
+                    var uuid = CommonRegexes.getUuidFromViewProfile(component)
+
+                    // if uuid isn't null, we update it. if it is null, we try to find it in cache
+                    if (uuid != null) PlayerCacheStorage.updatePlayer(uuid, name)
+                    else uuid = PlayerCacheStorage.getPlayerUUID(name)
+
                     FriendStorage.updateFriend(name, uuid, isBestFriend, nick)
                     foundFriends += name
                 }
@@ -185,37 +194,37 @@ object FriendsAPI {
     }
 
     @Subscription
-    fun onCommandsRegistration(event: RegisterCommandsEvent) {
+    internal fun onCommandsRegistration(event: RegisterSkyblockApiCommandsEvent) {
         val provider = SuggestionProvider<FabricClientCommandSource> { _, builder ->
             val friends = friends.map { it.name }
             SharedSuggestionProvider.suggest(friends, builder)
         }
-        event.register("sbapi friends") {
+        event.register("friends") {
             then("add name", StringArgumentType.string()) {
                 callback {
                     val name = StringArgumentType.getString(this, "name") ?: return@callback
                     FriendStorage.removeFriend(name)
                     FriendStorage.addFriend(name)
-                    Text.debug("Added $name to friends list.").send()
+                    Text.sendDebug("Added $name to friends list.")
                 }
             }
             then("remove name", StringArgumentType.string(), provider) {
                 callback {
                     val name = StringArgumentType.getString(this, "name") ?: return@callback
                     FriendStorage.removeFriend(name)
-                    Text.debug("Removed $name from friends list.").send()
+                    Text.sendDebug("Removed $name from friends list.")
                 }
             }
             then("list") {
                 callback {
                     val friends = friends
                     if (friends.isEmpty()) {
-                        Text.debug("You have no friends. :(").send()
+                        Text.sendDebug("You have no friends. :(")
                         return@callback
                     }
-                    Text.debug("Friends (${friends.size}):").send()
+                    Text.sendDebug("Friends (${friends.size}):")
                     friends.forEach { friend ->
-                        Text.debug(" - ${friend.name}") {
+                        Text.sendDebug(" - ${friend.name}") {
                             if (friend.bestFriend) {
                                 val friendText = Text.of(" (Best Friend)") {
                                     this.color = TextColor.GREEN
@@ -229,7 +238,7 @@ object FriendsAPI {
                                 }
                                 append(friendText)
                             }
-                        }.send()
+                        }
                     }
                 }
             }
@@ -238,7 +247,7 @@ object FriendsAPI {
                     val name = StringArgumentType.getString(this, "name") ?: return@callback
                     val friend = FriendStorage.getFriend(name)
                     if (friend == null) {
-                        Text.debug("$name is not your friend.").send()
+                        Text.sendDebug("$name is not your friend.")
                         return@callback
                     }
                     val bestFriend = if (friend.bestFriend) "Best Friend" else "Friend"
@@ -246,7 +255,7 @@ object FriendsAPI {
                         this.color = TextColor.GREEN
                         this.bold = friend.bestFriend
                     }
-                    Text.debug("${friend.name} is your ") {
+                    Text.sendDebug("${friend.name} is your ") {
                         append(friendText)
                         if (friend.nickname != null) {
                             val nicknameText = Text.of(" (Nick: ${friend.nickname})") {
@@ -254,19 +263,24 @@ object FriendsAPI {
                             }
                             append(nicknameText)
                         }
-                    }.send()
+                    }
                 }
             }
             then("clear") {
                 callback {
                     FriendStorage.clear()
-                    Text.debug("Cleared friends list.").send()
+                    Text.sendDebug("Cleared friends list.")
                 }
             }
         }
     }
 
     @Subscription
-    fun onDisconnect(event: ServerDisconnectEvent) = resetListSearch()
+    private fun onPlayerCacheUpdate(event: PlayerCacheUpdate) {
+        FriendStorage.updateIfNeeded(event.uuid, event.name)
+    }
+
+    @Subscription(ServerDisconnectEvent::class)
+    private fun onDisconnect() = resetListSearch()
 
 }

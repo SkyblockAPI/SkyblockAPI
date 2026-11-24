@@ -16,9 +16,11 @@ import tech.thatgravyboat.skyblockapi.api.events.level.PacketReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.time.TickEvent
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.utils.debugToggle
+import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.clearAnd
+import tech.thatgravyboat.skyblockapi.utils.extentions.currentInstant
 import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
+import tech.thatgravyboat.skyblockapi.utils.extentions.since
 import tech.thatgravyboat.skyblockapi.utils.mc.displayName
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.contains
@@ -30,8 +32,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.onClick
-import tech.thatgravyboat.skyblockapi.utils.time.currentInstant
-import tech.thatgravyboat.skyblockapi.utils.time.since
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
@@ -61,7 +61,7 @@ internal object TabListEventHandler {
     private val lastUnknownTabWidgetAlert = mutableMapOf<String, Instant>()
 
     @Subscription(ServerChangeEvent::class)
-    fun onServerChange() {
+    private fun onServerChange() {
         widgets.entries.clearAnd { (widget, old) ->
             TabWidgetChangeEvent(widget, old, emptyList(), emptyList()).post()
         }
@@ -70,9 +70,9 @@ internal object TabListEventHandler {
     }
 
     @Subscription(TickEvent::class)
-    @OnlyOnSkyBlock
     @TimePassed("1s")
-    fun onTick() {
+    @OnlyOnSkyBlock
+    private fun onTick() {
         val newTabList = McClient.tablist.take(TAB_LIST_LENGTH).map { it.displayName }.chunked(TAB_LIST_SECTION)
         val newStringTabList = newTabList.map { list -> list.map { it.stripped } }
 
@@ -83,19 +83,17 @@ internal object TabListEventHandler {
     }
 
     @Subscription
-    fun onTabListChange(event: TabListChangeEvent) {
-        val lines = event.new
-            .filter { it.isNotEmpty() && infoRegex.contains(it.first().stripped) }
-            .map { it.drop(1) }
-            .flatten()
+    private fun onTabListChange(event: TabListChangeEvent) {
+        val lines = event.new.filter { it.isNotEmpty() && infoRegex.contains(it.first().stripped) }.flatMap { it.drop(1) }
 
-        val widgetLines = mutableMapOf<TabWidget, List<Component>>()
+        val widgetLines = mutableMapOf<TabWidget, Pair<List<Component>, MatchResult?>>()
         val currentComponents = mutableListOf<Component>()
         var currentWidget: TabWidget? = null
+        var currentMatchResult: MatchResult? = null
 
         fun flushWidget() {
             if (currentWidget != null && currentComponents.isNotEmpty()) {
-                widgetLines[currentWidget!!] = currentComponents.toList()
+                widgetLines[currentWidget!!] = currentComponents.toList() to currentMatchResult
                 currentComponents.clear()
             }
         }
@@ -104,8 +102,11 @@ internal object TabListEventHandler {
             val stripped = line.stripped
             if (stripped.isBlank()) continue
 
-            val widget = widgetRegexes.entries.find { it.value.matches(stripped) }?.key
-            if (widget == null) {
+            val match = widgetRegexes.entries.firstNotNullOfOrNull { (widget, regex) ->
+                regex.matchEntire(stripped)?.let { widget to it }
+            }
+
+            if (match == null) {
                 if (couldBeUnknownWidgetStart(currentWidget, stripped)) {
                     handleUnknownWidget(stripped)
                 }
@@ -114,16 +115,19 @@ internal object TabListEventHandler {
             }
             flushWidget()
             currentComponents.add(line)
-            currentWidget = widget
+            currentWidget = match.first
+            currentMatchResult = match.second
         }
         flushWidget()
 
-        widgetLines.forEach { (widget, section) ->
+        widgetLines.forEach { (widget, data) ->
+            val section = data.first
+            val matchResult = data.second
             val old = widgets[widget] ?: emptyList()
             val new = section.map { it.stripped }
             if (old != new) {
                 widgets[widget] = new
-                TabWidgetChangeEvent(widget, old, new, section).post()
+                TabWidgetChangeEvent(widget, old, new, section, matchResult).post()
             }
         }
 
@@ -163,7 +167,7 @@ internal object TabListEventHandler {
     }
 
     @Subscription
-    fun onPacketReceived(event: PacketReceivedEvent) {
+    private fun onPacketReceived(event: PacketReceivedEvent) {
         if (event.packet is ClientboundTabListPacket) {
             val oldHeader = this.header
             val oldFooter = this.footer
