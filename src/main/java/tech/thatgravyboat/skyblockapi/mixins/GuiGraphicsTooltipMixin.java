@@ -70,11 +70,15 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         lastStack.set(stack);
     }
 
-    //? if >=26.3 {
+    //? if >=26.4 {
     @WrapMethod(
+        method = "setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;ZI)V"
+    )
+        //?} elif 26.3 {
+    /*@WrapMethod(
         method = "setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;ZZ)V"
     )
-        //?} else {
+    *///?} else {
     /*@WrapOperation(
         method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V",
         at = @At(
@@ -85,24 +89,27 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
     private void onRenderTooltipInternal(
         //? if <=26.2
         //GuiGraphicsExtractor instance,
-        Font font,
-        List<ClientTooltipComponent> list,
-        int x,
-        int y,
+        Font font, List<ClientTooltipComponent> lines,
+        int xo,
+        int yo,
         ClientTooltipPositioner positioner,
         Identifier style,
         boolean replaceExisting,
-        //? if >=26.3
-        boolean extraSpaceAfterFirstLine,
-        Operation<Void> operation
+        //? if 26.3
+        //boolean extraSpaceAfterFirstLine,
+        //? if >=26.4
+        int linesBeforeExtraSpace,
+        Operation<Void> original
     ) {
-        List<ClientTooltipComponent> listCopy = new ArrayList<>(list);
+        List<ClientTooltipComponent> listCopy = new ArrayList<>(lines);
         GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
         event.post(SkyBlockAPI.getEventBus());
-        //? if >=26.3 {
-        operation.call(font, listCopy, x, y, positioner, style, replaceExisting, extraSpaceAfterFirstLine);
-        //?} else
-        //operation.call(instance, font, listCopy, x, y, positioner, style, replaceExisting);
+        //? if >=26.4 {
+        original.call(font, listCopy, xo, yo, positioner, style, replaceExisting, linesBeforeExtraSpace);
+        //?} elif 26.3 {
+        /*original.call(font, listCopy, xo, yo, positioner, style, replaceExisting, extraSpaceAfterFirstLine);
+         *///?} else
+        //original.call(instance, font, listCopy, xo, yo, positioner, style, replaceExisting);
     }
 
     @Override
