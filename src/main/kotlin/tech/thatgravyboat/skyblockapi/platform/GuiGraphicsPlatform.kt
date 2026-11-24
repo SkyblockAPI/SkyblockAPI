@@ -115,11 +115,11 @@ public fun GuiGraphicsExtractor.drawOutline(x: Int, y: Int, width: Int, height: 
 
 public fun GuiGraphicsExtractor.showTooltip(text: Component, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {
     val (x, y) = McClient.mouse
-    this.setTooltipForNextFrame(McFont.self, McFont.split(text, maxWidth), DefaultTooltipPositioner.INSTANCE, x.toInt(), y.toInt(), false)
+    this.setTooltipForNextFrame(McFont.self, McFont.split(text, maxWidth), DefaultTooltipPositioner.INSTANCE, x.toInt(), y.toInt(), force)
 }
 
 public fun GuiGraphicsExtractor.showTooltip(text: Component, x: Int, y: Int, maxWidth: Int = Int.MAX_VALUE, force: Boolean = true) {
-    this.setTooltipForNextFrame(McFont.self, McFont.split(text, maxWidth), DefaultTooltipPositioner.INSTANCE, x, y, false)
+    this.setTooltipForNextFrame(McFont.self, McFont.split(text, maxWidth), DefaultTooltipPositioner.INSTANCE, x, y, force)
 }
 
 public fun GuiGraphicsExtractor.getTranslation(): Vector2f {

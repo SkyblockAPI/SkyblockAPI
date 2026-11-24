@@ -37,7 +37,7 @@ import tech.thatgravyboat.skyblockapi.utils.json.getPath
 public object SimpleItemAPI {
 
     internal val unobtainableIds = SkyBlockAPI.getRepo("skyblockid/unobtainable_ids", SkyBlockId.CODEC.listOf())
-    private val cache = object : RepoItemCache<SkyBlockId>("Items") {
+    private val cache = object : RepoItemCache<SkyBlockId>("SimpleItemApi") {
         override fun create(key: SkyBlockId): LazyItemStack? {
             val clean = key.cleanId.uppercase().takeUnless { it == UNKNOWN } ?: return null
 

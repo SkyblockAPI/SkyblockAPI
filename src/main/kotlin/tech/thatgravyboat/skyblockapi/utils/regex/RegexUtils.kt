@@ -33,8 +33,13 @@ public object RegexUtils {
         return match.groups[group]?.value
     }
 
+    public fun Regex.findGroup(input: Iterator<String>, group: String): String? {
+        while (input.hasNext()) findGroup(input.next(), group)?.let { return it }
+        return null
+    }
+
     public fun Regex.findGroup(input: List<String>, group: String): String? {
-        return input.firstNotNullOfOrNull { findGroup(it, group) }
+        return findGroup(input.iterator(), group)
     }
 
     public fun Regex.findGroups(input: CharSequence, vararg groups: String = arrayOf()): Destructured? {

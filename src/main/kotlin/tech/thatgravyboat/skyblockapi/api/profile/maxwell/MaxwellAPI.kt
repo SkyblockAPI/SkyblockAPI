@@ -179,7 +179,7 @@ public data object MaxwellAPI : ItemDebugCategory {
     internal fun onChat(event: ChatReceivedEvent.Pre) {
         findWhen(event.text) {
             case(selectPowerRegex, "power") { (power) ->
-                val newPower = MaxwellPowers.getByName(power) ?: return@case
+                val newPower = MaxwellPowers.getByName(power)
                 MaxwellStorage.updatePower(newPower)
             }
         }
@@ -211,10 +211,6 @@ public data object MaxwellAPI : ItemDebugCategory {
         val newStone = event.new?.powerstone?.value
         if (newStone != null) run {
             val newMaxwellPower = MaxwellPowers.getByName(newStone)
-            if (newMaxwellPower == null) {
-                debugString(loadoutDebug) { "Unknown power stone $newStone" }
-                return@run
-            }
             MaxwellStorage.updatePower(newMaxwellPower)
             debugString(loadoutDebug) { "Set power stone to ${newMaxwellPower.internalName}" }
         }
@@ -257,8 +253,8 @@ public data object MaxwellAPI : ItemDebugCategory {
             }
 
             in thaumaturgyPowerStonesRegion -> {
-                if (item == ItemStack.EMPTY) return true
-                val power = MaxwellPowers.getByName(item.cleanName) ?: return true
+                if (item.isEmpty) return true
+                val power = MaxwellPowers.getByName(item.cleanName)
                 val last = item.getRawLore().lastOrNull() ?: return true
                 val isSelected = selectedPowerRegex.contains(last)
                 if (isSelected) MaxwellStorage.updatePower(power)
@@ -326,7 +322,7 @@ public data object MaxwellAPI : ItemDebugCategory {
             }
             if (!foundPower) {
                 bagsPowerRegex.findThenNull(line, "power") { (power) ->
-                    val newPower = MaxwellPowers.getByName(power) ?: return@findThenNull
+                    val newPower = MaxwellPowers.getByName(power)
                     MaxwellStorage.updatePower(newPower)
                     item.addDebugString { "Maxwell Power: ${newPower.internalName}" }
                     foundPower = true

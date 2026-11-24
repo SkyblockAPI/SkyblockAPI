@@ -28,6 +28,7 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
+import tech.thatgravyboat.skyblockapi.utils.command.SkyBlockIdArgument
 import tech.thatgravyboat.skyblockapi.utils.extentions.asInt
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterContainerItems
 import tech.thatgravyboat.skyblockapi.utils.extentions.getRawLore
@@ -61,12 +62,21 @@ public object SacksAPI {
     public val sackOfSacksTitleRegex: Regex = RegexGroup.INVENTORY.create("sackapi.sack_of_sacks.title", "Sack of Sacks")
     public val sackAmountRegex: Regex = RegexGroup.INVENTORY.create("sackapi.amount", "Stored: (?<amount>[\\d,.]+)/.*")
 
-    public val sackItems: Map<String, Int> get() = SacksStorage.counts
+    //? < 26.4 {
+    @Deprecated("Use the skyblock id method instead!",
+        ReplaceWith(
+            "SacksStorage.items.mapKeys { (key, _) -> key.skyblockId }",
+            "tech.thatgravyboat.skyblockapi.api.data.stored.SacksStorage"
+        )
+    )
+    public val sackItems: Map<String, Int> get() = SacksStorage.counts.mapKeys { it.key.skyblockId }
+    //? }
+    public val items: Map<SkyBlockId, Int> get() = SacksStorage.counts
     public val ownedSacks: List<ItemStack> get() = SacksStorage.ownedSacks
     public val ownedSackIds: List<SkyBlockId> get() = SacksStorage.ownedSacks.mapNotNull { it.getSkyBlockId() }
 
     // Diff of updates gotten from recent sacks inventory
-    private val recentUpdates: Cache<String, Int> = CacheBuilder.newBuilder()
+    private val recentUpdates: Cache<SkyBlockId, Int> = CacheBuilder.newBuilder()
         .expireAfterWrite(30.seconds.toJavaDuration())
         .build()
 
@@ -80,7 +90,7 @@ public object SacksAPI {
 
             val changedItems = hoverComponents.mapNotNull { component ->
                 addedItemsRegex.findOrNull(component.stripped, "amount", "item") { (amount, item) ->
-                    val id = SimpleItemAPI.findIdByName(item)?.skyblockId ?: return@findOrNull null
+                    val id = SimpleItemAPI.findIdByName(item) ?: return@findOrNull null
                     return@findOrNull id to amount.replace("+", "").toIntValue()
                 }
             }
@@ -96,7 +106,12 @@ public object SacksAPI {
             }
 
             recentUpdates.invalidateAll()
-            SacksChangeEvent(changedItems.map { (item, amount) -> ChangedSackItem(item, amount) }).post()
+            SacksChangeEvent(changedItems.map { (item, amount) -> ChangedSackItem(
+                //? if < 26.4
+                item.skyblockId,
+                amount,
+                item
+            ) }).post()
         }
     }
 
@@ -109,7 +124,7 @@ public object SacksAPI {
         if (event.isInPlayerInventory) return
         if (!sackTitleRegex.matches(event.title)) return
         val item = event.item
-        val id = event.item.getData(DataTypes.ID) ?: return
+        val id = event.item.getData(DataTypes.SKYBLOCK_ID)?.asRoot() ?: return
 
         when (event.title) {
             "Gemstones Sack" -> {
@@ -139,8 +154,8 @@ public object SacksAPI {
     private fun SkyBlockPvOpenedEvent.updateSacks() {
         val sacks = member.getPath("inventory.sacks_counts") as? JsonObject ?: return
 
-        (sacks.keySet() + SacksStorage.counts.keys).forEach { itemId ->
-            val amount = sacks.get(itemId)?.asInt(0)?.coerceAtLeast(0) ?: 0
+        (sacks.keySet().map(SkyBlockId::item) + SacksStorage.counts.keys).forEach { itemId ->
+            val amount = sacks.get(itemId.skyblockId)?.asInt(0)?.coerceAtLeast(0) ?: 0
 
             if (amount == (SacksStorage.counts[itemId] ?: 0)) {
                 return@forEach
@@ -155,7 +170,7 @@ public object SacksAPI {
         }
     }
 
-    private fun updateItem(id: String, amount: Int) {
+    private fun updateItem(id: SkyBlockId, amount: Int) {
         val old = SacksStorage.updateItem(id, amount)
         val diff = amount - old
         if (diff == 0) return
@@ -163,11 +178,11 @@ public object SacksAPI {
         recentUpdates.put(id, current + diff)
     }
 
-    private fun handleGemstones(item: ItemStack, id: String) {
+    private fun handleGemstones(item: ItemStack, id: SkyBlockId) {
         listOf("Rough", "Flawed", "Fine").forEach { name ->
             Regex(" $name: (?<amount>[\\d,.]+) .*").anyMatch(item.getRawLore(), "amount") { (amount) ->
-                val actualId = id.replace("ROUGH", name.uppercase())
-                updateItem(actualId, amount.toIntValue())
+                val actualId = id.skyblockId.replace("ROUGH", name.uppercase())
+                updateItem(SkyBlockId.item(actualId), amount.toIntValue())
             }
         }
     }
@@ -186,16 +201,16 @@ public object SacksAPI {
                 }
             }
 
-            thenCallback("id id", StringArgumentType.string(), IterableSuggestionProvider(sackItems.keys)) {
-                val id = argument<String>("id")
-                val amount = sackItems[id] ?: run {
+            thenCallback("id id", SkyBlockIdArgument(), IterableSuggestionProvider(items.keys)) {
+                val id = argument<SkyBlockId>("id")
+                val amount = items[id] ?: run {
                     Text.sendDebug("This item isn't in sacks!")
                     return@thenCallback
                 }
                 Text.sendDebug("You have $amount of item $id")
             }
-            thenCallback("remove id", StringArgumentType.string(), IterableSuggestionProvider(sackItems.keys)) {
-                val id = argument<String>("id")
+            thenCallback("remove id", SkyBlockIdArgument(), IterableSuggestionProvider(items.keys)) {
+                val id = argument<SkyBlockId>("id")
                 SacksStorage.updateItem(id, 0)
                 Text.sendDebug("Reset $id to 0.")
             }

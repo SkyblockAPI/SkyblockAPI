@@ -2,10 +2,12 @@ package tech.thatgravyboat.skyblockapi.api.events.base.predicates
 
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicate
 import tech.thatgravyboat.skyblockapi.api.events.base.EventPredicateProvider
+import tech.thatgravyboat.skyblockapi.api.events.base.PredicateForEvents
 import tech.thatgravyboat.skyblockapi.api.location.LocationAPI
 import tech.thatgravyboat.skyblockapi.utils.extentions.hasAnnotation
 import java.lang.reflect.Method
 
+@PredicateForEvents
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 public annotation class OnlyOnSkyBlock
