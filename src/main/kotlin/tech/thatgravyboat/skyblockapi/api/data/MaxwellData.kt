@@ -5,7 +5,6 @@ import me.owdding.ktcodecs.Compact
 import me.owdding.ktcodecs.FieldName
 import me.owdding.ktcodecs.FieldNames
 import me.owdding.ktcodecs.GenerateCodec
-import me.owdding.ktcodecs.OptionalBoolean
 import me.owdding.ktcodecs.OptionalIfEmpty
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.skyblockapi.RemoveNextVersion
@@ -34,9 +33,6 @@ public data class MaxwellData(
     var tunings: MutableSet<MaxwellTuning> = mutableSetOf(),
     @FieldName("tuning_templates") @OptionalIfEmpty @Compact
     var tuningTemplates: MutableList<MaxwellTuningTemplate> = mutableListOf(),
-    //? if < 26.4 {
-    @Deprecated("You can no longer consume it.") @FieldName("consumed_rift_prism") @OptionalBoolean(false)
-    var consumedRiftPrism: Boolean = false,//?}
 ) {
     //? if < 26.4 {
     @Deprecated("Use the primary constructor instead", level = WARNING)
@@ -49,7 +45,10 @@ public data class MaxwellData(
         tuningTemplates: MutableList<MaxwellTuningTemplate> = mutableListOf(),
         @IntroducedAt("4.2.40")
         consumedRiftPrism: Boolean = false,
-    ) : this(power, accessoryPower, accessories.associateBy { it.getSkyBlockId()?.let(RepoAccessoryData::getFamilyFromItemId)?.name }.filterKeysNotNull().toMutableMap(), unlockedPowers, tunings, tuningTemplates, consumedRiftPrism)
+    ) : this(power, accessoryPower, accessories.associateBy { it.getSkyBlockId()?.let(RepoAccessoryData::getFamilyFromItemId)?.name }.filterKeysNotNull().toMutableMap(), unlockedPowers, tunings, tuningTemplates)
+
+    @Deprecated("You can no longer consume it.", level = HIDDEN)
+    var consumedRiftPrism: Boolean = false
 
     @JvmName("component3")
     @Deprecated("Use accessories instead", level = HIDDEN)
@@ -63,6 +62,8 @@ public data class MaxwellData(
     @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN)
     var magicalPower: Int by ::accessoryPower
 
+    @Deprecated("Use the other copy method instead", ReplaceWith("accessoryPower"), level = HIDDEN)
+    @Suppress("DEPRECATION")
     public fun copy(
         power: MaxwellPower,
         accessoryPower: Int,
