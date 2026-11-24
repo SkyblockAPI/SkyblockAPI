@@ -372,6 +372,7 @@ public class ComponentStateMachine(
 
     public constructor(parts: List<ComponentStateMachinePart<*>>) : this(CompositeComponentPart(parts))
 
+    /// Same as #match, but it removes legacy formatting codes but keeps the formats
     public fun decompose(component: Component, consumer: (Map<String, FormattedCharSequence>) -> Unit): Boolean {
         val current = StateMachinePosition(parts)
 
