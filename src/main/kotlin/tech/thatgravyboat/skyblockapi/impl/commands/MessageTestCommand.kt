@@ -14,6 +14,7 @@ import tech.thatgravyboat.skyblockapi.impl.suggestion.IterableSuggestionProvider
 import tech.thatgravyboat.skyblockapi.impl.suggestion.LayeredSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
 import tech.thatgravyboat.skyblockapi.utils.json.Json.toData
+import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.imitateServerMessage
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
@@ -40,7 +41,9 @@ internal object MessageTestCommand : Logger by LoggerFactory.getLogger(MessageTe
                     if (it.extension == "json") {
                         val element = it.readText().readJson<JsonElement>()
                         if (element.isJsonArray) {
-                            components[name.removeSuffix(".json")] = element.asJsonArray.map { it.toData(ComponentSerialization.CODEC) ?: return@forEach warn("Failed to load json $name") }
+                            components[name.removeSuffix(".json")] = element.asJsonArray.map { it.toDataOrThrow(ComponentSerialization.CODEC) ?: return@forEach warn("Failed to load json $name") }
+                        } else {
+                            components[name.removeSuffix(".json")] = listOf(element.toDataOrThrow(ComponentSerialization.CODEC) ?: return@forEach warn("Failed to load json $name"))
                         }
                     } else {
                         if (name.endsWith(".lines.raw")) {
