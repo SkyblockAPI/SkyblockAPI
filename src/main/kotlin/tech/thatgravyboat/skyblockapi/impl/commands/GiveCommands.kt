@@ -222,7 +222,6 @@ public object GiveCommands {
     public fun fillAndGiveShulkers(items: List<ItemStack>) {
         val maxAmount = items.size
         items.chunked(28).mapIndexed { index, items ->
-            @Suppress("DEPRECATION")
             when ((index + 10) % 16) {
                 0 -> Items.DYED_SHULKER_BOX.white
                 1 -> Items.DYED_SHULKER_BOX.orange

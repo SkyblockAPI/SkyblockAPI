@@ -199,7 +199,6 @@ public object MiscEventHandler {
         if (new == Blocks.POLISHED_DIORITE && old in MiningBlockFamily.MITHRIL.blocks) return true
         if (new == Blocks.STONE && (old in MiningBlockFamily.VANILLA_ORES.blocks || old in MiningBlockFamily.VANILLA_BLOCKS.blocks)) return true
         if (new == Blocks.RED_SANDSTONE && old == Blocks.RED_SAND) return true
-        @Suppress("DEPRECATION")
         if (new == Blocks.DYED_TERRACOTTA.gray && old == Blocks.MYCELIUM) return true
 
         return false

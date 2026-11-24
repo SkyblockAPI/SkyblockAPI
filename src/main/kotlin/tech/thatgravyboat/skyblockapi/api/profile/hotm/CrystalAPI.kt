@@ -108,7 +108,6 @@ public object CrystalAPI {
     @Subscription
     internal fun onContainerClick(event: SlotClickEvent) {
         if (event.title != "Confirm Process") return
-        @Suppress("DEPRECATION")
         if (event.item.cleanName != "Confirm" || !event.item.`is`(Items.DYED_TERRACOTTA.green)) return
 
         val forgeOutput = event.menuSlots.find { it.index == 16 }?.item?.getSkyBlockId() ?: return

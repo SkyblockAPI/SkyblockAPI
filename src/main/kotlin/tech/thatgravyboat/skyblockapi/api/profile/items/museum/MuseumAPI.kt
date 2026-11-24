@@ -143,7 +143,6 @@ public object MuseumAPI {
         if (event.isInPlayerInventory) return
         if (!donateTitleRegex.match(event.title)) return
         val item = event.item
-        @Suppress("DEPRECATION")
         if (item !in Items.DYED_TERRACOTTA.lime) return
         if (!confirmDonateItem.match(item.cleanName)) return
         val lastIndex = event.slot.index - 1

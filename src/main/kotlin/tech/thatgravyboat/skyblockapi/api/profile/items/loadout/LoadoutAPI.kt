@@ -68,7 +68,6 @@ public data object LoadoutAPI : ItemDebugCategory {
 
                 val name = event.item.cleanName
 
-                @Suppress("DEPRECATION")
                 val locked = event.item.`is`(Items.DYE.red)
                 event.item.addDebugString { "Locked: $locked" }
 
