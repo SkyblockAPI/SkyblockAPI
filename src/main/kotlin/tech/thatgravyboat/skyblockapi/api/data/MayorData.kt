@@ -10,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.toScreamingSnakeCase
 //? if < 26.4
 //import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
-@ConsistentCopyVisibility
 public data class MayorCandidate internal constructor(
     val id: String,
     val candidateName: String,
@@ -92,7 +91,6 @@ public object MayorCandidates {
     }
 }
 
-@ConsistentCopyVisibility
 public data class MayorPerk internal constructor(
     val id: String,
     val perkName: String,

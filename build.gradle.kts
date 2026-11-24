@@ -1,8 +1,11 @@
 @file:OptIn(ExperimentalAbiValidation::class)
 
+import jdk.jfr.internal.JVM.exclude
+import jdk.jfr.internal.JVM.include
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.lang.classfile.Attributes.module
 import java.nio.file.StandardCopyOption
 import kotlin.io.path.copyTo
 import kotlin.io.path.deleteIfExists
@@ -87,6 +90,7 @@ tasks.withType<KotlinCompile>().configureEach {
             "-Xnullability-annotations=@org.jspecify.annotations:ignore",
             // Protected constructors + public methods inside internal classes
             "-Xwarning-level=REDUNDANT_VISIBILITY_MODIFIER:disabled",
+            "-Xconsistent-data-class-copy-visibility",
         )
     }
 }
