@@ -54,6 +54,10 @@ public data class MaxwellData(
     @Deprecated("Use accessories instead", level = HIDDEN)
     public fun oldComponent3(): MutableList<ItemStack> = accessories.values.toMutableList()
 
+    @JvmName("component7")
+    @Deprecated("You can no longer consume rift prism", level = HIDDEN)
+    public fun oldComponent7(): Boolean = false
+
     @get:JvmName("getAccessories")
     @Deprecated("Use accessories instead", level = HIDDEN)
     val accessoryItems: MutableList<ItemStack> get() = accessories.values.toMutableList()
