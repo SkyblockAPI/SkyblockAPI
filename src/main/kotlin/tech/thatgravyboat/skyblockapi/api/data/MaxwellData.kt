@@ -39,7 +39,7 @@ public data class MaxwellData(
     var consumedRiftPrism: Boolean = false,//?}
 ) {
     //? if < 26.4 {
-    @Deprecated("Use the primary constructor instead", level = HIDDEN)
+    @Deprecated("Use the primary constructor instead", level = WARNING)
     public constructor(
         power: MaxwellPower,
         accessoryPower: Int,
@@ -57,11 +57,22 @@ public data class MaxwellData(
 
     @get:JvmName("getAccessories")
     @Deprecated("Use accessories instead", level = HIDDEN)
-    val accessoryItems: MutableList<ItemStack> = mutableListOf()
+    val accessoryItems: MutableList<ItemStack> get() = accessories.values.toMutableList()
 
     @RemoveNextVersion
     @Deprecated("Use accessoryPower instead", ReplaceWith("accessoryPower"), level = HIDDEN)
     var magicalPower: Int by ::accessoryPower
+
+    public fun copy(
+        power: MaxwellPower,
+        accessoryPower: Int,
+        accessories: MutableList<ItemStack>,
+        unlockedPowers: MutableSet<MaxwellPower> = this.unlockedPowers,
+        tunings: MutableSet<MaxwellTuning> = this.tunings,
+        tuningTemplates: MutableList<MaxwellTuningTemplate> = this.tuningTemplates,
+        @IntroducedAt("4.2.40")
+        consumedRiftPrism: Boolean = false,
+    ): MaxwellData = MaxwellData(power, accessoryPower, accessories, unlockedPowers, tunings, tuningTemplates, consumedRiftPrism)
     //?}
 
     public companion object {

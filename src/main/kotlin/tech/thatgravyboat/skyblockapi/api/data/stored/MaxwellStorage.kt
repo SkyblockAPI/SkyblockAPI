@@ -21,7 +21,6 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 import tech.thatgravyboat.skyblockapi.utils.extentions.replaceWith
 import tech.thatgravyboat.skyblockapi.utils.extentions.withoutGetter
 import tech.thatgravyboat.skyblockapi.utils.extentions.copyWithoutLinesAfterRarity
-import kotlin.Boolean
 
 internal object MaxwellStorage {
 
@@ -35,20 +34,18 @@ internal object MaxwellStorage {
                 CodecUtils.mutableSet(getCodec<MaxwellPower>()).optionalFieldOf("unlockedPowers").withoutGetter(),
                 CodecUtils.compactMutableSet(getCodec<MaxwellTuning>()).optionalFieldOf("tunings").withoutGetter(),
                 CodecUtils.compactMutableList(getCodec<MaxwellTuningTemplate>()).optionalFieldOf("tuning_templates").withoutGetter(),
-                getCodec<Boolean>().optionalFieldOf("consumed_rift_prism").withoutGetter(),
-            ).apply(it) { p_power, p_accessoryPower, p_accessories, p_unlockedPowers, p_tunings, p_tuningTemplates, p_consumedRiftPrism ->
+            ).apply(it) { power, accessoryPower, accessories, unlockedPowers, tunings, tuningTemplates ->
                 var obj = MaxwellData()
-                if (p_power.isPresent) obj = obj.copy(power = p_power.get())
-                if (p_accessoryPower.isPresent) obj = obj.copy(accessoryPower = p_accessoryPower.get())
-                if (p_accessories.isPresent) {
-                    obj = obj.copy(accessories = p_accessories.get().associateByNotNull { item ->
+                if (power.isPresent) obj = obj.copy(power = power.get())
+                if (accessoryPower.isPresent) obj = obj.copy(accessoryPower = accessoryPower.get())
+                if (accessories.isPresent) {
+                    obj = obj.copy(accessories = accessories.get().associateByNotNull { item ->
                         item.getSkyBlockId()?.let(RepoAccessoryData::getFamilyFromItemId)?.name
                     }.filterValuesNotNull().toMutableMap())
                 }
-                if (p_unlockedPowers.isPresent) obj = obj.copy(unlockedPowers = p_unlockedPowers.get())
-                if (p_tunings.isPresent) obj = obj.copy(tunings = p_tunings.get())
-                if (p_tuningTemplates.isPresent) obj = obj.copy(tuningTemplates = p_tuningTemplates.get())
-                if (p_consumedRiftPrism.isPresent) obj = obj.copy(consumedRiftPrism = p_consumedRiftPrism.get())
+                if (unlockedPowers.isPresent) obj = obj.copy(unlockedPowers = unlockedPowers.get())
+                if (tunings.isPresent) obj = obj.copy(tunings = tunings.get())
+                if (tuningTemplates.isPresent) obj = obj.copy(tuningTemplates = tuningTemplates.get())
                 obj
             }
         }
