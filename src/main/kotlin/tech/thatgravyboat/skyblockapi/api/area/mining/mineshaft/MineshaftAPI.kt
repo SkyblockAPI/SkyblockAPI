@@ -30,6 +30,7 @@ public object MineshaftAPI {
     private val widgetGroup = RegexGroup.TABLIST_WIDGET.group("mineshaft")
     private val scoreboardGroup = RegexGroup.SCOREBOARD.group("mineshaft")
     private val chatGroup = RegexGroup.CHAT.group("mineshaft")
+    private val corpseChatGroup = chatGroup.group("corpse")
 
     private val scrapRegex = widgetGroup.create(
         "scrap",
@@ -51,24 +52,24 @@ public object MineshaftAPI {
         "found",
         "WOW! You found a Glacite Mineshaft portal!",
     )
-    private val corpseStartRegex = chatGroup.create(
-        "corpse.start",
+    private val corpseStartRegex = corpseChatGroup.create(
+        "start",
         " +(?<type>\\w+) CORPSE LOOT! ?",
     )
-    private val corpseItemRegex = chatGroup.create(
-        "corpse.item",
+    private val corpseItemRegex = corpseChatGroup.create(
+        "item",
         " +(?<item>.+?)(?: x(?<amount>[\\d,]+)|$)",
     )
-    private val enchantmentItemRegex = chatGroup.create(
-        "corpse.item_enchantment",
+    private val enchantmentItemRegex = corpseChatGroup.create(
+        "item_enchantment",
         "Enchanted Book \\((?<name>.*) (?<level>[IVX]+)\\)", // Enchanted Book (Ice Cold I)
     )
-    private val corpseEndRegex = chatGroup.create(
-        "corpse.end",
+    private val corpseEndRegex = corpseChatGroup.create(
+        "end",
         "▬{64}",
     )
-    private val corpseResourceful = chatGroup.create(
-        "corpse.resourceful",
+    private val corpseResourceful = corpseChatGroup.create(
+        "resourceful",
         "LUCKY! Your Resourceful perk saved your key from being consumed!",
     )
 
