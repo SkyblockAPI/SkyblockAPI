@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl.debug
 
 import com.google.gson.JsonParser
+import com.mojang.serialization.Codec
 import me.owdding.dfu.item.LegacyTextFixer
 import me.owdding.ktmodules.Module
 import net.minecraft.client.gui.components.toasts.SystemToast
@@ -20,7 +21,6 @@ import tech.thatgravyboat.skyblockapi.utils.text.CommonText
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 import tech.thatgravyboat.skyblockapi.utils.text.Text.imitateServerMessage
 import tech.thatgravyboat.skyblockapi.utils.text.Text.send
-import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
@@ -64,6 +64,11 @@ public object DebugChat {
     private fun getStored(uuid: UUID?): StoredMessage? = messages.find {
         it.second.id == uuid
     }?.second
+
+    private val COMPONENT_LIST_CODEC = Codec.withAlternative(
+        ComponentSerialization.CODEC.listOf(),
+        ComponentSerialization.CODEC.xmap({ listOf(it) }, { it.first() }),
+    )
 
     @Subscription(receiveCancelled = true)
     internal fun onMessageFirst(event: ChatReceivedEvent.Pre) {
@@ -138,27 +143,29 @@ public object DebugChat {
         }
         event.registerWithCallback("message") {
             val clipboard = McClient.clipboard.takeUnless { it.isEmpty() } ?: return@registerWithCallback
-            val component = runCatching {
-                JsonParser.parseString(clipboard).toData(ComponentSerialization.CODEC)
-            }.getOrNull() ?: LegacyTextFixer.parse(clipboard)
+            val components = runCatching {
+                JsonParser.parseString(clipboard).toData(COMPONENT_LIST_CODEC)
+            }.getOrNull() ?: listOf(LegacyTextFixer.parse(clipboard))
 
-            Text.of {
-                append("<< ")
-                append(component)
-            }.send()
-            sentComponent = component
-            component.imitateServerMessage()
-            val message = getStored(sentMessage)
-            sentMessage = null
+            components.forEach { component ->
+                Text.of {
+                    append("<< ")
+                    append(component)
+                }.send()
+                sentComponent = component
+                component.imitateServerMessage()
+                val message = getStored(sentMessage)
+                sentMessage = null
 
-            if (message == null) return@registerWithCallback
-            if (message.cancelled) {
-                Text.sendDebug("Chat event cancelled!") {
-                    color = TextColor.RED
+                if (message == null) return@registerWithCallback
+                if (message.cancelled) {
+                    Text.sendDebug("Chat event cancelled!") {
+                        color = TextColor.RED
+                    }
                 }
-            }
-            if (message.modified != null) {
-                Text.sendDebug("Chat event modified!")
+                if (message.modified != null) {
+                    Text.sendDebug("Chat event modified!")
+                }
             }
         }
     }
