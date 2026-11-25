@@ -16,6 +16,9 @@ import tech.thatgravyboat.skyblockapi.api.remote.repo.accessory.RepoAccessoryDat
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterKeysNotNull
 
+//? if < 26.4
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
@@ -44,7 +47,14 @@ public data class MaxwellData(
         tuningTemplates: MutableList<MaxwellTuningTemplate> = mutableListOf(),
         @IntroducedAt("4.2.40")
         consumedRiftPrism: Boolean = false,
-    ) : this(power, accessoryPower, accessories.associateBy { it.getSkyBlockId()?.let(RepoAccessoryData::getFamilyFromItemId)?.name }.filterKeysNotNull().toMutableMap(), unlockedPowers, tunings, tuningTemplates)
+    ) : this(
+        power,
+        accessoryPower,
+        accessories.associateBy { it.getSkyBlockId()?.let(RepoAccessoryData::getFamilyFromItemId)?.name }.filterKeysNotNull().toMutableMap(),
+        unlockedPowers,
+        tunings,
+        tuningTemplates,
+    )
 
     @Deprecated("You can no longer consume it.", level = HIDDEN)
     var consumedRiftPrism: Boolean = false
