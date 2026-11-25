@@ -13,5 +13,8 @@ public data class ChangedSackItem internal constructor(
     //? if < 26.4
     //val item: String,
     val diff: Int,
-    val id: SkyBlockId,/*? if < 26.4 >> ',' */ /*= SkyBlockId.item(item)*/
+    //? if >= 26.4
+    val id: SkyBlockId,
+    //? else
+    //val id: SkyBlockId = SkyBlockId.item(item),
 )
