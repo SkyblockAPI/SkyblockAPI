@@ -1,6 +1,7 @@
 package tech.thatgravyboat.skyblockapi.api.location
 
 import me.owdding.ktcodecs.GenerateCodec
+import me.owdding.ktmodules.Module
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.Entity
@@ -31,6 +32,7 @@ public data class SkyBlockBiome(val biome: Identifier) {
 }
 
 @Suppress("unused")
+@Module
 public object SkyBlockBiomes : RegisterableValues<SkyBlockBiome>() {
 
     override val name: String = "biome"

@@ -1,6 +1,5 @@
 package tech.thatgravyboat.skyblockapi.api.remote.hypixel.itemdata
 
-import com.google.gson.JsonArray
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.FieldName
 import me.owdding.ktcodecs.GenerateCodec
@@ -11,22 +10,18 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.Scheduling
 import tech.thatgravyboat.skyblockapi.utils.http.Http
-import tech.thatgravyboat.skyblockapi.utils.json.Json.readJson
-import tech.thatgravyboat.skyblockapi.utils.json.Json.toDataOrThrow
-import java.nio.file.Files
 
 private const val URL = "https://api.hypixel.net/v2/resources/skyblock/items"
 
 @Module
 public object ItemData {
 
-    private val backupData: Map<String, HypixelApiItem> = SkyBlockAPI.mod.findPath("repo/item_data.json").orElseThrow()
-        ?.let(Files::readString)?.readJson<JsonArray>().toDataOrThrow(HypixelApiItem.CODEC.listOf())
-        .associateBy(HypixelApiItem::id)
+    private val backupData: Map<String, HypixelApiItem> = SkyBlockAPI.getRepo("item_data", HypixelApiItem.CODEC.listOf()).associateBy(HypixelApiItem::id)
 
-    private var hypixelData: Map<String, HypixelApiItem> = emptyMap()
+    private var remoteHypixelData: Map<String, HypixelApiItem>? = null
 
     init {
+
         Scheduling.async {
             val response = Http.getResult(
                 URL,
@@ -35,11 +30,12 @@ public object ItemData {
                 Logger.warn("Failed to get item data from URL: $it", it)
                 return@async
             }
-            hypixelData = response.items.associateBy { it.id }
+            remoteHypixelData = response.items.associateBy { it.id }.ifEmpty { null }
         }
     }
 
-    public val data: Map<String, HypixelApiItem> get() = hypixelData.takeUnless { it.isEmpty() } ?: backupData
+    public val data: Map<String, HypixelApiItem>
+        get() = remoteHypixelData ?: backupData
 
     @JvmName("getItemDataFromSkyBlockId")
     public fun getItemData(id: SkyBlockId): HypixelApiItem? = getItemData(id.skyblockId)

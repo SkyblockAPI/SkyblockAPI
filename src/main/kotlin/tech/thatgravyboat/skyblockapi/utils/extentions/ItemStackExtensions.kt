@@ -13,6 +13,8 @@ import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.ItemLore
+import net.minecraft.world.item.component.TooltipDisplay
 import tech.thatgravyboat.skyblockapi.api.datatype.DataType
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
@@ -37,8 +39,11 @@ internal fun ItemStack.computeRawLore(): List<String> {
     return lore.lines().map { it.stripped }
 }
 
-// TODO: make this less strict, some items in GUIs are actually glass panes
-public fun ItemStack.isSkyblockFiller(): Boolean = isEmpty || this in ItemTag.GLASS_PANES
+public val ItemStack.isTooltipHidden: Boolean
+    get() = this.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT).hideTooltip
+
+/** Returns `true` if the item is empty, or it's a glass pane with hidden tooltips */
+public fun ItemStack.isSkyblockFiller(): Boolean = isEmpty || (this in ItemTag.GLASS_PANES && this.isTooltipHidden)
 
 public fun ItemStack.getLore(): List<Component> = this[DataComponents.LORE]?.lines() ?: emptyList()
 
@@ -48,6 +53,22 @@ public val ItemStack.cleanName: String get() = this.getData(DataTypes.CLEAN_NAME
 public fun ItemStack.isSameItem(other: ItemStack?): Boolean {
     if (other == null) return false
     return this == other || ItemStack.isSameItemSameComponents(this, other)
+}
+
+/** Creates a copy of this item up with the same lore until the specified [index] (exclusive) */
+public fun ItemStack.copyWithLoreUntil(index: Int): ItemStack {
+    return this.copy().apply {
+        val lore = get(DataComponents.LORE)?.lines() ?: return@apply
+        val fixedLore = lore.subList(0, index.coerceIn(0..lore.size))
+        set(DataComponents.LORE, ItemLore(fixedLore))
+    }
+}
+
+/** Creates a copy of this item with the same lore until the SkyBlock rarity line (inclusive) if needed. */
+public fun ItemStack.copyWithoutLinesAfterRarity(): ItemStack {
+    val index = getRarityLineIndex()
+    if (index == -1 || index == getRawLore().lastIndex) return this
+    return copyWithLoreUntil(index + 1)
 }
 
 public fun ItemStack.getRarityLineIndex(): Int {

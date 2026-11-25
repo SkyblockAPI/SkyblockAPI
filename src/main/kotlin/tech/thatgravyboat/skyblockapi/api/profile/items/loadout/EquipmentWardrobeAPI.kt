@@ -78,7 +78,6 @@ public object EquipmentWardrobeAPI {
             val id = WARDROBE_SLOTS_PER_PAGE * (currentPage - 1) + index + 1
             var locked = false
 
-            @Suppress("DEPRECATION")
             if (selectStack.item == Items.DYE.red) {
                 locked = true
             } else if (equippedRegex.match(selectStack.hoverName.stripped)) {
