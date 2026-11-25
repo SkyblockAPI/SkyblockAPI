@@ -1181,25 +1181,31 @@ public final class tech/thatgravyboat/skyblockapi/api/data/FriendData$Companion 
 public final class tech/thatgravyboat/skyblockapi/api/data/MaxwellData {
 	public static final field Companion Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData$Companion;
 	public fun <init> ()V
-	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)V
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)V
 	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;Z)V
 	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/Map;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)V
+	public synthetic fun <init> (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/Map;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun component2 ()I
-	public final fun component3 ()Ljava/util/List;
+	public final synthetic fun component3 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/Map;
 	public final fun component4 ()Ljava/util/Set;
 	public final fun component5 ()Ljava/util/Set;
 	public final fun component6 ()Ljava/util/List;
-	public final fun component7 ()Z
+	public final synthetic fun component7 ()Z
 	public final synthetic fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
-	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;Z)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
+	public final synthetic fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;Z)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
+	public final fun copy (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/Map;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
 	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ZILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
+	public static synthetic fun copy$default (Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;ILjava/util/Map;Ljava/util/Set;Ljava/util/Set;Ljava/util/List;ILjava/lang/Object;)Ltech/thatgravyboat/skyblockapi/api/data/MaxwellData;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAccessories ()Ljava/util/List;
+	public final synthetic fun getAccessories ()Ljava/util/List;
+	public final fun getAccessoriesMap ()Ljava/util/Map;
 	public final fun getAccessoryPower ()I
-	public final fun getConsumedRiftPrism ()Z
+	public final synthetic fun getConsumedRiftPrism ()Z
 	public final synthetic fun getMagicalPower ()I
 	public final fun getPower ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
 	public final fun getTuningTemplates ()Ljava/util/List;
@@ -1207,7 +1213,7 @@ public final class tech/thatgravyboat/skyblockapi/api/data/MaxwellData {
 	public final fun getUnlockedPowers ()Ljava/util/Set;
 	public fun hashCode ()I
 	public final fun setAccessoryPower (I)V
-	public final fun setConsumedRiftPrism (Z)V
+	public final synthetic fun setConsumedRiftPrism (Z)V
 	public final synthetic fun setMagicalPower (I)V
 	public final fun setPower (Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;)V
 	public final fun setTuningTemplates (Ljava/util/List;)V
@@ -5882,7 +5888,8 @@ public final class tech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellAPI
 	public fun equals (Ljava/lang/Object;)Z
 	public fun fork (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/impl/debug/ItemDebugCategory;
 	public final fun getAccessories ()Ljava/util/List;
-	public final fun getAccessoryEntries ()Ljava/util/Collection;
+	public final synthetic fun getAccessoryEntries ()Ljava/util/Collection;
+	public final fun getAccessoryFamilies ()Ljava/util/Map;
 	public final fun getAccessoryPower ()I
 	public final fun getConsumedRiftPrism ()Z
 	public final fun getPower ()Ltech/thatgravyboat/skyblockapi/api/profile/maxwell/MaxwellPower;
@@ -6445,7 +6452,9 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/api/SkyBlockId {
 	public static final fun isRune-impl (Ljava/lang/String;)Z
 	public static final fun isUnsafe-impl (Ljava/lang/String;)Z
 	public static final fun toItem-impl (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
+	public static final fun toItemOrNull-impl (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
 	public static final fun toLazyItem-impl (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
+	public static final fun toLazyItemOrNull-impl (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/repo/LazyItemStack;
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun trySafe-BCdM1xk (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
@@ -6839,6 +6848,94 @@ public final class tech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData
 
 public final class tech/thatgravyboat/skyblockapi/api/remote/repo/RepoSlayerData$RepoSlayerData$Companion {
 	public final fun getCODEC ()Lcom/mojang/serialization/Codec;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryFamily : java/util/List, kotlin/jvm/internal/markers/KMappedMarker {
+	public synthetic fun add (ILjava/lang/Object;)V
+	public fun add (ILtech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;)V
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun add (Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;)Z
+	public fun addAll (ILjava/util/Collection;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public synthetic fun addFirst (Ljava/lang/Object;)V
+	public fun addFirst (Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;)V
+	public synthetic fun addLast (Ljava/lang/Object;)V
+	public fun addLast (Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;)V
+	public fun clear ()V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun contains (Ljava/lang/Object;)Z
+	public fun contains (Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;)Z
+	public final fun contains-Sg9Psy0 (Ljava/lang/String;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun flatMapItems ()Lkotlin/sequences/Sequence;
+	public synthetic fun get (I)Ljava/lang/Object;
+	public fun get (I)Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;
+	public final fun get-Sg9Psy0 (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;
+	public final fun getMaxTier ()I
+	public final fun getName ()Ljava/lang/String;
+	public fun getSize ()I
+	public final fun getTiers ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun indexOf (Ljava/lang/Object;)I
+	public fun indexOf (Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;)I
+	public fun isEmpty ()Z
+	public final fun isMax-Sg9Psy0 (Ljava/lang/String;)Z
+	public fun iterator ()Ljava/util/Iterator;
+	public final fun lastIndexOf (Ljava/lang/Object;)I
+	public fun lastIndexOf (Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;)I
+	public fun listIterator ()Ljava/util/ListIterator;
+	public fun listIterator (I)Ljava/util/ListIterator;
+	public synthetic fun remove (I)Ljava/lang/Object;
+	public fun remove (I)Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;
+	public fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public synthetic fun removeFirst ()Ljava/lang/Object;
+	public fun removeFirst ()Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;
+	public synthetic fun removeLast ()Ljava/lang/Object;
+	public fun removeLast ()Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;
+	public fun replaceAll (Ljava/util/function/UnaryOperator;)V
+	public fun retainAll (Ljava/util/Collection;)Z
+	public synthetic fun set (ILjava/lang/Object;)Ljava/lang/Object;
+	public fun set (ILtech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;)Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;
+	public final fun size ()I
+	public fun sort (Ljava/util/Comparator;)V
+	public fun subList (II)Ljava/util/List;
+	public final fun tierOf-Sg9Psy0 (Ljava/lang/String;)I
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier : java/lang/Comparable, java/util/Set, kotlin/jvm/internal/markers/KMappedMarker {
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun add-Sg9Psy0 (Ljava/lang/String;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun clear ()V
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun compareTo (Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryTier;)I
+	public final fun contains (Ljava/lang/Object;)Z
+	public fun contains-Sg9Psy0 (Ljava/lang/String;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public final fun getItems ()Ljava/util/Set;
+	public fun getSize ()I
+	public final fun getTier ()I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
+	public fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public final fun size ()I
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+}
+
+public final class tech/thatgravyboat/skyblockapi/api/remote/repo/accessory/RepoAccessoryData {
+	public static final field INSTANCE Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/RepoAccessoryData;
+	public final fun getFamilies ()Ljava/util/Map;
+	public final fun getFamilyFromItemId-Sg9Psy0 (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryFamily;
+	public final fun getFamilyFromItemName (Ljava/lang/String;)Ltech/thatgravyboat/skyblockapi/api/remote/repo/accessory/AccessoryFamily;
 }
 
 public final class tech/thatgravyboat/skyblockapi/api/repo/LazyItemStack {
@@ -10135,6 +10232,8 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/InstantExtens
 public final class tech/thatgravyboat/skyblockapi/utils/extentions/ItemStackExtensionsKt {
 	public static final fun ItemStack (Lnet/minecraft/world/item/Item;Lkotlin/jvm/functions/Function1;)Lnet/minecraft/world/item/ItemStack;
 	public static final fun contains (Lnet/minecraft/world/item/Item;Lnet/minecraft/world/item/ItemStack;)Z
+	public static final fun copyWithLoreUntil (Lnet/minecraft/world/item/ItemStack;I)Lnet/minecraft/world/item/ItemStack;
+	public static final fun copyWithoutLinesAfterRarity (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/ItemStack;
 	public static final fun createSkull (Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/world/item/ItemStack;
 	public static final fun createSkull (Ljava/lang/String;)Lnet/minecraft/world/item/ItemStack;
 	public static final fun filterContainerItems (Ljava/util/List;)Ljava/util/List;
@@ -10156,6 +10255,7 @@ public final class tech/thatgravyboat/skyblockapi/utils/extentions/ItemStackExte
 	public static final fun isNotEmpty (Lnet/minecraft/world/item/ItemStack;)Z
 	public static final fun isSameItem (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z
 	public static final fun isSkyblockFiller (Lnet/minecraft/world/item/ItemStack;)Z
+	public static final fun isTooltipHidden (Lnet/minecraft/world/item/ItemStack;)Z
 	public static final fun set (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;
 	public static final fun set (Ltech/thatgravyboat/skyblockapi/utils/builders/ItemBuilder;Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)V
 	public static final fun takeUnlessEmpty (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/ItemStack;
