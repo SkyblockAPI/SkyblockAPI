@@ -65,6 +65,9 @@ public object DebugChat {
         it.second.id == uuid
     }?.second
 
+    /**
+     * Allows parsing a list of component JSONs and a singular JSON at the same time
+     */
     private val COMPONENT_LIST_CODEC = Codec.withAlternative(
         ComponentSerialization.CODEC.listOf(),
         ComponentSerialization.CODEC.xmap({ listOf(it) }, { it.first() }),
