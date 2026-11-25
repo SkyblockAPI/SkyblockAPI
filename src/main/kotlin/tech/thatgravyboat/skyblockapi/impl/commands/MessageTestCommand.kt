@@ -41,9 +41,9 @@ internal object MessageTestCommand : Logger by LoggerFactory.getLogger(MessageTe
                     if (it.extension == "json") {
                         val element = it.readText().readJson<JsonElement>()
                         if (element.isJsonArray) {
-                            components[name.removeSuffix(".json")] = element.asJsonArray.map { it.toDataOrThrow(ComponentSerialization.CODEC) ?: return@forEach warn("Failed to load json $name") }
+                            components[name.removeSuffix(".json")] = element.asJsonArray.map { it.toDataOrThrow(ComponentSerialization.CODEC) }
                         } else {
-                            components[name.removeSuffix(".json")] = listOf(element.toDataOrThrow(ComponentSerialization.CODEC) ?: return@forEach warn("Failed to load json $name"))
+                            components[name.removeSuffix(".json")] = listOf(element.toDataOrThrow(ComponentSerialization.CODEC))
                         }
                     } else {
                         if (name.endsWith(".lines.raw")) {
