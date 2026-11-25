@@ -63,16 +63,15 @@ public object SacksAPI {
     public val sackAmountRegex: Regex = RegexGroup.INVENTORY.create("sackapi.amount", "Stored: (?<amount>[\\d,.]+)/.*")
 
     //? if < 26.4 {
-    @Deprecated(
+    /*@Deprecated(
         "Use the skyblock id method instead!",
         ReplaceWith(
             "SacksStorage.items.mapKeys { (key, _) -> key.skyblockId }",
             "tech.thatgravyboat.skyblockapi.api.data.stored.SacksStorage"
         ),
     )
-    public val sackItems: Map<String, Int> get() = SacksStorage.counts.mapKeys { it.key.skyblockId }
+    public val sackItems: Map<String, Int> get() = SacksStorage.counts.mapKeys { it.key.skyblockId }*///? }
 
-    //? }
     public val items: Map<SkyBlockId, Int> get() = SacksStorage.counts
     public val ownedSacks: List<ItemStack> get() = SacksStorage.ownedSacks
     public val ownedSackIds: List<SkyBlockId> get() = SacksStorage.ownedSacks.mapNotNull { it.getSkyBlockId() }
@@ -112,7 +111,7 @@ public object SacksAPI {
                 changedItems.map { (item, amount) ->
                     ChangedSackItem(
                         //? if < 26.4
-                        item.skyblockId,
+                        //item.skyblockId,
                         amount,
                         item,
                     )

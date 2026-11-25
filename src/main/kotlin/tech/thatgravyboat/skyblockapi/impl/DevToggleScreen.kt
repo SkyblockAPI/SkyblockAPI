@@ -31,14 +31,14 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.underlined
 
 //? if < 26.4
-import tech.thatgravyboat.skyblockapi.utils.DevUtils as OldDevUtils
+//import tech.thatgravyboat.skyblockapi.utils.DevUtils as OldDevUtils
 
 // im sorry to whoever has to read this and understand this
 internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
 
     val debugEntries: List<DebugEntry> = buildList {
         //? if < 26.4
-        @Suppress("DEPRECATION") addAll(OldDevUtils.allDevUtils.flatMap { it.debugEntries.values.map { it.toNew() } })
+        //@Suppress("DEPRECATION") addAll(OldDevUtils.allDevUtils.flatMap { it.debugEntries.values.map { it.toNew() } })
         addAll(DevUtils.allDevUtils.flatMap { it.debugEntries.values })
     }
 
@@ -370,8 +370,8 @@ internal class DevToggleScreen : Screen(CommonComponents.EMPTY) {
             }
         }
 
-        override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
-            super.extractWidgetRenderState(graphics, mouseX, mouseY, a)
+        override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor) {
+            super.extractWidgetRenderState(graphics)
             this.handleCursor(graphics) // we call this so the cursor actually changes when hovering
         }
 

@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class CommunityCenterData(
+internal data class CommunityCenterData(
     var rank: FameRank = FameRanks.NEW_PLAYER,
     var gems: Long = 0,
     val bitsAvailable: MutableMap<String, Long> = mutableMapOf(),

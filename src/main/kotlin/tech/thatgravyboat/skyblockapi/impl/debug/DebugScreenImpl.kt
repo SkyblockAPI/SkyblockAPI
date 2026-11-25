@@ -75,12 +75,12 @@ internal class DebugScreenImpl<T>(
     }
 
 
-    override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
+    override fun extractBackground(graphics: GuiGraphicsExtractor) {
         super.extractTransparentBackground(graphics)
     }
 
-    override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
-        super.extractRenderState(graphics, mouseX, mouseY, a)
+    override fun extractRenderState(graphics: GuiGraphicsExtractor) {
+        super.extractRenderState(graphics)
         val messages = filteredMessages
         val status = Text.join(this.title, ": ${messages.size}")
         graphics.drawString(status, (this.width - McFont.width(status)) / 2, 5)
@@ -94,7 +94,7 @@ internal class DebugScreenImpl<T>(
             val (timestamp, message) = messages[index]
             val y = 20 + (index - scroll) * 10
             //~ if >= 26.4 'mouseY' -> 'graphics.mouseY()'
-            val hovered = mouseY in y until y + 10
+            val hovered = graphics.mouseY() in y until y + 10
 
             if (hovered) {
                 graphics.drawFilledBox(0, y, this.width, 10, 0x80FFFFFF.toInt())

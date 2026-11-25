@@ -6,7 +6,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.suggestions.SuggestionContext
 import net.minecraft.world.item.ItemStack
 import tech.thatgravyboat.repolib.api.RepoAPI
 import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
@@ -59,23 +59,23 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
 //? if < 26.4 {
-import tech.thatgravyboat.skyblockapi.utils.toOld
+/*import tech.thatgravyboat.skyblockapi.utils.toOld
 import tech.thatgravyboat.skyblockapi.utils.DebugToggle as OldDebugToggle
-//?}
+*///?}
 
 @Module
 public data object AttributeAPI : ItemDebugCategory {
     //? if < 26.4
-    @get:JvmName("debugToggle")
+    //@get:JvmName("debugToggle")
     private val debugToggle: DebugToggle = debugToggle("attribute_api", "Adds debug information in both the hunting box and the attribute menu that shows stored data.")
     private val isDebugEnabled by debugToggle
 
     //? if < 26.4 {
-    @get:JvmName("getDebugToggle")
+    /*@get:JvmName("getDebugToggle")
     @Suppress("ObjectPropertyName", "DEPRECATION")
     @Deprecated("Should never have been public", level = DeprecationLevel.HIDDEN)
     public val _toggle: OldDebugToggle by lazy { debugToggle.toOld() }
-    //? }
+    *///? }
 
     private val attributeRarities = SkyBlockRarity.COMMON.rangeTo(SkyBlockRarity.LEGENDARY)
 
@@ -420,7 +420,7 @@ public data object AttributeAPI : ItemDebugCategory {
                 },
                 SuggestionProvider<FabricClientCommandSource> { _, builder ->
                     if (!RepoAPI.isInitialized()) return@SuggestionProvider builder.buildFuture()
-                    SharedSuggestionProvider.suggest(
+                    SuggestionContext.suggest(
                         buildSet {
                             for (value in _attributeMap.keys.mapNotNull { SkyBlockAttributesRepo.get(it.cleanId) }) {
                                 add(value.id.lowercase())
@@ -562,7 +562,7 @@ public data class AttributeData(
     var lastUpdated: Instant = Instant.DISTANT_PAST,
 ) {
     //~ if >= 26.4 'public' -> 'internal'
-    public fun updated() {
+    internal fun updated() {
         lastUpdated = currentInstant()
     }
 

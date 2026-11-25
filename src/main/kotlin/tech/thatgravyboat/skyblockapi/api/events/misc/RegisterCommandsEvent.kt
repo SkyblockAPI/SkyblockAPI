@@ -10,7 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.CommandBuildContext
-import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.suggestions.SuggestionContext
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.command.dsl.CommandBuilder0
 import tech.thatgravyboat.skyblockapi.utils.command.dsl.CommandClass
@@ -30,9 +30,9 @@ public data class BuilderDsl<Consumer>(val consumer: (Consumer) -> Unit) {
 public class RegisterCommandsEvent(private val dispatcher: CommandDispatcher<FabricClientCommandSource>, public val buildContext: CommandBuildContext?) : SkyBlockEvent() {
 
     //? if < 26.4 {
-    @Deprecated("Also provide build context")
+    /*@Deprecated("Also provide build context")
     public constructor(dispatcher: CommandDispatcher<FabricClientCommandSource>) : this(dispatcher, null)
-    //?}
+    *///?}
 
     public fun register(command: LiteralArgumentBuilder<FabricClientCommandSource>) {
         dispatcher.register(command)
@@ -109,7 +109,7 @@ public open class CommandBuilder<B : ArgumentBuilder<FabricClientCommandSource, 
     ): CommandBuilder<B> = then(
         name,
         argument,
-        { _, builder -> SharedSuggestionProvider.suggest(suggestions, builder) },
+        { _, builder -> SuggestionContext.suggest(suggestions, builder) },
         action,
     )
 

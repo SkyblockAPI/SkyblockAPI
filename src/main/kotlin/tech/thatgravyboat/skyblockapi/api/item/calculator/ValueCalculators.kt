@@ -7,12 +7,12 @@ import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.hypixel.pricing.Pricing
 
 //~ if >= 26.4 'public' -> 'internal'
-public interface Calculator {
+internal interface Calculator {
     public fun calculate(id: String, stack: ItemStack): List<CalculationEntry>?
 }
 
 //~ if >= 26.4 'public' -> 'internal'
-public interface SingleEntryCalculator : Calculator {
+internal interface SingleEntryCalculator : Calculator {
 
     override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? = getEntry(id, stack)?.let { listOf(it) }
 
@@ -20,7 +20,7 @@ public interface SingleEntryCalculator : Calculator {
 }
 
 //~ if >= 26.4 'public' -> 'internal'
-public interface MultiEntryCalculator : Calculator {
+internal interface MultiEntryCalculator : Calculator {
 
     override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? {
         val entries = getEntries(id, stack) ?: return null
@@ -31,7 +31,7 @@ public interface MultiEntryCalculator : Calculator {
 }
 
 //~ if >= 26.4 'public' -> 'internal'
-public open class DataTypeCalculator(private val dataType: DataType<String>) : SingleEntryCalculator {
+internal open class DataTypeCalculator(private val dataType: DataType<String>) : SingleEntryCalculator {
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
         val data = stack.getData(dataType) ?: return null
         return ItemEntry(data)
@@ -39,7 +39,7 @@ public open class DataTypeCalculator(private val dataType: DataType<String>) : S
 }
 
 //~ if >= 26.4 'public' -> 'internal'
-public open class DataTypeListCalculator(private val dataType: DataType<List<String>>) : MultiEntryCalculator {
+internal open class DataTypeListCalculator(private val dataType: DataType<List<String>>) : MultiEntryCalculator {
     override fun getEntries(id: String, stack: ItemStack): List<CalculationEntry>? {
         val data = stack.getData(dataType) ?: return null
         if (data.isEmpty()) return null
@@ -49,7 +49,7 @@ public open class DataTypeListCalculator(private val dataType: DataType<List<Str
 }
 
 //~ if >= 26.4 'public' -> 'internal'
-public open class DataTypesCalculator(private vararg val dataTypes: DataType<String>) : Calculator {
+internal open class DataTypesCalculator(private vararg val dataTypes: DataType<String>) : Calculator {
     override fun calculate(id: String, stack: ItemStack): List<CalculationEntry>? {
         val data = dataTypes.mapNotNull { stack.getData(it) }.takeUnless { it.isEmpty() } ?: return null
 
@@ -58,7 +58,7 @@ public open class DataTypesCalculator(private vararg val dataTypes: DataType<Str
 }
 
 //~ if >= 26.4 'public' -> 'internal'
-public open class IntDataTypeCalculator(private val dataType: DataType<Int>, private val itemId: String) : SingleEntryCalculator {
+internal open class IntDataTypeCalculator(private val dataType: DataType<Int>, private val itemId: String) : SingleEntryCalculator {
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
         val amount = stack.getData(dataType) ?: return null
 
@@ -67,7 +67,7 @@ public open class IntDataTypeCalculator(private val dataType: DataType<Int>, pri
 }
 
 //~ if >= 26.4 'public' -> 'internal'
-public open class IntDataTypeWithLimitCalculator(private val dataType: DataType<Int>, private val itemId: String, private val limit: Int) :
+internal open class IntDataTypeWithLimitCalculator(private val dataType: DataType<Int>, private val itemId: String, private val limit: Int) :
     SingleEntryCalculator {
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
         val amount = stack.getData(dataType) ?: return null
@@ -77,7 +77,7 @@ public open class IntDataTypeWithLimitCalculator(private val dataType: DataType<
 }
 
 //~ if >= 26.4 'public' -> 'internal'
-public open class BoolDataTypeCalculator(private val dataType: DataType<Boolean>, private val itemId: String) : SingleEntryCalculator {
+internal open class BoolDataTypeCalculator(private val dataType: DataType<Boolean>, private val itemId: String) : SingleEntryCalculator {
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
         val value = stack.getData(dataType) ?: return null
 
@@ -93,7 +93,7 @@ internal open class BoolDataTypeItemListCalculator(private val dataType: DataTyp
 }
 
 //~ if >= 26.4 'public' -> 'internal'
-public open class SkyBlockIdDataTypeCalculator(private val dataType: DataType<SkyBlockId>) : SingleEntryCalculator {
+internal open class SkyBlockIdDataTypeCalculator(private val dataType: DataType<SkyBlockId>) : SingleEntryCalculator {
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
         val value = stack.getData(dataType) ?: return null
 

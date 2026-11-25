@@ -23,11 +23,11 @@ internal open class Overlay : Screen(Component.empty()) {
         super.repositionElements()
     }
 
-    override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
+    override fun extractBackground(graphics: GuiGraphicsExtractor) {
         //? if >= 26.4
-        //graphics.extractWithoutMouse { this.background?.extractRenderStateWithTooltipAndSubtitles(graphics) }
+        graphics.extractWithoutMouse { this.background?.extractRenderStateWithTooltipAndSubtitles(graphics) }
         //? else
-        this.background?.extractRenderStateWithTooltipAndSubtitles(graphics, -1, -1, a)
+        //this.background?.extractRenderStateWithTooltipAndSubtitles(graphics, -1, -1, a)
         graphics.nextStratum()
     }
 

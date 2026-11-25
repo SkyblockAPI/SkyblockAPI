@@ -127,14 +127,14 @@ public enum class TrophyFishType(
     }
 
     //? if < 26.4
-    @Suppress("DEPRECATION")
+    //@Suppress("DEPRECATION")
     public fun getItem(tier: TrophyFishTier): ItemStack = getItem(TrophyTier.valueOf(tier.name))
 
     public fun getId(tier: TrophyTier, default: TrophyTier = TrophyTier.BRONZE): SkyBlockId =
         SkyBlockId.item("${this.internalName}_${tier.takeUnless { it == TrophyTier.NONE } ?: default}")
 
     //? if < 26.4
-    @Suppress("DEPRECATION")
+    //@Suppress("DEPRECATION")
     public fun getId(tier: TrophyFishTier, default: TrophyFishTier = TrophyFishTier.BRONZE): SkyBlockId =
         getId(TrophyTier.valueOf(tier.name), TrophyTier.valueOf(default.name))
 

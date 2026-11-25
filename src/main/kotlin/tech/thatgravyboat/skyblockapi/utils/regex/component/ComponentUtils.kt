@@ -12,7 +12,7 @@ internal object ComponentUtils {
         var current = 0
 
         //~ if >= 26.4 'visit' -> 'visitUnbounded'
-        component.visit(
+        component.visitUnbounded(
             { style, part ->
                 val length = part.stripColor().length
                 if (current + length <= start) {

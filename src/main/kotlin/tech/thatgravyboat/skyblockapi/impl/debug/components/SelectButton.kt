@@ -79,11 +79,11 @@ internal class SelectButton<T>(width: Int, height: Int) : AbstractButton(0, 0, w
 
     override fun updateWidgetNarration(output: NarrationElementOutput?) {}
 
-    override fun extractContents(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
+    override fun extractContents(graphics: GuiGraphicsExtractor) {
         val text = this.getMessage()
 
         //~ if >= 26.4 'isHoveredOrFocused' -> 'isHighlighted'
-        graphics.drawSprite(SPRITES.get(this.active, this.isHoveredOrFocused), this.x, this.y, this.width, this.height)
+        graphics.drawSprite(SPRITES.get(this.active, this.isHighlighted), this.x, this.y, this.width, this.height)
         graphics.drawString(text, this.x + (this.width - text.width) / 2, this.y + (this.height - 8) / 2, shadow = true)
     }
 
@@ -108,8 +108,8 @@ internal class SelectButton<T>(width: Int, height: Int) : AbstractButton(0, 0, w
             return mouseX.toInt() >= this.x && mouseX.toInt() <= this.x + button.width && mouseY.toInt() >= this.y && mouseY.toInt() <= this.y + SELECT_BUTTON_MAX_HEIGHT
         }
 
-        override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
-            super.extractBackground(graphics, mouseX, mouseY, a)
+        override fun extractBackground(graphics: GuiGraphicsExtractor) {
+            super.extractBackground(graphics)
 
             val height = min(
                 this.button.entries.size * SELECT_BUTTON_HEIGHT + (this.button.entries.size - 1) * SELECT_BUTTON_SPACING + SELECT_BUTTON_PADDING * 2,
@@ -132,7 +132,7 @@ internal class SelectButton<T>(width: Int, height: Int) : AbstractButton(0, 0, w
             }
         }
 
-        override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
+        override fun extractRenderState(graphics: GuiGraphicsExtractor) {
             graphics.scissor(x, y, button.width, SELECT_BUTTON_MAX_HEIGHT) {
                 for (i in 0 until SELECT_BUTTON_MAX_ENTRIES) {
                     val index = i + offset
@@ -141,7 +141,8 @@ internal class SelectButton<T>(width: Int, height: Int) : AbstractButton(0, 0, w
                     val entry = button.entries[index]
                     val entryY = y + SELECT_BUTTON_PADDING + i * SELECT_BUTTON_HEIGHT + i * SELECT_BUTTON_SPACING
                     //~ if >= 26.4 'mouseY' -> 'graphics.mouseY()', 'mouseX' -> 'graphics.mouseX()'
-                    val hovered = mouseX >= x && mouseX <= x + button.width && mouseY >= entryY && mouseY <= entryY + SELECT_BUTTON_HEIGHT
+                    val hovered =
+                        graphics.mouseX() >= x && graphics.mouseX() <= x + button.width && graphics.mouseY() >= entryY && graphics.mouseY() <= entryY + SELECT_BUTTON_HEIGHT
 
                     val text = Text.join(if (entry.selected) entry.selectedText else entry.unselectedText) {
                         this.underlined = hovered

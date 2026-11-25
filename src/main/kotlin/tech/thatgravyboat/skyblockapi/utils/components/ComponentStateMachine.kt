@@ -179,9 +179,9 @@ public data class ForkPart(
 ) : ComponentStateMachinePart<ForkPart.State> {
 
     //? if < 26.4 {
-    @Deprecated("Only for binary compat", level = DeprecationLevel.HIDDEN)
+    /*@Deprecated("Only for binary compat", level = DeprecationLevel.HIDDEN)
     public constructor(forks: List<StateMachinePosition<*>>) : this(forks.map { it.part }, Unit)
-    //?}
+    *///?}
 
     public data class State(
         var state: StateMachinePosition<*>? = null,
@@ -210,13 +210,13 @@ public data class ForkPart(
 
 public data class OptionalPart(
     //? if <= 26.3
-    @get:JvmName("newPart")
+    //@get:JvmName("newPart")
     val part: ComponentStateMachinePart<*>,
 ) : ComponentStateMachinePart<StateMachinePosition<*>> {
     public constructor(part: StateMachinePosition<*>) : this(part.part)
 
     //? if <= 26.3
-    @get:JvmName("part")
+    //@get:JvmName("part")
     val _part: StateMachinePosition<out Any?> get() = StateMachinePosition(part)
 
     override fun createState(): StateMachinePosition<*> = StateMachinePosition(part)
@@ -427,16 +427,16 @@ public class ComponentStateMachine(
         }
         context(sink) {
             //~ if >= 26.4 'visit' -> 'visitUnbounded' {
-            val isSuccess = component.visit(
+            val isSuccess = component.visitUnbounded(
                 { style, contents ->
                     for (char in contents) {
                         val result = current.tryConsume(char, style)
                         if (result.continuation && result.match) {
                             continue
                         }
-                        return@visit Optional.of(false)
+                        return@visitUnbounded Optional.of(false)
                     }
-                    return@visit Optional.empty()
+                    return@visitUnbounded Optional.empty()
                 },
                 EMPTY,
             )

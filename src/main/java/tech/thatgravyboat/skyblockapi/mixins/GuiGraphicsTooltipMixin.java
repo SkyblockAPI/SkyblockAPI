@@ -71,14 +71,14 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
     }
 
     //? if >=26.4 {
-    /*@WrapMethod(
+    @WrapMethod(
         method = "setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;ZI)V"
     )
-        *///?} elif 26.3 {
-    @WrapMethod(
+        //?} elif 26.3 {
+    /*@WrapMethod(
         method = "setTooltipForNextFrameInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;ZZ)V"
     )
-        //?} else {
+        *///?} else {
     /*@WrapOperation(
         method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V",
         at = @At(
@@ -96,19 +96,19 @@ public class GuiGraphicsTooltipMixin implements GuiGraphicsHook {
         Identifier style,
         boolean replaceExisting,
         //? if 26.3
-        boolean extraSpaceAfterFirstLine,
+        //boolean extraSpaceAfterFirstLine,
         //? if >=26.4
-        //int linesBeforeExtraSpace,
+        int linesBeforeExtraSpace,
         Operation<Void> original
     ) {
         List<ClientTooltipComponent> listCopy = new ArrayList<>(lines);
         GatherItemTooltipComponentsEvent event = new GatherItemTooltipComponentsEvent(lastStack.get(), listCopy);
         event.post(SkyBlockAPI.getEventBus());
         //? if >=26.4 {
-        /*original.call(font, listCopy, xo, yo, positioner, style, replaceExisting, linesBeforeExtraSpace);
-         *///?} elif 26.3 {
-        original.call(font, listCopy, xo, yo, positioner, style, replaceExisting, extraSpaceAfterFirstLine);
-        //?} else
+        original.call(font, listCopy, xo, yo, positioner, style, replaceExisting, linesBeforeExtraSpace);
+        //?} elif 26.3 {
+        /*original.call(font, listCopy, xo, yo, positioner, style, replaceExisting, extraSpaceAfterFirstLine);
+         *///?} else
         //original.call(instance, font, listCopy, xo, yo, positioner, style, replaceExisting);
     }
 

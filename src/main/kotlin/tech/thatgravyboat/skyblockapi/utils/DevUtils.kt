@@ -3,13 +3,13 @@
 package tech.thatgravyboat.skyblockapi.utils
 
 //? if < 26.4 {
-import com.mojang.brigadier.arguments.StringArgumentType
+/*import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.suggestion.SuggestionProvider
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.suggestions.SuggestionContext
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
@@ -563,7 +563,7 @@ public abstract class DevUtils {
                         val select = context.debugEntry<DebugSelect<*>>("select")
 
                         select.states().forEach {
-                            if (SharedSuggestionProvider.matchesSubStr(builder.remaining, it)) {
+                            if (SuggestionContext.matchesSubStr(builder.remaining, it)) {
                                 builder.suggest(it)
                             }
                         }
@@ -602,7 +602,7 @@ public abstract class DevUtils {
                             val multi = context.debugEntry<DebugMultiSelect<*>>("multiselect")
 
                             multi.states().forEach {
-                                if (SharedSuggestionProvider.matchesSubStr(builder.remaining, it)) {
+                                if (SuggestionContext.matchesSubStr(builder.remaining, it)) {
                                     builder.suggest(it)
                                 }
                             }
@@ -700,7 +700,7 @@ public abstract class DevUtils {
 private data class DevToolSuggestionProvider<T>(val utils: Iterable<T>, val location: T.() -> Identifier, val description: T.() -> String) :
     SuggestionProvider<FabricClientCommandSource> {
     override fun getSuggestions(context: CommandContext<FabricClientCommandSource>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
-        fun matches(arg: String): Boolean = SharedSuggestionProvider.matchesSubStr(builder.remaining.lowercase(), arg)
+        fun matches(arg: String): Boolean = SuggestionContext.matchesSubStr(builder.remaining.lowercase(), arg)
 
 
         utils.forEach {
@@ -712,4 +712,4 @@ private data class DevToolSuggestionProvider<T>(val utils: Iterable<T>, val loca
         return builder.buildFuture()
     }
 }
-//?}
+*///?}
