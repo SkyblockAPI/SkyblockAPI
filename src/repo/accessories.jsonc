@@ -2,6 +2,7 @@
 * Temporarily hardcoded, should use remote repo later on
 * Needs to get manually pasted from https://repo.owdding.me/accessories/families.json
 */
+
 [
     {
         "family": "bits",
@@ -60,6 +61,10 @@
             "item:sharp_shark_tooth_necklace",
             "item:razor_sharp_shark_tooth_necklace"
         ]
+    },
+    {
+        "family": "catacombs_gobbler",
+        "tiers": "item:catacombs_gobbler"
     },
     {
         "family": "general_medallion",

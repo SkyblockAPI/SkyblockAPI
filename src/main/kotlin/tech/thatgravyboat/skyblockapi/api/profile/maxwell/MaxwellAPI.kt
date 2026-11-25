@@ -69,10 +69,9 @@ public data object MaxwellAPI : ItemDebugCategory {
     @Suppress("DEPRECATION")
     val accessoryEntries: Collection<AccessoryBagEntry> get() = emptyList()//?}
 
-    //~ if >= 26.4 'List<' -> 'Collection<' {
+    //~ if >= 26.4 'List' -> 'Collection'
     val accessories: List<ItemStack>
         get() = accessoryFamilies.values/*? if < 26.4 */.toList()
-    //~}
 
     val accessoryFamilies: Map<String, ItemStack>
         get() = MaxwellStorage.accessories

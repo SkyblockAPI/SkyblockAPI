@@ -39,11 +39,11 @@ internal fun ItemStack.computeRawLore(): List<String> {
     return lore.lines().map { it.stripped }
 }
 
-public val ItemStack.hiddenTooltip: Boolean
+public val ItemStack.isTooltipHidden: Boolean
     get() = this.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT).hideTooltip
 
 /** Returns `true` if the item is empty, or it's a glass pane with hidden tooltips */
-public fun ItemStack.isSkyblockFiller(): Boolean = isEmpty || (this in ItemTag.GLASS_PANES && this.hiddenTooltip)
+public fun ItemStack.isSkyblockFiller(): Boolean = isEmpty || (this in ItemTag.GLASS_PANES && this.isTooltipHidden)
 
 public fun ItemStack.getLore(): List<Component> = this[DataComponents.LORE]?.lines() ?: emptyList()
 
