@@ -10,6 +10,7 @@ import net.minecraft.network.chat.ComponentSerialization
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.misc.RegisterSkyblockApiCommandsEvent
+import tech.thatgravyboat.skyblockapi.generated.CodecUtils
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
 import tech.thatgravyboat.skyblockapi.utils.devutils.SkyBlockApiDevUtils
@@ -68,10 +69,7 @@ public object DebugChat {
     /**
      * Allows parsing a list of component JSONs and a singular JSON at the same time
      */
-    private val COMPONENT_LIST_CODEC = Codec.withAlternative(
-        ComponentSerialization.CODEC.listOf(),
-        ComponentSerialization.CODEC.xmap({ listOf(it) }, { it.first() }),
-    )
+    private val COMPONENT_LIST_CODEC = CodecUtils.compactList<Component>()
 
     @Subscription(receiveCancelled = true)
     internal fun onMessageFirst(event: ChatReceivedEvent.Pre) {
