@@ -32,6 +32,10 @@ public enum class CrystalType(public val textColor: Int, public val placeable: B
         public fun byName(name: String): CrystalType? {
             return entries.find { it.name.equals(name, true) || "${it.name} Crystal".equals(name, true) }
         }
+
+        public fun byId(id: SkyBlockId): CrystalType? {
+            return entries.find { it.id == id }
+        }
     }
 }
 
