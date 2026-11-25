@@ -10,6 +10,7 @@ import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.pluralize
 import tech.thatgravyboat.skyblockapi.utils.text.Text
 
+/** Needs to be loaded by [me.owdding.ktmodules.Module], or by something else before post init */
 public abstract class RegisterableValues<T : Any> internal constructor() {
     protected abstract val name: String
     /** Used for the debug command */

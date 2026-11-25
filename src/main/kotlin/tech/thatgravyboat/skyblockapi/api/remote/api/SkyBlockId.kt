@@ -111,7 +111,7 @@ public value class SkyBlockId private constructor(public val id: String) {
 
         public fun unsafe(id: String): SkyBlockId = SkyBlockId("$UNSAFE$id")
 
-        @IncludedCodec
+        @IncludedCodec(keyable = true)
         public val CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap(::SkyBlockId, SkyBlockId::rootId)
 
         public val UNKNOWN_CODEC: Codec<SkyBlockId> = Codec.STRING.xmap({ it.lowercase() }, { it }).xmap({ unknownType(it) ?: SkyBlockId(it) }, { it.rootId })
@@ -188,7 +188,7 @@ public value class SkyBlockId private constructor(public val id: String) {
 
     public fun trySafe(consumer: (String) -> SkyBlockId): SkyBlockId = if (isUnsafe) consumer(cleanId) else this
 
-    public fun toLazyItem(): LazyItemStack = when {
+    public fun toLazyItemOrNull(): LazyItemStack? = when {
         isRune -> SimpleItemAPI.getLazyItemStackForRune(this)
         isPet -> SimpleItemAPI.getLazyItemStackForPet(this)
         isItem -> SimpleItemAPI.getLazyItemStackForItem(this)
@@ -196,10 +196,12 @@ public value class SkyBlockId private constructor(public val id: String) {
         isAttribute -> SimpleItemAPI.getLazyItemStackForAttribute(this)
         isPotion -> SimpleItemAPI.getLazyItemStackForPotion(this)
         else -> null
-    } ?: LazyItemStack(Items.BARRIER) {
+    }
+    public fun toLazyItem(): LazyItemStack = toLazyItemOrNull() ?: LazyItemStack(Items.BARRIER) {
         set(DataComponents.CUSTOM_NAME, Text.of(id) { this.color = TextColor.RED })
     }
 
+    public fun toItemOrNull(): ItemStack? = toLazyItemOrNull()?.create()
     public fun toItem(): ItemStack = toLazyItem().create()
 
     override fun toString(): String = "SkyBlockId($id)"

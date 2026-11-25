@@ -3,9 +3,7 @@ package tech.thatgravyboat.skyblockapi.api.data.stored
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.owdding.ktmodules.Module
-import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.component.ItemLore
 import tech.thatgravyboat.skyblockapi.api.data.StoredProfileData
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumCategory
 import tech.thatgravyboat.skyblockapi.api.profile.items.museum.MuseumItemData
@@ -16,9 +14,9 @@ import tech.thatgravyboat.skyblockapi.api.remote.hypixel.museum.MuseumData
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs.getCodec
 import tech.thatgravyboat.skyblockapi.utils.codecs.CodecUtils
 import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
-import tech.thatgravyboat.skyblockapi.utils.extentions.getRarityLineIndex
 import tech.thatgravyboat.skyblockapi.utils.extentions.isSameItem
 import tech.thatgravyboat.skyblockapi.utils.extentions.withoutGetter
+import tech.thatgravyboat.skyblockapi.utils.extentions.copyWithoutLinesAfterRarity
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
@@ -99,20 +97,10 @@ internal object MuseumStorage {
         }
     }
 
-    private fun ItemStack.removeMuseumLines(): ItemStack {
-        val index = getRarityLineIndex()
-        if (index == -1) return this
-        val newItem = this.copy()
-        val lore = newItem.get(DataComponents.LORE)?.lines() ?: return this
-        val fixedLore = lore.subList(0, index.coerceAtMost(lore.size))
-        newItem.set(DataComponents.LORE, ItemLore(fixedLore))
-        return newItem
-    }
-
     /** Shouldn't be called for special items */
     fun addItem(category: MuseumCategory, id: SkyBlockId, item: ItemStack) {
         val data = data ?: return
-        val cleanedItem = item.removeMuseumLines()
+        val cleanedItem = item.copyWithoutLinesAfterRarity()
         val items = data.categories.getOrPut(category, ::LinkedHashMap)
         val currentData = items[id]
         if (currentData == null) {

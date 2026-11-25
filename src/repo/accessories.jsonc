@@ -1,0 +1,1192 @@
+/*
+* Temporarily hardcoded, should use remote repo later on
+* Needs to get manually pasted from https://repo.owdding.me/accessories/families.json
+*/
+
+[
+    {
+        "family": "bits",
+        "tiers": "item:bits_talisman"
+    },
+    {
+        "family": "personal_compactor_combat",
+        "tiers": "item:personal_compactor_combat_4000"
+    },
+    {
+        "family": "kuudras_organ",
+        "tiers": [
+            "item:kuudras_kidney",
+            "item:kuudras_lung",
+            "item:kuudras_heart"
+        ]
+    },
+    {
+        "family": "crux",
+        "tiers": [
+            "item:crux_talisman_1",
+            "item:crux_talisman_2",
+            "item:crux_talisman_3",
+            "item:crux_talisman_4",
+            "item:crux_talisman_5",
+            "item:crux_talisman_6",
+            "item:crux_talisman_7"
+        ]
+    },
+    {
+        "family": "treasure",
+        "tiers": [
+            "item:treasure_talisman",
+            "item:treasure_ring",
+            "item:treasure_artifact"
+        ]
+    },
+    {
+        "family": "junk",
+        "tiers": [
+            "item:junk_talisman",
+            "item:junk_ring",
+            "item:junk_artifact"
+        ]
+    },
+    {
+        "family": "personal_compactor_farming",
+        "tiers": "item:personal_compactor_farming_4000"
+    },
+    {
+        "family": "shark_tooth_necklace",
+        "tiers": [
+            "item:raggedy_shark_tooth_necklace",
+            "item:dull_shark_tooth_necklace",
+            "item:honed_shark_tooth_necklace",
+            "item:sharp_shark_tooth_necklace",
+            "item:razor_sharp_shark_tooth_necklace"
+        ]
+    },
+    {
+        "family": "catacombs_gobbler",
+        "tiers": "item:catacombs_gobbler"
+    },
+    {
+        "family": "general_medallion",
+        "tiers": "item:general_medallion"
+    },
+    {
+        "family": "hegemony",
+        "tiers": "item:hegemony_artifact"
+    },
+    {
+        "family": "gratitude",
+        "tiers": [
+            "item:gratitude_talisman",
+            "item:gratitude_ring",
+            "item:gratitude_artifact"
+        ]
+    },
+    {
+        "family": "iq_point",
+        "tiers": [
+            "item:iq_point",
+            "item:two_iq_point"
+        ]
+    },
+    {
+        "family": "copper",
+        "tiers": [
+            "item:copper_talisman",
+            "item:copper_ring",
+            "item:copper_artifact"
+        ]
+    },
+    {
+        "family": "dwarven_metal",
+        "tiers": "item:dwarven_metal"
+    },
+    {
+        "family": "village",
+        "tiers": "item:village_talisman"
+    },
+    {
+        "family": "ring_of_eternal_love",
+        "tiers": "item:ring_of_eternal_love"
+    },
+    {
+        "family": "agarimoo",
+        "tiers": [
+            "item:agarimoo_talisman",
+            "item:agarimoo_ring",
+            "item:agarimoo_artifact"
+        ]
+    },
+    {
+        "family": "pesthunter",
+        "tiers": [
+            "item:pesthunter_badge",
+            "item:pesthunter_ring",
+            "item:pesthunter_artifact",
+            "item:pesthunter_relic"
+        ]
+    },
+    {
+        "family": "burststopper",
+        "tiers": [
+            "item:burststopper_talisman",
+            "item:burststopper_artifact"
+        ]
+    },
+    {
+        "family": "netherrack_looking_sunshade",
+        "tiers": "item:netherrack_looking_sunshade"
+    },
+    {
+        "family": "feather",
+        "tiers": [
+            "item:feather_talisman",
+            "item:feather_ring",
+            "item:feather_artifact"
+        ]
+    },
+    {
+        "family": "potato",
+        "tiers": [
+            "item:potato_talisman",
+            "item:potato_ring"
+        ]
+    },
+    {
+        "family": "night_vision_charm",
+        "tiers": "item:night_vision_charm"
+    },
+    {
+        "family": "experience",
+        "tiers": "item:experience_artifact"
+    },
+    {
+        "family": "atmospheric_filter",
+        "tiers": "item:atmospheric_filter"
+    },
+    {
+        "family": "trapper",
+        "tiers": "item:trapper_crest"
+    },
+    {
+        "family": "seal",
+        "tiers": [
+            "item:seal_talisman",
+            "item:seal_ring"
+        ]
+    },
+    {
+        "family": "blood_god_crest",
+        "tiers": [
+            "item:blood_god_crest",
+            "item:blood_god_sigil"
+        ]
+    },
+    {
+        "family": "moonglade",
+        "tiers": [
+            "item:moonglade_talisman",
+            "item:moonglade_ring",
+            "item:moonglade_artifact"
+        ]
+    },
+    {
+        "family": "mineral",
+        "tiers": [
+            "item:mineral_talisman",
+            "item:glossy_mineral_talisman"
+        ]
+    },
+    {
+        "family": "anguish",
+        "tiers": [
+            "item:anguish_talisman",
+            "item:anguish_ring",
+            "item:anguish_artifact"
+        ]
+    },
+    {
+        "family": "coin",
+        "tiers": [
+            "item:coin_talisman",
+            "item:ring_of_coins",
+            "item:artifact_of_coins",
+            "item:relic_of_coins"
+        ]
+    },
+    {
+        "family": "wolf",
+        "tiers": [
+            "item:wolf_talisman",
+            "item:wolf_ring"
+        ]
+    },
+    {
+        "family": "pandoras_box",
+        "tiers": "item:pandoras_box"
+    },
+    {
+        "family": "anita",
+        "tiers": [
+            "item:anita_talisman",
+            "item:anita_ring",
+            "item:anita_artifact"
+        ]
+    },
+    {
+        "family": "cropie",
+        "tiers": [
+            "item:cropie_talisman",
+            "item:squash_ring",
+            "item:fermento_artifact",
+            "item:helianthus_relic"
+        ]
+    },
+    {
+        "family": "tarantula",
+        "tiers": [
+            "item:tarantula_talisman",
+            "item:tarantula_ring"
+        ]
+    },
+    {
+        "family": "carnival_mask_bag",
+        "tiers": "item:carnival_mask_bag"
+    },
+    {
+        "family": "pressure",
+        "tiers": [
+            "item:pressure_talisman",
+            "item:pressure_ring",
+            "item:pressure_artifact"
+        ]
+    },
+    {
+        "family": "odgers_tooth",
+        "tiers": [
+            "item:odgers_bronze_tooth",
+            "item:odgers_silver_tooth",
+            "item:odgers_gold_tooth",
+            "item:odgers_diamond_tooth"
+        ]
+    },
+    {
+        "family": "bait",
+        "tiers": [
+            "item:bait_ring",
+            "item:spiked_atrocity"
+        ]
+    },
+    {
+        "family": "blood_donor",
+        "tiers": [
+            "item:blood_donor_talisman",
+            "item:blood_donor_ring",
+            "item:blood_donor_artifact"
+        ]
+    },
+    {
+        "family": "scarf_studies",
+        "tiers": [
+            "item:scarf_studies",
+            "item:scarf_thesis",
+            "item:scarf_grimoire"
+        ]
+    },
+    {
+        "family": "organ_donor",
+        "tiers": [
+            "item:organ_donor_talisman",
+            "item:organ_donor_ring",
+            "item:organ_donor_artifact"
+        ]
+    },
+    {
+        "family": "soulflow",
+        "tiers": [
+            "item:soulflow_pile",
+            "item:soulflow_battery",
+            "item:soulflow_supercell"
+        ]
+    },
+    {
+        "family": "hotspot",
+        "tiers": [
+            "item:hotspot_talisman",
+            "item:hotspot_ring",
+            "item:hotspot_artifact"
+        ]
+    },
+    {
+        "family": "dungeon_hub_race",
+        "tiers": [
+            "item:cat_talisman",
+            "item:lynx_talisman",
+            "item:cheetah_talisman"
+        ]
+    },
+    {
+        "family": "jerry",
+        "tiers": [
+            "item:jerry_talisman_green",
+            "item:jerry_talisman_blue",
+            "item:jerry_talisman_purple",
+            "item:jerry_talisman_golden"
+        ]
+    },
+    {
+        "family": "pigs_foot",
+        "tiers": "item:pigs_foot"
+    },
+    {
+        "family": "abicase",
+        "tiers": [
+            [
+                "item:abicase_blue_aqua",
+                "item:abicase_blue_blue",
+                "item:abicase_blue_green",
+                "item:abicase_blue_red",
+                "item:abicase_blue_yellow",
+                "item:abicase_rezar",
+                "item:abicase_sumsung_1",
+                "item:abicase_sumsung_2"
+            ]
+        ]
+    },
+    {
+        "family": "candy",
+        "tiers": [
+            "item:candy_talisman",
+            "item:candy_ring",
+            "item:candy_artifact",
+            "item:candy_relic"
+        ]
+    },
+    {
+        "family": "fish_affinity",
+        "tiers": "item:fish_affinity_talisman"
+    },
+    {
+        "family": "pocket_espresso_machine",
+        "tiers": "item:pocket_espresso_machine"
+    },
+    {
+        "family": "nether_artifact",
+        "tiers": "item:nether_artifact"
+    },
+    {
+        "family": "TODO",
+        "tiers": "item:reaper_orb"
+    },
+    {
+        "family": "combo_mania",
+        "tiers": "item:combo_mania_talisman"
+    },
+    {
+        "family": "healing",
+        "tiers": [
+            "item:healing_talisman",
+            "item:healing_ring"
+        ]
+    },
+    {
+        "family": "vampire_dentist",
+        "tiers": "item:vampire_dentist_relic"
+    },
+    {
+        "family": "bat_person",
+        "tiers": [
+            "item:bat_person_talisman",
+            "item:bat_person_ring",
+            "item:bat_person_artifact"
+        ]
+    },
+    {
+        "family": "warding_trinket",
+        "tiers": "item:warding_trinket"
+    },
+    {
+        "family": "night_crystal",
+        "tiers": [
+            "item:night_crystal",
+            "item:moonlight_crystal"
+        ]
+    },
+    {
+        "family": "titanium",
+        "tiers": [
+            "item:titanium_talisman",
+            "item:titanium_ring",
+            "item:titanium_artifact",
+            "item:titanium_relic"
+        ]
+    },
+    {
+        "family": "melody",
+        "tiers": "item:melody_hair"
+    },
+    {
+        "family": "torrhus",
+        "tiers": [
+            "item:torrhus_talisman",
+            "item:torrhus_ring",
+            "item:torrhus_artifact"
+        ]
+    },
+    {
+        "family": "rift_prism",
+        "tiers": "item:rift_prism"
+    },
+    {
+        "family": "hatcessory",
+        "tiers": [
+            [
+                "item:party_hat_crab",
+                "item:party_hat_crab_red",
+                "item:party_hat_crab_orange",
+                "item:party_hat_crab_yellow",
+                "item:party_hat_crab_lime",
+                "item:party_hat_crab_green",
+                "item:party_hat_crab_aqua",
+                "item:party_hat_crab_pink",
+                "item:party_hat_crab_purple",
+                "item:party_hat_crab_black",
+                "item:party_hat_crab_animated",
+                "item:party_hat_crab_red_animated",
+                "item:party_hat_crab_orange_animated",
+                "item:party_hat_crab_yellow_animated",
+                "item:party_hat_crab_lime_animated",
+                "item:party_hat_crab_green_animated",
+                "item:party_hat_crab_aqua_animated",
+                "item:party_hat_crab_pink_animated",
+                "item:party_hat_crab_purple_animated",
+                "item:party_hat_crab_black_animated",
+                "item:party_hat_sloth",
+                "item:party_hat_sloth_cheeky",
+                "item:party_hat_sloth_cool",
+                "item:party_hat_sloth_cute",
+                "item:party_hat_sloth_derp",
+                "item:party_hat_sloth_flushed",
+                "item:party_hat_sloth_grumpy",
+                "item:party_hat_sloth_happy",
+                "item:party_hat_sloth_regular",
+                "item:party_hat_sloth_shock",
+                "item:party_hat_sloth_tears",
+                "item:balloon_hat_2024_red",
+                "item:balloon_hat_2024",
+                "item:balloon_hat_2024_orange",
+                "item:balloon_hat_2024_yellow",
+                "item:balloon_hat_2024_lime",
+                "item:balloon_hat_2024_green",
+                "item:balloon_hat_2024_aqua",
+                "item:balloon_hat_2024_pink",
+                "item:balloon_hat_2024_purple",
+                "item:balloon_hat_2024_black",
+                "item:balloon_hat_2025",
+                "item:balloon_hat_2025_red",
+                "item:balloon_hat_2025_orange",
+                "item:balloon_hat_2025_yellow",
+                "item:balloon_hat_2025_lime",
+                "item:balloon_hat_2025_green",
+                "item:balloon_hat_2025_aqua",
+                "item:balloon_hat_2025_pink",
+                "item:balloon_hat_2025_purple",
+                "item:balloon_hat_2025_black",
+                "item:cake_hat_2026",
+                "item:cake_hat_2026_red",
+                "item:cake_hat_2026_orange",
+                "item:cake_hat_2026_yellow",
+                "item:cake_hat_2026_lime",
+                "item:cake_hat_2026_green",
+                "item:cake_hat_2026_aqua",
+                "item:cake_hat_2026_pink",
+                "item:cake_hat_2026_purple",
+                "item:cake_hat_2026_black"
+            ]
+        ]
+    },
+    {
+        "family": "power",
+        "tiers": [
+            "item:power_talisman",
+            "item:power_ring",
+            "item:power_artifact",
+            "item:power_relic"
+        ]
+    },
+    {
+        "family": "lava",
+        "tiers": "item:lava_talisman"
+    },
+    {
+        "family": "wedding",
+        "tiers": [
+            "item:wedding_ring_0",
+            "item:wedding_ring_1",
+            "item:wedding_ring_2",
+            "item:wedding_ring_3",
+            "item:wedding_ring_4",
+            "item:wedding_ring_5",
+            "item:wedding_ring_6",
+            "item:wedding_ring_7",
+            "item:wedding_ring_8",
+            "item:wedding_ring_9"
+        ]
+    },
+    {
+        "family": "handy_blood_chalice",
+        "tiers": "item:handy_blood_chalice"
+    },
+    {
+        "family": "powder",
+        "tiers": [
+            "item:powder_of_one",
+            "item:powder_of_the_few",
+            "item:powder_of_the_many",
+            "item:powder_of_the_people"
+        ]
+    },
+    {
+        "family": "hocus_pocus_cipher",
+        "tiers": "item:hocus_pocus_cipher"
+    },
+    {
+        "family": "personal_compactor_husbandry",
+        "tiers": "item:personal_compactor_husbandry_4000"
+    },
+    {
+        "family": "bluetooth",
+        "tiers": [
+            "item:bluetooth_ring",
+            "item:bluertooth_ring"
+        ]
+    },
+    {
+        "family": "safety_badge",
+        "tiers": "item:safety_badge"
+    },
+    {
+        "family": "defective_monitor",
+        "tiers": "item:defective_monitor"
+    },
+    {
+        "family": "century",
+        "tiers": [
+            "item:century_talisman",
+            "item:century_ring",
+            "item:century_artifact"
+        ]
+    },
+    {
+        "family": "farming",
+        "tiers": "item:farming_talisman"
+    },
+    {
+        "family": "freshly_baked",
+        "tiers": [
+            "item:freshly_baked_talisman",
+            "item:freshly_baked_ring",
+            "item:freshly_baked_artifact",
+            "item:freshly_baked_relic",
+            "item:freshly_baked_heirloom"
+        ]
+    },
+    {
+        "family": "shens_regalia",
+        "tiers": "item:shens_regalia"
+    },
+    {
+        "family": "gravity",
+        "tiers": "item:gravity_talisman"
+    },
+    {
+        "family": "scavenger",
+        "tiers": [
+            "item:scavenger_talisman",
+            "item:scavenger_ring",
+            "item:scavenger_artifact"
+        ]
+    },
+    {
+        "family": "magnetic",
+        "tiers": "item:magnetic_talisman"
+    },
+    {
+        "family": "draconic",
+        "tiers": [
+            "item:draconic_talisman",
+            "item:draconic_ring",
+            "item:draconic_artifact"
+        ]
+    },
+    {
+        "family": "test_bucket",
+        "tiers": "item:test_bucket_please_ignore"
+    },
+    {
+        "family": "archaeologist_compass",
+        "tiers": "item:archaeologist_compass"
+    },
+    {
+        "family": "magic_8_ball",
+        "tiers": "item:magic_8_ball"
+    },
+    {
+        "family": "witch",
+        "tiers": [
+            "item:witch_talisman",
+            "item:witch_ring",
+            "item:witch_artifact"
+        ]
+    },
+    {
+        "family": "lush",
+        "tiers": [
+            "item:lush_talisman",
+            "item:lush_ring",
+            "item:lush_artifact"
+        ]
+    },
+    {
+        "family": "day_crystal",
+        "tiers": [
+            "item:day_crystal",
+            "item:sunshine_crystal"
+        ]
+    },
+    {
+        "family": "garlic_flavored_gummy_bear",
+        "tiers": "item:garlic_flavored_gummy_bear"
+    },
+    {
+        "family": "fish_bowl",
+        "tiers": [
+            "item:small_fish_bowl",
+            "item:medium_fish_bowl",
+            "item:large_fish_bowl"
+        ]
+    },
+    {
+        "family": "mine",
+        "tiers": "item:mine_talisman"
+    },
+    {
+        "family": "wolf_paw",
+        "tiers": "item:wolf_paw"
+    },
+    {
+        "family": "cake_bag",
+        "tiers": "item:new_year_cake_bag"
+    },
+    {
+        "family": "piggy_bank",
+        "tiers": [
+            [
+                "item:piggy_bank",
+                "item:cracked_piggy_bank",
+                "item:broken_piggy_bank"
+            ]
+        ]
+    },
+    {
+        "family": "future_calories",
+        "tiers": "item:future_calories"
+    },
+    {
+        "family": "jungle",
+        "tiers": "item:jungle_amulet"
+    },
+    {
+        "family": "personal_compactor_fishing",
+        "tiers": "item:personal_compactor_fishing_4000"
+    },
+    {
+        "family": "intimidation",
+        "tiers": [
+            "item:intimidation_talisman",
+            "item:intimidation_ring",
+            "item:intimidation_artifact",
+            "item:intimidation_relic"
+        ]
+    },
+    {
+        "family": "auto_recombobulator",
+        "tiers": "item:auto_recombobulator"
+    },
+    {
+        "family": "miniaturized_tubulator",
+        "tiers": "item:miniaturized_tubulator"
+    },
+    {
+        "family": "master_skull",
+        "tiers": [
+            "item:master_skull_tier_1",
+            "item:master_skull_tier_2",
+            "item:master_skull_tier_3",
+            "item:master_skull_tier_4",
+            "item:master_skull_tier_5",
+            "item:master_skull_tier_6",
+            "item:master_skull_tier_7"
+        ]
+    },
+    {
+        "family": "red_claw",
+        "tiers": [
+            "item:red_claw_talisman",
+            "item:red_claw_ring",
+            "item:red_claw_artifact"
+        ]
+    },
+    {
+        "family": "haste",
+        "tiers": [
+            "item:haste_ring",
+            "item:haste_artifact"
+        ]
+    },
+    {
+        "family": "ender",
+        "tiers": [
+            "item:ender_artifact",
+            "item:ender_relic"
+        ]
+    },
+    {
+        "family": "accretion",
+        "tiers": [
+            "item:accretion_talisman",
+            "item:accretion_ring",
+            "item:accretion_artifact"
+        ]
+    },
+    {
+        "family": "big_brain",
+        "tiers": "item:big_brain_talisman"
+    },
+    {
+        "family": "devour_ring",
+        "tiers": "item:devour_ring"
+    },
+    {
+        "family": "ring_of_broken_love",
+        "tiers": "item:ring_of_broken_love"
+    },
+    {
+        "family": "speed",
+        "tiers": [
+            "item:speed_talisman",
+            "item:speed_ring",
+            "item:speed_artifact",
+            "item:speed_relic"
+        ]
+    },
+    {
+        "family": "frozen_chicken",
+        "tiers": [
+            "item:frozen_chicken",
+            "item:fried_frozen_chicken"
+        ]
+    },
+    {
+        "family": "tiny_dancer",
+        "tiers": "item:tiny_dancer"
+    },
+    {
+        "family": "hoof",
+        "tiers": [
+            "item:lucky_hoof",
+            "item:eternal_hoof"
+        ]
+    },
+    {
+        "family": "gift",
+        "tiers": [
+            "item:white_gift_talisman",
+            "item:green_gift_talisman",
+            "item:blue_gift_talisman",
+            "item:purple_gift_talisman",
+            "item:gold_gift_talisman"
+        ]
+    },
+    {
+        "family": "applicant",
+        "tiers": [
+            "item:applicant_statement",
+            "item:student_studies",
+            "item:master_thesis",
+            "item:phd_grimoire"
+        ]
+    },
+    {
+        "family": "artifact_of_control",
+        "tiers": "item:artifact_of_control"
+    },
+    {
+        "family": "fire",
+        "tiers": "item:fire_talisman"
+    },
+    {
+        "family": "soul_campfire",
+        "tiers": [
+            "item:soul_campfire_talisman_1",
+            "item:soul_campfire_talisman_2",
+            "item:soul_campfire_talisman_3",
+            "item:soul_campfire_talisman_4",
+            "item:soul_campfire_talisman_5",
+            "item:soul_campfire_talisman_6",
+            "item:soul_campfire_talisman_7",
+            "item:soul_campfire_talisman_8",
+            "item:soul_campfire_talisman_9",
+            "item:soul_campfire_talisman_10",
+            "item:soul_campfire_talisman_11",
+            "item:soul_campfire_talisman_12",
+            "item:soul_campfire_talisman_13",
+            "item:soul_campfire_talisman_14",
+            "item:soul_campfire_talisman_15",
+            "item:soul_campfire_talisman_16",
+            "item:soul_campfire_talisman_17",
+            "item:soul_campfire_talisman_18",
+            "item:soul_campfire_talisman_19",
+            "item:soul_campfire_talisman_20",
+            "item:soul_campfire_talisman_21",
+            "item:soul_campfire_talisman_22",
+            "item:soul_campfire_talisman_23",
+            "item:soul_campfire_talisman_24",
+            "item:soul_campfire_talisman_25",
+            "item:soul_campfire_talisman_26",
+            "item:soul_campfire_talisman_27",
+            "item:soul_campfire_talisman_28",
+            "item:soul_campfire_talisman_29"
+        ]
+    },
+    {
+        "family": "kuudra_core",
+        "tiers": [
+            "item:burning_kuudra_core",
+            "item:fiery_kuudra_core",
+            "item:infernal_kuudra_core"
+        ]
+    },
+    {
+        "family": "chocolate",
+        "tiers": [
+            "item:nibble_chocolate_stick",
+            "item:smooth_chocolate_bar",
+            "item:rich_chocolate_chunk",
+            "item:ganache_chocolate_slab",
+            "item:prestige_chocolate_realm"
+        ]
+    },
+    {
+        "family": "lumberjack",
+        "tiers": [
+            "item:lumberjack_talisman",
+            "item:lumberjack_ring",
+            "item:lumberjack_artifact"
+        ]
+    },
+    {
+        "family": "bingo",
+        "tiers": [
+            "item:bingo_talisman",
+            "item:bingo_ring",
+            "item:bingo_artifact",
+            "item:bingo_relic"
+        ]
+    },
+    {
+        "family": "dante",
+        "tiers": [
+            [
+                "item:dante_talisman",
+                "item:dante_ring"
+            ]
+        ]
+    },
+    {
+        "family": "hunter",
+        "tiers": [
+            "item:hunter_talisman",
+            "item:hunter_ring"
+        ]
+    },
+    {
+        "family": "emperor",
+        "tiers": [
+            "item:emperor_talisman",
+            "item:emperor_ring",
+            "item:emperor_artifact"
+        ]
+    },
+    {
+        "family": "vaccine",
+        "tiers": [
+            "item:vaccine_talisman",
+            "item:vaccine_ring",
+            "item:vaccine_artifact"
+        ]
+    },
+    {
+        "family": "pulse_ring",
+        "tiers": "item:pulse_ring"
+    },
+    {
+        "family": "campfire",
+        "tiers": [
+            "item:campfire_talisman_1",
+            "item:campfire_talisman_2",
+            "item:campfire_talisman_3",
+            "item:campfire_talisman_4",
+            "item:campfire_talisman_5",
+            "item:campfire_talisman_6",
+            "item:campfire_talisman_7",
+            "item:campfire_talisman_8",
+            "item:campfire_talisman_9",
+            "item:campfire_talisman_10",
+            "item:campfire_talisman_11",
+            "item:campfire_talisman_12",
+            "item:campfire_talisman_13",
+            "item:campfire_talisman_14",
+            "item:campfire_talisman_15",
+            "item:campfire_talisman_16",
+            "item:campfire_talisman_17",
+            "item:campfire_talisman_18",
+            "item:campfire_talisman_19",
+            "item:campfire_talisman_20",
+            "item:campfire_talisman_21",
+            "item:campfire_talisman_22",
+            "item:campfire_talisman_23",
+            "item:campfire_talisman_24",
+            "item:campfire_talisman_25",
+            "item:campfire_talisman_26",
+            "item:campfire_talisman_27",
+            "item:campfire_talisman_28",
+            "item:campfire_talisman_29"
+        ]
+    },
+    {
+        "family": "jake_plushie",
+        "tiers": "item:jake_plushie"
+    },
+    {
+        "family": "king",
+        "tiers": "item:king_talisman"
+    },
+    {
+        "family": "seal_of_the_family",
+        "tiers": [
+            "item:shady_ring",
+            "item:crooked_artifact",
+            "item:seal_of_the_family"
+        ]
+    },
+    {
+        "family": "runebook",
+        "tiers": "item:runebook"
+    },
+    {
+        "family": "book_of_progression",
+        "tiers": "item:book_of_progression"
+    },
+    {
+        "family": "honeycomb",
+        "tiers": [
+            "item:honeycomb_talisman",
+            "item:honeycomb_ring",
+            "item:honeycomb_artifact"
+        ]
+    },
+    {
+        "family": "runeblade",
+        "tiers": [
+            "item:runeblade_talisman",
+            "item:runeblade_ring",
+            "item:runeblade_artifact"
+        ]
+    },
+    {
+        "family": "infinipot",
+        "tiers": "item:infinipot"
+    },
+    {
+        "family": "spider",
+        "tiers": [
+            "item:spider_talisman",
+            "item:spider_ring",
+            "item:spider_artifact"
+        ]
+    },
+    {
+        "family": "jacobus",
+        "tiers": "item:jacobus_register"
+    },
+    {
+        "family": "bucket_of_dye",
+        "tiers": "item:bucket_of_dye"
+    },
+    {
+        "family": "zombie",
+        "tiers": [
+            "item:zombie_talisman",
+            "item:zombie_ring",
+            "item:zombie_artifact"
+        ]
+    },
+    {
+        "family": "bioanalysis",
+        "tiers": [
+            "item:bioanalysis_talisman",
+            "item:bioanalysis_ring",
+            "item:bioanalysis_artifact"
+        ]
+    },
+    {
+        "family": "wood",
+        "tiers": "item:wood_talisman"
+    },
+    {
+        "family": "blaze",
+        "tiers": "item:blaze_talisman"
+    },
+    {
+        "family": "harmonious_surgery_toolkit",
+        "tiers": "item:harmonious_surgery_toolkit"
+    },
+    {
+        "family": "emerald",
+        "tiers": [
+            "item:emerald_ring",
+            "item:emerald_artifact"
+        ]
+    },
+    {
+        "family": "farmer_orb",
+        "tiers": "item:farmer_orb"
+    },
+    {
+        "family": "glacial",
+        "tiers": [
+            "item:glacial_talisman",
+            "item:glacial_ring",
+            "item:glacial_artifact"
+        ]
+    },
+    {
+        "family": "sea_creature",
+        "tiers": [
+            "item:sea_creature_talisman",
+            "item:sea_creature_ring",
+            "item:sea_creature_artifact"
+        ]
+    },
+    {
+        "family": "survivor_cube",
+        "tiers": "item:survivor_cube"
+    },
+    {
+        "family": "beastmaster_crest",
+        "tiers": [
+            "item:beastmaster_crest_common",
+            "item:beastmaster_crest_uncommon",
+            "item:beastmaster_crest_rare",
+            "item:beastmaster_crest_epic",
+            "item:beastmaster_crest_legendary"
+        ]
+    },
+    {
+        "family": "satelite",
+        "tiers": "item:satelite"
+    },
+    {
+        "family": "personal_compactor_foraging",
+        "tiers": "item:personal_compactor_foraging_4000"
+    },
+    {
+        "family": "personal_compactor_mining",
+        "tiers": "item:personal_compactor_mining_4000"
+    },
+    {
+        "family": "catacombs_expert",
+        "tiers": "item:catacombs_expert_ring"
+    },
+    {
+        "family": "chumming",
+        "tiers": "item:chumming_talisman"
+    },
+    {
+        "family": "wither",
+        "tiers": [
+            "item:wither_artifact",
+            "item:wither_relic"
+        ]
+    },
+    {
+        "family": "potion_affinity",
+        "tiers": [
+            "item:potion_affinity_talisman",
+            "item:ring_potion_affinity",
+            "item:artifact_potion_affinity"
+        ]
+    },
+    {
+        "family": "personal_deletor",
+        "tiers": [
+            "item:personal_deletor_4000",
+            "item:personal_deletor_5000",
+            "item:personal_deletor_6000",
+            "item:personal_deletor_7000"
+        ]
+    },
+    {
+        "family": "bat",
+        "tiers": [
+            "item:bat_talisman",
+            "item:bat_ring",
+            "item:bat_artifact"
+        ]
+    },
+    {
+        "family": "beastslayers_codex",
+        "tiers": "item:beastslayers_codex"
+    },
+    {
+        "family": "skeleton",
+        "tiers": "item:skeleton_talisman"
+    },
+    {
+        "family": "great_spook",
+        "tiers": [
+            "item:great_spook_talisman",
+            "item:great_spook_ring",
+            "item:great_spook_artifact"
+        ]
+    },
+    {
+        "family": "voter_badge",
+        "tiers": [
+            "item:voter_badge",
+            "item:voter_badge_vip",
+            "item:voter_badge_elite",
+            "item:voter_badge_supreme"
+        ]
+    },
+    {
+        "family": "respiration",
+        "tiers": [
+            "item:respiration_talisman",
+            "item:respiration_ring",
+            "item:respiration_artifact"
+        ]
+    },
+    {
+        "family": "punchcard",
+        "tiers": "item:punchcard_artifact"
+    },
+    {
+        "family": "kuudra_follower",
+        "tiers": [
+            "item:kuudra_follower_artifact",
+            "item:kuudra_follower_relic"
+        ]
+    }
+]

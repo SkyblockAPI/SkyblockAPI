@@ -2,6 +2,7 @@ package tech.thatgravyboat.skyblockapi.api.profile.community
 
 import com.mojang.serialization.Codec
 import me.owdding.ktcodecs.IncludedCodec
+import me.owdding.ktmodules.Module
 import tech.thatgravyboat.skyblockapi.utils.RegisterableValues
 import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
@@ -16,11 +17,10 @@ public data class FameRank(val id: String, val name: String, val multiplier: Dou
 }
 
 @Suppress("unused")
+@Module
 public object FameRanks : RegisterableValues<FameRank>() {
     override val name: String = "fame_rank"
     override val debugToggle: DebugToggle = debugToggle("unknown.fame_rank", "Warns when detecting a new unknown fame rank")
-
-    private val registeredFameRanks = mutableMapOf<String, FameRank>()
 
     public fun getByNameOrNull(name: String): FameRank? = registered.values.find { it.name.equals(name, true) }
     public fun getByName(name: String): FameRank = getByNameOrNull(name) ?: register(name.toSnakeCase(), name, 1.0)
