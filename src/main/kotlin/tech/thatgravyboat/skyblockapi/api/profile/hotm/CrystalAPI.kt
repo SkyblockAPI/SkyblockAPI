@@ -12,9 +12,12 @@ import tech.thatgravyboat.skyblockapi.api.events.base.predicates.OnlyWidget
 import tech.thatgravyboat.skyblockapi.api.events.chat.ChatReceivedEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidget
 import tech.thatgravyboat.skyblockapi.api.events.info.TabWidgetChangeEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.hollows.CrystalNucleusLootedEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.InventoryChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.SlotClickEvent
 import tech.thatgravyboat.skyblockapi.api.remote.RepoRecipeAPI
+import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId.Companion.getSkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.Logger
 import tech.thatgravyboat.skyblockapi.utils.extentions.cleanName
@@ -68,28 +71,15 @@ public object CrystalAPI {
     }
 
     @Subscription
-    internal fun onChatReceived(event: ChatReceivedEvent.Pre) {
-        val match = matchWhen(event.text) {
-            case(crystalFoundRegex, "name") { (name) ->
-                CrystalStorage.setCrystalStatusByName(name, CrystalStatus.FOUND)
-            }
-            case(crystalPlacedRegex, "name") { (name) ->
-                CrystalStorage.setCrystalStatusByName(name, CrystalStatus.PLACED)
-            }
-            case(lootStartRegex) {
-                inLoot = true
-            }
-            case(lootEndRegex) {
-                inLoot = false
-            }
-        }
+    internal fun onCorpseLoot(event: CorpseEvent.Looted) = parseLoot(event.loot)
 
-        if (match || !inLoot) return
+    @Subscription
+    internal fun onNucleusLoot(event: CrystalNucleusLootedEvent) = parseLoot(event.loot)
 
-        lootItemRegex.match(event.text, "item") { (item) ->
-            if (CrystalType.entries.any { item.contains(it.name, true) }) {
-                CrystalStorage.setCrystalStatusByName(item, CrystalStatus.FOUND)
-            }
+    private fun parseLoot(loot: Map<SkyBlockId, Int>) {
+        loot.forEach { (id, _) ->
+            val type = CrystalType.byId(id) ?: return
+            CrystalStorage.setCrystalStatus(type, CrystalStatus.FOUND)
         }
     }
 
