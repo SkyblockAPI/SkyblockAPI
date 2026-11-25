@@ -1,0 +1,11 @@
+[
+    {"text": "-----------------------------------------------------", "color": "blue", "strikethrough": true},
+    {"text": "Party Members (3)", "color": "gold"},
+    "",
+    {"text": "Party Leader: ", "color": "yellow", "extra": [{"text": "[MVP", "color": "aqua"}, {"text": "+", "color": "light_purple"}, {"text": "] Qeauh", "color": "aqua"}, {"text": " ●","color": "green"}]},
+    {"text": "Party Members: ", "color": "yellow", "extra": [
+        {"text": "[MVP", "color": "gold"}, {"text": "++", "color": "light_purple"}, {"text": "] Rhynohowl", "color": "gold"}, {"text": " ●","color": "red"},
+        {"text": " [MVP", "color": "aqua"}, {"text": "+", "color": "light_purple"}, {"text": "] FJVil", "color": "aqua"}, {"text": " ●","color": "green"}
+    ]},
+    {"text": "-----------------------------------------------------", "color": "blue", "strikethrough": true}
+]

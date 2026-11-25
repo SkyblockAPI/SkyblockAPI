@@ -129,7 +129,7 @@ public object PartyAPI {
     private var lastPartyInfoRequest: Instant = Instant.DISTANT_PAST
 
     private val memberStates = ComponentStateMachine.build {
-        repeat(", ") {
+        repeat(" ") {
             optional {
                 char('[')
                 chars('A'..'Z', listOf('ዞ', '+'))
@@ -213,9 +213,9 @@ public object PartyAPI {
                 else -> PartyRole.MEMBER
             }
 
-            memberStates.match(membersList) { groups ->
-                val name = groups["username"]?.asString() ?: return@match
-                val statusStyles = groups["status"]?.styles()?.firstOrNull() ?: return@match
+            memberStates.decompose(membersList) { groups ->
+                val name = groups["username"]?.asString() ?: return@decompose
+                val statusStyles = groups["status"]?.styles()?.firstOrNull() ?: return@decompose
 
                 val member = PartyMember(name.cleanPlayerName(), partyRole)
                 add(member)

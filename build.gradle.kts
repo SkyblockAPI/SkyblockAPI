@@ -227,7 +227,10 @@ loom {
     runConfigs["client"].apply {
         generateRunConfig = true
         runDirectory = project.file("../../run")
-        jvmArguments.add("-Dfabric.modsFolder=${mcVersion}Mods")
+        jvmArguments.addAll(
+          "-Dfabric.modsFolder=${mcVersion}Mods",
+          "-Dtech.thatgravyboat.message_test_folder=${rootProject.layout.projectDirectory.asFile.toPath().resolve("messages").toAbsolutePath()}",
+        )
     }
 
     if (accessWidenerFile.exists()) {
