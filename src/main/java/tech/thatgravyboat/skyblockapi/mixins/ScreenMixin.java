@@ -24,11 +24,11 @@ public class ScreenMixin {
     protected Minecraft minecraft;
 
     @Inject(method = "extractRenderStateWithTooltipAndSubtitles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;nextStratum()V", ordinal = 0), cancellable = true)
-    private void extractRenderStateWithTooltipAndSubtitles(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+    private void extractRenderStateWithTooltipAndSubtitles(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         var screen = (Screen) (Object) this;
         if (new RenderScreenBackgroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus())) {
             new RenderScreenForegroundEvent(screen, graphics).post(SkyBlockAPI.getEventBus());
-            graphics.extractDeferredElements();
+            graphics.extractDeferredElements(mouseX, mouseY, a);
             ci.cancel();
         }
     }
@@ -39,11 +39,11 @@ public class ScreenMixin {
             value = "INVOKE",
             //~ !gui_extraction
             //~ if >= 26.4 'IIF)' -> ')'
-            target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;extractDeferredElements()V"
+            target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;extractDeferredElements(IIF)V"
             //~ gui_extraction
         )
     )
-    private void renderAfter(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+    private void renderAfter(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         new RenderScreenForegroundEvent((Screen) (Object) this, graphics).post(SkyBlockAPI.getEventBus());
     }
 

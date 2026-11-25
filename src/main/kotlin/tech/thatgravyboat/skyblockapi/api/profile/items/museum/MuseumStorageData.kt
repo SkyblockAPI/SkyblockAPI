@@ -10,7 +10,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.enumMapOf
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-internal data class MuseumStorageData(
+public data class MuseumStorageData(
     var milestone: Int = 0,
     val categories: MutableMap<MuseumCategory, MutableMap<SkyBlockId, MuseumItemData>> = enumMapOf(),
     val specialItems: MutableList<ItemStack> = mutableListOf(),
@@ -23,7 +23,7 @@ internal data class MuseumStorageData(
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-internal data class MuseumItemData(
+public data class MuseumItemData(
     var item: ItemStack?,
 ) {
     inline val inMuseum: Boolean get() = item != null

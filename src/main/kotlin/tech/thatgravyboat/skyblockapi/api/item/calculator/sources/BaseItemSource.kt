@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.api.item.calculator.SingleEntryCalculator
 import tech.thatgravyboat.skyblockapi.utils.extentions.getSkyBlockId
 
 //~ if >= 26.4 'public' -> 'internal'
-internal object BaseItemSource : SingleEntryCalculator {
+public object BaseItemSource : SingleEntryCalculator {
     override fun getEntry(id: String, stack: ItemStack): CalculationEntry? {
         val id = stack.getSkyBlockId() ?: return null
         return ItemEntry(id)

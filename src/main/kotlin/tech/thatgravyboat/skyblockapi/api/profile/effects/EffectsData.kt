@@ -9,7 +9,7 @@ import kotlin.time.Instant
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-internal data class EffectsData(
+public data class EffectsData(
     var boosterCookieExpireTime: Instant = Instant.DISTANT_PAST,
     var godPotionDuration: Duration = Duration.ZERO,
 ) {

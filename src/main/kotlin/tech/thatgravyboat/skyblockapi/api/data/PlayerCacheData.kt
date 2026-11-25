@@ -8,7 +8,7 @@ import java.util.UUID
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-internal data class PlayerCacheData(
+public data class PlayerCacheData(
     val players: MutableMap<UUID, CachedPlayer> = mutableMapOf(),
 ) {
     public companion object {
@@ -18,7 +18,7 @@ internal data class PlayerCacheData(
 
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-internal data class CachedPlayer(
+public data class CachedPlayer(
     var name: String,
     var time: Long = System.currentTimeMillis(),
 )

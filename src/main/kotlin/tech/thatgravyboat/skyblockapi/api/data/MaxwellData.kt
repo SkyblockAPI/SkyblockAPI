@@ -19,7 +19,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.filterKeysNotNull
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-internal data class MaxwellData(
+public data class MaxwellData(
     var power: MaxwellPower = MaxwellPowers.NO_POWER,
     @FieldNames("accessory_power", "magicalPower")
     var accessoryPower: Int = 0,

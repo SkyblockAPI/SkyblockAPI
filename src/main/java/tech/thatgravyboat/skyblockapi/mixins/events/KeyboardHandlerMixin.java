@@ -20,7 +20,7 @@ import tech.thatgravyboat.skyblockapi.api.events.screen.ScreenKeyReleasedEvent;
 public class KeyboardHandlerMixin {
 
     //? if >=26.4 {
-    @Definition(id = "screen", local = @Local(type = Screen.class, name = "screen"))
+    /*@Definition(id = "screen", local = @Local(type = Screen.class, name = "screen"))
     @Expression("screen != null")
     @ModifyExpressionValue(
         method = "keyPress",
@@ -30,7 +30,7 @@ public class KeyboardHandlerMixin {
         if (!original) return false;
         var pre = new ScreenKeyPressedEvent.Navigation(screen, keyEvent);
         return !pre.post(SkyBlockAPI.getEventBus());
-    }//?}
+    }*///?}
 
     @WrapOperation(method = "keyPress", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;keyPressed(Lnet/minecraft/client/input/KeyEvent;)Z"))
     private boolean keyPressed(Screen instance, KeyEvent event, Operation<Boolean> original) {

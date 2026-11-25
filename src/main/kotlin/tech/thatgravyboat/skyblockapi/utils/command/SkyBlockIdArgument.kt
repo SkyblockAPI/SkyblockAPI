@@ -7,7 +7,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import net.minecraft.commands.suggestions.SuggestionContext
+import net.minecraft.commands.SharedSuggestionProvider
 import tech.thatgravyboat.skyblockapi.api.remote.api.SimpleItemAPI
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.utils.extentions.sanitizeForCommandInput
@@ -36,7 +36,7 @@ public data class SkyBlockIdArgument(val skyblockIds: Iterable<SkyBlockId> = Sim
 
     private fun suggest(builder: SuggestionsBuilder, name: String) {
         val filtered = name.sanitizeForCommandInput()
-        if (SuggestionContext.matchesSubStr(builder.remaining.lowercase(), filtered.lowercase())) {
+        if (SharedSuggestionProvider.matchesSubStr(builder.remaining.lowercase(), filtered.lowercase())) {
             builder.suggest(filtered)
         }
     }

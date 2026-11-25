@@ -31,13 +31,13 @@ import java.nio.file.Path
 //? if >= 26.3
 import com.mojang.blaze3d.Blaze3D
 //? if >= 26.4 {
-import net.minecraft.commands.SuggestionBox
-//? } else {
-/*import com.mojang.brigadier.CommandDispatcher
-import net.minecraft.commands.suggestions.SuggestionContext
+/*import net.minecraft.commands.SuggestionBox
+*///? } else {
+import com.mojang.brigadier.CommandDispatcher
+import net.minecraft.commands.SharedSuggestionProvider
 import tech.thatgravyboat.skyblockapi.utils.McVersionGroup
 import net.minecraft.util.Util
-*///? }
+//? }
 
 public object McClient {
 
@@ -51,10 +51,11 @@ public object McClient {
     public val config: Path = FabricLoader.getInstance().configDir
 
     //? if < 26.4 {
-    /*@Deprecated("Use mcVersion instead")
+    @Deprecated("Use mcVersion instead")
     @Suppress("DEPRECATION")
     public val mcVersionGroup: McVersionGroup get() = McVersionGroup.entries.first { it.isActive }
-    *///?}
+
+    //?}
     public val mcVersion: McVersion get() = McVersion.entries.first { it.isActive }
 
     public val version: String = SharedConstants.getCurrentVersion().name()
@@ -109,7 +110,7 @@ public object McClient {
     public val scoreboardTitle: Component? get() = self.level?.scoreboard?.getDisplayObjective(SIDEBAR)?.displayName
 
     //~ if >= 26.4 'commands' -> 'commandSuggestions()', 'CommandDispatcher<out SharedSuggestionProvider>' -> 'SuggestionBox'
-    public val serverCommands: SuggestionBox? get() = connection?.commandSuggestions()
+    public val serverCommands: CommandDispatcher<out SharedSuggestionProvider>? get() = connection?.commands
 
     public val toasts: ToastManager get() = gui.toastManager()
     public val gui: Gui get() = self.gui

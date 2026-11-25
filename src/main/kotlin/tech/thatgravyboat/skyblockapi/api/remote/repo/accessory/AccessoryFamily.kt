@@ -9,7 +9,6 @@ import me.owdding.ktcodecs.GenerateCodec
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 
-@ConsistentCopyVisibility
 @GenerateCodec
 public data class AccessoryFamily internal constructor(
     @FieldName("family") val name: String,

@@ -39,9 +39,9 @@ import tech.thatgravyboat.skyblockapi.utils.text.Text.sendWithPrefix
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 
 //? if < 26.4
-//import net.minecraft.world.inventory.Slot
+import net.minecraft.world.inventory.Slot
 //? if >= 26.4
-import net.minecraft.client.gui.components.inventory.SlotWidget
+//import net.minecraft.client.gui.components.inventory.SlotWidget
 
 @Suppress("UnstableApiUsage")
 @Module
@@ -96,9 +96,9 @@ public object ChestDump {
                 }
 
                 //~ if >= 26.4 'Slot?' -> 'SlotWidget?', 'slot:' -> 'slotWidget:'
-                override fun slotClicked(slotWidget: SlotWidget?, slotId: Int, buttonNum: Int, containerInput: ContainerInput?) {
+                override fun slotClicked(slot: Slot?, slotId: Int, buttonNum: Int, containerInput: ContainerInput?) {
                     //~ if >= 26.4 'slot ?:' -> 'slotWidget?.slot() ?:'
-                    val slot = slotWidget?.slot() ?: return
+                    val slot = slot ?: return
                     SkyBlockAPI.info("<ChestDump> Clicked slot $slotId with button $buttonNum and click type $containerInput")
                     SlotClickEvent(slot.item, slot, buttonNum, this).post()
                 }

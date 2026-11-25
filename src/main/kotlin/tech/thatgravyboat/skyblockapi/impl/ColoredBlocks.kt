@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.impl
 
 //? if < 26.4 {
-/*import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 
 @Suppress("unused")
@@ -143,4 +143,4 @@ public object ColoredBlocks {
     public val RED_SHULKER_BOX: Block = Blocks.DYED_SHULKER_BOX.red
     public val BLACK_SHULKER_BOX: Block = Blocks.DYED_SHULKER_BOX.black
 }
-*///?}
+//?}

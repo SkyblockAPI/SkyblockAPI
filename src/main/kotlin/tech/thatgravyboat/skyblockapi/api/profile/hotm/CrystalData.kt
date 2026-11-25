@@ -9,7 +9,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-internal data class CrystalData(
+public data class CrystalData(
     var crystals: MutableMap<CrystalType, CrystalStatus> = mutableMapOf(),
 ) {
     public companion object {

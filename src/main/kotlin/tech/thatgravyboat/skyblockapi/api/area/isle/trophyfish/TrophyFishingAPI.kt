@@ -23,7 +23,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.matchWhen
 import kotlin.math.max
 
 //? if < 26.4
-//import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
+import tech.thatgravyboat.skyblockapi.api.events.location.isle.TrophyFishCaughtEvent
 
 @Module
 public object TrophyFishingAPI {
@@ -57,7 +57,7 @@ public object TrophyFishingAPI {
 
                 TrophyFishStorage.addCaught(type, fishTier)
                 //? if < 26.4
-                //@Suppress("DEPRECATION") TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name)).post()
+                @Suppress("DEPRECATION") TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name)).post()
                 TrophyCaughtEvent.Fish(type, fishTier).post()
             }
             case(multiTrophyFishCaughtRegex, "type", "tier", "amount") { (type, tier, amount) ->
@@ -67,7 +67,7 @@ public object TrophyFishingAPI {
 
                 TrophyFishStorage.addCaught(type, fishTier)
                 //? if < 26.4
-                //@Suppress("DEPRECATION") TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name), amount).post()
+                @Suppress("DEPRECATION") TrophyFishCaughtEvent(type, TrophyFishTier.valueOf(fishTier.name), amount).post()
                 TrophyCaughtEvent.Fish(type, fishTier, amount).post()
             }
         }
@@ -127,13 +127,13 @@ public object TrophyFishingAPI {
     }
 
     //? if < 26.4 {
-    /*@Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
+    @Deprecated("Binary compatibility", level = DeprecationLevel.HIDDEN)
     @Suppress("DEPRECATION")
     public fun getCaught(type: TrophyFishType): Map<TrophyFishTier, Int> {
         return TrophyFishStorage.getCaught(type).map { TrophyFishTier.valueOf(it.key.name) to it.value }.toMap()
     }
 
-    @JvmName("getCaughtTiers")*///?}
+    @JvmName("getCaughtTiers")//?}
     public fun getCaught(type: TrophyFishType): Map<TrophyTier, Int> {
         return TrophyFishStorage.getCaught(type)
     }

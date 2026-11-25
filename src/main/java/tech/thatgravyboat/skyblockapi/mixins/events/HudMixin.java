@@ -27,7 +27,7 @@ import tech.thatgravyboat.skyblockapi.api.events.render.RenderHudEvent;
 import tech.thatgravyboat.skyblockapi.api.item.VisualItemAccessor;
 
 //? if <26.4
-//import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.DeltaTracker;
 
 @Mixin(Hud.class)
 public abstract class HudMixin {
@@ -43,12 +43,12 @@ public abstract class HudMixin {
 
     @Inject(method = "extractSleepOverlay", at = @At("HEAD"))
     //~ if >=26.4 ', DeltaTracker delta, CallbackInfo' -> ', CallbackInfo'
-    private void onRenderSleepOverlay(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+    private void onRenderSleepOverlay(GuiGraphicsExtractor graphics, DeltaTracker delta, CallbackInfo ci) {
         if (this.isHidden()) {
             return;
         }
         //~ if >=26.4 'delta' -> 'graphics.deltaTracker()'
-        float partialTicks = graphics.deltaTracker().getGameTimeDeltaPartialTick(false);
+        float partialTicks = delta.getGameTimeDeltaPartialTick(false);
         new RenderHudEvent(graphics, partialTicks).post(SkyBlockAPI.getEventBus());
     }
 
@@ -57,11 +57,11 @@ public abstract class HudMixin {
         at = @At(
             value = "INVOKE",
             //~ if >= 26.4 ';Lnet/minecraft/client/DeltaTracker;)' -> ';)'
-            target = "Lnet/minecraft/client/gui/Hud;extractItemHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
+            target = "Lnet/minecraft/client/gui/Hud;extractItemHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"
         )
     )
     //~ if >= 26.4 ', DeltaTracker deltaTracker)' -> ')'
-    private boolean onRenderHotbar(Hud instance, GuiGraphicsExtractor graphics) {
+    private boolean onRenderHotbar(Hud instance, GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         return !new RenderHudElementEvent(HudElement.HOTBAR, graphics).post(SkyBlockAPI.getEventBus());
     }
 
@@ -70,7 +70,7 @@ public abstract class HudMixin {
         at = @At(
             value = "INVOKE",
             //~ if >= 26.4 ';Lnet/minecraft/client/DeltaTracker;)' -> ';)'
-            target = "Lnet/minecraft/client/gui/contextualbar/ContextualBar;extractBackground(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
+            target = "Lnet/minecraft/client/gui/contextualbar/ContextualBar;extractBackground(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"
         )
     )
     private void onRenderBar(CallbackInfo ci, @Local(argsOnly = true) GuiGraphicsExtractor graphics) {

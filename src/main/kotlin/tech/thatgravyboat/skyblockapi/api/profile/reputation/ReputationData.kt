@@ -7,7 +7,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-internal data class ReputationData(
+public data class ReputationData(
     var selectedFaction: Faction?,
     val reputation: MutableMap<Faction, Int> = mutableMapOf(),
 ) {

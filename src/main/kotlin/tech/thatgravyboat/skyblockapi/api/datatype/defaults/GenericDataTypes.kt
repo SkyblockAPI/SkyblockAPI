@@ -90,11 +90,11 @@ public object GenericDataTypes {
     }
 
     //? if < 26.4 {
-    /*@Deprecated("All enrichments are now in theory strength", ReplaceWith("HAS_ENRICHMENT"))
+    @Deprecated("All enrichments are now in theory strength", ReplaceWith("HAS_ENRICHMENT"))
     public val ENRICHMENT: DataType<SkyBlockId> = DataType.of("enrichment") {
         val id = it.unsafeTag?.getStringOrNull("talisman_enrichment") ?: return@of null
         SkyBlockId.item("talisman_enrichment_$id")
-    }*///?}
+    }//?}
     public val GILDED_GIFTED_COINS: DataType<Long> = DataType.simple("gilded_gifted_coins")
     public val THUNDER_CHARGE: DataType<Int> = DataType.simple("thunder_charge")
     public val PELTS_EARNED: DataType<Long> = DataType.simple("pelts_earned")

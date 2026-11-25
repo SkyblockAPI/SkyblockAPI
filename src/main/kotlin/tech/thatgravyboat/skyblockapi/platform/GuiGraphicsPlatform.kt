@@ -19,11 +19,11 @@ import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.Logger
 
 //~ if >= 26.4 'renderer.RenderPipelines' -> 'gui.GuiPipeline'
-import net.minecraft.client.gui.GuiPipeline
+import net.minecraft.client.renderer.RenderPipelines
 //? if < 26.3
 //import com.mojang.blaze3d.pipeline.RenderPipeline
 //? else if = 26.3
-//import com.mojang.renderpearl.api.pipeline.RenderPipeline
+import com.mojang.renderpearl.api.pipeline.RenderPipeline
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun adjustColor(color: Int): Int {
@@ -66,7 +66,7 @@ public fun GuiGraphicsExtractor.drawString(text: FormattedCharSequence, x: Int, 
 }
 
 //~ if >= 26.4 'RenderPipelines.GUI_TEXTURED' -> 'GuiPipeline.TEXTURED', 'RenderPipeline' -> 'GuiPipeline'
-public val GUI_TEXTURED_PIPELINE: GuiPipeline = GuiPipeline.TEXTURED
+public val GUI_TEXTURED_PIPELINE: RenderPipeline = RenderPipelines.GUI_TEXTURED
 
 public fun GuiGraphicsExtractor.drawSprite(texture: Identifier, x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
     this.blitSprite(GUI_TEXTURED_PIPELINE, texture, x, y, width, height, color)
@@ -83,7 +83,7 @@ public fun GuiGraphicsExtractor.drawTexture(
     val maxy = (y + height)
 
     //~ if >= 26.4 'textureView' -> 'textureView()', 'sampler' -> 'sampler()'
-    val setup: TextureSetup = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView(), it.sampler()) }
+    val setup: TextureSetup = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView, it.sampler) }
 
     this.guiRenderState.addGuiElement(
         BlitRenderState(

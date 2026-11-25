@@ -5,7 +5,7 @@ import net.minecraft.world.inventory.Slot
 import tech.thatgravyboat.skyblockapi.mixins.accessors.AbstractContainerScreenAccessor
 
 //? if >= 26.4
-import net.minecraft.client.gui.components.inventory.SlotWidget
+//import net.minecraft.client.gui.components.inventory.SlotWidget
 
 /**
  * This contains extensions of which accessors or interfaces are injected on vanilla classes.
@@ -13,9 +13,9 @@ import net.minecraft.client.gui.components.inventory.SlotWidget
 
 public fun AbstractContainerScreen<*>.getHoveredSlot(): Slot? {
     //? if < 26.4
-     //return (this as AbstractContainerScreenAccessor).hoveredSlot
+    return (this as AbstractContainerScreenAccessor).hoveredSlot
     //? else
-    return this.children().filterIsInstance<SlotWidget>().find { it.isHovered }?.slot()
+    //return this.children().filterIsInstance<SlotWidget>().find { it.isHovered }?.slot()
 }
 
 public val AbstractContainerScreen<*>.left: Int get() = (this as AbstractContainerScreenAccessor).leftPos

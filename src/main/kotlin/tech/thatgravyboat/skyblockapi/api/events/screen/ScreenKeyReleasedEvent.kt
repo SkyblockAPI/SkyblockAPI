@@ -9,19 +9,23 @@ public sealed class ScreenKeyReleasedEvent(
     public val event: KeyEvent,
 ) : CancellableSkyBlockEvent() {
     //? if < 26.4 {
-    /*protected constructor(
+    protected constructor(
         screen: Screen,
         key: Int,
         //? if < 26.3
         //scanCode: Int,
         modifiers: Int,
-    ) : this(screen, KeyEvent(key,
-        //? if < 26.3
-        //scanCode,
-        //? else
-        0,
-        modifiers)
-    )*///?}
+    ) : this(
+        screen,
+        KeyEvent(
+            key,
+            //? if < 26.3
+            //scanCode,
+            //? else
+            0,
+            modifiers,
+        ),
+    )//?}
     public val key: Int = event.key
 
     //~ if > 26.2 'scancode' -> 'keycode'
@@ -33,7 +37,7 @@ public sealed class ScreenKeyReleasedEvent(
 
     public class Pre(screen: Screen, event: KeyEvent) : ScreenKeyReleasedEvent(screen, event)
     //? if < 26.4 {
-    /*{
+    {
         @Deprecated("Provide a KeyEvent instead", level = DeprecationLevel.HIDDEN)
         public constructor(
             screen: Screen,
@@ -46,11 +50,11 @@ public sealed class ScreenKeyReleasedEvent(
             //~ if >= 26.3 'scanCode' -> '0'
             KeyEvent(key, 0, modifiers),
         )
-    }*///?}
+    }//?}
 
     public class Post(screen: Screen, event: KeyEvent) : ScreenKeyReleasedEvent(screen, event)
     //? if < 26.4 {
-    /*{
+    {
         @Deprecated("Provide a KeyEvent instead", level = DeprecationLevel.HIDDEN)
         public constructor(
             screen: Screen,
@@ -63,5 +67,5 @@ public sealed class ScreenKeyReleasedEvent(
             //~ if >= 26.3 'scanCode' -> '0'
             KeyEvent(key, 0, modifiers),
         )
-    }*///?}
+    }//?}
 }

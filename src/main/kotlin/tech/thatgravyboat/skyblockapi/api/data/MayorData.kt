@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.utils.extentions.stripColor
 import tech.thatgravyboat.skyblockapi.utils.extentions.toScreamingSnakeCase
 
 //? if < 26.4
-//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 
 public data class MayorCandidate internal constructor(
     val id: String,
@@ -98,10 +98,10 @@ public data class MayorPerk internal constructor(
     val perkpocalypse: Boolean = true,
 ) {
     //? if < 26.4 {
-    /*@RemoveNextVersion
+    @RemoveNextVersion
     @Deprecated("Use MayorPerk.perkpocalypse instead.", ReplaceWith("perkpocalypse"))
     val perkapocalypse: Boolean get() = perkpocalypse
-    *///?}
+    //?}
 
     internal var overrideState: TriState = DEFAULT
 

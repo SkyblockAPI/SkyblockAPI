@@ -9,7 +9,7 @@ import kotlin.time.Instant
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-internal data class StorageData(
+public data class StorageData(
     val normal: PlayerStorageData = PlayerStorageData(),
     val rift: MutableList<PlayerStorageInstance> = mutableListOf(),
 ) {
@@ -20,7 +20,7 @@ internal data class StorageData(
 
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-internal data class PlayerStorageData(
+public data class PlayerStorageData(
     val enderchests: MutableList<PlayerStorageInstance> = mutableListOf(),
     val backpacks: MutableList<PlayerStorageInstance> = mutableListOf(),
 )

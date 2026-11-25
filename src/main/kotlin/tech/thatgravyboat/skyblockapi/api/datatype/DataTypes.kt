@@ -53,9 +53,9 @@ public object DataTypes {
     public val HAS_ENRICHMENT: DataType<Boolean> = GenericDataTypes.HAS_ENRICHMENT
 
     //? if < 26.4 {
-    /*@Deprecated("All enrichments are now in theory strength", ReplaceWith("HAS_ENRICHMENT"))
+    @Deprecated("All enrichments are now in theory strength", ReplaceWith("HAS_ENRICHMENT"))
     @Suppress("DEPRECATION")
-    public val ENRICHMENT: DataType<SkyBlockId> = GenericDataTypes.ENRICHMENT*///?}
+    public val ENRICHMENT: DataType<SkyBlockId> = GenericDataTypes.ENRICHMENT//?}
     public val SOULBOUND: DataType<LoreDataTypes.SoulboundType> = LoreDataTypes.SOULBOUND
     public val ETHERMERGE: DataType<Boolean> = GenericDataTypes.ETHERMERGE
     public val TUNED_TRANSMISSION: DataType<Int> = GenericDataTypes.TUNED_TRANSMISSION

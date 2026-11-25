@@ -12,18 +12,21 @@ internal object ComponentUtils {
         var current = 0
 
         //~ if >= 26.4 'visit' -> 'visitUnbounded'
-        component.visitUnbounded({ style, part ->
-            val length = part.stripColor().length
-            if (current + length <= start) {
-                current += length
-            } else {
-                val startIndex = start - current
-                val endIndex = (end - current).coerceAtMost(length)
-                components.add(Component.literal(part.substringIgnoreColorCodes(startIndex, endIndex)).setStyle(style))
-                current += length
-            }
-            if (current >= end) Optional.of(Unit) else Optional.empty()
-        }, Style.EMPTY)
+        component.visit(
+            { style, part ->
+                val length = part.stripColor().length
+                if (current + length <= start) {
+                    current += length
+                } else {
+                    val startIndex = start - current
+                    val endIndex = (end - current).coerceAtMost(length)
+                    components.add(Component.literal(part.substringIgnoreColorCodes(startIndex, endIndex)).setStyle(style))
+                    current += length
+                }
+                if (current >= end) Optional.of(Unit) else Optional.empty()
+            },
+            Style.EMPTY,
+        )
 
         if (components.isEmpty()) return Component.empty()
         if (components.size == 1) return components[0]
