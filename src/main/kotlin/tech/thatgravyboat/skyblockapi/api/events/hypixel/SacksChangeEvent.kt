@@ -16,5 +16,5 @@ public data class ChangedSackItem internal constructor(
     //? if >= 26.4
     val id: SkyBlockId,
     //? else
-    //val id: SkyBlockId = SkyBlockId.item(item),
+    //@IntroducedAt("4.3.2") val id: SkyBlockId = SkyBlockId.item(item),
 )
