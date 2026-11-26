@@ -33,6 +33,7 @@ import kotlin.io.path.createDirectories
 @Module
 public object DebugCommands {
 
+    private var actionbarComponent: Component = Component.empty()
     private var actionbar: String = ""
     private var tabListFooter: Component = Component.empty()
     private var tabListHeader: Component = Component.empty()
@@ -46,6 +47,7 @@ public object DebugCommands {
     @Subscription(receiveCancelled = true)
     internal fun onActionBar(event: ActionBarReceivedEvent.Pre) {
         actionbar = event.coloredText
+        actionbarComponent = event.component
     }
 
     @Subscription(priority = Int.MIN_VALUE)
@@ -149,9 +151,18 @@ public object DebugCommands {
                 McClient.clipboard = McPlayer.heldItem.toJson(ItemStack.CODEC).toPrettyString()
             }
 
-            thenCallback("actionbar") {
-                copyMessage("actionbar")
-                McClient.clipboard = actionbar
+            then("actionbar") {
+                then("raw") {
+                    callback {
+                        copyMessage("raw actionbar")
+                        McClient.clipboard = actionbarComponent.toJson(ComponentSerialization.CODEC).toPrettyString()
+                    }
+                }
+
+                callback {
+                    copyMessage("actionbar")
+                    McClient.clipboard = actionbar
+                }
             }
         }
         register("folder") {

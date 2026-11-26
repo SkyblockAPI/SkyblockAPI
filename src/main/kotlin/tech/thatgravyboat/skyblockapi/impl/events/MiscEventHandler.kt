@@ -141,7 +141,7 @@ public object MiscEventHandler {
 
         ClientReceiveMessageEvents.ALLOW_GAME.register(phase) { message, overlay ->
             if (overlay) {
-                !ActionBarReceivedEvent.Pre(message).post()
+                !ActionBarReceivedEvent.preparePre(message).post()
             } else {
                 message.push()
                 if (ChatReceivedEvent.Pre(message, id()).post()) {
@@ -170,7 +170,7 @@ public object MiscEventHandler {
         }
         ClientReceiveMessageEvents.MODIFY_GAME.register(phase) { message, overlay ->
             if (overlay) {
-                ActionBarReceivedEvent.Post(message).let { event ->
+                ActionBarReceivedEvent.preparePost(message).let { event ->
                     event.post()
                     event.component
                 }

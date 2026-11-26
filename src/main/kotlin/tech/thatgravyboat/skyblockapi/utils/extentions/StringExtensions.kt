@@ -1,7 +1,9 @@
 package tech.thatgravyboat.skyblockapi.utils.extentions
 
+import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import tech.thatgravyboat.skyblockapi.utils.regex.Regexes
+import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.UUID
@@ -32,18 +34,25 @@ private val romanNumerals = mapOf(
 public fun String?.toIntValue(): Int = runCatching {
     this?.replace(",", "")?.toInt() ?: 0
 }.getOrDefault(0)
-
 public fun String?.toLongValue(): Long = runCatching {
     this?.replace(",", "")?.toLong() ?: 0
 }.getOrDefault(0)
-
 public fun String?.toFloatValue(): Float = runCatching {
     this?.replace(",", "")?.toFloat() ?: 0f
 }.getOrDefault(0f)
 
-public fun String?.parseFormattedLong(default: Long = 0L): Long = parseFormattedDouble(default.toDouble()).toLong()
-
 public fun String?.parseFormattedInt(default: Int = 0): Int = parseFormattedLong(default.toLong()).toInt()
+public fun String?.parseFormattedLong(default: Long = 0L): Long = parseFormattedDouble(default.toDouble()).toLong()
+public fun String?.parseFormattedFloat(default: Float = 0f): Float = parseFormattedDouble(default.toDouble()).toFloat()
+
+
+public fun Component?.toIntValue(): Int = this?.stripped?.toIntValue() ?: 0
+public fun Component?.toLongValue(): Long = this?.stripped?.toLongValue() ?: 0
+public fun Component?.toFloatValue(): Float = this?.stripped?.toFloatValue() ?: 0f
+
+public fun Component?.parseFormattedInt(default: Int = 0): Int = this?.stripped?.parseFormattedInt(default) ?: default
+public fun Component?.parseFormattedLong(default: Long = 0L): Long = this?.stripped?.parseFormattedLong(default) ?: default
+public fun Component?.parseFormattedFloat(default: Float = 0f): Float = this?.stripped?.parseFormattedFloat(default) ?: default
 
 @JvmOverloads
 public fun String?.parseFormattedDouble(default: Double = 0.0): Double = runCatching {

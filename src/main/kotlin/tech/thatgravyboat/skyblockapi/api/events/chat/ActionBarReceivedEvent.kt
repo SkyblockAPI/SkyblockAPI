@@ -1,5 +1,6 @@
 package tech.thatgravyboat.skyblockapi.api.events.chat
 
+import me.owdding.dfu.item.LegacyTextFixer
 import net.minecraft.network.chat.Component
 import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
@@ -40,5 +41,19 @@ public abstract class ActionBarReceivedEvent : SkyBlockEvent() {
     public class Sent internal constructor(override val component: Component) : ActionBarReceivedEvent() {
         override val text: String = super.text
         override val coloredText: String = super.coloredText
+    }
+
+
+    // TODO: remove once hypixel starts sending actual components in action bars
+    internal companion object {
+        internal fun preparePre(component: Component): Pre {
+            val fixedComponent = if (component.siblings.isEmpty()) LegacyTextFixer.parse(component.string) else component
+            return Pre(fixedComponent)
+        }
+
+        internal fun preparePost(component: Component): Post {
+            val fixedComponent = if (component.siblings.isEmpty()) LegacyTextFixer.parse(component.string) else component
+            return Post(fixedComponent)
+        }
     }
 }

@@ -5,7 +5,10 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.extentions.associateByNotNull
+import tech.thatgravyboat.skyblockapi.utils.extentions.trimIgnoreColor
 import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils
+import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils.spans
+import tech.thatgravyboat.skyblockapi.utils.regex.component.ComponentUtils.tryTrimIgnoreColor
 import tech.thatgravyboat.skyblockapi.utils.text.TextProperties.stripped
 import java.util.Optional
 import net.minecraft.network.chat.TextColor as McTextColor
@@ -121,6 +124,42 @@ public object TextUtils {
         if (style.isUnderlined) append(ChatFormatting.UNDERLINE)
         if (style.isStrikethrough) append(ChatFormatting.STRIKETHROUGH)
         if (style.isObfuscated) append(ChatFormatting.OBFUSCATED)
+    }
+
+    public fun Component.remove(component: Component): Component = ComponentUtils.remove(this, component)
+
+    public fun Component.trim(): Component {
+        val spans = this.spans.toMutableList()
+        return when {
+            spans.isEmpty() -> Component.empty()
+            spans.size == 1 -> Component.literal(spans[0].first.trimIgnoreColor()).setStyle(spans[0].second)
+            else -> {
+                val prefix = mutableListOf<Component>()
+                val suffix = mutableListOf<Component>()
+
+                while (spans.isNotEmpty()) {
+                    val (content, style) = spans.removeFirst()
+                    val (isEmpty, trimmed) = content.tryTrimIgnoreColor(end = false)
+                    prefix.add(Component.literal(trimmed).setStyle(style))
+
+                    if (!isEmpty) break // Means we found actual content
+                }
+
+                while (spans.isNotEmpty()) {
+                    val (content, style) = spans.removeLast()
+                    val (isEmpty, trimmed) = content.tryTrimIgnoreColor(start = false)
+                    suffix.addFirst(Component.literal(trimmed).setStyle(style))
+
+                    if (!isEmpty) break // Means we found actual content
+                }
+
+                Component.empty().apply {
+                    prefix.forEach(this::append)
+                    spans.forEach { (content, style) -> this.append(Component.literal(content).setStyle(style)) }
+                    suffix.forEach(this::append)
+                }
+            }
+        }
     }
 
 }
