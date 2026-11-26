@@ -12,7 +12,7 @@ public enum class SkyBlockRarity(public val color: Int, public val skyBlockColor
     UNCOMMON(TextColor.GREEN, SkyBlockColor.GREEN),
     RARE(TextColor.BLUE, SkyBlockColor.BLUE),
     EPIC(TextColor.DARK_PURPLE, SkyBlockColor.DARK_PURPLE),
-    LEGENDARY(TextColor.GOLD, SkyBlockColor.GOLD),
+    LEGENDARY(TextColor.GOLD, SkyBlockColor.GOLD, "LEGENJERRY"),
     MYTHIC(TextColor.LIGHT_PURPLE, SkyBlockColor.LIGHT_PURPLE),
     DIVINE(TextColor.AQUA, SkyBlockColor.AQUA, "SUPREME"),
     ULTIMATE(TextColor.DARK_RED, SkyBlockColor.DARK_RED),
