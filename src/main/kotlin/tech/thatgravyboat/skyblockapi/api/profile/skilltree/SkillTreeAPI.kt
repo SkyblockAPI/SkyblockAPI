@@ -37,7 +37,7 @@ public abstract class SkillTreeAPI<
     protected open val levelRegex: Regex = inventoryGroup.create("level", "Level (?<level>\\d+)(?:/\\d+)?")
     protected open val disabledRegex: Regex = inventoryGroup.create("disabled", "DISABLED|Click to select!")
     //? if < 26.4
-    protected open val mainItemRegex: Regex = inventoryGroup.create("mainitem", "Heart of the $identifier")
+    //protected open val mainItemRegex: Regex = inventoryGroup.create("mainitem", "Heart of the $identifier")
     protected open val tokensRegex: Regex = inventoryGroup.create("tokens", "Tokens? of the $identifier: (?<tokens>\\d+)")
     protected open val spentTokensRegex: Regex = inventoryGroup.create("tokens.spent", "\\s*-\\s*(?<tokens>[\\d,.]+) Tokens? of the $identifier")
     protected open val tierRegex: Regex = inventoryGroup.create("tier", "Tier (?<tier>\\d+)")

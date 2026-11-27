@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.suggestion.SuggestionProvider
 import me.owdding.ktmodules.Module
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.suggestions.SuggestionContext
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import tech.thatgravyboat.skyblockapi.api.data.stored.FriendStorage
@@ -197,7 +197,7 @@ public object FriendsAPI {
     internal fun onCommandsRegistration(event: RegisterSkyblockApiCommandsEvent) {
         val provider = SuggestionProvider<FabricClientCommandSource> { _, builder ->
             val friends = friends.map { it.name }
-            SharedSuggestionProvider.suggest(friends, builder)
+            SuggestionContext.suggest(friends, builder)
         }
         event.register("friends") {
             then("add name", StringArgumentType.string()) {

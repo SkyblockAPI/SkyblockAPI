@@ -11,8 +11,8 @@ public enum class CorpseType(public val keyId: SkyBlockId? = null) {
     ;
 
     //? if < 26.4 {
-    @Deprecated("Use keyId instead", ReplaceWith("keyId"))
-    public val key: String? = keyId?.skyblockId//?}
+    /*@Deprecated("Use keyId instead", ReplaceWith("keyId"))
+    public val key: String? = keyId?.skyblockId*///?}
 
     private val string = toFormattedName()
     override fun toString(): String = string

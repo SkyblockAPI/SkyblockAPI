@@ -4,7 +4,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.state.gui.BlitRenderState
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
@@ -18,6 +17,13 @@ import org.joml.Vector2f
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.utils.Logger
+
+//~ if >= 26.4 'renderer.RenderPipelines' -> 'gui.GuiPipeline'
+import net.minecraft.client.gui.GuiPipeline
+//? if < 26.3
+//import com.mojang.blaze3d.pipeline.RenderPipeline
+//? else if = 26.3
+//import com.mojang.renderpearl.api.pipeline.RenderPipeline
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun adjustColor(color: Int): Int {
@@ -59,9 +65,11 @@ public fun GuiGraphicsExtractor.drawString(text: FormattedCharSequence, x: Int, 
     this.text(McFont.self, text, x, y, adjustColor(color), shadow)
 }
 
+//~ if >= 26.4 'RenderPipelines.GUI_TEXTURED' -> 'GuiPipeline.TEXTURED', 'RenderPipeline' -> 'GuiPipeline'
+public val GUI_TEXTURED_PIPELINE: GuiPipeline = GuiPipeline.TEXTURED
 
 public fun GuiGraphicsExtractor.drawSprite(texture: Identifier, x: Int, y: Int, width: Int, height: Int, color: Int = -1) {
-    this.blitSprite(RenderPipelines.GUI_TEXTURED, texture, x, y, width, height, color)
+    this.blitSprite(GUI_TEXTURED_PIPELINE, texture, x, y, width, height, color)
 }
 
 public fun GuiGraphicsExtractor.drawTexture(
@@ -74,11 +82,12 @@ public fun GuiGraphicsExtractor.drawTexture(
     val maxx = (x + width)
     val maxy = (y + height)
 
-    val setup: TextureSetup = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView, it.sampler) }
+    //~ if >= 26.4 'textureView' -> 'textureView()', 'sampler' -> 'sampler()'
+    val setup: TextureSetup = McClient.self.textureManager.getTexture(texture).let { TextureSetup.singleTexture(it.textureView(), it.sampler()) }
 
     this.guiRenderState.addGuiElement(
         BlitRenderState(
-            RenderPipelines.GUI_TEXTURED, setup, Matrix3x2f(this.pose()),
+            GUI_TEXTURED_PIPELINE, setup, Matrix3x2f(this.pose()),
             minx, miny, maxx, maxy, u0, u1, v0, v1, color,
             this.scissorStack.peek(),
         ),

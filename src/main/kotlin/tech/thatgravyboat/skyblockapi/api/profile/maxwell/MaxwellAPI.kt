@@ -66,13 +66,13 @@ public data object MaxwellAPI : ItemDebugCategory {
         get() = MaxwellStorage.accessoryPower
 
     //? if < 26.4 {
-    @Deprecated("Accessories aren't really assigned a specific slot and page anymore.", ReplaceWith("accessories"), level = HIDDEN)
+    /*@Deprecated("Accessories aren't really assigned a specific slot and page anymore.", ReplaceWith("accessories"), level = HIDDEN)
     @Suppress("DEPRECATION")
-    val accessoryEntries: Collection<AccessoryBagEntry> get() = emptyList()//?}
+    val accessoryEntries: Collection<AccessoryBagEntry> get() = emptyList()*///?}
 
     //~ if >= 26.4 'List' -> 'Collection'
-    val accessories: List<ItemStack>
-        get() = accessoryFamilies.values/*? if < 26.4 */.toList()
+    val accessories: Collection<ItemStack>
+        get() = accessoryFamilies.values/*? if < 26.4 *///.toList()
 
     val accessoryFamilies: Map<String, ItemStack>
         get() = MaxwellStorage.accessories
@@ -87,8 +87,8 @@ public data object MaxwellAPI : ItemDebugCategory {
         get() = MaxwellStorage.tuningTemplates
 
     //? if < 26.4 {
-    @Deprecated("You can no longer consume it.")
-    val consumedRiftPrism: Boolean = false//?}
+    /*@Deprecated("You can no longer consume it.")
+    val consumedRiftPrism: Boolean = false*///?}
 
     //region Regex
     private val chatGroup = RegexGroup.CHAT.group("maxwell")

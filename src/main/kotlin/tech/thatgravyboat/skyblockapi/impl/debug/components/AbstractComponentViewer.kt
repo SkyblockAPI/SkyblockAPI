@@ -1,3 +1,4 @@
+//~ gui_extraction
 package tech.thatgravyboat.skyblockapi.impl.debug.components
 
 import com.google.gson.JsonElement
@@ -8,7 +9,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.input.KeyEvent
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
@@ -21,6 +21,7 @@ import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McFont
 import tech.thatgravyboat.skyblockapi.helpers.McPlayer
 import tech.thatgravyboat.skyblockapi.helpers.McScreen
+import tech.thatgravyboat.skyblockapi.platform.GUI_TEXTURED_PIPELINE
 import tech.thatgravyboat.skyblockapi.utils.devutils.debugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.getHoveredSlot
 import tech.thatgravyboat.skyblockapi.utils.text.Text
@@ -117,7 +118,7 @@ public class AbstractComponentViewer(public val map: Map<ComponentViewerCategory
         return super.mouseScrolled(x, y, scrollX, scrollY)
     }
 
-    override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
+    override fun extractRenderState(graphics: GuiGraphicsExtractor) {
         if (selectedCategory == null || map[selectedCategory] == null) {
             graphics.centeredText(McFont.self, "No entry found!", width / 2, height / 2 - McFont.height / 2, ARGB.opaque(0xFF0000))
         }
@@ -130,14 +131,14 @@ public class AbstractComponentViewer(public val map: Map<ComponentViewerCategory
             graphics.text(McFont.self, line, width / 4 + 8, height / 8 + 6 + (index * (McFont.height + 1)), -1, false)
         }
         graphics.disableScissor()
-        super.extractRenderState(graphics, mouseX, mouseY, a)
+        super.extractRenderState(graphics)
     }
 
     public val widgetHeight: Int get() = (height / 4) * 3
 
-    override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
-        super.extractBackground(graphics, mouseX, mouseY, a)
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, width / 4, height / 8, width / 2, widgetHeight)
+    override fun extractBackground(graphics: GuiGraphicsExtractor) {
+        super.extractBackground(graphics)
+        graphics.blitSprite(GUI_TEXTURED_PIPELINE, BACKGROUND, width / 4, height / 8, width / 2, widgetHeight)
     }
 }
 

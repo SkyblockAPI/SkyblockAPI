@@ -10,7 +10,6 @@ import tech.thatgravyboat.skyblockapi.utils.devutils.entries.DebugToggle
 import tech.thatgravyboat.skyblockapi.utils.extentions.toSnakeCase
 import tech.thatgravyboat.skyblockapi.utils.extentions.toTitleCase
 
-@ConsistentCopyVisibility
 public data class PersonalCompactorType internal constructor(
     val name: String,
     val internalName: String,

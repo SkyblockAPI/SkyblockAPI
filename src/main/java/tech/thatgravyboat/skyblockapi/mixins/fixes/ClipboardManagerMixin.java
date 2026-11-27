@@ -1,7 +1,7 @@
 package tech.thatgravyboat.skyblockapi.mixins.fixes;
 
-//? if >= 26.3 {
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+//? if 26.3 {
+/*import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.platform.ClipboardManager;
 import org.lwjgl.sdl.SDLClipboard;
@@ -32,5 +32,4 @@ public class ClipboardManagerMixin {
         }
     }
 
-}
-//?}
+}*///?}

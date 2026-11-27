@@ -162,7 +162,6 @@ public data class ContainerPosition(
     public operator fun component4(): Int = page
 }
 
-@ConsistentCopyVisibility
 public data class ContentFlow private constructor(val anchor: Anchor, val direction: ContentDirection) {
 
     public fun index(rows: Int, columns: Int, row: Int, column: Int, debugCollector: ((String) -> Unit)? = null) : Int {

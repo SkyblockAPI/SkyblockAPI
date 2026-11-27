@@ -7,7 +7,6 @@ import me.owdding.ktcodecs.FieldNames
 import me.owdding.ktcodecs.GenerateCodec
 import me.owdding.ktcodecs.OptionalIfEmpty
 import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.RemoveNextVersion
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPower
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellPowers
 import tech.thatgravyboat.skyblockapi.api.profile.maxwell.MaxwellTuning
@@ -17,15 +16,18 @@ import tech.thatgravyboat.skyblockapi.api.remote.repo.accessory.RepoAccessoryDat
 import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 import tech.thatgravyboat.skyblockapi.utils.extentions.filterKeysNotNull
 
+//? if < 26.4
+//import tech.thatgravyboat.skyblockapi.RemoveNextVersion
+
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class MaxwellData(
+internal data class MaxwellData(
     var power: MaxwellPower = MaxwellPowers.NO_POWER,
     @FieldNames("accessory_power", "magicalPower")
     var accessoryPower: Int = 0,
     //? if < 26.4
-    @get:JvmName("getAccessoriesMap")
+    //@get:JvmName("getAccessoriesMap")
     val accessories: MutableMap</* Family */ String, ItemStack> = mutableMapOf(),
     @FieldNames("unlocked_power", "unlockedPowers")
     val unlockedPowers: MutableSet<MaxwellPower> = mutableSetOf(MaxwellPowers.NO_POWER),
@@ -35,7 +37,7 @@ public data class MaxwellData(
     var tuningTemplates: MutableList<MaxwellTuningTemplate> = mutableListOf(),
 ) {
     //? if < 26.4 {
-    @Deprecated("Use the primary constructor instead", level = WARNING)
+    /*@Deprecated("Use the primary constructor instead", level = WARNING)
     public constructor(
         power: MaxwellPower,
         accessoryPower: Int,
@@ -45,7 +47,14 @@ public data class MaxwellData(
         tuningTemplates: MutableList<MaxwellTuningTemplate> = mutableListOf(),
         @IntroducedAt("4.2.40")
         consumedRiftPrism: Boolean = false,
-    ) : this(power, accessoryPower, accessories.associateBy { it.getSkyBlockId()?.let(RepoAccessoryData::getFamilyFromItemId)?.name }.filterKeysNotNull().toMutableMap(), unlockedPowers, tunings, tuningTemplates)
+    ) : this(
+        power,
+        accessoryPower,
+        accessories.associateBy { it.getSkyBlockId()?.let(RepoAccessoryData::getFamilyFromItemId)?.name }.filterKeysNotNull().toMutableMap(),
+        unlockedPowers,
+        tunings,
+        tuningTemplates,
+    )
 
     @Deprecated("You can no longer consume it.", level = HIDDEN)
     var consumedRiftPrism: Boolean = false
@@ -78,7 +87,7 @@ public data class MaxwellData(
         @IntroducedAt("4.2.40")
         consumedRiftPrism: Boolean = false,
     ): MaxwellData = MaxwellData(power, accessoryPower, accessories, unlockedPowers, tunings, tuningTemplates, consumedRiftPrism)
-    //?}
+    *///?}
 
     public companion object {
         public val CODEC: Codec<MaxwellData> = SkyblockAPICodecs.getCodec<MaxwellData>()

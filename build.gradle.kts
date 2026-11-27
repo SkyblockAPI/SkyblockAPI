@@ -1,11 +1,15 @@
 @file:OptIn(ExperimentalAbiValidation::class)
 
+import jdk.jfr.internal.JVM.exclude
+import jdk.jfr.internal.JVM.include
 import net.fabricmc.loom.task.ValidateAccessWidenerTask
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.lang.classfile.Attributes.module
 import java.nio.file.StandardCopyOption
 import kotlin.io.path.copyTo
 import kotlin.io.path.deleteIfExists
+import kotlin.io.path.exists
 
 plugins {
     kotlin("jvm")
@@ -86,6 +90,7 @@ tasks.withType<KotlinCompile>().configureEach {
             "-Xnullability-annotations=@org.jspecify.annotations:ignore",
             // Protected constructors + public methods inside internal classes
             "-Xwarning-level=REDUNDANT_VISIBILITY_MODIFIER:disabled",
+            "-Xconsistent-data-class-copy-visibility",
         )
     }
 }
@@ -264,6 +269,7 @@ tasks.register("copyApiData") {
     doFirst {
         val path = layout.projectDirectory.asFile.toPath()
         val api = path.resolve("api/${name}.api")
+        if (!api.exists()) return@doFirst
         api.copyTo(api.resolveSibling("${name}.api.old"), StandardCopyOption.REPLACE_EXISTING)
     }
 }
@@ -279,7 +285,13 @@ tasks.register("resetApiData") {
         val path = layout.projectDirectory.asFile.toPath()
         val api = path.resolve("api/${name}.api")
         val backupApi = api.resolveSibling("${name}.api.old")
-        backupApi.copyTo(api, StandardCopyOption.REPLACE_EXISTING)
-        backupApi.deleteIfExists()
+        // TODO: figure out a better way to do this
+        // we need to delete the api file if the backup doesn't exist, because that means its a new version locally
+        if (backupApi.exists()) {
+            backupApi.copyTo(api, StandardCopyOption.REPLACE_EXISTING)
+            backupApi.deleteIfExists()
+        } else {
+            api.deleteIfExists()
+        }
     }
 }

@@ -20,7 +20,7 @@ import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findAll
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.match
 
 //? if < 26.4
-import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseSpawnEvent
+//import tech.thatgravyboat.skyblockapi.api.events.location.mineshaft.CorpseSpawnEvent
 import tech.thatgravyboat.skyblockapi.utils.extentions.addOrPut
 import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanOrArabic
 
@@ -116,7 +116,7 @@ public object MineshaftAPI {
                 corpses = foundCorpses
                 if (wasEmpty && corpses.isNotEmpty()) {
                     //? if < 26.4
-                    @Suppress("DEPRECATION") CorpseSpawnEvent(foundCorpses).post()
+                    //@Suppress("DEPRECATION") CorpseSpawnEvent(foundCorpses).post()
                     CorpseEvent.Spawn(foundCorpses).post()
                 }
             }

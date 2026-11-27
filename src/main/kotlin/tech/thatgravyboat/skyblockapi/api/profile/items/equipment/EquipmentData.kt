@@ -8,7 +8,7 @@ import tech.thatgravyboat.skyblockapi.generated.SkyblockAPICodecs
 // TODO: move somewhere else once its internal in all versions
 @GenerateCodec
 //~ if >= 26.4 'public' -> 'internal'
-public data class EquipmentData(
+internal data class EquipmentData(
     val slots: MutableMap<EquipmentSlot, ItemStack> = mutableMapOf(),
     val riftSlots: MutableMap<EquipmentSlot, ItemStack> = mutableMapOf(),
 ) {

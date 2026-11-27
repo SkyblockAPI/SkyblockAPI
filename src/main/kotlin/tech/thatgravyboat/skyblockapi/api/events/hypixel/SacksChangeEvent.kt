@@ -4,18 +4,17 @@ import tech.thatgravyboat.skyblockapi.api.events.base.SkyBlockEvent
 import tech.thatgravyboat.skyblockapi.api.remote.api.SkyBlockId
 
 //~ if >= 26.4 'constructor' -> 'internal constructor'
-public data class SacksChangeEvent constructor(
+public data class SacksChangeEvent internal constructor(
     val changedItems: List<ChangedSackItem>,
 ) : SkyBlockEvent()
 
 //~ if >= 26.4 'constructor' -> 'internal constructor'
-public data class ChangedSackItem constructor(
+public data class ChangedSackItem internal constructor(
     //? if < 26.4
-    val item: String,
+    //val item: String,
     val diff: Int,
-    //? if < 26.4
-    @IntroducedAt("4.3.2")
-    val id: SkyBlockId
-    //? if < 26.4
-    = SkyBlockId.item(item)
+    //? if >= 26.4
+    val id: SkyBlockId,
+    //? else
+    //@IntroducedAt("4.3.2") val id: SkyBlockId = SkyBlockId.item(item),
 )
